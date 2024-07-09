@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.1'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'woowacourse'
-version = '0.0.1-SNAPSHOT-' + new Date().format('yyyy-MM-dd-HHmm')
+version = '0.0.1-' + new Date().format('yyyy-MM-dd-HHmm')
 
 java {
     toolchain {
