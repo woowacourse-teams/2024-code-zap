@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.template.dto.request.CreateTemplateResponse;
 import codezap.template.dto.response.CreateTemplateRequest;
+import codezap.template.dto.response.FindAllTemplatesResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 public interface SpringDocTemplateController {
@@ -16,6 +17,9 @@ public interface SpringDocTemplateController {
             * 모든 스니펫 순서는 1부터 시작합니다. \n
             """)
     ResponseEntity<CreateTemplateResponse> create(CreateTemplateRequest createTemplateRequest);
+
+    @Operation(summary = "템플릿 목록 조회", description = "작성된 모든 템플릿을 조회합니다.")
+    ResponseEntity<FindAllTemplatesResponse> getTemplates();
 
 }
 
