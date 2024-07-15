@@ -11,10 +11,6 @@ const UploadsTemplate = () => {
       title: 'example.js',
       content: 'const a = 1 + 2;',
     },
-    {
-      title: 'module.js',
-      content: 'const a = 1 + 2;',
-    },
   ]);
 
   const handleCodeChange = useCallback((val: string, idx: number) => {
@@ -22,6 +18,16 @@ const UploadsTemplate = () => {
       prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, content: val } : snippet)),
     );
   }, []);
+
+  const handleAddButtonClick = () => {
+    setSnippets((prevSnippets) => [
+      ...prevSnippets,
+      {
+        title: '',
+        content: '',
+      },
+    ]);
+  };
 
   return (
     <>
@@ -43,7 +49,7 @@ const UploadsTemplate = () => {
             );
           })}
           <Flex direction='row' justify='space-between' width='100%'>
-            <Button width='auto' type='outlined'>
+            <Button width='auto' type='outlined' onClick={handleAddButtonClick}>
               + Add Snippet
             </Button>
             <Button>Save</Button>
