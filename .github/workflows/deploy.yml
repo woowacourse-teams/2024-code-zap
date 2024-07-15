@@ -3,8 +3,7 @@ name: Build and deploy
 on:
   push:
     branches:
-      - develop
-      - main
+      - feat/cd
 
 jobs:
   build:
