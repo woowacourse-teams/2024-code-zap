@@ -35,6 +35,6 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateByIdResponse> getTemplateById(@PathVariable Long id) {
-        throw new NotImplementedException();
+        return ResponseEntity.ok(templateService.findById(id));
     }
 }
