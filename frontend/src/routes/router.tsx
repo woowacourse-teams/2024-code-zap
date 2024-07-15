@@ -1,5 +1,6 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
+import Template from '@/pages/Template';
 import TemplateList from '@/pages/TemplateList';
 
 const Layout = () => {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <TemplateList />,
+      },
+      {
+        path: 'templates/:id',
+        element: <Template />,
       },
     ],
   },
