@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 
 export const style = css({
-  padding: '14px',
-  borderRadius: '9px',
-  border: '1px solid #808080',
+  padding: '1.4rem',
+  borderRadius: '0.9rem',
+  border: '0.1rem solid #808080',
   background: '#eeeeee',
-  width: '450px',
-  height: '40px',
+  width: '45rem',
+  height: '4rem',
 
   '&::placeholder': {
     color: '#808080',
@@ -23,20 +23,20 @@ export const style = css({
 });
 
 export const searchStyle = {
-  paddingLeft: '42px',
+  paddingLeft: '4.2rem',
 };
 
 export const inputWrapperStyle = css({
   position: 'relative',
   display: 'inline-block',
-  width: '450px',
+  width: '45rem',
 });
 
 export const iconStyle = css({
   position: 'absolute',
-  left: '14px',
+  left: '1.4rem',
   top: '50%',
   transform: 'translateY(-50%)',
-  width: '20px',
-  height: '20px',
+  width: '2rem',
+  height: '2rem',
 });

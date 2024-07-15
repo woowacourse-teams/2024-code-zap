@@ -16,11 +16,11 @@ const preview: Preview = {
     (Story) => (
       <>
         <GlobalStyles />
-        <div style={{ display: 'flex', gap: '16px' }}>
-          <div style={{ border: '2px solid black', borderRadius: '8px', padding: '32px' }}>
+        <div style={{ display: 'flex', gap: '1.6rem' }}>
+          <div style={{ border: '0.2rem solid black', borderRadius: '0.8rem', padding: '3.2rem' }}>
             <Story />
           </div>
-          <div style={{ border: '2px solid black', borderRadius: '8px', padding: '32px', background: 'black' }}>
+          <div style={{ border: '0.2rem solid black', borderRadius: '0.8rem', padding: '3.2rem', background: 'black' }}>
             <Story />
           </div>
         </div>

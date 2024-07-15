@@ -12,15 +12,15 @@ export default meta;
 
 type Story = StoryObj<typeof Button>;
 
-const colStyle = css({ display: 'flex', flexDirection: 'column', gap: '24px' });
-const rowStyle = css({ display: 'flex', gap: '24px', alignItems: 'center' });
+const colStyle = css({ display: 'flex', flexDirection: 'column', gap: '2.4rem' });
+const rowStyle = css({ display: 'flex', gap: '2.4rem', alignItems: 'center' });
 
 const buttonWrapper = css({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  width: '74px',
-  height: '40px',
+  width: '7.4rem',
+  height: '4rem',
 });
 
 const ButtonGroup = ({ disabled }: { disabled: boolean }) => {
@@ -78,16 +78,16 @@ export const CustomSized: Story = {
   render: () => {
     return (
       <div css={colStyle}>
-        <Button type='default' width='100px'>
-          100px
+        <Button type='default' width='10rem'>
+          10rem
         </Button>
-        <Button type='outlined' width='200px'>
-          200px
+        <Button type='outlined' width='20rem'>
+          20rem
         </Button>
-        <Button type='text' width='300px'>
-          300px
+        <Button type='text' width='30rem'>
+          30rem
         </Button>
-        <p style={{ color: '#888888', fontSize: '12px' }}>(text 타입 버튼의 사이즈는 텍스트 길이에 비례합니다.)</p>
+        <p style={{ color: '#888888', fontSize: '1.2rem' }}>(text 타입 버튼의 사이즈는 텍스트 길이에 비례합니다.)</p>
       </div>
     );
   },

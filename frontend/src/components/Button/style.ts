@@ -2,9 +2,9 @@ import { css } from '@emotion/react';
 
 export const style = css({
   cursor: 'pointer',
-  borderRadius: '8px',
+  borderRadius: '0.8rem',
   textAlign: 'center',
-  padding: '8px 16px',
+  padding: '0.8rem 1.6rem',
 
   '&:not(:disabled):focus': {
     outline: 'none',
@@ -28,7 +28,7 @@ export const types = {
   }),
   outlined: css({
     background: 'none',
-    border: '1px solid rgba(255, 211, 105, 1)',
+    border: '0.1rem solid rgba(255, 211, 105, 1)',
     color: 'rgba(255, 211, 105, 1)',
   }),
   text: css({
@@ -39,14 +39,14 @@ export const types = {
 
 export const sizes = {
   small: css({
-    height: '30px',
+    height: '3rem',
     fontWeight: 700,
-    fontSize: '14px',
+    fontSize: '1.4rem',
   }),
   medium: css({
-    height: '40px',
+    height: '4rem',
     fontWeight: 700,
-    fontSize: '18px',
+    fontSize: '1.8rem',
   }),
 };
 
