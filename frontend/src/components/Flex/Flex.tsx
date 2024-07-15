@@ -1,5 +1,4 @@
 import { FlexContainer } from './style';
-import PropTypes from 'prop-types';
 import { ReactNode } from 'react';
 
 export interface FlexProps {
@@ -50,37 +49,6 @@ const Flex: React.FC<FlexProps> = ({
       {children}
     </FlexContainer>
   );
-};
-
-Flex.propTypes = {
-  children: PropTypes.node,
-  direction: PropTypes.oneOf([
-    'row',
-    'row-reverse',
-    'column',
-    'column-reverse',
-  ]),
-  justify: PropTypes.oneOf([
-    'flex-start',
-    'flex-end',
-    'center',
-    'space-between',
-    'space-around',
-    'space-evenly',
-  ]),
-  align: PropTypes.oneOf([
-    'stretch',
-    'flex-start',
-    'flex-end',
-    'center',
-    'baseline',
-  ]),
-  wrap: PropTypes.oneOf(['nowrap', 'wrap', 'wrap-reverse']),
-  gap: PropTypes.string,
-  width: PropTypes.string,
-  height: PropTypes.string,
-  padding: PropTypes.string,
-  margin: PropTypes.string,
 };
 
 export default Flex;
