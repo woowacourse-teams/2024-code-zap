@@ -4,7 +4,13 @@ import Template from '@/pages/Template';
 import TemplateList from '@/pages/TemplateList';
 
 const Layout = () => {
-  return <Outlet />;
+  const style = { maxWidth: '1024px', margin: 'auto', padding: '0 2rem' };
+
+  return (
+    <div css={style}>
+      <Outlet />
+    </div>
+  );
 };
 
 const router = createBrowserRouter([
