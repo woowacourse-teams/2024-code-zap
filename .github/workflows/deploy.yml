@@ -9,7 +9,6 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     env:
       build-directory: ./backend
@@ -31,7 +30,6 @@ jobs:
         path: build/libs/*.jar
 
   deploy:
-    if: github.event.pull_request.head.repo.full_name == github.repository
     needs: build
     runs-on: ubuntu-latest
     steps:
