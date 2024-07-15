@@ -7,6 +7,7 @@ export const FlexContainer = styled.div<FlexProps>`
   justify-content: ${(props) => props.justify};
   align-items: ${(props) => props.align};
   flex-wrap: ${(props) => props.wrap};
+  flex: ${(props) => props.flex};
   gap: ${(props) => props.gap};
   width: ${(props) => props.width};
   height: ${(props) => props.height};
