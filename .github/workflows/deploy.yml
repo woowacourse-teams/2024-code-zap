@@ -1,0 +1,57 @@
+name: Build and deploy
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      build-directory: ./backend
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Setup JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: temurin
+    - name: Build with Gradle Wrapper
+      run: ./gradlew bootJar
+      working-directory: ${{ env.build-directory }}
+    - name: Archive JAR file
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-jar
+        path: build/libs/*.jar
+
+  deploy:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-jar
+      - name: Copy JAR to remote server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          target: ${{ secrets.WORK_DIRECTORY }}
+          source: '*.jar'
+      - name: Execute Server Init Script
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_SSH_KEY }}
+          target: ${{ secrets.WORK_DIRECTORY }}
+          script_stop: true
+          script: chmod +x ./deploy.sh && sh ./deploy.sh
