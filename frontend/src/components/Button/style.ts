@@ -58,6 +58,6 @@ export const textTypeStyle = css({
   background: 'none',
   border: 'none',
   width: 'fit-content',
-  minWidth: '0',
+  height: 'fit-content',
   display: 'inline-block',
 });
