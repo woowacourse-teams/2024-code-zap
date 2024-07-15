@@ -1,10 +1,12 @@
 package codezap.template.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import codezap.template.dto.request.CreateTemplateResponse;
 import codezap.template.dto.response.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindTemplateByIdResponse;
 import io.swagger.v3.oas.annotations.Operation;
 
 public interface SpringDocTemplateController {
@@ -21,5 +23,7 @@ public interface SpringDocTemplateController {
     @Operation(summary = "템플릿 목록 조회", description = "작성된 모든 템플릿을 조회합니다.")
     ResponseEntity<FindAllTemplatesResponse> getTemplates();
 
+    @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
+    ResponseEntity<FindTemplateByIdResponse> getTemplateById(@PathVariable Long id);
 }
 
