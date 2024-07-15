@@ -3,7 +3,7 @@ package codezap.representative_snippet.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -18,11 +18,14 @@ import lombok.Getter;
 public class RepresentativeSnippet extends BaseTimeEntity {
 
     @Id
+    private Long templateId;
+
+    @MapsId
     @OneToOne
     @JoinColumn(name = "template_id")
     private Template template;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "snippet_id", nullable = false)
     private Snippet snippet;
 }
