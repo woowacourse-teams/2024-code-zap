@@ -4,13 +4,7 @@ import { ReactNode } from 'react';
 export interface FlexProps {
   children: ReactNode;
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
-  justify?:
-    | 'flex-start'
-    | 'flex-end'
-    | 'center'
-    | 'space-between'
-    | 'space-around'
-    | 'space-evenly';
+  justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
   align?: 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
   gap?: string;
@@ -18,6 +12,7 @@ export interface FlexProps {
   height?: string;
   padding?: string;
   margin?: string;
+  flex?: string;
 }
 
 const Flex: React.FC<FlexProps> = ({
@@ -31,6 +26,7 @@ const Flex: React.FC<FlexProps> = ({
   height = 'auto',
   padding = '0',
   margin = '0',
+  flex = 'none',
   ...props
 }) => {
   return (
@@ -44,6 +40,7 @@ const Flex: React.FC<FlexProps> = ({
       height={height}
       padding={padding}
       margin={margin}
+      flex={flex}
       {...props}
     >
       {children}
