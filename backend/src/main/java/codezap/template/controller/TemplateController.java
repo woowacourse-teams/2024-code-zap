@@ -1,4 +1,4 @@
-package codezap.member.controller;
+package codezap.template.controller;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
@@ -9,15 +9,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import codezap.template.controller.SpringDocTemplateController;
 import codezap.template.dto.request.CreateTemplateResponse;
 import codezap.template.dto.response.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.service.TemplateService;
 
 @RestController
 @RequestMapping("/templates")
 public class TemplateController implements SpringDocTemplateController {
+
+    private final TemplateService templateService;
+
+    public TemplateController(TemplateService templateService) {this.templateService = templateService;}
 
     @PostMapping("")
     public ResponseEntity<CreateTemplateResponse> create(@RequestBody CreateTemplateRequest createTemplateRequest) {
@@ -26,7 +30,7 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping("")
     public ResponseEntity<FindAllTemplatesResponse> getTemplates() {
-        throw new NotImplementedException();
+        return ResponseEntity.ok(templateService.findAll());
     }
 
     @GetMapping("/{id}")
