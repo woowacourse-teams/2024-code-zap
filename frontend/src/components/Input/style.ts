@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 export const style = css({
   padding: '1.4rem',
-  borderRadius: '0.9rem',
+  borderRadius: '8px',
   border: '0.1rem solid #808080',
   background: '#eeeeee',
   width: '45rem',

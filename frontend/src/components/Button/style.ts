@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 export const style = css({
   cursor: 'pointer',
-  borderRadius: '0.8rem',
+  borderRadius: '8px',
   textAlign: 'center',
   padding: '0.8rem 1.6rem',
 
