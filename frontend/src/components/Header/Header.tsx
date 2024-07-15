@@ -6,6 +6,7 @@ import { Button } from '../Button';
 import { HeaderContainer } from './style';
 import logoIcon from '../../assets/images/logo.png';
 import newTemplateIcon from '../../assets/images/newTemplate.png';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -16,21 +17,27 @@ const Header = () => {
 
   return (
     <HeaderContainer>
-      <Flex align='center' gap='1.2rem' width='fit-content'>
-        <img src={logoIcon} alt='logo' />
-        <Text.SubTitle weight='bold' color='#FFD269'>
-          CodeZap
-        </Text.SubTitle>
-      </Flex>
+      <Link to={'/my-page'}>
+        <Flex align='center' gap='1.2rem' width='fit-content'>
+          <img src={logoIcon} alt='logo' />
+          <Text.SubTitle weight='bold' color='#FFD269'>
+            CodeZap
+          </Text.SubTitle>
+        </Flex>
+      </Link>
       <Flex align='center' gap='3rem' flex='1'>
-        <Button onClick={() => {}} type='text'>
-          <Text.Body weight='bold' color='#FFD269'>
-            MyPage
-          </Text.Body>
-        </Button>
-        <Button onClick={() => {}} type='text'>
-          <Text.Body weight='bold'>Explores</Text.Body>
-        </Button>
+        <Link to={'/my-page'}>
+          <Button type='text'>
+            <Text.Body weight='bold' color='#FFD269'>
+              MyPage
+            </Text.Body>
+          </Button>
+        </Link>
+        <Link to={'/'}>
+          <Button type='text'>
+            <Text.Body weight='bold'>Explores</Text.Body>
+          </Button>
+        </Link>
       </Flex>
       <Flex align='center' gap='3rem' width='fit-content'>
         <Input
@@ -38,15 +45,18 @@ const Header = () => {
           onChange={handleInputChange}
           placeholder='Search...'
           type='search'
-          width='45rem'
+          max-width='40rem'
+          height='4rem'
           fontSize='1.6rem'
         />
-        <Button onClick={() => {}} type='outlined' width='fit-content'>
-          <img src={newTemplateIcon} alt='newTemplate' />
-          <Text.Body weight='bold' color='#FFD269'>
-            New Template
-          </Text.Body>
-        </Button>
+        <Link to={'/upload'}>
+          <Button type='outlined' width='fit-content'>
+            <img src={newTemplateIcon} alt='newTemplate' />
+            <Text.Body weight='bold' color='#FFD269'>
+              New Template
+            </Text.Body>
+          </Button>
+        </Link>
       </Flex>
     </HeaderContainer>
   );
