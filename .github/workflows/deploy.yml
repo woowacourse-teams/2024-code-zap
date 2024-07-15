@@ -10,6 +10,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      build-directory: ./backend
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -20,11 +22,12 @@ jobs:
         distribution: temurin
     - name: Build with Gradle Wrapper
       run: ./gradlew bootJar
+      working-directory: ${{ env.build-directory }}
     - name: Archive JAR file
       uses: actions/upload-artifact@v4
       with:
         name: build-jar
-        path: build/libs/*.jar
+        path: backend/build/libs/*.jar
 
   deploy:
     needs: build
