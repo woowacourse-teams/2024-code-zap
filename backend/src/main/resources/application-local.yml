@@ -3,13 +3,11 @@ spring:
     activate:
       on-profile: local
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:23306/code_zap?serverTimezone=Asia/Seoul
     username: root
     password: woowacourse
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
       ddl-auto: create
     properties:
