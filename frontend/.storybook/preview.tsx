@@ -16,8 +16,8 @@ const preview: Preview = {
     (Story) => (
       <>
         <GlobalStyles />
-        <div style={{ display: 'flex', gap: '1.6rem' }}>
-          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem' }}>
+        <div style={{ display: 'flex', gap: '1.6rem', flexWrap: 'wrap' }}>
+          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'white' }}>
             <Story />
           </div>
           <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'black' }}>
