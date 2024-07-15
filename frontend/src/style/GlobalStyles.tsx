@@ -18,6 +18,7 @@ const GlobalStyles = () => {
           listStyle: 'none',
           backgroundColor: '#222831',
         },
+        a: { textDecoration: 'none', color: 'inherit' },
       }}
     />
   );
