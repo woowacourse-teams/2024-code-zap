@@ -1,6 +1,6 @@
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
-import Templates from '@/pages/Templates';
+import TemplateList from '@/pages/TemplateList';
 
 const Layout = () => {
   return <Outlet />;
@@ -12,7 +12,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Templates />,
+        element: <TemplateList />,
       },
     ],
   },
