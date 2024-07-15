@@ -4,8 +4,10 @@ import ReactCodeMirror from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { useCallback, useState } from 'react';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import { useNavigate } from 'react-router-dom';
 
 const UploadsTemplate = () => {
+  const navigate = useNavigate();
   const [snippets, setSnippets] = useState([
     {
       title: 'example.js',
@@ -27,6 +29,10 @@ const UploadsTemplate = () => {
         content: '',
       },
     ]);
+  };
+
+  const handleSaveButtonClick = () => {
+    navigate('/');
   };
 
   return (
@@ -52,7 +58,7 @@ const UploadsTemplate = () => {
             <Button width='auto' type='outlined' onClick={handleAddButtonClick}>
               + Add Snippet
             </Button>
-            <Button>Save</Button>
+            <Button onClick={handleSaveButtonClick}>Save</Button>
           </Flex>
         </Flex>
       </Flex>
