@@ -1,5 +1,8 @@
 package codezap.snippet.domain;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -14,12 +17,10 @@ import codezap.extension.domain.Extension;
 import codezap.global.domain.BaseTimeEntity;
 import codezap.template.domain.Template;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name = "snippet")
 @Getter
-@Setter
 public class Snippet extends BaseTimeEntity {
 
     @Id
@@ -42,4 +43,10 @@ public class Snippet extends BaseTimeEntity {
 
     @Column(nullable = false)
     private Integer ordinal;
+
+    public String getSummaryContent() {
+        return Arrays.stream(content.split("<br>"))
+                .limit(10)
+                .collect(Collectors.joining("<br>"));
+    }
 }
