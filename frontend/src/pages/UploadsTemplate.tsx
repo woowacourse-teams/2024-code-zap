@@ -1,6 +1,9 @@
 import { Button } from '@/components/Button';
 import { Flex } from '@/components/Flex';
-import { useState } from 'react';
+import ReactCodeMirror from '@uiw/react-codemirror';
+import { javascript } from '@codemirror/lang-javascript';
+import { useCallback, useState } from 'react';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 
 const UploadsTemplate = () => {
   const [snippets, setSnippets] = useState([
@@ -14,6 +17,12 @@ const UploadsTemplate = () => {
     },
   ]);
 
+  const handleCodeChange = useCallback((val: string, idx: number) => {
+    setSnippets((prevSnippets) =>
+      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, content: val } : snippet)),
+    );
+  }, []);
+
   return (
     <>
       <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0 0 0'>
@@ -21,7 +30,17 @@ const UploadsTemplate = () => {
           <input placeholder='템플릿명을 입력해주세요' style={{ width: '100%' }}></input>
 
           {snippets.map((snippet, idx) => {
-            return <textarea key={idx} style={{ width: '100%', height: '10rem' }}></textarea>;
+            return (
+              <ReactCodeMirror
+                key={idx}
+                value={snippet.content}
+                height='200px'
+                style={{ width: '100%', borderRadius: '20px' }}
+                theme={vscodeDark}
+                extensions={[javascript({ jsx: true })]}
+                onChange={(val) => handleCodeChange(val, idx)}
+              />
+            );
           })}
           <Flex direction='row' justify='space-between' width='100%'>
             <Button width='auto' type='outlined'>
