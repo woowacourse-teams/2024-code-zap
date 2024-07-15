@@ -46,7 +46,7 @@ Text.Label = function Label({
   return <span css={styleText('1.8', weight, color)}>{children}</span>;
 };
 
-Text.Body = function Label({
+Text.Body = function Body({
   children,
   weight,
   color,
