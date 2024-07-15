@@ -1,8 +1,6 @@
-package codezap.template.dto.response;
+package codezap.template.dto.request;
 
 import java.util.List;
-
-import codezap.template.dto.request.CreateSnippetRequest;
 
 public record CreateTemplateRequest(
         String title,
