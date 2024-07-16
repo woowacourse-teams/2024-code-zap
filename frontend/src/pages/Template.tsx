@@ -9,7 +9,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const Template = () => {
   const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [currentFile] = useState(mockTemplate.snippets[0].filename);
+  const [currentFile, setCurrentFile] = useState(mockTemplate.snippets[0].filename);
 
   const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -50,7 +50,10 @@ const Template = () => {
             {mockTemplate.snippets.map((snippet, index) => (
               <SelectList.Option
                 key={snippet.id}
-                onClick={handleSelectOption(index)}
+                onClick={() => {
+                  setCurrentFile(snippet.filename);
+                  handleSelectOption(index);
+                }}
                 isSelected={currentFile === snippet.filename}
               >
                 {snippet.filename}
