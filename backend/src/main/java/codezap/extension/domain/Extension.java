@@ -12,11 +12,15 @@ import jakarta.persistence.Table;
 
 import codezap.global.domain.BaseTimeEntity;
 import codezap.language.domain.Language;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "extension")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Extension extends BaseTimeEntity {
 
     @Id
@@ -27,6 +31,6 @@ public class Extension extends BaseTimeEntity {
     @JoinColumn(name = "language_id", nullable = false)
     private Language language;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 }

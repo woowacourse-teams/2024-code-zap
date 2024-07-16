@@ -8,11 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import codezap.global.domain.BaseTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "language")
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Language extends BaseTimeEntity {
 
     @Id

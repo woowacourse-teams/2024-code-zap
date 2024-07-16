@@ -11,11 +11,15 @@ import jakarta.persistence.Table;
 
 import codezap.global.domain.BaseTimeEntity;
 import codezap.member.domain.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "template")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Template extends BaseTimeEntity {
 
     @Id
