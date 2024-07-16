@@ -47,20 +47,15 @@ const Template = () => {
           </Flex>
 
           <SelectList>
-            {mockTemplate.snippets.map((snippet, index) => {
-              return (
-                <SelectList.Option
-                  key={snippet.id}
-                  onClick={() => {
-                    setCurrentFile(snippet.filename);
-                    handleSelectOption(index);
-                  }}
-                  isSelected={currentFile === snippet.filename}
-                >
-                  {snippet.filename}
-                </SelectList.Option>
-              );
-            })}
+          {mockTemplate.snippets.map((snippet, index) => (
+            <SelectList.Option
+              key={snippet.id}
+              onClick={handleSelectOption(index, snippet.filename)}
+              isSelected={currentFile === snippet.filename}
+            >
+              {snippet.filename}
+            </SelectList.Option>
+          ))}
           </SelectList>
         </Flex>
       </Flex>
