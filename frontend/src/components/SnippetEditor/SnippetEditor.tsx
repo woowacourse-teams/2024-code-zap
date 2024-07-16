@@ -22,7 +22,7 @@ const SnippetEditor = ({ fileName, content, onChangeContent, onChangeFileName }:
 
   return (
     <S.SnippetEditorContainer>
-      <S.SnippetTitleInput value={fileName} onChange={handleFileNameChange} />
+      <S.SnippetFileNameInput value={fileName} onChange={handleFileNameChange} />
       <ReactCodeMirror
         value={content}
         height='200px'

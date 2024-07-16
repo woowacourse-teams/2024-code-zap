@@ -7,13 +7,15 @@ export const SnippetEditorContainer = styled.div`
   border-radius: 8px;
 `;
 
-export const SnippetTitleInput = styled.input`
+export const SnippetFileNameInput = styled.input`
   width: 100%;
   height: 3rem;
   background-color: #393e46;
-  color: white;
   border: none;
-  padding: 1rem;
+  padding: 1rem 1.5rem;
+  color: #ffd369;
+  font-size: 14px;
+  font-weight: 700;
 
   &:focus {
     outline: none;
