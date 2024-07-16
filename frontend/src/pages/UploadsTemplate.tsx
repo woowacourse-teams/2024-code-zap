@@ -9,14 +9,20 @@ const UploadsTemplate = () => {
   const navigate = useNavigate();
   const [snippets, setSnippets] = useState([
     {
-      title: 'example.js',
+      fileName: 'example.js',
       content: 'const a = 1 + 2;',
     },
   ]);
 
-  const handleCodeChange = useCallback((val: string, idx: number) => {
+  const handleCodeChange = useCallback((newContent: string, idx: number) => {
     setSnippets((prevSnippets) =>
-      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, content: val } : snippet)),
+      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, content: newContent } : snippet)),
+    );
+  }, []);
+
+  const handleFileNameChange = useCallback((newFileName: string, idx: number) => {
+    setSnippets((prevSnippets) =>
+      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, fileName: newFileName } : snippet)),
     );
   }, []);
 
@@ -24,7 +30,7 @@ const UploadsTemplate = () => {
     setSnippets((prevSnippets) => [
       ...prevSnippets,
       {
-        title: '',
+        fileName: '',
         content: '',
       },
     ]);
@@ -40,7 +46,15 @@ const UploadsTemplate = () => {
         <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
           <TemplateTitleInput placeholder='템플릿명을 입력해주세요' />
           {snippets.map((snippet, idx) => {
-            return <SnippetEditor key={idx} content={snippet.content} onChange={(val) => handleCodeChange(val, idx)} />;
+            return (
+              <SnippetEditor
+                key={idx}
+                fileName={snippet.fileName}
+                content={snippet.content}
+                onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
+                onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
+              />
+            );
           })}
 
           <Flex direction='row' justify='space-between' width='100%' padding='3rem 0 0 0'>
