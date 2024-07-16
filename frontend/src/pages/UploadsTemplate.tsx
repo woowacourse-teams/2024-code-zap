@@ -1,12 +1,10 @@
-import { Button } from '@/components/Button';
-import { Flex } from '@/components/Flex';
-import ReactCodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
 import { useCallback, useState } from 'react';
-import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { useNavigate } from 'react-router-dom';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
+import { Button } from '@/components/Button';
+import { Flex } from '@/components/Flex';
+import { SnippetEditor } from '@/components/SnippetEditor';
 
 const UploadsTemplate = () => {
   const navigate = useNavigate();
@@ -43,20 +41,7 @@ const UploadsTemplate = () => {
         <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
           <Input placeholder='템플릿명을 입력해주세요'></Input>
           {snippets.map((snippet, idx) => {
-            return (
-              <div key={idx} style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '8px' }}>
-                <SnippetTitleInput />
-                <ReactCodeMirror
-                  value={snippet.content}
-                  height='200px'
-                  style={{ width: '100%', borderRadius: '20px' }}
-                  theme={vscodeDark}
-                  extensions={[javascript({ jsx: true })]}
-                  onChange={(val) => handleCodeChange(val, idx)}
-                  basicSetup={{ highlightActiveLine: false }}
-                />
-              </div>
-            );
+            return <SnippetEditor key={idx} content={snippet.content} onChange={(val) => handleCodeChange(val, idx)} />;
           })}
           <Flex direction='row' justify='space-between' width='100%' padding='3rem 0 0 0'>
             <Button width='auto' type='outlined' onClick={handleAddButtonClick}>
@@ -99,20 +84,6 @@ const InputWrapper = styled.div`
 
 const StyledInput = styled.input`
   ${inputStyles}
-`;
-
-const SnippetTitleInput = styled.input`
-  width: 100%;
-  height: 30px;
-  background-color: #393e46;
-  color: white;
-  border: none;
-  padding: 5px;
-
-  &:focus {
-    outline: none;
-    border-bottom: 2px solid #00adb5;
-  }
 `;
 
 const Input = ({ placeholder }: { placeholder: string }) => {
