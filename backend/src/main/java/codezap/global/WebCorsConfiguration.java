@@ -1,24 +1,15 @@
 package codezap.global;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class WebCorsConfiguration {
-
-    @Bean
-    public CorsConfigurationSource configureCors() {
-        final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedHeader("*");
-        configuration.addAllowedMethod("*");
-        configuration.addAllowedOriginPattern("*");
-        configuration.setAllowCredentials(true);
-
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+public class WebCorsConfiguration implements WebMvcConfigurer {
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*");
     }
 }
