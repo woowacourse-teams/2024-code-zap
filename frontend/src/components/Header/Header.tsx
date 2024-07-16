@@ -49,7 +49,7 @@ const Header = () => {
           height='4rem'
           fontSize='1.6rem'
         />
-        <Link to={'/upload'}>
+        <Link to={'/templates/uploads'}>
           <Button type='outlined' width='fit-content'>
             <img src={newTemplateIcon} alt='newTemplate' />
             <Text.Body weight='bold' color='#FFD269'>
