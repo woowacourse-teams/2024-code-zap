@@ -28,7 +28,7 @@ const Template = () => {
           <Flex direction='column' gap='1rem' flex='0.7'>
             {mockTemplate.snippets.map((snippet, index) => {
               return (
-                <div id={String(snippet.filename)} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
+                <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
                   <SyntaxHighlighter
                     language='javascript'
                     style={vscDarkPlus}
