@@ -5,6 +5,8 @@ import { javascript } from '@codemirror/lang-javascript';
 import { useCallback, useState } from 'react';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { useNavigate } from 'react-router-dom';
+import { css } from '@emotion/react';
+import styled from '@emotion/styled';
 
 const UploadsTemplate = () => {
   const navigate = useNavigate();
@@ -37,24 +39,25 @@ const UploadsTemplate = () => {
 
   return (
     <>
-      <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0 0 0'>
+      <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0'>
         <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
-          <input placeholder='템플릿명을 입력해주세요' style={{ width: '100%' }}></input>
-
+          <Input placeholder='템플릿명을 입력해주세요'></Input>
           {snippets.map((snippet, idx) => {
             return (
-              <ReactCodeMirror
-                key={idx}
-                value={snippet.content}
-                height='200px'
-                style={{ width: '100%', borderRadius: '20px' }}
-                theme={vscodeDark}
-                extensions={[javascript({ jsx: true })]}
-                onChange={(val) => handleCodeChange(val, idx)}
-              />
+              <div key={idx} style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '8px' }}>
+                <ReactCodeMirror
+                  value={snippet.content}
+                  height='200px'
+                  style={{ width: '100%', borderRadius: '20px' }}
+                  theme={vscodeDark}
+                  extensions={[javascript({ jsx: true })]}
+                  onChange={(val) => handleCodeChange(val, idx)}
+                  basicSetup={{ highlightActiveLine: false }}
+                />
+              </div>
             );
           })}
-          <Flex direction='row' justify='space-between' width='100%'>
+          <Flex direction='row' justify='space-between' width='100%' padding='3rem 0 0 0'>
             <Button width='auto' type='outlined' onClick={handleAddButtonClick}>
               + Add Snippet
             </Button>
@@ -67,3 +70,40 @@ const UploadsTemplate = () => {
 };
 
 export default UploadsTemplate;
+
+const inputStyles = css`
+  width: 100%;
+  padding: 10px 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid #555555;
+  color: #cccccc;
+  font-size: 16px;
+
+  &::placeholder {
+    color: #808080;
+  }
+
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid #cccccc;
+  }
+`;
+
+const InputWrapper = styled.div`
+  position: relative;
+  margin: 20px 0;
+  width: 100%;
+`;
+
+const StyledInput = styled.input`
+  ${inputStyles}
+`;
+
+const Input = ({ placeholder }: { placeholder: string }) => {
+  return (
+    <InputWrapper>
+      <StyledInput placeholder={placeholder} />
+    </InputWrapper>
+  );
+};
