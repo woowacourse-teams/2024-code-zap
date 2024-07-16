@@ -1,6 +1,7 @@
 package codezap.template.controller;
 
-import org.apache.commons.lang3.NotImplementedException;
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping("")
     public ResponseEntity<Void> create(@RequestBody CreateTemplateRequest createTemplateRequest) {
-        throw new NotImplementedException();
+        return ResponseEntity.created(URI.create("/templates" + templateService.create(createTemplateRequest))).build();
     }
 
     @GetMapping("")

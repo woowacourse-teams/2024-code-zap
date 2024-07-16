@@ -16,11 +16,15 @@ import jakarta.persistence.Table;
 import codezap.extension.domain.Extension;
 import codezap.global.domain.BaseTimeEntity;
 import codezap.template.domain.Template;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "snippet")
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Snippet extends BaseTimeEntity {
 
     @Id
@@ -45,8 +49,8 @@ public class Snippet extends BaseTimeEntity {
     private Integer ordinal;
 
     public String getSummaryContent() {
-        return Arrays.stream(content.split("<br>"))
+        return Arrays.stream(content.split("\n"))
                 .limit(10)
-                .collect(Collectors.joining("<br>"));
+                .collect(Collectors.joining("\n"));
     }
 }
