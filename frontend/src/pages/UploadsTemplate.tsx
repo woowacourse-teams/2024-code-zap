@@ -45,6 +45,7 @@ const UploadsTemplate = () => {
           {snippets.map((snippet, idx) => {
             return (
               <div key={idx} style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '8px' }}>
+                <SnippetTitleInput />
                 <ReactCodeMirror
                   value={snippet.content}
                   height='200px'
@@ -98,6 +99,20 @@ const InputWrapper = styled.div`
 
 const StyledInput = styled.input`
   ${inputStyles}
+`;
+
+const SnippetTitleInput = styled.input`
+  width: 100%;
+  height: 30px;
+  background-color: #393e46;
+  color: white;
+  border: none;
+  padding: 5px;
+
+  &:focus {
+    outline: none;
+    border-bottom: 2px solid #00adb5;
+  }
 `;
 
 const Input = ({ placeholder }: { placeholder: string }) => {
