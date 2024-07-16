@@ -1,5 +1,5 @@
 import React from 'react';
-import { style, searchStyle, inputWrapperStyle, iconStyle } from './style';
+import { inputStyle, searchStyle, inputWrapperStyle, iconStyle } from './style';
 import searchIcon from '../../assets/images/search.png';
 
 interface Props {
@@ -8,14 +8,28 @@ interface Props {
   placeholder?: string;
   type?: 'text' | 'email' | 'password' | 'search';
   disabled?: boolean;
+  width?: string;
+  height?: string;
+  fontSize?: string;
+  fontWeight?: string;
 }
 
-const Input = ({ value, onChange, placeholder = '', type = 'text', disabled = false }: Props) => {
+const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  type = 'text',
+  disabled = false,
+  width,
+  height,
+  fontSize,
+  fontWeight,
+}: Props) => {
   return (
-    <div css={inputWrapperStyle}>
+    <div css={inputWrapperStyle(width)}>
       {type === 'search' && <img src={searchIcon} css={iconStyle} alt='search icon' />}
       <input
-        css={[style, type === 'search' && searchStyle]}
+        css={[inputStyle({ width, height, fontSize, fontWeight }), type === 'search' && searchStyle]}
         value={value}
         onChange={onChange}
         placeholder={placeholder}

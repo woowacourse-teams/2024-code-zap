@@ -1,10 +1,13 @@
 import { css } from '@emotion/react';
 
-export const style = css({
+export const buttonStyle = css({
   cursor: 'pointer',
   borderRadius: '8px',
   textAlign: 'center',
   padding: '0.8rem 1.6rem',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.8rem',
 
   '&:not(:disabled):focus': {
     outline: 'none',
@@ -21,7 +24,7 @@ export const style = css({
   },
 });
 
-export const types = {
+export const stylesByType = {
   default: css({
     background: 'rgba(255, 211, 105, 1)',
     color: 'rgba(52, 60, 72, 1)',
@@ -37,7 +40,7 @@ export const types = {
   }),
 };
 
-export const sizes = {
+export const stylesBySize = {
   small: css({
     height: '3rem',
     fontWeight: 700,
@@ -55,6 +58,6 @@ export const textTypeStyle = css({
   background: 'none',
   border: 'none',
   width: 'fit-content',
-  minWidth: '0',
+  height: 'fit-content',
   display: 'inline-block',
 });
