@@ -9,7 +9,7 @@ interface Props {
 const TemplateTitleInput = ({ placeholder, value, onChange }: Props) => {
   return (
     <S.InputWrapper>
-      <S.TemplateTitleInput placeholder={ placeholder } value={ value } onChange={ onChange } />
+      <S.TemplateTitleInput placeholder={placeholder} value={value} onChange={onChange} />
     </S.InputWrapper>
   );
 };
