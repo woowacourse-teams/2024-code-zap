@@ -2,7 +2,8 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { Template } from '@/types/template';
 
 const fetchTemplate = async (id: string): Promise<Template> => {
-  const response = await fetch(`http://localhost:8080/templates/${id}`);
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const response = await fetch(`${apiUrl}/templates/${id}`);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
