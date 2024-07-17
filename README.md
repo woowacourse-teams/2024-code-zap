@@ -40,20 +40,20 @@
       </a>
     </td>
     <td>
-      <a href=https://github.com/Jaymyong66">
+      <a href="https://github.com/Jaymyong66">
         <img src="https://avatars.githubusercontent.com/u/78201530?v=4" width="150" style="max-width: 100%;">
       </a>
     </td>
   <tr>
   <tr>
     <td align="center">
-      🍓<a href="https://github.com/kyum-q">헤인</a>
+      🍓<a href="https://github.com/Hain-tain">헤인</a>
     </td>
     <td align="center">
-      🌜<a href="https://github.com/zeus6768">월하</a>
+      🌜<a href="https://github.com/vi-wolhwa">월하</a>
     </td>
     <td align="center">
-      🔪<a href="https://github.com/HoeSeong123">마스터위</a>
+      🔪<a href="https://github.com/Jaymyong66">마스터위</a>
     </td>
   </tr>
 </table>
@@ -103,10 +103,10 @@
       🤩<a href="https://github.com/HoeSeong123">초롱</a>
     </td>
     <td align="center">
-      🍀<a href="https://github.com/HoeSeong123">몰리</a>
+      🍀<a href="https://github.com/jminkkk">몰리</a>
     </td>
     <td align="center">
-      👍<a href="https://github.com/HoeSeong123">짱수</a>
+      👍<a href="https://github.com/zangsu">짱수</a>
     </td>
   </tr>
 </table>
