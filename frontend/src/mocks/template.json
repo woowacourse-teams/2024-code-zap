@@ -1,0 +1,24 @@
+{
+  "id": 2024,
+  "title": "회원가입 유효성 검증",
+  "member": {
+    "id": 1,
+    "nickname": "zangsu"
+  },
+  "representative_snippet_ordinal": 1,
+  "snippets": [
+    {
+      "id": 305,
+      "filename": "filename1.txt",
+      "content": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>\n        <span>CodeZap</span>\n\n        <SyntaxHighlighter language='javascript' style={monokaiSublime}>\n          {content}\n        </SyntaxHighlighter>\n      </Flex>\n    </>\n  );\n};\n\nexport default Template",
+      "ordinal": 1
+    },
+    {
+      "id": 306,
+      "filename": "filename2.java",
+      "content": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>\n        <span>CodeZap</span>\n\n        <SyntaxHighlighter language='javascript' style={monokaiSublime}>\n          {content}\n        </SyntaxHighlighter>\n      </Flex>\n    </>\n  );\n};\n\nexport default Template",
+      "ordinal": 2
+    }
+  ],
+  "modified_at": "2024-07-11 12:34"
+}
