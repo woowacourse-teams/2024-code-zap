@@ -1,7 +1,5 @@
 # 코드잽 ⚡
 
-## 서비스 소개
-
 ```
 나만의 코드 템플릿을 잽(zap)싸게 저장하고 공유하는 서비스
 ```
@@ -23,7 +21,7 @@
 
 <br>
 
-## 팀원
+## 팀원 🐣
 <table align="center">
   <tr>
     <td align="center">Frontend</td>
@@ -49,13 +47,13 @@
   <tr>
   <tr>
     <td align="center">
-      <a href="https://github.com/kyum-q">헤인</a>
+      🍓<a href="https://github.com/kyum-q">헤인</a>
     </td>
     <td align="center">
-      <a href="https://github.com/zeus6768">월하</a>
+      🌜<a href="https://github.com/zeus6768">월하</a>
     </td>
     <td align="center">
-      <a href="https://github.com/HoeSeong123">마스터위</a>
+      🔪<a href="https://github.com/HoeSeong123">마스터위</a>
     </td>
   </tr>
 </table>
@@ -96,19 +94,19 @@
   <tr>
   <tr>
     <td align="center">
-      <a href="https://github.com/kyum-q">켬미</a>
+      🐰<a href="https://github.com/kyum-q">켬미</a>
     </td>
     <td align="center">
-      <a href="https://github.com/zeus6768">제우스</a>
+      ⚡<a href="https://github.com/zeus6768">제우스</a>
     </td>
     <td align="center">
-      <a href="https://github.com/HoeSeong123">초롱</a>
+      🤩<a href="https://github.com/HoeSeong123">초롱</a>
     </td>
     <td align="center">
-      <a href="https://github.com/HoeSeong123">몰리</a>
+      🍀<a href="https://github.com/HoeSeong123">몰리</a>
     </td>
     <td align="center">
-      <a href="https://github.com/HoeSeong123">짱수</a>
+      👍<a href="https://github.com/HoeSeong123">짱수</a>
     </td>
   </tr>
 </table>
