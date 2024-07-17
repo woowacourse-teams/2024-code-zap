@@ -1,4 +1,4 @@
-name: Build and deploy
+name: Backend CD
 
 on:
   push:
