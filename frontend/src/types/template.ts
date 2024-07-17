@@ -1,5 +1,5 @@
 export interface Snippet {
-  id: number;
+  id?: number;
   filename: string;
   content: string;
   ordinal: number;
@@ -33,4 +33,10 @@ export interface TemplateListItem {
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
+}
+
+export interface CreateTemplateRequest {
+  title: string;
+  representative_snippet_ordinal: number;
+  snippets: Snippet[];
 }

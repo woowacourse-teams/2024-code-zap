@@ -12,7 +12,7 @@ const Template = () => {
   const { id } = useParams<{ id: string; }>();
   const { data: template, error, isLoading } = useTemplateQuery(id as string);
   const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [currentFile, setCurrentFile] = useState<string>('');
+  const [currentFile, setCurrentFile] = useState(template?.snippets[0].id);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: { error.message }</div>;
@@ -22,7 +22,7 @@ const Template = () => {
   const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
     snippetRefs.current[index]?.scrollIntoView({ behavior: 'smooth' });
-    setCurrentFile(template.snippets[index].filename);
+    setCurrentFile(template.snippets[index].id);
   };
 
   return (
@@ -60,7 +60,7 @@ const Template = () => {
               <SelectList.Option
                 key={ snippet.id }
                 onClick={ handleSelectOption(index) }
-                isSelected={ currentFile === snippet.filename }
+                isSelected={ currentFile === snippet.id }
               >
                 { snippet.filename }
               </SelectList.Option>
