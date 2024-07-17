@@ -6,14 +6,11 @@ import useTemplateListQuery from '@/hooks/useTemplateListQuery';
 
 const TemplateList = () => {
   const { data, error, isLoading } = useTemplateListQuery();
-  console.log(data, error, isLoading);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: { error.message }</div>;
 
   const list = data?.templates || [];
-
-  console.log(list);
 
   return (
     <Flex
