@@ -27,5 +27,5 @@ jobs:
           mysql database: code_zap
           mysql root password: woowacourse
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
+        run: ./gradlew test
         working-directory: ${{ env.build-directory }}
