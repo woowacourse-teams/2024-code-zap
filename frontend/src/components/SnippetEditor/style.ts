@@ -8,14 +8,16 @@ export const SnippetEditorContainer = styled.div`
 `;
 
 export const SnippetFileNameInput = styled.input`
-  padding: 1rem 1.5rem;
-  border: none;
   width: 100%;
   height: 3rem;
-  background-color: #393e46;
+  padding: 1rem 1.5rem;
+
   font-size: 14px;
   font-weight: 700;
   color: #ffd369;
+
+  background-color: #393e46;
+  border: none;
 
   &:focus {
     border-bottom: 2px solid #00adb5;

@@ -15,7 +15,7 @@ export const inputStyle = ({
     padding: '1.4rem',
     borderRadius: '8px',
     border: '0.1rem solid #808080',
-    background: '#eeeeee',
+    background: '#eee',
     width,
     height,
     fontSize: fontSize || 'inherit',
@@ -24,14 +24,16 @@ export const inputStyle = ({
     '&::placeholder': {
       color: '#808080',
     },
+
     '&:focus': {
       borderColor: 'black',
     },
+
     '&:disabled': {
-      backgroundColor: '#f5f5f5',
-      borderColor: '#ddd',
       cursor: 'default',
       opacity: 0.6,
+      backgroundColor: '#f5f5f5',
+      borderColor: '#ddd',
     },
   });
 
