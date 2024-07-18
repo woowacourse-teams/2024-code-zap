@@ -6,7 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
 
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.snippet.domain.Snippet;
@@ -16,7 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "representative_snippet")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
