@@ -8,7 +8,8 @@
     "start": "webpack serve --mode development",
     "build": "webpack --mode production",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint:style": "stylelint '**/style.ts' --fix"
   },
   "keywords": [],
   "author": "",
@@ -52,8 +53,12 @@
     "eslint-plugin-storybook": "^0.8.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.6.0",
+    "postcss-styled-syntax": "^0.6.4",
     "prettier": "^3.3.3",
     "storybook": "^8.2.1",
+    "stylelint": "^16.7.0",
+    "stylelint-config-standard": "^36.0.1",
+    "stylelint-order": "^6.0.4",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.3",
     "webpack": "^5.92.1",
