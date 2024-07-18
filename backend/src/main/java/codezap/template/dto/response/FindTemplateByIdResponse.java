@@ -9,8 +9,6 @@ import codezap.template.domain.Template;
 public record FindTemplateByIdResponse(
         Long id,
         String title,
-        FindMemberBySummaryResponse member,
-        Integer representative_snippet_ordinal,
         List<FindAllSnippetByTemplateResponse> snippets,
         LocalDateTime modified_at
 ) {
@@ -18,8 +16,6 @@ public record FindTemplateByIdResponse(
         return new FindTemplateByIdResponse(
                 template.getId(),
                 template.getTitle(),
-                FindMemberBySummaryResponse.from(template.getMember()),
-                1,
                 mapToFindAllSnippetByTemplateResponse(snippets),
                 template.getModifiedAt()
         );

@@ -21,7 +21,9 @@ public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
 
-    public TemplateController(TemplateService templateService) {this.templateService = templateService;}
+    public TemplateController(TemplateService templateService) {
+        this.templateService = templateService;
+    }
 
     @PostMapping("")
     public ResponseEntity<Void> create(@RequestBody CreateTemplateRequest createTemplateRequest) {

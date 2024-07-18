@@ -2,22 +2,20 @@ package codezap.template.dto.response;
 
 import java.time.LocalDateTime;
 
-import codezap.representative_snippet.domain.RepresentativeSnippet;
+import codezap.thumbnail_snippet.domain.ThumbnailSnippet;
 
 public record FindTemplateBySummaryResponse(
         Long id,
         String title,
-        FindMemberBySummaryResponse member,
-        FindRepresentativeSnippetResponse representative_snippet,
+        FindThumbnailSnippetResponse thumbnailSnippet,
         LocalDateTime modified_at
 ) {
-    public static FindTemplateBySummaryResponse from(RepresentativeSnippet representativeSnippet) {
+    public static FindTemplateBySummaryResponse from(ThumbnailSnippet thumbnailSnippet) {
         return new FindTemplateBySummaryResponse(
-                representativeSnippet.getTemplate().getId(),
-                representativeSnippet.getTemplate().getTitle(),
-                FindMemberBySummaryResponse.from(representativeSnippet.getTemplate().getMember()),
-                FindRepresentativeSnippetResponse.from(representativeSnippet.getSnippet()),
-                representativeSnippet.getModifiedAt()
+                thumbnailSnippet.getTemplate().getId(),
+                thumbnailSnippet.getTemplate().getTitle(),
+                FindThumbnailSnippetResponse.from(thumbnailSnippet.getSnippet()),
+                thumbnailSnippet.getModifiedAt()
         );
     }
 }

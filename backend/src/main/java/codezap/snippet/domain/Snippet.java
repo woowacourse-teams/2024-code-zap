@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import codezap.extension.domain.Extension;
 import codezap.global.domain.BaseTimeEntity;
 import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
@@ -34,10 +33,6 @@ public class Snippet extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "template_id", nullable = false)
     private Template template;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "extension_id", nullable = false)
-    private Extension extension;
 
     @Column(nullable = false)
     private String filename;

@@ -1,4 +1,4 @@
-package codezap.representative_snippet.domain;
+package codezap.thumbnail_snippet.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RepresentativeSnippet extends BaseTimeEntity {
+public class ThumbnailSnippet extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
