@@ -1,12 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import useTemplateQuery from '@/hooks/useTemplateQuery';
-
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Flex } from '@/components/Flex';
 import { SelectList } from '@/components/SelectList';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { Text } from '@/components/Text';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { useTemplateQuery } from '@/hooks/useTemplateQuery';
 
 const Template = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,10 +13,17 @@ const Template = () => {
   const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [currentFile, setCurrentFile] = useState(template?.snippets[0].id);
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
-  if (!template) return <div>No data available</div>;
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (!template) {
+    return <div>No data available</div>;
+  }
 
   const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -35,24 +41,22 @@ const Template = () => {
 
         <Flex direction='row' gap='6rem' width='100%'>
           <Flex direction='column' gap='1rem' flex='0.7'>
-            {template.snippets.map((snippet, index) => {
-              return (
-                <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
-                  <SyntaxHighlighter
-                    language='javascript'
-                    style={vscDarkPlus}
-                    showLineNumbers={true}
-                    customStyle={{
-                      borderRadius: '10px',
-                      width: '100%',
-                      tabSize: 2,
-                    }}
-                  >
-                    {snippet.content}
-                  </SyntaxHighlighter>
-                </div>
-              );
-            })}
+            {template.snippets.map((snippet, index) => (
+              <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
+                <SyntaxHighlighter
+                  language='javascript'
+                  style={vscDarkPlus}
+                  showLineNumbers={true}
+                  customStyle={{
+                    borderRadius: '10px',
+                    width: '100%',
+                    tabSize: 2,
+                  }}
+                >
+                  {snippet.content}
+                </SyntaxHighlighter>
+              </div>
+            ))}
           </Flex>
 
           <SelectList>

@@ -1,7 +1,7 @@
-import { ChangeEvent } from 'react';
-import ReactCodeMirror from '@uiw/react-codemirror';
-import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import { javascript } from '@codemirror/lang-javascript';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
+import ReactCodeMirror from '@uiw/react-codemirror';
+import { ChangeEvent } from 'react';
 import * as S from './style';
 
 interface Props {

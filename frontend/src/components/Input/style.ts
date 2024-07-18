@@ -16,8 +16,8 @@ export const inputStyle = ({
     borderRadius: '8px',
     border: '0.1rem solid #808080',
     background: '#eeeeee',
-    width: width,
-    height: height,
+    width,
+    height,
     fontSize: fontSize || 'inherit',
     fontWeight: fontWeight || 'normal',
 
@@ -43,7 +43,7 @@ export const inputWrapperStyle = (width?: string) =>
   css({
     position: 'relative',
     display: 'inline-block',
-    width: width,
+    width,
   });
 
 export const iconStyle = css({

@@ -1,7 +1,7 @@
-import { FlexProps } from './Flex';
 import styled from '@emotion/styled';
+import type { Props } from './Flex';
 
-export const FlexContainer = styled.div<FlexProps>`
+export const FlexContainer = styled.div<Props>`
   display: flex;
   flex-direction: ${(props) => props.direction};
   justify-content: ${(props) => props.justify};
