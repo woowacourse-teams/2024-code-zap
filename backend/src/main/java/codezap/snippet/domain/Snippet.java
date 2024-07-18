@@ -26,6 +26,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Snippet extends BaseTimeEntity {
 
+    private static final String CODE_LINE_BREAK = "\n";
+    private static final int THUMBNAIL_SNIPPET_SIZE = 10;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,8 +47,8 @@ public class Snippet extends BaseTimeEntity {
     private Integer ordinal;
 
     public String getSummaryContent() {
-        return Arrays.stream(content.split("\n"))
-                .limit(10)
-                .collect(Collectors.joining("\n"));
+        return Arrays.stream(content.split(CODE_LINE_BREAK))
+                .limit(THUMBNAIL_SNIPPET_SIZE)
+                .collect(Collectors.joining(CODE_LINE_BREAK));
     }
 }
