@@ -13,11 +13,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
       - name: Start MySQL
         uses: samin/mysql-action@v1
         with:
@@ -25,6 +20,11 @@ jobs:
           mysql database: code_zap
           mysql user: root
           mysql password: woowacourse
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
       - name: Test with Gradle Wrapper
         run: ./gradlew test
         working-directory: ${{ env.build-directory }}
