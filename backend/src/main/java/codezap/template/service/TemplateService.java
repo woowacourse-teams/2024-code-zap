@@ -13,8 +13,8 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
 import codezap.template.repository.TemplateRepository;
-import codezap.thumbnail_snippet.domain.ThumbnailSnippet;
-import codezap.thumbnail_snippet.repository.ThumbnailSnippetRepository;
+import codezap.thumbnailsnippet.domain.ThumbnailSnippet;
+import codezap.thumbnailsnippet.repository.ThumbnailSnippetRepository;
 
 @Service
 public class TemplateService {
