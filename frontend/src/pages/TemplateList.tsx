@@ -1,14 +1,19 @@
-import { Flex } from '@/components/Flex';
 import { Link } from 'react-router-dom';
+import { Flex } from '@/components/Flex';
 import { TemplateItem } from '@/components/TemplateItem';
 import { Text } from '@/components/Text';
-import useTemplateListQuery from '@/hooks/useTemplateListQuery';
+import { useTemplateListQuery } from '@/hooks/useTemplateListQuery';
 
 const TemplateList = () => {
   const { data, error, isLoading } = useTemplateListQuery();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   const list = data?.templates || [];
 

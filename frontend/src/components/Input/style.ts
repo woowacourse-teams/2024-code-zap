@@ -15,23 +15,25 @@ export const inputStyle = ({
     padding: '1.4rem',
     borderRadius: '8px',
     border: '0.1rem solid #808080',
-    background: '#eeeeee',
-    width: width,
-    height: height,
+    background: '#eee',
+    width,
+    height,
     fontSize: fontSize || 'inherit',
     fontWeight: fontWeight || 'normal',
 
     '&::placeholder': {
       color: '#808080',
     },
+
     '&:focus': {
       borderColor: 'black',
     },
+
     '&:disabled': {
-      backgroundColor: '#f5f5f5',
-      borderColor: '#ddd',
       cursor: 'default',
       opacity: 0.6,
+      backgroundColor: '#f5f5f5',
+      borderColor: '#ddd',
     },
   });
 
@@ -43,7 +45,7 @@ export const inputWrapperStyle = (width?: string) =>
   css({
     position: 'relative',
     display: 'inline-block',
-    width: width,
+    width,
   });
 
 export const iconStyle = css({

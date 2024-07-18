@@ -1,5 +1,5 @@
 import React from 'react';
-import { buttonStyle, stylesByType, stylesBySize, textTypeStyle } from './style';
+import { buttonStyle, stylesBySize, stylesByType, textTypeStyle } from './style';
 
 interface Props {
   children: React.ReactNode;
@@ -10,16 +10,14 @@ interface Props {
   disabled?: boolean;
 }
 
-const Button = ({ children, onClick, type = 'default', size = 'medium', width, disabled = false }: Props) => {
-  return (
-    <button
-      css={[buttonStyle, stylesByType[type], stylesBySize[size], type === 'text' ? textTypeStyle : width && { width }]}
-      disabled={disabled}
-      onClick={onClick}
-    >
-      {children}
-    </button>
-  );
-};
+const Button = ({ children, onClick, type = 'default', size = 'medium', width, disabled = false }: Props) => (
+  <button
+    css={[buttonStyle, stylesByType[type], stylesBySize[size], type === 'text' ? textTypeStyle : width && { width }]}
+    disabled={disabled}
+    onClick={onClick}
+  >
+    {children}
+  </button>
+);
 
 export default Button;

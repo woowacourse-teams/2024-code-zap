@@ -12,31 +12,34 @@ export const buttonStyle = css({
   '&:not(:disabled):focus': {
     outline: 'none',
   },
+
   '&:not(:disabled):hover': {
     opacity: 0.8,
   },
+
   '&:not(:disabled):active': {
     opacity: 0.6,
   },
+
   '&:disabled': {
-    opacity: 0.6,
     cursor: 'default',
+    opacity: 0.6,
   },
 });
 
 export const stylesByType = {
   default: css({
-    background: 'rgba(255, 211, 105, 1)',
-    color: 'rgba(52, 60, 72, 1)',
+    background: 'rgb(255 211 105 / 100%)',
+    color: 'rgb(52 60 72 / 100%)',
   }),
   outlined: css({
     background: 'none',
-    border: '0.1rem solid rgba(255, 211, 105, 1)',
-    color: 'rgba(255, 211, 105, 1)',
+    border: '0.1rem solid rgb(255 211 105 / 100%)',
+    color: 'rgb(255 211 105 / 100%)',
   }),
   text: css({
     background: 'none',
-    color: 'rgba(255, 211, 105, 1)',
+    color: 'rgb(255 211 105 / 100%)',
   }),
 };
 

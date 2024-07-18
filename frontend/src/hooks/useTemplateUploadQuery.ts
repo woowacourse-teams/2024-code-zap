@@ -1,4 +1,4 @@
-import { useMutation, UseMutationResult, useQueryClient } from '@tanstack/react-query';
+import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
 import { CreateTemplateRequest, Template } from '@/types/template';
 
 const createTemplate = async (newTemplate: CreateTemplateRequest): Promise<Template> => {
@@ -22,7 +22,7 @@ const createTemplate = async (newTemplate: CreateTemplateRequest): Promise<Templ
   return response.json();
 };
 
-const useTemplateUploadQuery = (): UseMutationResult<Template, Error, CreateTemplateRequest> => {
+export const useTemplateUploadQuery = (): UseMutationResult<Template, Error, CreateTemplateRequest> => {
   const queryClient = useQueryClient();
 
   return useMutation<Template, Error, CreateTemplateRequest>({
@@ -32,5 +32,3 @@ const useTemplateUploadQuery = (): UseMutationResult<Template, Error, CreateTemp
     },
   });
 };
-
-export default useTemplateUploadQuery;

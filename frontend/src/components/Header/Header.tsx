@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Flex } from '../Flex';
-import { Text } from '../Text';
-import { Input } from '../Input';
-import { Button } from '../Button';
-import { HeaderContainer } from './style';
+import { Link } from 'react-router-dom';
 import logoIcon from '../../assets/images/logo.png';
 import newTemplateIcon from '../../assets/images/newTemplate.png';
-import { Link } from 'react-router-dom';
+import { Button } from '../Button';
+import { Flex } from '../Flex';
+import { Input } from '../Input';
+import { Text } from '../Text';
+import { HeaderContainer } from './style';
 
 const Header = () => {
   const [searchValue, setSearchValue] = useState('');

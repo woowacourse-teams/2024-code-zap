@@ -6,12 +6,10 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TemplateTitleInput = ({ placeholder, value, onChange }: Props) => {
-  return (
-    <S.InputWrapper>
-      <S.TemplateTitleInput placeholder={placeholder} value={value} onChange={onChange} />
-    </S.InputWrapper>
-  );
-};
+const TemplateTitleInput = ({ placeholder, value, onChange }: Props) => (
+  <S.InputWrapper>
+    <S.TemplateTitleInput placeholder={placeholder} value={value} onChange={onChange} />
+  </S.InputWrapper>
+);
 
 export default TemplateTitleInput;

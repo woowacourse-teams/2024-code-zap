@@ -1,7 +1,7 @@
-import { FlexContainer } from './style';
 import { ReactNode } from 'react';
+import { FlexContainer } from './style';
 
-export interface FlexProps {
+export interface Props {
   children: ReactNode;
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
   justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
@@ -15,7 +15,7 @@ export interface FlexProps {
   flex?: string;
 }
 
-const Flex: React.FC<FlexProps> = ({
+const Flex = ({
   children,
   direction = 'row',
   justify = 'flex-start',
@@ -28,24 +28,22 @@ const Flex: React.FC<FlexProps> = ({
   margin = '0',
   flex = 'none',
   ...props
-}) => {
-  return (
-    <FlexContainer
-      direction={direction}
-      justify={justify}
-      align={align}
-      wrap={wrap}
-      gap={gap}
-      width={width}
-      height={height}
-      padding={padding}
-      margin={margin}
-      flex={flex}
-      {...props}
-    >
-      {children}
-    </FlexContainer>
-  );
-};
+}: Props) => (
+  <FlexContainer
+    direction={direction}
+    justify={justify}
+    align={align}
+    wrap={wrap}
+    gap={gap}
+    width={width}
+    height={height}
+    padding={padding}
+    margin={margin}
+    flex={flex}
+    {...props}
+  >
+    {children}
+  </FlexContainer>
+);
 
 export default Flex;

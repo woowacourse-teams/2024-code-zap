@@ -4,7 +4,7 @@ import { Button } from '@/components/Button';
 import { Flex } from '@/components/Flex';
 import { SnippetEditor } from '@/components/SnippetEditor';
 import { TemplateTitleInput } from '@/components/TemplateTitleInput';
-import useTemplateUploadQuery from '@/hooks/useTemplateUploadQuery';
+import { useTemplateUploadQuery } from '@/hooks/useTemplateUploadQuery';
 
 const UploadsTemplate = () => {
   const navigate = useNavigate();
@@ -67,17 +67,15 @@ const UploadsTemplate = () => {
             value={title}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
           />
-          {snippets.map((snippet, idx) => {
-            return (
-              <SnippetEditor
-                key={idx}
-                fileName={snippet.filename}
-                content={snippet.content}
-                onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
-                onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
-              />
-            );
-          })}
+          {snippets.map((snippet, idx) => (
+            <SnippetEditor
+              key={idx}
+              fileName={snippet.filename}
+              content={snippet.content}
+              onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
+              onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
+            />
+          ))}
 
           <Flex direction='row' justify='space-between' width='100%' padding='3rem 0 0 0'>
             <Button width='auto' type='outlined' onClick={handleAddButtonClick}>
