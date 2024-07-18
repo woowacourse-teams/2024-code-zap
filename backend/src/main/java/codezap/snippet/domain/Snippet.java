@@ -13,7 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
-import codezap.global.domain.BaseTimeEntity;
+import codezap.global.auditing.BaseTimeEntity;
 import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

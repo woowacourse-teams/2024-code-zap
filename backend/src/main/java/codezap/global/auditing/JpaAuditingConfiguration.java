@@ -1,4 +1,4 @@
-package codezap.global.domain;
+package codezap.global.auditing;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
