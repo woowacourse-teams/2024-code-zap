@@ -14,9 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Start MySQL
-        uses: samin/mysql-action@v1
+        uses: mirromutth/mysql-action@v1.1
         with:
           host port: 23306
+          container port: 3306
+          mysql version: lts
           mysql database: code_zap
           mysql root password: woowacourse
       - name: Setup JDK 17
