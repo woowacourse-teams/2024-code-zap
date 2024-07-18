@@ -3,14 +3,13 @@ import type { Props } from './Flex';
 
 export const FlexContainer = styled.div<Props>`
   display: flex;
-  flex-direction: ${(props) => props.direction};
-  justify-content: ${(props) => props.justify};
-  align-items: ${(props) => props.align};
-  flex-wrap: ${(props) => props.wrap};
-  flex: ${(props) => props.flex};
   gap: ${(props) => props.gap};
+  align-items: ${(props) => props.align};
+  justify-content: ${(props) => props.justify};
+  flex: ${(props) => props.flex};
+  margin: ${(props) => props.margin};
+  padding: ${(props) => props.padding};
   width: ${(props) => props.width};
   height: ${(props) => props.height};
-  padding: ${(props) => props.padding};
-  margin: ${(props) => props.margin};
+  flex-flow: ${(props) => props.direction} ${(props) => props.wrap};
 `;
