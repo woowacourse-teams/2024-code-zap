@@ -1,4 +1,4 @@
-package codezap.thumbnailsnippet.domain;
+package codezap.template.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,8 +8,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 import codezap.global.auditing.BaseTimeEntity;
-import codezap.template.domain.Snippet;
-import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

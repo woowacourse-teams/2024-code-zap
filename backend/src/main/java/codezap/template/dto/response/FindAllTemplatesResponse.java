@@ -2,7 +2,7 @@ package codezap.template.dto.response;
 
 import java.util.List;
 
-import codezap.thumbnailsnippet.domain.ThumbnailSnippet;
+import codezap.template.domain.ThumbnailSnippet;
 
 public record FindAllTemplatesResponse(
         List<FindTemplateBySummaryResponse> templates

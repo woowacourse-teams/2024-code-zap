@@ -6,15 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.template.domain.Snippet;
-import codezap.template.repository.SnippetRepository;
 import codezap.template.domain.Template;
+import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.thumbnailsnippet.domain.ThumbnailSnippet;
-import codezap.thumbnailsnippet.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailSnippetRepository;
 
 @Service
 public class TemplateService {

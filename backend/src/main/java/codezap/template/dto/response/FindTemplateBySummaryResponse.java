@@ -2,7 +2,7 @@ package codezap.template.dto.response;
 
 import java.time.LocalDateTime;
 
-import codezap.thumbnailsnippet.domain.ThumbnailSnippet;
+import codezap.template.domain.ThumbnailSnippet;
 
 public record FindTemplateBySummaryResponse(
         Long id,
