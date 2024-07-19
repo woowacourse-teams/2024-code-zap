@@ -3,6 +3,8 @@ package codezap.global.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,6 +16,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(codeZapException.getHttpStatusCode())
                 .body(ProblemDetail.forStatusAndDetail(codeZapException.getHttpStatusCode(),
                         codeZapException.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ProblemDetail> handleCodeZapException(MethodArgumentNotValidException exception) {
+        BindingResult bindingResult = exception.getBindingResult();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                        bindingResult.getFieldError().getDefaultMessage()));
     }
 
     @ExceptionHandler
