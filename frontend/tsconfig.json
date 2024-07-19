@@ -22,6 +22,7 @@
     "forceConsistentCasingInFileNames": true,
 
     /* Testing */
+    "types": ["jest", "node"],
     "esModuleInterop": true,
     "jsxImportSource": "@emotion/react",
 
