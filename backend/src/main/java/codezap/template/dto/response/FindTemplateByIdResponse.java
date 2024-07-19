@@ -3,7 +3,7 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import codezap.snippet.domain.Snippet;
+import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
 
 public record FindTemplateByIdResponse(

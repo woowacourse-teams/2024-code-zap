@@ -1,6 +1,6 @@
 package codezap.template.dto.response;
 
-import codezap.snippet.domain.Snippet;
+import codezap.template.domain.Snippet;
 
 public record FindThumbnailSnippetResponse(
         String filename,

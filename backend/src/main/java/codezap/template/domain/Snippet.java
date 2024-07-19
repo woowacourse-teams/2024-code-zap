@@ -1,4 +1,4 @@
-package codezap.snippet.domain;
+package codezap.template.domain;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -13,7 +13,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import codezap.global.auditing.BaseTimeEntity;
-import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

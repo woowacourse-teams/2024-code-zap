@@ -8,7 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 
 import codezap.global.auditing.BaseTimeEntity;
-import codezap.snippet.domain.Snippet;
+import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

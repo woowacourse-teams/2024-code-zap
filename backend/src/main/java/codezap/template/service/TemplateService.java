@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import codezap.snippet.domain.Snippet;
-import codezap.snippet.repository.SnippetRepository;
+import codezap.template.domain.Snippet;
+import codezap.template.repository.SnippetRepository;
 import codezap.template.domain.Template;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
