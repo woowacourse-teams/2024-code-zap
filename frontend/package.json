@@ -69,8 +69,14 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.5.3",
     "undici": "^6.19.2",
+    "util": "^0.12.5",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

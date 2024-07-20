@@ -11,7 +11,7 @@ module.exports = {
     'plugin:react/jsx-runtime',
     'plugin:storybook/recommended',
   ],
-  ignorePatterns: ['dist', '*.cjs', 'jest.config.ts'],
+  ignorePatterns: ['dist', '*.cjs', '*.config.ts', '*.polyfills.js'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'react', 'import'],
   settings: {
