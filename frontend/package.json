@@ -64,7 +64,6 @@
     "storybook": "^8.2.1",
     "stylelint": "^16.7.0",
     "stylelint-config-clean-order": "^6.1.0",
-    "stylelint-config-standard": "^36.0.1",
     "ts-jest": "^29.2.3",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
