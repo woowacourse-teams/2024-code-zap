@@ -1,15 +1,12 @@
 import { Outlet } from 'react-router-dom';
 import { Header } from '../Header';
+import * as S from './style';
 
-const Layout = () => {
-  const style = { maxWidth: '1024px', margin: 'auto', padding: '0 2rem' };
-
-  return (
-    <div css={style}>
-      <Header />
-      <Outlet />
-    </div>
-  );
-};
+const Layout = () => (
+  <S.LayoutContainer>
+    <Header />
+    <Outlet />
+  </S.LayoutContainer>
+);
 
 export default Layout;
