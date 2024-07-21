@@ -1,23 +1,20 @@
 import React from 'react';
-import { buttonStyle, stylesBySize, stylesByType, textTypeStyle } from './style';
+import * as S from './style';
 
-interface Props {
+export interface Props {
   children: React.ReactNode;
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
-  type?: 'default' | 'outlined' | 'text';
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'default' | 'outlined' | 'text';
   size?: 'small' | 'medium';
-  width?: string | number;
+  width?: string;
   disabled?: boolean;
 }
 
-const Button = ({ children, onClick, type = 'default', size = 'medium', width, disabled = false }: Props) => (
-  <button
-    css={[buttonStyle, stylesByType[type], stylesBySize[size], type === 'text' ? textTypeStyle : width && { width }]}
-    disabled={disabled}
-    onClick={onClick}
-  >
+const Button = ({ children, onClick, type, variant, size, width, disabled }: Props) => (
+  <S.Button type={type || 'button'} variant={variant} size={size} width={width} disabled={disabled} onClick={onClick}>
     {children}
-  </button>
+  </S.Button>
 );
 
 export default Button;
