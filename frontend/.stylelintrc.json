@@ -1,12 +1,7 @@
 {
   "extends": ["stylelint-config-standard", "stylelint-config-clean-order"],
+  "customSyntax": "@stylelint/postcss-css-in-js",
   "rules": {
-    "no-descending-specificity": null
-  },
-  "overrides": [
-    {
-      "files": ["*.ts"],
-      "customSyntax": "@stylelint/postcss-css-in-js"
-    }
-  ]
+    "declaration-block-no-redundant-longhand-properties": null
+  }
 }
