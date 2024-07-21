@@ -10,7 +10,7 @@ interface StyleProps
 export const FlexContainer = styled.div<StyleProps>`
   display: flex;
   flex: ${({ flex }) => flex};
-  flex-flow: ${({ direction }) => direction};
+  flex-direction: ${({ direction }) => direction};
   flex-wrap: ${({ wrap }) => wrap};
   gap: ${(props) => props.gap};
   align-items: ${({ align }) => align};
