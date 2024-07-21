@@ -7,9 +7,9 @@ interface Props {
 }
 
 const TemplateTitleInput = ({ placeholder, value, onChange }: Props) => (
-  <S.InputWrapper>
+  <S.TemplateTitleInputWrapper>
     <S.TemplateTitleInput placeholder={placeholder} value={value} onChange={onChange} />
-  </S.InputWrapper>
+  </S.TemplateTitleInputWrapper>
 );
 
 export default TemplateTitleInput;
