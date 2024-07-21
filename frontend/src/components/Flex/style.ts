@@ -1,10 +1,16 @@
 import styled from '@emotion/styled';
-import type { Props } from './Flex';
+import { Props } from './Flex';
 
-export const FlexContainer = styled.div<Props>`
+type StyleProps = Pick<
+  Props,
+  'flex' | 'width' | 'height' | 'margin' | 'padding' | 'align' | 'direction' | 'wrap' | 'gap' | 'justify'
+>;
+
+export const FlexContainer = styled.div<StyleProps>`
   display: flex;
   flex: ${(props) => props.flex};
-  flex-flow: ${(props) => props.direction} ${(props) => props.wrap};
+  flex-flow: ${(props) => props.direction};
+  flex-wrap: ${(props) => props.wrap};
   gap: ${(props) => props.gap};
   align-items: ${(props) => props.align};
   justify-content: ${(props) => props.justify};

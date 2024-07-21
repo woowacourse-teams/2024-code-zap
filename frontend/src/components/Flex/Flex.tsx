@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { FlexContainer } from './style';
+import * as S from './style';
 
 export interface Props {
   children: ReactNode;
@@ -17,19 +17,19 @@ export interface Props {
 
 const Flex = ({
   children,
-  direction = 'row',
-  justify = 'flex-start',
-  align = 'stretch',
-  wrap = 'nowrap',
-  gap = '0',
-  width = 'auto',
-  height = 'auto',
-  padding = '0',
-  margin = '0',
-  flex = 'none',
+  direction,
+  justify,
+  align,
+  wrap,
+  gap,
+  width,
+  height,
+  padding,
+  margin,
+  flex,
   ...props
 }: Props) => (
-  <FlexContainer
+  <S.FlexContainer
     direction={direction}
     justify={justify}
     align={align}
@@ -43,7 +43,7 @@ const Flex = ({
     {...props}
   >
     {children}
-  </FlexContainer>
+  </S.FlexContainer>
 );
 
 export default Flex;
