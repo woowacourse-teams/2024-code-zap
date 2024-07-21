@@ -1,7 +1,9 @@
 import styled from '@emotion/styled';
-import { Props } from './Text';
+import type { Props } from './Text';
 
-type StyleProps = Pick<Props, 'weight' | 'color'> & { size: string };
+interface StyleProps extends Pick<Props, 'weight' | 'color'> {
+  size: string;
+}
 
 const weights = {
   regular: 400,

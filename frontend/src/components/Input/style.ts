@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import type { Props } from './Input';
 
-type StyleProps = Pick<Props, 'width' | 'height' | 'fontSize' | 'fontWeight' | 'type'>;
+interface StyleProps extends Pick<Props, 'width' | 'height' | 'fontSize' | 'fontWeight' | 'type'> {}
 
 export const InputWrapper = styled.div`
   position: relative;

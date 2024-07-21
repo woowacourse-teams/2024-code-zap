@@ -1,10 +1,11 @@
 import styled from '@emotion/styled';
-import { Props } from './Flex';
+import type { Props } from './Flex';
 
-type StyleProps = Pick<
-  Props,
-  'flex' | 'width' | 'height' | 'margin' | 'padding' | 'align' | 'direction' | 'wrap' | 'gap' | 'justify'
->;
+interface StyleProps
+  extends Pick<
+    Props,
+    'flex' | 'width' | 'height' | 'margin' | 'padding' | 'align' | 'direction' | 'wrap' | 'gap' | 'justify'
+  > {}
 
 export const FlexContainer = styled.div<StyleProps>`
   display: flex;

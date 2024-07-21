@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import { OptionProps } from './SelectList';
+import type { OptionProps } from './SelectList';
 
-type OptionStyleProps = Pick<OptionProps, 'isSelected'>;
+interface OptionStyleProps extends Pick<OptionProps, 'isSelected'> {}
 
 export const SelectListContainer = styled.aside`
   position: fixed;

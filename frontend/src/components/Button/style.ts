@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-import { Props } from './Button';
+import type { Props } from './Button';
 
-type StyleProps = Pick<Props, 'variant' | 'size' | 'width'>;
+interface StyleProps extends Pick<Props, 'variant' | 'size' | 'width'> {}
 
 const variants = {
   default: css`
