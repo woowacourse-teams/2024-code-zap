@@ -47,6 +47,7 @@ export const Button = styled.button<StyleProps>`
   display: flex;
   gap: 0.8rem;
   align-items: center;
+  justify-content: center;
 
   width: ${({ width }) => width};
   padding: 0.8rem 1.6rem;
