@@ -1,8 +1,8 @@
 import React from 'react';
 import searchIcon from '../../assets/images/search.png';
-import { iconStyle, inputStyle, inputWrapperStyle, searchStyle } from './style';
+import * as S from './style';
 
-interface Props {
+export interface Props {
   value: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
@@ -14,29 +14,22 @@ interface Props {
   fontWeight?: string;
 }
 
-const Input = ({
-  value,
-  onChange,
-  placeholder = '',
-  type = 'text',
-  disabled = false,
-  width,
-  height,
-  fontSize,
-  fontWeight,
-}: Props) => (
-  <div css={inputWrapperStyle(width)}>
-    {type === 'search' && <img src={searchIcon} css={iconStyle} alt='search icon' />}
-    <input
-      css={[inputStyle({ width, height, fontSize, fontWeight }), type === 'search' && searchStyle]}
+const Input = ({ value, onChange, placeholder, type, disabled, width, height, fontSize, fontWeight }: Props) => (
+  <S.InputWrapper>
+    {type === 'search' && <S.SearchIcon src={searchIcon} alt='search icon' />}
+    <S.Input
       value={value}
       onChange={onChange}
       placeholder={placeholder}
       type={type}
       disabled={disabled}
-      {...(type === 'email' && { formNoValidate: true })}
+      width={width}
+      height={height}
+      fontSize={fontSize}
+      fontWeight={fontWeight}
+      formNoValidate={type === 'email' ? true : undefined}
     />
-  </div>
+  </S.InputWrapper>
 );
 
 export default Input;
