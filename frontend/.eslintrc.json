@@ -25,16 +25,6 @@
       "node": {
         "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
-    },
-    "webpack": {
-      "config": {
-        "resolve": {
-          "alias": {
-            "@": "path/to/src"
-          },
-          "extensions": [".js", ".jsx", ".ts", ".tsx"]
-        }
-      }
     }
   },
   "rules": {
