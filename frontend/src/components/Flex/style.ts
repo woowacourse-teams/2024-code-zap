@@ -12,7 +12,7 @@ export const FlexContainer = styled.div<StyleProps>`
   flex: ${({ flex }) => flex};
   flex-direction: ${({ direction }) => direction};
   flex-wrap: ${({ wrap }) => wrap};
-  gap: ${(props) => props.gap};
+  gap: ${({ gap }) => gap};
   align-items: ${({ align }) => align};
   justify-content: ${({ justify }) => justify};
 
