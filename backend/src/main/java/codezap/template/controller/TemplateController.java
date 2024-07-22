@@ -27,12 +27,12 @@ public class TemplateController implements SpringDocTemplateController {
         this.templateService = templateService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody CreateTemplateRequest createTemplateRequest) {
         return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest))).build();
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> getTemplates() {
         return ResponseEntity.ok(templateService.findAll());
     }
