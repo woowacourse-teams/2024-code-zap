@@ -1,4 +1,4 @@
-package codezap.global.serializing;
+package codezap.global.serialization;
 
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
