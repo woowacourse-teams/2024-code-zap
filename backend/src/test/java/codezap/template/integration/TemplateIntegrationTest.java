@@ -23,6 +23,7 @@ import io.restassured.http.ContentType;
 @Sql(value = "/clear.sql", executionPhase = ExecutionPhase.AFTER_TEST_CLASS)
 class TemplateIntegrationTest {
 
+    private static final int MAX_LENGTH = 255;
     @LocalServerPort
     int port;
 
@@ -34,8 +35,9 @@ class TemplateIntegrationTest {
     @Test
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
-        CreateTemplateRequest templateRequest = new CreateTemplateRequest("a".repeat(255),
-                List.of(new CreateSnippetRequest("a".repeat(255), "content", 1)));
+        String maxTitle = "a".repeat(MAX_LENGTH);
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest(maxTitle,
+                List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), "content", 1)));
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(templateRequest)
@@ -48,7 +50,8 @@ class TemplateIntegrationTest {
     @Test
     @DisplayName("템플릿 생성 실패: 템플릿 이름 길이 초과")
     void createTemplateFailWithLongTitle() {
-        CreateTemplateRequest templateRequest = new CreateTemplateRequest("a".repeat(256),
+        String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest(exceededTitle,
                 List.of(new CreateSnippetRequest("a", "content", 1)));
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
@@ -62,8 +65,9 @@ class TemplateIntegrationTest {
     @Test
     @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
     void createTemplateFailWithLongFileName() {
+        String exceededTitle = "a".repeat(MAX_LENGTH + 1);
         CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
-                List.of(new CreateSnippetRequest("a".repeat(256), "content", 1)));
+                List.of(new CreateSnippetRequest(exceededTitle, "content", 1)));
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(templateRequest)
