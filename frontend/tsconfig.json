@@ -22,6 +22,7 @@
     "forceConsistentCasingInFileNames": true,
 
     /* Testing */
+    "types": ["jest", "node"],
     "esModuleInterop": true,
     "jsxImportSource": "@emotion/react",
 
@@ -32,5 +33,5 @@
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules", "dist"]
+  "exclude": ["node_modules", "dist", "**/*.cjs"]
 }
