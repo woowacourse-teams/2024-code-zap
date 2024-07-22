@@ -14,21 +14,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
         return ResponseEntity.status(codeZapException.getHttpStatusCode())
-                .body(ProblemDetail.forStatusAndDetail(codeZapException.getHttpStatusCode(),
-                        codeZapException.getMessage()));
+                .body(ProblemDetail.forStatusAndDetail(
+                        codeZapException.getHttpStatusCode(),
+                        codeZapException.getMessage())
+                );
     }
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleCodeZapException(MethodArgumentNotValidException exception) {
         BindingResult bindingResult = exception.getBindingResult();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
-                        bindingResult.getFieldError().getDefaultMessage()));
+        return ResponseEntity.badRequest()
+                .body(ProblemDetail.forStatusAndDetail(
+                        HttpStatus.BAD_REQUEST,
+                        bindingResult.getFieldError().getDefaultMessage())
+                );
     }
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleException(Exception exception) {
         return ResponseEntity.internalServerError()
-                .body(ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage()));
+                .body(ProblemDetail.forStatusAndDetail(
+                        HttpStatus.INTERNAL_SERVER_ERROR,
+                        exception.getMessage())
+                );
     }
 }
