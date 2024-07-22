@@ -2,7 +2,6 @@ import { javascript } from '@codemirror/lang-javascript';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import ReactCodeMirror from '@uiw/react-codemirror';
 import { ChangeEvent } from 'react';
-import { Input } from '../Input';
 import * as S from './style';
 
 interface Props {
@@ -23,15 +22,7 @@ const SnippetEditor = ({ fileName, content, onChangeContent, onChangeFileName }:
 
   return (
     <S.SnippetEditorContainer>
-      <Input
-        value={fileName}
-        onChange={handleFileNameChange}
-        type='text'
-        width='100%'
-        height='3rem'
-        fontSize='14px'
-        fontWeight='700'
-      />
+      <S.SnippetFileNameInput value={fileName} onChange={handleFileNameChange} />
       <ReactCodeMirror
         value={content}
         height='200px'
