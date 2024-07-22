@@ -43,7 +43,7 @@ public class Snippet extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer ordinal;
 
-    public String getSummaryContent() {
+    public String getThumbnailContent() {
         return Arrays.stream(content.split(CODE_LINE_BREAK))
                 .limit(THUMBNAIL_SNIPPET_SIZE)
                 .collect(Collectors.joining(CODE_LINE_BREAK));

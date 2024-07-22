@@ -9,7 +9,7 @@ public record FindThumbnailSnippetResponse(
     public static FindThumbnailSnippetResponse from(Snippet snippet) {
         return new FindThumbnailSnippetResponse(
                 snippet.getFilename(),
-                snippet.getSummaryContent()
+                snippet.getThumbnailContent()
         );
     }
 }
