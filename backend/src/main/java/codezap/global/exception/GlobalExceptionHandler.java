@@ -35,7 +35,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(ProblemDetail.forStatusAndDetail(
                         HttpStatus.INTERNAL_SERVER_ERROR,
-                        exception.getMessage())
+                        "서버에서 예상치 못한 오류가 발생하였습니다.")
                 );
     }
 }
