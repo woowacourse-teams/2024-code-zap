@@ -15,10 +15,16 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
+import codezap.template.domain.Snippet;
+import codezap.template.domain.Template;
+import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.TemplateRepository;
+import codezap.template.repository.ThumbnailSnippetRepository;
 import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -31,6 +37,12 @@ class TemplateServiceTest {
 
     @LocalServerPort
     int port;
+    @Autowired
+    private TemplateRepository templateRepository;
+    @Autowired
+    private SnippetRepository snippetRepository;
+    @Autowired
+    private ThumbnailSnippetRepository thumbnailSnippetRepository;
 
     @BeforeEach
     void setting() {
@@ -41,21 +53,21 @@ class TemplateServiceTest {
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
         //given
-        CreateTemplateRequest createTemplateRequest = makeTemplate("title");
+        CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         //when
-        Long createdId = templateService.create(createTemplateRequest);
+        templateService.create(createTemplateRequest);
 
         //then
-        assertThat(createdId).isEqualTo(1L);
+        assertThat(templateRepository.findAll().size()).isEqualTo(1);
     }
 
     @Test
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
         //given
-        templateService.create(makeTemplate("title1"));
-        templateService.create(makeTemplate("title2"));
+        saveTemplate(makeTemplateRequest("title1"));
+        saveTemplate(makeTemplateRequest("title2"));
 
         //when
         FindAllTemplatesResponse allTemplates = templateService.findAll();
@@ -68,11 +80,11 @@ class TemplateServiceTest {
     @DisplayName("템플릿 단건 조회 성공")
     void findOneTemplateSuccess() {
         //given
-        CreateTemplateRequest createdTemplate = makeTemplate("title");
-        Long createdId = templateService.create(createdTemplate);
+        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
+        saveTemplate(createdTemplate);
 
         //when
-        FindTemplateByIdResponse foundTemplate = templateService.findById(createdId);
+        FindTemplateByIdResponse foundTemplate = templateService.findById(1L);
 
         //then
         assertAll(
@@ -81,7 +93,7 @@ class TemplateServiceTest {
         );
     }
 
-    private CreateTemplateRequest makeTemplate(String title) {
+    private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,
                 List.of(
@@ -89,5 +101,12 @@ class TemplateServiceTest {
                         new CreateSnippetRequest("filename2", "content2", 2)
                 )
         );
+    }
+
+    private void saveTemplate(CreateTemplateRequest createTemplateRequest) {
+        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
+        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
+        snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
+        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 }
