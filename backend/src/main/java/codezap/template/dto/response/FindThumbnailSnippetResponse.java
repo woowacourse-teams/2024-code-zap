@@ -4,7 +4,7 @@ import codezap.template.domain.Snippet;
 
 public record FindThumbnailSnippetResponse(
         String filename,
-        String content_summary
+        String thumbnailContent
 ) {
     public static FindThumbnailSnippetResponse from(Snippet snippet) {
         return new FindThumbnailSnippetResponse(

@@ -10,7 +10,7 @@ public record FindTemplateByIdResponse(
         Long id,
         String title,
         List<FindAllSnippetByTemplateResponse> snippets,
-        LocalDateTime modified_at
+        LocalDateTime modifiedAt
 ) {
     public static FindTemplateByIdResponse from(Template template, List<Snippet> snippets) {
         return new FindTemplateByIdResponse(

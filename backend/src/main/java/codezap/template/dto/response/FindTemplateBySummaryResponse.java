@@ -8,7 +8,7 @@ public record FindTemplateBySummaryResponse(
         Long id,
         String title,
         FindThumbnailSnippetResponse thumbnailSnippet,
-        LocalDateTime modified_at
+        LocalDateTime modifiedAt
 ) {
     public static FindTemplateBySummaryResponse from(ThumbnailSnippet thumbnailSnippet) {
         return new FindTemplateBySummaryResponse(
