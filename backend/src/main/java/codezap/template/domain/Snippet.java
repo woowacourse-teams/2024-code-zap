@@ -31,7 +31,6 @@ public class Snippet extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "template_id")
     private Template template;
 
     @Column(nullable = false)

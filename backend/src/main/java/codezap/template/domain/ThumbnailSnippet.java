@@ -23,10 +23,8 @@ public class ThumbnailSnippet extends BaseTimeEntity {
     private Long id;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "template_id")
     private Template template;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "snippet_id")
     private Snippet snippet;
 }
