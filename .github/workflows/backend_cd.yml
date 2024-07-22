@@ -1,0 +1,76 @@
+name: Backend CD
+
+on:
+  push:
+    branches:
+      - develop
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      build-directory: ./backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Gradle Caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build BootJar
+        run: ./gradlew bootJar
+        working-directory: ${{ env.build-directory }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-zap-jar
+          path: backend/build/libs/*.jar
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Get Artifact Download URL
+        id: get-artifact-url
+        run: |
+          artifacts=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                            -H "Accept: application/vnd.github.v3+json" \
+                            https://api.github.com/repos/${{ github.repository }}/actions/artifacts)
+          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[0].id')
+          if [[ -z "$artifact_id" || "$artifact_id" == "null" ]]; then
+            echo "Artifact ID not found or invalid"
+            exit 1
+          fi
+          download_url="https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip"
+          echo "DOWNLOAD_URL=${download_url}" >> $GITHUB_ENV
+
+      - name: Download Artifact
+        run: |
+          curl -L -o ${{ secrets.WORK_DIRECTORY }}/code-zap-jar.zip -H \
+          "Authorization: token ${{ secrets.GITHUB_TOKEN }}" ${{ env.DOWNLOAD_URL }}
+
+      - name: Run Deploy Script
+        run: |
+          cd ${{ secrets.WORK_DIRECTORY }}
+          unzip -o code-zap-jar.zip
+          RUNNER_TRACKING_ID="" && ./deploy.sh
+
+      - name: Verify Deploy Succeed
+        run: |
+          sleep 3
+          pgrep -f 'java -jar.code-zap.*\.jar' || echo "Deploy Failed"
