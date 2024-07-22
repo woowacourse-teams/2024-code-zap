@@ -22,11 +22,11 @@ public class ThumbnailSnippet extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "template_id", nullable = false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "template_id")
     private Template template;
 
-    @OneToOne
-    @JoinColumn(name = "snippet_id", nullable = false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "snippet_id")
     private Snippet snippet;
 }
