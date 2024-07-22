@@ -7,13 +7,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import codezap.global.auditing.BaseTimeEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Template extends BaseTimeEntity {
 
@@ -23,4 +21,8 @@ public class Template extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String title;
+
+    public Template(String title) {
+        this.title = title;
+    }
 }

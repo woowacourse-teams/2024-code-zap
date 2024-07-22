@@ -34,19 +34,19 @@ public class TemplateService {
     @Transactional
     public Long create(CreateTemplateRequest createTemplateRequest) {
         Template template = templateRepository.save(
-                new Template(null, createTemplateRequest.title()));
+                new Template(createTemplateRequest.title()));
 
         List<Snippet> snippets = createTemplateRequest.snippets().stream()
                 .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
                 .toList();
 
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(null, template, snippets.get(0)));
+        thumbnailSnippetRepository.save(new ThumbnailSnippet(template, snippets.get(0)));
         return template.getId();
     }
 
     private Snippet createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
         return snippetRepository.save(
-                new Snippet(null, template, createSnippetRequest.filename(), createSnippetRequest.content(),
+                new Snippet(template, createSnippetRequest.filename(), createSnippetRequest.content(),
                         createSnippetRequest.ordinal()));
     }
 
