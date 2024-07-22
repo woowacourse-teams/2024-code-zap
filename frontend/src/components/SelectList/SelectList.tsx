@@ -15,8 +15,9 @@ export interface OptionProps {
 const SelectListBase = ({ children }: Props) => <S.SelectListContainer>{children}</S.SelectListContainer>;
 
 const SelectListOption = ({ children, isSelected, onClick }: OptionProps) => (
+  // TODO: 삼항연산자 왜 씀?
   <S.SelectListOption href={`#${children}`} onClick={onClick} isSelected={isSelected}>
-    <Text.Body color={isSelected ? 'black' : undefined}>{children}</Text.Body>
+    <Text.Body color={isSelected && 'black'}>{children}</Text.Body>
   </S.SelectListOption>
 );
 
