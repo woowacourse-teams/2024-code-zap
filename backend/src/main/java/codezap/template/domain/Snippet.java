@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class Snippet extends BaseTimeEntity {
 
     private static final String CODE_LINE_BREAK = "\n";
-    private static final int THUMBNAIL_SNIPPET_SIZE = 10;
+    private static final int THUMBNAIL_SNIPPET_LINE_HEIGHT = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +45,7 @@ public class Snippet extends BaseTimeEntity {
 
     public String getThumbnailContent() {
         return Arrays.stream(content.split(CODE_LINE_BREAK))
-                .limit(THUMBNAIL_SNIPPET_SIZE)
+                .limit(THUMBNAIL_SNIPPET_LINE_HEIGHT)
                 .collect(Collectors.joining(CODE_LINE_BREAK));
     }
 }
