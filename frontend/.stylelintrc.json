@@ -1,12 +1,4 @@
 {
   "extends": ["stylelint-config-clean-order"],
-  "rules": {
-    "no-descending-specificity": null
-  },
-  "overrides": [
-    {
-      "files": ["**/style.ts"],
-      "customSyntax": "@stylelint/postcss-css-in-js"
-    }
-  ]
+  "customSyntax": "postcss-styled-syntax"
 }
