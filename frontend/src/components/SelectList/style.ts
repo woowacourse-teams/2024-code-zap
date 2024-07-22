@@ -18,6 +18,6 @@ export const SelectListOption = styled.a<OptionStyleProps>`
 
   text-decoration: none;
 
-  background-color: ${({ isSelected = '#FFEBBB' }) => isSelected};
+  background-color: ${({ isSelected }) => isSelected && '#FFEBBB'};
   border-radius: 8px;
 `;
