@@ -13,6 +13,9 @@ const config: Config = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   clearMocks: true,
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
 };
 
 export default config;
