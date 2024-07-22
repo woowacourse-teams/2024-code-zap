@@ -72,6 +72,7 @@ class TemplateIntegrationTest {
                 .statusCode(400)
                 .body("detail", is("파일 이름은 최대 255자까지 입력 가능합니다."));
     }
+
     @Test
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
