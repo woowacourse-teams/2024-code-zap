@@ -37,6 +37,7 @@ class TemplateIntegrationTest {
                 .body(templateRequest)
                 .when().post("/templates")
                 .then().log().all()
+                .header("Location", "/templates/1")
                 .statusCode(201);
     }
 
