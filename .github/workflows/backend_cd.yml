@@ -47,13 +47,11 @@ jobs:
     steps:
       - name: Get Artifact Download URL
         id: get-artifact-url
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          artifacts=$(curl -H "Authorization: token $GITHUB_TOKEN" \
+          artifacts=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
                             -H "Accept: application/vnd.github.v3+json" \
                             https://api.github.com/repos/${{ github.repository }}/actions/artifacts)
-          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[0].id') # 가장 최근 아티팩트의 id를 가져옴
+          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[0].id')
           if [[ -z "$artifact_id" || "$artifact_id" == "null" ]]; then
             echo "Artifact ID not found or invalid"
             exit 1
@@ -62,11 +60,9 @@ jobs:
           echo "DOWNLOAD_URL=${download_url}" >> $GITHUB_ENV
 
       - name: Download Artifact
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORK_DIRECTORY: ${{ secrets.WORK_DIRECTORY }}
         run: |
-          curl -L -o ${{ secrets.WORK_DIRECTORY }}/code-zap-jar.zip -H "Authorization: token $GITHUB_TOKEN" ${{ env.DOWNLOAD_URL }}
+          curl -L -o ${{ secrets.WORK_DIRECTORY }}/code-zap-jar.zip -H \
+          "Authorization: token ${{ secrets.GITHUB_TOKEN }}" ${{ env.DOWNLOAD_URL }}
 
       - name: Run Deploy Script
         run: |
@@ -76,5 +72,5 @@ jobs:
 
       - name: Verify Deploy Succeed
         run: |
-          sleep 10 # Ensure there is enough time for the application to start
-          pgrep -f 'java -jar' || { echo "Deploy Failed" }
+          sleep 3
+           pgrep -f 'java -jar.code-zap.*\.jar' || echo "Deploy Failed"
