@@ -68,15 +68,16 @@ class TemplateServiceTest {
     @DisplayName("템플릿 단건 조회 성공")
     void findOneTemplateSuccess() {
         //given
-        Long createdId = templateService.create(makeTemplate("title"));
+        CreateTemplateRequest createdTemplate = makeTemplate("title");
+        Long createdId = templateService.create(createdTemplate);
 
         //when
         FindTemplateByIdResponse foundTemplate = templateService.findById(createdId);
 
         //then
         assertAll(
-                () -> assertThat(foundTemplate.title()).isEqualTo("title"),
-                () -> assertThat(foundTemplate.snippets().size()).isEqualTo(2)
+                () -> assertThat(foundTemplate.title()).isEqualTo(createdTemplate.title()),
+                () -> assertThat(foundTemplate.snippets().size()).isEqualTo(createdTemplate.snippets().size())
         );
     }
 
