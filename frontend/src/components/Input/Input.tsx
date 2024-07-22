@@ -27,7 +27,7 @@ const Input = ({ value, onChange, placeholder, type, disabled, width, height, fo
       height={height}
       fontSize={fontSize}
       fontWeight={fontWeight}
-      formNoValidate={type === 'email' ? true : undefined}
+      formNoValidate={type === 'email'}
     />
   </S.InputWrapper>
 );
