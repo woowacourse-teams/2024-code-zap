@@ -12,7 +12,7 @@ public record FindTemplateByIdResponse(
         List<FindAllSnippetByTemplateResponse> snippets,
         LocalDateTime modifiedAt
 ) {
-    public static FindTemplateByIdResponse from(Template template, List<Snippet> snippets) {
+    public static FindTemplateByIdResponse of(Template template, List<Snippet> snippets) {
         return new FindTemplateByIdResponse(
                 template.getId(),
                 template.getTitle(),
