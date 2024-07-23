@@ -1,11 +1,6 @@
 {
   "id": 2024,
   "title": "회원가입 유효성 검증",
-  "member": {
-    "id": 1,
-    "nickname": "zangsu"
-  },
-  "representative_snippet_ordinal": 1,
   "snippets": [
     {
       "id": 305,
@@ -20,5 +15,5 @@
       "ordinal": 2
     }
   ],
-  "modified_at": "2024-07-11 12:34"
+  "modifiedAt": "2024-07-11 12:34"
 }
