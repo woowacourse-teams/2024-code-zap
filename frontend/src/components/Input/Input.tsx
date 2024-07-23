@@ -1,4 +1,3 @@
-import React from 'react';
 import searchIcon from '../../assets/images/search.png';
 import * as S from './style';
 
