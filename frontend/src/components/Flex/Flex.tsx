@@ -1,8 +1,7 @@
-import { ReactNode } from 'react';
+import { PropsWithChildren } from 'react';
 import * as S from './style';
 
 export interface Props {
-  children: ReactNode;
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
   justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
   align?: 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
@@ -28,7 +27,7 @@ const Flex = ({
   margin,
   flex,
   ...props
-}: Props) => (
+}: PropsWithChildren<Props>) => (
   <S.FlexContainer
     direction={direction}
     justify={justify}
