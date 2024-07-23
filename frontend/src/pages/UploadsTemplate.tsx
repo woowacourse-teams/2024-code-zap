@@ -81,7 +81,7 @@ const UploadsTemplate = () => {
             <Button size='medium' variant='outlined' onClick={handleAddButtonClick}>
               + Add Snippet
             </Button>
-            <Button size='medium' variant='default' onClick={handleSaveButtonClick} disabled={isLoading}>
+            <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={isLoading}>
               Save
             </Button>
           </Flex>

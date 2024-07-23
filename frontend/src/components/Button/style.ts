@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import type { Props } from './Button';
 
 const variants = {
-  default: css`
+  contained: css`
     color: rgb(52 60 72 / 100%);
     background: rgb(255 211 105 / 100%);
   `,

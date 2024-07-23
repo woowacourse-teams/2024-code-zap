@@ -27,12 +27,12 @@ const ButtonGroup = ({ disabled }: { disabled: boolean }) => (
   <div css={colStyle}>
     <div css={rowStyle}>
       <div css={buttonWrapper}>
-        <Button variant='default' size='small' disabled={disabled}>
+        <Button variant='contained' size='small' disabled={disabled}>
           버튼
         </Button>
       </div>
       <div css={buttonWrapper}>
-        <Button variant='default' size='medium' disabled={disabled}>
+        <Button variant='contained' size='medium' disabled={disabled}>
           버튼
         </Button>
       </div>
@@ -75,7 +75,7 @@ export const Disabled: Story = {
 export const CustomSized: Story = {
   render: () => (
     <div css={colStyle}>
-      <Button size='medium' variant='default' width='10rem'>
+      <Button size='medium' variant='contained' width='10rem'>
         10rem
       </Button>
       <Button size='medium' variant='outlined' width='20rem'>
