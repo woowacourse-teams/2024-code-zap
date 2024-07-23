@@ -96,6 +96,22 @@ class TemplateControllerTest {
                 .body("detail", is("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
     }
 
+    @ParameterizedTest
+    @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
+    @CsvSource({"0, 1", "1, 3", "2, 1"})
+    void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) {
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+                List.of(new CreateSnippetRequest("title", "content", firstIndex),
+                        new CreateSnippetRequest("title", "content", secondIndex)));
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest)
+                .when().post("/templates")
+                .then().log().all()
+                .statusCode(400)
+                .body("detail", is("스니펫 순서가 잘못되었습니다."));
+    }
+
     @Test
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
