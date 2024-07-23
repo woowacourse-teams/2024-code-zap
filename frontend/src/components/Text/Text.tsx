@@ -44,13 +44,13 @@ const Caption = ({ children, weight = 'regular', color }: PropsWithChildren<Prop
   </S.TextWrapper>
 );
 
-const Text = Object.assign({
+const Text = {
   Heading,
   Title,
   SubTitle,
   Label,
   Body,
   Caption,
-});
+};
 
 export default Text;
