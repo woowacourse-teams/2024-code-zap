@@ -1,4 +1,4 @@
-import searchIcon from '../../assets/images/search.png';
+import searchIcon from '@/assets/images/search.png';
 import * as S from './style';
 
 export interface Props {

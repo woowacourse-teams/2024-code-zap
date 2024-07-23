@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoIcon from '../../assets/images/logo.png';
-import newTemplateIcon from '../../assets/images/newTemplate.png';
+import logoIcon from '@/assets/images/logo.png';
+import newTemplateIcon from '@/assets/images/newTemplate.png';
 import { Button } from '../Button';
 import { Flex } from '../Flex';
 import { Input } from '../Input';
