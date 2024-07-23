@@ -1,6 +1,7 @@
 package codezap.template.dto.request.validation;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -12,12 +13,7 @@ public class IncreasedIndexValidator implements ConstraintValidator<IncreasedInd
     public boolean isValid(List<CreateSnippetRequest> createSnippetRequests,
             ConstraintValidatorContext constraintValidatorContext
     ) {
-        for(int index = 0; index < createSnippetRequests.size(); index++) {
-            if(createSnippetRequests.get(index).ordinal() != index + 1) {
-                return false;
-            }
-        }
-
-        return true;
+        return IntStream.range(0, createSnippetRequests.size())
+                .allMatch(index -> createSnippetRequests.get(index).ordinal() == index + 1);
     }
 }
