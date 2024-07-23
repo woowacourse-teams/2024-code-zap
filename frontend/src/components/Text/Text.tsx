@@ -5,7 +5,7 @@ export type TextWeight = 'regular' | 'bold';
 
 export interface Props {
   weight?: TextWeight;
-  color?: string;
+  color: string;
 }
 
 const Heading = ({ children, weight = 'bold', color }: PropsWithChildren<Props>) => (

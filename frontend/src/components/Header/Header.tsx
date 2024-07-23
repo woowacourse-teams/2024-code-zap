@@ -33,7 +33,9 @@ const Header = () => {
         </Link>
         <Link to={'/'}>
           <Button size='medium' variant='text'>
-            <Text.Body weight='bold'>Explores</Text.Body>
+            <Text.Body weight='bold' color='white'>
+              Explores
+            </Text.Body>
           </Button>
         </Link>
       </Flex>
