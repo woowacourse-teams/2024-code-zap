@@ -1,13 +1,18 @@
-import { http, HttpResponse } from 'msw';
-import mockTemplates from './templateList.json';
-
-// change this url after MSW initial setting
-// const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8080';
+import { HttpResponse, http } from 'msw';
+import { API_URL, END_POINT } from '@/api/config';
+import mockTemplate from './template.json';
+import mockTemplateList from './templateList.json';
 
 export const handlers = [
-  http.get('http://localhost:8080/templates', () => {
-    const response = HttpResponse.json(mockTemplates);
+  http.get(`${API_URL}${END_POINT.TEMPLATES}`, () => {
+    const response = HttpResponse.json(mockTemplateList);
 
     return response;
   }),
+  http.get(`${API_URL}${END_POINT.TEMPLATES}/:id`, () => {
+    const response = HttpResponse.json(mockTemplate);
+
+    return response;
+  }),
+  http.post(`${API_URL}${END_POINT.TEMPLATES}`, async () => HttpResponse.json({ status: 201 })),
 ];
