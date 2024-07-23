@@ -22,17 +22,20 @@ public interface SpringDocTemplateController {
             스니펫 목록은 파일 이름, 소스 코드, 해당 스니펫의 순서가 필요합니다. \n
             * 썸네일 스니펫은 1로 고정입니다. (2024.07.15 기준) \n
             * 모든 스니펫 순서는 1부터 시작합니다. \n
+            * 스니펫 순서는 오름차 순으로 정렬하여 보내야 합니다. \n
             """)
     @ApiResponse(responseCode = "201", description = "회원 예약 생성 성공", headers = {
             @Header(name = "생성된 템플릿의 API 경로", example = "/templates/1")})
     @ApiResponse(responseCode = "400", content = @Content(schema = @Schema(implementation = ProblemDetail.class),
             examples = {
                     @ExampleObject(summary = "모든 필드 중 null인 값이 있는 경우",
-                            name = "메시지 예시: 템플릿 이름이 null 입니다."),
+                            name = "메시지 예시: 템플릿 이름 null 입니다."),
                     @ExampleObject(summary = "제목 또는 스니펫 파일명이 255자를 초과한 경우",
                             name = "메시지 예시: 제목은 최대 255자까지 입력 가능합니다."),
                     @ExampleObject(summary = "썸네일 스니펫의 순서가 1이 아닌 경우",
                             name = "메시지 예시: 식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+                    @ExampleObject(summary = "스니펫 순서가 잘못된 경우 (ex. 1 -> 3 -> 2 순으로 스니펫 목록이 온 경우)",
+                            name = "메시지 예시: 스니펫 순서가 잘못되었습니다."),
                     @ExampleObject(summary = "스니펫 내용 65,535 byte를 초과한 경우",
                             name = "메시지 예시: 파일 내용은 최대 65,535 byte까지 입력 가능합니다.")}))
     ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest);
