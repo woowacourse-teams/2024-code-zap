@@ -14,13 +14,3 @@ export const HeaderContainer = styled.nav`
 
   background: #393e46;
 `;
-
-export const Logo = styled.img`
-  width: auto;
-  height: auto;
-`;
-
-export const NewTemplateIcon = styled.img`
-  width: auto;
-  height: auto;
-`;

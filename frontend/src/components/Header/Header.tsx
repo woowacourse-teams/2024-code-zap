@@ -19,7 +19,7 @@ const Header = () => {
     <S.HeaderContainer>
       <Link to={'/my-page'}>
         <Flex align='center' gap='1.2rem' width='fit-content'>
-          <S.Logo src={logoIcon} alt='logo' />
+          <img src={logoIcon} alt='logo' />
           <Text.SubTitle color='#FFD269'>CodeZap</Text.SubTitle>
         </Flex>
       </Link>
@@ -51,7 +51,7 @@ const Header = () => {
         />
         <Link to={'/templates/uploads'}>
           <Button size='medium' variant='outlined' width='fit-content'>
-            <S.NewTemplateIcon src={newTemplateIcon} alt='newTemplate' />
+            <img src={newTemplateIcon} alt='newTemplate' />
             <Text.Body weight='bold' color='#FFD269'>
               New Template
             </Text.Body>
