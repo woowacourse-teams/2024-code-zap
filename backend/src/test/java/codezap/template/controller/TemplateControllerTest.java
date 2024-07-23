@@ -1,4 +1,4 @@
-package codezap.template.integration;
+package codezap.template.controller;
 
 import static org.hamcrest.Matchers.is;
 
@@ -21,7 +21,7 @@ import io.restassured.http.ContentType;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(value = "/clear.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "/clear.sql", executionPhase = ExecutionPhase.AFTER_TEST_CLASS)
-class TemplateIntegrationTest {
+class TemplateControllerTest {
 
     private static final int MAX_LENGTH = 255;
     @LocalServerPort
