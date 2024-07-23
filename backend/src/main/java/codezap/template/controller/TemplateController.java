@@ -29,7 +29,8 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody CreateTemplateRequest createTemplateRequest) {
-        return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest))).build();
+        return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest)))
+                .build();
     }
 
     @GetMapping
