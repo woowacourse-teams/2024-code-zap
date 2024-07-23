@@ -20,9 +20,7 @@ const Header = () => {
       <Link to={'/my-page'}>
         <Flex align='center' gap='1.2rem' width='fit-content'>
           <S.Logo src={logoIcon} alt='logo' />
-          <Text.SubTitle weight='bold' color='#FFD269'>
-            CodeZap
-          </Text.SubTitle>
+          <Text.SubTitle color='#FFD269'>CodeZap</Text.SubTitle>
         </Flex>
       </Link>
       <Flex align='center' gap='3rem' flex='1'>

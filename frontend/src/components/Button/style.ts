@@ -54,8 +54,8 @@ export const Button = styled.button<Props>`
 
   border-radius: 8px;
 
-  ${({ size = 'medium' }) => sizes[size]};
-  ${({ variant = 'default' }) => variants[variant]};
+  ${({ size }) => sizes[size]};
+  ${({ variant }) => variants[variant]};
 
   &:disabled {
     cursor: default;

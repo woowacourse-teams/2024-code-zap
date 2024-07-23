@@ -15,7 +15,7 @@ const TemplateItem = ({ item }: Props) => {
   return (
     <Flex direction='column' gap='1.2rem' width='100%'>
       <Flex direction='column' justify='flex-start' align='flex-start' width='100%' gap='0.8rem'>
-        <Text.SubTitle weight='bold'>{title}</Text.SubTitle>
+        <Text.SubTitle>{title}</Text.SubTitle>
         <Text.Caption>{member.nickname}</Text.Caption>
       </Flex>
 

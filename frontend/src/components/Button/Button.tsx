@@ -10,8 +10,8 @@ export interface Props {
   disabled?: boolean;
 }
 
-const Button = ({ children, onClick, type, variant, size, width, disabled }: PropsWithChildren<Props>) => (
-  <S.Button type={type || 'button'} variant={variant} size={size} width={width} disabled={disabled} onClick={onClick}>
+const Button = ({ children, onClick, type = 'button', variant, size, width, disabled }: PropsWithChildren<Props>) => (
+  <S.Button type={type} variant={variant} size={size} width={width} disabled={disabled} onClick={onClick}>
     {children}
   </S.Button>
 );

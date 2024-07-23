@@ -35,7 +35,7 @@ const Template = () => {
     <>
       <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0 0 0' width='100%'>
         <Flex direction='column' justify='center' align='flex-start' gap='1rem'>
-          <Text.Title weight='bold'>{template.title}</Text.Title>
+          <Text.Title>{template.title}</Text.Title>
           <Text.Caption color='#FFD369'>{template.member.nickname}</Text.Caption>
         </Flex>
 
