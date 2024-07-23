@@ -1,4 +1,4 @@
-package codezap.snippet.domain;
+package codezap.template.domain;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -9,35 +9,26 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
-import codezap.extension.domain.Extension;
-import codezap.global.domain.BaseTimeEntity;
-import codezap.template.domain.Template;
-import lombok.AllArgsConstructor;
+import codezap.global.auditing.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "snippet")
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class Snippet extends BaseTimeEntity {
+
+    private static final String CODE_LINE_BREAK = "\n";
+    private static final int THUMBNAIL_SNIPPET_LINE_HEIGHT = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "template_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Template template;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "extension_id", nullable = false)
-    private Extension extension;
 
     @Column(nullable = false)
     private String filename;
@@ -48,9 +39,16 @@ public class Snippet extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer ordinal;
 
-    public String getSummaryContent() {
-        return Arrays.stream(content.split("\n"))
-                .limit(10)
-                .collect(Collectors.joining("\n"));
+    public Snippet(Template template, String filename, String content, Integer ordinal) {
+        this.template = template;
+        this.filename = filename;
+        this.content = content;
+        this.ordinal = ordinal;
+    }
+
+    public String getThumbnailContent() {
+        return Arrays.stream(content.split(CODE_LINE_BREAK))
+                .limit(THUMBNAIL_SNIPPET_LINE_HEIGHT)
+                .collect(Collectors.joining(CODE_LINE_BREAK));
     }
 }

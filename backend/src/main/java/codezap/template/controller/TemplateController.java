@@ -2,6 +2,8 @@ package codezap.template.controller;
 
 import java.net.URI;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,14 +23,16 @@ public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
 
-    public TemplateController(TemplateService templateService) {this.templateService = templateService;}
-
-    @PostMapping("")
-    public ResponseEntity<Void> create(@RequestBody CreateTemplateRequest createTemplateRequest) {
-        return ResponseEntity.created(URI.create("/templates" + templateService.create(createTemplateRequest))).build();
+    public TemplateController(TemplateService templateService) {
+        this.templateService = templateService;
     }
 
-    @GetMapping("")
+    @PostMapping
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateTemplateRequest createTemplateRequest) {
+        return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest))).build();
+    }
+
+    @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> getTemplates() {
         return ResponseEntity.ok(templateService.findAll());
     }

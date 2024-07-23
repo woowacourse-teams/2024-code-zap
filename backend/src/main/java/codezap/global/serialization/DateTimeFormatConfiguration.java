@@ -1,4 +1,4 @@
-package codezap.global;
+package codezap.global.serialization;
 
 import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
@@ -15,10 +15,7 @@ public class DateTimeFormatConfiguration {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        return jacksonObjectMapperBuilder -> {
-            jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone("UTC"));
-            jacksonObjectMapperBuilder.serializers(
-                    new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-        };
+        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.serializers(
+                new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
     }
 }

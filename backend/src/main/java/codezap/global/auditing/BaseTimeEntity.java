@@ -1,4 +1,4 @@
-package codezap.global.domain;
+package codezap.global.auditing;
 
 import java.time.LocalDateTime;
 
