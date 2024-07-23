@@ -78,10 +78,10 @@ const UploadsTemplate = () => {
           ))}
 
           <Flex direction='row' justify='space-between' width='100%' padding='3rem 0 0 0'>
-            <Button variant='outlined' onClick={handleAddButtonClick}>
+            <Button size='medium' variant='outlined' onClick={handleAddButtonClick}>
               + Add Snippet
             </Button>
-            <Button onClick={handleSaveButtonClick} disabled={isLoading}>
+            <Button size='medium' variant='default' onClick={handleSaveButtonClick} disabled={isLoading}>
               Save
             </Button>
           </Flex>

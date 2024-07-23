@@ -27,14 +27,14 @@ const Header = () => {
       </Link>
       <Flex align='center' gap='3rem' flex='1'>
         <Link to={'/my-page'}>
-          <Button variant='text'>
+          <Button size='medium' variant='text'>
             <Text.Body weight='bold' color='#FFD269'>
               MyPage
             </Text.Body>
           </Button>
         </Link>
         <Link to={'/'}>
-          <Button variant='text'>
+          <Button size='medium' variant='text'>
             <Text.Body weight='bold'>Explores</Text.Body>
           </Button>
         </Link>
@@ -50,7 +50,7 @@ const Header = () => {
           fontSize='1.6rem'
         />
         <Link to={'/templates/uploads'}>
-          <Button variant='outlined' width='fit-content'>
+          <Button size='medium' variant='outlined' width='fit-content'>
             <S.NewTemplateIcon src={newTemplateIcon} alt='newTemplate' />
             <Text.Body weight='bold' color='#FFD269'>
               New Template

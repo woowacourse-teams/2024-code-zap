@@ -7,9 +7,9 @@ interface Props {
 }
 
 export interface OptionProps {
-  children?: string;
+  children: string;
   isSelected: boolean;
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
 const SelectListBase = ({ children }: Props) => <S.SelectListContainer>{children}</S.SelectListContainer>;

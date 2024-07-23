@@ -5,8 +5,8 @@ export interface Props {
   children: React.ReactNode;
   onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'default' | 'outlined' | 'text';
-  size?: 'small' | 'medium';
+  variant: 'default' | 'outlined' | 'text';
+  size: 'small' | 'medium';
   width?: string;
   disabled?: boolean;
 }
