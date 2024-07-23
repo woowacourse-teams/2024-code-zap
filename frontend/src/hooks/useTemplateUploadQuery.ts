@@ -1,34 +1,14 @@
-import { UseMutationResult, useMutation, useQueryClient } from '@tanstack/react-query';
-import { CreateTemplateRequest, Template } from '@/types/template';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEY } from '@/api/queryKeys';
+import { postTemplate } from '@/api/templates';
 
-const createTemplate = async (newTemplate: CreateTemplateRequest): Promise<Template> => {
-  const apiUrl = process.env.REACT_APP_API_URL;
-  const response = await fetch(`${apiUrl}/templates`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(newTemplate),
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to create template');
-  }
-
-  if (response.status === 201) {
-    return newTemplate as Template;
-  }
-
-  return response.json();
-};
-
-export const useTemplateUploadQuery = (): UseMutationResult<Template, Error, CreateTemplateRequest> => {
+export const useTemplateUploadQuery = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Template, Error, CreateTemplateRequest>({
-    mutationFn: createTemplate,
+  return useMutation({
+    mutationFn: postTemplate,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['templateList'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.TEMPLATE_LIST] });
     },
   });
 };
