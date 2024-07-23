@@ -37,6 +37,12 @@ const sizes = {
     font-size: 1.8rem;
     font-weight: 700;
   `,
+  filled: css`
+    width: 100%;
+    height: 4rem;
+    font-size: 1.8rem;
+    font-weight: 700%;
+  `,
 };
 
 export const Button = styled.button<Props>`
@@ -47,7 +53,6 @@ export const Button = styled.button<Props>`
   align-items: center;
   justify-content: center;
 
-  width: ${({ width }) => width};
   padding: 0.8rem 1.6rem;
 
   text-align: center;

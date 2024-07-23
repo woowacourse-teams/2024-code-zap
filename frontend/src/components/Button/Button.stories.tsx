@@ -71,20 +71,3 @@ export const Enabled: Story = {
 export const Disabled: Story = {
   render: () => <ButtonGroup disabled={true} />,
 };
-
-export const CustomSized: Story = {
-  render: () => (
-    <div css={colStyle}>
-      <Button size='medium' variant='contained' width='10rem'>
-        10rem
-      </Button>
-      <Button size='medium' variant='outlined' width='20rem'>
-        20rem
-      </Button>
-      <Button size='medium' variant='text' width='30rem'>
-        30rem
-      </Button>
-      <p style={{ color: '#888888', fontSize: '1.2rem' }}>(text 타입 버튼의 사이즈는 텍스트 길이에 비례합니다.)</p>
-    </div>
-  ),
-};
