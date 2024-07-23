@@ -7,6 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -24,6 +26,7 @@ import io.restassured.http.ContentType;
 class TemplateControllerTest {
 
     private static final int MAX_LENGTH = 255;
+
     @LocalServerPort
     int port;
 
@@ -32,12 +35,13 @@ class TemplateControllerTest {
         RestAssured.port = port;
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("템플릿 생성 성공")
-    void createTemplateSuccess() {
+    @CsvSource({"a, 65535", "ㄱ, 21845"})
+    void createTemplateSuccess(String repeatTarget, int maxLength) {
         String maxTitle = "a".repeat(MAX_LENGTH);
         CreateTemplateRequest templateRequest = new CreateTemplateRequest(maxTitle,
-                List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), "content", 1)));
+                List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)));
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(templateRequest)
@@ -75,6 +79,21 @@ class TemplateControllerTest {
                 .then().log().all()
                 .statusCode(400)
                 .body("detail", is("파일 이름은 최대 255자까지 입력 가능합니다."));
+    }
+
+    @ParameterizedTest
+    @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
+    @CsvSource({"a, 65536", "ㄱ, 21846"})
+    void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+                List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)));
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest)
+                .when().post("/templates")
+                .then().log().all()
+                .statusCode(400)
+                .body("detail", is("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
     }
 
     @Test
