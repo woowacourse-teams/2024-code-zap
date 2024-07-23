@@ -1,14 +1,12 @@
 import styled from '@emotion/styled';
 import type { Props } from './Input';
 
-interface StyleProps extends Pick<Props, 'width' | 'height' | 'fontSize' | 'fontWeight' | 'type'> {}
-
 export const InputWrapper = styled.div`
   position: relative;
   display: inline-block;
 `;
 
-export const Input = styled.input<StyleProps>`
+export const Input = styled.input<Props>`
   width: ${({ width }) => width};
   height: ${({ height }) => height};
   padding: 1.4rem;

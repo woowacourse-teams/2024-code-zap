@@ -2,8 +2,6 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import type { Props } from './Button';
 
-interface StyleProps extends Pick<Props, 'variant' | 'size' | 'width'> {}
-
 const variants = {
   default: css`
     color: rgb(52 60 72 / 100%);
@@ -41,7 +39,7 @@ const sizes = {
   `,
 };
 
-export const Button = styled.button<StyleProps>`
+export const Button = styled.button<Props>`
   cursor: pointer;
 
   display: flex;

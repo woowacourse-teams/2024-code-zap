@@ -1,13 +1,7 @@
 import styled from '@emotion/styled';
 import type { Props } from './Flex';
 
-interface StyleProps
-  extends Pick<
-    Props,
-    'flex' | 'width' | 'height' | 'margin' | 'padding' | 'align' | 'direction' | 'wrap' | 'gap' | 'justify'
-  > {}
-
-export const FlexContainer = styled.div<StyleProps>`
+export const FlexContainer = styled.div<Props>`
   display: flex;
   flex: ${({ flex }) => flex};
   flex-direction: ${({ direction }) => direction};
