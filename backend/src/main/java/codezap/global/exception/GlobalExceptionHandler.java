@@ -30,10 +30,10 @@ public class GlobalExceptionHandler {
         BindingResult bindingResult = exception.getBindingResult();
         return ResponseEntity.badRequest()
                 .body(ProblemDetail.forStatusAndDetail(
-                        HttpStatus.BAD_REQUEST,
-                        bindingResult.getFieldErrors().stream()
-                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                                .collect(Collectors.joining())
+                                HttpStatus.BAD_REQUEST,
+                                bindingResult.getFieldErrors().stream()
+                                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                                        .collect(Collectors.joining())
                         )
                 );
     }
