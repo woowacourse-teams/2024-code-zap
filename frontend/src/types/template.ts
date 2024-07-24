@@ -17,7 +17,7 @@ export interface TemplateListItem {
   title: string;
   thumbnailSnippet: {
     filename: string;
-    contentSummary: string;
+    thumbnailContent: string;
   };
   modifiedAt: string;
 }

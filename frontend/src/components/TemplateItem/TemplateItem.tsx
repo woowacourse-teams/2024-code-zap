@@ -29,7 +29,7 @@ const TemplateItem = ({ item }: Props) => {
           },
         }}
       >
-        {thumbnailSnippet.contentSummary}
+        {thumbnailSnippet.thumbnailContent}
       </SyntaxHighlighter>
 
       <Text.Caption color='white'>{formatRelativeTime(modifiedAt)}</Text.Caption>
