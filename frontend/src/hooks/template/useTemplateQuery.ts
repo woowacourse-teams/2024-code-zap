@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
-import { QUERY_KEY } from '@/api/queryKeys';
-import { getTemplate } from '@/api/templates';
+import { QUERY_KEY, getTemplate } from '@/api';
 import { Template } from '@/types/template';
 
 export const useTemplateQuery = (id: number): UseQueryResult<Template, Error> =>
