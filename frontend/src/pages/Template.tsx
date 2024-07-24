@@ -36,7 +36,9 @@ const Template = () => {
     <>
       <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0 0 0' width='100%'>
         <Flex direction='column' justify='center' align='flex-start' gap='2rem'>
-          <Text.Title weight='bold'>{template.title}</Text.Title>
+          <Text.Title color='white' weight='bold'>
+            {template.title}
+          </Text.Title>
           <Text.Caption weight='bold' color='#ffd369'>
             {formatRelativeTime(template.modifiedAt)}
           </Text.Caption>
