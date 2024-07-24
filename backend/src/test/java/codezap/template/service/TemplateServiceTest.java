@@ -287,6 +287,22 @@ class TemplateServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("템플릿 토픽 검색 성공 : 템플릿 제목에 포함")
+    void findAllTemplatesTitleContainTopicSuccess() {
+        //given
+        saveTemplate(makeTemplateRequest("hello"));
+        saveTemplate(makeTemplateRequest("hello topic"));
+        saveTemplate(makeTemplateRequest("topic hello"));
+        saveTemplate(makeTemplateRequest("hello topic !"));
+
+        //when
+        FindAllTemplatesResponse templates = templateService.findContainTopic("topic");
+
+        //then
+        assertThat(templates.templates()).hasSize(3);
+    }
+
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,

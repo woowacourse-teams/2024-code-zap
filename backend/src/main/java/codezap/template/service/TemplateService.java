@@ -257,4 +257,8 @@ public class TemplateService {
     private CodeZapException throwNotFoundThumbnailSnippet() {
         throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
     }
+
+    public FindAllTemplatesResponse findContainTopic(String topic) {
+        return FindAllTemplatesResponse.from(thumbnailSnippetRepository.searchByTopic(topic));
+    }
 }
