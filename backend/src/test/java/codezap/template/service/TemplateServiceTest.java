@@ -20,6 +20,8 @@ import codezap.template.domain.Template;
 import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
+import codezap.template.dto.request.UpdateSnippetRequest;
+import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
 import codezap.template.repository.SnippetRepository;
@@ -81,15 +83,34 @@ class TemplateServiceTest {
     void findOneTemplateSuccess() {
         //given
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        saveTemplate(createdTemplate);
+        Template template = saveTemplate(createdTemplate);
 
         //when
-        FindTemplateByIdResponse foundTemplate = templateService.findById(1L);
+        FindTemplateByIdResponse foundTemplate = templateService.findById(template.getId());
 
         //then
         assertAll(
-                () -> assertThat(foundTemplate.title()).isEqualTo(createdTemplate.title()),
-                () -> assertThat(foundTemplate.snippets().size()).isEqualTo(createdTemplate.snippets().size())
+                () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
+                () -> assertThat(foundTemplate.snippets().size()).isEqualTo(snippetRepository.findAllByTemplate(template).size())
+        );
+    }
+
+    @Test
+    @DisplayName("템플릿 수정 성공")
+    void updateTemplateSuccess() {
+        //given
+        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
+        Template template = saveTemplate(createdTemplate);
+
+        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
+        templateService.update(template.getId(), updateTemplateRequest);
+        List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
+        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
+
+        assertAll(
+                () -> assertThat(updateTemplateRequest.title()).isEqualTo("updateTitle"),
+                () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),
+                () -> assertThat(snippets.size()).isEqualTo(3)
         );
     }
 
@@ -103,10 +124,26 @@ class TemplateServiceTest {
         );
     }
 
-    private void saveTemplate(CreateTemplateRequest createTemplateRequest) {
+    private UpdateTemplateRequest makeUpdateTemplateRequest(String title) {
+        return new UpdateTemplateRequest(
+                title,
+                List.of(
+                        new CreateSnippetRequest("filename3", "content3", 2),
+                        new CreateSnippetRequest("filename4", "content4", 3)
+                ),
+                List.of(
+                        new UpdateSnippetRequest(2L, "filename2", "content2", 1)
+                ),
+                List.of(1L)
+        );
+    }
+
+    private Template saveTemplate(CreateTemplateRequest createTemplateRequest) {
         Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+
+        return savedTemplate;
     }
 }

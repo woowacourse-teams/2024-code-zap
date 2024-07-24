@@ -51,4 +51,10 @@ public class Snippet extends BaseTimeEntity {
                 .limit(THUMBNAIL_SNIPPET_LINE_HEIGHT)
                 .collect(Collectors.joining(CODE_LINE_BREAK));
     }
+
+    public void updateSnippet(String filename, String content, Integer ordinal) {
+        this.filename = filename;
+        this.content = content;
+        this.ordinal = ordinal;
+    }
 }
