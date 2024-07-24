@@ -6,7 +6,10 @@ import jakarta.validation.constraints.Size;
 import codezap.global.validation.ByteLength;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record CreateSnippetRequest(
+public record UpdateSnippetRequest(
+        @Schema(description = "파일 식별자", example = "0")
+        Long id,
+
         @Schema(description = "파일 이름", example = "Main.java")
         @NotNull(message = "파일 이름이 null 입니다.")
         @Size(max = 255, message = "파일 이름은 최대 255자까지 입력 가능합니다.")
