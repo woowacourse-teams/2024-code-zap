@@ -6,7 +6,7 @@ import { SnippetEditor } from '@/components/SnippetEditor';
 import { TemplateTitleInput } from '@/components/TemplateTitleInput';
 import { useTemplateUploadQuery } from '@/hooks/useTemplateUploadQuery';
 
-const UploadsTemplate = () => {
+const TemplateUpload = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [snippets, setSnippets] = useState([
@@ -93,4 +93,4 @@ const UploadsTemplate = () => {
   );
 };
 
-export default UploadsTemplate;
+export default TemplateUpload;

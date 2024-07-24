@@ -6,10 +6,11 @@ import { Flex } from '@/components/Flex';
 import { SelectList } from '@/components/SelectList';
 import { Text } from '@/components/Text';
 import { useTemplateQuery } from '@/hooks/useTemplateQuery';
+import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
 const Template = () => {
   const { id } = useParams<{ id: string }>();
-  const { data: template, error, isLoading } = useTemplateQuery(id as string);
+  const { data: template, error, isLoading } = useTemplateQuery(Number(id));
   const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [currentFile, setCurrentFile] = useState(template?.snippets[0].id);
 
@@ -34,9 +35,11 @@ const Template = () => {
   return (
     <>
       <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0 0 0' width='100%'>
-        <Flex direction='column' justify='center' align='flex-start' gap='1rem'>
-          <Text.Title color='white'>{template.title}</Text.Title>
-          <Text.Caption color='#FFD369'>{template.member.nickname}</Text.Caption>
+        <Flex direction='column' justify='center' align='flex-start' gap='2rem'>
+          <Text.Title weight='bold'>{template.title}</Text.Title>
+          <Text.Caption weight='bold' color='#ffd369'>
+            {formatRelativeTime(template.modifiedAt)}
+          </Text.Caption>
         </Flex>
 
         <Flex direction='row' gap='6rem' width='100%'>
@@ -51,6 +54,11 @@ const Template = () => {
                     borderRadius: '10px',
                     width: '100%',
                     tabSize: 2,
+                  }}
+                  codeTagProps={{
+                    style: {
+                      fontSize: '1.8rem',
+                    },
                   }}
                 >
                   {snippet.content}

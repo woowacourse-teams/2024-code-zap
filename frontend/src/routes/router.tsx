@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
 import Template from '@/pages/Template';
 import TemplateList from '@/pages/TemplateList';
-import UploadsTemplate from '@/pages/UploadsTemplate';
+import TemplateUpload from '@/pages/TemplateUpload';
 
 const router = createBrowserRouter([
   {
@@ -18,7 +18,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'templates/uploads',
-        element: <UploadsTemplate />,
+        element: <TemplateUpload />,
       },
     ],
   },

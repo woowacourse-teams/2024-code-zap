@@ -1,6 +1,7 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { TemplateListItem } from '@/types/template';
+import { formatRelativeTime } from '@/utils/formatRelativeTime';
 import { Flex } from '../Flex';
 import { Text } from '../Text';
 
@@ -9,14 +10,12 @@ interface Props {
 }
 
 const TemplateItem = ({ item }: Props) => {
-  const { title, member, modified_at, representative_snippet } = item;
-  const [year, month, day] = modified_at.split(' ')[0].split('-');
+  const { title, modifiedAt, thumbnailSnippet } = item;
 
   return (
     <Flex direction='column' gap='1.2rem' width='100%'>
       <Flex direction='column' justify='flex-start' align='flex-start' width='100%' gap='0.8rem'>
         <Text.SubTitle color='white'>{title}</Text.SubTitle>
-        <Text.Caption color='white'>{member.nickname}</Text.Caption>
       </Flex>
 
       <SyntaxHighlighter
@@ -24,13 +23,16 @@ const TemplateItem = ({ item }: Props) => {
         style={vscDarkPlus}
         showLineNumbers={true}
         customStyle={{ borderRadius: '10px', width: '100%', tabSize: 2 }}
+        codeTagProps={{
+          style: {
+            fontSize: '1.8rem',
+          },
+        }}
       >
-        {representative_snippet.content_summary}
+        {thumbnailSnippet.contentSummary}
       </SyntaxHighlighter>
 
-      <Text.Caption color='white'>
-        {year}년 {month}월 {day}일
-      </Text.Caption>
+      <Text.Caption color='white'>{formatRelativeTime(modifiedAt)}</Text.Caption>
     </Flex>
   );
 };
