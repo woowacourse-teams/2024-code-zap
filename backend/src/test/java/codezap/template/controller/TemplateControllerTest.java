@@ -164,6 +164,17 @@ class TemplateControllerTest {
     }
 
     @Test
+    @DisplayName("템플릿 상세 조회 실패: 존재하지 않는 템플릿 조회")
+    void findOneTemplateFailWithNotFoundTemplate() {
+        //when
+        RestAssured.given().log().all()
+                .get("/templates/1")
+                .then().log().all()
+                .statusCode(404)
+                .body("detail", is("식별자 1에 해당하는 템플릿이 존재하지 않습니다."));
+    }
+
+    @Test
     @DisplayName("템플리 수정 성공")
     void updateTemplateSuccess() {
         //given
