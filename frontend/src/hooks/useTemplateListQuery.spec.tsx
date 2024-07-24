@@ -1,10 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
+import { PropsWithChildren } from 'react';
 import { useTemplateListQuery } from './useTemplateListQuery';
 
 const queryClient = new QueryClient();
 
-const queryWrapper = ({ children }: { children: React.ReactNode }) => (
+const queryWrapper = ({ children }: PropsWithChildren) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 

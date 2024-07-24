@@ -15,7 +15,7 @@ const TemplateItem = ({ item }: Props) => {
   return (
     <Flex direction='column' gap='1.2rem' width='100%'>
       <Flex direction='column' justify='flex-start' align='flex-start' width='100%' gap='0.8rem'>
-        <Text.SubTitle weight='bold'>{title}</Text.SubTitle>
+        <Text.SubTitle color='white'>{title}</Text.SubTitle>
       </Flex>
 
       <SyntaxHighlighter
@@ -32,7 +32,7 @@ const TemplateItem = ({ item }: Props) => {
         {thumbnailSnippet.contentSummary}
       </SyntaxHighlighter>
 
-      <Text.Caption>{formatRelativeTime(modifiedAt)}</Text.Caption>
+      <Text.Caption color='white'>{formatRelativeTime(modifiedAt)}</Text.Caption>
     </Flex>
   );
 };
