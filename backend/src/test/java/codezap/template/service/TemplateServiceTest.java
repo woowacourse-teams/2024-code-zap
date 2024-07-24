@@ -91,7 +91,8 @@ class TemplateServiceTest {
         //then
         assertAll(
                 () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
-                () -> assertThat(foundTemplate.snippets().size()).isEqualTo(snippetRepository.findAllByTemplate(template).size())
+                () -> assertThat(foundTemplate.snippets().size())
+                        .isEqualTo(snippetRepository.findAllByTemplate(template).size())
         );
     }
 
