@@ -50,10 +50,31 @@
     "import/order": [
       "error",
       {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "type"],
-        "newlines-between": "never",
+        "groups": [
+          ["builtin", "external"],
+          ["internal", "parent", "sibling", "index", "type"]
+        ],
         "warnOnUnassignedImports": true,
-        "alphabetize": { "order": "asc" }
+        "alphabetize": { "order": "asc" },
+        "newlines-between": "always",
+        "distinctGroup": false,
+        "pathGroups": [
+          {
+            "pattern": "@storybook/**",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "@/**",
+            "group": "internal",
+            "position": "before"
+          },
+          {
+            "pattern": "./**",
+            "group": "sibling",
+            "position": "after"
+          }
+        ]
       }
     ],
     "import/extensions": [
