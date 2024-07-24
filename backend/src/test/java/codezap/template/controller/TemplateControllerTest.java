@@ -482,4 +482,42 @@ class TemplateControllerTest {
         );
         return templateRequest;
     }
+
+    @Test
+    @DisplayName("템플릿 토픽 검색 성공")
+    void searchTopicSuccess() {
+        //given
+        String topic = "java";
+
+        CreateTemplateRequest templateRequest1 = new CreateTemplateRequest(topic,
+                List.of(new CreateSnippetRequest("filename", "content", 1)));
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest1)
+                .when().post("/templates")
+                .then().log().all();
+
+        CreateTemplateRequest templateRequest2 = new CreateTemplateRequest("title2",
+                List.of(new CreateSnippetRequest("filename." + topic, "content", 1)));
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest2)
+                .when().post("/templates")
+                .then().log().all();
+
+        CreateTemplateRequest templateRequest3 = new CreateTemplateRequest("title3",
+                List.of(new CreateSnippetRequest("filename", "// " + topic + " text", 1)));
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest3)
+                .when().post("/templates")
+                .then().log().all();
+
+        //when
+        RestAssured.given().log().all()
+                .get("/templates/search?topic=" + topic)
+                .then().log().all()
+                .statusCode(200)
+                .body("templates.size()", is(3));
+    }
 }
