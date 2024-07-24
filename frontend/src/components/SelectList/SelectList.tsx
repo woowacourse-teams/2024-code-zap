@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { Text } from '../Text';
+import { Text } from '..';
 import * as S from './style';
 
 export interface OptionProps {
