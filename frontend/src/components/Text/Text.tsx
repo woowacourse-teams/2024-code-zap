@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react';
+
 import * as S from './style';
 
 export type TextWeight = 'regular' | 'bold';

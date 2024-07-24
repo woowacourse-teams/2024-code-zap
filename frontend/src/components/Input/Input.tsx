@@ -1,4 +1,5 @@
 import { InputHTMLAttributes } from 'react';
+
 import { searchIcon } from '@/assets/images';
 import * as S from './style';
 

@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from 'react';
+
 import * as S from './style';
 
 export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {

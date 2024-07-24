@@ -1,4 +1,5 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
+
 import { QUERY_KEY } from '@/api/queryKeys';
 import { getTemplate } from '@/api/templates';
 import { Template } from '@/types/template';
