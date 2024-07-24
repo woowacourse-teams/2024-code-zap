@@ -23,9 +23,9 @@ jobs:
         working-directory: ${{ env.frontend-directory }}
 
       - name: Run Type Checking
-        run: npm tsc
+        run: npm run tsc
         working-directory: ${{ env.frontend-directory }}
 
       - name: Run Tests
-        run: npm test
+        run: npm run test
         working-directory: ${{ env.frontend-directory }}
