@@ -1,18 +1,18 @@
 import { HttpResponse, http } from 'msw';
-import { API_URL, END_POINT } from '@/api/config';
+import { TEMPLATE_API_URL } from '@/api/templates';
 import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
 
 export const handlers = [
-  http.get(`${API_URL}${END_POINT.TEMPLATES}`, () => {
+  http.get(`${TEMPLATE_API_URL}`, () => {
     const response = HttpResponse.json(mockTemplateList);
 
     return response;
   }),
-  http.get(`${API_URL}${END_POINT.TEMPLATES}/:id`, () => {
+  http.get(`${TEMPLATE_API_URL}/:id`, () => {
     const response = HttpResponse.json(mockTemplate);
 
     return response;
   }),
-  http.post(`${API_URL}${END_POINT.TEMPLATES}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
 ];

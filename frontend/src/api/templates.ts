@@ -1,22 +1,24 @@
 import { Template, TemplateListResponse, TemplateUploadRequest } from '@/types/template';
-import { API_URL, END_POINT } from './config';
 import { customFetch } from './customFetch';
+
+const BASE_URL = process.env.REACT_APP_API_URL;
+
+export const TEMPLATE_API_URL = `${BASE_URL}/templates`;
 
 export const getTemplateList = async (): Promise<TemplateListResponse> =>
   await customFetch({
-    url: `${API_URL}${END_POINT.TEMPLATES}`,
+    url: `${TEMPLATE_API_URL}`,
   });
 
 export const getTemplate = async (id: number): Promise<Template> =>
   await customFetch({
-    url: `${API_URL}${END_POINT.TEMPLATES}/${id}`,
+    url: `${TEMPLATE_API_URL}/${id}`,
   });
 
 export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void> => {
   await customFetch({
     method: 'POST',
-    url: `${API_URL}${END_POINT.TEMPLATES}`,
-    headers: { 'Content-Type': 'application/json' },
+    url: `${TEMPLATE_API_URL}`,
     body: JSON.stringify(newTemplate),
   });
 };
