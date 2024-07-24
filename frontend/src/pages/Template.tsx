@@ -7,6 +7,7 @@ import { SelectList } from '@/components/SelectList';
 import { Text } from '@/components/Text';
 import { useTemplateQuery } from '@/hooks/useTemplateQuery';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { MainContainer, SidebarContainer } from './Template.style';
 
 const Template = () => {
   const { id } = useParams<{ id: string }>();
@@ -33,56 +34,50 @@ const Template = () => {
   };
 
   return (
-    <>
-      <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0 0 0' width='100%'>
-        <Flex direction='column' justify='center' align='flex-start' gap='2rem'>
-          <Text.Title color='white' weight='bold'>
-            {template.title}
-          </Text.Title>
-          <Text.Caption weight='bold' color='#ffd369'>
-            {formatRelativeTime(template.modifiedAt)}
-          </Text.Caption>
-        </Flex>
+    <Flex direction='column' align='center' padding='10rem 0 0 0' width='100%'>
+      <MainContainer>
+        <Text.Title color='white'>{template.title}</Text.Title>
+        <Text.Caption color='#ffd369' weight='bold'>
+          {formatRelativeTime(template.modifiedAt)}
+        </Text.Caption>
 
-        <Flex direction='row' gap='6rem' width='100%'>
-          <Flex direction='column' gap='1rem' flex='0.7'>
-            {template.snippets.map((snippet, index) => (
-              <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
-                <SyntaxHighlighter
-                  language='javascript'
-                  style={vscDarkPlus}
-                  showLineNumbers={true}
-                  customStyle={{
-                    borderRadius: '10px',
-                    width: '100%',
-                    tabSize: 2,
-                  }}
-                  codeTagProps={{
-                    style: {
-                      fontSize: '1.8rem',
-                    },
-                  }}
-                >
-                  {snippet.content}
-                </SyntaxHighlighter>
-              </div>
-            ))}
-          </Flex>
+        {template.snippets.map((snippet, index) => (
+          <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
+            <SyntaxHighlighter
+              language='javascript'
+              style={vscDarkPlus}
+              showLineNumbers={true}
+              customStyle={{
+                borderRadius: '10px',
+                width: '100%',
+                tabSize: 2,
+              }}
+              codeTagProps={{
+                style: {
+                  fontSize: '1.8rem',
+                },
+              }}
+            >
+              {snippet.content}
+            </SyntaxHighlighter>
+          </div>
+        ))}
+      </MainContainer>
 
-          <SelectList>
-            {template.snippets.map((snippet, index) => (
-              <SelectList.Option
-                key={snippet.id}
-                onClick={handleSelectOption(index)}
-                isSelected={currentFile === snippet.id}
-              >
-                {snippet.filename}
-              </SelectList.Option>
-            ))}
-          </SelectList>
-        </Flex>
-      </Flex>
-    </>
+      <SidebarContainer>
+        <SelectList>
+          {template.snippets.map((snippet, index) => (
+            <SelectList.Option
+              key={snippet.id}
+              onClick={handleSelectOption(index)}
+              isSelected={currentFile === snippet.id}
+            >
+              {snippet.filename}
+            </SelectList.Option>
+          ))}
+        </SelectList>
+      </SidebarContainer>
+    </Flex>
   );
 };
 
