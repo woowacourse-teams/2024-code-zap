@@ -35,7 +35,7 @@ public interface SpringDocTemplateController {
                     @ExampleObject(summary = "제목 또는 스니펫 파일명이 255자를 초과한 경우",
                             name = "메시지 예시: 제목은 최대 255자까지 입력 가능합니다."),
                     @ExampleObject(summary = "썸네일 스니펫의 순서가 1이 아닌 경우",
-                            name = "메시지 예시: 식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+                            name = "메시지 예시: 썸네일 스니펫의 순서가 잘못되었습니다."),
                     @ExampleObject(summary = "스니펫 순서가 잘못된 경우 (ex. 1 -> 3 -> 2 순으로 스니펫 목록이 온 경우)",
                             name = "메시지 예시: 스니펫 순서가 잘못되었습니다."),
                     @ExampleObject(summary = "스니펫 내용 65,535 byte를 초과한 경우",
