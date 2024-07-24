@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
-import { useTemplateUploadQuery } from '@/hooks/useTemplateUploadQuery';
+import { useTemplateUploadQuery } from '@/hooks/template';
 
 const TemplateUpload = () => {
   const navigate = useNavigate();

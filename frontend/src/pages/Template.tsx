@@ -3,8 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Flex, SelectList, Text } from '@/components';
-import { useTemplateQuery } from '@/hooks/useTemplateQuery';
-import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { useTemplateQuery } from '@/hooks/template';
+import { formatRelativeTime } from '@/utils';
 
 const Template = () => {
   const { id } = useParams<{ id: string }>();
