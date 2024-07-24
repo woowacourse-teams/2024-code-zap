@@ -1,6 +1,7 @@
 package codezap.global.exception;
 
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException exception
     ) {
+        List<String> errorMessages = new ArrayList<>();
         BindingResult bindingResult = exception.getBindingResult();
+        if (bindingResult.hasFieldErrors()) {
+            bindingResult.getFieldErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .forEach(errorMessages::add);
+        }
+
+        if (bindingResult.hasGlobalErrors()) {
+            bindingResult.getGlobalErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .forEach(errorMessages::add);
+        }
         return ResponseEntity.badRequest()
                 .body(ProblemDetail.forStatusAndDetail(
-                                HttpStatus.BAD_REQUEST,
-                                bindingResult.getFieldErrors().stream()
-                                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                                        .collect(Collectors.joining())
-                        )
+                        HttpStatus.BAD_REQUEST,
+                        String.join("\n", errorMessages))
                 );
     }
 

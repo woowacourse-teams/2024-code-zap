@@ -1,9 +1,11 @@
 package codezap.template.dto.request;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import jakarta.validation.constraints.NotNull;
 
+import codezap.template.dto.request.validation.IncreaseIndexRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateTemplateRequest(
@@ -22,5 +24,12 @@ public record UpdateTemplateRequest(
         @Schema(description = "삭제한 스니펫 식별자")
         @NotNull(message = "deleteSnippetIds 리스트가 null 입니다.")
         List<Long> deleteSnippetIds
-) {
+) implements IncreaseIndexRequest {
+    @Override
+    public List<Integer> increasedIndexes() {
+        return Stream.concat(
+                updateSnippets.stream().map(UpdateSnippetRequest::ordinal),
+                createSnippets.stream().map(CreateSnippetRequest::ordinal)
+        ).toList();
+    }
 }

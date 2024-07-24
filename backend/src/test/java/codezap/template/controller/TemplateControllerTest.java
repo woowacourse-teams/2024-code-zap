@@ -17,6 +17,8 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
+import codezap.template.dto.request.UpdateSnippetRequest;
+import codezap.template.dto.request.UpdateTemplateRequest;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -159,5 +161,83 @@ class TemplateControllerTest {
                 .statusCode(200)
                 .body("title", is(templateRequest.title()),
                         "snippets.size()", is(1));
+    }
+
+    @Test
+    @DisplayName("템플리 수정 성공")
+    void updateTemplateSuccess() {
+        //given
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                "title",
+                List.of(
+                        new CreateSnippetRequest("filename1", "content1", 1),
+                        new CreateSnippetRequest("filename2", "content2", 2)
+                )
+        );
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest)
+                .when().post("/templates")
+                .then().log().all();
+
+        //when
+        UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                "updateTitle",
+                List.of(
+                        new CreateSnippetRequest("filename3", "content3", 2),
+                        new CreateSnippetRequest("filename4", "content4", 3)
+                ),
+                List.of(
+                        new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                ),
+                List.of(1L)
+        );
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(updateTemplateRequest)
+                .when().post("/templates/1")
+                .then().log().all()
+                .statusCode(200);
+    }
+
+    @ParameterizedTest
+    @DisplayName("템플리 수정 실패: 잘못된 스니펫 순서 입력")
+    @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
+        // 정상 요청: 2, 3, 1
+    void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
+        //given
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                "title",
+                List.of(
+                        new CreateSnippetRequest("filename1", "content1", 1),
+                        new CreateSnippetRequest("filename2", "content2", 2)
+                )
+        );
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(templateRequest)
+                .when().post("/templates")
+                .then().log().all();
+
+        //when
+        UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                "updateTitle",
+                List.of(
+                        new CreateSnippetRequest("filename3", "content3", createOrdinal1),
+                        new CreateSnippetRequest("filename4", "content4", createOrdinal2)
+                ),
+                List.of(
+                        new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", updateOrdinal)
+                ),
+                List.of(1L)
+        );
+        RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
+                .body(updateTemplateRequest)
+                .when().post("/templates/1")
+                .then().log().all()
+                .statusCode(400)
+                .body("detail", is("스니펫 순서가 잘못되었습니다."));
+        ;
     }
 }
