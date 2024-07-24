@@ -172,4 +172,8 @@ public class TemplateService {
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
     }
+
+    public FindAllTemplatesResponse findContainTopic(String topic) {
+        return FindAllTemplatesResponse.from(thumbnailSnippetRepository.searchByTopic(topic));
+    }
 }
