@@ -59,4 +59,10 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "400", description = "해당하는 id 값인 템플릿이 없는 경우",
             content = {@Content(schema = @Schema(implementation = ProblemDetail.class))})
     ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest);
+
+    @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
+    @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
+    @ApiResponse(responseCode = "400", description = "해당하는 id 값인 템플릿이 없는 경우",
+            content = {@Content(schema = @Schema(implementation = ProblemDetail.class))})
+    ResponseEntity<Void> deleteTemplate(Long id);
 }
