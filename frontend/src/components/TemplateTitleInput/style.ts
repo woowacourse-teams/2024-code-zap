@@ -21,7 +21,7 @@ export const TemplateTitleInput = styled.input`
   }
 `;
 
-export const InputWrapper = styled.div`
+export const TemplateTitleInputWrapper = styled.div`
   position: relative;
   width: 100%;
   margin: 20px 0;

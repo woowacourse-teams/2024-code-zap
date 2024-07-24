@@ -15,8 +15,8 @@ const TemplateItem = ({ item }: Props) => {
   return (
     <Flex direction='column' gap='1.2rem' width='100%'>
       <Flex direction='column' justify='flex-start' align='flex-start' width='100%' gap='0.8rem'>
-        <Text.SubTitle weight='bold'>{title}</Text.SubTitle>
-        <Text.Caption>{member.nickname}</Text.Caption>
+        <Text.SubTitle color='white'>{title}</Text.SubTitle>
+        <Text.Caption color='white'>{member.nickname}</Text.Caption>
       </Flex>
 
       <SyntaxHighlighter
@@ -28,7 +28,7 @@ const TemplateItem = ({ item }: Props) => {
         {representative_snippet.content_summary}
       </SyntaxHighlighter>
 
-      <Text.Caption>
+      <Text.Caption color='white'>
         {year}년 {month}월 {day}일
       </Text.Caption>
     </Flex>

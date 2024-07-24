@@ -1,8 +1,7 @@
-import { ReactNode } from 'react';
-import { FlexContainer } from './style';
+import { HTMLAttributes, PropsWithChildren } from 'react';
+import * as S from './style';
 
-export interface Props {
-  children: ReactNode;
+export interface Props extends HTMLAttributes<HTMLDivElement> {
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
   justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
   align?: 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
@@ -17,19 +16,19 @@ export interface Props {
 
 const Flex = ({
   children,
-  direction = 'row',
-  justify = 'flex-start',
-  align = 'stretch',
-  wrap = 'nowrap',
-  gap = '0',
-  width = 'auto',
-  height = 'auto',
-  padding = '0',
-  margin = '0',
-  flex = 'none',
-  ...props
-}: Props) => (
-  <FlexContainer
+  direction,
+  justify,
+  align,
+  wrap,
+  gap,
+  width,
+  height,
+  padding,
+  margin,
+  flex,
+  ...rests
+}: PropsWithChildren<Props>) => (
+  <S.FlexContainer
     direction={direction}
     justify={justify}
     align={align}
@@ -40,10 +39,10 @@ const Flex = ({
     padding={padding}
     margin={margin}
     flex={flex}
-    {...props}
+    {...rests}
   >
     {children}
-  </FlexContainer>
+  </S.FlexContainer>
 );
 
 export default Flex;
