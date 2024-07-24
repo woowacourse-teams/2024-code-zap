@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoIcon from '@/assets/images/logo.png';
-import newTemplateIcon from '@/assets/images/newTemplate.png';
+import { logoIcon, newTemplateIcon } from '@/assets/images';
 import { Button, Flex, Input, Text } from '..';
 import * as S from './style';
 

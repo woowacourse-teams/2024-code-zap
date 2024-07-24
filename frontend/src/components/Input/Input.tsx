@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from 'react';
-import searchIcon from '@/assets/images/search.png';
+import { searchIcon } from '@/assets/images';
 import * as S from './style';
 
 export interface Props extends InputHTMLAttributes<HTMLInputElement> {
