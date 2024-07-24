@@ -2,9 +2,9 @@ package codezap.template.controller;
 
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import codezap.template.dto.request.CreateTemplateRequest;
+import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,7 +13,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "템플릿 CRUD API", description = "템플릿 생성, 단건 및 목록 조회, 삭제, 수정 API")
 public interface SpringDocTemplateController {
 
     @Operation(summary = "템플릿 생성", description = """
@@ -50,5 +52,11 @@ public interface SpringDocTemplateController {
             content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
     @ApiResponse(responseCode = "400", description = "해당하는 id 값인 템플릿이 없는 경우",
             content = {@Content(schema = @Schema(implementation = ProblemDetail.class))})
-    ResponseEntity<FindTemplateByIdResponse> getTemplateById(@PathVariable Long id);
+    ResponseEntity<FindTemplateByIdResponse> getTemplateById(Long id);
+
+    @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
+    @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
+    @ApiResponse(responseCode = "400", description = "해당하는 id 값인 템플릿이 없는 경우",
+            content = {@Content(schema = @Schema(implementation = ProblemDetail.class))})
+    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest);
 }

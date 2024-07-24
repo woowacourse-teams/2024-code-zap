@@ -4,6 +4,7 @@ import java.net.URI;
 
 import jakarta.validation.Valid;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.template.dto.request.CreateTemplateRequest;
+import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
 import codezap.template.service.TemplateService;
@@ -42,4 +44,10 @@ public class TemplateController implements SpringDocTemplateController {
     public ResponseEntity<FindTemplateByIdResponse> getTemplateById(@PathVariable Long id) {
         return ResponseEntity.ok(templateService.findById(id));
     }
+
+    @PostMapping("/{id}")
+    public ResponseEntity<Void> updateTemplate(@PathVariable Long id, UpdateTemplateRequest updateTemplateRequest) {
+        throw new NotImplementedException();
+    }
+
 }
