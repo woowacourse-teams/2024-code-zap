@@ -3,7 +3,7 @@ import * as S from './style';
 
 export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: 'contained' | 'outlined' | 'text';
-  size: 'small' | 'medium';
+  size: 'small' | 'medium' | 'filled';
 }
 
 const Button = ({ children, onClick, variant, size, ...rest }: Props) => (
