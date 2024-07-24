@@ -32,16 +32,13 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-              outputPath: 'assets/images',
-            },
+        test: /\.(png|svg|jpe?g|gif|webp)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 4 * 1024, // 4kb
           },
-        ],
+        },
       },
     ],
   },
