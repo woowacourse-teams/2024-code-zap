@@ -11,10 +11,10 @@ public record UpdateTemplateRequest(
         @Schema(description = "새로 추가한 스니펫 내역")
         List<CreateSnippetRequest> createSnippets,
 
-        @Schema(description = "수정한 스니펫 내역")
+        @Schema(description = "삭제, 생성 스니펫을 제외한 모든 스니펫 내역")
         List<UpdateSnippetRequest> updateSnippets,
 
-        @Schema(description = "삭제한 스니펫 식별자", example = "{0, 1, 2}")
+        @Schema(description = "삭제한 스니펫 식별자")
         List<Long> deleteSnippetIds
 ) {
 }
