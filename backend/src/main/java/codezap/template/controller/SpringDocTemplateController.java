@@ -51,6 +51,11 @@ public interface SpringDocTemplateController {
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(Long id);
 
+    @Operation(summary = "템플릿 토픽 검색", description = "토픽이 포함된 템플릿들을 검색합니다.")
+    @ApiResponse(responseCode = "200", description = "템플릿 토픽 검색 성공",
+            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+    ResponseEntity<FindAllTemplatesResponse> getTemplatesContainTopic(String topic);
+
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
