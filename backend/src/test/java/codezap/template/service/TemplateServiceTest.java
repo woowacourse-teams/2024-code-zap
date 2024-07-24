@@ -199,6 +199,21 @@ class TemplateServiceTest {
         assertThat(templates.templates()).hasSize(2);
     }
 
+    @Test
+    @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
+    void findAllSnippetContentContainTopicSuccess() {
+        //given
+        saveTemplateBySnippetContent("tempate1", "public Main {", "new Car();");
+        saveTemplateBySnippetContent("tempate2", "private Car", "public Movement");
+        saveTemplateBySnippetContent("tempate3", "console.log", "a+b=3");
+
+        //when
+        FindAllTemplatesResponse templates = templateService.findContainTopic("Car");
+
+        //then
+        assertThat(templates.templates()).hasSize(2);
+    }
+
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,
@@ -261,6 +276,21 @@ class TemplateServiceTest {
 
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
+        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+    }
+
+    private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent) {
+        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
+                templateTitle,
+                List.of(
+                        new CreateSnippetRequest("filename1", firstContent, 1),
+                        new CreateSnippetRequest("filename2", secondContent, 2)
+                )
+        );
+        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
+
+        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
+        snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 }
