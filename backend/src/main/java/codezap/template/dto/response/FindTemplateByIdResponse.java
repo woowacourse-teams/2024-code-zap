@@ -3,23 +3,24 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import codezap.snippet.domain.Snippet;
+import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindTemplateByIdResponse(
+        @Schema(description = "템플릿 식별자", example = "0")
         Long id,
+        @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
         String title,
-        FindMemberBySummaryResponse member,
-        Integer representative_snippet_ordinal,
+        @Schema(description = "스니펫 목록")
         List<FindAllSnippetByTemplateResponse> snippets,
-        LocalDateTime modified_at
+        @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
+        LocalDateTime modifiedAt
 ) {
-    public static FindTemplateByIdResponse from(Template template, List<Snippet> snippets) {
+    public static FindTemplateByIdResponse of(Template template, List<Snippet> snippets) {
         return new FindTemplateByIdResponse(
                 template.getId(),
                 template.getTitle(),
-                FindMemberBySummaryResponse.from(template.getMember()),
-                1,
                 mapToFindAllSnippetByTemplateResponse(snippets),
                 template.getModifiedAt()
         );
