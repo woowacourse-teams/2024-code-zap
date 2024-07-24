@@ -174,6 +174,7 @@ public class TemplateService {
     }
 
     public FindAllTemplatesResponse findContainTopic(String topic) {
-        return FindAllTemplatesResponse.from(thumbnailSnippetRepository.searchByTopic(topic));
+        List<ThumbnailSnippet> thumbnailSnippets = thumbnailSnippetRepository.searchByTopic(topic);
+        return FindAllTemplatesResponse.from(thumbnailSnippets);
     }
 }
