@@ -26,7 +26,7 @@ const Flex = ({
   padding,
   margin,
   flex,
-  ...props
+  ...rests
 }: PropsWithChildren<Props>) => (
   <S.FlexContainer
     direction={direction}
@@ -39,7 +39,7 @@ const Flex = ({
     padding={padding}
     margin={margin}
     flex={flex}
-    {...props}
+    {...rests}
   >
     {children}
   </S.FlexContainer>
