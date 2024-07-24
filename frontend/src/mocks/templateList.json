@@ -5,7 +5,7 @@
       "title": "title1",
       "thumbnailSnippet": {
         "filename": "title1.java",
-        "contentSummary": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
+        "thumbnailContent": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
       },
       "modifiedAt": "2024-07-11 12:34"
     },
@@ -14,7 +14,7 @@
       "title": "title2",
       "thumbnailSnippet": {
         "filename": "title1.java",
-        "contentSummary": "public class ......"
+        "thumbnailContent": "public class ......"
       },
       "modifiedAt": "2024-07-10 12:34"
     },
@@ -23,7 +23,7 @@
       "title": "title3",
       "thumbnailSnippet": {
         "filename": "title1.java",
-        "contentSummary": "const GlobalStyles = () => {"
+        "thumbnailContent": "const GlobalStyles = () => {"
       },
       "modifiedAt": "2024-07-09 12:34"
     },
@@ -32,7 +32,7 @@
       "title": "title4",
       "thumbnailSnippet": {
         "filename": "title1.java",
-        "contentSummary": "public class ......"
+        "thumbnailContent": "public class ......"
       },
       "modifiedAt": "2024-07-08 12:34"
     },
@@ -41,7 +41,7 @@
       "title": "title5",
       "thumbnailSnippet": {
         "filename": "title1.java",
-        "contentSummary": "public class ......"
+        "thumbnailContent": "public class ......"
       },
       "modifiedAt": "2024-07-07 12:34"
     }
