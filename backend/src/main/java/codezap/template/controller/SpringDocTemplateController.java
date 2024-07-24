@@ -24,7 +24,7 @@ public interface SpringDocTemplateController {
             스니펫 목록은 파일 이름, 소스 코드, 해당 스니펫의 순서가 필요합니다. \n
             * 썸네일 스니펫은 1로 고정입니다. (2024.07.15 기준) \n
             * 모든 스니펫 순서는 1부터 시작합니다. \n
-            * 스니펫 순서는 오름차 순으로 정렬하여 보내야 합니다. \n
+            * 스니펫 순서는 오름차순으로 정렬하여 보내야 합니다. \n
             """)
     @ApiResponse(responseCode = "201", description = "회원 예약 생성 성공", headers = {
             @Header(name = "생성된 템플릿의 API 경로", example = "/templates/1")})
