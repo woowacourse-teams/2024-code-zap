@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { Layout } from '@/components/Layout';
-import Template from '@/pages/Template';
+import Template from '@/pages/Template/Template';
 import TemplateList from '@/pages/TemplateList';
 import TemplateUpload from '@/pages/TemplateUpload';
 
