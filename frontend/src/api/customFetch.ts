@@ -17,6 +17,7 @@ export const customFetch = async ({
     const response = await fetch(url, {
       method,
       headers: {
+        'Content-Type': 'application/json',
         ...headers,
       },
       body,
