@@ -73,4 +73,4 @@ jobs:
       - name: Verify Deploy Succeed
         run: |
           sleep 3
-          pgrep -f 'java -jar.code-zap.*\.jar' || echo "Deploy Failed"
+          pgrep -f 'java -jar .*code-zap.*\.jar' || { echo "Deploy Failed"; exit 1; }
