@@ -17,8 +17,9 @@ public interface ThumbnailSnippetRepository extends JpaRepository<ThumbnailSnipp
 
     @Query("""
             SELECT t
-            FROM ThumbnailSnippet t
+            FROM ThumbnailSnippet t JOIN Snippet s ON t.template.id = s.template.id
             WHERE t.template.title LIKE %:topic%
+            OR s.filename LIKE %:topic%
             """)
     List<ThumbnailSnippet> searchByTopic(@Param("topic") String topic);
 }

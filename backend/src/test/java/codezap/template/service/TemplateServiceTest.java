@@ -184,6 +184,21 @@ class TemplateServiceTest {
         assertThat(templates.templates()).hasSize(3);
     }
 
+    @Test
+    @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
+    void findAllSnippetFilenameContainTopicSuccess() {
+        //given
+        saveTemplateBySnippetFilename("tempate1", "login.js", "signup.js");
+        saveTemplateBySnippetFilename("tempate2", "login.java", "signup.java");
+        saveTemplateBySnippetFilename("tempate3", "login.js", "signup.java");
+
+        //when
+        FindAllTemplatesResponse templates = templateService.findContainTopic("java");
+
+        //then
+        assertThat(templates.templates()).hasSize(2);
+    }
+
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,
@@ -232,5 +247,20 @@ class TemplateServiceTest {
                 .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
 
         return savedTemplate;
+    }
+
+    private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename) {
+        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
+                templateTitle,
+                List.of(
+                        new CreateSnippetRequest(firstFilename, "content1", 1),
+                        new CreateSnippetRequest(secondFilename, "content2", 2)
+                )
+        );
+        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
+
+        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
+        snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
+        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 }
