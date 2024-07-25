@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 
+import { Button } from '@/components';
+
 export const MainContainer = styled.main`
   display: flex;
   flex-direction: column;
@@ -14,3 +16,7 @@ export const SidebarContainer = styled.aside`
   top: 20rem;
   right: 2rem;
 `;
+
+export const EditButton = styled(Button)``;
+
+export const DeleteButton = styled(Button)``;

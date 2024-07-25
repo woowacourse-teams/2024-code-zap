@@ -3,11 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { Button, Flex, SelectList, Text } from '@/components';
+import { pencilIcon, trashcanIcon } from '@/assets/images';
+import { Flex, SelectList, Text } from '@/components';
 import { useTemplateDeleteQuery, useTemplateQuery } from '@/hooks/template';
+import { TemplateEditPage } from '@/pages';
 import { formatRelativeTime } from '@/utils';
-import TemplateEditPage from '../TemplateEditPage/TemplateEditPage';
-import { MainContainer, SidebarContainer } from './TemplatePage.style';
+import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const TemplatePage = () => {
         <TemplateEditPage template={template} toggleEditButton={toggleEditButton} />
       ) : (
         <Flex direction='column' align='center' padding='10rem 0 0 0' width='100%'>
-          <MainContainer>
+          <S.MainContainer>
             <Flex justify='space-between'>
               <Flex direction='column' gap='1.6rem'>
                 <Text.Title color='white'>{template.title}</Text.Title>
@@ -71,13 +72,25 @@ const TemplatePage = () => {
                   {formatRelativeTime(template.modifiedAt)}
                 </Text.Caption>
               </Flex>
-              <Flex align='flex-end' gap='1.6rem'>
-                <Button variant='outlined' size='medium' onClick={handleEditButtonClick}>
-                  Edit
-                </Button>
-                <Button variant='outlined' size='medium' style={{ backgroundColor: '#BF3015' }} onClick={handleDelete}>
-                  Delete
-                </Button>
+              <Flex align='center' gap='1.6rem'>
+                <S.EditButton
+                  size='small'
+                  variant='text'
+                  onClick={() => {
+                    handleEditButtonClick();
+                  }}
+                >
+                  <img src={pencilIcon} width={24} height={24} alt='Delete snippet' />
+                </S.EditButton>
+                <S.DeleteButton
+                  size='small'
+                  variant='text'
+                  onClick={() => {
+                    handleDelete();
+                  }}
+                >
+                  <img src={trashcanIcon} width={28} height={28} alt='Delete snippet' />
+                </S.DeleteButton>
               </Flex>
             </Flex>
 
@@ -103,9 +116,9 @@ const TemplatePage = () => {
                 </SyntaxHighlighter>
               </div>
             ))}
-          </MainContainer>
+          </S.MainContainer>
 
-          <SidebarContainer>
+          <S.SidebarContainer>
             <SelectList>
               {template.snippets.map((snippet, index) => (
                 <SelectList.Option
@@ -117,7 +130,7 @@ const TemplatePage = () => {
                 </SelectList.Option>
               ))}
             </SelectList>
-          </SidebarContainer>
+          </S.SidebarContainer>
         </Flex>
       )}
     </>
