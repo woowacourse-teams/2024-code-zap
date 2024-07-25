@@ -54,41 +54,41 @@ class TemplateServiceTest {
     @Test
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
-        //given
+        // given
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
-        //when
+        // when
         templateService.create(createTemplateRequest);
 
-        //then
+        // then
         assertThat(templateRepository.findAll()).hasSize(1);
     }
 
     @Test
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
-        //given
+        // given
         saveTemplate(makeTemplateRequest("title1"));
         saveTemplate(makeTemplateRequest("title2"));
 
-        //when
+        // when
         FindAllTemplatesResponse allTemplates = templateService.findAll();
 
-        //then
+        // then
         assertThat(allTemplates.templates()).hasSize(2);
     }
 
     @Test
     @DisplayName("템플릿 단건 조회 성공")
     void findOneTemplateSuccess() {
-        //given
+        // given
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate);
 
-        //when
+        // when
         FindTemplateByIdResponse foundTemplate = templateService.findById(template.getId());
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
                 () -> assertThat(foundTemplate.snippets()).hasSize(snippetRepository.findAllByTemplate(template).size())
@@ -98,17 +98,17 @@ class TemplateServiceTest {
     @Test
     @DisplayName("템플릿 수정 성공")
     void updateTemplateSuccess() {
-        //given
+        // given
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate);
 
-        //when
+        // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
         templateService.update(template.getId(), updateTemplateRequest);
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
 
-        //then
+        // then
         assertAll(
                 () -> assertThat(updateTemplateRequest.title()).isEqualTo("updateTitle"),
                 () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),

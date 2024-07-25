@@ -128,15 +128,13 @@ class TemplateControllerTest {
     @Test
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
-        //given
-        CreateTemplateRequest templateRequest1 = new CreateTemplateRequest("title1",
-                List.of(new CreateSnippetRequest("filename", "content", 1)));
-        CreateTemplateRequest templateRequest2 = new CreateTemplateRequest("title2",
-                List.of(new CreateSnippetRequest("filename", "content", 1)));
+        // given
+        CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+        CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
         templateService.create(templateRequest1);
         templateService.create(templateRequest2);
 
-        //when & then
+        // when & then
         RestAssured.given().log().all()
                 .get("/templates")
                 .then().log().all()
@@ -151,24 +149,23 @@ class TemplateControllerTest {
         @Test
         @DisplayName("템플릿 상세 조회 성공")
         void findOneTemplateSuccess() {
-            //given
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)));
+            // given
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
-            //when & then
+            // when & then
             RestAssured.given().log().all()
                     .get("/templates/1")
                     .then().log().all()
                     .statusCode(200)
                     .body("title", is(templateRequest.title()),
-                            "snippets.size()", is(1));
+                            "snippets.size()", is(2));
         }
 
         @Test
         @DisplayName("템플릿 상세 조회 실패: 존재하지 않는 템플릿 조회")
         void findOneTemplateFailWithNotFoundTemplate() {
-            //when & then
+            // when & then
             RestAssured.given().log().all()
                     .get("/templates/1")
                     .then().log().all()
@@ -181,23 +178,14 @@ class TemplateControllerTest {
     @DisplayName("템플릿 수정 테스트")
     class updateTemplateTest {
 
-        @BeforeEach
-        void createTemplate() {
-            //given
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    "title",
-                    List.of(
-                            new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)
-                    )
-            );
-            templateService.create(templateRequest);
-        }
-
         @Test
         @DisplayName("템플릿 수정 성공")
         void updateTemplateSuccess() {
-            //when & then
+            // given
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            // when & then
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
                     List.of(
@@ -222,7 +210,11 @@ class TemplateControllerTest {
         @DisplayName("템플릿 수정 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
         void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
-            //when & then
+            // given
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            // when & then
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
                     List.of(
@@ -242,5 +234,16 @@ class TemplateControllerTest {
                     .statusCode(400)
                     .body("detail", is("스니펫 순서가 잘못되었습니다."));
         }
+    }
+
+    private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
+        CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                title,
+                List.of(
+                        new CreateSnippetRequest("filename1", "content1", 1),
+                        new CreateSnippetRequest("filename2", "content2", 2)
+                )
+        );
+        return templateRequest;
     }
 }
