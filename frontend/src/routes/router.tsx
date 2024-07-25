@@ -24,7 +24,7 @@ const router = createBrowserRouter(
       ],
     },
   ],
-  { basename: process.env.NODE_ENV === 'development' ? '/' : process.env.REACT_APP_BASE_URL },
+  { basename: process.env.REACT_APP_BASE_URL },
 );
 
 export default router;
