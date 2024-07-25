@@ -3,47 +3,67 @@
     {
       "id": 2024,
       "title": "title1",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
+      "member": {
+        "id": 20,
+        "nickname": "짱수"
       },
-      "modifiedAt": "2024-07-11 12:34"
+      "representative_snippet": {
+        "filename": "title1.java",
+        "content_summary": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
+      },
+      "modified_at": "2024-07-11 12:34"
     },
     {
       "id": 2025,
-      "title": "title2",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
+      "title": "title1",
+      "member": {
+        "id": 21,
+        "nickname": "몰리"
       },
-      "modifiedAt": "2024-07-10 12:34"
+      "representative_snippet": {
+        "filename": "title1.java",
+        "content_summary": "public class ......"
+      },
+      "modified_at": "2024-07-10 12:34"
     },
     {
       "id": 2026,
-      "title": "title3",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "const GlobalStyles = () => {"
+      "title": "title1",
+      "member": {
+        "id": 22,
+        "nickname": "마스터위"
       },
-      "modifiedAt": "2024-07-09 12:34"
+      "representative_snippet": {
+        "filename": "title1.java",
+        "content_summary": "const GlobalStyles = () => {"
+      },
+      "modified_at": "2024-07-09 12:34"
     },
     {
       "id": 2027,
-      "title": "title4",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
+      "title": "title1",
+      "member": {
+        "id": 23,
+        "nickname": "초롱"
       },
-      "modifiedAt": "2024-07-08 12:34"
+      "representative_snippet": {
+        "filename": "title1.java",
+        "content_summary": "public class ......"
+      },
+      "modified_at": "2024-07-08 12:34"
     },
     {
       "id": 2028,
-      "title": "title5",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
+      "title": "title1",
+      "member": {
+        "id": 24,
+        "nickname": "켬미"
       },
-      "modifiedAt": "2024-07-07 12:34"
+      "representative_snippet": {
+        "filename": "title1.java",
+        "content_summary": "public class ......"
+      },
+      "modified_at": "2024-07-07 12:34"
     }
   ]
 }

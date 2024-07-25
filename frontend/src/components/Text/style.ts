@@ -1,14 +1,13 @@
-import styled from '@emotion/styled';
+import { FontWeight } from './Text';
 
-import type { Props, TextWeight } from './Text';
-
-const weights: Record<TextWeight, number> = {
-  regular: 400,
-  bold: 700,
+export const styleText = (
+  size: string,
+  weight: FontWeight = 'regular',
+  color: string = '#ffffff'
+) => {
+  return {
+    color: color,
+    fontSize: `${size}rem`,
+    fontWeight: weight === 'regular' ? 400 : 700,
+  };
 };
-
-export const TextWrapper = styled.span<Props & { weight: TextWeight; size: string }>`
-  font-size: ${({ size }) => size};
-  font-weight: ${({ weight }) => weights[weight]};
-  color: ${({ color }) => color};
-`;
