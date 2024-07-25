@@ -61,7 +61,7 @@ class TemplateServiceTest {
         templateService.create(createTemplateRequest);
 
         //then
-        assertThat(templateRepository.findAll().size()).isEqualTo(1);
+        assertThat(templateRepository.findAll()).hasSize(1);
     }
 
     @Test
@@ -75,7 +75,7 @@ class TemplateServiceTest {
         FindAllTemplatesResponse allTemplates = templateService.findAll();
 
         //then
-        assertThat(allTemplates.templates().size()).isEqualTo(2);
+        assertThat(allTemplates.templates()).hasSize(2);
     }
 
     @Test
@@ -91,8 +91,7 @@ class TemplateServiceTest {
         //then
         assertAll(
                 () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
-                () -> assertThat(foundTemplate.snippets().size())
-                        .isEqualTo(snippetRepository.findAllByTemplate(template).size())
+                () -> assertThat(foundTemplate.snippets()).hasSize(snippetRepository.findAllByTemplate(template).size())
         );
     }
 
@@ -113,7 +112,7 @@ class TemplateServiceTest {
         assertAll(
                 () -> assertThat(updateTemplateRequest.title()).isEqualTo("updateTitle"),
                 () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),
-                () -> assertThat(snippets.size()).isEqualTo(3)
+                () -> assertThat(snippets).hasSize(3)
         );
     }
 
