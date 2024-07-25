@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
 import { useTemplateUploadQuery } from '@/hooks/template';
+import { TemplateUploadRequest } from '@/types/template';
 
 const TemplateUploadPage = () => {
   const navigate = useNavigate();
@@ -43,9 +44,8 @@ const TemplateUploadPage = () => {
   };
 
   const handleSaveButtonClick = () => {
-    const newTemplate = {
+    const newTemplate: TemplateUploadRequest = {
       title,
-      representative_snippet_ordinal: 1,
       snippets,
     };
 
