@@ -21,6 +21,8 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 @Service
 public class TemplateService {
 
+    public static final int FIRST_ORDINAL = 1;
+
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
@@ -68,7 +70,7 @@ public class TemplateService {
         updateTemplateRequest.createSnippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
 
-        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, 1);
+        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
 
         if (updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId())) {
             snippets.stream()
