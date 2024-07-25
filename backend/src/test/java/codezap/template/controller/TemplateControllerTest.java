@@ -54,6 +54,7 @@ class TemplateControllerTest {
             String maxTitle = "a".repeat(MAX_LENGTH);
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(maxTitle,
                     List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)));
+            
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -69,6 +70,7 @@ class TemplateControllerTest {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(exceededTitle,
                     List.of(new CreateSnippetRequest("a", "content", 1)));
+            
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -84,6 +86,7 @@ class TemplateControllerTest {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest(exceededTitle, "content", 1)));
+            
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -99,6 +102,7 @@ class TemplateControllerTest {
         void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)));
+            
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -115,6 +119,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
                             new CreateSnippetRequest("title", "content", secondIndex)));
+            
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -185,7 +190,6 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
-            // when & then
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
                     List.of(
@@ -197,6 +201,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L)
             );
+
+            // when & then
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
@@ -214,7 +220,6 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
-            // when & then
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
                     List.of(
@@ -226,6 +231,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L)
             );
+
+            // when & then
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
