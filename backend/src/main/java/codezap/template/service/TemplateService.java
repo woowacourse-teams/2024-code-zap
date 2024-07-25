@@ -1,6 +1,7 @@
 package codezap.template.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +74,7 @@ public class TemplateService {
         if (updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId())) {
             List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
             snippets.stream()
-                    .filter(snippet -> thumbnailSnippet.getSnippet().getId() != snippet.getId())
+                    .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
                     .findFirst()
                     .ifPresent(thumbnailSnippet::updateThumbnailSnippet);
         }
