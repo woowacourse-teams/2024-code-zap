@@ -1,6 +1,5 @@
 package codezap.global.exception;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
