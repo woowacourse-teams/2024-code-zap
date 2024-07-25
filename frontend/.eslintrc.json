@@ -14,7 +14,7 @@
     "plugin:react/jsx-runtime",
     "plugin:storybook/recommended"
   ],
-  "ignorePatterns": ["dist", "*.cjs", "*.config.ts", "*.polyfills.js"],
+  "ignorePatterns": ["dist", "*.config.ts", "*.config.js", "*.prod.js", "*.dev.js", "*.polyfills.js"],
   "parser": "@typescript-eslint/parser",
   "plugins": ["react-refresh", "react", "import"],
   "settings": {

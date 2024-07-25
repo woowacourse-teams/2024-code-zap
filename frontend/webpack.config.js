@@ -1,15 +1,5 @@
-const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const dotenv = require('dotenv');
-
-const dotenvPath = path.join(__dirname, '.env');
-const fileEnv = dotenv.config({ path: dotenvPath }).parsed;
-
-const envKeys = Object.keys(fileEnv).reduce((prev, next) => {
-  prev[`process.env.${next}`] = JSON.stringify(fileEnv[next]);
-  return prev;
-}, {});
 
 module.exports = {
   entry: './src/index.tsx',
@@ -18,11 +8,9 @@ module.exports = {
     filename: 'bundle.js',
     publicPath: '/',
   },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src/'),
-    },
-    extensions: ['.tsx', '.ts', '.js'],
+  devServer: {
+    port: 3000,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -47,10 +35,11 @@ module.exports = {
       template: './public/index.html',
       filename: 'index.html',
     }),
-    new webpack.DefinePlugin(envKeys),
   ],
-  devServer: {
-    port: 3000,
-    historyApiFallback: true,
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+    },
+    extensions: ['.tsx', '.ts', '.js'],
   },
 };
