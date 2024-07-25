@@ -26,6 +26,7 @@ const TemplateItem = ({ item }: Props) => {
         codeTagProps={{
           style: {
             fontSize: '1.8rem',
+            lineHeight: '1.2rem',
           },
         }}
       >
