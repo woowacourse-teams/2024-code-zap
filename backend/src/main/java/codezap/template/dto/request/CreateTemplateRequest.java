@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import codezap.template.dto.request.validation.IncreaseIndexRequest;
+import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CreateTemplateRequest(
@@ -19,9 +19,9 @@ public record CreateTemplateRequest(
         @Valid
         List<CreateSnippetRequest> snippets
 
-) implements IncreaseIndexRequest {
+) implements ValidatedSnippetsOrdinalRequest {
     @Override
-    public List<Integer> increasedIndexes() {
+    public List<Integer> extractSnippetsOrdinal() {
         return snippets.stream().map(CreateSnippetRequest::ordinal).toList();
     }
 }
