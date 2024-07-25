@@ -1,9 +1,9 @@
 import { Template, TemplateListResponse, TemplateUploadRequest } from '@/types/template';
 import { customFetch } from './customFetch';
 
-const BASE_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL;
 
-export const TEMPLATE_API_URL = `${BASE_URL}/templates`;
+export const TEMPLATE_API_URL = `${API_URL}/templates`;
 
 export const getTemplateList = async (): Promise<TemplateListResponse> =>
   await customFetch({
