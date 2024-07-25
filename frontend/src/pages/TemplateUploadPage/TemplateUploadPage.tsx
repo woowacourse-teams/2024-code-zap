@@ -1,12 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/Button';
-import { Flex } from '@/components/Flex';
-import { SnippetEditor } from '@/components/SnippetEditor';
-import { TemplateTitleInput } from '@/components/TemplateTitleInput';
-import useTemplateUploadQuery from '@/hooks/useTemplateUploadQuery';
 
-const UploadsTemplate = () => {
+import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
+import { useTemplateUploadQuery } from '@/hooks/template';
+
+const TemplateUploadPage = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [snippets, setSnippets] = useState([
@@ -67,23 +65,21 @@ const UploadsTemplate = () => {
             value={title}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value)}
           />
-          {snippets.map((snippet, idx) => {
-            return (
-              <SnippetEditor
-                key={idx}
-                fileName={snippet.filename}
-                content={snippet.content}
-                onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
-                onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
-              />
-            );
-          })}
+          {snippets.map((snippet, idx) => (
+            <SnippetEditor
+              key={idx}
+              fileName={snippet.filename}
+              content={snippet.content}
+              onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
+              onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
+            />
+          ))}
 
           <Flex direction='row' justify='space-between' width='100%' padding='3rem 0 0 0'>
-            <Button width='auto' type='outlined' onClick={handleAddButtonClick}>
+            <Button size='medium' variant='outlined' onClick={handleAddButtonClick}>
               + Add Snippet
             </Button>
-            <Button onClick={handleSaveButtonClick} disabled={isLoading}>
+            <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={isLoading}>
               Save
             </Button>
           </Flex>
@@ -95,4 +91,4 @@ const UploadsTemplate = () => {
   );
 };
 
-export default UploadsTemplate;
+export default TemplateUploadPage;

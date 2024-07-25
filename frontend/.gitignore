@@ -3,3 +3,7 @@ node_modules
 *storybook.log
 
 dist
+
+.env
+.env.development
+.env.production

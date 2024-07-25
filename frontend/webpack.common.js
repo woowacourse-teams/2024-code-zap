@@ -1,18 +1,16 @@
-const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
-    publicPath: '/',
+    clean: true,
   },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src/'),
-    },
-    extensions: ['.tsx', '.ts', '.js'],
+  devServer: {
+    port: 3000,
+    historyApiFallback: true,
   },
   module: {
     rules: [
@@ -22,16 +20,13 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-              outputPath: 'assets/images',
-            },
+        test: /\.(png|svg|jpe?g|gif|webp)$/i,
+        type: 'asset',
+        parser: {
+          dataUrlCondition: {
+            maxSize: 4 * 1024, // 4kb
           },
-        ],
+        },
       },
     ],
   },
@@ -41,8 +36,10 @@ module.exports = {
       filename: 'index.html',
     }),
   ],
-  devServer: {
-    port: 3000,
-    historyApiFallback: true,
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src/'),
+    },
+    extensions: ['.tsx', '.ts', '.js'],
   },
 };
