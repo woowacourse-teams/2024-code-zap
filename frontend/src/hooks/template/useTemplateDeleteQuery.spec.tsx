@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { PropsWithChildren } from 'react';
+
 import { useTemplateDeleteQuery } from './useTemplateDeleteQuery';
 
 const queryClient = new QueryClient();
