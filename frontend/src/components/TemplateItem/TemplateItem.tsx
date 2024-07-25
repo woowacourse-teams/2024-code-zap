@@ -3,7 +3,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { Flex, Text } from '@/components';
 import { TemplateListItem } from '@/types/template';
-import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { formatRelativeTime } from '@/utils';
 
 interface Props {
   item: TemplateListItem;
