@@ -17,7 +17,7 @@ const router = createBrowserRouter(
           element: <TemplatePage />,
         },
         {
-          path: 'templates/uploads',
+          path: 'templates/upload',
           element: <TemplateUploadPage />,
         },
       ],
