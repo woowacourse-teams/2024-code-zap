@@ -7,4 +7,6 @@ import codezap.template.domain.ThumbnailSnippet;
 
 public interface ThumbnailSnippetRepository extends JpaRepository<ThumbnailSnippet, Long> {
     ThumbnailSnippet findByTemplate(Template template);
+
+    void deleteByTemplateId(Long id);
 }

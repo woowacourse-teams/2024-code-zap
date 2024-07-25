@@ -77,6 +77,13 @@ public class TemplateService {
         updateTemplateRequest.deleteSnippetIds().forEach(snippetRepository::deleteById);
     }
 
+    @Transactional
+    public void deleteById(Long id) {
+        thumbnailSnippetRepository.deleteByTemplateId(id);
+        snippetRepository.deleteByTemplateId(id);
+        templateRepository.deleteById(id);
+    }
+
     private static boolean isThumbnailSnippetDeleted(
             UpdateTemplateRequest updateTemplateRequest,
             ThumbnailSnippet thumbnailSnippet

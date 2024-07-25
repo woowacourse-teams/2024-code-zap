@@ -20,4 +20,6 @@ public interface SnippetRepository extends JpaRepository<Snippet, Long> {
     Snippet findByTemplateAndOrdinal(Template template, int ordinal);
 
     List<Snippet> findAllByTemplateAndOrdinal(Template template, int ordinal);
+
+    void deleteByTemplateId(Long id);
 }

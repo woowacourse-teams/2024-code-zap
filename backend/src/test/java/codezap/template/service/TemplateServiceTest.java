@@ -116,6 +116,24 @@ class TemplateServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("템플릿 삭제 성공")
+    void deleteTemplateSuccess() {
+        // given
+        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
+        saveTemplate(createdTemplate);
+
+        // when
+        templateService.deleteById(1L);
+
+        // then
+        assertAll(
+                () -> assertThat(templateRepository.findAll()).isEmpty(),
+                () -> assertThat(snippetRepository.findAll()).isEmpty(),
+                () -> assertThat(thumbnailSnippetRepository.findAll()).isEmpty()
+        );
+    }
+
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,
