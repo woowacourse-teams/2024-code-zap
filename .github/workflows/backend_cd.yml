@@ -30,7 +30,7 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
+            
       - name: Build BootJar
         run: ./gradlew bootJar
         working-directory: ${{ env.build-directory }}
@@ -45,32 +45,19 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Get Artifact Download URL
-        id: get-artifact-url
-        run: |
-          artifacts=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                            -H "Accept: application/vnd.github.v3+json" \
-                            https://api.github.com/repos/${{ github.repository }}/actions/artifacts)
-          artifact_id=$(echo "$artifacts" | jq -r '.artifacts[0].id')
-          if [[ -z "$artifact_id" || "$artifact_id" == "null" ]]; then
-            echo "Artifact ID not found or invalid"
-            exit 1
-          fi
-          download_url="https://api.github.com/repos/${{ github.repository }}/actions/artifacts/$artifact_id/zip"
-          echo "DOWNLOAD_URL=${download_url}" >> $GITHUB_ENV
-
       - name: Download Artifact
-        run: |
-          curl -L -o ${{ secrets.WORK_DIRECTORY }}/code-zap-jar.zip -H \
-          "Authorization: token ${{ secrets.GITHUB_TOKEN }}" ${{ env.DOWNLOAD_URL }}
-
+        uses: actions/download-artifact@v4
+        with:
+          name: code-zap-jar
+          path: ${{ secrets.WORK_DIRECTORY }}
+          
       - name: Run Deploy Script
         run: |
           cd ${{ secrets.WORK_DIRECTORY }}
           unzip -o code-zap-jar.zip
           RUNNER_TRACKING_ID="" && ./deploy.sh
-
+          
       - name: Verify Deploy Succeed
         run: |
           sleep 3
-          pgrep -f 'java -jar.code-zap.*\.jar' || echo "Deploy Failed"
+          pgrep -f 'java -jar .*code-zap.*\.jar' || { echo "Deploy Failed"; exit 1; }
