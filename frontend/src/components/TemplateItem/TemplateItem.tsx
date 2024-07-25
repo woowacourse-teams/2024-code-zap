@@ -1,9 +1,9 @@
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
+import { Flex, Text } from '@/components';
 import { TemplateListItem } from '@/types/template';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
-import { Flex, Text } from '..';
 
 interface Props {
   item: TemplateListItem;

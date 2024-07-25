@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon } from '@/assets/images';
-import { Button, Flex, Input, Text } from '..';
+import { Button, Flex, Input, Text } from '@/components';
 import * as S from './style';
 
 const Header = () => {
