@@ -86,7 +86,7 @@ class TemplateControllerTest {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest(exceededTitle, "content", 1)));
-            
+
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -102,7 +102,7 @@ class TemplateControllerTest {
         void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)));
-            
+
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -119,7 +119,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
                             new CreateSnippetRequest("title", "content", secondIndex)));
-            
+
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -241,6 +241,36 @@ class TemplateControllerTest {
                     .statusCode(400)
                     .body("detail", is("스니펫 순서가 잘못되었습니다."));
         }
+    }
+
+    @Nested
+    @DisplayName("템플릿 삭제 테스트")
+    class deleteTemplateTest {
+
+        @Test
+        @DisplayName("템플릿 삭제 성공")
+        void deleteTemplateSuccess() {
+            // given
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            // when & then
+            RestAssured.given().log().all()
+                    .delete("/templates/1")
+                    .then().log().all()
+                    .statusCode(204);
+        }
+
+        @Test
+        @DisplayName("템플릿 삭제 성공: 존재하지 않는 템플릿 삭제")
+        void deleteTemplateSuccessWithNotFoundTemplate() {
+            // when & then
+            RestAssured.given().log().all()
+                    .delete("/templates/1")
+                    .then().log().all()
+                    .statusCode(204);
+        }
+
     }
 
     private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
