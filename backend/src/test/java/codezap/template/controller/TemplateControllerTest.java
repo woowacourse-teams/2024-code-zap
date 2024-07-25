@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -20,6 +21,7 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.service.TemplateService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -29,6 +31,9 @@ import io.restassured.http.ContentType;
 class TemplateControllerTest {
 
     private static final int MAX_LENGTH = 255;
+
+    @Autowired
+    private TemplateService templateService;
 
     @LocalServerPort
     int port;
@@ -41,6 +46,7 @@ class TemplateControllerTest {
     @Nested
     @DisplayName("템플릿 생성 테스트")
     class createTemplateTest {
+
         @ParameterizedTest
         @DisplayName("템플릿 생성 성공")
         @CsvSource({"a, 65535", "ㄱ, 21845"})
@@ -125,19 +131,10 @@ class TemplateControllerTest {
         //given
         CreateTemplateRequest templateRequest1 = new CreateTemplateRequest("title1",
                 List.of(new CreateSnippetRequest("filename", "content", 1)));
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(templateRequest1)
-                .when().post("/templates")
-                .then().log().all();
-
         CreateTemplateRequest templateRequest2 = new CreateTemplateRequest("title2",
                 List.of(new CreateSnippetRequest("filename", "content", 1)));
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(templateRequest2)
-                .when().post("/templates")
-                .then().log().all();
+        templateService.create(templateRequest1);
+        templateService.create(templateRequest2);
 
         //when & then
         RestAssured.given().log().all()
@@ -150,17 +147,14 @@ class TemplateControllerTest {
     @Nested
     @DisplayName("템플릿 상세 조회 테스트")
     class findTemplateTest {
+
         @Test
         @DisplayName("템플릿 상세 조회 성공")
         void findOneTemplateSuccess() {
             //given
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest("filename", "content", 1)));
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(templateRequest)
-                    .when().post("/templates")
-                    .then().log().all();
+            templateService.create(templateRequest);
 
             //when & then
             RestAssured.given().log().all()
@@ -186,9 +180,9 @@ class TemplateControllerTest {
     @Nested
     @DisplayName("템플릿 수정 테스트")
     class updateTemplateTest {
-        @Test
-        @DisplayName("템플릿 수정 성공")
-        void updateTemplateSuccess() {
+
+        @BeforeEach
+        void createTemplate() {
             //given
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
@@ -197,12 +191,12 @@ class TemplateControllerTest {
                             new CreateSnippetRequest("filename2", "content2", 2)
                     )
             );
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(templateRequest)
-                    .when().post("/templates")
-                    .then().log().all();
+            templateService.create(templateRequest);
+        }
 
+        @Test
+        @DisplayName("템플릿 수정 성공")
+        void updateTemplateSuccess() {
             //when & then
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
@@ -228,20 +222,6 @@ class TemplateControllerTest {
         @DisplayName("템플릿 수정 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
         void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
-            //given
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    "title",
-                    List.of(
-                            new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)
-                    )
-            );
-            RestAssured.given().log().all()
-                    .contentType(ContentType.JSON)
-                    .body(templateRequest)
-                    .when().post("/templates")
-                    .then().log().all();
-
             //when & then
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
