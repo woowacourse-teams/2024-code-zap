@@ -64,23 +64,32 @@ public class TemplateService {
         Template template = templateRepository.fetchById(templateId);
         template.updateTitle(updateTemplateRequest.title());
 
-        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template);
-
-        updateTemplateRequest.updateSnippets()
-                .forEach(this::updateSnippet);
+        updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
         updateTemplateRequest.createSnippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
 
-        if (updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId())) {
-            List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
-            snippets.stream()
-                    .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
-                    .findFirst()
-                    .ifPresent(thumbnailSnippet::updateThumbnailSnippet);
+        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template);
+
+        if (isThumbnailSnippetDeleted(updateTemplateRequest, thumbnailSnippet)) {
+            updateThumbnailSnippet(template, thumbnailSnippet);
         }
 
-        updateTemplateRequest.deleteSnippetIds()
-                .forEach(snippetRepository::deleteById);
+        updateTemplateRequest.deleteSnippetIds().forEach(snippetRepository::deleteById);
+    }
+
+    private static boolean isThumbnailSnippetDeleted(
+            UpdateTemplateRequest updateTemplateRequest,
+            ThumbnailSnippet thumbnailSnippet
+    ) {
+        return updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId());
+    }
+
+    private void updateThumbnailSnippet(Template template, ThumbnailSnippet thumbnailSnippet) {
+        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
+        snippets.stream()
+                .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
+                .findFirst()
+                .ifPresent(thumbnailSnippet::updateThumbnailSnippet);
     }
 
     private void createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
