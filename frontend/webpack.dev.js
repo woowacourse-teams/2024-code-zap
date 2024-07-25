@@ -1,13 +1,16 @@
-const webpack = require('webpack');
-const { merge } = require('webpack-merge');
 const { HotModuleReplacementPlugin } = require('webpack');
-const common = require('./webpack.config.js');
+const { merge } = require('webpack-merge');
 const Dotenv = require('dotenv-webpack');
+
+const common = require('./webpack.common.js');
 
 module.exports = () => {
   return merge(common, {
     mode: 'development',
     devtool: 'cheap-module-source-map',
+    output: {
+      publicPath: '/',
+    },
     plugins: [
       new HotModuleReplacementPlugin(),
       new Dotenv({
