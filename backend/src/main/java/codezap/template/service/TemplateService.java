@@ -44,7 +44,7 @@ public class TemplateService {
         createTemplateRequest.snippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
 
-        Snippet thumbnailSnippet = snippetRepository.findByTemplateAndOrdinal(template, 1);
+        Snippet thumbnailSnippet = snippetRepository.findByTemplateAndOrdinal(template, FIRST_ORDINAL);
         thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
         return template.getId();
     }
