@@ -1,26 +1,20 @@
+import { Flex } from '@/components/Flex';
 import { Link } from 'react-router-dom';
+import { TemplateItem } from '@/components/TemplateItem';
+import { Text } from '@/components/Text';
+import useTemplateListQuery from '@/hooks/useTemplateListQuery';
 
-import { Flex, TemplateItem, Text } from '@/components';
-import { useTemplateListQuery } from '@/hooks/template';
-
-const TemplateListPage = () => {
+const TemplateList = () => {
   const { data, error, isLoading } = useTemplateListQuery();
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
   const list = data?.templates || [];
 
   return (
     <Flex direction='column' justify='flex-start' align='flex-end' width='100%' padding='10rem 0 0 0' gap='3.6rem'>
-      <Text.Body color='white' weight='bold'>
-        {list.length} Results
-      </Text.Body>
+      <Text.Body weight='bold'>{list.length} Results</Text.Body>
       <Flex direction='column' width='100%' gap='4.8rem'>
         {list.map((item) => (
           <Link to={`templates/${item.id}`} key={item.id}>
@@ -32,4 +26,4 @@ const TemplateListPage = () => {
   );
 };
 
-export default TemplateListPage;
+export default TemplateList;

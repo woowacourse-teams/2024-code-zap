@@ -1,29 +1,44 @@
-import { InputHTMLAttributes } from 'react';
+import React from 'react';
+import { inputStyle, searchStyle, inputWrapperStyle, iconStyle } from './style';
+import searchIcon from '../../assets/images/search.png';
 
-import { searchIcon } from '@/assets/images';
-import * as S from './style';
-
-export interface Props extends InputHTMLAttributes<HTMLInputElement> {
+interface Props {
+  value: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
   type?: 'text' | 'email' | 'password' | 'search';
+  disabled?: boolean;
   width?: string;
   height?: string;
   fontSize?: string;
   fontWeight?: string;
 }
 
-const Input = ({ type, width, height, fontSize, fontWeight, ...rests }: Props) => (
-  <S.InputWrapper>
-    {type === 'search' && <S.SearchIcon src={searchIcon} alt='search icon' />}
-    <S.Input
-      type={type}
-      width={width}
-      height={height}
-      fontSize={fontSize}
-      fontWeight={fontWeight}
-      formNoValidate
-      {...rests}
-    />
-  </S.InputWrapper>
-);
+const Input = ({
+  value,
+  onChange,
+  placeholder = '',
+  type = 'text',
+  disabled = false,
+  width,
+  height,
+  fontSize,
+  fontWeight,
+}: Props) => {
+  return (
+    <div css={inputWrapperStyle(width)}>
+      {type === 'search' && <img src={searchIcon} css={iconStyle} alt='search icon' />}
+      <input
+        css={[inputStyle({ width, height, fontSize, fontWeight }), type === 'search' && searchStyle]}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        type={type}
+        disabled={disabled}
+        {...(type === 'email' && { formNoValidate: true })}
+      />
+    </div>
+  );
+};
 
 export default Input;
