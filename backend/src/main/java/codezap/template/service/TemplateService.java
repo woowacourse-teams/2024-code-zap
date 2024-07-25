@@ -70,9 +70,8 @@ public class TemplateService {
         updateTemplateRequest.createSnippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
 
-        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
-
         if (updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId())) {
+            List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
             snippets.stream()
                     .filter(snippet -> thumbnailSnippet.getSnippet().getId() != snippet.getId())
                     .findFirst()
