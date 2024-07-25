@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
 import { useTemplateUploadQuery } from '@/hooks/template';
 
-const TemplateUpload = () => {
+const TemplateUploadPage = () => {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
   const [snippets, setSnippets] = useState([
@@ -91,4 +91,4 @@ const TemplateUpload = () => {
   );
 };
 
-export default TemplateUpload;
+export default TemplateUploadPage;

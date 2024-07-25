@@ -1,3 +1,3 @@
-export { default as Template } from './Template/Template';
-export { default as TemplateList } from './TemplateList/TemplateList';
-export { default as TemplateUpload } from './TemplateUpload/TemplateUpload';
+export { default as TemplatePage } from './TemplatePage/TemplatePage';
+export { default as TemplateListPage } from './TemplateListPage/TemplateListPage';
+export { default as TemplateUploadPage } from './TemplateUploadPage/TemplateUploadPage';

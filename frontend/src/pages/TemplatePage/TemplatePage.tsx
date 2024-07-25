@@ -6,9 +6,9 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Flex, SelectList, Text } from '@/components';
 import { useTemplateQuery } from '@/hooks/template';
 import { formatRelativeTime } from '@/utils';
-import { MainContainer, SidebarContainer } from './Template.style';
+import { MainContainer, SidebarContainer } from './TemplatePage.style';
 
-const Template = () => {
+const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: template, error, isLoading } = useTemplateQuery(Number(id));
   const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -80,4 +80,4 @@ const Template = () => {
   );
 };
 
-export default Template;
+export default TemplatePage;
