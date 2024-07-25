@@ -1,7 +1,7 @@
-const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const common = require('./webpack.config.js');
 const Dotenv = require('dotenv-webpack');
+
+const common = require('./webpack.common.js');
 
 module.exports = () => {
   return merge(common, {
@@ -13,9 +13,6 @@ module.exports = () => {
         systemvars: true,
         safe: true,
         ignoreStub: true,
-      }),
-      new webpack.ProvidePlugin({
-        process: 'process/browser.js',
       }),
     ],
   });
