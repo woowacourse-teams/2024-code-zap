@@ -1,10 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/Button';
-import { Flex } from '@/components/Flex';
-import { SnippetEditor } from '@/components/SnippetEditor';
-import { TemplateTitleInput } from '@/components/TemplateTitleInput';
-import { useTemplateUploadQuery } from '@/hooks/useTemplateUploadQuery';
+
+import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
+import { useTemplateUploadQuery } from '@/hooks/template';
 
 const TemplateUpload = () => {
   const navigate = useNavigate();

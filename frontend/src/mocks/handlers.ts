@@ -1,4 +1,5 @@
 import { HttpResponse, http } from 'msw';
+
 import { TEMPLATE_API_URL } from '@/api/templates';
 import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
