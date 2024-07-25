@@ -7,7 +7,6 @@ import jakarta.validation.ConstraintValidatorContext;
 
 public class IncreasedIndexValidator implements ConstraintValidator<IncreasedIndex, IncreaseIndexRequest> {
 
-
     @Override
     public boolean isValid(IncreaseIndexRequest increaseIndexRequest,
             ConstraintValidatorContext constraintValidatorContext
