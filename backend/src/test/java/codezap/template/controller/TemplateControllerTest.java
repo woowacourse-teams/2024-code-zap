@@ -134,7 +134,7 @@ class TemplateControllerTest {
                 .when().post("/templates")
                 .then().log().all();
 
-        //when
+        //when & then
         RestAssured.given().log().all()
                 .get("/templates")
                 .then().log().all()
@@ -154,7 +154,7 @@ class TemplateControllerTest {
                 .when().post("/templates")
                 .then().log().all();
 
-        //when
+        //when & then
         RestAssured.given().log().all()
                 .get("/templates/1")
                 .then().log().all()
@@ -166,7 +166,7 @@ class TemplateControllerTest {
     @Test
     @DisplayName("템플릿 상세 조회 실패: 존재하지 않는 템플릿 조회")
     void findOneTemplateFailWithNotFoundTemplate() {
-        //when
+        //when & then
         RestAssured.given().log().all()
                 .get("/templates/1")
                 .then().log().all()
@@ -191,7 +191,7 @@ class TemplateControllerTest {
                 .when().post("/templates")
                 .then().log().all();
 
-        //when
+        //when & then
         UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                 "updateTitle",
                 List.of(
@@ -211,10 +211,10 @@ class TemplateControllerTest {
                 .statusCode(200);
     }
 
+    // 정상 요청: 2, 3, 1
     @ParameterizedTest
     @DisplayName("템플리 수정 실패: 잘못된 스니펫 순서 입력")
     @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
-        // 정상 요청: 2, 3, 1
     void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
         //given
         CreateTemplateRequest templateRequest = new CreateTemplateRequest(
@@ -230,7 +230,7 @@ class TemplateControllerTest {
                 .when().post("/templates")
                 .then().log().all();
 
-        //when
+        //when & then
         UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                 "updateTitle",
                 List.of(
@@ -249,6 +249,5 @@ class TemplateControllerTest {
                 .then().log().all()
                 .statusCode(400)
                 .body("detail", is("스니펫 순서가 잘못되었습니다."));
-        ;
     }
 }

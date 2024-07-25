@@ -103,11 +103,13 @@ class TemplateServiceTest {
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate);
 
+        //when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
         templateService.update(template.getId(), updateTemplateRequest);
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
 
+        //then
         assertAll(
                 () -> assertThat(updateTemplateRequest.title()).isEqualTo("updateTitle"),
                 () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),
