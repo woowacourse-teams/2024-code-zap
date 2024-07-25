@@ -28,19 +28,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ProblemDetail> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException exception
     ) {
-        List<String> errorMessages = new ArrayList<>();
         BindingResult bindingResult = exception.getBindingResult();
-        if (bindingResult.hasFieldErrors()) {
-            bindingResult.getFieldErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .forEach(errorMessages::add);
-        }
+        List<String> errorMessages = bindingResult.getAllErrors().stream()
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .toList();
 
-        if (bindingResult.hasGlobalErrors()) {
-            bindingResult.getGlobalErrors().stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .forEach(errorMessages::add);
-        }
         return ResponseEntity.badRequest()
                 .body(ProblemDetail.forStatusAndDetail(
                         HttpStatus.BAD_REQUEST,
