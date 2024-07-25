@@ -4,7 +4,6 @@ import java.net.URI;
 
 import jakarta.validation.Valid;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,12 +46,17 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> updateTemplate(@PathVariable Long id, UpdateTemplateRequest updateTemplateRequest) {
-        throw new NotImplementedException();
+    public ResponseEntity<Void> updateTemplate(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateTemplateRequest updateTemplateRequest
+    ) {
+        templateService.update(id, updateTemplateRequest);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTemplate(@PathVariable Long id) {
-        throw new NotImplementedException();
+        templateService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -29,4 +29,8 @@ public class ThumbnailSnippet extends BaseTimeEntity {
         this.template = template;
         this.snippet = snippet;
     }
+
+    public void updateThumbnailSnippet(Snippet snippet) {
+        this.snippet = snippet;
+    }
 }
