@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
+
+import { Text } from '@/components';
 import Flex from '../Flex/Flex';
-import { Text } from '../Text';
 import * as S from './style';
 
 export interface OptionProps {

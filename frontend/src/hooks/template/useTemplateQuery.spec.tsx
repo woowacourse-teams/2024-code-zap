@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
+
 import { useTemplateQuery } from './useTemplateQuery';
 
 const queryClient = new QueryClient();

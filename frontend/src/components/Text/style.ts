@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+
 import type { Props, TextWeight } from './Text';
 
 const weights: Record<TextWeight, number> = {

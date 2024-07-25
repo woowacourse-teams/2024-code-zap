@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import logoIcon from '@/assets/images/logo.png';
-import newTemplateIcon from '@/assets/images/newTemplate.png';
-import { Button } from '../Button';
-import { Flex } from '../Flex';
-import { Input } from '../Input';
-import { Text } from '../Text';
+
+import { logoIcon, newTemplateIcon } from '@/assets/images';
+import { Button, Flex, Input, Text } from '@/components';
 import * as S from './style';
 
 const Header = () => {

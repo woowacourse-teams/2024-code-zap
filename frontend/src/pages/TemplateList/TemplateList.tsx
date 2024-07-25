@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Flex } from '@/components/Flex';
-import { TemplateItem } from '@/components/TemplateItem';
-import { Text } from '@/components/Text';
-import { useTemplateListQuery } from '@/hooks/useTemplateListQuery';
+
+import { Flex, TemplateItem, Text } from '@/components';
+import { useTemplateListQuery } from '@/hooks/template';
 
 const TemplateList = () => {
   const { data, error, isLoading } = useTemplateListQuery();
