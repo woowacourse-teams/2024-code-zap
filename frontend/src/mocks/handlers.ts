@@ -15,4 +15,6 @@ export const handlers = [
     return response;
   }),
   http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 200 })),
+  http.delete(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 204 })),
 ];
