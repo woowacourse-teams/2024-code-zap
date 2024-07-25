@@ -1,26 +1,32 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { Template, TemplateList, TemplateUpload } from '@/pages';
+import { TemplatePage, TemplateListPage, TemplateUploadPage, TemplateEditPage } from '@/pages';
 
-const router = createBrowserRouter([
-  {
-    element: <Layout />,
-    children: [
-      {
-        path: '/',
-        element: <TemplateList />,
-      },
-      {
-        path: 'templates/:id',
-        element: <Template />,
-      },
-      {
-        path: 'templates/uploads',
-        element: <TemplateUpload />,
-      },
-    ],
-  },
-]);
+const router = createBrowserRouter(
+  [
+    {
+      element: <Layout />,
+      children: [
+        {
+          path: '/',
+          element: <TemplateListPage />,
+        },
+        {
+          path: 'templates/:id',
+          element: <TemplatePage />,
+        },
+        {
+          path: 'templates/upload',
+          element: <TemplateUploadPage />,
+        },
+        {
+          path: 'templates/edit/:id',
+          element: <TemplateEditPage />,
+        },
+      ],
+    },
+  ],
+);
 
 export default router;

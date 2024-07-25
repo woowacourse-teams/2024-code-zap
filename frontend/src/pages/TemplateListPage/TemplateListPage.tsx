@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Flex, TemplateItem, Text } from '@/components';
 import { useTemplateListQuery } from '@/hooks/template';
 
-const TemplateList = () => {
+const TemplateListPage = () => {
   const { data, error, isLoading } = useTemplateListQuery();
 
   if (isLoading) {
@@ -32,4 +32,4 @@ const TemplateList = () => {
   );
 };
 
-export default TemplateList;
+export default TemplateListPage;

@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import { Text } from '@/components';
+import Flex from '../Flex/Flex';
 import * as S from './style';
 
 export interface OptionProps {
@@ -8,7 +9,7 @@ export interface OptionProps {
   onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-const SelectListBase = ({ children }: PropsWithChildren) => <S.SelectListContainer>{children}</S.SelectListContainer>;
+const SelectListBase = ({ children }: PropsWithChildren) => <Flex direction='column'>{children}</Flex>;
 
 const SelectListOption = ({ children, isSelected, onClick }: PropsWithChildren<OptionProps>) => (
   <S.SelectListOption href={`#${children}`} onClick={onClick} isSelected={isSelected}>
