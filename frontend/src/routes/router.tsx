@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, TemplateListPage, TemplateUploadPage } from '@/pages';
+import { TemplatePage, TemplateListPage, TemplateUploadPage, TemplateEditPage } from '@/pages';
 
 const router = createBrowserRouter(
   [
@@ -19,6 +19,10 @@ const router = createBrowserRouter(
         {
           path: 'templates/upload',
           element: <TemplateUploadPage />,
+        },
+        {
+          path: 'templates/edit/:id',
+          element: <TemplateEditPage />,
         },
       ],
     },
