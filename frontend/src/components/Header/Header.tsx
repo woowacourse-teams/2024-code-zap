@@ -14,7 +14,7 @@ const Header = () => {
 
   return (
     <S.HeaderContainer>
-      <Link to={'/my-page'}>
+      <Link to={'/'}>
         <Flex align='center' gap='1.2rem' width='fit-content'>
           <img src={logoIcon} alt='logo' />
           <Text.SubTitle color='#FFD269'>CodeZap</Text.SubTitle>
