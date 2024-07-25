@@ -8,10 +8,10 @@ import java.lang.annotation.Target;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = IncreasedIndexValidator.class)
-public @interface IncreasedIndex {
+@Constraint(validatedBy = SnippetsOrdinalValidator.class)
+public @interface SnippetsOrdinal {
 
     String message();
 

@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-import codezap.template.dto.request.validation.IncreasedIndex;
+import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CreateTemplateRequest(
@@ -17,8 +17,11 @@ public record CreateTemplateRequest(
 
         @Schema(description = "템플릿의 스니펫 내역")
         @NotNull(message = "스니펫 리스트가 null 입니다.")
-        @IncreasedIndex(message = "스니펫 순서가 잘못되었습니다.")
         @Valid
         List<CreateSnippetRequest> snippets
-) {
+) implements ValidatedSnippetsOrdinalRequest {
+    @Override
+    public List<Integer> extractSnippetsOrdinal() {
+        return snippets.stream().map(CreateSnippetRequest::ordinal).toList();
+    }
 }

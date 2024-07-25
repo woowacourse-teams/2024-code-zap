@@ -1,15 +1,15 @@
 package codezap.template.repository;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
 
+import codezap.global.exception.CodeZapException;
 import codezap.template.domain.Template;
 
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 
-    default Template getById(Long id) {
+    default Template fetchById(Long id) {
         return findById(id).orElseThrow(
-                () -> new NoSuchElementException("식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
+                () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
     }
 }

@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateSnippetRequest(
         @Schema(description = "파일 식별자", example = "0")
+        @NotNull(message = "파일 id가 null 입니다.")
         Long id,
 
         @Schema(description = "파일 이름", example = "Main.java")

@@ -47,8 +47,12 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> updateTemplate(@PathVariable Long id, UpdateTemplateRequest updateTemplateRequest) {
-        throw new NotImplementedException();
+    public ResponseEntity<Void> updateTemplate(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateTemplateRequest updateTemplateRequest
+    ) {
+        templateService.update(id, updateTemplateRequest);
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
