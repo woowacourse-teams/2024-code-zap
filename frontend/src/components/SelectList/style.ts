@@ -11,9 +11,10 @@ export const SelectListContainer = styled.div`
 
   border-radius: 0.8rem;
 
+  transition: all 0.2s ease-in-out;
+
   &:hover {
     gap: 0;
-    padding: 1.2rem;
     background: #fff;
   }
 
