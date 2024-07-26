@@ -26,6 +26,6 @@ public @interface ApiErrorResponse {
 
     String instance();
 
-    ErrorCase[] failCases();
+    ErrorCase[] errorCases();
 }
 

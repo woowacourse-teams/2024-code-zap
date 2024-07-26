@@ -32,7 +32,7 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
     }
 
     private MediaType makeMediaType(ApiErrorResponse apiErrorResponse) {
-        ErrorCase[] errorCases = apiErrorResponse.failCases();
+        ErrorCase[] errorCases = apiErrorResponse.errorCases();
 
         MediaType mediaType = new MediaType();
         Arrays.stream(errorCases).forEach(

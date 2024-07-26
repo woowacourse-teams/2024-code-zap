@@ -29,7 +29,7 @@ public interface SpringDocTemplateController {
             """)
     @ApiResponse(responseCode = "201", description = "회원 예약 생성 성공", headers = {
             @Header(name = "생성된 템플릿의 API 경로", example = "/templates/1")})
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", failCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 이름 null 입니다."),
             @ErrorCase(description = "제목 또는 스니펫 파일명이 255자를 초과한 경우", exampleMessage = "제목은 최대 255자까지 입력 가능합니다."),
             @ErrorCase(description = "썸네일 스니펫의 순서가 1이 아닌 경우", exampleMessage = "썸네일 스니펫의 순서가 잘못되었습니다."),
@@ -46,14 +46,14 @@ public interface SpringDocTemplateController {
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
             content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", failCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     ResponseEntity<FindTemplateByIdResponse> getTemplateById(Long id);
 
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", failCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest);
