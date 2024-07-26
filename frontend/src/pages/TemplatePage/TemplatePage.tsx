@@ -96,14 +96,25 @@ const TemplatePage = () => {
 
             {template.snippets.map((snippet, index) => (
               <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
+                <Flex
+                  align='center'
+                  height='3rem'
+                  padding='1rem 1.5rem'
+                  style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
+                >
+                  <Text.Caption color='#fff' weight='bold'>
+                    {snippet.filename}
+                  </Text.Caption>
+                </Flex>
                 <SyntaxHighlighter
                   language='javascript'
                   style={vscDarkPlus}
                   showLineNumbers={true}
                   customStyle={{
-                    borderRadius: '10px',
+                    borderRadius: '0 0 8px 8px',
                     width: '100%',
                     tabSize: 2,
+                    margin: 0,
                   }}
                   codeTagProps={{
                     style: {
