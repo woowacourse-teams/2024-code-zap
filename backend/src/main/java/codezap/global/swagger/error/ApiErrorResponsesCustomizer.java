@@ -30,8 +30,18 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
     }
 
     private ApiResponse makeFailResponse(ApiErrorResponse apiErrorResponse) {
-        ApiResponse apiResponse = new ApiResponse().description(apiErrorResponse.status().name());
+        ApiResponse apiResponse = new ApiResponse().description(getDescriptionByStatus(apiErrorResponse.status()));
         return apiResponse.content(new Content().addMediaType("application/json", makeMediaType(apiErrorResponse)));
+    }
+
+    private String getDescriptionByStatus(HttpStatusCode httpStatusCode) {
+        if (httpStatusCode.is4xxClientError()) {
+            return "클라이언트 오류";
+        }
+        if (httpStatusCode.is5xxServerError()) {
+            return "서버 오류";
+        }
+        return "문서화에 오류가 발생했습니다. 서버팀에게 문의해주세요 😭";
     }
 
     private MediaType makeMediaType(ApiErrorResponse apiErrorResponse) {
