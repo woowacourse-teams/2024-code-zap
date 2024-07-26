@@ -1,8 +1,10 @@
 package codezap.global.swagger.error;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 
@@ -19,9 +21,10 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
         if (handlerMethod.hasMethodAnnotation(ApiErrorResponse.class)) {
-            ApiErrorResponse apiErrorResponse = handlerMethod.getMethodAnnotation(ApiErrorResponse.class);
+            ApiErrorResponse apiErrorResponse = Objects.requireNonNull(handlerMethod.getMethodAnnotation(ApiErrorResponse.class));
             ApiResponses responses = operation.getResponses();
-            responses.addApiResponse(apiErrorResponse.status().name(), makeFailResponse(apiErrorResponse));
+            String statusCode = String.valueOf(apiErrorResponse.status().value());
+            responses.addApiResponse(statusCode, makeFailResponse(apiErrorResponse));
         }
         return operation;
     }
