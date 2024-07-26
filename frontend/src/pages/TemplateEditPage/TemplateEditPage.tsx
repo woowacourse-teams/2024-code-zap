@@ -119,7 +119,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
             <Button size='medium' variant='outlined' onClick={handleCancelButton}>
               cancel
             </Button>
-            <Button size='medium' variant='contained' onClick={handleSaveButtonClick}>
+            <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={snippets.length === 0}>
               Save
             </Button>
           </Flex>
