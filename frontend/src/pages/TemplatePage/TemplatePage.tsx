@@ -49,8 +49,29 @@ const TemplatePage = () => {
 
   const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    snippetRefs.current[index]?.scrollIntoView({ behavior: 'smooth' });
-    setCurrentFile(template.snippets[index].id as number);
+
+    const targetElement = snippetRefs.current[index];
+    const headerHeight = 68;
+
+    if (targetElement) {
+      const elementPosition = targetElement.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
+    }
+
+    const id = template.snippets[index].id;
+
+    if (!id) {
+      console.error('snippet id가 존재하지 않습니다.');
+
+      return;
+    }
+
+    setCurrentFile(() => id);
   };
 
   const handleDelete = () => {
@@ -118,7 +139,7 @@ const TemplatePage = () => {
                   }}
                   codeTagProps={{
                     style: {
-                      fontSize: '1.8rem',
+                      fontSize: '2.4rem',
                       lineHeight: '1.2rem',
                     },
                   }}
