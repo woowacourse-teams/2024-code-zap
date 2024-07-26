@@ -35,7 +35,7 @@ const TemplateItem = ({ item }: Props) => {
           customStyle={{ margin: 0, borderRadius: '0 0 8px 8px', width: '100%', tabSize: 2 }}
           codeTagProps={{
             style: {
-              fontSize: '1.8rem',
+              fontSize: '2.4rem',
               lineHeight: '1.2rem',
             },
           }}
