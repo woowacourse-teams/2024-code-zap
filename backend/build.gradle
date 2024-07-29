@@ -24,7 +24,7 @@ dependencies {
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-    compileOnly 'org.projectlombok:lombok:0.11.0'
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
     runtimeOnly 'com.mysql:mysql-connector-j:9.0.0'
