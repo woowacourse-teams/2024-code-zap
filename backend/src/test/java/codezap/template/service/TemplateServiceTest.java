@@ -34,15 +34,18 @@ import io.restassured.RestAssured;
 @Sql(value = "/clear.sql", executionPhase = ExecutionPhase.AFTER_TEST_CLASS)
 class TemplateServiceTest {
 
+    @LocalServerPort
+    int port;
+
     @Autowired
     private TemplateService templateService;
 
-    @LocalServerPort
-    int port;
     @Autowired
     private TemplateRepository templateRepository;
+
     @Autowired
     private SnippetRepository snippetRepository;
+
     @Autowired
     private ThumbnailSnippetRepository thumbnailSnippetRepository;
 
