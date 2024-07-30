@@ -5,7 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
+import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,9 @@ public class Template extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String title;
+
+    @ManyToOne(optional = false)
+    private Category category;
 
     public Template(String title) {
         this.title = title;
