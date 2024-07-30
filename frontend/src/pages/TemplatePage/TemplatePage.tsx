@@ -7,7 +7,7 @@ import { pencilIcon, trashcanIcon } from '@/assets/images';
 import { Flex, SelectList, Text } from '@/components';
 import { useTemplateDeleteQuery, useTemplateQuery } from '@/hooks/template';
 import { TemplateEditPage } from '@/pages';
-import { formatRelativeTime } from '@/utils';
+import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
@@ -128,7 +128,7 @@ const TemplatePage = () => {
                   </Text.Caption>
                 </Flex>
                 <SyntaxHighlighter
-                  language='javascript'
+                  language={getLanguageByFilename(snippet.filename)}
                   style={vscDarkPlus}
                   showLineNumbers={true}
                   customStyle={{
@@ -139,8 +139,7 @@ const TemplatePage = () => {
                   }}
                   codeTagProps={{
                     style: {
-                      fontSize: '2.4rem',
-                      lineHeight: '1.2rem',
+                      fontSize: '1rem',
                     },
                   }}
                 >
