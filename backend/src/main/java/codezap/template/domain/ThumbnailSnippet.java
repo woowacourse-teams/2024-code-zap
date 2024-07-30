@@ -11,8 +11,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor
+@Getter
 public class ThumbnailSnippet extends BaseTimeEntity {
 
     @Id
