@@ -2,6 +2,8 @@ package codezap.category.controller;
 
 import java.net.URI;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +24,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@RequestBody CreateCategoryRequest createCategoryRequest) {
+    public ResponseEntity<Void> createCategory(@Valid @RequestBody CreateCategoryRequest createCategoryRequest) {
         return ResponseEntity.created(URI.create("/categories/" + categoryService.create(createCategoryRequest)))
                 .build();
     }
