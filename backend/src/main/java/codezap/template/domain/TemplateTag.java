@@ -12,10 +12,11 @@ import jakarta.persistence.MapsId;
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
 public class TemplateTag extends BaseTimeEntity {
 

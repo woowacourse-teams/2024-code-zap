@@ -16,8 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor
+@Getter
 public class Snippet extends BaseTimeEntity {
 
     private static final String CODE_LINE_BREAK = "\n";
