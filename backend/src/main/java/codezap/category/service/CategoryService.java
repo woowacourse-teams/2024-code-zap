@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 
@@ -26,5 +27,9 @@ public class CategoryService {
         }
         Category category = new Category(categoryName);
         return categoryRepository.save(category).getId();
+    }
+
+    public FindAllCategoriesResponse findAll() {
+        return FindAllCategoriesResponse.from(categoryRepository.findAll());
     }
 }
