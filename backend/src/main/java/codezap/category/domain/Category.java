@@ -20,4 +20,9 @@ public class Category extends BaseTimeEntity {
 
     @Column(nullable = false)
     private String name;
+
+    public Category(String name) {
+        this.id = null;
+        this.name = name;
+    }
 }
