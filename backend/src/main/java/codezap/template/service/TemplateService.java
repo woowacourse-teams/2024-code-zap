@@ -6,8 +6,12 @@ import java.util.Objects;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codezap.category.domain.Category;
+import codezap.category.repository.CategoryRepository;
 import codezap.template.domain.Snippet;
+import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
+import codezap.template.domain.TemplateTag;
 import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -16,7 +20,9 @@ import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
 import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
+import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailSnippetRepository;
 
 @Service
@@ -27,19 +33,35 @@ public class TemplateService {
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
+    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final TemplateTagRepository templateTagRepository;
 
     public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
-            TemplateRepository templateRepository, SnippetRepository snippetRepository
+            TemplateRepository templateRepository, SnippetRepository snippetRepository,
+            CategoryRepository categoryRepository, TagRepository tagRepository,
+            TemplateTagRepository templateTagRepository
     ) {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
         this.snippetRepository = snippetRepository;
+        this.categoryRepository = categoryRepository;
+        this.tagRepository = tagRepository;
+        this.templateTagRepository = templateTagRepository;
     }
 
     @Transactional
     public Long create(CreateTemplateRequest createTemplateRequest) {
-        Template template = templateRepository.save(
-                new Template(createTemplateRequest.title()));
+        Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
+
+        Template template = templateRepository.save(new Template(createTemplateRequest.title(), category));
+
+        List<Tag> tags = createTemplateRequest.tags().stream()
+                .map(Tag::new)
+                .map(tagRepository::save)
+                .toList();
+
+        tags.forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
 
         createTemplateRequest.snippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
