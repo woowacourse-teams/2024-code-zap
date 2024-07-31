@@ -1,3 +1,6 @@
 spring:
-  profiles:
-    active: local
+  config:
+    import: classpath:application-db.yml
+  output:
+    ansi:
+      enabled: always
