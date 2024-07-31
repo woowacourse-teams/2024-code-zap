@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { logoIcon, newTemplateIcon } from '@/assets/images';
+import { logoIcon, newTemplateIcon, searchIcon } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
 import * as S from './style';
 
@@ -37,15 +37,12 @@ const Header = () => {
         </Link>
       </Flex>
       <Flex align='center' gap='3rem' width='fit-content'>
-        <Input
-          value={searchValue}
-          onChange={handleInputChange}
-          placeholder='Search...'
-          type='search'
-          width='40rem'
-          height='4rem'
-          fontSize='1.6rem'
-        />
+        <Input size='medium' variant='outlined'>
+          <Input.Adornment>
+            <img src={searchIcon} />
+          </Input.Adornment>
+          <Input.TextField placeholder='Search...' onChange={handleInputChange} type='search' value={searchValue} />
+        </Input>
         <Link to={'/templates/upload'}>
           <Button size='medium' variant='outlined'>
             <img src={newTemplateIcon} alt='newTemplate' />
