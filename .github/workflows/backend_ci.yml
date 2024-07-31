@@ -25,7 +25,7 @@ jobs:
           mysql root password: ${{ secrets.MYSQL_PASSWORD }}
 
       - name: DB 관련 스프링 설정 생성
-        working-directory: /backend/src/main/resources
+        working-directory: ./backend/src/main/resources
         run: echo "${{ secrets.APPLICATION_DB_YAML }}" > application-db.yml
 
       - name: JDK 17 설정
@@ -36,4 +36,4 @@ jobs:
           
       - name: 테스트 코드 실행
         run: ./gradlew test
-        working-directory: /backend
+        working-directory: ./backend
