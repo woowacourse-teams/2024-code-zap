@@ -46,7 +46,6 @@ jobs:
       - name: 브랜치명을 통해 개발 환경 알아내기
         id: get-branch
         run: |
-          # Extract branch name from GITHUB_REF
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
 
           if [ "$BRANCH_NAME" = "main" ]; then
