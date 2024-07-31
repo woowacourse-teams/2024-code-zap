@@ -17,6 +17,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
+import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.service.CategoryService;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
@@ -35,6 +37,9 @@ class TemplateControllerTest {
     @Autowired
     private TemplateService templateService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @LocalServerPort
     int port;
 
@@ -52,9 +57,13 @@ class TemplateControllerTest {
         @CsvSource({"a, 65535", "ㄱ, 21845"})
         void createTemplateSuccess(String repeatTarget, int maxLength) {
             String maxTitle = "a".repeat(MAX_LENGTH);
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(maxTitle,
-                    List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)));
-            
+                    List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -68,9 +77,13 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 템플릿 이름 길이 초과")
         void createTemplateFailWithLongTitle() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(exceededTitle,
-                    List.of(new CreateSnippetRequest("a", "content", 1)));
-            
+                    List.of(new CreateSnippetRequest("a", "content", 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
@@ -84,8 +97,12 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
         void createTemplateFailWithLongFileName() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
-                    List.of(new CreateSnippetRequest(exceededTitle, "content", 1)));
+                    List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -100,8 +117,12 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
-                    List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)));
+                    List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -116,9 +137,13 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) {
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
-                            new CreateSnippetRequest("title", "content", secondIndex)));
+                            new CreateSnippetRequest("title", "content", secondIndex)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
 
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
@@ -136,6 +161,7 @@ class TemplateControllerTest {
         // given
         CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
         CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
+        categoryService.create(new CreateCategoryRequest("category"));
         templateService.create(templateRequest1);
         templateService.create(templateRequest2);
 
@@ -155,6 +181,7 @@ class TemplateControllerTest {
         @DisplayName("템플릿 상세 조회 성공")
         void findOneTemplateSuccess() {
             // given
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
@@ -187,6 +214,7 @@ class TemplateControllerTest {
         @DisplayName("템플릿 수정 성공")
         void updateTemplateSuccess() {
             // given
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
@@ -217,6 +245,7 @@ class TemplateControllerTest {
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
         void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
             // given
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
@@ -251,6 +280,7 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 성공")
         void deleteTemplateSuccess() {
             // given
+            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
@@ -279,7 +309,9 @@ class TemplateControllerTest {
                 List.of(
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
-                )
+                ),
+                1L,
+                List.of("tag1", "tag2")
         );
         return templateRequest;
     }
