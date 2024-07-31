@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop
-      - main
 
 jobs:
   build:
@@ -50,14 +49,20 @@ jobs:
         with:
           name: code-zap-jar
           path: ${{ secrets.WORK_DIRECTORY }}
-          
+
+      - name: Check Run Processes
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash check-old-pids.sh
+        
       - name: Run Deploy Script
         run: |
           cd ${{ secrets.WORK_DIRECTORY }}
           unzip -o code-zap-jar.zip
-          RUNNER_TRACKING_ID="" && ./deploy.sh
-          
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          RUNNER_TRACKING_ID="" && bash start.sh dev
+                    
       - name: Verify Deploy Succeed
         run: |
-          sleep 3
-          pgrep -f 'java -jar .*code-zap.*\.jar' || { echo "Deploy Failed"; exit 1; }
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash verify-deploy.sh
