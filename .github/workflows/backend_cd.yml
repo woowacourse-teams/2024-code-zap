@@ -4,12 +4,11 @@ on:
   push:
     branches:
       - develop
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      build-directory: ./backend
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
@@ -32,7 +31,7 @@ jobs:
             
       - name: bootJar로 jar 파일 생성
         run: ./gradlew bootJar
-        working-directory: ${{ env.build-directory }}
+        working-directory: ./backend
 
       - name: jar 파일 Artifact로 업로드
         uses: actions/upload-artifact@v4
@@ -44,6 +43,22 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps:
+      - name: 브랜치명을 통해 개발 환경 알아내기
+        id: get-branch
+        run: |
+          # Extract branch name from GITHUB_REF
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+
+          if [ "$BRANCH_NAME" = "main" ]; then
+            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
+            echo "개발 환경 : prod"
+          elif [ "$BRANCH_NAME" = "develop" ]; then
+            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
+            echo "개발 환경 : dev"
+          else
+            exit 1
+          fi
+          
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
@@ -60,7 +75,7 @@ jobs:
           cd ${{ secrets.WORK_DIRECTORY }}
           unzip -o code-zap-jar.zip
           cd ${{ secrets.SCRIPT_DIRECTORY }}
-          RUNNER_TRACKING_ID="" && bash start.sh dev
+          RUNNER_TRACKING_ID="" && bash start.sh ${{ env.ENVIRONMENT }}
                     
       - name: 실행 프로세스 확인으로 배포 검증 
         run: |
