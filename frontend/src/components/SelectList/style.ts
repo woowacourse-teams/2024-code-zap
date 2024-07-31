@@ -31,7 +31,7 @@ export const SelectListContainer = styled.div`
     transition: all 0.3s ease-in-out;
   }
 
-  @media (min-width: 1360px) {
+  @media (min-width: 86rem) {
     gap: 0;
     background: #fff;
     a {

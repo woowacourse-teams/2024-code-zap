@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 
 export const LayoutContainer = styled.div`
-  max-width: 1024px;
+  max-width: 86rem;
   margin: auto;
   margin-bottom: 3rem;
-  padding: 0 5rem;
+  padding: 0 3rem;
 `;
