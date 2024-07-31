@@ -66,6 +66,7 @@ const Base = ({
   return (
     <S.Container>
       {label}
+
       <S.Base variant={variant} size={size} isValid={isValid} {...rests}>
         {inputWithAdornment}
       </S.Base>
