@@ -20,5 +20,5 @@ public class Tag extends BaseTimeEntity {
     private Long id;
 
     @Column(nullable = false)
-    private String value;
+    private String name;
 }
