@@ -1,9 +1,8 @@
 name: Backend CI
 
 on:
-  pull_request:
-    branches:
-      - '**'
+  pull_request_target:
+    types: BE
 
 jobs:
   build:
