@@ -30,6 +30,23 @@ export const SelectListContainer = styled.div`
     opacity: 1;
     transition: all 0.3s ease-in-out;
   }
+
+  @media (min-width: 1360px) {
+    gap: 0;
+    background: #fff;
+    a {
+      width: 24rem;
+      height: 3.2rem;
+      padding: 0 0.8rem;
+      border-radius: 0.8rem;
+    }
+
+    .select-list-text {
+      margin-left: 1rem;
+      opacity: 1;
+      transition: all 0.3s ease-in-out;
+    }
+  }
 `;
 
 export const SelectListOption = styled.a<OptionProps>`
@@ -52,6 +69,13 @@ export const SelectListOption = styled.a<OptionProps>`
 `;
 
 export const SelectListText = styled.div`
+  overflow: hidden;
+  display: block;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
   opacity: 0;
+
   transition: all 0.1s ease-in-out;
 `;

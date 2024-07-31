@@ -3,7 +3,7 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { Flex, Text } from '@/components';
 import { TemplateListItem } from '@/types/template';
-import { formatRelativeTime } from '@/utils';
+import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 
 interface Props {
   item: TemplateListItem;
@@ -29,14 +29,13 @@ const TemplateItem = ({ item }: Props) => {
           </Text.Caption>
         </Flex>
         <SyntaxHighlighter
-          language='javascript'
+          language={getLanguageByFilename(thumbnailSnippet.filename)}
           style={vscDarkPlus}
           showLineNumbers={true}
           customStyle={{ margin: 0, borderRadius: '0 0 8px 8px', width: '100%', tabSize: 2 }}
           codeTagProps={{
             style: {
-              fontSize: '1.8rem',
-              lineHeight: '1.2rem',
+              fontSize: '1rem',
             },
           }}
         >

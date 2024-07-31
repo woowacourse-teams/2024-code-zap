@@ -10,10 +10,9 @@ const GlobalStyles = () => (
         font: 'inherit',
         verticalAlign: 'baseline',
         boxSizing: 'border-box',
-        fontSize: '62.5%',
       },
       body: {
-        lineHeight: 1,
+        lineHeight: '100%',
         listStyle: 'none',
         backgroundColor: '#222831',
       },
