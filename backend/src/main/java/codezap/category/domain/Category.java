@@ -22,7 +22,6 @@ public class Category extends BaseTimeEntity {
     private String name;
 
     public Category(String name) {
-        this.id = null;
         this.name = name;
     }
 }

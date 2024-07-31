@@ -18,7 +18,11 @@ public record CreateTemplateRequest(
         @Schema(description = "템플릿의 스니펫 내역")
         @NotNull(message = "스니펫 리스트가 null 입니다.")
         @Valid
-        List<CreateSnippetRequest> snippets
+        List<CreateSnippetRequest> snippets,
+
+        Long categoryId,
+
+        List<String> tags
 ) implements ValidatedSnippetsOrdinalRequest {
     @Override
     public List<Integer> extractSnippetsOrdinal() {
