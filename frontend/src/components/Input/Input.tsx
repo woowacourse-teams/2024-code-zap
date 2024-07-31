@@ -45,13 +45,13 @@ const Base = ({
   children,
   ...rests
 }: PropsWithChildren<BaseProps>) => {
-  const textField = getChildrenWithoutType(children, HelperTextType);
+  const inputWithAdornment = getChildrenWithoutType(children, HelperTextType);
   const helperText = getChildOfType(children, HelperTextType);
 
   return (
     <S.Wrapper>
       <S.Base variant={variant} size={size} isValid={isValid} {...rests}>
-        {textField}
+        {inputWithAdornment}
       </S.Base>
       {helperText}
     </S.Wrapper>
