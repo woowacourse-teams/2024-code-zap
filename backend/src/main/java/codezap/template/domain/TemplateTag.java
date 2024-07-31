@@ -10,17 +10,21 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 
 import codezap.global.auditing.BaseTimeEntity;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@RequiredArgsConstructor
+@NoArgsConstructor
 @Getter
 public class TemplateTag extends BaseTimeEntity {
 
     @Embeddable
-    @RequiredArgsConstructor
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Getter
     @EqualsAndHashCode
     private static class TemplateTagId implements Serializable {
@@ -40,4 +44,10 @@ public class TemplateTag extends BaseTimeEntity {
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     private Tag tag;
+
+    public TemplateTag(Template template, Tag tag) {
+        this.id = new TemplateTagId(template.getId(), tag.getId());
+        this.template = template;
+        this.tag = tag;
+    }
 }

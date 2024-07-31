@@ -13,8 +13,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor
+@Getter
 public class Template extends BaseTimeEntity {
 
     @Id
@@ -24,11 +24,15 @@ public class Template extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @ManyToOne(optional = false)
     private Category category;
 
-    public Template(String title) {
+    public Template(String title, Category category) {
         this.title = title;
+        this.category = category;
     }
 
     public void updateTitle(String title) {
