@@ -37,7 +37,6 @@ const globalStyles = css`
 
   body {
     font-family: 'Pretendard', sans-serif;
-    font-size: 1rem;
     line-height: '100%';
     color: ${theme.color.dark.secondary_800};
     list-style: none;
