@@ -1,3 +1,16 @@
 spring:
-  profiles:
-    active: local
+  config:
+    activate:
+      on-profile: default
+  datasource:
+    url: jdbc:mysql://localhost:${MYSQL_HOST_PORT}/code_zap?serverTimezone=Asia/Seoul
+    username: root
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
