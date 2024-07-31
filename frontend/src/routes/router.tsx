@@ -1,20 +1,7 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
-import Template from '@/pages/Template';
-import TemplateList from '@/pages/TemplateList';
-import UploadsTemplate from '@/pages/UploadsTemplate';
-import { Header } from '@/components/Header';
-
-const Layout = () => {
-  const style = { maxWidth: '1024px', margin: 'auto', padding: '0 2rem' };
-
-  return (
-    <div css={style}>
-      <Header />
-      <Outlet />
-    </div>
-  );
-};
+import { Layout } from '@/components';
+import { TemplatePage, TemplateListPage, TemplateUploadPage } from '@/pages';
 
 const router = createBrowserRouter([
   {
@@ -22,15 +9,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <TemplateList />,
+        element: <TemplateListPage />,
       },
       {
         path: 'templates/:id',
-        element: <Template />,
+        element: <TemplatePage />,
       },
       {
-        path: 'templates/uploads',
-        element: <UploadsTemplate />,
+        path: 'templates/upload',
+        element: <TemplateUploadPage />,
       },
     ],
   },

@@ -1,43 +1,24 @@
-import { Flex } from '../Flex';
-import { ReactNode } from 'react';
-import { Text } from '../Text';
+import { PropsWithChildren } from 'react';
 
-interface Props {
-  children?: ReactNode;
-}
+import { Text } from '@/components';
+import * as S from './style';
 
-interface SelectListOptionProps {
-  children?: ReactNode;
+export interface OptionProps {
   isSelected: boolean;
-  onClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-const SelectListContainer = ({ children }: Props) => {
-  return (
-    <Flex direction='column'>
-      <aside css={{ position: 'fixed' }}>{children}</aside>
-    </Flex>
-  );
-};
+const SelectListBase = ({ children }: PropsWithChildren) => <S.SelectListContainer>{children}</S.SelectListContainer>;
 
-const SelectListOption = ({ children, isSelected, onClick }: SelectListOptionProps) => {
-  return (
-    <a href={`#${children}`} onClick={onClick}>
-      <div
-        css={{
-          backgroundColor: isSelected ? '#FFEBBB' : undefined,
-          padding: '1rem 1.6rem',
-          borderRadius: '8px',
-          width: '24rem',
-        }}
-      >
-        <Text.Body color={isSelected ? 'black' : undefined}>{children}</Text.Body>
-      </div>
-    </a>
-  );
-};
+const SelectListOption = ({ children, isSelected, onClick }: PropsWithChildren<OptionProps>) => (
+  <S.SelectListOption href={`#${children}`} onClick={onClick} isSelected={isSelected}>
+    <S.SelectListText className='select-list-text'>
+      <Text.Body color={isSelected ? 'black' : '#393E46'}>{children}</Text.Body>
+    </S.SelectListText>
+  </S.SelectListOption>
+);
 
-const SelectList = Object.assign(SelectListContainer, {
+const SelectList = Object.assign(SelectListBase, {
   Option: SelectListOption,
 });
 

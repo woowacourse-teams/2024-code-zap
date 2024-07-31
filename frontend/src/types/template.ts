@@ -8,35 +8,32 @@ export interface Snippet {
 export interface Template {
   id: number;
   title: string;
-  member: {
-    id: number;
-    nickname: string;
-  };
-  representative_snippet_ordinal: number;
   snippets: Snippet[];
-  modified_at: string;
+  modifiedAt: string;
 }
 
 export interface TemplateListItem {
   id: number;
   title: string;
-  member: {
-    id: number;
-    nickname: string;
-  };
-  representative_snippet: {
+  thumbnailSnippet: {
     filename: string;
-    content_summary: string;
+    thumbnailContent: string;
   };
-  modified_at: string;
+  modifiedAt: string;
 }
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
 }
 
-export interface CreateTemplateRequest {
+export interface TemplateUploadRequest {
   title: string;
-  representative_snippet_ordinal: number;
   snippets: Snippet[];
+}
+
+export interface TemplateEditRequest {
+  title: string;
+  createSnippets: Snippet[];
+  updateSnippets: Snippet[];
+  deleteSnippetIds: number[];
 }
