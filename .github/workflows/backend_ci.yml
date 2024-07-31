@@ -1,9 +1,12 @@
 name: Backend CI
 
 on:
-  pull_request:
+  pull_request_target:
     branches:
-      - '**'
+      - dev/be
+      - develop
+      - main
+    types: [opened, reopened]
 
 jobs:
   build:
