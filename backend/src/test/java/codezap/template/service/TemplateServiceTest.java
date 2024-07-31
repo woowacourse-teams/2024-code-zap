@@ -18,7 +18,9 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.template.domain.Snippet;
+import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
+import codezap.template.domain.TemplateTag;
 import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -27,7 +29,9 @@ import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateByIdResponse;
 import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
+import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailSnippetRepository;
 import io.restassured.RestAssured;
 
@@ -50,8 +54,14 @@ class TemplateServiceTest {
 
     @Autowired
     private ThumbnailSnippetRepository thumbnailSnippetRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Autowired
+    private TemplateTagRepository templateTagRepository;
+    @Autowired
+    private TagRepository tagRepository;
 
     @BeforeEach
     void setting() {
@@ -99,7 +109,10 @@ class TemplateServiceTest {
         // then
         assertAll(
                 () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
-                () -> assertThat(foundTemplate.snippets()).hasSize(snippetRepository.findAllByTemplate(template).size())
+                () -> assertThat(foundTemplate.snippets()).hasSize(
+                        snippetRepository.findAllByTemplate(template).size()),
+                () -> assertThat(foundTemplate.category().id()).isEqualTo(template.getCategory().getId()),
+                () -> assertThat(foundTemplate.tags()).hasSize(2)
         );
     }
 
@@ -174,6 +187,10 @@ class TemplateServiceTest {
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+        createTemplateRequest.tags().stream()
+                .map(Tag::new)
+                .map(tagRepository::save)
+                .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
 
         return savedTemplate;
     }

@@ -191,7 +191,10 @@ class TemplateControllerTest {
                     .then().log().all()
                     .statusCode(200)
                     .body("title", is(templateRequest.title()),
-                            "snippets.size()", is(2));
+                            "snippets.size()", is(2),
+                            "category.id", is(1),
+                            "category.name", is("category"),
+                            "tags.size()", is(2));
         }
 
         @Test
