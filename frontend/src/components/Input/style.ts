@@ -1,47 +1,112 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import type { Props } from './Input';
+import type { BaseProps, TextFieldProps } from './Input';
 
-export const InputWrapper = styled.div`
-  position: relative;
-  display: inline-block;
+const sizes = {
+  small: css`
+    gap: 0.8rem;
+
+    height: 3.2rem;
+    padding: 1rem 1.2rem;
+
+    font-size: 1.2rem;
+    line-height: 100%;
+
+    border-radius: '0.8rem';
+  `,
+  medium: css`
+    gap: 1.2rem;
+
+    height: 4.8rem;
+    padding: 1.6rem;
+
+    font-size: 1.6rem;
+    line-height: '100%';
+
+    border-radius: 1.2rem;
+  `,
+};
+
+const variants = {
+  filled: css`
+    background-color: #ffffff;
+  `,
+  outlined: css`
+    background: none;
+    border: 0.1rem solid #808080;
+  `,
+  text: css`
+    background: none;
+  `,
+};
+
+export const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 `;
 
-export const Input = styled.input<Props>`
-  width: ${({ width }) => width};
-  height: ${({ height }) => height};
-  padding: 1.4rem;
-  padding-left: ${({ type }) => type === 'search' && '4.2rem;'};
+export const Base = styled.div<BaseProps>`
+  display: flex;
+  align-items: center;
 
-  font-size: ${({ fontSize }) => fontSize};
-  font-weight: ${({ fontWeight }) => fontWeight};
+  ${({ variant }) => variant && variants[variant]};
+  ${({ size }) => size && sizes[size]};
+  ${({ isValid }) =>
+    isValid === false &&
+    css`
+      border: 0.1rem solid red;
+    `};
 
-  background: #eee;
-  border: 0.1rem solid #808080;
-  border-radius: 8px;
+  /* for Adornment size */
+  & > div {
+    ${({ size }) =>
+      size === 'small' &&
+      css`
+        width: 1.2rem;
+        height: 1.2rem;
+      `}
+
+    ${({ size }) =>
+      size === 'medium' &&
+      css`
+        width: 1.6rem;
+        height: 1.6rem;
+      `}
+  }
+`;
+
+export const TextField = styled.input<TextFieldProps>`
+  width: 100%;
+  font-size: inherit;
+  line-height: inherit;
+  background: none;
 
   &::placeholder {
-    color: #808080;
+    color: #788496;
   }
 
   &:focus {
-    border-color: black;
+    outline: none;
+    &::placeholder {
+      color: transparent;
+    }
   }
 
   &:disabled {
     cursor: default;
     opacity: 0.6;
-    background-color: #f5f5f5;
+    background: none;
     border-color: #ddd;
   }
 `;
 
-export const SearchIcon = styled.img`
-  position: absolute;
-  top: 50%;
-  left: 1.4rem;
-  transform: translateY(-50%);
+export const Adornment = styled.div`
+  display: flex;
+`;
 
-  width: 2rem;
-  height: 2rem;
+export const HelperText = styled.span`
+  margin-left: 8px;
+  color: red;
 `;
