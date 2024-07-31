@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, TemplateListPage, TemplateUploadPage, SignupPage } from '@/pages';
+import { TemplatePage, TemplateListPage, TemplateUploadPage, SignupPage, LoginPage } from '@/pages';
 
 const router = createBrowserRouter([
   {
@@ -22,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignupPage />,
+      },
+      {
+        path: 'login',
+        element: <LoginPage />,
       },
     ],
   },
