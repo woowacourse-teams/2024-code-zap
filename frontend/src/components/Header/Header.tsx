@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, searchIcon } from '@/assets/images';
-import { Button, Flex, Input, Text } from '@/components';
+import { Button, Flex, Heading, Input, Text } from '@/components';
 import * as S from './style';
 
 const Header = () => {
@@ -17,22 +17,22 @@ const Header = () => {
       <Link to={'/'}>
         <Flex align='center' gap='1.2rem' width='fit-content'>
           <img src={logoIcon} alt='logo' />
-          <Text.SubTitle color='#FFD269'>CodeZap</Text.SubTitle>
+          <Heading.Large color='#FFD269'>CodeZap</Heading.Large>
         </Flex>
       </Link>
       <Flex align='center' gap='3rem' flex='1'>
         <Link to={'/my-page'}>
           <Button size='medium' variant='text'>
-            <Text.Body weight='bold' color='#FFD269'>
+            <Text.Medium weight='bold' color='#FFD269'>
               MyPage
-            </Text.Body>
+            </Text.Medium>
           </Button>
         </Link>
         <Link to={'/'}>
           <Button size='medium' variant='text'>
-            <Text.Body weight='bold' color='white'>
+            <Text.Medium weight='bold' color='white'>
               Explores
-            </Text.Body>
+            </Text.Medium>
           </Button>
         </Link>
       </Flex>
@@ -46,9 +46,9 @@ const Header = () => {
         <Link to={'/templates/upload'}>
           <Button size='medium' variant='outlined'>
             <img src={newTemplateIcon} alt='newTemplate' />
-            <Text.Body weight='bold' color='#FFD269'>
+            <Text.Medium weight='bold' color='#FFD269'>
               New Template
-            </Text.Body>
+            </Text.Medium>
           </Button>
         </Link>
       </Flex>
