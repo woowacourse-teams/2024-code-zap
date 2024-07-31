@@ -39,9 +39,10 @@ const globalStyles = css`
     font-family: 'Pretendard', sans-serif;
     font-size: 1rem;
     line-height: '100%';
+    color: ${theme.color.dark.secondary_800};
     list-style: none;
 
-    background-color: ${theme.mode === 'dark' ? theme.color.darkMode.tertiary_900 : theme.color.lightMode.white};
+    background-color: ${theme.mode === 'dark' ? theme.color.dark.tertiary_900 : theme.color.light.white};
   }
 
   a {

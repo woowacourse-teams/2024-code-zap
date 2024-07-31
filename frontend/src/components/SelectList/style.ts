@@ -41,8 +41,7 @@ export const SelectListOption = styled.a<OptionProps>`
 
   text-decoration: none;
 
-  background-color: ${({ isSelected, theme }) =>
-    isSelected ? theme.color.darkMode.primary_100 : theme.color.darkMode.white};
+  background-color: ${({ isSelected, theme }) => (isSelected ? theme.color.dark.primary_100 : theme.color.dark.white)};
   border-radius: 50%;
 
   transition: all 0.2s ease-in-out;
