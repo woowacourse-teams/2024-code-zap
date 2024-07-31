@@ -78,7 +78,10 @@ public class TemplateService {
     public FindTemplateByIdResponse findById(Long id) {
         Template template = templateRepository.fetchById(id);
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
-        return FindTemplateByIdResponse.of(template, snippets);
+        List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
+                .map(TemplateTag::getTag)
+                .toList();
+        return FindTemplateByIdResponse.of(template, snippets, tags);
     }
 
     @Transactional
