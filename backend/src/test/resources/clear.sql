@@ -18,6 +18,7 @@ CREATE TABLE template
 (
     id          BIGINT       NOT NULL AUTO_INCREMENT,
     title       VARCHAR(255) NOT NULL,
+    description TEXT,
     category_id BIGINT       NOT NULL,
     created_at  DATETIME(6)  NOT NULL,
     modified_at DATETIME(6)  NOT NULL,
@@ -28,7 +29,7 @@ CREATE TABLE template
 create table tag
 (
     id          BIGINT       NOT NULL auto_increment,
-    value       VARCHAR(255) NOT NULL,
+    name        VARCHAR(255) NOT NULL,
     created_at  DATETIME(6)  NOT NULL,
     modified_at DATETIME(6)  NOT NULL,
     PRIMARY KEY (id)

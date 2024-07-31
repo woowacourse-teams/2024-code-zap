@@ -15,6 +15,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
+import codezap.category.domain.Category;
+import codezap.category.repository.CategoryRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
 import codezap.template.domain.ThumbnailSnippet;
@@ -48,6 +50,8 @@ class TemplateServiceTest {
 
     @Autowired
     private ThumbnailSnippetRepository thumbnailSnippetRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @BeforeEach
     void setting() {
@@ -59,6 +63,7 @@ class TemplateServiceTest {
     void createTemplateSuccess() {
         // given
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
+        categoryRepository.save(new Category("category"));
 
         // when
         templateService.create(createTemplateRequest);
@@ -143,7 +148,9 @@ class TemplateServiceTest {
                 List.of(
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
-                )
+                ),
+                1L,
+                List.of("tag1", "tag2")
         );
     }
 
@@ -162,7 +169,8 @@ class TemplateServiceTest {
     }
 
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest) {
-        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
+        Category category = categoryRepository.save(new Category("category"));
+        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title(), category));
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
