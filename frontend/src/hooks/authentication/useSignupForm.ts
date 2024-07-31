@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { postSignup } from '@/api/authentication';
+
 export const useSignupForm = () => {
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
@@ -72,7 +74,14 @@ export const useSignupForm = () => {
 
   const handleSubmit = async () => {
     if (isFormValid()) {
-      console.log('valid');
+      const response = await postSignup({ email, nickname, password, confirmPassword });
+
+      if (!response.ok) {
+        console.error(response);
+      }
+
+      console.log('signup success');
+      // route to Login
     }
   };
 
