@@ -1,4 +1,4 @@
-export const lightMode = {
+export const light = {
   white: '#ffffff',
   black: '#000000',
 
@@ -91,7 +91,7 @@ export const lightMode = {
   triadic_secondary_900: '#00955c',
 };
 
-export const darkMode = {
+export const dark = {
   white: '#ffffff',
   black: '#000000',
 

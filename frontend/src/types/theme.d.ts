@@ -4,8 +4,8 @@ declare module '@emotion/react' {
   export interface Theme {
     mode: 'dark' | 'light';
     color: {
-      darkMode: ColorPalette;
-      lightMode: ColorPalette;
+      dark: ColorPalette;
+      light: ColorPalette;
     };
     font: {
       size: {
