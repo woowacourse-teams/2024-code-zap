@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 import { passwordEyeIcon } from '@/assets/images';
 import { Button, Flex, Input } from '@/components';
 import { useShowPassword } from '@/hooks/authentication';
@@ -28,9 +30,12 @@ const LoginPage = () => {
           </Button>
           <Flex justify='flex-end' width='100%' gap='1rem'>
             <span style={{ fontSize: '0.875rem', fontWeight: '400' }}>계정이 없으신가요?</span>
-            <Button variant='text' size='small'>
-              회원가입
-            </Button>
+
+            <Link to={'/signup'}>
+              <Button variant='text' size='small'>
+                회원가입
+              </Button>
+            </Link>
           </Flex>
         </Flex>
       </Flex>
