@@ -17,10 +17,10 @@ const preview: Preview = {
       <>
         <GlobalStyles />
         <div style={{ display: 'flex', gap: '1.6rem', flexWrap: 'wrap' }}>
-          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'white' }}>
+          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: '#eeeeee' }}>
             <Story />
           </div>
-          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'black' }}>
+          <div style={{ border: '0.2rem solid white', borderRadius: '8px', padding: '3.2rem', background: '#222831' }}>
             <Story />
           </div>
         </div>
