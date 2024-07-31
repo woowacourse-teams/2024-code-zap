@@ -41,7 +41,7 @@ const globalStyles = css`
     line-height: '100%';
     list-style: none;
 
-    background-color: ${theme.color.darkMode.tertiary_900};
+    background-color: ${theme.mode === 'dark' ? theme.color.darkMode.tertiary_900 : theme.color.lightMode.white};
   }
 
   a {
