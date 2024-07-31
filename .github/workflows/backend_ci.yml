@@ -8,8 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      build-directory: ./backend
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,11 +19,14 @@ jobs:
           mysql version: ${{ secrets.MYSQL_VERSION }}
           mysql database: ${{ secrets.MYSQL_DATABASE }}
           mysql root password: ${{ secrets.MYSQL_PASSWORD }}
+      - name: Setup db config profile
+        working-directory: /backend/src/main/resources
+        run: echo "${{ secrets.APPLICATION_DB_YAML }}" > application-db.yml
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: temurin
       - name: Test with Gradle Wrapper
+        working-directory: /backend
         run: ./gradlew test
-        working-directory: ${{ env.build-directory }}
