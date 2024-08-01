@@ -13,7 +13,7 @@ const SelectListBase = ({ children }: PropsWithChildren) => <S.SelectListContain
 const SelectListOption = ({ children, isSelected, onClick }: PropsWithChildren<OptionProps>) => (
   <S.SelectListOption href={`#${children}`} onClick={onClick} isSelected={isSelected}>
     <S.SelectListText className='select-list-text'>
-      <Text.Body color={isSelected ? 'black' : '#393E46'}>{children}</Text.Body>
+      <Text.Medium color={isSelected ? 'black' : '#393E46'}>{children}</Text.Medium>
     </S.SelectListText>
   </S.SelectListOption>
 );

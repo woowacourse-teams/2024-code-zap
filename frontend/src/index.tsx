@@ -1,3 +1,4 @@
+import { ThemeProvider } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -5,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import router from './routes/router';
 import GlobalStyles from './style/GlobalStyles';
+import { theme } from './style/theme';
 
 const queryClient = new QueryClient();
 
@@ -24,8 +26,10 @@ enableMocking().then(() => {
   root.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
-        <GlobalStyles />
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </QueryClientProvider>
     </React.StrictMode>,
   );
