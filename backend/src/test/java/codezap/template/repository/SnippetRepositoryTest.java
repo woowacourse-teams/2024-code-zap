@@ -35,7 +35,7 @@ class SnippetRepositoryTest {
     @DisplayName("단일 스니펫 찾기 성공: 템플릿과 순서")
     void findOneSnippetSuccessWithTemplateAndOrdinal() {
         Category category = categoryRepository.save(new Category("category"));
-        Template template = templateRepository.save(new Template("title", category));
+        Template template = templateRepository.save(new Template("title", "description", category));
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
 
@@ -53,7 +53,7 @@ class SnippetRepositoryTest {
     @DisplayName("스니펫 리스트 찾기 성공: 템플릿과 순서")
     void findSnippetsSuccessWithTemplateAndOrdinal() {
         Category category = categoryRepository.save(new Category("category"));
-        Template template = templateRepository.save(new Template("title", category));
+        Template template = templateRepository.save(new Template("title","description", category));
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
         Snippet snippet3 = snippetRepository.save(new Snippet(template, "filename3", "content3", 2));

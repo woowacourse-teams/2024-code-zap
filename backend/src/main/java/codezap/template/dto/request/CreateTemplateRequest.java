@@ -15,6 +15,8 @@ public record CreateTemplateRequest(
         @Size(max = 255, message = "템플릿 이름은 최대 255자까지 입력 가능합니다.")
         String title,
 
+        String description,
+
         @Schema(description = "템플릿의 스니펫 내역")
         @NotNull(message = "스니펫 리스트가 null 입니다.")
         @Valid

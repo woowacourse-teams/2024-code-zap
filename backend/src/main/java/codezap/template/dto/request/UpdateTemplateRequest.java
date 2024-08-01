@@ -13,6 +13,8 @@ public record UpdateTemplateRequest(
         @NotNull(message = "템플릿 이름이 null 입니다.")
         String title,
 
+        String description,
+
         @Schema(description = "새로 추가한 스니펫 내역")
         @NotNull(message = "createSnippets 리스트가 null 입니다.")
         List<CreateSnippetRequest> createSnippets,

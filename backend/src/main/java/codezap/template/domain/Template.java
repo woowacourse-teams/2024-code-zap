@@ -30,13 +30,15 @@ public class Template extends BaseTimeEntity {
     @ManyToOne(optional = false)
     private Category category;
 
-    public Template(String title, Category category) {
+    public Template(String title, String description, Category category) {
         this.title = title;
+        this.description = description;
         this.category = category;
     }
 
-    public void updateTitle(String title, Category category) {
+    public void updateTemplate(String title, String description, Category category) {
         this.title = title;
+        this.description = description;
         this.category = category;
     }
 }

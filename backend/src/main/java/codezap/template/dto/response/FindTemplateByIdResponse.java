@@ -16,6 +16,8 @@ public record FindTemplateByIdResponse(
         @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
         String title,
 
+        String description,
+
         @Schema(description = "스니펫 목록")
         List<FindAllSnippetByTemplateResponse> snippets,
 
@@ -30,6 +32,7 @@ public record FindTemplateByIdResponse(
         return new FindTemplateByIdResponse(
                 template.getId(),
                 template.getTitle(),
+                template.getDescription(),
                 mapToFindAllSnippetByTemplateResponse(snippets),
                 FindCategoryByIdResponse.from(template.getCategory()),
                 mapToFindTagByTemplateResponse(tags),

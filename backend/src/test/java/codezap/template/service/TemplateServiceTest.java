@@ -72,8 +72,8 @@ class TemplateServiceTest {
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
         // given
-        CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
         categoryRepository.save(new Category("category"));
+        CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
         Long id = templateService.create(createTemplateRequest);
@@ -171,6 +171,7 @@ class TemplateServiceTest {
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,
+                "description",
                 List.of(
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
@@ -183,6 +184,7 @@ class TemplateServiceTest {
     private UpdateTemplateRequest makeUpdateTemplateRequest(String title) {
         return new UpdateTemplateRequest(
                 title,
+                "description",
                 List.of(
                         new CreateSnippetRequest("filename3", "content3", 2),
                         new CreateSnippetRequest("filename4", "content4", 3)
@@ -198,7 +200,7 @@ class TemplateServiceTest {
 
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.save(new Category("category"));
-        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title(), category));
+        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title(), createTemplateRequest.description(), category));
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));

@@ -54,7 +54,13 @@ public class TemplateService {
     public Long create(CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
 
-        Template template = templateRepository.save(new Template(createTemplateRequest.title(), category));
+        Template template = templateRepository.save(
+                new Template(
+                    createTemplateRequest.title(),
+                    createTemplateRequest.description(),
+                    category
+                )
+        );
 
         List<Tag> tags = createTemplateRequest.tags().stream()
                 .map(Tag::new)
@@ -88,7 +94,7 @@ public class TemplateService {
     public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         Template template = templateRepository.fetchById(templateId);
-        template.updateTitle(updateTemplateRequest.title(), category);
+        template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
 
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
         updateTemplateRequest.createSnippets()

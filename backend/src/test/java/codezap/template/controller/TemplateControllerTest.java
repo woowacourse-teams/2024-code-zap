@@ -58,7 +58,9 @@ class TemplateControllerTest {
         void createTemplateSuccess(String repeatTarget, int maxLength) {
             String maxTitle = "a".repeat(MAX_LENGTH);
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(maxTitle,
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    "description",
                     List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -78,7 +80,9 @@ class TemplateControllerTest {
         void createTemplateFailWithLongTitle() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(exceededTitle,
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    exceededTitle,
+                    "description",
                     List.of(new CreateSnippetRequest("a", "content", 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -98,7 +102,9 @@ class TemplateControllerTest {
         void createTemplateFailWithLongFileName() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
                     List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -118,7 +124,9 @@ class TemplateControllerTest {
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
                     List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -138,7 +146,9 @@ class TemplateControllerTest {
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) {
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
                             new CreateSnippetRequest("title", "content", secondIndex)),
                     1L,
@@ -159,9 +169,9 @@ class TemplateControllerTest {
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
         // given
+        categoryService.create(new CreateCategoryRequest("category"));
         CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
         CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
-        categoryService.create(new CreateCategoryRequest("category"));
         templateService.create(templateRequest1);
         templateService.create(templateRequest2);
 
@@ -224,6 +234,7 @@ class TemplateControllerTest {
 
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
+                    "description",
                     List.of(
                             new CreateSnippetRequest("filename3", "content3", 2),
                             new CreateSnippetRequest("filename4", "content4", 3)
@@ -258,6 +269,7 @@ class TemplateControllerTest {
 
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
+                    "description",
                     List.of(
                             new CreateSnippetRequest("filename3", "content3", createOrdinal1),
                             new CreateSnippetRequest("filename4", "content4", createOrdinal2)
@@ -315,6 +327,7 @@ class TemplateControllerTest {
     private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
         CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                 title,
+                "description",
                 List.of(
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
