@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
@@ -31,5 +32,15 @@ public class CategoryService {
 
     public FindAllCategoriesResponse findAll() {
         return FindAllCategoriesResponse.from(categoryRepository.findAll());
+    }
+
+    @Transactional
+    public void update(Long id, UpdateCategoryRequest updateCategoryRequest) {
+        if (categoryRepository.existsByName(updateCategoryRequest.name())) {
+            throw new CodeZapException(HttpStatus.CONFLICT,
+                    "이름이 " + updateCategoryRequest.name() + "인 카테고리가 이미 존재하고 있습니다.");
+        }
+        Category category = categoryRepository.fetchById(id);
+        category.updateName(updateCategoryRequest.name());
     }
 }
