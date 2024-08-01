@@ -51,7 +51,7 @@ public class CategoryService {
 
     private void validateDuplicatedCategory(String categoryName) {
         if (categoryRepository.existsByName(categoryName)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재하고 있습니다.");
+            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
         }
     }
 }

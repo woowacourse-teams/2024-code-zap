@@ -62,7 +62,7 @@ class CategoryServiceTest {
 
             assertThatThrownBy(() -> categoryService.create(createCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + createCategoryRequest.name() + "인 카테고리가 이미 존재하고 있습니다.");
+                    .hasMessage("이름이 " + createCategoryRequest.name() + "인 카테고리가 이미 존재합니다.");
         }
     }
 

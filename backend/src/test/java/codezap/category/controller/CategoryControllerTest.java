@@ -146,7 +146,7 @@ class CategoryControllerTest {
                     .when().put("/categories/" + savedCategoryId)
                     .then().log().all()
                     .statusCode(409)
-                    .body("detail", is("이름이 " + duplicatedName + "인 카테고리가 이미 존재하고 있습니다."));
+                    .body("detail", is("이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."));
         }
     }
 
