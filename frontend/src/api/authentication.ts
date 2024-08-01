@@ -3,9 +3,9 @@ import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-const SIGNUP_API_URL = `${API_URL}/signup`;
-const CHECK_USERNAME_API_URL = `${API_URL}/check-username`;
-const CHECK_EMAIL_API_URL = `${API_URL}/check-email`;
+export const SIGNUP_API_URL = `${API_URL}/signup`;
+export const CHECK_USERNAME_API_URL = `${API_URL}/check-username`;
+export const CHECK_EMAIL_API_URL = `${API_URL}/check-email`;
 
 export const postSignup = async (signupInfo: SignupRequest) =>
   await customFetch({
