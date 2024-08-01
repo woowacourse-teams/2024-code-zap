@@ -13,6 +13,8 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
 
+import codezap.category.domain.Category;
+import codezap.category.repository.CategoryRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
 
@@ -26,11 +28,14 @@ class SnippetRepositoryTest {
     private SnippetRepository snippetRepository;
     @Autowired
     private TemplateRepository templateRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Test
     @DisplayName("단일 스니펫 찾기 성공: 템플릿과 순서")
     void findOneSnippetSuccessWithTemplateAndOrdinal() {
-        Template template = templateRepository.save(new Template("title"));
+        Category category = categoryRepository.save(new Category("category"));
+        Template template = templateRepository.save(new Template("title", category));
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
 
@@ -47,7 +52,8 @@ class SnippetRepositoryTest {
     @Test
     @DisplayName("스니펫 리스트 찾기 성공: 템플릿과 순서")
     void findSnippetsSuccessWithTemplateAndOrdinal() {
-        Template template = templateRepository.save(new Template("title"));
+        Category category = categoryRepository.save(new Category("category"));
+        Template template = templateRepository.save(new Template("title", category));
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
         Snippet snippet3 = snippetRepository.save(new Snippet(template, "filename3", "content3", 2));

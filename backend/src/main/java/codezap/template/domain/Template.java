@@ -35,7 +35,8 @@ public class Template extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void updateTitle(String title) {
+    public void updateTitle(String title, Category category) {
         this.title = title;
+        this.category = category;
     }
 }

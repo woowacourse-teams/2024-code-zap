@@ -78,13 +78,17 @@ public class TemplateService {
     public FindTemplateByIdResponse findById(Long id) {
         Template template = templateRepository.fetchById(id);
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
-        return FindTemplateByIdResponse.of(template, snippets);
+        List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
+                .map(TemplateTag::getTag)
+                .toList();
+        return FindTemplateByIdResponse.of(template, snippets, tags);
     }
 
     @Transactional
     public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest) {
+        Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         Template template = templateRepository.fetchById(templateId);
-        template.updateTitle(updateTemplateRequest.title());
+        template.updateTitle(updateTemplateRequest.title(), category);
 
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
         updateTemplateRequest.createSnippets()
@@ -97,12 +101,24 @@ public class TemplateService {
         }
 
         updateTemplateRequest.deleteSnippetIds().forEach(snippetRepository::deleteById);
+
+        templateTagRepository.deleteAllByTemplate(template);
+        updateTemplateRequest.tags().stream()
+                .map(Tag::new)
+                .filter(tag -> !tagRepository.existsByName(tag.getName()))
+                .forEach(tagRepository::save);
+
+        List<Tag> tags = updateTemplateRequest.tags().stream()
+                .map(tagRepository::findByName)
+                .toList();
+        tags.forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
     }
 
     @Transactional
     public void deleteById(Long id) {
         thumbnailSnippetRepository.deleteByTemplateId(id);
         snippetRepository.deleteByTemplateId(id);
+        templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
     }
 

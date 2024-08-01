@@ -23,7 +23,11 @@ public record UpdateTemplateRequest(
 
         @Schema(description = "삭제한 스니펫 식별자")
         @NotNull(message = "deleteSnippetIds 리스트가 null 입니다.")
-        List<Long> deleteSnippetIds
+        List<Long> deleteSnippetIds,
+
+        Long categoryId,
+
+        List<String> tags
 ) implements ValidatedSnippetsOrdinalRequest {
     @Override
     public List<Integer> extractSnippetsOrdinal() {
