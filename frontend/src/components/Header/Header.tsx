@@ -1,62 +1,61 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import { logoIcon, newTemplateIcon } from '@/assets/images';
-import { Button, Flex, Input, Text } from '@/components';
-import * as S from './style';
+import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
+import { Button, Flex, Heading, Text } from '@/components';
+import * as S from './Header.style';
 
-const Header = () => {
-  const [searchValue, setSearchValue] = useState('');
+const Header = () => (
+  <S.HeaderContainer>
+    <S.HeaderContentContainer>
+      <Logo />
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-  };
-
-  return (
-    <S.HeaderContainer>
-      <Link to={'/'}>
-        <Flex align='center' gap='1.2rem' width='fit-content'>
-          <img src={logoIcon} alt='logo' />
-          <Text.SubTitle color='#FFD269'>CodeZap</Text.SubTitle>
-        </Flex>
-      </Link>
-      <Flex align='center' gap='3rem' flex='1'>
-        <Link to={'/my-page'}>
-          <Button size='medium' variant='text'>
-            <Text.Body weight='bold' color='#FFD269'>
-              MyPage
-            </Text.Body>
-          </Button>
-        </Link>
-        <Link to={'/'}>
-          <Button size='medium' variant='text'>
-            <Text.Body weight='bold' color='white'>
-              Explores
-            </Text.Body>
-          </Button>
-        </Link>
+      <Flex align='center' gap='2rem' flex='1'>
+        <NavOption route='/' name='내 템플릿' />
+        <NavOption route='/explore' name='구경가기' />
       </Flex>
-      <Flex align='center' gap='3rem' width='fit-content'>
-        <Input
-          value={searchValue}
-          onChange={handleInputChange}
-          placeholder='Search...'
-          type='search'
-          width='40rem'
-          height='4rem'
-          fontSize='1.6rem'
-        />
-        <Link to={'/templates/upload'}>
-          <Button size='medium' variant='outlined'>
-            <img src={newTemplateIcon} alt='newTemplate' />
-            <Text.Body weight='bold' color='#FFD269'>
-              New Template
-            </Text.Body>
-          </Button>
-        </Link>
+
+      <Flex align='center' gap='2rem'>
+        <NewTemplateButton />
+        <UserMenuButton />
       </Flex>
-    </S.HeaderContainer>
-  );
-};
+    </S.HeaderContentContainer>
+  </S.HeaderContainer>
+);
+
+const Logo = () => (
+  <Link to={'/'}>
+    <Flex align='center' gap='1rem'>
+      <img src={logoIcon} alt='로고 버튼' />
+      <Heading.XSmall color='#FF9500'>코드잽</Heading.XSmall>
+    </Flex>
+  </Link>
+);
+
+const NavOption = ({ route, name }: { route: string; name: string }) => (
+  <Link to={route}>
+    <Button size='medium' variant='text'>
+      <Text.Medium weight='bold' color='#393E46'>
+        {name}
+      </Text.Medium>
+    </Button>
+  </Link>
+);
+
+const NewTemplateButton = () => (
+  <Link to={'/templates/upload'}>
+    <S.NewTemplateButton>
+      <img src={newTemplateIcon} alt='' />
+      <Text.Small weight='bold' color='#FF9500'>
+        새 템플릿
+      </Text.Small>
+    </S.NewTemplateButton>
+  </Link>
+);
+
+const UserMenuButton = () => (
+  <S.UserMenuButton>
+    <img src={userMenuIcon} alt='사용자 메뉴' />
+  </S.UserMenuButton>
+);
 
 export default Header;
