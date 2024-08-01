@@ -49,6 +49,8 @@ public class CategoryController implements SpringDocCategoryController{
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        return null;
+        categoryService.deleteById(id);
+        return ResponseEntity.noContent()
+                .build();
     }
 }

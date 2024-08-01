@@ -2,6 +2,8 @@ package codezap.category.controller;
 
 import static org.hamcrest.Matchers.is;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,6 +18,9 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.service.CategoryService;
+import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.dto.request.CreateTemplateRequest;
+import codezap.template.service.TemplateService;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
@@ -31,6 +36,8 @@ class CategoryControllerTest {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private TemplateService templateService;
 
     @BeforeEach
     void setting() {
@@ -140,6 +147,56 @@ class CategoryControllerTest {
                     .then().log().all()
                     .statusCode(409)
                     .body("detail", is("이름이 " + duplicatedName + "인 카테고리가 이미 존재하고 있습니다."));
+        }
+    }
+
+
+    @Nested
+    @DisplayName("카테고리 삭제 테스트")
+    class deleteCategoryTest {
+
+        Long savedCategoryId;
+
+        @BeforeEach
+        void saveCategory() {
+            savedCategoryId = categoryService.create(new CreateCategoryRequest("category1"));
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 성공")
+        void deleteCategorySuccess() {
+            RestAssured.given().log().all()
+                    .when().delete("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(204);
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 성공: 존재하지 않는 카테고리의 삭제 요청")
+        void updateCategoryFailWithDuplicatedName() {
+            RestAssured.given().log().all()
+                    .when().delete("/categories/" + savedCategoryId + 1)
+                    .then().log().all()
+                    .statusCode(204);
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
+        void updateCategoryFailWithLongName() {
+            //given
+            templateService.create(new CreateTemplateRequest(
+                    "title",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    savedCategoryId,
+                    List.of("tag1", "tag2")
+            ));
+
+            //when & then
+            RestAssured.given().log().all()
+                    .when().delete("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿이 존재하는 카테고리는 삭제할 수 없습니다."));
         }
     }
 }

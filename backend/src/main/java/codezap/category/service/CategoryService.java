@@ -10,22 +10,23 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.template.repository.TemplateRepository;
 
 @Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final TemplateRepository templateRepository;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, TemplateRepository templateRepository) {
         this.categoryRepository = categoryRepository;
+        this.templateRepository = templateRepository;
     }
 
     @Transactional
     public Long create(CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
-        if (categoryRepository.existsByName(categoryName)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재하고 있습니다.");
-        }
+        validateDuplicatedCategory(categoryName);
         Category category = new Category(categoryName);
         return categoryRepository.save(category).getId();
     }
@@ -36,11 +37,21 @@ public class CategoryService {
 
     @Transactional
     public void update(Long id, UpdateCategoryRequest updateCategoryRequest) {
-        if (categoryRepository.existsByName(updateCategoryRequest.name())) {
-            throw new CodeZapException(HttpStatus.CONFLICT,
-                    "이름이 " + updateCategoryRequest.name() + "인 카테고리가 이미 존재하고 있습니다.");
-        }
+        validateDuplicatedCategory(updateCategoryRequest.name());
         Category category = categoryRepository.fetchById(id);
         category.updateName(updateCategoryRequest.name());
+    }
+
+    public void deleteById(Long id) {
+        if (templateRepository.existsByCategoryId(id)) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
+        }
+        categoryRepository.deleteById(id);
+    }
+
+    private void validateDuplicatedCategory(String categoryName) {
+        if (categoryRepository.existsByName(categoryName)) {
+            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재하고 있습니다.");
+        }
     }
 }
