@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { postSignup } from '@/api/authentication';
 import { useCheckEmailQuery } from '@/queries/authentication';
@@ -15,6 +16,7 @@ export const useSignupForm = () => {
     confirmPassword: '',
   });
 
+  const navigate = useNavigate();
   const { data: isUniqueEmail, isSuccess, refetch: checkEmailQuery } = useCheckEmailQuery(email);
 
   useEffect(() => {
@@ -94,8 +96,7 @@ export const useSignupForm = () => {
         console.error(response);
       }
 
-      console.log('signup success');
-      // route to Login
+      navigate('/login');
     }
   };
 
