@@ -13,18 +13,18 @@ export const HeaderContainer = styled.nav`
   width: 100%;
 
   background: white;
-  border-bottom: 0.125rem solid ${theme.color.light.secondary_200};
+  border-bottom: 2px solid ${theme.color.light.secondary_200};
 `;
 
 export const HeaderContentContainer = styled.div`
   display: flex;
-  gap: 60px;
+  gap: 3.75rem;
   align-items: center;
 
-  width: 1280px;
-  max-width: 1280px;
-  height: 64px;
-  padding: 30px;
+  width: 80rem;
+  max-width: 80rem;
+  height: 4rem;
+  padding: 1.875rem;
 
   white-space: nowrap;
 `;
@@ -42,19 +42,19 @@ export const NewTemplateButton = styled.button`
   align-items: center;
   justify-content: center;
 
-  width: 120px;
-  height: 38px;
+  width: 7.5rem;
+  height: 2.375rem;
 
   background-color: white;
-  border: 0.125rem solid ${theme.color.light.primary_800};
-  border-radius: 0.5rem;
+  border: 2px solid ${theme.color.light.primary_800};
+  border-radius: 8px;
 `;
 
 export const UserMenuButton = styled.button`
   cursor: pointer;
 
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
 
   color: ${theme.color.light.primary_800};
 
