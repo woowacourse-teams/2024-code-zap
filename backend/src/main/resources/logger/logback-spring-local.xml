@@ -7,7 +7,7 @@
         <appender-ref ref="console-appender"/>
     </logger>
 
-    <logger name="woowacourse.codezap" level="DEBUG">
+    <logger name="codezap" level="TRACE">
         <appender-ref ref="console-appender"/>
     </logger>
 
