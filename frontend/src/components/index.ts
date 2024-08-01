@@ -5,6 +5,7 @@ export { default as Heading } from './Heading/Heading';
 export { default as Input } from './Input/Input';
 export { default as Layout } from './Layout/Layout';
 export { default as SelectList } from './SelectList/SelectList';
+export { default as TagButton } from './TagButton/TagButton';
 export { default as SnippetEditor } from './SnippetEditor/SnippetEditor';
 export { default as TemplateItem } from './TemplateItem/TemplateItem';
 export { default as TemplateTitleInput } from './TemplateTitleInput/TemplateTitleInput';
