@@ -76,10 +76,15 @@ class TemplateServiceTest {
         categoryRepository.save(new Category("category"));
 
         // when
-        templateService.create(createTemplateRequest);
+        Long id = templateService.create(createTemplateRequest);
+        Template template = templateRepository.fetchById(id);
 
         // then
-        assertThat(templateRepository.findAll()).hasSize(1);
+        assertAll(
+                () -> assertThat(templateRepository.findAll()).hasSize(1),
+                () -> assertThat(template.getTitle()).isEqualTo(createTemplateRequest.title()),
+                () -> assertThat(template.getCategory().getName()).isEqualTo("category")
+        );
     }
 
     @Test
@@ -122,18 +127,26 @@ class TemplateServiceTest {
         // given
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate);
+        categoryRepository.save(new Category("category2"));
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
         templateService.update(template.getId(), updateTemplateRequest);
+        Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
+        List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
+                .map(TemplateTag::getTag)
+                .toList();
 
         // then
         assertAll(
-                () -> assertThat(updateTemplateRequest.title()).isEqualTo("updateTitle"),
+                () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
                 () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),
-                () -> assertThat(snippets).hasSize(3)
+                () -> assertThat(snippets).hasSize(3),
+                () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(2L),
+                () -> assertThat(tags).hasSize(2),
+                () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
         );
     }
 
@@ -177,7 +190,9 @@ class TemplateServiceTest {
                 List.of(
                         new UpdateSnippetRequest(2L, "filename2", "content2", 1)
                 ),
-                List.of(1L)
+                List.of(1L),
+                2L,
+                List.of("tag1", "tag3")
         );
     }
 

@@ -217,7 +217,8 @@ class TemplateControllerTest {
         @DisplayName("템플릿 수정 성공")
         void updateTemplateSuccess() {
             // given
-            categoryService.create(new CreateCategoryRequest("category"));
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
@@ -230,7 +231,9 @@ class TemplateControllerTest {
                     List.of(
                             new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
-                    List.of(1L)
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
             );
 
             // when & then
@@ -248,7 +251,8 @@ class TemplateControllerTest {
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
         void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
             // given
-            categoryService.create(new CreateCategoryRequest("category"));
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
             templateService.create(templateRequest);
 
@@ -261,7 +265,9 @@ class TemplateControllerTest {
                     List.of(
                             new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", updateOrdinal)
                     ),
-                    List.of(1L)
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
             );
 
             // when & then

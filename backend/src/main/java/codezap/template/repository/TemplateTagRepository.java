@@ -10,4 +10,6 @@ import codezap.template.domain.TemplateTag;
 public interface TemplateTagRepository extends JpaRepository<TemplateTag, Long> {
 
     List<TemplateTag> findAllByTemplate(Template template);
+
+    void deleteAllByTemplate(Template template);
 }
