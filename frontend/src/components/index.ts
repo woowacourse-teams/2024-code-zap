@@ -1,4 +1,5 @@
 export { default as Button } from './Button/Button';
+export { default as CategoryMenu } from './CategoryMenu/CategoryMenu';
 export { default as Flex } from './Flex/Flex';
 export { default as Header } from './Header/Header';
 export { default as Heading } from './Heading/Heading';
