@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="5 seconds">
+
+    <timestamp key="DATE_FORMAT"
+               datePattern="yyyy-MM-dd"/>
+
+    <!-- Local 개발환경 로그 설정 -->
+    <springProfile name="default">
+        <include resource="logger/logback-spring-local.xml"/>
+    </springProfile>
+
+    <!-- Development 환경 로그 설정 -->
+    <springProfile name="dev">
+        <include resource="logger/logback-spring-dev.xml"/>
+    </springProfile>
+
+</configuration>
