@@ -1,5 +1,6 @@
 import { Text } from '@/components';
 import { Category } from '@/types/template';
+import { theme } from '../../style/theme';
 import * as S from './CategoryButton.style';
 
 interface Props {
@@ -14,9 +15,9 @@ const CategoryButton = ({ category, onClick }: Props) => {
 
   return (
     <S.CategoryButtonWrapper onClick={handleCategoryButtonClick}>
-      <Text.Body color='#393E46' weight='bold'>
+      <Text.Medium color={theme.color.light.secondary_700} weight='bold'>
         {category.name}
-      </Text.Body>
+      </Text.Medium>
     </S.CategoryButtonWrapper>
   );
 };

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Flex, TagButton, Text } from '@/components';
 import { Tag, Template } from '@/types/template';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { theme } from '../../style/theme';
 import * as S from './TemplateCard.style';
 
 interface Props {
@@ -16,17 +17,17 @@ const TemplateCard = ({ template }: Props) => {
     <Link to={`/templates/${id}`}>
       <S.TemplateCardContainer>
         <Flex justify='space-between' width='100%'>
-          <Flex direction='column' gap='1.2rem'>
-            <Text.Body color='#191D25' weight='bold'>
+          <Flex direction='column' gap='.5rem'>
+            <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
               {title}
-            </Text.Body>
-            <Text.Body color='#585D65'>{description}</Text.Body>
+            </Text.XLarge>
+            <Text.Medium color={theme.color.light.secondary_700}>{description}</Text.Medium>
           </Flex>
 
-          <Text.Caption color='#393E46'>{formatRelativeTime(modifiedAt)}</Text.Caption>
+          <Text.XSmall color={theme.color.light.secondary_600}>{formatRelativeTime(modifiedAt)}</Text.XSmall>
         </Flex>
 
-        <Flex gap='0.8rem'>
+        <Flex gap='.5rem'>
           {tags.map((tag: Tag) => (
             <TagButton key={tag.id} id={tag.id} name={tag.name} disabled={true} />
           ))}
