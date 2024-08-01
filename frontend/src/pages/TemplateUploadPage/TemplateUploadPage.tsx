@@ -70,7 +70,7 @@ const TemplateUploadPage = () => {
 
   return (
     <>
-      <Flex direction='column' justify='center' align='flex-start' gap='1.5rem' padding='10rem 0'>
+      <Flex direction='column' justify='center' align='flex-start' gap='1.5rem'>
         <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
           <TemplateTitleInput
             placeholder='템플릿명을 입력해주세요'
