@@ -16,6 +16,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
@@ -74,5 +75,18 @@ class CategoryServiceTest {
         FindAllCategoriesResponse findAllCategoriesResponse = categoryService.findAll();
 
         assertThat(findAllCategoriesResponse.categories()).hasSize(2);
+    }
+
+    @Test
+    @DisplayName("카테고리 수정 성공")
+    void updateCategorySuccess() {
+        //given
+        Category savedCategory = categoryRepository.save(new Category("category1"));
+
+        //when
+        categoryService.update(savedCategory.getId(), new UpdateCategoryRequest("updateName"));
+
+        //then
+        assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo("updateName");
     }
 }
