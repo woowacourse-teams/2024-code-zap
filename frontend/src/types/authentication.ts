@@ -4,3 +4,7 @@ export interface SignupRequest {
   password: string;
   confirmPassword: string;
 }
+
+export interface CheckEmailResponse {
+  check: boolean;
+}
