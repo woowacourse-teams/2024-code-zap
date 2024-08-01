@@ -89,4 +89,17 @@ class CategoryServiceTest {
         //then
         assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo("updateName");
     }
+
+    @Test
+    @DisplayName("카테고리 삭제 성공")
+    void deleteCategorySuccess() {
+        //given
+        Category savedCategory = categoryRepository.save(new Category("category1"));
+
+        //when
+        categoryService.deleteById(savedCategory.getId());
+
+        //then
+        assertThat(categoryRepository.findById(savedCategory.getId())).isEmpty();
+    }
 }
