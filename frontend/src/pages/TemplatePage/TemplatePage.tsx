@@ -84,7 +84,7 @@ const TemplatePage = () => {
       {isEdit ? (
         <TemplateEditPage template={template} toggleEditButton={toggleEditButton} />
       ) : (
-        <Flex direction='column' align='center' padding='10rem 0 0 0' width='100%'>
+        <Flex direction='column' align='center' width='100%'>
           <S.MainContainer>
             <Flex justify='space-between'>
               <Flex direction='column' gap='1.6rem'>

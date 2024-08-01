@@ -17,7 +17,7 @@ const TemplateListPage = () => {
   const list = data?.templates || [];
 
   return (
-    <Flex direction='column' justify='flex-start' align='flex-end' width='100%' padding='10rem 0 0 0' gap='3.6rem'>
+    <Flex direction='column' justify='flex-start' align='flex-end' width='100%' gap='3.6rem'>
       <Text.Medium color='white' weight='bold'>
         {list.length} Results
       </Text.Medium>

@@ -5,26 +5,26 @@ import type { BaseProps, TextFieldProps } from './Input';
 
 const sizes = {
   small: css`
-    gap: 0.8rem;
+    gap: 0.5rem;
 
-    height: 3.2rem;
-    padding: 1rem 1.2rem;
+    height: 2rem;
+    padding: 0.625rem 0.75rem;
 
-    font-size: 1.2rem;
+    font-size: 0.75rem;
     line-height: 100%;
 
-    border-radius: '0.8rem';
+    border-radius: 8px;
   `,
   medium: css`
-    gap: 1.2rem;
+    gap: 0.75rem;
 
-    height: 4.8rem;
-    padding: 1.6rem;
+    height: 3rem;
+    padding: 1rem;
 
-    font-size: 1.6rem;
-    line-height: '100%';
+    font-size: 1rem;
+    line-height: 100%;
 
-    border-radius: 1.2rem;
+    border-radius: 12px;
   `,
 };
 
@@ -34,17 +34,18 @@ const variants = {
   `,
   outlined: css`
     background: none;
-    border: 0.1rem solid #808080;
+    border: 1px solid #808080;
   `,
   text: css`
     background: none;
   `,
 };
 
-export const Wrapper = styled.div`
+export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
+  width: 100%;
 `;
 
 export const Base = styled.div<BaseProps>`
@@ -56,7 +57,7 @@ export const Base = styled.div<BaseProps>`
   ${({ isValid }) =>
     isValid === false &&
     css`
-      border: 0.1rem solid red;
+      border: 1px solid red;
     `};
 
   /* for Adornment size */
@@ -64,15 +65,15 @@ export const Base = styled.div<BaseProps>`
     ${({ size }) =>
       size === 'small' &&
       css`
-        width: 1.2rem;
-        height: 1.2rem;
+        width: 0.75rem;
+        height: 0.75rem;
       `}
 
     ${({ size }) =>
       size === 'medium' &&
       css`
-        width: 1.6rem;
-        height: 1.6rem;
+        width: 1rem;
+        height: 1rem;
       `}
   }
 `;
@@ -102,11 +103,18 @@ export const TextField = styled.input<TextFieldProps>`
   }
 `;
 
+export const Label = styled.label`
+  font-size: 1rem;
+  line-height: 100%;
+`;
+
 export const Adornment = styled.div`
   display: flex;
 `;
 
 export const HelperText = styled.span`
-  margin-left: 8px;
+  height: 1rem;
+  margin-left: 0.5rem;
+  font-size: 1rem;
   color: red;
 `;

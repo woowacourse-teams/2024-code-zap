@@ -83,7 +83,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   };
 
   return (
-    <Flex direction='column' align='center' padding='10rem 0 0 0' width='100%'>
+    <Flex direction='column' align='center' width='100%'>
       <S.MainContainer>
         <TemplateTitleInput
           placeholder='템플릿명을 입력해주세요'
