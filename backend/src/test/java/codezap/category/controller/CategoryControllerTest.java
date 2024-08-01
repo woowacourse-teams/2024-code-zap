@@ -55,8 +55,8 @@ class CategoryControllerTest {
         }
 
         @Test
-        @DisplayName("카테고리 생성 실패:")
-        void createCategoryFail() {
+        @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
+        void createCategoryFailWithLongName() {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             RestAssured.given().log().all()
