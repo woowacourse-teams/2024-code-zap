@@ -15,6 +15,6 @@ export const handlers = [
 
   // authentication
   http.post(`${SIGNUP_API_URL}`, async () => HttpResponse.json({ status: 201 })),
-  http.get(`${CHECK_EMAIL_API_URL}`, async () => HttpResponse.json({ status: 200 })),
-  http.get(`${CHECK_USERNAME_API_URL}`, async () => HttpResponse.json({ status: 200 })),
+  http.get(`${CHECK_EMAIL_API_URL}`, async () => HttpResponse.json({ check: true })),
+  http.get(`${CHECK_USERNAME_API_URL}`, async () => HttpResponse.json({ check: true })),
 ];
