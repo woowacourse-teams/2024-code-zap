@@ -1,5 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
+import { SIGNUP_API_URL } from '@/api/authentication';
 import { TEMPLATE_API_URL } from '@/api/templates';
 import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
@@ -18,5 +19,5 @@ export const handlers = [
   http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
   http.post(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 200 })),
   http.delete(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 204 })),
-  http.post(`${process.env.REACT_APP_API_URL}/signup`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${SIGNUP_API_URL}`, async () => HttpResponse.json({ status: 201 })),
 ];
