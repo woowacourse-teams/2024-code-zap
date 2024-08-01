@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
-import { Button, Flex, Heading, Text } from '@/components';
+import { Flex, Heading, Text } from '@/components';
 import * as S from './Header.style';
 
 const Header = () => (
@@ -33,11 +33,11 @@ const Logo = () => (
 
 const NavOption = ({ route, name }: { route: string; name: string }) => (
   <Link to={route}>
-    <Button size='medium' variant='text'>
+    <S.NavOptionButton>
       <Text.Medium weight='bold' color='#393E46'>
         {name}
       </Text.Medium>
-    </Button>
+    </S.NavOptionButton>
   </Link>
 );
 

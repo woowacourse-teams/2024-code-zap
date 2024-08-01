@@ -29,6 +29,11 @@ export const HeaderContentContainer = styled.div`
   white-space: nowrap;
 `;
 
+export const NavOptionButton = styled.button`
+  cursor: pointer;
+  background: none;
+`;
+
 export const NewTemplateButton = styled.button`
   cursor: pointer;
 
