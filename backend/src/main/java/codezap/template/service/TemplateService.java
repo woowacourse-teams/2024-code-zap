@@ -118,6 +118,7 @@ public class TemplateService {
     public void deleteById(Long id) {
         thumbnailSnippetRepository.deleteByTemplateId(id);
         snippetRepository.deleteByTemplateId(id);
+        templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
     }
 
