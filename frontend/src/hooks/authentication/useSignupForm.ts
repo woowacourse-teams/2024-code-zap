@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { postSignup } from '@/api/authentication';
-import { useCheckEmailQuery } from '@/queries/authentication/useCheckEmailQuery';
+import { useCheckEmailQuery } from '@/queries/authentication';
 
 export const useSignupForm = () => {
   const [email, setEmail] = useState('');
