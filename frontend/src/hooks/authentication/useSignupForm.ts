@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { postSignup } from '@/api/authentication';
+import { useCheckEmailQuery } from '@/queries/authentication/useCheckEmailQuery';
 
 export const useSignupForm = () => {
   const [email, setEmail] = useState('');
@@ -13,6 +14,19 @@ export const useSignupForm = () => {
     password: '',
     confirmPassword: '',
   });
+
+  const { data: isUniqueEmail, isSuccess, refetch: checkEmailQuery } = useCheckEmailQuery(email);
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (isUniqueEmail?.check === false) {
+        setErrors((prev) => ({
+          ...prev,
+          email: '중복된 이메일입니다.',
+        }));
+      }
+    }
+  }, [isUniqueEmail?.check, isSuccess]);
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -97,5 +111,6 @@ export const useSignupForm = () => {
     handleConfirmPasswordChange,
     isFormValid,
     handleSubmit,
+    checkEmailQuery,
   };
 };
