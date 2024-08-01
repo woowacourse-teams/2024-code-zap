@@ -88,7 +88,7 @@ export const useSignupForm = () => {
 
   const handleSubmit = async () => {
     if (isFormValid()) {
-      const response = await postSignup({ email, nickname, password, confirmPassword });
+      const response = await postSignup({ email, nickname, password });
 
       if (!response.ok) {
         console.error(response);
