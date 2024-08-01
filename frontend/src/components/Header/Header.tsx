@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Flex, Heading, Text } from '@/components';
+import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = () => (
@@ -26,7 +27,7 @@ const Logo = () => (
   <Link to={'/'}>
     <Flex align='center' gap='1rem'>
       <img src={logoIcon} alt='로고 버튼' />
-      <Heading.XSmall color='#FF9500'>코드잽</Heading.XSmall>
+      <Heading.XSmall color={theme.color.light.primary_800}>코드잽</Heading.XSmall>
     </Flex>
   </Link>
 );
@@ -34,7 +35,7 @@ const Logo = () => (
 const NavOption = ({ route, name }: { route: string; name: string }) => (
   <Link to={route}>
     <S.NavOptionButton>
-      <Text.Medium weight='bold' color='#393E46'>
+      <Text.Medium weight='bold' color={theme.color.light.secondary_800}>
         {name}
       </Text.Medium>
     </S.NavOptionButton>
@@ -45,7 +46,7 @@ const NewTemplateButton = () => (
   <Link to={'/templates/upload'}>
     <S.NewTemplateButton>
       <img src={newTemplateIcon} alt='' />
-      <Text.Small weight='bold' color='#FF9500'>
+      <Text.Small weight='bold' color={theme.color.light.primary_800}>
         새 템플릿
       </Text.Small>
     </S.NewTemplateButton>
