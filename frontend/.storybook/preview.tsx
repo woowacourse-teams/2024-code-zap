@@ -18,11 +18,11 @@ const preview: Preview = {
       <>
         <GlobalStyles />
         <MemoryRouter>
-          <div style={{ display: 'flex', gap: '1.6rem', flexWrap: 'wrap' }}>
-            <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'white' }}>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ border: '2px solid black', borderRadius: '8px', padding: '2rem', background: 'white' }}>
               <Story />
             </div>
-            <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'black' }}>
+            <div style={{ border: '2px solid black', borderRadius: '8px', padding: '2rem', background: 'black' }}>
               <Story />
             </div>
           </div>
