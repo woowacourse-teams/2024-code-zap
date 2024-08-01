@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
 import { Flex, TagButton, Text } from '@/components';
+import { theme } from '@/style/theme';
 import { Tag, Template } from '@/types/template';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
-import { theme } from '../../style/theme';
 import * as S from './TemplateCard.style';
 
 interface Props {

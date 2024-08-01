@@ -1,5 +1,5 @@
 import { Text } from '@/components';
-import { theme } from '../../style/theme';
+import { theme } from '@/style/theme';
 import * as S from './TagButton.style';
 
 interface Props {
