@@ -6,13 +6,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import codezap.global.auditing.BaseTimeEntity;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor
-public class Member {
+@AllArgsConstructor
+@Getter
+@EqualsAndHashCode(callSuper = false)
+public class Member extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,4 +31,8 @@ public class Member {
 
     @Column(unique = true, nullable = false)
     private String username;
+
+    public Member(String email, String password, String username) {
+        this(null, email, password, username);
+    }
 }
