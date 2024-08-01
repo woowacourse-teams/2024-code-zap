@@ -5,7 +5,7 @@
       "title": "title0",
       "description": "description0",
       "snippets": [],
-      "category": { "id": 1, "name": "Category1" },
+      "category": { "id": 2, "name": "Category1" },
       "tags": [
         { "id": 0, "name": "Java" },
         { "id": 1, "name": "Example" }
@@ -17,7 +17,7 @@
       "title": "title1",
       "description": "description1",
       "snippets": [],
-      "category": { "id": 2, "name": "Category2" },
+      "category": { "id": 3, "name": "Category2" },
       "tags": [
         { "id": 2, "name": "JavaScript" },
         { "id": 3, "name": "React" }
@@ -29,7 +29,7 @@
       "title": "title2",
       "description": "description2",
       "snippets": [],
-      "category": { "id": 3, "name": "Category3" },
+      "category": { "id": 4, "name": "Category3" },
       "tags": [
         { "id": 4, "name": "Java" },
         { "id": 5, "name": "Backend" }
