@@ -15,7 +15,7 @@ const TemplateItem = ({ item }: Props) => {
   return (
     <Flex direction='column' gap='1.6rem' width='100%'>
       <Flex direction='column' justify='flex-start' align='flex-start' width='100%' gap='0.8rem'>
-        <Text.SubTitle color='white'>{title}</Text.SubTitle>
+        <Text.Large color='white'>{title}</Text.Large>
       </Flex>
       <Flex direction='column'>
         <Flex
@@ -24,9 +24,9 @@ const TemplateItem = ({ item }: Props) => {
           padding='1rem 1.5rem'
           style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
         >
-          <Text.Caption color='#fff' weight='bold'>
+          <Text.Small color='#fff' weight='bold'>
             {thumbnailSnippet.filename}
-          </Text.Caption>
+          </Text.Small>
         </Flex>
         <SyntaxHighlighter
           language={getLanguageByFilename(thumbnailSnippet.filename)}
@@ -43,7 +43,7 @@ const TemplateItem = ({ item }: Props) => {
         </SyntaxHighlighter>
       </Flex>
 
-      <Text.Caption color='white'>{formatRelativeTime(modifiedAt)}</Text.Caption>
+      <Text.Small color='white'>{formatRelativeTime(modifiedAt)}</Text.Small>
     </Flex>
   );
 };

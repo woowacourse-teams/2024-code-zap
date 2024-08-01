@@ -18,9 +18,9 @@ const TemplateListPage = () => {
 
   return (
     <Flex direction='column' justify='flex-start' align='flex-end' width='100%' padding='10rem 0 0 0' gap='3.6rem'>
-      <Text.Body color='white' weight='bold'>
+      <Text.Medium color='white' weight='bold'>
         {list.length} Results
-      </Text.Body>
+      </Text.Medium>
       <Flex direction='column' width='100%' gap='4.8rem'>
         {list.map((item) => (
           <Link to={`templates/${item.id}`} key={item.id}>

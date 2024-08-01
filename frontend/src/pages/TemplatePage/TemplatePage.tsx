@@ -88,10 +88,10 @@ const TemplatePage = () => {
           <S.MainContainer>
             <Flex justify='space-between'>
               <Flex direction='column' gap='1.6rem'>
-                <Text.Title color='white'>{template.title}</Text.Title>
-                <Text.Caption color='#ffd369' weight='bold'>
+                <Text.XLarge color='white'>{template.title}</Text.XLarge>
+                <Text.Small color='#ffd369' weight='bold'>
                   {formatRelativeTime(template.modifiedAt)}
-                </Text.Caption>
+                </Text.Small>
               </Flex>
               <Flex align='center' gap='1.6rem'>
                 <S.EditButton
@@ -123,9 +123,9 @@ const TemplatePage = () => {
                   padding='1rem 1.5rem'
                   style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
                 >
-                  <Text.Caption color='#fff' weight='bold'>
+                  <Text.Small color='#fff' weight='bold'>
                     {snippet.filename}
-                  </Text.Caption>
+                  </Text.Small>
                 </Flex>
                 <SyntaxHighlighter
                   language={getLanguageByFilename(snippet.filename)}
