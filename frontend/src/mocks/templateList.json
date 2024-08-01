@@ -1,49 +1,136 @@
 {
   "templates": [
     {
-      "id": 2024,
+      "id": 0,
+      "title": "title0",
+      "description": "description0",
+      "snippets": [],
+      "category": { "id": 1, "name": "Category1" },
+      "tags": [
+        { "id": 0, "name": "Java" },
+        { "id": 1, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 1,
       "title": "title1",
-      "thumbnailSnippet": {
-        "filename": "title1.tsx",
-        "thumbnailContent": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
-      },
+      "description": "description1",
+      "snippets": [],
+      "category": { "id": 2, "name": "Category2" },
+      "tags": [
+        { "id": 2, "name": "JavaScript" },
+        { "id": 3, "name": "React" }
+      ],
       "modifiedAt": "2024-07-11 12:34"
     },
     {
-      "id": 2025,
+      "id": 2,
       "title": "title2",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
-      },
+      "description": "description2",
+      "snippets": [],
+      "category": { "id": 3, "name": "Category3" },
+      "tags": [
+        { "id": 4, "name": "Java" },
+        { "id": 5, "name": "Backend" }
+      ],
       "modifiedAt": "2024-07-10 12:34"
     },
     {
-      "id": 2026,
+      "id": 3,
       "title": "title3",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "const GlobalStyles = () => {"
-      },
+      "description": "description3",
+      "snippets": [],
+      "category": { "id": 1, "name": "Category1" },
+      "tags": [
+        { "id": 6, "name": "CSS" },
+        { "id": 7, "name": "Styling" }
+      ],
       "modifiedAt": "2024-07-09 12:34"
     },
     {
-      "id": 2027,
+      "id": 4,
       "title": "title4",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
-      },
+      "description": "description4",
+      "snippets": [],
+      "category": { "id": 2, "name": "Category2" },
+      "tags": [
+        { "id": 8, "name": "Java" },
+        { "id": 9, "name": "OOP" }
+      ],
       "modifiedAt": "2024-07-08 12:34"
     },
     {
-      "id": 2028,
+      "id": 5,
       "title": "title5",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
-      },
+      "description": "description5",
+      "snippets": [],
+      "category": { "id": 3, "name": "Category3" },
+      "tags": [
+        { "id": 10, "name": "Java" },
+        { "id": 11, "name": "Example" }
+      ],
       "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 6,
+      "title": "title6",
+      "description": "description6",
+      "snippets": [],
+      "category": { "id": 1, "name": "Category1" },
+      "tags": [
+        { "id": 12, "name": "React" },
+        { "id": 13, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 7,
+      "title": "title7",
+      "description": "description7",
+      "snippets": [],
+      "category": { "id": 2, "name": "Category2" },
+      "tags": [
+        { "id": 14, "name": "Python" },
+        { "id": 15, "name": "Script" }
+      ],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 8,
+      "title": "title8",
+      "description": "description8",
+      "snippets": [],
+      "category": { "id": 3, "name": "Category3" },
+      "tags": [
+        { "id": 16, "name": "SQL" },
+        { "id": 17, "name": "Database" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 9,
+      "title": "title9",
+      "description": "description9",
+      "snippets": [],
+      "category": { "id": 1, "name": "Category1" },
+      "tags": [
+        { "id": 18, "name": "C++" },
+        { "id": 19, "name": "Programming" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 10,
+      "title": "title10",
+      "description": "description10",
+      "snippets": [],
+      "category": { "id": 2, "name": "Category2" },
+      "tags": [
+        { "id": 20, "name": "JavaScript" },
+        { "id": 21, "name": "Log" }
+      ],
+      "modifiedAt": "2024-07-02 12:34"
     }
   ]
 }
