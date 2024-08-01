@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 
+import { theme } from '../../style/theme';
+
 export const TemplateCardContainer = styled.div`
   cursor: pointer;
 
@@ -9,18 +11,18 @@ export const TemplateCardContainer = styled.div`
 
   box-sizing: border-box;
   width: 100%;
-  height: 12.8rem;
-  padding: 1.6rem;
+  height: 8rem;
+  padding: 1rem;
 
-  background: #ffffff;
-  border: 1px solid #afb6c1;
-  border-radius: 0.8rem;
-  box-shadow: 0 0.4rem 0.8rem #00000020;
+  background: ${theme.color.light.white};
+  border-radius: 8px;
+  box-shadow: 1px 2px 8px 1px #00000020;
 
   transition: 0.1s ease;
 
   &:hover {
-    bottom: 0.8rem;
-    transform: scale(1.04);
+    bottom: 0.5rem;
+    transform: scale(1.025);
+    box-shadow: 1px 2px 8px 1px #00000030;
   }
 `;

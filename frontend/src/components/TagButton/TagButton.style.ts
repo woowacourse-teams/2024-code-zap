@@ -4,14 +4,14 @@ export const TagButtonWrapper = styled.button<{ bgColor: string; borderColor: st
   cursor: pointer;
 
   box-sizing: border-box;
-  height: 2.8rem;
-  padding: 0 1.2rem;
+  height: 1.75rem;
+  padding: 0 0.75rem;
 
   background-color: ${({ bgColor }) => bgColor};
-  border: 2px solid ${({ borderColor }) => borderColor};
+  border: 1px solid ${({ borderColor }) => borderColor};
   border-radius: 2.5rem;
 
   &:not(:disabled):hover {
-    box-shadow: 0 0.2rem 0.5rem #00000040;
+    box-shadow: 0 1px 4px #00000030;
   }
 `;
