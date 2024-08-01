@@ -1,12 +1,12 @@
 package codezap.member.controller;
 
-import org.springframework.http.HttpStatus;
+import java.net.URI;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.member.dto.SignupRequest;
@@ -15,25 +15,25 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberController implements SpringDocMemberController {
 
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    void signup(@RequestBody SignupRequest request) {
-        memberService.signup(request);
+    public ResponseEntity<Void> signup(@RequestBody SignupRequest request) {
+        long memberId = memberService.signup(request);
+        return ResponseEntity.created(URI.create("/members/" + memberId)).build();
     }
 
     @GetMapping("/check-email")
-    ResponseEntity<Boolean> checkEmailDuplicate(@RequestParam String value) {
-        boolean isDuplicate = memberService.isEmailDuplicate(value);
-        return ResponseEntity.ok(isDuplicate);
+    public ResponseEntity<Boolean> checkUniqueEmail(@RequestParam String email) {
+        boolean isUnique = memberService.isUniqueEmail(email);
+        return ResponseEntity.ok(isUnique);
     }
 
     @GetMapping("/check-username")
-    ResponseEntity<Boolean> checkUsernameDuplicate(@RequestParam String value) {
-        boolean isDuplicate = memberService.isUsernameDuplicate(value);
-        return ResponseEntity.ok(isDuplicate);
+    public ResponseEntity<Boolean> checkUniqueUsername(@RequestParam String username) {
+        boolean isUnique = memberService.isUniqueUsername(username);
+        return ResponseEntity.ok(isUnique);
     }
 }

@@ -15,10 +15,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public void signup(SignupRequest request) {
+    public long signup(SignupRequest request) {
         validateSignupRequest(request);
         Member member = new Member(request.email(), request.password(), request.username());
-        memberRepository.save(member);
+        Member saved = memberRepository.save(member);
+        return saved.getId();
     }
 
     private void validateSignupRequest(SignupRequest request) {
@@ -27,22 +28,22 @@ public class MemberService {
     }
 
     private void validateNotDuplicateEmail(String email) {
-        if (isEmailDuplicate(email)) {
+        if (!isUniqueEmail(email)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "이메일이 이미 존재합니다.");
         }
     }
 
     private void validateNotDuplicateUsername(String username) {
-        if (isUsernameDuplicate(username)) {
+        if (!isUniqueUsername(username)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "사용자명이 이미 존재합니다.");
         }
     }
 
-    public boolean isEmailDuplicate(String email) {
-        return memberRepository.existsByEmail(email);
+    public boolean isUniqueEmail(String email) {
+        return !memberRepository.existsByEmail(email);
     }
 
-    public boolean isUsernameDuplicate(String username) {
-        return memberRepository.existsByUsername(username);
+    public boolean isUniqueUsername(String username) {
+        return !memberRepository.existsByUsername(username);
     }
 }
