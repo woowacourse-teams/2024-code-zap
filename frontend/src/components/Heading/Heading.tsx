@@ -15,33 +15,33 @@ interface Props {
 }
 
 const XLarge = ({ children, as = 'span', color, weight = 'bold' }: PropsWithChildren<Props>) => (
-  <S.HeadingWrapper as={as} color={color} weight={weights[weight]} size={sizes.xlarge}>
+  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.xlarge}>
     {children}
-  </S.HeadingWrapper>
+  </S.HeadingElement>
 );
 
 const Large = ({ children, as = 'span', color, weight = 'bold' }: PropsWithChildren<Props>) => (
-  <S.HeadingWrapper as={as} color={color} weight={weights[weight]} size={sizes.large}>
+  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.large}>
     {children}
-  </S.HeadingWrapper>
+  </S.HeadingElement>
 );
 
 const Medium = ({ children, as = 'span', color, weight = 'bold' }: PropsWithChildren<Props>) => (
-  <S.HeadingWrapper as={as} color={color} weight={weights[weight]} size={sizes.medium}>
+  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.medium}>
     {children}
-  </S.HeadingWrapper>
+  </S.HeadingElement>
 );
 
 const Small = ({ children, as = 'span', color, weight = 'bold' }: PropsWithChildren<Props>) => (
-  <S.HeadingWrapper as={as} color={color} weight={weights[weight]} size={sizes.small}>
+  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.small}>
     {children}
-  </S.HeadingWrapper>
+  </S.HeadingElement>
 );
 
 const XSmall = ({ children, as = 'span', color, weight = 'bold' }: PropsWithChildren<Props>) => (
-  <S.HeadingWrapper as={as} color={color} weight={weights[weight]} size={sizes.xsmall}>
+  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.xsmall}>
     {children}
-  </S.HeadingWrapper>
+  </S.HeadingElement>
 );
 
 const Heading = Object.assign(

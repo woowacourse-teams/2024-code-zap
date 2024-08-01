@@ -6,7 +6,7 @@ interface Props {
   size: string;
 }
 
-export const HeadingWrapper = styled.span<Props>`
+export const HeadingElement = styled.span<Props>`
   font-size: ${({ size }) => size};
   font-weight: ${({ weight }) => weight};
   color: ${({ color }) => color};

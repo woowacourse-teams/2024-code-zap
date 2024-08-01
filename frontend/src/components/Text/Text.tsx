@@ -15,33 +15,33 @@ interface Props {
 }
 
 const XLarge = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as={as} color={color} weight={weights[weight]} size={sizes.xlarge}>
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.xlarge}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
 const Large = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as={as} color={color} weight={weights[weight]} size={sizes.large}>
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.large}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
 const Medium = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as={as} color={color} weight={weights[weight]} size={sizes.medium}>
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.medium}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
 const Small = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as={as} color={color} weight={weights[weight]} size={sizes.small}>
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.small}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
 const XSmall = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as={as} color={color} weight={weights[weight]} size={sizes.xsmall}>
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.xsmall}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
 const Text = Object.assign(
