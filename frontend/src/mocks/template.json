@@ -1,6 +1,7 @@
 {
-  "id": 2024,
-  "title": "회원가입 유효성 검증",
+  "id": 0,
+  "title": "title0",
+  "description": "description0",
   "snippets": [
     {
       "id": 305,
@@ -15,5 +16,10 @@
       "ordinal": 2
     }
   ],
-  "modifiedAt": "2024-07-11 12:34"
+  "category": { "id": 2, "name": "Category1" },
+  "tags": [
+    { "id": 0, "name": "Java" },
+    { "id": 1, "name": "Example" }
+  ],
+  "modifiedAt": "2024-07-01 12:34"
 }
