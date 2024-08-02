@@ -15,12 +15,17 @@ export const postSignup = async (signupInfo: SignupRequest) =>
     body: JSON.stringify(signupInfo),
   });
 
-export const postLogin = async (loginInfo: LoginRequest) =>
-  await customFetch({
+export const postLogin = async (loginInfo: LoginRequest) => {
+  const response = await customFetch({
     method: 'POST',
     url: `${LOGIN_API_URL}`,
     body: JSON.stringify(loginInfo),
   });
+
+  localStorage.setItem('token', response.headers.get('Authorization'));
+
+  return response;
+};
 
 export const checkUsername = async (username: string) => {
   const params = new URLSearchParams({ username });
