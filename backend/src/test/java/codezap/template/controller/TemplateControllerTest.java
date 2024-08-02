@@ -60,7 +60,7 @@ class TemplateControllerTest {
             categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     maxTitle,
-                    "description",
+                    repeatTarget.repeat(maxLength),
                     List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -139,6 +139,28 @@ class TemplateControllerTest {
                     .then().log().all()
                     .statusCode(400)
                     .body("detail", is("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void createTemplateFailWithLongDescription(String repeatTarget, int exceededLength) {
+            categoryService.create(new CreateCategoryRequest("category"));
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    repeatTarget.repeat(exceededLength),
+                    List.of(new CreateSnippetRequest("title", "content", 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(templateRequest)
+                    .when().post("/templates")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -254,6 +276,146 @@ class TemplateControllerTest {
                     .when().post("/templates/1")
                     .then().log().all()
                     .statusCode(200);
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 템플릿 이름 길이 초과")
+        void updateTemplateFailWithLongName() {
+            // given
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    exceededTitle,
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest("filename3", "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿 이름은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
+        void updateTemplateFailWithLongFileName() {
+            // given
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest(exceededTitle, "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("파일 이름은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void updateTemplateFailWithLongFileContent(String repeatTarget, int exceedLength) {
+            // given
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest("filename3", repeatTarget.repeat(exceedLength), 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void updateTemplateFailWithLongContent(String repeatTarget, int exceedLength) {
+            // given
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
+
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    repeatTarget.repeat(exceedLength),
+                    List.of(
+                            new CreateSnippetRequest("filename3", "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         // 정상 요청: 2, 3, 1
