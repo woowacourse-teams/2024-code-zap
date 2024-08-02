@@ -17,7 +17,7 @@ const meta: Meta<typeof Input> = {
     size: {
       control: {
         type: 'radio',
-        options: ['small', 'medium'],
+        options: ['small', 'medium', 'large'],
       },
     },
     isValid: {
