@@ -41,7 +41,8 @@ public class CategoryController implements SpringDocCategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateCategory(@PathVariable Long id,
+    public ResponseEntity<Void> updateCategory(
+            @PathVariable Long id,
             @Valid @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
         categoryService.update(id, updateCategoryRequest);

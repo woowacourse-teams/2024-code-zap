@@ -249,11 +249,7 @@ class TemplateControllerTest {
         @DisplayName("템플릿 수정 성공")
         void updateTemplateSuccess() {
             // given
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
                     "description",
@@ -283,11 +279,7 @@ class TemplateControllerTest {
         void updateTemplateFailWithLongName() {
             // given
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     exceededTitle,
                     "description",
@@ -318,11 +310,7 @@ class TemplateControllerTest {
         void updateTemplateFailWithLongFileName() {
             // given
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "title",
                     "description",
@@ -353,11 +341,7 @@ class TemplateControllerTest {
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void updateTemplateFailWithLongFileContent(String repeatTarget, int exceedLength) {
             // given
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "title",
                     "description",
@@ -388,11 +372,7 @@ class TemplateControllerTest {
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void updateTemplateFailWithLongContent(String repeatTarget, int exceedLength) {
             // given
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "title",
                     repeatTarget.repeat(exceedLength),
@@ -424,11 +404,7 @@ class TemplateControllerTest {
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
         void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
             // given
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
                     "description",
@@ -452,6 +428,13 @@ class TemplateControllerTest {
                     .then().log().all()
                     .statusCode(400)
                     .body("detail", is("스니펫 순서가 잘못되었습니다."));
+        }
+
+        private void createTemplateAndTwoCategories() {
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
         }
     }
 

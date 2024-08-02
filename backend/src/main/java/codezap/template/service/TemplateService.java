@@ -53,28 +53,24 @@ public class TemplateService {
     @Transactional
     public Long create(CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
-
         Template template = templateRepository.save(
-                new Template(
-                    createTemplateRequest.title(),
-                    createTemplateRequest.description(),
-                    category
-                )
+                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
-
-        List<Tag> tags = createTemplateRequest.tags().stream()
-                .map(Tag::new)
-                .map(tagRepository::save)
-                .toList();
-
-        tags.forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
-
+        createTags(createTemplateRequest, template);
         createTemplateRequest.snippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
 
         Snippet thumbnailSnippet = snippetRepository.findByTemplateAndOrdinal(template, FIRST_ORDINAL);
         thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
         return template.getId();
+    }
+
+    private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
+        templateTagRepository.saveAll(createTemplateRequest.tags().stream()
+                .map(tag -> tagRepository.save(new Tag(tag)))
+                .map(tag -> new TemplateTag(template, tag))
+                .toList()
+        );
     }
 
     public FindAllTemplatesResponse findAll() {
@@ -95,7 +91,11 @@ public class TemplateService {
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         Template template = templateRepository.fetchById(templateId);
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
+        updateSnippets(updateTemplateRequest, template);
+        updateTags(updateTemplateRequest, template);
+    }
 
+    private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
         updateTemplateRequest.createSnippets()
                 .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
@@ -107,7 +107,9 @@ public class TemplateService {
         }
 
         updateTemplateRequest.deleteSnippetIds().forEach(snippetRepository::deleteById);
+    }
 
+    private void updateTags(UpdateTemplateRequest updateTemplateRequest, Template template) {
         templateTagRepository.deleteAllByTemplate(template);
         updateTemplateRequest.tags().stream()
                 .map(Tag::new)
