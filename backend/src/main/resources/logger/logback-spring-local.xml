@@ -15,9 +15,4 @@
         <appender-ref ref="parameter-appender"/>
     </logger>
 
-    <!-- 전체 로그 확인이 필요한 경우 활성화 시킬 것 -->
-    <!--        <logger name="root" level="TRACE">-->
-    <!--            <appender-ref ref="console-appender"/>-->
-    <!--        </logger>-->
-
 </configuration>
