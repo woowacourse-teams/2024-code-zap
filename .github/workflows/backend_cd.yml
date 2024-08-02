@@ -44,19 +44,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: 브랜치명을 통해 개발 환경 알아내기
-        id: get-branch
         run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-
-          if [ "$BRANCH_NAME" = "main" ]; then
-            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-            echo "개발 환경 : prod"
-          elif [ "$BRANCH_NAME" = "develop" ]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-            echo "개발 환경 : dev"
-          else
-            exit 1
-          fi
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash find-env-branch.sh
           
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
@@ -72,7 +62,7 @@ jobs:
       - name: 배포 스크립트 실행
         run: |
           cd ${{ secrets.WORK_DIRECTORY }}
-          unzip -o code-zap-jar.zip
+          unzip -o code-zap-jar.zip -d ${{ env.ENVIRONMENT }}
           cd ${{ secrets.SCRIPT_DIRECTORY }}
           RUNNER_TRACKING_ID="" && bash start.sh ${{ env.ENVIRONMENT }}
                     
