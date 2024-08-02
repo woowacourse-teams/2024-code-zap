@@ -45,8 +45,6 @@ export const useLoginForm = () => {
         console.error(response);
       }
 
-      localStorage.setItem('token', response.headers.get('Authorization'));
-
       navigate('/');
     }
   };
