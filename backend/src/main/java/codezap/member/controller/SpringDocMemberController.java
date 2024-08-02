@@ -30,7 +30,7 @@ public interface SpringDocMemberController {
                     @ErrorCase(description = "사용자명 중복", exampleMessage = "사용자명이 이미 존재합니다.")
             }
     )
-    ResponseEntity<Void> signup(@RequestBody SignupRequest request);
+    void signup(@RequestBody SignupRequest request);
 
     @Operation(summary = "이메일 중복 확인")
     @ApiResponse(responseCode = "200", description = "사용가능한 이메일이면 true, 중복된 이메일이면 false를 반환합니다.")

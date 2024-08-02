@@ -16,11 +16,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public long signup(SignupRequest request) {
+    public void signup(SignupRequest request) {
         validateSignupRequest(request);
         Member member = new Member(request.email(), request.password(), request.username());
-        Member saved = memberRepository.save(member);
-        return saved.getId();
+        memberRepository.save(member);
     }
 
     public String login(LoginRequest request) {
