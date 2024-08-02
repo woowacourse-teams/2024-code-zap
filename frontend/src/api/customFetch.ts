@@ -14,10 +14,12 @@ export const customFetch = async ({
   errorMessage = '[Error] response was not ok',
 }: Props) => {
   try {
+    const token = localStorage.getItem('token');
     const response = await fetch(url, {
       method,
       headers: {
         'Content-Type': 'application/json',
+        Authorization: token ? `Bearer ${token}` : '',
         ...headers,
       },
       body,
@@ -35,6 +37,6 @@ export const customFetch = async ({
 
     return data;
   } catch (error) {
-    throw new Error(errorMessage);
+    throw new Error(String(error));
   }
 };
