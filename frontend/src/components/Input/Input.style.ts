@@ -8,7 +8,7 @@ const sizes = {
     gap: 0.5rem;
 
     height: 2rem;
-    padding: 0.625rem 0.75rem;
+    padding: 0 0.75rem;
 
     font-size: 0.75rem;
     line-height: 100%;
@@ -16,10 +16,21 @@ const sizes = {
     border-radius: 8px;
   `,
   medium: css`
+    gap: 0.875rem;
+
+    height: 2.5rem;
+    padding: 0 0.875rem;
+
+    font-size: 0.875rem;
+    line-height: 100%;
+
+    border-radius: 10px;
+  `,
+  large: css`
     gap: 0.75rem;
 
     height: 3rem;
-    padding: 1rem;
+    padding: 0 1rem;
 
     font-size: 1rem;
     line-height: 100%;
