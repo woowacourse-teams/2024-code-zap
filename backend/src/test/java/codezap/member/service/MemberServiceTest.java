@@ -65,15 +65,12 @@ public class MemberServiceTest {
         @Test
         @DisplayName("로그인 성공: 액세스 토큰 반환")
         void login() {
-            // given
             var saved = new Member("code@zap.com", "pw1234", "zappy");
             memberRepository.save(saved);
             var request = new LoginRequest(saved.getEmail(), saved.getPassword());
 
-            // when
             var token = sut.login(request);
 
-            // then
             assertThat(token).isNotNull();
         }
     }
