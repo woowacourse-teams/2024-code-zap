@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import codezap.member.dto.LoginRequest;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.dto.SignupRequest;
 import codezap.global.exception.CodeZapException;
@@ -54,6 +55,26 @@ public class MemberServiceTest {
             assertThatThrownBy(() -> sut.signup(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessageContaining("사용자명이 이미 존재합니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("로그인 테스트")
+    class LoginTest {
+
+        @Test
+        @DisplayName("로그인 성공: 액세스 토큰 반환")
+        void login() {
+            // given
+            var saved = new Member("code@zap.com", "pw1234", "zappy");
+            memberRepository.save(saved);
+            var request = new LoginRequest(saved.getEmail(), saved.getPassword());
+
+            // when
+            var token = sut.login(request);
+
+            // then
+            assertThat(token).isNotNull();
         }
     }
 }

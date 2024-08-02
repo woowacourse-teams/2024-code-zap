@@ -3,6 +3,7 @@ package codezap.member.service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import codezap.member.dto.LoginRequest;
 import codezap.member.dto.SignupRequest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
@@ -20,6 +21,10 @@ public class MemberService {
         Member member = new Member(request.email(), request.password(), request.username());
         Member saved = memberRepository.save(member);
         return saved.getId();
+    }
+
+    public String login(LoginRequest request) {
+        return "";
     }
 
     private void validateSignupRequest(SignupRequest request) {
