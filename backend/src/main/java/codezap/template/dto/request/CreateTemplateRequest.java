@@ -15,6 +15,7 @@ public record CreateTemplateRequest(
         @Size(max = 255, message = "템플릿 이름은 최대 255자까지 입력 가능합니다.")
         String title,
 
+        @Schema(description = "템플릿 설명", example = "JWT를 사용하여 로그인 기능을 구현함")
         String description,
 
         @Schema(description = "템플릿의 스니펫 내역")
@@ -22,8 +23,10 @@ public record CreateTemplateRequest(
         @Valid
         List<CreateSnippetRequest> snippets,
 
+        @Schema(description = "카테고리 ID", example = "1")
         Long categoryId,
 
+        @Schema(description = "태그 리스트")
         List<String> tags
 ) implements ValidatedSnippetsOrdinalRequest {
     @Override

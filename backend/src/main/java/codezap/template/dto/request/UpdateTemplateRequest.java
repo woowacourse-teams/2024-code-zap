@@ -13,6 +13,7 @@ public record UpdateTemplateRequest(
         @NotNull(message = "템플릿 이름이 null 입니다.")
         String title,
 
+        @Schema(description = "템플릿 설명", example = "JWT를 사용하여 로그인 기능을 구현함")
         String description,
 
         @Schema(description = "새로 추가한 스니펫 내역")
@@ -27,8 +28,10 @@ public record UpdateTemplateRequest(
         @NotNull(message = "deleteSnippetIds 리스트가 null 입니다.")
         List<Long> deleteSnippetIds,
 
+        @Schema(description = "카테고리 ID", example = "1")
         Long categoryId,
 
+        @Schema(description = "태그 리스트")
         List<String> tags
 ) implements ValidatedSnippetsOrdinalRequest {
     @Override

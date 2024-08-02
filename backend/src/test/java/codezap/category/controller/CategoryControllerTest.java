@@ -186,6 +186,7 @@ class CategoryControllerTest {
             //given
             templateService.create(new CreateTemplateRequest(
                     "title",
+                    "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
                     savedCategoryId,
                     List.of("tag1", "tag2")
