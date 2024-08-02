@@ -2,9 +2,8 @@ package codezap.template.controller;
 
 import java.net.URI;
 
-import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codezap.global.validation.ValidationSequence;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
@@ -30,7 +30,7 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateTemplateRequest createTemplateRequest) {
+    public ResponseEntity<Void> create(@Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest) {
         return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest)))
                 .build();
     }
@@ -48,7 +48,7 @@ public class TemplateController implements SpringDocTemplateController {
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateTemplateRequest updateTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
         templateService.update(id, updateTemplateRequest);
         return ResponseEntity.ok().build();

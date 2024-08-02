@@ -80,26 +80,26 @@ class CategoryServiceTest {
     @Test
     @DisplayName("카테고리 수정 성공")
     void updateCategorySuccess() {
-        //given
+        // given
         Category savedCategory = categoryRepository.save(new Category("category1"));
 
-        //when
+        // when
         categoryService.update(savedCategory.getId(), new UpdateCategoryRequest("updateName"));
 
-        //then
+        // then
         assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo("updateName");
     }
 
     @Test
     @DisplayName("카테고리 삭제 성공")
     void deleteCategorySuccess() {
-        //given
+        // given
         Category savedCategory = categoryRepository.save(new Category("category1"));
 
-        //when
+        // when
         categoryService.deleteById(savedCategory.getId());
 
-        //then
+        // then
         assertThat(categoryRepository.findById(savedCategory.getId())).isEmpty();
     }
 }

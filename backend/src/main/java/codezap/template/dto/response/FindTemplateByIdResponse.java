@@ -16,11 +16,16 @@ public record FindTemplateByIdResponse(
         @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
         String title,
 
+        @Schema(description = "템플릿 설명", example = "JWT를 사용하여 로그인 기능을 구현함")
+        String description,
+
         @Schema(description = "스니펫 목록")
         List<FindAllSnippetByTemplateResponse> snippets,
 
+        @Schema(description = "카테고리 정보")
         FindCategoryByIdResponse category,
 
+        @Schema(description = "태그 목록")
         List<FindTagByIdResponse> tags,
 
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
@@ -30,6 +35,7 @@ public record FindTemplateByIdResponse(
         return new FindTemplateByIdResponse(
                 template.getId(),
                 template.getTitle(),
+                template.getDescription(),
                 mapToFindAllSnippetByTemplateResponse(snippets),
                 FindCategoryByIdResponse.from(template.getCategory()),
                 mapToFindTagByTemplateResponse(tags),

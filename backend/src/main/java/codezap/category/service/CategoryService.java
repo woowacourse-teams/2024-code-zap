@@ -46,6 +46,9 @@ public class CategoryService {
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
+        if (id == 1) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "1번 카테고리는 삭제할 수 없습니다.");
+        }
         categoryRepository.deleteById(id);
     }
 

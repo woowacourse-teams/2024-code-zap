@@ -133,13 +133,13 @@ class CategoryControllerTest {
         @Test
         @DisplayName("카테고리 수정 실패: 중복된 이름의 카테고리 존재")
         void updateCategoryFailWithDuplicatedName() {
-            //given
+            // given
             String duplicatedName = "duplicatedName";
             categoryService.create(new CreateCategoryRequest(duplicatedName));
 
             UpdateCategoryRequest createCategoryRequest = new UpdateCategoryRequest(duplicatedName);
 
-            //when & then
+            // when & then
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
                     .body(createCategoryRequest)
@@ -183,15 +183,16 @@ class CategoryControllerTest {
         @Test
         @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
         void updateCategoryFailWithLongName() {
-            //given
+            // given
             templateService.create(new CreateTemplateRequest(
                     "title",
+                    "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
                     savedCategoryId,
                     List.of("tag1", "tag2")
             ));
 
-            //when & then
+            // when & then
             RestAssured.given().log().all()
                     .when().delete("/categories/" + savedCategoryId)
                     .then().log().all()

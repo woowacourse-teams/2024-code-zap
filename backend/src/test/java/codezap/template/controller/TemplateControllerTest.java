@@ -58,7 +58,9 @@ class TemplateControllerTest {
         void createTemplateSuccess(String repeatTarget, int maxLength) {
             String maxTitle = "a".repeat(MAX_LENGTH);
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(maxTitle,
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    repeatTarget.repeat(maxLength),
                     List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -78,7 +80,9 @@ class TemplateControllerTest {
         void createTemplateFailWithLongTitle() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(exceededTitle,
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    exceededTitle,
+                    "description",
                     List.of(new CreateSnippetRequest("a", "content", 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -98,7 +102,9 @@ class TemplateControllerTest {
         void createTemplateFailWithLongFileName() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
                     List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -118,7 +124,9 @@ class TemplateControllerTest {
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
                     List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
                     1L,
                     List.of("tag1", "tag2")
@@ -134,11 +142,35 @@ class TemplateControllerTest {
         }
 
         @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void createTemplateFailWithLongDescription(String repeatTarget, int exceededLength) {
+            categoryService.create(new CreateCategoryRequest("category"));
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    repeatTarget.repeat(exceededLength),
+                    List.of(new CreateSnippetRequest("title", "content", 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(templateRequest)
+                    .when().post("/templates")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) {
             categoryService.create(new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest("title",
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
                             new CreateSnippetRequest("title", "content", secondIndex)),
                     1L,
@@ -159,9 +191,9 @@ class TemplateControllerTest {
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
         // given
+        categoryService.create(new CreateCategoryRequest("category"));
         CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
         CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
-        categoryService.create(new CreateCategoryRequest("category"));
         templateService.create(templateRequest1);
         templateService.create(templateRequest2);
 
@@ -217,13 +249,10 @@ class TemplateControllerTest {
         @DisplayName("템플릿 수정 성공")
         void updateTemplateSuccess() {
             // given
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
+                    "description",
                     List.of(
                             new CreateSnippetRequest("filename3", "content3", 2),
                             new CreateSnippetRequest("filename4", "content4", 3)
@@ -245,19 +274,140 @@ class TemplateControllerTest {
                     .statusCode(200);
         }
 
+        @Test
+        @DisplayName("템플릿 수정 실패: 템플릿 이름 길이 초과")
+        void updateTemplateFailWithLongName() {
+            // given
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    exceededTitle,
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest("filename3", "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿 이름은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
+        void updateTemplateFailWithLongFileName() {
+            // given
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest(exceededTitle, "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("파일 이름은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void updateTemplateFailWithLongFileContent(String repeatTarget, int exceedLength) {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest("filename3", repeatTarget.repeat(exceedLength), 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void updateTemplateFailWithLongContent(String repeatTarget, int exceedLength) {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    repeatTarget.repeat(exceedLength),
+                    List.of(
+                            new CreateSnippetRequest("filename3", "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(updateTemplateRequest)
+                    .when().post("/templates/1")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
         // 정상 요청: 2, 3, 1
         @ParameterizedTest
         @DisplayName("템플릿 수정 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
         void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal) {
             // given
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
-
+            createTemplateAndTwoCategories();
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
                     "updateTitle",
+                    "description",
                     List.of(
                             new CreateSnippetRequest("filename3", "content3", createOrdinal1),
                             new CreateSnippetRequest("filename4", "content4", createOrdinal2)
@@ -278,6 +428,13 @@ class TemplateControllerTest {
                     .then().log().all()
                     .statusCode(400)
                     .body("detail", is("스니펫 순서가 잘못되었습니다."));
+        }
+
+        private void createTemplateAndTwoCategories() {
+            categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category2"));
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.create(templateRequest);
         }
     }
 
@@ -315,6 +472,7 @@ class TemplateControllerTest {
     private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
         CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                 title,
+                "description",
                 List.of(
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
