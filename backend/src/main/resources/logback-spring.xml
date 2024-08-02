@@ -4,7 +4,7 @@
     <timestamp key="DATE_FORMAT"
                datePattern="yyyy-MM-dd"/>
 
-    <springProfile name="default">
+    <springProfile name="local">
         <include resource="logger/logback-spring-local.xml"/>
     </springProfile>
 
