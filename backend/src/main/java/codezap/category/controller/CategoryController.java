@@ -21,7 +21,7 @@ import codezap.category.service.CategoryService;
 
 @RestController
 @RequestMapping("/categories")
-public class CategoryController implements SpringDocCategoryController{
+public class CategoryController implements SpringDocCategoryController {
 
     private final CategoryService categoryService;
 
@@ -42,7 +42,8 @@ public class CategoryController implements SpringDocCategoryController{
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(@PathVariable Long id,
-            @Valid @RequestBody UpdateCategoryRequest updateCategoryRequest) {
+            @Valid @RequestBody UpdateCategoryRequest updateCategoryRequest
+    ) {
         categoryService.update(id, updateCategoryRequest);
         return ResponseEntity.ok().build();
     }

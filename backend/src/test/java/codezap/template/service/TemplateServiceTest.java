@@ -200,7 +200,13 @@ class TemplateServiceTest {
 
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.save(new Category("category"));
-        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title(), createTemplateRequest.description(), category));
+        Template savedTemplate = templateRepository.save(
+                new Template(
+                        createTemplateRequest.title(),
+                        createTemplateRequest.description(),
+                        category
+                )
+        );
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
