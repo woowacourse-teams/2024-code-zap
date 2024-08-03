@@ -22,7 +22,7 @@ const LoginPage = () => {
           >
             <Input variant='outlined' size='medium' isValid={!errors.email}>
               <Input.Label>이메일</Input.Label>
-              <Input.TextField type='email' value={email} onChange={handleEmailChange} />
+              <Input.TextField type='email' value={email} onChange={handleEmailChange} autoComplete='email' />
               <Input.HelperText>{errors.email}</Input.HelperText>
             </Input>
 
@@ -32,6 +32,7 @@ const LoginPage = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={handlePasswordChange}
+                autoComplete='current-password'
               />
               <Input.Adornment>
                 <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
