@@ -38,6 +38,38 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
+    public Optional<Member> findByEmail(String email) {
+        return members.stream()
+                .filter(member -> Objects.equals(member.getEmail(), email))
+                .findFirst();
+    }
+
+    @Override
+    public long count() {
+        return members.size();
+    }
+
+    @Override
+    public <S extends Member> S save(S entity) {
+        var saved = new Member(
+                getOrGenerateId(entity),
+                entity.getEmail(),
+                entity.getPassword(),
+                entity.getUsername()
+        );
+        members.removeIf(member -> Objects.equals(member.getId(), entity.getId()));
+        members.add(saved);
+        return (S) saved;
+    }
+
+    private long getOrGenerateId(Member entity) {
+        if (existsById(entity.getId())) {
+            return entity.getId();
+        }
+        return idCounter.getAndIncrement();
+    }
+
+    @Override
     public void flush() {
     }
 
@@ -117,19 +149,6 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public <S extends Member> S save(S entity) {
-        var saved = new Member(
-                getOrGenerateId(entity),
-                entity.getEmail(),
-                entity.getPassword(),
-                entity.getUsername()
-        );
-        members.removeIf(member -> Objects.equals(member.getId(), entity.getId()));
-        members.add(saved);
-        return (S) saved;
-    }
-
-    @Override
     public <S extends Member> List<S> saveAll(Iterable<S> entities) {
         return List.of();
     }
@@ -152,11 +171,6 @@ public class FakeMemberRepository implements MemberRepository {
     @Override
     public List<Member> findAllById(Iterable<Long> longs) {
         return List.of();
-    }
-
-    @Override
-    public long count() {
-        return members.size();
     }
 
     @Override
@@ -192,12 +206,5 @@ public class FakeMemberRepository implements MemberRepository {
     @Override
     public Page<Member> findAll(Pageable pageable) {
         return null;
-    }
-
-    private long getOrGenerateId(Member entity) {
-        if (existsById(entity.getId())) {
-            return entity.getId();
-        }
-        return idCounter.getAndIncrement();
     }
 }
