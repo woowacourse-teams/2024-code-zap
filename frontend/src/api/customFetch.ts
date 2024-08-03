@@ -22,6 +22,7 @@ export const customFetch = async ({
         Authorization: token ? `Bearer ${token}` : '',
         ...headers,
       },
+      credentials: 'include',
       body,
     });
 
