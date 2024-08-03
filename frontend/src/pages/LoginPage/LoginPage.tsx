@@ -13,40 +13,45 @@ const LoginPage = () => {
   return (
     <>
       <Flex direction='column' justify='center' align='center' height='100vh'>
-        <Flex direction='column' justify='center' align='center' gap='2.5rem' width='27.5rem'>
+        <Flex direction='column' justify='center' align='center' gap='3.5rem' width='27.5rem'>
           <Heading.XLarge color='#F79037'>Hello Codezap</Heading.XLarge>
 
-          <Input variant='outlined' size='medium' isValid={!errors.email}>
-            <Input.Label>이메일</Input.Label>
-            <Input.TextField type='email' value={email} onChange={handleEmailChange} />
-            <Input.HelperText>{errors.email}</Input.HelperText>
-          </Input>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
+          >
+            <Input variant='outlined' size='medium' isValid={!errors.email}>
+              <Input.Label>이메일</Input.Label>
+              <Input.TextField type='email' value={email} onChange={handleEmailChange} />
+              <Input.HelperText>{errors.email}</Input.HelperText>
+            </Input>
 
-          <Input variant='outlined' size='medium' isValid={!errors.password}>
-            <Input.Label>비밀번호</Input.Label>
-            <Input.TextField
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <Input.Adornment>
-              <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
-            </Input.Adornment>
-            <Input.HelperText>{errors.password}</Input.HelperText>
-          </Input>
+            <Input variant='outlined' size='medium' isValid={!errors.password}>
+              <Input.Label>비밀번호</Input.Label>
+              <Input.TextField
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={handlePasswordChange}
+              />
+              <Input.Adornment>
+                <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
+              </Input.Adornment>
+              <Input.HelperText>{errors.password}</Input.HelperText>
+            </Input>
 
-          <Button variant='contained' size='filled' disabled={!isFormValid()} onClick={handleSubmit}>
-            로그인
-          </Button>
-          <Flex justify='flex-end' width='100%' gap='1rem'>
-            <span style={{ fontSize: '0.875rem', fontWeight: '400' }}>계정이 없으신가요?</span>
+            <Button type='submit' variant='contained' size='filled' disabled={!isFormValid()}>
+              로그인
+            </Button>
+            <Flex justify='flex-end' width='100%' gap='1rem'>
+              <span style={{ fontSize: '0.875rem', fontWeight: '400' }}>계정이 없으신가요?</span>
 
-            <Link to={'/signup'}>
-              <Button variant='text' size='small'>
-                회원가입
-              </Button>
-            </Link>
-          </Flex>
+              <Link to={'/signup'}>
+                <Button variant='text' size='small'>
+                  회원가입
+                </Button>
+              </Link>
+            </Flex>
+          </form>
         </Flex>
       </Flex>
     </>
