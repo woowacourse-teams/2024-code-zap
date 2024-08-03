@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postSignup } from '@/api/authentication';
@@ -114,12 +114,16 @@ export const useSignupForm = () => {
     password &&
     confirmPassword;
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (isFormValid()) {
       const response = await postSignup({ email, username, password });
 
       if (!response.ok) {
         console.error(response);
+
+        return;
       }
 
       navigate('/login');
