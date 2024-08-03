@@ -22,14 +22,14 @@ export const useLoginForm = () => {
   const validatePassword = (password: string) => (password.length >= 6 ? '' : '비밀번호는 최소 6자 이상이어야 합니다.');
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     setEmail(value);
     setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     setPassword(value);
     setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
