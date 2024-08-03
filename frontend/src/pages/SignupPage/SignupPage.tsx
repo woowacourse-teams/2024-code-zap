@@ -41,6 +41,7 @@ const SignupPage = () => {
                 value={email}
                 onChange={handleEmailChange}
                 onBlur={() => checkEmailQuery()}
+                autoComplete='email'
               />
               <Input.HelperText>{errors.email}</Input.HelperText>
             </Input>
@@ -52,6 +53,7 @@ const SignupPage = () => {
                 value={username}
                 onChange={handleUsernameChange}
                 onBlur={() => checkUserQuery()}
+                autoComplete='username'
               />
               <Input.HelperText>{errors.username}</Input.HelperText>
             </Input>
@@ -62,6 +64,7 @@ const SignupPage = () => {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={handlePasswordChange}
+                autoComplete='new-password'
               />
               <Input.Adornment>
                 <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
@@ -75,6 +78,7 @@ const SignupPage = () => {
                 type={showPasswordConfirm ? 'text' : 'password'}
                 value={confirmPassword}
                 onChange={handleConfirmPasswordChange}
+                autoComplete='new-password'
               />
               <Input.Adornment>
                 <img src={passwordEyeIcon} onClick={handlePasswordConfirmToggle} style={{ cursor: 'pointer' }} />
@@ -82,7 +86,7 @@ const SignupPage = () => {
               <Input.HelperText>{errors.confirmPassword}</Input.HelperText>
             </Input>
 
-            <Button variant='contained' size='filled' disabled={!isFormValid()} type='submit'>
+            <Button type='submit' variant='contained' size='filled' disabled={!isFormValid()}>
               회원가입
             </Button>
 
