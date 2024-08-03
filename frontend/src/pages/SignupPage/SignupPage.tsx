@@ -10,12 +10,12 @@ const SignupPage = () => {
 
   const {
     email,
-    nickname,
+    username,
     password,
     confirmPassword,
     errors,
     handleEmailChange,
-    handleNicknameChange,
+    handleUsernameChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     isFormValid,
@@ -42,10 +42,10 @@ const SignupPage = () => {
             <Input.HelperText>{errors.email}</Input.HelperText>
           </Input>
 
-          <Input variant='outlined' size='medium' isValid={!errors.nickname}>
+          <Input variant='outlined' size='medium' isValid={!errors.username}>
             <Input.Label>닉네임</Input.Label>
-            <Input.TextField type='text' value={nickname} onChange={handleNicknameChange} />
-            <Input.HelperText>{errors.nickname}</Input.HelperText>
+            <Input.TextField type='text' value={username} onChange={handleUsernameChange} />
+            <Input.HelperText>{errors.username}</Input.HelperText>
           </Input>
 
           <Input variant='outlined' size='medium' isValid={!errors.password}>
