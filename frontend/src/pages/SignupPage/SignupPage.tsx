@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { passwordEyeIcon } from '@/assets/images';
-import { Button, Flex, Heading, Input } from '@/components';
+import { Button, Flex, Heading, Input, Text } from '@/components';
 import { useShowPassword, useSignupForm } from '@/hooks/authentication';
 
 const SignupPage = () => {
@@ -91,7 +91,7 @@ const SignupPage = () => {
             </Button>
 
             <Flex justify='flex-end' width='100%' gap='1rem'>
-              <span style={{ fontSize: '0.875rem', fontWeight: '400' }}>이미 계정이 있으신가요?</span>
+              <Text.Small color='#6B7079'>이미 계정이 있으신가요?</Text.Small>
               <Link to={'/login'}>
                 <Button variant='text' size='small'>
                   로그인
