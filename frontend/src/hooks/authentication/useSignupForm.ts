@@ -6,12 +6,12 @@ import { useCheckEmailQuery } from '@/queries/authentication';
 
 export const useSignupForm = () => {
   const [email, setEmail] = useState('');
-  const [nickname, setNickname] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({
     email: '',
-    nickname: '',
+    username: '',
     password: '',
     confirmPassword: '',
   });
@@ -33,32 +33,37 @@ export const useSignupForm = () => {
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    return regex.test(email) ? '' : '유효한 이메일을 입력해주세요.';
+    return regex.test(email) && !/\s/.test(email) ? '' : '유효한 이메일을 입력해주세요.';
   };
 
-  const validateNickname = (nickname: string) => (nickname ? '' : '닉네임을 입력해주세요.');
+  const validateUsername = (username: string) => {
+    const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
-  const validatePassword = (password: string) => (password.length >= 6 ? '' : '비밀번호는 최소 6자 이상이어야 합니다.');
+    return regex.test(username) && username.length > 0 ? '' : '공백을 제외한 1자 이상의 닉네임을 입력해주세요.';
+  };
+
+  const validatePassword = (password: string) =>
+    password.length >= 6 && !/\s/.test(password) ? '' : '공백을 제외한 6자 이상의 비밀번호를 입력해주세요.';
 
   const validateConfirmPassword = (password: string, confirmPassword: string) =>
     password === confirmPassword ? '' : '비밀번호가 일치하지 않습니다.';
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     setEmail(value);
     setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
   };
 
-  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
 
-    setNickname(value);
-    setErrors((prev) => ({ ...prev, nickname: validateNickname(value) }));
+    setUsername(value);
+    setErrors((prev) => ({ ...prev, username: validateUsername(value) }));
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     setPassword(value);
     setErrors((prev) => ({
@@ -69,7 +74,7 @@ export const useSignupForm = () => {
   };
 
   const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
 
     setConfirmPassword(value);
     setErrors((prev) => ({
@@ -80,17 +85,17 @@ export const useSignupForm = () => {
 
   const isFormValid = () =>
     !errors.email &&
-    !errors.nickname &&
+    !errors.username &&
     !errors.password &&
     !errors.confirmPassword &&
     email &&
-    nickname &&
+    username &&
     password &&
     confirmPassword;
 
   const handleSubmit = async () => {
     if (isFormValid()) {
-      const response = await postSignup({ email, nickname, password });
+      const response = await postSignup({ email, username, password });
 
       if (!response.ok) {
         console.error(response);
@@ -102,12 +107,12 @@ export const useSignupForm = () => {
 
   return {
     email,
-    nickname,
+    username,
     password,
     confirmPassword,
     errors,
     handleEmailChange,
-    handleNicknameChange,
+    handleUsernameChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     isFormValid,
