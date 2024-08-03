@@ -2,6 +2,7 @@ import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
+import { validateEmail, validatePassword } from './validates';
 
 export const useLoginForm = () => {
   const [email, setEmail] = useState('');
@@ -12,14 +13,6 @@ export const useLoginForm = () => {
   });
 
   const navigate = useNavigate();
-
-  const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    return regex.test(email) ? '' : '유효한 이메일을 입력해주세요.';
-  };
-
-  const validatePassword = (password: string) => (password.length >= 6 ? '' : '비밀번호는 최소 6자 이상이어야 합니다.');
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.trim();
