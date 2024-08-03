@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { passwordEyeIcon } from '@/assets/images';
-import { Button, Flex, Input } from '@/components';
+import { Button, Flex, Heading, Input } from '@/components';
 import { useShowPassword } from '@/hooks/authentication';
 import { useLoginForm } from '@/hooks/authentication/useLoginForm';
 
@@ -14,7 +14,7 @@ const LoginPage = () => {
     <>
       <Flex direction='column' justify='center' align='center' height='100vh'>
         <Flex direction='column' justify='center' align='center' gap='2.5rem' width='27.5rem'>
-          <h1 style={{ fontSize: '3rem', fontWeight: '700', color: '#F79037' }}>Code-Zap</h1>
+          <Heading.XLarge color='#F79037'>Hello Codezap</Heading.XLarge>
 
           <Input variant='outlined' size='medium' isValid={!errors.email}>
             <Input.Label>이메일</Input.Label>
