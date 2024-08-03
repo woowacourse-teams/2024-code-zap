@@ -1,32 +1,28 @@
 name: 백엔드 CI
 
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - dev/be
       - develop
       - main
-    types: [opened, reopened, synchronize]
-
+      
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
-        
-      - name: MySQL 실행
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          host port: ${{ secrets.MYSQL_HOST_PORT }}
-          container port: ${{ secrets.MYSQL_CONTAINER_PORT }}
-          mysql version: ${{ secrets.MYSQL_VERSION }}
-          mysql database: ${{ secrets.MYSQL_DATABASE }}
-          mysql root password: ${{ secrets.MYSQL_PASSWORD }}
 
-      - name: DB 관련 스프링 설정 생성
-        working-directory: ./backend/src/main/resources
-        run: echo "${{ secrets.APPLICATION_DB_YAML }}" > application-db.yml
+      - name: H2 스프링 설정 생성
+        run: |
+          echo "spring:
+            h2:
+              console:
+                enabled: true
+                path: /h2-console
+            datasource:
+              url: jdbc:h2:mem:database" > backend/src/main/resources/application.yml
 
       - name: JDK 17 설정
         uses: actions/setup-java@v4
