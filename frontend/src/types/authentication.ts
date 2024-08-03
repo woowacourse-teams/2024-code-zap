@@ -1,6 +1,6 @@
 export interface SignupRequest {
   email: string;
-  nickname: string;
+  username: string;
   password: string;
 }
 
@@ -10,5 +10,9 @@ export interface LoginRequest {
 }
 
 export interface CheckEmailResponse {
+  check: boolean;
+}
+
+export interface CheckUsernameResponse {
   check: boolean;
 }
