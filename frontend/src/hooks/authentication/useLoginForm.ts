@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
@@ -37,12 +37,16 @@ export const useLoginForm = () => {
 
   const isFormValid = () => !errors.email && !errors.password && email && password;
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (isFormValid()) {
       const response = await postLogin({ email, password });
 
       if (!response.ok) {
         console.error(response);
+
+        return;
       }
 
       navigate('/');
