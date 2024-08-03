@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { passwordEyeIcon } from '@/assets/images';
-import { Button, Flex, Input } from '@/components';
+import { Button, Flex, Heading, Input } from '@/components';
 import { useShowPassword, useSignupForm } from '@/hooks/authentication';
 
 const SignupPage = () => {
@@ -27,8 +27,8 @@ const SignupPage = () => {
   return (
     <>
       <Flex direction='column' justify='center' align='center' height='100vh'>
-        <Flex direction='column' justify='center' align='center' width='27.5rem' gap='3rem'>
-          <h1 style={{ fontSize: '3rem', fontWeight: '400', color: '#F79037' }}>Hello Codezap</h1>
+        <Flex direction='column' justify='center' align='center' width='27.5rem' gap='3.5rem'>
+          <Heading.XLarge color='#F79037'>Hello Codezap</Heading.XLarge>
 
           <form
             onSubmit={handleSubmit}
