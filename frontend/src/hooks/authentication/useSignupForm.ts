@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { postSignup } from '@/api/authentication';
 import { useCheckEmailQuery } from '@/queries/authentication';
+import { useCheckUsernameQuery } from '@/queries/authentication/useCheckUsernameQuery';
 
 export const useSignupForm = () => {
   const [email, setEmail] = useState('');
@@ -17,10 +18,19 @@ export const useSignupForm = () => {
   });
 
   const navigate = useNavigate();
-  const { data: isUniqueEmail, isSuccess, refetch: checkEmailQuery } = useCheckEmailQuery(email);
+  const {
+    data: isUniqueEmail,
+    isSuccess: isSuccessCheckEmailQuery,
+    refetch: checkEmailQuery,
+  } = useCheckEmailQuery(email);
+  const {
+    data: isUniqueUsername,
+    isSuccess: isSuccessCheckUsernameQuery,
+    refetch: checkUserQuery,
+  } = useCheckUsernameQuery(username);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccessCheckEmailQuery) {
       if (isUniqueEmail?.check === false) {
         setErrors((prev) => ({
           ...prev,
@@ -28,7 +38,18 @@ export const useSignupForm = () => {
         }));
       }
     }
-  }, [isUniqueEmail?.check, isSuccess]);
+  }, [isUniqueEmail?.check, isSuccessCheckEmailQuery]);
+
+  useEffect(() => {
+    if (isSuccessCheckUsernameQuery) {
+      if (isUniqueUsername?.check === false) {
+        setErrors((prev) => ({
+          ...prev,
+          username: '중복된 닉네임입니다.',
+        }));
+      }
+    }
+  }, [isUniqueUsername?.check, isSuccessCheckUsernameQuery]);
 
   const validateEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -118,5 +139,6 @@ export const useSignupForm = () => {
     isFormValid,
     handleSubmit,
     checkEmailQuery,
+    checkUserQuery,
   };
 };

@@ -21,6 +21,7 @@ const SignupPage = () => {
     isFormValid,
     handleSubmit,
     checkEmailQuery,
+    checkUserQuery,
   } = useSignupForm();
 
   return (
@@ -31,20 +32,18 @@ const SignupPage = () => {
 
           <Input variant='outlined' size='medium' isValid={!errors.email}>
             <Input.Label>이메일</Input.Label>
-            <Input.TextField
-              type='email'
-              value={email}
-              onChange={handleEmailChange}
-              onBlur={() => {
-                checkEmailQuery();
-              }}
-            />
+            <Input.TextField type='email' value={email} onChange={handleEmailChange} onBlur={() => checkEmailQuery()} />
             <Input.HelperText>{errors.email}</Input.HelperText>
           </Input>
 
           <Input variant='outlined' size='medium' isValid={!errors.username}>
             <Input.Label>닉네임</Input.Label>
-            <Input.TextField type='text' value={username} onChange={handleUsernameChange} />
+            <Input.TextField
+              type='text'
+              value={username}
+              onChange={handleUsernameChange}
+              onBlur={() => checkUserQuery()}
+            />
             <Input.HelperText>{errors.username}</Input.HelperText>
           </Input>
 
