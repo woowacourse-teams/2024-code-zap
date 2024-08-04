@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { QUERY_KEY, getTemplateList } from '@/api';
-import type { TemplateListResponse } from '@/types/template';
+import type { TemplateListResponse } from '@/types';
 
 export const useTemplateListQuery = () =>
   useQuery<TemplateListResponse, Error>({

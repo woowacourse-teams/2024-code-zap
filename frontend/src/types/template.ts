@@ -34,19 +34,3 @@ export interface TemplateListItem {
   };
   modifiedAt: string;
 }
-
-export interface TemplateListResponse {
-  templates: Template[];
-}
-
-export interface TemplateUploadRequest {
-  title: string;
-  snippets: Snippet[];
-}
-
-export interface TemplateEditRequest {
-  title: string;
-  createSnippets: Snippet[];
-  updateSnippets: Snippet[];
-  deleteSnippetIds: number[];
-}

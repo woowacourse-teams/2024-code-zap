@@ -3,7 +3,7 @@ import { ChangeEvent, useCallback, useState } from 'react';
 import { trashcanIcon } from '@/assets/images';
 import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
 import { useTemplateEditQuery } from '@/hooks/template';
-import { Template } from '@/types/template';
+import type { Template } from '@/types';
 import * as S from './TemplateEditPage.style';
 
 interface Props {

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { Flex, TagButton, Text } from '@/components';
 import { theme } from '@/style/theme';
-import { Tag, Template } from '@/types/template';
+import type { Tag, Template } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 import * as S from './TemplateCard.style';
 
