@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, TemplateListPage, TemplateUploadPage } from '@/pages';
+import { MyTemplatePage, TemplatePage, TemplateUploadPage } from '@/pages';
 
 const router = createBrowserRouter([
   {
@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <TemplateListPage />,
+        element: <MyTemplatePage />,
       },
       {
         path: 'templates/:id',
