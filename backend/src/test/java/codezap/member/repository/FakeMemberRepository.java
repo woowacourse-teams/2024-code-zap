@@ -70,6 +70,11 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
+    public boolean existsById(Long aLong) {
+        return false;
+    }
+
+    @Override
     public void flush() {
     }
 
@@ -156,11 +161,6 @@ public class FakeMemberRepository implements MemberRepository {
     @Override
     public Optional<Member> findById(Long aLong) {
         return Optional.empty();
-    }
-
-    @Override
-    public boolean existsById(Long aLong) {
-        return false;
     }
 
     @Override
