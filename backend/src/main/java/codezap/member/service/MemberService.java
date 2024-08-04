@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
+import codezap.member.repository.MemberRepository;
 import codezap.member.dto.LoginRequest;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
-import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -25,11 +25,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public void signup(SignupRequest request) {
+    public Member signup(SignupRequest request) {
         assertUniqueEmail(request.email());
         assertUniqueUsername(request.username());
         Member member = new Member(request.email(), request.password(), request.username());
-        memberRepository.save(member);
+        return memberRepository.save(member);
     }
 
     public MemberDto login(LoginRequest request) {
