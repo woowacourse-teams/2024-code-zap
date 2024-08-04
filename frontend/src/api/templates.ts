@@ -5,10 +5,21 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const TEMPLATE_API_URL = `${API_URL}/templates`;
 
-export const getTemplateList = async (): Promise<TemplateListResponse> =>
-  await customFetch({
-    url: `${TEMPLATE_API_URL}`,
+export const getTemplateList = async (categoryId?: number, tagId?: number): Promise<TemplateListResponse> => {
+  const url = new URL(TEMPLATE_API_URL);
+
+  if (categoryId) {
+    url.searchParams.append('category', categoryId.toString());
+  }
+
+  if (tagId) {
+    url.searchParams.append('tag', tagId.toString());
+  }
+
+  return await customFetch({
+    url: url.toString(),
   });
+};
 
 export const getTemplate = async (id: number): Promise<Template> =>
   await customFetch({
