@@ -1,8 +1,8 @@
 import { searchIcon } from '@/assets/images';
 import { CategoryMenu, Flex, Heading, Input, TemplateGrid } from '@/components';
-import { useWindowWidth } from '@/hooks/';
+import { useWindowWidth } from '@/hooks';
 import { useTemplateListQuery } from '@/hooks/template';
-import categoryList from '@/mocks/categoryList.json';
+import { useCategoryListQuery } from '@/queries/category';
 import { theme } from '@/style/theme';
 import * as S from './MyTemplatePage.style';
 
@@ -11,15 +11,19 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 const MyTemplatePage = () => {
   const windowWidth = useWindowWidth();
 
-  const { data, error, isLoading } = useTemplateListQuery();
+  const { data: templateData, error: templateError, isLoading: templateLoading } = useTemplateListQuery();
+  const { data: categoryData, error: categoryError, isLoading: categoryLoading } = useCategoryListQuery();
 
-  if (isLoading) {
+  if (templateLoading || categoryLoading) {
     return <div>Loading...</div>;
-  } else if (error) {
-    return <div>Error: {error.message}</div>;
+  } else if (templateError) {
+    return <div>Error: {templateError.message}</div>;
+  } else if (categoryError) {
+    return <div>Error: {categoryError.message}</div>;
   }
 
-  const templates = data?.templates || [];
+  const templates = templateData?.templates || [];
+  const categories = categoryData?.categories || [];
 
   return (
     <S.MyTemplatePageContainer>
@@ -33,7 +37,7 @@ const MyTemplatePage = () => {
       </S.TopBannerContainer>
       <S.MainContainer>
         <Flex style={{ marginTop: '72px' }}>
-          <CategoryMenu categories={categoryList.categories} />
+          <CategoryMenu categories={categories} />
         </Flex>
 
         <Flex direction='column' width='100%' gap='2rem'>
