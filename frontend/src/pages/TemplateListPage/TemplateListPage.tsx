@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { Flex, TemplateItem, Text } from '@/components';
+import { Flex, Text } from '@/components';
 import { useTemplateListQuery } from '@/hooks/template';
 
 const TemplateListPage = () => {
@@ -24,7 +24,7 @@ const TemplateListPage = () => {
       <Flex direction='column' width='100%' gap='4.8rem'>
         {list.map((item) => (
           <Link to={`templates/${item.id}`} key={item.id}>
-            <TemplateItem item={item} />
+            {/* <TemplateItem item={item} /> */}
           </Link>
         ))}
       </Flex>
