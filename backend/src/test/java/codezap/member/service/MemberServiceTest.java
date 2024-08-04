@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import jakarta.servlet.http.Cookie;
 
@@ -17,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.LoginRequest;
+import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
@@ -73,7 +73,7 @@ public class MemberServiceTest {
         @DisplayName("로그인 성공: Basic authentication 쿠키 값 반환")
         void login() {
             // given
-            var member = new Member("code@zap.com", "pw1234", "zappy");
+            var member = new Member(1L, "code@zap.com", "pw1234", "zappy");
             memberRepository.save(member);
             var request = new LoginRequest(member.getEmail(), member.getPassword());
 
@@ -81,8 +81,7 @@ public class MemberServiceTest {
             var actual = sut.login(request);
 
             // then
-            var basicAuth = member.getEmail() + ":" + member.getPassword();
-            var expect = Base64.getEncoder().encodeToString(basicAuth.getBytes(StandardCharsets.UTF_8));
+            var expect = MemberDto.from(member);
             assertThat(actual).isEqualTo(expect);
         }
 
@@ -116,7 +115,7 @@ public class MemberServiceTest {
             var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, basicAuthCredentials);
             var cookies = new Cookie[]{basicAuthCookie};
 
-            assertThatCode(() -> sut.authorizeByCookie(cookies))
+            assertThatCode(() -> sut.login(cookies))
                     .doesNotThrowAnyException();
         }
 
@@ -133,7 +132,7 @@ public class MemberServiceTest {
             var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, wrongCredentials);
             var cookies = new Cookie[]{basicAuthCookie};
 
-            assertThatThrownBy(() -> sut.authorizeByCookie(cookies))
+            assertThatThrownBy(() -> sut.login(cookies))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("인증에 실패했습니다.");
         }

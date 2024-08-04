@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.LoginRequest;
+import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
 import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +32,24 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public String login(LoginRequest request) {
-        authorizeByEmailAndPassword(request.email(), request.password());
-        return HttpHeaders.encodeBasicAuth(request.email(), request.password(), StandardCharsets.UTF_8);
+    public MemberDto login(LoginRequest request) {
+        return login(request.email(), request.password());
     }
 
-    public void authorizeByCookie(Cookie[] cookies) {
+    public MemberDto login(Cookie[] cookies) {
         String authHeaderValue = getAuthCookieValue(cookies);
         String[] credentials = decodeCredentials(authHeaderValue);
         String email = credentials[0];
         String password = credentials[1];
-        authorizeByEmailAndPassword(email, password);
+        return login(email, password);
     }
 
-    private void authorizeByEmailAndPassword(String email, String password) {
+    private MemberDto login(String email, String password) {
         Member member = memberRepository.findByEmail(email).orElseThrow(this::throwUnauthorized);
         if (!member.matchPassword(password)) {
             throwUnauthorized();
         }
+        return MemberDto.from(member);
     }
 
     private String getAuthCookieValue(Cookie[] cookies) {
