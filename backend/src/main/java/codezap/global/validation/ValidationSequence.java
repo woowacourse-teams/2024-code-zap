@@ -7,6 +7,6 @@ import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
 import codezap.global.validation.ValidationGroups.SnippetOrdinalGroup;
 
-@GroupSequence({NotNullGroup.class, SnippetOrdinalGroup.class, ByteLengthGroup.class, SizeCheckGroup.class})
+@GroupSequence({NotNullGroup.class, SizeCheckGroup.class, ByteLengthGroup.class, SnippetOrdinalGroup.class})
 public interface ValidationSequence {
 }
