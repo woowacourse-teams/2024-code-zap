@@ -3,6 +3,7 @@ package codezap.template.dto.request;
 import java.util.List;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -15,7 +16,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CreateTemplateRequest(
         @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
-        @NotNull(message = "템플릿 이름이 null 입니다.", groups = NotNullGroup.class)
+        @NotBlank(message = "템플릿 이름이 null 입니다.", groups = NotNullGroup.class)
         @Size(max = 255, message = "템플릿 이름은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String title,
 

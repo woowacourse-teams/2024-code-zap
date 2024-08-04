@@ -3,11 +3,13 @@ package codezap.template.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.global.exception.CodeZapException;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -93,6 +95,7 @@ public class TemplateService {
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
         updateSnippets(updateTemplateRequest, template);
         updateTags(updateTemplateRequest, template);
+        validateSnippetsCount(updateTemplateRequest, template);
     }
 
     private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
@@ -120,6 +123,13 @@ public class TemplateService {
                 .map(tagRepository::findByName)
                 .toList();
         tags.forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
+    }
+
+    private void validateSnippetsCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
+        if (updateTemplateRequest.updateSnippets().size() + updateTemplateRequest.createSnippets().size()
+                != snippetRepository.findAllByTemplate(template).size()) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "스니펫의 정보가 정확하지 않습니다.");
+        }
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package codezap.template.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -15,12 +16,12 @@ public record UpdateSnippetRequest(
         Long id,
 
         @Schema(description = "파일 이름", example = "Main.java")
-        @NotNull(message = "파일 이름이 null 입니다.", groups = NotNullGroup.class)
+        @NotBlank(message = "파일 이름이 null 입니다.", groups = NotNullGroup.class)
         @Size(max = 255, message = "파일 이름은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String filename,
 
         @Schema(description = "소스 코드", example = "public class Main { // ...")
-        @NotNull(message = "파일 내용이 null 입니다.", groups = NotNullGroup.class)
+        @NotBlank(message = "파일 내용이 null 입니다.", groups = NotNullGroup.class)
         @ByteLength(max = 65_535, message = "파일 내용은 최대 65,535 Byte까지 입력 가능합니다.", groups = ByteLengthGroup.class)
         String content,
 
