@@ -2,7 +2,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { Flex, Text } from '@/components';
-import { TemplateListItem } from '@/types/template';
+import type { TemplateListItem } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 
 interface Props {

@@ -1,4 +1,4 @@
-import { Template, TemplateEditRequest, TemplateListResponse, TemplateUploadRequest } from '@/types/template';
+import type { Template, TemplateEditRequest, TemplateListResponse, TemplateUploadRequest } from '@/types';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;

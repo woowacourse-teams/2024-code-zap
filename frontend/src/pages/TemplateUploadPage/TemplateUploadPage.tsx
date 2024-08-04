@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { trashcanIcon } from '@/assets/images';
 import { Button, Flex, SnippetEditor, TemplateTitleInput } from '@/components';
 import { useTemplateUploadQuery } from '@/hooks/template';
-import { TemplateUploadRequest } from '@/types/template';
+import type { TemplateUploadRequest } from '@/types';
 import * as S from './TemplateUploadPage.style';
 
 const TemplateUploadPage = () => {
