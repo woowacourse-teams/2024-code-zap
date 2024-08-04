@@ -19,6 +19,14 @@ jobs:
         with:
           node-version: 20
 
+      - name: Create .env.production file
+        run: |
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+          echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+
+      - name: Set environment file permissions
+        run: chmod 644 ${{ env.frontend-directory }}/.env.production
+
       - name: Install Dependencies
         run: npm install
         working-directory: ${{ env.frontend-directory }}
@@ -48,4 +56,3 @@ jobs:
         run: |
           aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
           rm -rf ${{ secrets.FRONT_DIRECTORY }}
-        
