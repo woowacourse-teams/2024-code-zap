@@ -27,6 +27,7 @@ public record CreateTemplateRequest(
 
         @Schema(description = "템플릿의 스니펫 내역")
         @NotNull(message = "스니펫 리스트가 null 입니다.", groups = NotNullGroup.class)
+        @Size(min = 1, message = "스니펫은 최소 1개 입력해야 합니다.", groups = SizeCheckGroup.class)
         @Valid
         List<CreateSnippetRequest> snippets,
 

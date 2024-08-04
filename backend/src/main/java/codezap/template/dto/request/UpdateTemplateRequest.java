@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
@@ -11,12 +12,13 @@ import codezap.global.validation.ByteLength;
 import codezap.global.validation.ValidationGroups.ByteLengthGroup;
 import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
+import codezap.template.dto.request.validation.ValidatedSnippetsCountRequest;
 import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateTemplateRequest(
         @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
-        @NotNull(message = "템플릿 이름이 null 입니다.", groups = NotNullGroup.class)
+        @NotBlank(message = "템플릿 이름이 null 입니다.", groups = NotNullGroup.class)
         @Size(max = 255, message = "템플릿 이름은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String title,
 
@@ -46,12 +48,17 @@ public record UpdateTemplateRequest(
         @Schema(description = "태그 리스트")
         @NotNull(message = "태그 리스트가 null 입니다.")
         List<String> tags
-) implements ValidatedSnippetsOrdinalRequest {
+) implements ValidatedSnippetsOrdinalRequest, ValidatedSnippetsCountRequest {
     @Override
     public List<Integer> extractSnippetsOrdinal() {
         return Stream.concat(
                 updateSnippets.stream().map(UpdateSnippetRequest::ordinal),
                 createSnippets.stream().map(CreateSnippetRequest::ordinal)
         ).toList();
+    }
+
+    @Override
+    public Integer countSnippets() {
+        return updateSnippets.size() + createSnippets.size();
     }
 }
