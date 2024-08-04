@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { CATEGORY } from '@/api/category';
+import { CATEGORY } from '@/api';
 import { Text } from '@/components';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
