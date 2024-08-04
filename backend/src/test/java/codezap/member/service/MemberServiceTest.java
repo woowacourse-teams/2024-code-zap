@@ -15,11 +15,11 @@ import org.springframework.http.HttpHeaders;
 
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
+import codezap.member.repository.MemberRepository;
 import codezap.member.dto.LoginRequest;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
 import codezap.member.repository.FakeMemberRepository;
-import codezap.member.repository.MemberRepository;
 
 public class MemberServiceTest {
 
@@ -35,9 +35,10 @@ public class MemberServiceTest {
         void signup() {
             var request = new SignupRequest("code@zap.com", "password", "chorong");
 
-            sut.signup(request);
+            var actual = sut.signup(request);
 
-            assertThat(memberRepository.findAll()).hasSize(1);
+            var expect = new Member(1L, request.email(), request.password(), request.username());
+            assertThat(actual).isEqualTo(expect);
         }
 
         @Test
@@ -70,7 +71,7 @@ public class MemberServiceTest {
     class LoginTest {
 
         @Test
-        @DisplayName("로그인 성공: Basic authentication 쿠키 값 반환")
+        @DisplayName("로그인 성공")
         void login() {
             // given
             var member = new Member(1L, "code@zap.com", "pw1234", "zappy");
