@@ -1,24 +1,42 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postSignup } from '@/api/authentication';
 import { useCheckEmailQuery } from '@/queries/authentication';
 import { useCheckUsernameQuery } from '@/queries/authentication/useCheckUsernameQuery';
-import { validateConfirmPassword, validateEmail, validatePassword, validateUsername } from './validates';
+import { useInput } from '../useInput';
+import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from './validates';
 
 export const useSignupForm = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState({
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: '',
-  });
-
   const navigate = useNavigate();
+
+  const {
+    value: email,
+    errorMessage: emailError,
+    handleChange: handleEmailChange,
+    handleErrorMessage: handleEmailErrorMessage,
+  } = useInput('', validateEmail);
+
+  const {
+    value: username,
+    errorMessage: usernameError,
+    handleChange: handleUsernameChange,
+    handleErrorMessage: handleUsernameErrorMessage,
+  } = useInput('', validateUsername);
+
+  const {
+    value: password,
+    errorMessage: passwordError,
+    handleChange: handlePasswordChange,
+  } = useInput('', validatePassword);
+
+  const {
+    value: confirmPassword,
+    errorMessage: confirmPasswordError,
+    handleChange: handleConfirmPasswordChange,
+    handleErrorMessage: handleConfirmPasswordErrorMessage,
+  } = useInput('', (value, compareValue) => validateConfirmPassword(value, compareValue ?? ''));
+
   const {
     data: isUniqueEmail,
     isSuccess: isSuccessCheckEmailQuery,
@@ -33,65 +51,29 @@ export const useSignupForm = () => {
   useEffect(() => {
     if (isSuccessCheckEmailQuery) {
       if (isUniqueEmail?.check === false) {
-        setErrors((prev) => ({
-          ...prev,
-          email: '중복된 이메일입니다.',
-        }));
+        handleEmailErrorMessage('중복된 이메일입니다.');
       }
     }
-  }, [isUniqueEmail?.check, isSuccessCheckEmailQuery]);
+  }, [isUniqueEmail?.check, isSuccessCheckEmailQuery, handleEmailErrorMessage]);
 
   useEffect(() => {
     if (isSuccessCheckUsernameQuery) {
       if (isUniqueUsername?.check === false) {
-        setErrors((prev) => ({
-          ...prev,
-          username: '중복된 닉네임입니다.',
-        }));
+        handleUsernameErrorMessage('중복된 닉네임입니다.');
       }
     }
-  }, [isUniqueUsername?.check, isSuccessCheckUsernameQuery]);
+  }, [isUniqueUsername?.check, isSuccessCheckUsernameQuery, handleUsernameErrorMessage]);
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-
-    setEmail(value);
-    setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
-  };
-
-  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-
-    setUsername(value);
-    setErrors((prev) => ({ ...prev, username: validateUsername(value) }));
-  };
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-
-    setPassword(value);
-    setErrors((prev) => ({
-      ...prev,
-      password: validatePassword(value),
-      confirmPassword: validateConfirmPassword(value, confirmPassword),
-    }));
-  };
-
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-
-    setConfirmPassword(value);
-    setErrors((prev) => ({
-      ...prev,
-      confirmPassword: validateConfirmPassword(password, value),
-    }));
-  };
+  // only change password not confirmPassword
+  useEffect(() => {
+    handleConfirmPasswordErrorMessage(validateConfirmPassword(password, confirmPassword));
+  }, [password, confirmPassword, handleConfirmPasswordErrorMessage]);
 
   const isFormValid = () =>
-    !errors.email &&
-    !errors.username &&
-    !errors.password &&
-    !errors.confirmPassword &&
+    !emailError &&
+    !usernameError &&
+    !passwordError &&
+    !confirmPasswordError &&
     email &&
     username &&
     password &&
@@ -118,7 +100,12 @@ export const useSignupForm = () => {
     username,
     password,
     confirmPassword,
-    errors,
+    errors: {
+      email: emailError,
+      username: usernameError,
+      password: passwordError,
+      confirmPassword: confirmPasswordError,
+    },
     handleEmailChange,
     handleUsernameChange,
     handlePasswordChange,
