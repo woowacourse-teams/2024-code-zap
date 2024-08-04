@@ -1,34 +1,22 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
+import { useInput } from '../useInput';
 import { validateEmail, validatePassword } from './validates';
 
 export const useLoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState({
-    email: '',
-    password: '',
-  });
-
   const navigate = useNavigate();
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
+  const { value: email, errorMessage: emailError, handleChange: handleEmailChange } = useInput('', validateEmail);
 
-    setEmail(value);
-    setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
-  };
+  const {
+    value: password,
+    errorMessage: passwordError,
+    handleChange: handlePasswordChange,
+  } = useInput('', validatePassword);
 
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-
-    setPassword(value);
-    setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
-  };
-
-  const isFormValid = () => !errors.email && !errors.password && email && password;
+  const isFormValid = () => !emailError && !passwordError && email && password;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,7 +37,10 @@ export const useLoginForm = () => {
   return {
     email,
     password,
-    errors,
+    errors: {
+      email: emailError,
+      password: passwordError,
+    },
     handleEmailChange,
     handlePasswordChange,
     isFormValid,
