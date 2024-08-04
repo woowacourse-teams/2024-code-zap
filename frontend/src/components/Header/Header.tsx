@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
-import { Flex, Heading, Text } from '@/components';
+import { Button, Flex, Heading, Text } from '@/components';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
@@ -16,7 +16,11 @@ const Header = () => (
       </Flex>
 
       <Flex align='center' gap='2rem'>
-        <NewTemplateButton />
+        <Link to={'/templates/upload'}>
+          <Button variant='outlined' size='medium' weight='bold'>
+            <img src={newTemplateIcon} alt='' />새 템플릿
+          </Button>
+        </Link>
         <UserMenuButton />
       </Flex>
     </S.HeaderContentContainer>
@@ -39,17 +43,6 @@ const NavOption = ({ route, name }: { route: string; name: string }) => (
         {name}
       </Text.Medium>
     </S.NavOptionButton>
-  </Link>
-);
-
-const NewTemplateButton = () => (
-  <Link to={'/templates/upload'}>
-    <S.NewTemplateButton>
-      <img src={newTemplateIcon} alt='' />
-      <Text.Small weight='bold' color={theme.color.light.primary_800}>
-        새 템플릿
-      </Text.Small>
-    </S.NewTemplateButton>
   </Link>
 );
 
