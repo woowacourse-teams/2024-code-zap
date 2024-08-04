@@ -29,6 +29,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             WebDataBinderFactory binderFactory
     ) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        return memberService.login(request.getCookies());
+        return memberService.checkLogin(request.getCookies());
     }
 }

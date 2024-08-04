@@ -24,7 +24,8 @@ import codezap.member.repository.FakeMemberRepository;
 public class MemberServiceTest {
 
     private final MemberRepository memberRepository = new FakeMemberRepository();
-    private final MemberService sut = new MemberService(memberRepository);
+    private final AuthService authService = new AuthService(memberRepository);
+    private final MemberService sut = new MemberService(memberRepository, authService);
 
     @Nested
     @DisplayName("회원가입 테스트")
@@ -116,7 +117,7 @@ public class MemberServiceTest {
             var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, basicAuthCredentials);
             var cookies = new Cookie[]{basicAuthCookie};
 
-            assertThatCode(() -> sut.login(cookies))
+            assertThatCode(() -> sut.checkLogin(cookies))
                     .doesNotThrowAnyException();
         }
 
@@ -133,7 +134,7 @@ public class MemberServiceTest {
             var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, wrongCredentials);
             var cookies = new Cookie[]{basicAuthCookie};
 
-            assertThatThrownBy(() -> sut.login(cookies))
+            assertThatThrownBy(() -> sut.checkLogin(cookies))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("인증에 실패했습니다.");
         }

@@ -63,6 +63,6 @@ public class MemberController implements SpringDocMemberController {
     @GetMapping("/login/check")
     @ResponseStatus(HttpStatus.OK)
     public void checkLogin(HttpServletRequest request) {
-        memberService.login(request.getCookies());
+        memberService.checkLogin(request.getCookies());
     }
 }
