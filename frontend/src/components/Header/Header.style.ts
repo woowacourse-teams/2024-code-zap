@@ -11,6 +11,7 @@ export const HeaderContainer = styled.nav`
   justify-content: center;
 
   width: 100%;
+  padding: 0 2rem;
 
   background: white;
   border-bottom: 2px solid ${theme.color.light.secondary_200};
@@ -24,7 +25,6 @@ export const HeaderContentContainer = styled.div`
   width: 80rem;
   max-width: 80rem;
   height: 4rem;
-  padding: 1.875rem;
 
   white-space: nowrap;
 `;
