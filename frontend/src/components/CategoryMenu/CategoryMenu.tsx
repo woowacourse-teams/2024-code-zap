@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { CATEGORY } from '@/api/category';
 import { Text } from '@/components';
 import { theme } from '@/style/theme';
-import { Category } from '@/types/template';
+import type { Category } from '@/types';
 import * as S from './CategoryMenu.style';
 
 interface MenuProps {
