@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Flex, Heading, Text } from '@/components';
-import { theme } from '../../style/theme';
+import { theme } from '@/style/theme';
 import * as S from './Header.style';
 
 const Header = () => (
