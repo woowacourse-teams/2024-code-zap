@@ -36,7 +36,7 @@ export interface TemplateListItem {
 }
 
 export interface TemplateListResponse {
-  templates: TemplateListItem[];
+  templates: Template[];
 }
 
 export interface TemplateUploadRequest {
