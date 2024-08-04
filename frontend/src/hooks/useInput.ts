@@ -1,20 +1,23 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export const useInput = (initialValue: string, validate?: (value: string, compareValue?: string) => string) => {
   const [value, setValue] = useState(initialValue);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value.trim();
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, compareValue?: string) => {
+      const newValue = e.target.value.trim();
 
-    setValue(newValue);
+      setValue(newValue);
 
-    if (validate) {
-      setErrorMessage(validate(newValue));
-    } else {
-      setErrorMessage(newValue);
-    }
-  };
+      if (validate) {
+        setErrorMessage(validate(newValue, compareValue));
+      } else {
+        setErrorMessage(newValue);
+      }
+    },
+    [validate],
+  );
 
   return {
     value,
