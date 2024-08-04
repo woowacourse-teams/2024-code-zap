@@ -94,6 +94,7 @@ class CategoryServiceTest {
     @DisplayName("카테고리 삭제 성공")
     void deleteCategorySuccess() {
         // given
+        categoryRepository.save(new Category("category1"));
         Category savedCategory = categoryRepository.save(new Category("category1"));
 
         // when

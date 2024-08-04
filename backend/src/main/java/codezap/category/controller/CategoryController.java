@@ -2,9 +2,8 @@ package codezap.category.controller;
 
 import java.net.URI;
 
-import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +17,7 @@ import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
+import codezap.global.validation.ValidationSequence;
 
 @RestController
 @RequestMapping("/categories")
@@ -30,7 +30,7 @@ public class CategoryController implements SpringDocCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@Valid @RequestBody CreateCategoryRequest createCategoryRequest) {
+    public ResponseEntity<Void> createCategory(@Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest) {
         return ResponseEntity.created(URI.create("/categories/" + categoryService.create(createCategoryRequest)))
                 .build();
     }
@@ -43,7 +43,7 @@ public class CategoryController implements SpringDocCategoryController {
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateCategoryRequest updateCategoryRequest
+            @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
         categoryService.update(id, updateCategoryRequest);
         return ResponseEntity.ok().build();

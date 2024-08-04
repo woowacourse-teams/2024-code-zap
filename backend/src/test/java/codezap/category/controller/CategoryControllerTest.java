@@ -159,7 +159,8 @@ class CategoryControllerTest {
 
         @BeforeEach
         void saveCategory() {
-            savedCategoryId = categoryService.create(new CreateCategoryRequest("category1"));
+            categoryService.create(new CreateCategoryRequest("category1"));
+            savedCategoryId = categoryService.create(new CreateCategoryRequest("category2"));
         }
 
         @Test
