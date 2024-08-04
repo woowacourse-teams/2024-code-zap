@@ -21,10 +21,10 @@ const TemplateCard = ({ template }: Props) => {
             <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
               {title}
             </Text.XLarge>
-            <Text.Medium color={theme.color.light.secondary_700}>{description}</Text.Medium>
+            <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
           </Flex>
 
-          <Text.XSmall color={theme.color.light.secondary_600}>{formatRelativeTime(modifiedAt)}</Text.XSmall>
+          <Text.XSmall color={theme.color.light.secondary_500}>{formatRelativeTime(modifiedAt)}</Text.XSmall>
         </Flex>
 
         <Flex gap='.5rem'>
