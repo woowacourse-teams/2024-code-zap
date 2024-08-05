@@ -20,14 +20,12 @@ public class FakeMemberRepository implements MemberRepository {
 
     @Override
     public boolean existsByEmail(String email) {
-        return members.stream()
-                .anyMatch(member -> Objects.equals(member.getEmail(), email));
+        return members.stream().anyMatch(member -> Objects.equals(member.getEmail(), email));
     }
 
     @Override
     public boolean existsByUsername(String username) {
-        return members.stream()
-                .anyMatch(member -> Objects.equals(member.getUsername(), username));
+        return members.stream().anyMatch(member -> Objects.equals(member.getUsername(), username));
     }
 
     @Override
@@ -58,7 +56,6 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     private boolean existsById(Long id) {
-        return members.stream()
-                .anyMatch(member -> Objects.equals(member.getId(), id));
+        return members.stream().anyMatch(member -> Objects.equals(member.getId(), id));
     }
 }
