@@ -10,6 +10,5 @@ export { default as TagButton } from './TagButton/TagButton';
 export { default as TemplateCard } from './TemplateCard/TemplateCard';
 export { default as TemplateGrid } from './TemplateGrid/TemplateGrid';
 export { default as SnippetEditor } from './SnippetEditor/SnippetEditor';
-export { default as TemplateItem } from './TemplateItem/TemplateItem';
 export { default as TemplateTitleInput } from './TemplateTitleInput/TemplateTitleInput';
 export { default as Text } from './Text/Text';

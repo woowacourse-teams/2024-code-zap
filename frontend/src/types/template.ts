@@ -24,13 +24,3 @@ export interface Template {
   tags: Tag[];
   modifiedAt: string;
 }
-
-export interface TemplateListItem {
-  id: number;
-  title: string;
-  thumbnailSnippet: {
-    filename: string;
-    thumbnailContent: string;
-  };
-  modifiedAt: string;
-}
