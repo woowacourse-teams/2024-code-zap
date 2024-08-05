@@ -66,4 +66,17 @@ public class MemberController implements SpringDocMemberController {
     public void checkLogin(HttpServletRequest request) {
         memberService.checkLogin(request.getCookies());
     }
+
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, "")
+                .maxAge(0)
+                .path("/")
+                .secure(true)
+                .httpOnly(true)
+                .build();
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
 }

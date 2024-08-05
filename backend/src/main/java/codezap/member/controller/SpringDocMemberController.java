@@ -161,7 +161,7 @@ public interface SpringDocMemberController {
     @ApiResponse(
             responseCode = "200",
             description = "로그인 성공",
-            headers = {@Header(name = "Cookie", description = "base64(${email}:${password})")}
+            headers = {@Header(name = "Set-Cookie", description = "base64(${email}:${password}); path=\"/\"; HttpOnly; Secure;")}
     )
     @ApiResponse(
             responseCode = "400",
@@ -241,7 +241,7 @@ public interface SpringDocMemberController {
                             @ExampleObject(name = "이메일 불일치", value = """
                                     {
                                       "type": "about:blank",
-                                      "title": "BAD_REQUEST",
+                                      "title": "UNAUTHORIZED",
                                       "status": 401,
                                       "detail": "이메일이 입력되지 않았습니다.",
                                       "instance": "/login"
@@ -251,7 +251,7 @@ public interface SpringDocMemberController {
                             @ExampleObject(name = "비밀번호 불일치", value = """
                                     {
                                       "type": "about:blank",
-                                      "title": "BAD_REQUEST",
+                                      "title": "UNAUTHORIZED",
                                       "status": 401,
                                       "detail": "비밀번호가 입력되지 않았습니다.",
                                       "instance": "/login"
@@ -261,22 +261,36 @@ public interface SpringDocMemberController {
                     }
             )
     )
-    @ApiErrorResponse(
-            status = HttpStatus.UNAUTHORIZED,
-            instance = "/login",
-            errorCases = {@ErrorCase(description = "이메일 또는 비밀번호 불일치", exampleMessage = "인증에 실패했습니다.")}
-    )
     void login(LoginRequest request, HttpServletResponse response);
 
     @Operation(summary = "이메일 로그인 후 쿠키 인증")
     @ApiResponse(responseCode = "200", description = "쿠키 인증 성공")
+    @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
+            content = @Content(
+                    schema = @Schema(implementation = ProblemDetailSchema.class),
+                    examples = {
+                            @ExampleObject(name = "쿠키 값 오류", value = """
+                                    {
+                                      "type": "about:blank",
+                                      "title": "UNAUTHORIZED",
+                                      "status": 401,
+                                      "detail": "인증에 실패했습니다.",
+                                      "instance": "/login"
+                                    }
+                                    """)
+                    }
+            )
+    )
     @ApiErrorResponse(
             status = HttpStatus.UNAUTHORIZED,
             instance = "/login/check",
-            errorCases = {@ErrorCase(
-                    description = "쿠키 값 오류",
-                    exampleMessage = "인증에 실패했습니다."
-            )}
+            errorCases = {@ErrorCase(description = "쿠키 값 오류", exampleMessage = "인증에 실패했습니다.")}
     )
     void checkLogin(HttpServletRequest request);
+
+    @Operation(summary = "로그아웃")
+    @ApiResponse(responseCode = "204", description = "인증 성공")
+    void logout(HttpServletResponse response);
 }
