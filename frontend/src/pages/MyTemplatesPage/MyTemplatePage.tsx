@@ -1,8 +1,10 @@
+import { useState, useCallback } from 'react';
+
 import { searchIcon } from '@/assets/images';
 import { CategoryMenu, Flex, Heading, Input, TemplateGrid } from '@/components';
 import { useWindowWidth } from '@/hooks';
-import { useTemplateListQuery } from '@/hooks/template';
 import { useCategoryListQuery } from '@/queries/category';
+import { useTemplateListQuery } from '@/queries/template';
 import { theme } from '@/style/theme';
 import * as S from './MyTemplatePage.style';
 
@@ -10,17 +12,16 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const MyTemplatePage = () => {
   const windowWidth = useWindowWidth();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
 
-  const { data: templateData, error: templateError, isLoading: templateLoading } = useTemplateListQuery();
-  const { data: categoryData, error: categoryError, isLoading: categoryLoading } = useCategoryListQuery();
+  const { data: templateData } = useTemplateListQuery({
+    categoryId: selectedCategoryId,
+  });
+  const { data: categoryData } = useCategoryListQuery();
 
-  if (templateLoading || categoryLoading) {
-    return <div>Loading...</div>;
-  } else if (templateError) {
-    return <div>Error: {templateError.message}</div>;
-  } else if (categoryError) {
-    return <div>Error: {categoryError.message}</div>;
-  }
+  const handleCategorySelect = useCallback((categoryId: number) => {
+    setSelectedCategoryId(categoryId);
+  }, []);
 
   const templates = templateData?.templates || [];
   const categories = categoryData?.categories || [];
@@ -37,7 +38,7 @@ const MyTemplatePage = () => {
       </S.TopBannerContainer>
       <S.MainContainer>
         <Flex style={{ marginTop: '72px' }}>
-          <CategoryMenu categories={categories} />
+          <CategoryMenu categories={categories} onSelectCategory={handleCategorySelect} />
         </Flex>
 
         <Flex direction='column' width='100%' gap='2rem'>
