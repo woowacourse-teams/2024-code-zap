@@ -30,14 +30,16 @@ public class RequestResponseLogger extends OncePerRequestFilter {
         filterChain.doFilter(requestWrapper, responseWrapper);
         long duration = System.currentTimeMillis() - startTime;
 
-        String requestBody = new String(requestWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
-        String responseBody = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
-
         log.info("[Request] {} {}, 쿠키 헤더 값: {} \n 요청 바디: {}", request.getMethod(), request.getRequestURI(),
-                cookieHeader, requestBody);
-        log.info("[Response] Status: {}, Duration: {}ms, 응답 바디: {}", response.getStatus(), duration, responseBody);
+                cookieHeader, getBodyAsUtf8String(requestWrapper.getContentAsByteArray()));
+        log.info("[Response] Status: {}, Duration: {}ms, 응답 바디: {}", response.getStatus(), duration,
+                getBodyAsUtf8String(responseWrapper.getContentAsByteArray()));
 
         responseWrapper.copyBodyToResponse();
+    }
+
+    private String getBodyAsUtf8String(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     @Override
