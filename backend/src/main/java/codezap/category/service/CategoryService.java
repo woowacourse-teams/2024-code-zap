@@ -50,12 +50,20 @@ public class CategoryService {
     }
 
     public void deleteById(Long id) {
+        assertNoTemplates(id);
+        assertDefaultCategory(id);
+        categoryRepository.deleteById(id);
+    }
+
+    private void assertNoTemplates(Long id) {
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
+    }
+
+    private static void assertDefaultCategory(Long id) {
         if (id == DEFAULT_CATEGORY) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
-        categoryRepository.deleteById(id);
     }
 }
