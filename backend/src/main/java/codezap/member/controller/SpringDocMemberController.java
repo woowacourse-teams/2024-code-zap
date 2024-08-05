@@ -3,13 +3,9 @@ package codezap.member.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import codezap.global.swagger.error.ApiErrorResponse;
-import codezap.global.swagger.error.ErrorCase;
 import codezap.global.swagger.error.ProblemDetailSchema;
 import codezap.member.dto.LoginRequest;
 import codezap.member.dto.SignupRequest;
@@ -150,12 +146,50 @@ public interface SpringDocMemberController {
     void signup(@RequestBody SignupRequest request);
 
     @Operation(summary = "이메일 중복 확인")
-    @ApiResponse(responseCode = "200", description = "사용가능한 이메일이면 true, 중복된 이메일이면 false를 반환")
-    ResponseEntity<Boolean> checkUniqueEmail(@RequestParam String email);
+    @ApiResponse(responseCode = "200", description = "사용가능한 이메일")
+    @ApiResponse(
+            responseCode = "409",
+            description = "중복된 이메일",
+            content = @Content(
+                    schema = @Schema(implementation = ProblemDetailSchema.class),
+                    examples = {
+                            @ExampleObject(name = "이메일 중복", value = """
+                                    {
+                                      "type": "about:blank",
+                                      "title": "CONFLICT",
+                                      "status": 409,
+                                      "detail": "이메일이 이미 존재합니다.",
+                                      "instance": "/check-email"
+                                    }
+                                    """
+                            )
+                    }
+            )
+    )
+    void checkUniqueEmail(@RequestParam String email);
 
     @Operation(summary = "사용자명 중복 확인")
-    @ApiResponse(responseCode = "200", description = "사용가능한 사용자명이면 true, 중복된 사용자명이면 false를 반환")
-    ResponseEntity<Boolean> checkUniqueUsername(@RequestParam String username);
+    @ApiResponse(responseCode = "200", description = "사용가능한 사용자명")
+    @ApiResponse(
+            responseCode = "409",
+            description = "중복된 사용자명",
+            content = @Content(
+                    schema = @Schema(implementation = ProblemDetailSchema.class),
+                    examples = {
+                            @ExampleObject(name = "사용자명 중복", value = """
+                                    {
+                                      "type": "about:blank",
+                                      "title": "CONFLICT",
+                                      "status": 409,
+                                      "detail": "사용자명이 이미 존재합니다.",
+                                      "instance": "/check-username"
+                                    }
+                                    """
+                            )
+                    }
+            )
+    )
+    void checkUniqueUsername(@RequestParam String username);
 
     @Operation(summary = "이메일 로그인")
     @ApiResponse(
@@ -277,20 +311,33 @@ public interface SpringDocMemberController {
                                       "title": "UNAUTHORIZED",
                                       "status": 401,
                                       "detail": "인증에 실패했습니다.",
-                                      "instance": "/login"
+                                      "instance": "/login/check"
                                     }
                                     """)
                     }
             )
     )
-    @ApiErrorResponse(
-            status = HttpStatus.UNAUTHORIZED,
-            instance = "/login/check",
-            errorCases = {@ErrorCase(description = "쿠키 값 오류", exampleMessage = "인증에 실패했습니다.")}
-    )
     void checkLogin(HttpServletRequest request);
 
     @Operation(summary = "로그아웃")
     @ApiResponse(responseCode = "204", description = "인증 성공")
+    @ApiResponse(
+            responseCode = "401",
+            description = "인증 실패",
+            content = @Content(
+                    schema = @Schema(implementation = ProblemDetailSchema.class),
+                    examples = {
+                            @ExampleObject(name = "쿠키 값 오류", value = """
+                                    {
+                                      "type": "about:blank",
+                                      "title": "UNAUTHORIZED",
+                                      "status": 401,
+                                      "detail": "인증에 실패했습니다.",
+                                      "instance": "/login/check"
+                                    }
+                                    """)
+                    }
+            )
+    )
     void logout(HttpServletResponse response);
 }

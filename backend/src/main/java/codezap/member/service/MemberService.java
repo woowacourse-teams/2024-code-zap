@@ -31,27 +31,19 @@ public class MemberService {
         return authService.authorizeByEmailAndPassword(request.email(), request.password());
     }
 
-    public MemberDto checkLogin(Cookie[] cookies) {
-        return authService.authorizeByCookie(cookies);
+    public void checkLogin(Cookie[] cookies) {
+        authService.authorizeByCookie(cookies);
     }
 
-    private void assertUniqueEmail(String email) {
-        if (!isUniqueEmail(email)) {
+    public void assertUniqueEmail(String email) {
+        if (!memberRepository.existsByEmail(email)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "이메일이 이미 존재합니다.");
         }
     }
 
-    private void assertUniqueUsername(String username) {
-        if (!isUniqueUsername(username)) {
+    public void assertUniqueUsername(String username) {
+        if (!memberRepository.existsByUsername(username)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "사용자명이 이미 존재합니다.");
         }
-    }
-
-    public boolean isUniqueEmail(String email) {
-        return !memberRepository.existsByEmail(email);
-    }
-
-    public boolean isUniqueUsername(String username) {
-        return !memberRepository.existsByUsername(username);
     }
 }

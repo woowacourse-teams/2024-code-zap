@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,15 +35,15 @@ public class MemberController implements SpringDocMemberController {
     }
 
     @GetMapping("/check-email")
-    public ResponseEntity<Boolean> checkUniqueEmail(@RequestParam String email) {
-        boolean isUnique = memberService.isUniqueEmail(email);
-        return ResponseEntity.ok(isUnique);
+    @ResponseStatus(HttpStatus.OK)
+    public void checkUniqueEmail(@RequestParam String email) {
+        memberService.assertUniqueEmail(email);
     }
 
     @GetMapping("/check-username")
-    public ResponseEntity<Boolean> checkUniqueUsername(@RequestParam String username) {
-        boolean isUnique = memberService.isUniqueUsername(username);
-        return ResponseEntity.ok(isUnique);
+    @ResponseStatus(HttpStatus.OK)
+    public void checkUniqueUsername(@RequestParam String username) {
+        memberService.assertUniqueUsername(username);
     }
 
     @PostMapping("/login")
