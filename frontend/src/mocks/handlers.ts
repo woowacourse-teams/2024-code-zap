@@ -41,6 +41,20 @@ export const handlers = [
         },
       }),
   ),
-  http.get(`${CHECK_EMAIL_API_URL}`, async () => HttpResponse.json({ check: true })),
+  // http.get(`${CHECK_EMAIL_API_URL}`, async () => HttpResponse.json({ check: true })),
+  http.get(
+    `${CHECK_EMAIL_API_URL}`,
+    () =>
+      new HttpResponse(
+        JSON.stringify({
+          message: '중복된 이메일입니다.',
+          status: 409,
+        }),
+        {
+          status: 409,
+          statusText: 'Conflict',
+        },
+      ),
+  ),
   http.get(`${CHECK_USERNAME_API_URL}`, async () => HttpResponse.json({ check: true })),
 ];
