@@ -6,11 +6,14 @@ jobs:
   notify_reviewers:
     runs-on: self-hosted
     steps:
+    - name: 변수 추출
+      run: |
+        SLACK_WEBHOOK_URL=$(cat ../slack_noti/SLACK_PR_CREATE_WEBHOOK_URL)
+        SLACK_IDS=$(cat ../slack_noti/SLACK_IDS)
+        echo "SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL" >> $GITHUB_ENV
+        echo "SLACK_IDS=$SLACK_IDS" >> $GITHUB_ENV
         
     - name: PR 생성 시 reviewer들에게 Slack 알람 보내기
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PR_CREATE_WEBHOOK_URL }}
-        SLACK_IDS: ${{ secrets.SLACK_IDS }}
       run: |
         PR_TITLE="${{ github.event.pull_request.title }}"
         PR_URL="${{ github.event.pull_request.html_url }}"
