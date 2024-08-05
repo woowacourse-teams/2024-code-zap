@@ -37,24 +37,21 @@ export const useSignupForm = () => {
     handleErrorMessage: handleConfirmPasswordErrorMessage,
   } = useInput('', (value, compareValue) => validateConfirmPassword(value, compareValue ?? ''));
 
-  const {
-    data: isUniqueEmail,
-    isSuccess: isSuccessCheckEmailQuery,
-    refetch: checkEmailQuery,
-  } = useCheckEmailQuery(email);
+  const { refetch: checkEmailQuery } = useCheckEmailQuery(email);
   const {
     data: isUniqueUsername,
     isSuccess: isSuccessCheckUsernameQuery,
     refetch: checkUserQuery,
   } = useCheckUsernameQuery(username);
 
-  useEffect(() => {
-    if (isSuccessCheckEmailQuery) {
-      if (isUniqueEmail?.check === false) {
-        handleEmailErrorMessage('중복된 이메일입니다.');
-      }
+  const handleEmailCheck = async () => {
+    const { error } = await checkEmailQuery();
+
+    // refetch does not exist onError
+    if (error) {
+      handleEmailErrorMessage(error.message);
     }
-  }, [isUniqueEmail?.check, isSuccessCheckEmailQuery, handleEmailErrorMessage]);
+  };
 
   useEffect(() => {
     if (isSuccessCheckUsernameQuery) {
@@ -112,7 +109,7 @@ export const useSignupForm = () => {
     handleConfirmPasswordChange,
     isFormValid,
     handleSubmit,
-    checkEmailQuery,
+    handleEmailCheck,
     checkUserQuery,
   };
 };
