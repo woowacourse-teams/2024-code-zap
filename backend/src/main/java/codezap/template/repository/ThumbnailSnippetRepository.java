@@ -24,6 +24,7 @@ public interface ThumbnailSnippetRepository extends JpaRepository<ThumbnailSnipp
             WHERE t.template.title LIKE %:topic%
             OR s.filename LIKE %:topic%
             OR s.content LIKE %:topic%
+            OR t.template.description LIKE %:topic%
             """)
     List<ThumbnailSnippet> searchByTopic(@Param("topic") String topic);
 }

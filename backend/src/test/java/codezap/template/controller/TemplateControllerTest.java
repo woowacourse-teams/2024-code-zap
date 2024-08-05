@@ -581,5 +581,36 @@ class TemplateControllerTest {
                     .statusCode(200)
                     .body("templates.size()", is(1));
         }
+
+        @Test
+        @DisplayName("템플릿 토픽 검색 성공 : 템플릿 설명에 포함")
+        void searchDescriptionTopicSuccess() {
+            //given
+            String topic = "java";
+
+            CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
+            Long categoryId = categoryService.create(createCategoryRequest1);
+
+            CreateTemplateRequest templateRequest1 = new CreateTemplateRequest(
+                    "title",
+                    topic + "Login 구현",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    categoryId,
+                    List.of()
+            );
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(templateRequest1)
+                    .when().post("/templates")
+                    .then().log().all();
+
+            //when
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .get("/templates/search?topic=" + topic)
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("templates.size()", is(1));
+        }
     }
 }
