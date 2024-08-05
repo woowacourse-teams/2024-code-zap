@@ -11,7 +11,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
     runs-on: self-hosted
     steps:
-      - name: Send Slack notification
+      - name: CI 또는 CD 실패 시 Slack 알람 보내기
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CICD_FAIL_WEBHOOK_URL }}
           SLACK_IDS: ${{ secrets.SLACK_IDS }}
