@@ -20,7 +20,7 @@ const SignupPage = () => {
     handleConfirmPasswordChange,
     isFormValid,
     handleSubmit,
-    checkEmailQuery,
+    handleEmailCheck,
     checkUserQuery,
   } = useSignupForm();
 
@@ -40,7 +40,7 @@ const SignupPage = () => {
                 type='email'
                 value={email}
                 onChange={handleEmailChange}
-                onBlur={() => checkEmailQuery()}
+                onBlur={() => handleEmailCheck()}
                 autoComplete='email'
               />
               <Input.HelperText>{errors.email}</Input.HelperText>
