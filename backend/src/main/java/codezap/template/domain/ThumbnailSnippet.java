@@ -7,11 +7,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
 import codezap.global.auditing.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ThumbnailSnippet extends BaseTimeEntity {
 

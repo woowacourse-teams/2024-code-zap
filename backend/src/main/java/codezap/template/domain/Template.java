@@ -9,11 +9,12 @@ import jakarta.persistence.ManyToOne;
 
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Template extends BaseTimeEntity {
 

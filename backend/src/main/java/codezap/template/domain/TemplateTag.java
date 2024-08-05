@@ -10,18 +10,19 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 
 import codezap.global.auditing.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class TemplateTag extends BaseTimeEntity {
 
     @Embeddable
-    @NoArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Getter
     @EqualsAndHashCode
