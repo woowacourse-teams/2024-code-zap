@@ -30,8 +30,11 @@ public class CategoryController implements SpringDocCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(@Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest) {
-        return ResponseEntity.created(URI.create("/categories/" + categoryService.create(createCategoryRequest)))
+    public ResponseEntity<Void> createCategory(
+            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
+    ) {
+        Long createdCategoryId = categoryService.create(createCategoryRequest);
+        return ResponseEntity.created(URI.create("/categories/" + createdCategoryId))
                 .build();
     }
 

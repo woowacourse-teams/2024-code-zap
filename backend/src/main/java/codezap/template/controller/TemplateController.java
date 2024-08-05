@@ -16,7 +16,7 @@ import codezap.global.validation.ValidationSequence;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.TemplateService;
 
 @RestController
@@ -30,7 +30,9 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest) {
+    public ResponseEntity<Void> create(
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
+    ) {
         return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest)))
                 .build();
     }
@@ -41,7 +43,7 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateByIdResponse> getTemplateById(@PathVariable Long id) {
+    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id) {
         return ResponseEntity.ok(templateService.findById(id));
     }
 

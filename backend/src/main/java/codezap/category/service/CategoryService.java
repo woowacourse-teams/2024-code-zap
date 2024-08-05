@@ -42,6 +42,12 @@ public class CategoryService {
         category.updateName(updateCategoryRequest.name());
     }
 
+    private void validateDuplicatedCategory(String categoryName) {
+        if (categoryRepository.existsByName(categoryName)) {
+            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
+        }
+    }
+
     public void deleteById(Long id) {
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
@@ -50,11 +56,5 @@ public class CategoryService {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "1번 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
-    }
-
-    private void validateDuplicatedCategory(String categoryName) {
-        if (categoryRepository.existsByName(categoryName)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
-        }
     }
 }
