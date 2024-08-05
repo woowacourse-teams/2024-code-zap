@@ -27,9 +27,9 @@ public interface SpringDocTemplateController {
             * 모든 스니펫 순서는 1부터 시작합니다. \n
             * 스니펫 순서는 오름차순으로 정렬하여 보내야 합니다. \n
             """)
-    @ApiResponse(responseCode = "201", description = "회원 예약 생성 성공", headers = {
+    @ApiResponse(responseCode = "201", description = "템플릿 생성 성공", headers = {
             @Header(name = "생성된 템플릿의 API 경로", example = "/templates/1")})
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates", errorCases = {
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 이름 null 입니다."),
             @ErrorCase(description = "제목 또는 스니펫 파일명이 255자를 초과한 경우", exampleMessage = "제목은 최대 255자까지 입력 가능합니다."),
             @ErrorCase(description = "썸네일 스니펫의 순서가 1이 아닌 경우", exampleMessage = "썸네일 스니펫의 순서가 잘못되었습니다."),
