@@ -19,6 +19,7 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
@@ -95,8 +96,8 @@ public class TemplateService {
         );
     }
 
-    public FindAllTemplatesResponse findAll() {
-        return FindAllTemplatesResponse.from(thumbnailSnippetRepository.findAll());
+    public ExploreTemplatesResponse findAll() {
+        return ExploreTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
 
     public FindTemplateResponse findById(Long id) {

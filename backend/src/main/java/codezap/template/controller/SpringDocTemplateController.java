@@ -7,6 +7,7 @@ import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,13 +40,17 @@ public interface SpringDocTemplateController {
     ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest);
 
     @Operation(summary = "템플릿 목록 조회", description = "작성된 모든 템플릿을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "조회 성공",
-            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
-    ResponseEntity<FindAllTemplatesResponse> getTemplates();
+    @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
+            content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
+    ResponseEntity<FindAllTemplatesResponse> getTemplates(
+            Long memberId,
+            Integer pageNumber,
+            Integer pageSize
+    );
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
-            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+            content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })

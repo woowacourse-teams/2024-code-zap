@@ -26,6 +26,7 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
@@ -96,7 +97,7 @@ class TemplateServiceTest {
         saveTemplate(makeTemplateRequest("title2"));
 
         // when
-        FindAllTemplatesResponse allTemplates = templateService.findAll();
+        ExploreTemplatesResponse allTemplates = templateService.findAll();
 
         // then
         assertThat(allTemplates.templates()).hasSize(2);

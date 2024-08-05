@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import codezap.global.validation.ValidationSequence;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.TemplateService;
@@ -39,7 +40,15 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping
-    public ResponseEntity<FindAllTemplatesResponse> getTemplates() {
+    public ResponseEntity<FindAllTemplatesResponse> getTemplates(
+            Long memberId,
+            Integer pageNumber,
+            Integer pageSize) {
+        return null;
+    }
+
+    @GetMapping("/explore")
+    public ResponseEntity<ExploreTemplatesResponse> explore() {
         return ResponseEntity.ok(templateService.findAll());
     }
 

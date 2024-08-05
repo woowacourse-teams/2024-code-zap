@@ -188,7 +188,7 @@ class TemplateControllerTest {
     }
 
     @Test
-    @DisplayName("템플릿 전체 조회 성공")
+    @DisplayName("템플릿 전체 탐색 성공")
     void findAllTemplatesSuccess() {
         // given
         categoryService.create(new CreateCategoryRequest("category"));
@@ -199,7 +199,7 @@ class TemplateControllerTest {
 
         // when & then
         RestAssured.given().log().all()
-                .get("/templates")
+                .get("/templates/explore")
                 .then().log().all()
                 .statusCode(200)
                 .body("templates.size()", is(2));
