@@ -9,10 +9,6 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface CheckEmailResponse {
-  check: boolean;
-}
-
 export interface CheckUsernameResponse {
   check: boolean;
 }
