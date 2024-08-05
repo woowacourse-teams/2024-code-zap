@@ -388,14 +388,18 @@ class TemplateServiceTest {
     }
 
     private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename) {
+        Category category = categoryRepository.save(new Category("category"));
         CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                templateTitle,
+                templateTitle, "설명",
                 List.of(
                         new CreateSnippetRequest(firstFilename, "content1", 1),
                         new CreateSnippetRequest(secondFilename, "content2", 2)
-                )
+                ),
+                category.getId(),
+                List.of()
         );
-        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
+        Template savedTemplate = templateRepository.save(
+                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category));
 
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
@@ -403,14 +407,18 @@ class TemplateServiceTest {
     }
 
     private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent) {
+        Category category = categoryRepository.save(new Category("category"));
         CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                templateTitle,
+                templateTitle, "설명",
                 List.of(
                         new CreateSnippetRequest("filename1", firstContent, 1),
                         new CreateSnippetRequest("filename2", secondContent, 2)
-                )
+                ),
+                category.getId(),
+                List.of()
         );
-        Template savedTemplate = templateRepository.save(new Template(createTemplateRequest.title()));
+        Template savedTemplate = templateRepository.save(
+                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category));
 
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
