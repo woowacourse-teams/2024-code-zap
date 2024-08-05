@@ -51,9 +51,7 @@ public record FindTemplateResponse(
                 .toList();
     }
 
-    private static List<FindTagResponse> mapToFindTagByTemplateResponse(
-            List<Tag> tags
-    ) {
+    private static List<FindTagResponse> mapToFindTagByTemplateResponse(List<Tag> tags) {
         return tags.stream()
                 .map(FindTagResponse::from)
                 .toList();
