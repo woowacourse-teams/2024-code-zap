@@ -7,5 +7,7 @@ export { default as Layout } from './Layout/Layout';
 export { default as SelectList } from './SelectList/SelectList';
 export { default as SnippetEditor } from './SnippetEditor/SnippetEditor';
 export { default as TemplateItem } from './TemplateItem/TemplateItem';
-export { default as TemplateTitleInput } from './TemplateTitleInput/TemplateTitleInput';
 export { default as Text } from './Text/Text';
+export { default as Dropdown } from './Dropdown/Dropdown';
+export { default as TagInput } from './TagInput/TagInput';
+export { default as TemplateEdit } from './TemplateEdit/TemplateEdit';
