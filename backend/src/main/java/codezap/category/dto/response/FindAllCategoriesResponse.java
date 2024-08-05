@@ -7,12 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindAllCategoriesResponse(
         @Schema(description = "카테고리 목록")
-        List<FindCategoryByIdResponse> categories
+        List<FindCategoryResponse> categories
 ) {
     public static FindAllCategoriesResponse from(List<Category> categories) {
         return new FindAllCategoriesResponse(
                 categories.stream()
-                        .map(FindCategoryByIdResponse::from)
+                        .map(FindCategoryResponse::from)
                         .toList()
         );
     }

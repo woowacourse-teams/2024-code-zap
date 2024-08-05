@@ -20,7 +20,7 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
@@ -79,13 +79,13 @@ public class TemplateService {
         return FindAllTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
 
-    public FindTemplateByIdResponse findById(Long id) {
+    public FindTemplateResponse findById(Long id) {
         Template template = templateRepository.fetchById(id);
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
                 .map(TemplateTag::getTag)
                 .toList();
-        return FindTemplateByIdResponse.of(template, snippets, tags);
+        return FindTemplateResponse.of(template, snippets, tags);
     }
 
     @Transactional

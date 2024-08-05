@@ -3,13 +3,13 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import codezap.category.dto.response.FindCategoryByIdResponse;
+import codezap.category.dto.response.FindCategoryResponse;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record FindTemplateByIdResponse(
+public record FindTemplateResponse(
         @Schema(description = "템플릿 식별자", example = "0")
         Long id,
 
@@ -23,21 +23,21 @@ public record FindTemplateByIdResponse(
         List<FindAllSnippetByTemplateResponse> snippets,
 
         @Schema(description = "카테고리 정보")
-        FindCategoryByIdResponse category,
+        FindCategoryResponse category,
 
         @Schema(description = "태그 목록")
-        List<FindTagByIdResponse> tags,
+        List<FindTagResponse> tags,
 
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
         LocalDateTime modifiedAt
 ) {
-    public static FindTemplateByIdResponse of(Template template, List<Snippet> snippets, List<Tag> tags) {
-        return new FindTemplateByIdResponse(
+    public static FindTemplateResponse of(Template template, List<Snippet> snippets, List<Tag> tags) {
+        return new FindTemplateResponse(
                 template.getId(),
                 template.getTitle(),
                 template.getDescription(),
                 mapToFindAllSnippetByTemplateResponse(snippets),
-                FindCategoryByIdResponse.from(template.getCategory()),
+                FindCategoryResponse.from(template.getCategory()),
                 mapToFindTagByTemplateResponse(tags),
                 template.getModifiedAt()
         );
@@ -51,11 +51,11 @@ public record FindTemplateByIdResponse(
                 .toList();
     }
 
-    private static List<FindTagByIdResponse> mapToFindTagByTemplateResponse(
+    private static List<FindTagResponse> mapToFindTagByTemplateResponse(
             List<Tag> tags
     ) {
         return tags.stream()
-                .map(FindTagByIdResponse::from)
+                .map(FindTagResponse::from)
                 .toList();
     }
 }

@@ -27,7 +27,7 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
@@ -109,7 +109,7 @@ class TemplateServiceTest {
         Template template = saveTemplate(createdTemplate);
 
         // when
-        FindTemplateByIdResponse foundTemplate = templateService.findById(template.getId());
+        FindTemplateResponse foundTemplate = templateService.findById(template.getId());
 
         // then
         assertAll(
