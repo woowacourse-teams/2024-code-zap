@@ -1,4 +1,4 @@
-name: 백엔드 CI
+name: Backend CI
 
 on:
   pull_request:
