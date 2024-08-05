@@ -8,6 +8,7 @@ import * as S from './CategoryMenu.style';
 
 interface MenuProps {
   categories: Category[];
+  onSelectCategory: (categoryId: number) => void;
 }
 
 interface ButtonProps {
@@ -16,7 +17,7 @@ interface ButtonProps {
   onClick: () => void;
 }
 
-const CategoryMenu = ({ categories }: MenuProps) => {
+const CategoryMenu = ({ categories, onSelectCategory }: MenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
 
   const indexById: Record<number, number> = {
@@ -26,6 +27,7 @@ const CategoryMenu = ({ categories }: MenuProps) => {
 
   const handleButtonClick = (id: number) => {
     setSelectedId(id);
+    onSelectCategory(id);
   };
 
   return (
