@@ -59,8 +59,11 @@ public class TemplateService {
                 new Template(createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
         createTags(createTemplateRequest, template);
-        createTemplateRequest.snippets()
-                .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
+        snippetRepository.saveAll(
+                createTemplateRequest.snippets().stream()
+                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
+                        .toList()
+        );
 
         Snippet thumbnailSnippet = snippetRepository.findByTemplateAndOrdinal(template, FIRST_ORDINAL);
         thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
@@ -68,23 +71,26 @@ public class TemplateService {
     }
 
     private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
-        createTemplateRequest.tags().stream()
+        tagRepository.saveAll(
+                createTemplateRequest.tags().stream()
                 .filter(tagName -> !tagRepository.existsByName(tagName))
                 .map(Tag::new)
-                .forEach(tagRepository::save);
+                .toList()
+        );
 
-        createTemplateRequest.tags().stream()
+       templateTagRepository.saveAll(
+               createTemplateRequest.tags().stream()
                 .map(tagRepository::findByName)
-                .forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
+                .map(tag -> new TemplateTag(template, tag))
+                .toList()
+       );
     }
 
-    private void createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
-        snippetRepository.save(
-                new Snippet(
-                        template, createSnippetRequest.filename(),
-                        createSnippetRequest.content(),
-                        createSnippetRequest.ordinal()
-                )
+    private Snippet createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
+        return new Snippet(
+                template, createSnippetRequest.filename(),
+                createSnippetRequest.content(),
+                createSnippetRequest.ordinal()
         );
     }
 
@@ -148,14 +154,19 @@ public class TemplateService {
 
     private void updateTags(UpdateTemplateRequest updateTemplateRequest, Template template) {
         templateTagRepository.deleteAllByTemplateId(template.getId());
-        updateTemplateRequest.tags().stream()
+        tagRepository.saveAll(
+                updateTemplateRequest.tags().stream()
                 .filter(tagName -> !tagRepository.existsByName(tagName))
                 .map(Tag::new)
-                .forEach(tagRepository::save);
+                .toList()
+        );
 
-        updateTemplateRequest.tags().stream()
+        templateTagRepository.saveAll(
+                updateTemplateRequest.tags().stream()
                 .map(tagRepository::findByName)
-                .forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
+                .map(tag -> new TemplateTag(template, tag))
+                .toList()
+        );
     }
 
     private void validateSnippetsCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
