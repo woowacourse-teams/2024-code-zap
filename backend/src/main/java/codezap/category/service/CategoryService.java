@@ -15,7 +15,7 @@ import codezap.template.repository.TemplateRepository;
 @Service
 public class CategoryService {
 
-    public static final int DEFAULT_CATEGORY = 1;
+    private static final long DEFAULT_CATEGORY = 1L;
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
 

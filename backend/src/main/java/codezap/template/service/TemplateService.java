@@ -30,7 +30,7 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 @Service
 public class TemplateService {
 
-    public static final int FIRST_ORDINAL = 1;
+    private static final int FIRST_ORDINAL = 1;
 
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
