@@ -67,7 +67,7 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<FindAllTemplatesResponse> getTemplatesContainTopic(@RequestParam String topic) {
+    public ResponseEntity<FindAllTemplatesResponse> getTemplatesContainTopic(@RequestParam("topic") String topic) {
         return ResponseEntity.ok(templateService.findContainTopic(topic));
     }
 

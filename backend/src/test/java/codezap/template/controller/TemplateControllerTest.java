@@ -469,7 +469,7 @@ class TemplateControllerTest {
 
     }
 
-    private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
+    private CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
         CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                 title,
                 "description",
@@ -489,24 +489,43 @@ class TemplateControllerTest {
         //given
         String topic = "java";
 
-        CreateTemplateRequest templateRequest1 = new CreateTemplateRequest(topic,
-                List.of(new CreateSnippetRequest("filename", "content", 1)));
+        CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
+        Long categoryId = categoryService.create(createCategoryRequest1);
+
+        // title에 topic이 포함
+        CreateTemplateRequest templateRequest1 = new CreateTemplateRequest(
+                topic,
+                "설명",
+                List.of(new CreateSnippetRequest("filename", "content", 1)),
+                categoryId,
+                List.of()
+        );
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(templateRequest1)
                 .when().post("/templates")
                 .then().log().all();
-
-        CreateTemplateRequest templateRequest2 = new CreateTemplateRequest("title2",
-                List.of(new CreateSnippetRequest("filename." + topic, "content", 1)));
+        // filename에 topic이 포함
+        CreateTemplateRequest templateRequest2 = new CreateTemplateRequest(
+                "title2",
+                "설명",
+                List.of(new CreateSnippetRequest("filename." + topic, "content", 1)),
+                categoryId,
+                List.of()
+        );
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(templateRequest2)
                 .when().post("/templates")
                 .then().log().all();
-
-        CreateTemplateRequest templateRequest3 = new CreateTemplateRequest("title3",
-                List.of(new CreateSnippetRequest("filename", "// " + topic + " text", 1)));
+        // code에 topic이 포함
+        CreateTemplateRequest templateRequest3 = new CreateTemplateRequest(
+                "title3",
+                "설명",
+                List.of(new CreateSnippetRequest("filename", "// " + topic + " text", 1)),
+                categoryId,
+                List.of()
+        );
         RestAssured.given().log().all()
                 .contentType(ContentType.JSON)
                 .body(templateRequest3)
@@ -515,6 +534,7 @@ class TemplateControllerTest {
 
         //when
         RestAssured.given().log().all()
+                .contentType(ContentType.JSON)
                 .get("/templates/search?topic=" + topic)
                 .then().log().all()
                 .statusCode(200)
