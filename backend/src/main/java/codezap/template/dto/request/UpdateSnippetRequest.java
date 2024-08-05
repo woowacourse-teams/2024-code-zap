@@ -5,7 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import codezap.global.validation.ByteLength;
-import codezap.global.validation.ValidationGroups.ByteLengthGroup;
 import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,7 +21,7 @@ public record UpdateSnippetRequest(
 
         @Schema(description = "소스 코드", example = "public class Main { // ...")
         @NotBlank(message = "파일 내용이 null 입니다.", groups = NotNullGroup.class)
-        @ByteLength(max = 65_535, message = "파일 내용은 최대 65,535 Byte까지 입력 가능합니다.", groups = ByteLengthGroup.class)
+        @ByteLength(max = 65_535, message = "파일 내용은 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String content,
 
         @Schema(description = "스니펫 순서", example = "1")

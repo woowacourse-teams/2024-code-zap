@@ -7,7 +7,5 @@ public class ValidationGroups {
 
     public interface SnippetCountGroup {}
 
-    public interface ByteLengthGroup {}
-
     public interface SizeCheckGroup {}
 }

@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import codezap.global.validation.ByteLength;
-import codezap.global.validation.ValidationGroups.ByteLengthGroup;
 import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
 import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
@@ -22,7 +21,7 @@ public record CreateTemplateRequest(
 
         @Schema(description = "템플릿 설명", example = "JWT를 사용하여 로그인 기능을 구현함")
         @NotNull(message = "템플릿 설명이 null 입니다.", groups = NotNullGroup.class)
-        @ByteLength(max = 65_535, message = "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다.", groups = ByteLengthGroup.class)
+        @ByteLength(max = 65_535, message = "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String description,
 
         @Schema(description = "템플릿의 스니펫 내역")
