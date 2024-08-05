@@ -1,0 +1,49 @@
+name: PR Slack Notification
+on:
+  pull_request:
+    types: [opened, reopened]
+jobs:
+  notify_reviewers:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+        
+    - name: Slack 알람 보내기
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_PR_CREATE_WEBHOOK_URL }}
+        SLACK_IDS: ${{ secrets.SLACK_IDS }}
+      run: |
+        PR_TITLE="${{ github.event.pull_request.title }}"
+        PR_URL="${{ github.event.pull_request.html_url }}"
+        REVIEWERS='${{ toJson(github.event.pull_request.requested_reviewers.*.login) }}'
+        echo "REVIEWERS: $REVIEWERS"
+        
+        parse_slack_ids() {
+            echo "$SLACK_IDS" | jq -r 'to_entries | map("\(.key):\(.value)") | .[]'
+        }
+        
+        reviewers=$(echo "$REVIEWERS" | jq -r '.[]')
+        mentions=""
+        
+        for reviewer in $reviewers; do
+            slack_id=$(parse_slack_ids | grep "^$reviewer:" | cut -d':' -f2)
+            
+            if [ -n "$slack_id" ]; then
+                mentions="$mentions <@$slack_id>"
+            else
+                mentions="$mentions $reviewer"
+            fi
+        done
+        
+        echo "Mentions: $mentions"
+        
+        if [ ! -z "$mentions" ]; then
+          message="$mentions 님, 새로운 PR이 생성되었습니다: <$PR_URL|$PR_TITLE>"
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"$message\"}" \
+            "$SLACK_WEBHOOK_URL"
+          echo "Sent message: $message"
+        else
+          echo "No reviewers to notify"
+        fi
