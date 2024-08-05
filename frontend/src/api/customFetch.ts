@@ -35,6 +35,7 @@ export const customFetch = async ({
 
     return data;
   } catch (error) {
+    console.error(error);
     throw new Error(errorMessage);
   }
 };
