@@ -69,7 +69,7 @@ public class TemplateService {
 
     private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
         templateTagRepository.saveAll(createTemplateRequest.tags().stream()
-                .map(tag -> tagRepository.save(new Tag(tag)))
+                .map(tagName -> tagRepository.save(new Tag(tagName)))
                 .map(tag -> new TemplateTag(template, tag))
                 .toList()
         );
