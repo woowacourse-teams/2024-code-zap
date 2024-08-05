@@ -173,7 +173,7 @@ class TemplateServiceTest {
     @DisplayName("템플릿 토픽 검색")
     class searchContainTopic {
         @Test
-        @DisplayName("성공 : 템플릿 제목에 포함")
+        @DisplayName("템플릿 토픽 검색 성공 : 템플릿 제목에 포함")
         void findAllTemplatesTitleContainTopicSuccess() {
             //given
             saveTemplate(makeTemplateRequest("hello"));
@@ -189,7 +189,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
+        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
         void findAllSnippetFilenameContainTopicSuccess() {
             //given
             saveTemplateBySnippetFilename("tempate1", "login.js", "signup.js");
@@ -204,7 +204,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
+        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
         void findAllSnippetContentContainTopicSuccess() {
             //given
             saveTemplateBySnippetContent("tempate1", "public Main {", "new Car();");
@@ -216,6 +216,41 @@ class TemplateServiceTest {
 
             //then
             assertThat(templates.templates()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 설명에 포함")
+        void findAllDescriptionContainTopicSuccess() {
+            //given
+            Category category = categoryRepository.save(new Category("category"));
+            CreateTemplateRequest request1 = new CreateTemplateRequest(
+                    "타이틀",
+                    "Login 구현",
+                    List.of(
+                            new CreateSnippetRequest("filename1", "content1", 1),
+                            new CreateSnippetRequest("filename2", "content2", 2)
+                    ),
+                    category.getId(),
+                    List.of("tag1", "tag2")
+            );
+            saveTemplate(request1);
+            CreateTemplateRequest request2 = new CreateTemplateRequest(
+                    "타이틀",
+                    "Signup 구현",
+                    List.of(
+                            new CreateSnippetRequest("filename1", "content1", 1),
+                            new CreateSnippetRequest("filename2", "content2", 2)
+                    ),
+                    category.getId(),
+                    List.of("tag1", "tag2")
+            );
+            saveTemplate(request2);
+
+            //when
+            FindAllTemplatesResponse templates = templateService.findContainTopic("Login");
+
+            //then
+            assertThat(templates.templates()).hasSize(1);
         }
     }
 
