@@ -113,7 +113,7 @@ public class TemplateService {
     }
 
     private void updateTags(UpdateTemplateRequest updateTemplateRequest, Template template) {
-        templateTagRepository.deleteAllByTemplate(template);
+        templateTagRepository.deleteAllByTemplateId(template.getId());
         updateTemplateRequest.tags().stream()
                 .map(Tag::new)
                 .filter(tag -> !tagRepository.existsByName(tag.getName()))

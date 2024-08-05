@@ -11,7 +11,5 @@ public interface TemplateTagRepository extends JpaRepository<TemplateTag, Long> 
 
     List<TemplateTag> findAllByTemplate(Template template);
 
-    void deleteAllByTemplate(Template template);
-
     void deleteAllByTemplateId(Long id);
 }
