@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +31,7 @@ public class MemberController implements SpringDocMemberController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@RequestBody SignupRequest request) {
+    public void signup(@Valid @RequestBody SignupRequest request) {
         memberService.signup(request);
     }
 
@@ -48,7 +49,7 @@ public class MemberController implements SpringDocMemberController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public void login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public void login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         MemberDto member = memberService.login(request);
         String basicAuth = HttpHeaders.encodeBasicAuth(member.email(), member.password(), StandardCharsets.UTF_8);
         ResponseCookie cookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, basicAuth)
