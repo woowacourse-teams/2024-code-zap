@@ -74,15 +74,12 @@ public class MemberServiceTest {
         @Test
         @DisplayName("로그인 성공")
         void login() {
-            // given
             var member = new Member(1L, "code@zap.com", "pw1234", "zappy");
             memberRepository.save(member);
             var request = new LoginRequest(member.getEmail(), member.getPassword());
 
-            // when
             var actual = sut.login(request);
 
-            // then
             var expect = MemberDto.from(member);
             assertThat(actual).isEqualTo(expect);
         }
