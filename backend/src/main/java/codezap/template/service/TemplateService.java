@@ -75,6 +75,16 @@ public class TemplateService {
         );
     }
 
+    private void createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
+        snippetRepository.save(
+                new Snippet(
+                        template, createSnippetRequest.filename(),
+                        createSnippetRequest.content(),
+                        createSnippetRequest.ordinal()
+                )
+        );
+    }
+
     public FindAllTemplatesResponse findAll() {
         return FindAllTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
@@ -112,11 +122,32 @@ public class TemplateService {
         updateTemplateRequest.deleteSnippetIds().forEach(snippetRepository::deleteById);
     }
 
+    private void updateSnippet(UpdateSnippetRequest updateSnippetRequest) {
+        Snippet snippet = snippetRepository.fetchById(updateSnippetRequest.id());
+        snippet.updateSnippet(updateSnippetRequest.filename(), updateSnippetRequest.content(),
+                updateSnippetRequest.ordinal());
+    }
+
+    private static boolean isThumbnailSnippetDeleted(
+            UpdateTemplateRequest updateTemplateRequest,
+            ThumbnailSnippet thumbnailSnippet
+    ) {
+        return updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId());
+    }
+
+    private void updateThumbnailSnippet(Template template, ThumbnailSnippet thumbnailSnippet) {
+        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
+        snippets.stream()
+                .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
+                .findFirst()
+                .ifPresent(thumbnailSnippet::updateThumbnailSnippet);
+    }
+
     private void updateTags(UpdateTemplateRequest updateTemplateRequest, Template template) {
         templateTagRepository.deleteAllByTemplateId(template.getId());
         updateTemplateRequest.tags().stream()
+                .filter(tagName -> !tagRepository.existsByName(tagName))
                 .map(Tag::new)
-                .filter(tag -> !tagRepository.existsByName(tag.getName()))
                 .forEach(tagRepository::save);
 
         List<Tag> tags = updateTemplateRequest.tags().stream()
@@ -138,36 +169,5 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    private static boolean isThumbnailSnippetDeleted(
-            UpdateTemplateRequest updateTemplateRequest,
-            ThumbnailSnippet thumbnailSnippet
-    ) {
-        return updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId());
-    }
-
-    private void updateThumbnailSnippet(Template template, ThumbnailSnippet thumbnailSnippet) {
-        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
-        snippets.stream()
-                .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
-                .findFirst()
-                .ifPresent(thumbnailSnippet::updateThumbnailSnippet);
-    }
-
-    private void createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
-        snippetRepository.save(
-                new Snippet(
-                        template, createSnippetRequest.filename(),
-                        createSnippetRequest.content(),
-                        createSnippetRequest.ordinal()
-                )
-        );
-    }
-
-    private void updateSnippet(UpdateSnippetRequest updateSnippetRequest) {
-        Snippet snippet = snippetRepository.fetchById(updateSnippetRequest.id());
-        snippet.updateSnippet(updateSnippetRequest.filename(), updateSnippetRequest.content(),
-                updateSnippetRequest.ordinal());
     }
 }
