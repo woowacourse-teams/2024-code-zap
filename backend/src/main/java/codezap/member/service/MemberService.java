@@ -36,13 +36,13 @@ public class MemberService {
     }
 
     public void assertUniqueEmail(String email) {
-        if (!memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmail(email)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "이메일이 이미 존재합니다.");
         }
     }
 
     public void assertUniqueUsername(String username) {
-        if (!memberRepository.existsByUsername(username)) {
+        if (memberRepository.existsByUsername(username)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "사용자명이 이미 존재합니다.");
         }
     }
