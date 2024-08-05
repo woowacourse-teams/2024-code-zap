@@ -185,7 +185,7 @@ class CategoryControllerTest {
         @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
         void updateCategoryFailWithLongName() {
             // given
-            templateService.create(new CreateTemplateRequest(
+            templateService.createTemplate(new CreateTemplateRequest(
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),

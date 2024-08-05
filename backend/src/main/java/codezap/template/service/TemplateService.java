@@ -53,7 +53,7 @@ public class TemplateService {
     }
 
     @Transactional
-    public Long create(CreateTemplateRequest createTemplateRequest) {
+    public Long createTemplate(CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         Template template = templateRepository.save(
                 new Template(createTemplateRequest.title(), createTemplateRequest.description(), category)

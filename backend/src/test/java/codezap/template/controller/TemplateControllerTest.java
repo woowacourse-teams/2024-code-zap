@@ -194,8 +194,8 @@ class TemplateControllerTest {
         categoryService.create(new CreateCategoryRequest("category"));
         CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
         CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
-        templateService.create(templateRequest1);
-        templateService.create(templateRequest2);
+        templateService.createTemplate(templateRequest1);
+        templateService.createTemplate(templateRequest2);
 
         // when & then
         RestAssured.given().log().all()
@@ -215,7 +215,7 @@ class TemplateControllerTest {
             // given
             categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
+            templateService.createTemplate(templateRequest);
 
             // when & then
             RestAssured.given().log().all()
@@ -434,7 +434,7 @@ class TemplateControllerTest {
             categoryService.create(new CreateCategoryRequest("category1"));
             categoryService.create(new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
+            templateService.createTemplate(templateRequest);
         }
     }
 
@@ -448,7 +448,7 @@ class TemplateControllerTest {
             // given
             categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.create(templateRequest);
+            templateService.createTemplate(templateRequest);
 
             // when & then
             RestAssured.given().log().all()

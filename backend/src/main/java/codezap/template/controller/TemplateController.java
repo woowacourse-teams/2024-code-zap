@@ -33,7 +33,8 @@ public class TemplateController implements SpringDocTemplateController {
     public ResponseEntity<Void> create(
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest)))
+        Long createdTemplateId = templateService.createTemplate(createTemplateRequest);
+        return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
 

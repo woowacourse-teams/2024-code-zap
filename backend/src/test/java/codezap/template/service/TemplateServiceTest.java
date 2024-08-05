@@ -76,7 +76,7 @@ class TemplateServiceTest {
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Long id = templateService.create(createTemplateRequest);
+        Long id = templateService.createTemplate(createTemplateRequest);
         Template template = templateRepository.fetchById(id);
 
         // then
