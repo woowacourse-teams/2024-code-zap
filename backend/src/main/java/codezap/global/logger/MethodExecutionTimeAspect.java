@@ -13,8 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 public class MethodExecutionTimeAspect {
 
     @Around("execution(* codezap..*(..)) && " +
-            "!execution(* codezap.global.logger.MethodExecutionTimeAspect(..))" +
-            "!execution(* codezap.global.exception.*.*(..))")
+            "!within(codezap.global.logger.*) && " +
+            "!within(codezap.global.exception.*)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         if (!log.isInfoEnabled()) {
             return joinPoint.proceed();
