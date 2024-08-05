@@ -2,7 +2,6 @@ package codezap.template.controller;
 
 import java.net.URI;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +49,7 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<FindAllTemplatesResponse> getTemplatesContainTopic(@RequestParam String topic) {
+    public ResponseEntity<FindAllTemplatesResponse> getTemplatesContainTopic(@RequestParam("topic") String topic) {
         return ResponseEntity.ok(templateService.findContainTopic(topic));
     }
 
