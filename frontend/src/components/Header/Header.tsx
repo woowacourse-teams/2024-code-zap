@@ -17,7 +17,7 @@ const Header = () => (
 
       <Flex align='center' gap='2rem'>
         <Link to={'/templates/upload'}>
-          <Button variant='outlined' size='medium' weight='bold'>
+          <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
             <img src={newTemplateIcon} alt='' />새 템플릿
           </Button>
         </Link>

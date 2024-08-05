@@ -20,7 +20,7 @@ const Button = ({
   variant = 'contained',
   size = 'medium',
   weight = 'bold',
-  hoverStyle = 'none',
+  hoverStyle = 'base',
   fullWidth = false,
   ...rest
 }: Props) => (
