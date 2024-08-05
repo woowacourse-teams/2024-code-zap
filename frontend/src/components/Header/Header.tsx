@@ -5,8 +5,8 @@ import { Flex, Heading, Text } from '@/components';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
-const Header = () => (
-  <S.HeaderContainer>
+const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => (
+  <S.HeaderContainer ref={headerRef}>
     <S.HeaderContentContainer>
       <Logo />
 

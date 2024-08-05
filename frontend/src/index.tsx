@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 
+import { HeaderProvider } from './context/HeaderContext';
 import router from './routes/router';
 import GlobalStyles from './style/GlobalStyles';
 import { theme } from './style/theme';
@@ -27,8 +28,10 @@ enableMocking().then(() => {
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
-          <GlobalStyles />
-          <RouterProvider router={router} />
+          <HeaderProvider>
+            <GlobalStyles />
+            <RouterProvider router={router} />
+          </HeaderProvider>
         </ThemeProvider>
       </QueryClientProvider>
     </React.StrictMode>,
