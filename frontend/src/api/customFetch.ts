@@ -6,13 +6,7 @@ interface Props {
   errorMessage?: string;
 }
 
-export const customFetch = async ({
-  url,
-  headers,
-  method = 'GET',
-  body,
-  errorMessage = '[Error] response was not ok',
-}: Props) => {
+export const customFetch = async ({ url, headers, method = 'GET', body }: Props) => {
   try {
     const token = localStorage.getItem('token');
     const response = await fetch(url, {
@@ -25,10 +19,6 @@ export const customFetch = async ({
       credentials: 'include',
       body,
     });
-
-    if (!response.ok) {
-      throw new Error(errorMessage);
-    }
 
     if (method !== 'GET') {
       return response;
