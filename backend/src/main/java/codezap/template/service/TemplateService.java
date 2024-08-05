@@ -3,6 +3,8 @@ package codezap.template.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,8 @@ import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
+import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -107,6 +111,73 @@ public class TemplateService {
                 .map(TemplateTag::getTag)
                 .toList();
         return FindTemplateResponse.of(template, snippets, tags);
+    }
+
+
+    public FindAllTemplatesResponse findAllBy(
+            //long memberId,
+            PageRequest pageRequest,
+            Long categoryId,
+            List<String> tagNames
+    ) {
+        if (categoryId != null && tagNames != null) {
+            return makeTemplatesResponseByCategoryAndTagNames(pageRequest, categoryId, tagNames);
+        }
+        if (categoryId != null && tagNames == null) {
+            return makeTemplatesResponse(templateRepository.findByCategoryId(pageRequest, categoryId));
+        }
+        if (categoryId == null && tagNames != null) {
+            return makeTemplatesResponseByTagNames(pageRequest, tagNames);
+        }
+
+        return makeTemplatesResponse(templateRepository.findBy(pageRequest));
+    }
+
+    private FindAllTemplatesResponse makeTemplatesResponseByCategoryAndTagNames(PageRequest pageRequest,
+            Long categoryId, List<String> tagNames
+    ) {
+        List<Tag> tags = tagRepository.findByNameIn(tagNames);
+        List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
+        List<Long> templateIds = templateTags.stream()
+                .map(TemplateTag::getTemplate)
+                .map(Template::getId)
+                .toList();
+        Page<Template> page = templateRepository.findByIdInAndCategoryId(pageRequest, templateIds, categoryId);
+        return makeTemplatesResponse(page);
+
+    }
+
+    private FindAllTemplatesResponse makeTemplatesResponseByTagNames(PageRequest pageRequest, List<String> tagNames) {
+        List<Tag> tags = tagRepository.findByNameIn(tagNames);
+        List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
+        List<Long> templateIds = templateTags.stream()
+                .map(TemplateTag::getTemplate)
+                .map(Template::getId)
+                .toList();
+        Page<Template> page = templateRepository.findByIdIn(pageRequest, templateIds);
+        return makeTemplatesResponse(page);
+    }
+
+    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
+        List<ItemResponse> itemResponses = page.stream()
+                .map(this::findAllTemplatesResponses)
+                .toList();
+        return new FindAllTemplatesResponse(page.getTotalPages(), itemResponses);
+    }
+
+    private ItemResponse findAllTemplatesResponses(Template template) {
+        return new ItemResponse(template.getId(),
+                template.getTitle(),
+                template.getDescription(),
+                getTemplateTags(template),
+                template.getModifiedAt());
+    }
+
+    private List<FindTagResponse> getTemplateTags(Template template) {
+        return templateTagRepository.findAllByTemplate(template).stream()
+                .map(templateTag -> tagRepository.fetchById(templateTag.getTag().getId()))
+                .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
+                .toList();
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package codezap.template.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +50,7 @@ public class TemplateController implements SpringDocTemplateController {
             @RequestParam(required = false, defaultValue = "1") Long categoryId,
             @RequestParam(required = false) List<String> tagNames
     ) {
-        return null;
+        return ResponseEntity.ok(templateService.findAllBy(PageRequest.of(pageNumber - 1, pageSize), categoryId, tagNames));
     }
 
     @GetMapping("/explore")
