@@ -1,0 +1,63 @@
+name: PR Review Notification
+on:
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  notify_pr_author:
+    runs-on: self-hosted
+    steps:
+    - name: 변수 추출
+      run: |
+        SLACK_WEBHOOK_URL=$(cat ../slack_noti/SLACK_PR_REVIEW_WEBHOOK_URL)
+        SLACK_IDS=$(cat ../slack_noti/SLACK_IDS)
+        echo "SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL" >> $GITHUB_ENV
+        echo "SLACK_IDS=$SLACK_IDS" >> $GITHUB_ENV
+
+    - name: PR에 리뷰 등록 시 담당자에게 Slack 알람
+      run: |
+        PR_TITLE="${{ github.event.pull_request.title }}"
+        PR_URL="${{ github.event.pull_request.html_url }}"
+        PR_AUTHOR="${{ github.event.pull_request.user.login }}"
+        REVIEW_STATE="${{ github.event.review.state }}"
+        REVIEWER="${{ github.event.review.user.login }}"
+
+        parse_slack_ids() {
+            echo "$SLACK_IDS" | jq -r 'to_entries | map("\(.key):\(.value)") | .[]'
+        }
+
+        author_slack_id=$(parse_slack_ids | grep "^$PR_AUTHOR:" | cut -d':' -f2)
+        reviewer_slack_id=$(parse_slack_ids | grep "^$REVIEWER:" | cut -d':' -f2)
+
+        if [ -n "$author_slack_id" ]; then
+            author_mention="<@$author_slack_id>"
+        else
+            author_mention="$PR_AUTHOR"
+        fi
+
+        if [ -n "$reviewer_slack_id" ]; then
+            reviewer_mention="<@$reviewer_slack_id>"
+        else
+            reviewer_mention="$REVIEWER"
+        fi
+
+        case "$REVIEW_STATE" in
+          "changes_requested")
+            message="$author_mention님, $reviewer_mention님이 PR에 변경을 요청했습니다: <$PR_URL|$PR_TITLE>"
+            ;;
+          "commented")
+            message="$author_mention님, $reviewer_mention님이 PR에 코멘트를 남겼습니다: <$PR_URL|$PR_TITLE>"
+            ;;
+          "approved")
+            message="$author_mention님, 축하합니다! $reviewer_mention님이 PR을 승인했습니다: <$PR_URL|$PR_TITLE>"
+            ;;
+        esac
+
+        if [ ! -z "$message" ]; then
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\":\"$message\"}" \
+            "$SLACK_WEBHOOK_URL"
+          echo "Sent message: $message"
+        else
+          echo "No notification sent"
+        fi
