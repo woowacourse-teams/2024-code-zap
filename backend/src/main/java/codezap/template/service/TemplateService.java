@@ -68,11 +68,14 @@ public class TemplateService {
     }
 
     private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
-        templateTagRepository.saveAll(createTemplateRequest.tags().stream()
-                .map(tagName -> tagRepository.save(new Tag(tagName)))
-                .map(tag -> new TemplateTag(template, tag))
-                .toList()
-        );
+        createTemplateRequest.tags().stream()
+                .filter(tagName -> !tagRepository.existsByName(tagName))
+                .map(Tag::new)
+                .forEach(tagRepository::save);
+
+        createTemplateRequest.tags().stream()
+                .map(tagRepository::findByName)
+                .forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
     }
 
     private void createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
@@ -150,10 +153,9 @@ public class TemplateService {
                 .map(Tag::new)
                 .forEach(tagRepository::save);
 
-        List<Tag> tags = updateTemplateRequest.tags().stream()
+        updateTemplateRequest.tags().stream()
                 .map(tagRepository::findByName)
-                .toList();
-        tags.forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
+                .forEach(tag -> templateTagRepository.save(new TemplateTag(template, tag)));
     }
 
     private void validateSnippetsCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
