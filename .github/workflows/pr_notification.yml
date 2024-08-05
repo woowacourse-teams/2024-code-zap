@@ -4,10 +4,8 @@ on:
     types: [opened, reopened]
 jobs:
   notify_reviewers:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
         
     - name: Slack 알람 보내기
       env:
@@ -47,3 +45,4 @@ jobs:
         else
           echo "No reviewers to notify"
         fi
+
