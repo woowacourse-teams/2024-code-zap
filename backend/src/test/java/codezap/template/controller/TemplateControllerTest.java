@@ -483,61 +483,103 @@ class TemplateControllerTest {
         return templateRequest;
     }
 
-    @Test
-    @DisplayName("템플릿 토픽 검색 성공")
-    void searchTopicSuccess() {
-        //given
-        String topic = "java";
+    @Nested
+    @DisplayName("템플릿 토픽 검색")
+    class searchTopic {
 
-        CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
-        Long categoryId = categoryService.create(createCategoryRequest1);
+        @Test
+        @DisplayName("템플릿 토픽 검색 성공 : 템플릿 제목에 포함")
+        void searchTitleTopicSuccess() {
+            //given
+            String topic = "java";
 
-        // title에 topic이 포함
-        CreateTemplateRequest templateRequest1 = new CreateTemplateRequest(
-                topic,
-                "설명",
-                List.of(new CreateSnippetRequest("filename", "content", 1)),
-                categoryId,
-                List.of()
-        );
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(templateRequest1)
-                .when().post("/templates")
-                .then().log().all();
-        // filename에 topic이 포함
-        CreateTemplateRequest templateRequest2 = new CreateTemplateRequest(
-                "title2",
-                "설명",
-                List.of(new CreateSnippetRequest("filename." + topic, "content", 1)),
-                categoryId,
-                List.of()
-        );
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(templateRequest2)
-                .when().post("/templates")
-                .then().log().all();
-        // code에 topic이 포함
-        CreateTemplateRequest templateRequest3 = new CreateTemplateRequest(
-                "title3",
-                "설명",
-                List.of(new CreateSnippetRequest("filename", "// " + topic + " text", 1)),
-                categoryId,
-                List.of()
-        );
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .body(templateRequest3)
-                .when().post("/templates")
-                .then().log().all();
+            CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
+            Long categoryId = categoryService.create(createCategoryRequest1);
 
-        //when
-        RestAssured.given().log().all()
-                .contentType(ContentType.JSON)
-                .get("/templates/search?topic=" + topic)
-                .then().log().all()
-                .statusCode(200)
-                .body("templates.size()", is(3));
+            // filename에 topic이 포함
+            CreateTemplateRequest templateRequest2 = new CreateTemplateRequest(
+                    "title2",
+                    "설명",
+                    List.of(new CreateSnippetRequest("filename." + topic, "content", 1)),
+                    categoryId,
+                    List.of()
+            );
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(templateRequest2)
+                    .when().post("/templates")
+                    .then().log().all();
+
+            //when
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .get("/templates/search?topic=" + topic)
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("templates.size()", is(1));
+        }
+
+        @Test
+        @DisplayName("템플릿 토픽 검색 성공 : 템플릿 코드에 포함")
+        void searchContentTopicSuccess() {
+            //given
+            String topic = "java";
+
+            CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
+            Long categoryId = categoryService.create(createCategoryRequest1);
+
+            // code에 topic이 포함
+            CreateTemplateRequest templateRequest3 = new CreateTemplateRequest(
+                    "title",
+                    "설명",
+                    List.of(new CreateSnippetRequest("filename", "// " + topic + " text", 1)),
+                    categoryId,
+                    List.of()
+            );
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(templateRequest3)
+                    .when().post("/templates")
+                    .then().log().all();
+
+            //when
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .get("/templates/search?topic=" + topic)
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("templates.size()", is(1));
+        }
+
+        @Test
+        @DisplayName("템플릿 토픽 검색 성공 : 스니펫 파일 이름 중에 포함")
+        void searchFilenameTopicSuccess() {
+            //given
+            String topic = "java";
+
+            CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
+            Long categoryId = categoryService.create(createCategoryRequest1);
+
+            CreateTemplateRequest templateRequest1 = new CreateTemplateRequest(
+                    "title",
+                    "설명",
+                    List.of(new CreateSnippetRequest("file." + topic, "content", 1)),
+                    categoryId,
+                    List.of()
+            );
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .body(templateRequest1)
+                    .when().post("/templates")
+                    .then().log().all();
+
+            //when
+            RestAssured.given().log().all()
+                    .contentType(ContentType.JSON)
+                    .get("/templates/search?topic=" + topic)
+                    .then().log().all()
+                    .statusCode(200)
+                    .body("templates.size()", is(1));
+        }
     }
 }
