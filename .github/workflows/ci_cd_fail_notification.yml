@@ -1,0 +1,44 @@
+name: Notify on Workflow Failure
+
+on:
+  workflow_run:
+    workflows: ["Backend CI", "Backend CD", "Frontend CD", "Frontend CI"]
+    types:
+      - completed
+
+jobs:
+  notify:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Slack notification
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_CICD_FAIL_WEBHOOK_URL }}
+          SLACK_IDS: ${{ secrets.SLACK_IDS }}
+        run: |
+          WORKFLOW_NAME="${{ github.event.workflow_run.name }}"
+          WORKFLOW_URL="${{ github.event.workflow_run.html_url }}"
+          ASSIGNEE="${{ github.event.workflow_run.actor.login }}"
+          mentions=""
+
+          parse_slack_ids() {
+              echo "$SLACK_IDS" | jq -r 'to_entries | map("\(.key):\(.value)") | .[]'
+          }
+          
+          slack_id=$(parse_slack_ids | grep "^$ASSIGNEE:" | cut -d':' -f2)
+
+          if [ -n "$slack_id" ]; then
+              MENTION="<@$slack_id>"
+          else
+              MENTION="$ASSIGNEE"
+          fi
+
+          if [ ! -z "$MENTION" ]; then
+            message="$MENTION 님, 실행된 $WORKFLOW_NAME 워크플로가 실패했습니다. <$WORKFLOW_URL|확인하러 가기>."
+            curl -X POST -H 'Content-type: application/json' \
+              --data "{\"text\":\"$message\"}" \
+              "$SLACK_WEBHOOK_URL"
+            echo "Sent message: $message"
+          else
+            echo "No MENTIONER to notify"
+          fi
