@@ -5,7 +5,7 @@
       "title": "title0",
       "description": "description0",
       "snippets": [],
-      "category": { "id": 2, "name": "Category1" },
+      "category": { "id": 2, "name": "CategoryID2" },
       "tags": [
         { "id": 0, "name": "Java" },
         { "id": 1, "name": "Example" }
@@ -17,7 +17,7 @@
       "title": "title1",
       "description": "description1",
       "snippets": [],
-      "category": { "id": 3, "name": "Category2" },
+      "category": { "id": 3, "name": "CategoryID3" },
       "tags": [
         { "id": 2, "name": "JavaScript" },
         { "id": 3, "name": "React" }
@@ -29,7 +29,7 @@
       "title": "title2",
       "description": "description2",
       "snippets": [],
-      "category": { "id": 4, "name": "Category3" },
+      "category": { "id": 4, "name": "CategoryID4" },
       "tags": [
         { "id": 4, "name": "Java" },
         { "id": 5, "name": "Backend" }
@@ -41,7 +41,7 @@
       "title": "title3",
       "description": "description3",
       "snippets": [],
-      "category": { "id": 1, "name": "Category1" },
+      "category": { "id": 2, "name": "CategoryID2" },
       "tags": [
         { "id": 6, "name": "CSS" },
         { "id": 7, "name": "Styling" }
@@ -53,7 +53,8 @@
       "title": "title4",
       "description": "description4",
       "snippets": [],
-      "category": { "id": 2, "name": "Category2" },
+      "category": { "id": 3, "name": "CategoryID3" },
+
       "tags": [
         { "id": 8, "name": "Java" },
         { "id": 9, "name": "OOP" }
@@ -65,7 +66,7 @@
       "title": "title5",
       "description": "description5",
       "snippets": [],
-      "category": { "id": 3, "name": "Category3" },
+      "category": { "id": 4, "name": "CategoryID4" },
       "tags": [
         { "id": 10, "name": "Java" },
         { "id": 11, "name": "Example" }
@@ -77,7 +78,8 @@
       "title": "title6",
       "description": "description6",
       "snippets": [],
-      "category": { "id": 1, "name": "Category1" },
+      "category": { "id": 2, "name": "CategoryID2" },
+
       "tags": [
         { "id": 12, "name": "React" },
         { "id": 13, "name": "Frontend" }
@@ -89,7 +91,7 @@
       "title": "title7",
       "description": "description7",
       "snippets": [],
-      "category": { "id": 2, "name": "Category2" },
+      "category": { "id": 3, "name": "CategoryID3" },
       "tags": [
         { "id": 14, "name": "Python" },
         { "id": 15, "name": "Script" }
@@ -101,7 +103,7 @@
       "title": "title8",
       "description": "description8",
       "snippets": [],
-      "category": { "id": 3, "name": "Category3" },
+      "category": { "id": 4, "name": "CategoryID4" },
       "tags": [
         { "id": 16, "name": "SQL" },
         { "id": 17, "name": "Database" }
@@ -113,7 +115,7 @@
       "title": "title9",
       "description": "description9",
       "snippets": [],
-      "category": { "id": 1, "name": "Category1" },
+      "category": { "id": 2, "name": "CategoryID2" },
       "tags": [
         { "id": 18, "name": "C++" },
         { "id": 19, "name": "Programming" }
@@ -125,7 +127,8 @@
       "title": "title10",
       "description": "description10",
       "snippets": [],
-      "category": { "id": 2, "name": "Category2" },
+      "category": { "id": 1, "name": "" },
+
       "tags": [
         { "id": 20, "name": "JavaScript" },
         { "id": 21, "name": "Log" }
