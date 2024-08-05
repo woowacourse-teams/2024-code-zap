@@ -40,7 +40,15 @@ export const checkEmail = async (email: string) => {
   const params = new URLSearchParams({ email });
   const url = `${CHECK_EMAIL_API_URL}?${params}`;
 
-  return await customFetch({
-    url,
-  });
+  const response = await customFetch({ url });
+
+  if (response.status === 409) {
+    throw new Error('중복된 이메일입니다.');
+  }
+
+  if (!response.ok) {
+    throw new Error('서버 에러가 발생했습니다.');
+  }
+
+  return {};
 };
