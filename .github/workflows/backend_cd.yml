@@ -44,25 +44,15 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: 브랜치명을 통해 개발 환경 알아내기
-        id: get-branch
         run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-
-          if [ "$BRANCH_NAME" = "main" ]; then
-            echo "ENVIRONMENT=prod" >> $GITHUB_ENV
-            echo "개발 환경 : prod"
-          elif [ "$BRANCH_NAME" = "develop" ]; then
-            echo "ENVIRONMENT=dev" >> $GITHUB_ENV
-            echo "개발 환경 : dev"
-          else
-            exit 1
-          fi
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash find-env-by-branch.sh
           
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
           name: code-zap-jar
-          path: ${{ secrets.WORK_DIRECTORY }}
+          path: ${{ secrets.WORK_DIRECTORY }}/${{ env.ENVIRONMENT }}
 
       - name: 실행 프로세스 확인
         run: |
