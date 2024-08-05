@@ -15,6 +15,7 @@ import codezap.template.repository.TemplateRepository;
 @Service
 public class CategoryService {
 
+    public static final int DEFAULT_CATEGORY = 1;
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
 
@@ -52,8 +53,8 @@ public class CategoryService {
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
-        if (id == 1) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "1번 카테고리는 삭제할 수 없습니다.");
+        if (id == DEFAULT_CATEGORY) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
     }
