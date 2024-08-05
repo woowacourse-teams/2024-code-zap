@@ -90,9 +90,6 @@ export const TextField = styled.input<TextFieldProps>`
 
   &:focus {
     outline: none;
-    &::placeholder {
-      color: transparent;
-    }
   }
 
   &:disabled {
