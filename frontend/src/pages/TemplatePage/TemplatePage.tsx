@@ -1,99 +1,61 @@
-import { useRef, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useTheme } from '@emotion/react';
+import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { pencilIcon, trashcanIcon } from '@/assets/images';
-import { Flex, SelectList, Text } from '@/components';
-import { useTemplateDeleteQuery, useTemplateQuery } from '@/hooks/template';
+import { Flex, Heading, SelectList, Text } from '@/components';
+import { useTemplate } from '@/hooks/template/useTemplate';
 import { TemplateEditPage } from '@/pages';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { data: template, error, isLoading } = useTemplateQuery(Number(id));
-  const { mutateAsync: deleteTemplate } = useTemplateDeleteQuery(Number(id));
+  const theme = useTheme();
 
-  const [currentFile, setCurrentFile] = useState<number | null>(null);
-  const [isEdit, setIsEdit] = useState(false);
-
-  const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
-
-  useEffect(() => {
-    if (template && template.snippets.length > 0) {
-      setCurrentFile(template.snippets[0].id as number);
-    }
-  }, [template]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const {
+    currentFile,
+    template,
+    isEdit,
+    snippetRefs,
+    toggleEditButton,
+    handleEditButtonClick,
+    handleSelectOption,
+    handleDelete,
+  } = useTemplate(Number(id));
 
   if (!template) {
-    return <div>No data available</div>;
+    return <div>템플릿을 불러오는 중...</div>;
   }
-
-  const toggleEditButton = () => {
-    setIsEdit((prev) => !prev);
-  };
-
-  const handleEditButtonClick = () => {
-    toggleEditButton();
-  };
-
-  const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    const targetElement = snippetRefs.current[index];
-    const headerHeight = 68;
-
-    if (targetElement) {
-      const elementPosition = targetElement.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
-
-    const id = template.snippets[index].id;
-
-    if (!id) {
-      console.error('snippet id가 존재하지 않습니다.');
-
-      return;
-    }
-
-    setCurrentFile(() => id);
-  };
-
-  const handleDelete = () => {
-    deleteTemplate();
-    navigate('/');
-  };
 
   return (
     <>
       {isEdit ? (
         <TemplateEditPage template={template} toggleEditButton={toggleEditButton} />
       ) : (
-        <Flex direction='column' align='center' width='100%'>
+        <Flex
+          direction='column'
+          align='center'
+          width='100%'
+          css={{ maxWidth: '53rem', margin: 'auto', marginTop: '3rem' }}
+        >
           <S.MainContainer>
             <Flex justify='space-between'>
-              <Flex direction='column' gap='1.6rem'>
-                <Text.XLarge color='white'>{template.title}</Text.XLarge>
-                <Text.Small color='#ffd369' weight='bold'>
+              <Flex direction='column' gap='0.5rem'>
+                <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
+                <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
+                  {template.title}
+                </Heading.Medium>
+                <Text.Medium color={theme.color.dark.secondary_500}>{template.description}</Text.Medium>
+                <Text.Small
+                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                  weight='bold'
+                >
                   {formatRelativeTime(template.modifiedAt)}
                 </Text.Small>
               </Flex>
-              <Flex align='center' gap='1.6rem'>
+              <Flex align='center' gap='1rem'>
                 <S.EditButton
                   size='small'
                   variant='text'
