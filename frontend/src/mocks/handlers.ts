@@ -5,6 +5,7 @@ import {
   CHECK_USERNAME_API_URL,
   LOGIN_API_URL,
   LOGIN_STATE_API_URL,
+  LOGOUT_API_URL,
   SIGNUP_API_URL,
 } from '@/api/authentication';
 import { TEMPLATE_API_URL } from '@/api/templates';
@@ -26,6 +27,14 @@ export const handlers = [
     () =>
       new HttpResponse(null, {
         status: 200,
+      }),
+  ),
+  http.post(
+    `${LOGOUT_API_URL}`,
+    () =>
+      new HttpResponse(null, {
+        status: 204,
+        statusText: 'AUTHORIZED',
       }),
   ),
   http.get(
