@@ -86,7 +86,7 @@ const SignupPage = () => {
               <Input.HelperText>{errors.confirmPassword}</Input.HelperText>
             </Input>
 
-            <Button type='submit' variant='contained' size='filled' disabled={!isFormValid()}>
+            <Button type='submit' variant='contained' fullWidth disabled={!isFormValid()}>
               회원가입
             </Button>
 

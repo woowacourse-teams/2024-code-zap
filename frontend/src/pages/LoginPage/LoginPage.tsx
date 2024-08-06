@@ -40,7 +40,7 @@ const LoginPage = () => {
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>
 
-            <Button type='submit' variant='contained' size='filled' disabled={!isFormValid()}>
+            <Button type='submit' variant='contained' fullWidth disabled={!isFormValid()}>
               로그인
             </Button>
             <Flex justify='flex-end' width='100%' gap='1rem'>
