@@ -9,7 +9,7 @@ import { ToastContext } from '@/context/ToastContext';
 import { useTemplate } from '@/hooks/template/useTemplate';
 import useCustomContext from '@/hooks/utils/useCustomContext';
 import { TemplateEditPage } from '@/pages';
-import { Snippet } from '@/types/template';
+import type { Snippet } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 import * as S from './TemplatePage.style';
 

@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { QUERY_KEY } from '@/api/queryKeys';
-import { deleteTemplate } from '@/api/templates';
+import { QUERY_KEY, deleteTemplate } from '@/api';
 
 export const useTemplateDeleteQuery = (id: number) => {
   const queryClient = useQueryClient();

@@ -1,7 +1,6 @@
 import { xCircle } from '@/assets/images';
+import { Flex, Input } from '@/components';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
-import Flex from '../Flex/Flex';
-import Input from '../Input/Input';
 import * as S from './TagInput.style';
 
 interface Props {

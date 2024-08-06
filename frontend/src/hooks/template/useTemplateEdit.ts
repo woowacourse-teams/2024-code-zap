@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 
 import { ToastContext } from '@/context/ToastContext';
-import { Template, TemplateEditRequest } from '@/types/template';
+import type { Template, TemplateEditRequest } from '@/types';
 import { useCategory } from '../category/useCategory';
 import useCustomContext from '../utils/useCustomContext';
 import { useInput } from '../utils/useInput';

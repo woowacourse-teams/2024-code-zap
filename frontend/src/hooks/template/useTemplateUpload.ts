@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ToastContext } from '@/context/ToastContext';
-import { Snippet, TemplateUploadRequest } from '@/types/template';
+import type { Snippet, TemplateUploadRequest } from '@/types';
 import { useCategory } from '../category/useCategory';
 import useCustomContext from '../utils/useCustomContext';
 import { useInput } from '../utils/useInput';

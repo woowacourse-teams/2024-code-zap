@@ -1,6 +1,6 @@
 import { TemplateEdit } from '@/components';
 import { useTemplateEdit } from '@/hooks/template/useTemplateEdit';
-import { Template } from '@/types/template';
+import type { Template } from '@/types';
 
 interface Props {
   template: Template;

@@ -1,14 +1,33 @@
-import { Template, TemplateEditRequest, TemplateListResponse, TemplateUploadRequest } from '@/types/template';
+import type { Template, TemplateEditRequest, TemplateListResponse, TemplateUploadRequest } from '@/types';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const TEMPLATE_API_URL = `${API_URL}/templates`;
 
-export const getTemplateList = async (): Promise<TemplateListResponse> =>
-  await customFetch({
-    url: `${TEMPLATE_API_URL}`,
+export const getTemplateList = async (
+  categoryId?: number,
+  tagId?: number,
+  page: number = 1,
+  pageSize: number = 20,
+): Promise<TemplateListResponse> => {
+  const url = new URL(TEMPLATE_API_URL);
+
+  if (categoryId) {
+    url.searchParams.append('category', categoryId.toString());
+  }
+
+  if (tagId) {
+    url.searchParams.append('tag', tagId.toString());
+  }
+
+  url.searchParams.append('page', page.toString());
+  url.searchParams.append('pageSize', pageSize.toString());
+
+  return await customFetch({
+    url: url.toString(),
   });
+};
 
 export const getTemplate = async (id: number): Promise<Template> =>
   await customFetch({
