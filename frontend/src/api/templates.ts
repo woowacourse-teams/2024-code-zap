@@ -14,14 +14,14 @@ export const getTemplateList = async (
   const url = new URL(TEMPLATE_API_URL);
 
   if (categoryId) {
-    url.searchParams.append('category', categoryId.toString());
+    url.searchParams.append('categoryId', categoryId.toString());
   }
 
   if (tagId) {
-    url.searchParams.append('tag', tagId.toString());
+    url.searchParams.append('tags', tagId.toString());
   }
 
-  url.searchParams.append('page', page.toString());
+  url.searchParams.append('pageNumber', page.toString());
   url.searchParams.append('pageSize', pageSize.toString());
 
   return await customFetch({
