@@ -5,16 +5,17 @@ import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryJpaRepository;
+import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
-import codezap.member.repository.MemberJpaRepository;
+import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -24,8 +25,10 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
@@ -37,35 +40,35 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 @Service
 public class TemplateService {
 
-    private static final int FIRST_ORDINAL = 1;
+    public static final int FIRST_ORDINAL = 1;
 
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
-    private final CategoryJpaRepository categoryJpaRepository;
+    private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
-    private final MemberJpaRepository memberJpaRepository;
+    private final MemberRepository memberRepository;
 
     public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
             TemplateRepository templateRepository, SnippetRepository snippetRepository,
-            CategoryJpaRepository categoryJpaRepository, TagRepository tagRepository,
+            CategoryRepository categoryRepository, TagRepository tagRepository,
             TemplateTagRepository templateTagRepository,
-            MemberJpaRepository memberJpaRepository
+            MemberRepository memberRepository
     ) {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
         this.snippetRepository = snippetRepository;
-        this.categoryJpaRepository = categoryJpaRepository;
+        this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
         this.templateTagRepository = templateTagRepository;
-        this.memberJpaRepository = memberJpaRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
     public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryJpaRepository.fetchById(createTemplateRequest.categoryId());
+        Member member = memberRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
@@ -118,7 +121,7 @@ public class TemplateService {
     }
 
     public FindTemplateResponse findByIdAndMember(Long id, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 
@@ -189,8 +192,8 @@ public class TemplateService {
 
     @Transactional
     public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryJpaRepository.fetchById(updateTemplateRequest.categoryId());
+        Member member = memberRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
         validateTemplateAuthorizeMember(template, member);
@@ -225,7 +228,7 @@ public class TemplateService {
                 updateSnippetRequest.ordinal());
     }
 
-    private static boolean isThumbnailSnippetDeleted(
+    private boolean isThumbnailSnippetDeleted(
             UpdateTemplateRequest updateTemplateRequest,
             ThumbnailSnippet thumbnailSnippet
     ) {
@@ -266,7 +269,7 @@ public class TemplateService {
 
     @Transactional
     public void deleteById(Long id, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 
@@ -274,6 +277,30 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
+    }
+
+    public FindAllMyTemplatesResponse findContainTopic(Long memberId, String topic, Pageable pageable) {
+        Page<Template> templates = getTemplates(memberId, topic, pageable);
+        List<FindMyTemplateResponse> myTemplateResponses = templates.stream()
+                .map(this::findByTemplate)
+                .toList();
+
+        return FindAllMyTemplatesResponse.of(myTemplateResponses, templates.getTotalPages());
+    }
+
+    private Page<Template> getTemplates(Long memberId, String topic, Pageable pageable) {
+        String topicWithWildcards = "%" + topic + "%";
+        Pageable newPageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
+        return templateRepository.searchByTopic(memberId, topicWithWildcards, newPageable);
+    }
+
+    private FindMyTemplateResponse findByTemplate(Template template) {
+        List<Tag> tags = templateTagRepository.findAllByTemplate(template)
+                .stream()
+                .map(TemplateTag::getTag)
+                .toList();
+
+        return FindMyTemplateResponse.of(template, tags);
     }
 
     private CodeZapException throwNotFoundSnippet() {

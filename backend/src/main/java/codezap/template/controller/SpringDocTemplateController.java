@@ -1,5 +1,6 @@
 package codezap.template.controller;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import codezap.global.swagger.error.ErrorCase;
 import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
@@ -65,6 +67,13 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(Long id, MemberDto memberDto);
+
+    @Operation(summary = "템플릿 토픽 검색", description = "토픽이 포함된 템플릿들을 검색합니다.")
+    @ApiResponse(responseCode = "200", description = "템플릿 토픽 검색 성공",
+            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+    ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
+            MemberDto memberDto, Long memberId, String topic, Pageable pageable
+    );
 
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")

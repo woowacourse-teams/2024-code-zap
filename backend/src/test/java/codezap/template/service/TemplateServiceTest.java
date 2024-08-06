@@ -34,7 +34,9 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
+import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -353,5 +355,47 @@ class TemplateServiceTest {
                 .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
 
         return savedTemplate;
+    }
+
+    private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename) {
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.save(new Category("category", member));
+        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
+                templateTitle, "설명",
+                List.of(
+                        new CreateSnippetRequest(firstFilename, "content1", 1),
+                        new CreateSnippetRequest(secondFilename, "content2", 2)
+                ),
+                category.getId(),
+                List.of()
+        );
+        Template savedTemplate = templateRepository.save(
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
+
+        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
+        snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
+        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+    }
+
+    private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent) {
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.save(new Category("category", member));
+        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
+                templateTitle, "설명",
+                List.of(
+                        new CreateSnippetRequest("filename1", firstContent, 1),
+                        new CreateSnippetRequest("filename2", secondContent, 2)
+                ),
+                category.getId(),
+                List.of()
+        );
+        Template savedTemplate = templateRepository.save(
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
+
+        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
+        snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
+        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 }
