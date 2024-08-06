@@ -5,6 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const SIGNUP_API_URL = `${API_URL}/signup`;
 export const LOGIN_API_URL = `${API_URL}/login`;
+export const LOGOUT_API_URL = `${API_URL}/logout`;
 export const LOGIN_STATE_API_URL = `${API_URL}/login/check`;
 export const CHECK_USERNAME_API_URL = `${API_URL}/check-username`;
 export const CHECK_EMAIL_API_URL = `${API_URL}/check-email`;
@@ -21,6 +22,15 @@ export const postLogin = async (loginInfo: LoginRequest) => {
     method: 'POST',
     url: `${LOGIN_API_URL}`,
     body: JSON.stringify(loginInfo),
+  });
+
+  return response;
+};
+
+export const postLogout = async () => {
+  const response = await customFetch({
+    method: 'POST',
+    url: `${LOGOUT_API_URL}`,
   });
 
   return response;
