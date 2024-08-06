@@ -21,9 +21,9 @@ public record FindAllTemplatesResponse(
             Long id,
             @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
             String title,
-            //todo 문서화
+            @Schema(description = "템플릿 설명", example = "Jwt 토큰을 이용하여 로그인 기능을 구현합니다.")
             String description,
-            //todo 문서화
+            @Schema(description = "태그 리스트")
             List<FindTagResponse> tags,
             @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
             LocalDateTime modifiedAt
