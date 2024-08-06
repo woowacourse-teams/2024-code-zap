@@ -27,7 +27,6 @@ import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
-import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -111,13 +110,22 @@ public class TemplateService {
         return ExploreTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
 
-    public FindTemplateResponse findById(Long id) {
+    public FindTemplateResponse findByIdAndMember(Long id, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
+        validateAuthorizeMember(template, member);
+
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
                 .map(TemplateTag::getTag)
                 .toList();
         return FindTemplateResponse.of(template, snippets, tags);
+    }
+
+    private void validateAuthorizeMember(Template template, Member member) {
+        if (!template.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 템플릿을 열람할 권한이 없는 유저입니다.");
+        }
     }
 
     public FindAllTemplatesResponse findAllBy(
