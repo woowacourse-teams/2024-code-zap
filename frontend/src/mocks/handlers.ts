@@ -1,6 +1,12 @@
 import { HttpResponse, http } from 'msw';
 
-import { CHECK_EMAIL_API_URL, CHECK_USERNAME_API_URL, LOGIN_API_URL, SIGNUP_API_URL } from '@/api/authentication';
+import {
+  CHECK_EMAIL_API_URL,
+  CHECK_USERNAME_API_URL,
+  LOGIN_API_URL,
+  LOGIN_STATE_API_URL,
+  SIGNUP_API_URL,
+} from '@/api/authentication';
 import { TEMPLATE_API_URL } from '@/api/templates';
 import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
@@ -57,4 +63,19 @@ export const handlers = [
       ),
   ),
   http.get(`${CHECK_USERNAME_API_URL}`, async () => HttpResponse.json({ check: true })),
+  http.get(
+    `${LOGIN_STATE_API_URL}`,
+    () =>
+      new HttpResponse(
+        JSON.stringify({
+          ok: false,
+          message: '인증되지 않은 사용자입니다.',
+          status: 401,
+        }),
+        {
+          status: 401,
+          statusText: 'UNAUTHORIZED',
+        },
+      ),
+  ),
 ];
