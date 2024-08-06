@@ -35,7 +35,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
       css={{
         width: '100%',
         flexWrap: 'wrap',
-        borderBottom: 'solid 1px #788496',
+        marginTop: '1rem',
       }}
     >
       <Flex gap='0.125rem' css={{ flexWrap: 'wrap', width: '100%' }}>
@@ -53,7 +53,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
       </Flex>
       <Input>
         <Input.TextField
-          placeholder='태그를 입력해주세요'
+          placeholder='enter 또는 space bar로 태그를 등록해보세요'
           value={value}
           onChange={handleValue}
           onKeyUpCapture={handleSpaceBarAndEnterKeydown}
