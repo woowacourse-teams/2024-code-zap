@@ -66,6 +66,7 @@ public class TemplateService {
     public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
+        validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
@@ -80,6 +81,12 @@ public class TemplateService {
                 .orElseThrow(this::throwNotFoundSnippet);
         thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
         return template.getId();
+    }
+
+    private void validateCategoryAuthorizeMember(Category category, Member member) {
+        if (!category.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 카테고리에 대한 권한이 없는 유저입니다.");
+        }
     }
 
     private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
@@ -113,7 +120,7 @@ public class TemplateService {
     public FindTemplateResponse findByIdAndMember(Long id, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
-        validateAuthorizeMember(template, member);
+        validateTemplateAuthorizeMember(template, member);
 
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
@@ -122,7 +129,7 @@ public class TemplateService {
         return FindTemplateResponse.of(template, snippets, tags);
     }
 
-    private void validateAuthorizeMember(Template template, Member member) {
+    private void validateTemplateAuthorizeMember(Template template, Member member) {
         if (!template.getMember().equals(member)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 템플릿에 대한 권한이 없는 유저입니다.");
         }
@@ -184,8 +191,9 @@ public class TemplateService {
     public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
+        validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
-        validateAuthorizeMember(template, member);
+        validateTemplateAuthorizeMember(template, member);
 
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
         updateSnippets(updateTemplateRequest, template);
@@ -257,7 +265,11 @@ public class TemplateService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Template template = templateRepository.fetchById(id);
+        validateTemplateAuthorizeMember(template, member);
+
         thumbnailSnippetRepository.deleteByTemplateId(id);
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);

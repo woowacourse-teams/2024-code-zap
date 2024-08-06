@@ -75,5 +75,5 @@ public interface SpringDocTemplateController {
 
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
-    ResponseEntity<Void> deleteTemplate(Long id);
+    ResponseEntity<Void> deleteTemplate(Long id, MemberDto memberDto);
 }
