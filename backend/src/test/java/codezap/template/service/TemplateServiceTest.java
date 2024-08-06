@@ -141,7 +141,6 @@ class TemplateServiceTest {
                 .map(TemplateTag::getTag)
                 .toList();
 
-        System.out.println(snippets.get(0).getFilename());
         // then
         assertAll(
                 () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
