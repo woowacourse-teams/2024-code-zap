@@ -71,7 +71,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest);
+    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto);
 
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")

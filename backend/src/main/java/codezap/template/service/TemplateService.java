@@ -124,7 +124,7 @@ public class TemplateService {
 
     private void validateAuthorizeMember(Template template, Member member) {
         if (!template.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 템플릿을 열람할 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 템플릿에 대한 권한이 없는 유저입니다.");
         }
     }
 
@@ -181,9 +181,12 @@ public class TemplateService {
     }
 
     @Transactional
-    public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest) {
+    public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         Template template = templateRepository.fetchById(templateId);
+        validateAuthorizeMember(template, member);
+
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
         updateSnippets(updateTemplateRequest, template);
         updateTags(updateTemplateRequest, template);
