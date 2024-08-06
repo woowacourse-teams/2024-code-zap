@@ -21,8 +21,10 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
@@ -35,7 +37,7 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 @Service
 public class TemplateService {
 
-    private static final int FIRST_ORDINAL = 1;
+    public static final int FIRST_ORDINAL = 1;
 
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
@@ -199,7 +201,7 @@ public class TemplateService {
                 updateSnippetRequest.ordinal());
     }
 
-    private static boolean isThumbnailSnippetDeleted(
+    private boolean isThumbnailSnippetDeleted(
             UpdateTemplateRequest updateTemplateRequest,
             ThumbnailSnippet thumbnailSnippet
     ) {
@@ -246,6 +248,21 @@ public class TemplateService {
         templateRepository.deleteById(id);
     }
 
+    public FindAllMyTemplatesResponse findContainTopic(String topic) {
+        List<Template> templates = templateRepository.searchByTopic(topic);
+        List<FindMyTemplateResponse> myTemplateResponses = templates.stream()
+                .map(this::findByTemplate)
+                .toList();
+        return FindAllMyTemplatesResponse.from(myTemplateResponses);
+    }
+
+    private FindMyTemplateResponse findByTemplate(Template template) {
+        List<Tag> tags = templateTagRepository.findAllByTemplate(template)
+                .stream()
+                .map(TemplateTag::getTag)
+                .toList();
+
+        return FindMyTemplateResponse.of(template, tags);
     private CodeZapException throwNotFoundSnippet() {
         throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 스니펫이 존재하지 않습니다.");
     }

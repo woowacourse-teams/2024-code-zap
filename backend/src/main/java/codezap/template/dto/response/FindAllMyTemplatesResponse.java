@@ -5,15 +5,11 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindAllMyTemplatesResponse(
-        @Schema(description = "총 페이지", example = "5")
-        int totalPage,
-
         @Schema(description = "템플릿 목록")
         List<FindMyTemplateResponse> templates
 ) {
-    public static FindAllMyTemplatesResponse of(List<FindMyTemplateResponse> myTemplateResponses, int totalPage) {
+    public static FindAllMyTemplatesResponse from(List<FindMyTemplateResponse> myTemplateResponses) {
         return new FindAllMyTemplatesResponse(
-                totalPage,
                 myTemplateResponses
         );
     }

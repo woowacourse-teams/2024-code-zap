@@ -2,10 +2,9 @@ package codezap.template.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -19,6 +18,19 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     }
 
     boolean existsByCategoryId(Long categoryId);
+
+    @Query("""
+            SELECT t
+            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            WHERE
+            (
+                t.title LIKE %:topic%
+                OR s.filename LIKE %:topic%
+                OR s.content LIKE %:topic%
+                OR t.description LIKE %:topic%
+            )
+            """)
+    List<Template> searchByTopic(@Param("topic") String topic);
 
     Page<Template> findBy(Pageable pageable);
 
