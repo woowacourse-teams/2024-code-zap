@@ -2,9 +2,9 @@
   "templates": [
     {
       "id": 2024,
-      "title": "월하의 템플릿",
+      "title": "재위의 템플릿",
       "thumbnailSnippet": {
-        "filename": "vi-wallha.tsx",
+        "filename": "jaewi.tsx",
         "thumbnailContent": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
       },
       "modifiedAt": "2024-07-11 12:34"
