@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record FindAllTemplatesResponse(
         @Schema(description = "전체 페이지 개수", example = "1")
         int totalPage,
+        @Schema(description = "총 템플릿 개수", example = "134")
+        long totalElement,
         @Schema(description = "템플릿 목록")
         List<ItemResponse> templates
 ) {
@@ -27,15 +29,15 @@ public record FindAllTemplatesResponse(
             LocalDateTime modifiedAt
     ) {
         public static ItemResponse of(Template template, List<Tag> templateTags) {
-        return new ItemResponse(
-                template.getId(),
-                template.getTitle(),
-                template.getDescription(),
-                templateTags.stream()
-                        .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
-                        .toList(),
-                template.getModifiedAt()
-        );
-    }
+            return new ItemResponse(
+                    template.getId(),
+                    template.getTitle(),
+                    template.getDescription(),
+                    templateTags.stream()
+                            .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
+                            .toList(),
+                    template.getModifiedAt()
+            );
+        }
     }
 }

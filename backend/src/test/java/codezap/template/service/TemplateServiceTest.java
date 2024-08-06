@@ -147,8 +147,10 @@ class TemplateServiceTest {
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20)
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20),
+                    () -> assertThat(allBy.totalElement()).isEqualTo(30)
             );
+
         }
 
         @Test
@@ -158,7 +160,8 @@ class TemplateServiceTest {
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(10),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() > 20)
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() > 20),
+                    () -> assertThat(allBy.totalElement()).isEqualTo(30)
             );
         }
 
@@ -170,7 +173,8 @@ class TemplateServiceTest {
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1)
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
+                    () -> assertThat(allBy.totalElement()).isEqualTo(15)
             );
         }
 
@@ -182,7 +186,8 @@ class TemplateServiceTest {
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16)
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
+                    () -> assertThat(allBy.totalElement()).isEqualTo(15)
             );
         }
 
@@ -194,7 +199,8 @@ class TemplateServiceTest {
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 21)
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 21),
+                    () -> assertThat(allBy.totalElement()).isEqualTo(30)
             );
         }
 
@@ -207,7 +213,8 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(8),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1)
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
+                    () -> assertThat(allBy.totalElement()).isEqualTo(8)
             );
         }
     }

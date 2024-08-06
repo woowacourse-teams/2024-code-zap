@@ -28,4 +28,10 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     Page<Template> findByIdInAndCategoryId(PageRequest pageRequest, List<Long> templateIds, Long categoryId);
 
+    long countByCategoryId(Long categoryId);
+
+    long countByIdInAndCategoryId(List<Long> templateIds, Long categoryId);
+
+    long countByIdIn(List<Long> templateIds);
+
 }
