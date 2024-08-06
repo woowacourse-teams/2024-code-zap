@@ -10,6 +10,9 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
+import codezap.member.repository.MemberJpaRepository;
 import codezap.template.repository.TemplateRepository;
 
 @Service
@@ -18,17 +21,22 @@ public class CategoryService {
     private static final long DEFAULT_CATEGORY = 1L;
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
-    public CategoryService(CategoryRepository categoryRepository, TemplateRepository templateRepository) {
+    public CategoryService(CategoryRepository categoryRepository, TemplateRepository templateRepository,
+            MemberJpaRepository memberJpaRepository
+    ) {
         this.categoryRepository = categoryRepository;
         this.templateRepository = templateRepository;
+        this.memberJpaRepository = memberJpaRepository;
     }
 
     @Transactional
-    public Long create(CreateCategoryRequest createCategoryRequest) {
+    public Long create(CreateCategoryRequest createCategoryRequest, MemberDto memberDto) {
         String categoryName = createCategoryRequest.name();
         validateDuplicatedCategory(categoryName);
-        Category category = new Category(categoryName);
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = new Category(categoryName, member);
         return categoryRepository.save(category).getId();
     }
 

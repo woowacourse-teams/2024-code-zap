@@ -8,6 +8,7 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
+import codezap.member.dto.MemberDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +30,7 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리 이름이 255자를 초과한 경우", exampleMessage = "카테고리 이름은 최대 255자까지 입력 가능합니다."),
             @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다.")
     })
-    ResponseEntity<Void> createCategory(CreateCategoryRequest createCategoryRequest);
+    ResponseEntity<Void> createCategory(CreateCategoryRequest createCategoryRequest, MemberDto memberDto);
 
     @Operation(summary = "카테고리 목록 조회", description = "생성된 모든 카테고리를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회 성공",

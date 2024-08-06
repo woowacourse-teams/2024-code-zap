@@ -18,6 +18,8 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
 import codezap.global.validation.ValidationSequence;
+import codezap.member.configuration.BasicAuthentication;
+import codezap.member.dto.MemberDto;
 
 @RestController
 @RequestMapping("/categories")
@@ -31,9 +33,10 @@ public class CategoryController implements SpringDocCategoryController {
 
     @PostMapping
     public ResponseEntity<Void> createCategory(
-            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
+            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        Long createdCategoryId = categoryService.create(createCategoryRequest);
+        Long createdCategoryId = categoryService.create(createCategoryRequest, memberDto);
         return ResponseEntity.created(URI.create("/categories/" + createdCategoryId))
                 .build();
     }
@@ -55,6 +58,7 @@ public class CategoryController implements SpringDocCategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent()
+                .build();
     }
 }
