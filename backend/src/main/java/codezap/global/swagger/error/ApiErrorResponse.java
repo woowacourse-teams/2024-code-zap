@@ -2,6 +2,7 @@ package codezap.global.swagger.error;
 
 import static java.lang.annotation.ElementType.METHOD;
 
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 
 @Target(value = METHOD)
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(ApiErrorResponses.class)
 public @interface ApiErrorResponse {
 
     String type() default "about:blank";

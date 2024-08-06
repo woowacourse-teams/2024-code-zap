@@ -1,6 +1,7 @@
 package codezap.template.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ public interface SnippetRepository extends JpaRepository<Snippet, Long> {
 
     List<Snippet> findAllByTemplate(Template template);
 
-    Snippet findByTemplateAndOrdinal(Template template, int ordinal);
+    Optional<Snippet> findByTemplateAndOrdinal(Template template, int ordinal);
 
     List<Snippet> findAllByTemplateAndOrdinal(Template template, int ordinal);
 
