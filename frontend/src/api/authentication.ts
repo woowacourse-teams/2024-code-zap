@@ -39,7 +39,12 @@ export const postLogout = async () => {
 export const getLoginState = async () => {
   const url = `${LOGIN_STATE_API_URL}`;
 
-  const response = await customFetch({ url });
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
 
   if (response.status === 401) {
     throw new Error('로그인을 해주세요.');
@@ -56,7 +61,12 @@ export const checkEmail = async (email: string) => {
   const params = new URLSearchParams({ email });
   const url = `${CHECK_EMAIL_API_URL}?${params}`;
 
-  const response = await customFetch({ url });
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
 
   if (response.status === 409) {
     throw new Error('중복된 이메일입니다.');
@@ -73,7 +83,12 @@ export const checkUsername = async (username: string) => {
   const params = new URLSearchParams({ username });
   const url = `${CHECK_USERNAME_API_URL}?${params}`;
 
-  const response = await customFetch({ url });
+  const response = await fetch(url, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  });
 
   if (response.status === 409) {
     throw new Error('중복된 닉네임입니다.');
