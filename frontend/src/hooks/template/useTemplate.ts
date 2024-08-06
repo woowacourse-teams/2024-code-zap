@@ -17,9 +17,12 @@ export const useTemplate = (id: number) => {
 
   const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  const [isOpenList, setIsOpenList] = useState<boolean[]>(template?.snippets.map(() => true) || []);
+
   useEffect(() => {
     if (template && template.snippets.length > 0) {
       setCurrentFile(template.snippets[0].id as number);
+      setIsOpenList(template?.snippets.map(() => true));
     }
   }, [template]);
 
@@ -54,6 +57,10 @@ export const useTemplate = (id: number) => {
     navigate('/');
   };
 
+  const handleIsOpenList = (index: number) => () => {
+    setIsOpenList((prev) => prev.map((isOpen, idx) => (index === idx ? !isOpen : isOpen)));
+  };
+
   return {
     currentFile,
     template,
@@ -63,5 +70,7 @@ export const useTemplate = (id: number) => {
     handleEditButtonClick,
     handleSelectOption,
     handleDelete,
+    isOpenList,
+    handleIsOpenList,
   };
 };
