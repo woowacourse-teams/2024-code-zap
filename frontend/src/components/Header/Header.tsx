@@ -4,6 +4,7 @@ import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { useCheckLoginState } from '@/hooks/authentication';
 import { useAuth } from '@/hooks/authentication/useAuth';
+import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
@@ -53,11 +54,19 @@ const NavOption = ({ route, name }: { route: string; name: string }) => (
   </Link>
 );
 
-const UserMenuButton = () => (
-  <S.UserMenuButton>
-    <img src={userMenuIcon} alt='사용자 메뉴' />
-  </S.UserMenuButton>
-);
+const UserMenuButton = () => {
+  const { mutateAsync } = useLogoutMutation();
+
+  const handleLogoutButton = async () => {
+    await mutateAsync();
+  };
+
+  return (
+    <S.UserMenuButton onClick={handleLogoutButton}>
+      <img src={userMenuIcon} alt='사용자 메뉴' />
+    </S.UserMenuButton>
+  );
+};
 
 const LoginButton = () => (
   <Link to='/login'>
