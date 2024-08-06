@@ -9,12 +9,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.global.exception.CodeZapException;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
 
@@ -39,7 +41,8 @@ class SnippetRepositoryTest {
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
 
-        Snippet foundSnippet = snippetRepository.findByTemplateAndOrdinal(template, 2);
+        Snippet foundSnippet = snippetRepository.findByTemplateAndOrdinal(template, 2)
+                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 스니펫이 존재하지 않습니다."));
 
         assertAll(
                 () -> assertThat(foundSnippet.getTemplate().getTitle()).isEqualTo(template.getTitle()),
