@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
+import codezap.category.repository.CategoryJpaRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
@@ -42,21 +42,21 @@ public class TemplateService {
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryJpaRepository categoryJpaRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
     private final MemberJpaRepository memberJpaRepository;
 
     public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
             TemplateRepository templateRepository, SnippetRepository snippetRepository,
-            CategoryRepository categoryRepository, TagRepository tagRepository,
+            CategoryJpaRepository categoryJpaRepository, TagRepository tagRepository,
             TemplateTagRepository templateTagRepository,
             MemberJpaRepository memberJpaRepository
     ) {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
         this.snippetRepository = snippetRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryJpaRepository = categoryJpaRepository;
         this.tagRepository = tagRepository;
         this.templateTagRepository = templateTagRepository;
         this.memberJpaRepository = memberJpaRepository;
@@ -65,7 +65,7 @@ public class TemplateService {
     @Transactional
     public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
+        Category category = categoryJpaRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
@@ -85,7 +85,7 @@ public class TemplateService {
 
     private void validateCategoryAuthorizeMember(Category category, Member member) {
         if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 카테고리에 대한 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없는 유저입니다.");
         }
     }
 
@@ -131,7 +131,7 @@ public class TemplateService {
 
     private void validateTemplateAuthorizeMember(Template template, Member member) {
         if (!template.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 템플릿에 대한 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없는 유저입니다.");
         }
     }
 
@@ -190,7 +190,7 @@ public class TemplateService {
     @Transactional
     public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
+        Category category = categoryJpaRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
         validateTemplateAuthorizeMember(template, member);
@@ -281,10 +281,10 @@ public class TemplateService {
     }
 
     private CodeZapException throwNotFoundTag() {
-        throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당하는 태그가 존재하지 않습니다.");
+        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 태그가 존재하지 않습니다.");
     }
 
     private CodeZapException throwNotFoundThumbnailSnippet() {
-        throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
+        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
     }
 }
