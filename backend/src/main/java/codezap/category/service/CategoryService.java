@@ -8,7 +8,6 @@ import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
-import codezap.category.repository.CategoryJpaRepository;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
@@ -20,14 +19,14 @@ import codezap.template.repository.TemplateRepository;
 @Service
 public class CategoryService {
 
-    private final CategoryRepository categoryJpaRepository;
+    private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
     private final MemberRepository memberJpaRepository;
 
-    public CategoryService(CategoryJpaRepository categoryJpaRepository, TemplateRepository templateRepository,
+    public CategoryService(CategoryRepository categoryRepository, TemplateRepository templateRepository,
             MemberJpaRepository memberJpaRepository
     ) {
-        this.categoryJpaRepository = categoryJpaRepository;
+        this.categoryRepository = categoryRepository;
         this.templateRepository = templateRepository;
         this.memberJpaRepository = memberJpaRepository;
     }
@@ -38,36 +37,36 @@ public class CategoryService {
         Member member = memberJpaRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
         Category category = new Category(categoryName, member);
-        return categoryJpaRepository.save(category).getId();
+        return categoryRepository.save(category).getId();
     }
 
     public FindAllCategoriesResponse findAllByMember(MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
-        return FindAllCategoriesResponse.from(categoryJpaRepository.findAllByMember(member));
+        return FindAllCategoriesResponse.from(categoryRepository.findAllByMember(member));
     }
 
     public FindAllCategoriesResponse findAll() {
-        return FindAllCategoriesResponse.from(categoryJpaRepository.findAll());
+        return FindAllCategoriesResponse.from(categoryRepository.findAll());
     }
 
     @Transactional
     public void update(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
-        Category category = categoryJpaRepository.fetchById(id);
+        Category category = categoryRepository.fetchById(id);
         validateAuthorizeMember(category, member);
         category.updateName(updateCategoryRequest.name());
     }
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
-        if (categoryJpaRepository.existsByNameAndMember(categoryName, member)) {
+        if (categoryRepository.existsByNameAndMember(categoryName, member)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
         }
     }
 
     public void deleteById(Long id, MemberDto memberDto) {
         Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryJpaRepository.fetchById(id);
+        Category category = categoryRepository.fetchById(id);
         validateAuthorizeMember(category, member);
 
         if (templateRepository.existsByCategoryId(id)) {
@@ -76,7 +75,7 @@ public class CategoryService {
         if (category.getIsDefault()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
-        categoryJpaRepository.deleteById(id);
+        categoryRepository.deleteById(id);
     }
 
     private void validateAuthorizeMember(Category category, Member member) {

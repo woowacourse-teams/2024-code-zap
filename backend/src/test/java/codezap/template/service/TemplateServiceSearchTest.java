@@ -18,7 +18,9 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.MemberDtoFixture;
 import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
@@ -153,8 +155,9 @@ class TemplateServiceSearchTest {
         @DisplayName("템플릿 토픽 검색 성공 : 템플릿 제목에 포함")
         void findAllTemplatesTitleContainTopicSuccess() {
             //given
-            Member member = memberRepository.save(new Member("a@a.com", "aaa1", "kyummi"));
-            Category category = categoryRepository.save(new Category("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberRepository.fetchById(memberDto.id());
+            Category category = categoryRepository.save(new Category("category", member));
             saveTemplate(makeTemplateRequest("hello"), member, category);
             saveTemplate(makeTemplateRequest("hello topic"), member, category);
             saveTemplate(makeTemplateRequest("topic hello"), member, category);
@@ -172,8 +175,9 @@ class TemplateServiceSearchTest {
         @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
         void findAllSnippetFilenameContainTopicSuccess() {
             //given
-            Member member = memberRepository.save(new Member("a@a.com", "aaa1", "kyummi"));
-            Category category = categoryRepository.save(new Category("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberRepository.fetchById(memberDto.id());
+            Category category = categoryRepository.save(new Category("category", member));
             saveTemplateBySnippetFilename("tempate1", "login.js", "signup.js", member, category);
             saveTemplateBySnippetFilename("tempate2", "login.java", "signup.java", member, category);
             saveTemplateBySnippetFilename("tempate3", "login.js", "signup.java", member, category);
@@ -190,8 +194,9 @@ class TemplateServiceSearchTest {
         @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
         void findAllSnippetContentContainTopicSuccess() {
             //given
-            Member member = memberRepository.save(new Member("a@a.com", "aaa1", "kyummi"));
-            Category category = categoryRepository.save(new Category("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberRepository.fetchById(memberDto.id());
+            Category category = categoryRepository.save(new Category("category", member));
             saveTemplateBySnippetContent("tempate1", "public Main {", "new Car();", member, category);
             saveTemplateBySnippetContent("tempate2", "private Car", "public Movement", member, category);
             saveTemplateBySnippetContent("tempate3", "console.log", "a+b=3", member, category);
@@ -208,8 +213,9 @@ class TemplateServiceSearchTest {
         @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 설명에 포함")
         void findAllDescriptionContainTopicSuccess() {
             //given
-            Member member = memberRepository.save(new Member("a@a.com", "aaa1", "kyummi"));
-            Category category = categoryRepository.save(new Category("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberRepository.fetchById(memberDto.id());
+            Category category = categoryRepository.save(new Category("category", member));
             CreateTemplateRequest request1 = new CreateTemplateRequest(
                     "타이틀",
                     "Login 구현",
@@ -245,8 +251,9 @@ class TemplateServiceSearchTest {
         @DisplayName("템플릿 토픽 검색 성공 : 페이징 성공")
         void findAllContainTopicPaging() {
             //given
-            Member member = memberRepository.save(new Member("a@a.com", "aaa1", "kyummi"));
-            Category category = categoryRepository.save(new Category("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberRepository.fetchById(memberDto.id());
+            Category category = categoryRepository.save(new Category("category", member));
             saveTemplate(makeTemplateRequest("hello topic 1"), member, category);
             saveTemplate(makeTemplateRequest("hello topic 2"), member, category);
             saveTemplate(makeTemplateRequest("hello topic 3"), member, category);

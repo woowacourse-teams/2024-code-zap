@@ -358,7 +358,9 @@ class TemplateServiceTest {
     }
 
     private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename) {
-        Category category = categoryRepository.save(new Category("category"));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.save(new Category("category", member));
         CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
                 templateTitle, "설명",
                 List.of(
@@ -369,7 +371,7 @@ class TemplateServiceTest {
                 List.of()
         );
         Template savedTemplate = templateRepository.save(
-                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category));
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
 
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
@@ -377,7 +379,9 @@ class TemplateServiceTest {
     }
 
     private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent) {
-        Category category = categoryRepository.save(new Category("category"));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.save(new Category("category", member));
         CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
                 templateTitle, "설명",
                 List.of(
@@ -388,125 +392,10 @@ class TemplateServiceTest {
                 List.of()
         );
         Template savedTemplate = templateRepository.save(
-                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category));
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
 
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
-    }
-
-    @Nested
-    @DisplayName("템플릿 토픽 검색")
-    class searchContainTopic {
-        @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 템플릿 제목에 포함")
-        void findAllTemplatesTitleContainTopicSuccess() {
-            //given
-            saveTemplate(makeTemplateRequest("hello"));
-            saveTemplate(makeTemplateRequest("hello topic"));
-            saveTemplate(makeTemplateRequest("topic hello"));
-            saveTemplate(makeTemplateRequest("hello topic !"));
-
-            //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("topic", PageRequest.of(1, 3));
-
-            //then
-            assertThat(templates.templates()).hasSize(3);
-        }
-
-        @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
-        void findAllSnippetFilenameContainTopicSuccess() {
-            //given
-            saveTemplateBySnippetFilename("tempate1", "login.js", "signup.js");
-            saveTemplateBySnippetFilename("tempate2", "login.java", "signup.java");
-            saveTemplateBySnippetFilename("tempate3", "login.js", "signup.java");
-
-            //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("java", PageRequest.of(1, 2));
-
-            //then
-            assertThat(templates.templates()).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
-        void findAllSnippetContentContainTopicSuccess() {
-            //given
-            saveTemplateBySnippetContent("tempate1", "public Main {", "new Car();");
-            saveTemplateBySnippetContent("tempate2", "private Car", "public Movement");
-            saveTemplateBySnippetContent("tempate3", "console.log", "a+b=3");
-
-            //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("Car", PageRequest.of(1, 2));
-
-            //then
-            assertThat(templates.templates()).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 설명에 포함")
-        void findAllDescriptionContainTopicSuccess() {
-            //given
-            Category category = categoryRepository.save(new Category("category"));
-            CreateTemplateRequest request1 = new CreateTemplateRequest(
-                    "타이틀",
-                    "Login 구현",
-                    List.of(
-                            new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)
-                    ),
-                    category.getId(),
-                    List.of("tag1", "tag2")
-            );
-            saveTemplate(request1);
-            CreateTemplateRequest request2 = new CreateTemplateRequest(
-                    "타이틀",
-                    "Signup 구현",
-                    List.of(
-                            new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)
-                    ),
-                    category.getId(),
-                    List.of("tag1", "tag2")
-            );
-            saveTemplate(request2);
-
-            //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("Login", PageRequest.of(1, 1));
-
-            //then
-            assertThat(templates.templates()).hasSize(1);
-        }
-
-        @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 페이징 성공")
-        void findAllContainTopicPaging() {
-            //given
-            saveTemplate(makeTemplateRequest("hello topic 1"));
-            saveTemplate(makeTemplateRequest("hello topic 2"));
-            saveTemplate(makeTemplateRequest("hello topic 3"));
-            saveTemplate(makeTemplateRequest("hello topic 4"));
-            saveTemplate(makeTemplateRequest("hello topic 5"));
-            saveTemplate(makeTemplateRequest("hello topic 6"));
-            saveTemplate(makeTemplateRequest("hello topic 7"));
-            saveTemplate(makeTemplateRequest("hello topic 8"));
-            saveTemplate(makeTemplateRequest("hello topic 9"));
-            saveTemplate(makeTemplateRequest("hello topic 10"));
-            saveTemplate(makeTemplateRequest("hello topic 11"));
-            saveTemplate(makeTemplateRequest("hello topic 12"));
-            saveTemplate(makeTemplateRequest("hello topic 13"));
-            saveTemplate(makeTemplateRequest("hello topic 14"));
-            saveTemplate(makeTemplateRequest("hello topic 15"));
-
-            //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("topic", PageRequest.of(2, 5));
-
-            //then
-            List<String> titles = templates.templates().stream().map(FindMyTemplateResponse::title).toList();
-            assertThat(titles).containsExactly(
-                    "hello topic 6", "hello topic 7", "hello topic 8", "hello topic 9", "hello topic 10");
-        }
-
     }
 }

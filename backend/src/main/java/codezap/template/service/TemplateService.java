@@ -6,14 +6,12 @@ import java.util.Objects;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryJpaRepository;
+import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
@@ -47,7 +45,7 @@ public class TemplateService {
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
-    private final CategoryJpaRepository categoryJpaRepository;
+    private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
     private final MemberRepository memberRepository;
@@ -61,7 +59,7 @@ public class TemplateService {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
         this.snippetRepository = snippetRepository;
-        this.categoryJpaRepository = categoryJpaRepository;
+        this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
         this.templateTagRepository = templateTagRepository;
         this.memberRepository = memberRepository;
@@ -69,8 +67,8 @@ public class TemplateService {
 
     @Transactional
     public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryJpaRepository.fetchById(createTemplateRequest.categoryId());
+        Member member = memberRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
@@ -123,7 +121,7 @@ public class TemplateService {
     }
 
     public FindTemplateResponse findByIdAndMember(Long id, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 
@@ -194,8 +192,8 @@ public class TemplateService {
 
     @Transactional
     public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
-        Category category = categoryJpaRepository.fetchById(updateTemplateRequest.categoryId());
+        Member member = memberRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
         validateTemplateAuthorizeMember(template, member);
@@ -271,7 +269,7 @@ public class TemplateService {
 
     @Transactional
     public void deleteById(Long id, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 

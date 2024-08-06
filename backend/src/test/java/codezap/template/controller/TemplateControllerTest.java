@@ -484,7 +484,7 @@ class TemplateControllerTest {
         }
     }
 
-    private CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
+    private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
         CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                 title,
                 "description",
@@ -497,5 +497,4 @@ class TemplateControllerTest {
         );
         return templateRequest;
     }
-
 }
