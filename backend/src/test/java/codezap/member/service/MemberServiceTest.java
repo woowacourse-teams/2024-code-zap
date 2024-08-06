@@ -5,12 +5,16 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.stream.Stream;
 
 import jakarta.servlet.http.Cookie;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 
 import codezap.global.exception.CodeZapException;
@@ -156,11 +160,7 @@ public class MemberServiceTest {
         void checkLogin() {
             var member = new Member("code@zap.com", "pw1234", "zappy");
             memberRepository.save(member);
-            var basicAuthCredentials = HttpHeaders.encodeBasicAuth(
-                    member.getEmail(),
-                    member.getPassword(),
-                    StandardCharsets.UTF_8
-            );
+            var basicAuthCredentials = encodeToBase64(member.getEmail() + ":" + member.getPassword());
             var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, basicAuthCredentials);
             var cookies = new Cookie[]{basicAuthCookie};
 
@@ -168,22 +168,29 @@ public class MemberServiceTest {
                     .doesNotThrowAnyException();
         }
 
-        @Test
+        @ParameterizedTest
         @DisplayName("쿠키 인증 실패: 쿠키 값 오류")
-        void checkLogin_fail_wrong_cookie_value() {
+        @MethodSource
+        void checkLogin_fail_wrong_cookie_value(String wrongCredentials) {
             var member = new Member("code@zap.com", "pw1234", "zappy");
             memberRepository.save(member);
-            var wrongCredentials = HttpHeaders.encodeBasicAuth(
-                    "wrong@email.kr",
-                    "nopassword",
-                    StandardCharsets.UTF_8
-            );
             var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, wrongCredentials);
             var cookies = new Cookie[]{basicAuthCookie};
 
             assertThatThrownBy(() -> sut.checkLogin(cookies))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("인증에 실패했습니다.");
+        }
+
+        static Stream<String> checkLogin_fail_wrong_cookie_value() {
+            return Stream.of(
+                    encodeToBase64("wrong@email.kr:nopassword"),
+                    encodeToBase64("Hello world!")
+            );
+        }
+
+        static String encodeToBase64(String plainText) {
+            return Base64.getEncoder().encodeToString(plainText.getBytes(StandardCharsets.UTF_8));
         }
     }
 }

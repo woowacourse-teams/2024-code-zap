@@ -21,6 +21,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthService {
 
+    private static final String BASIC_AUTH_REGEX = ".+:.+";
+    private static final String BASIC_AUTH_DELIMITER = ":";
+
     private final MemberRepository memberRepository;
 
     public MemberDto authorizeByEmailAndPassword(String email, String password) {
@@ -50,7 +53,10 @@ public class AuthService {
     private String[] decodeCredentials(String encodedCredentials) {
         byte[] decodedBytes = Base64.getDecoder().decode(encodedCredentials.getBytes(StandardCharsets.UTF_8));
         String decodedString = new String(decodedBytes);
-        return decodedString.split(":");
+        if (!decodedString.matches(BASIC_AUTH_REGEX)) {
+            throwUnauthorized();
+        }
+        return decodedString.split(BASIC_AUTH_DELIMITER);
     }
 
     private CodeZapException throwUnauthorized() {
