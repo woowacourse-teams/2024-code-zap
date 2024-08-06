@@ -6,7 +6,7 @@ on:
       - develop
       - main
 
-jobs:         
+jobs:
   build:
     runs-on: self-hosted
     steps:
