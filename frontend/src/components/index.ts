@@ -11,4 +11,5 @@ export { default as Text } from './Text/Text';
 export { default as Dropdown } from './Dropdown/Dropdown';
 export { default as TagInput } from './TagInput/TagInput';
 export { default as TemplateEdit } from './TemplateEdit/TemplateEdit';
+export { default as TagButton } from './TagButton/TagButton';
 export { default as Toast } from './Toast/Toast';
