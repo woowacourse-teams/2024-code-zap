@@ -64,19 +64,23 @@ public class CategoryService {
         }
     }
 
-    private void validateAuthorizeMember(Category category, Member member) {
-        if (category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 카테고리를 수정할 권한이 없는 유저입니다.");
-        }
-    }
+    public void deleteById(Long id, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.fetchById(id);
+        validateAuthorizeMember(category, member);
 
-    public void deleteById(Long id) {
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
-        if (id == DEFAULT_CATEGORY) {
+        if (category.getIsDefault()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
+    }
+
+    private void validateAuthorizeMember(Category category, Member member) {
+        if (!category.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 카테고리를 수정할 권한이 없는 유저입니다.");
+        }
     }
 }

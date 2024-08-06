@@ -36,6 +36,7 @@ public class Category extends BaseTimeEntity {
     public Category(String name, Member member) {
         this.name = name;
         this.member = member;
+        this.isDefault = false;
     }
 
     public static Category createDefaultCategory(Member member) {

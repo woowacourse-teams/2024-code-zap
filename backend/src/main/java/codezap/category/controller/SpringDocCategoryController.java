@@ -53,5 +53,5 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우",
                     exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
     })
-    ResponseEntity<Void> deleteCategory(Long id);
+    ResponseEntity<Void> deleteCategory(Long id, MemberDto memberDto);
 }
