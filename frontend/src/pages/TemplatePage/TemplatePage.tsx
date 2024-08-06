@@ -67,7 +67,7 @@ const TemplatePage = () => {
                   ))}
                 </Flex>
               </Flex>
-              <Flex align='center' gap='1rem'>
+              <Flex align='center'>
                 <S.EditButton
                   size='small'
                   variant='text'
