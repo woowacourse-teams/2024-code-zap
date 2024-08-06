@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-import { CATEGORY } from '@/api';
 import { Text } from '@/components';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
@@ -20,10 +19,27 @@ interface ButtonProps {
 const CategoryMenu = ({ categories, onSelectCategory }: MenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
 
-  const indexById: Record<number, number> = {
-    0: 0,
-    1: categories.length + 1,
-  };
+  const reorderedCategories = useMemo(() => {
+    if (categories.length === 0) {
+      return [];
+    }
+
+    const [first, ...rest] = categories;
+
+    return [...rest, first];
+  }, [categories]);
+
+  const indexById: Record<number, number> = useMemo(() => {
+    const map: Record<number, number> = {
+      0: 0,
+    };
+
+    reorderedCategories.forEach(({ id }, index) => {
+      map[id] = index + 1;
+    });
+
+    return map;
+  }, [reorderedCategories]);
 
   const handleButtonClick = (id: number) => {
     setSelectedId(id);
@@ -34,21 +50,11 @@ const CategoryMenu = ({ categories, onSelectCategory }: MenuProps) => {
     <S.CategoryContainer>
       <CategoryButton name='전체보기' disabled={selectedId === 0} onClick={() => handleButtonClick(0)} />
 
-      {categories.map(({ id, name }, index) => {
-        indexById[id] = index + 1;
+      {reorderedCategories.map(({ id, name }) => (
+        <CategoryButton key={id} name={name} disabled={selectedId === id} onClick={() => handleButtonClick(id)} />
+      ))}
 
-        return (
-          <CategoryButton key={id} name={name} disabled={selectedId === id} onClick={() => handleButtonClick(id)} />
-        );
-      })}
-
-      <CategoryButton
-        name='카테고리 미지정'
-        disabled={selectedId === CATEGORY.UNASSIGNED_ID}
-        onClick={() => handleButtonClick(CATEGORY.UNASSIGNED_ID)}
-      />
-
-      <S.HighlightBox selectedIndex={indexById[selectedId]} categoryCount={categories.length + 2} />
+      <S.HighlightBox selectedIndex={indexById[selectedId]} categoryCount={reorderedCategories.length + 1} />
     </S.CategoryContainer>
   );
 };
