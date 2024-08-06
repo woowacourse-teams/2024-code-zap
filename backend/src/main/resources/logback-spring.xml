@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="5 seconds">
 
+    <property name="LOG_FILE_PATH" value="./spring-log"/>
     <timestamp key="DATE_FORMAT" datePattern="yyyy-MM-dd"/>
 
     <springProfile name="local">
