@@ -4,9 +4,4 @@ node_modules
 
 dist
 
-.env
-.env.development
-.env.production
-
-# Sentry Config File
-.env.sentry-build-plugin
+.env*

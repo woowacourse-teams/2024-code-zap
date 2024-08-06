@@ -31,6 +31,7 @@ const globalStyles = css`
 
     font: inherit;
     vertical-align: baseline;
+    list-style: none;
 
     border: 0;
   }
@@ -39,14 +40,21 @@ const globalStyles = css`
     font-family: 'Pretendard', sans-serif;
     line-height: 100%;
     color: ${theme.color.dark.secondary_800};
-    list-style: none;
-
     background-color: ${theme.mode === 'dark' ? theme.color.dark.tertiary_900 : theme.color.light.white};
   }
 
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  button {
+    padding: 0;
+
+    background: inherit;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
   }
 `;
 
