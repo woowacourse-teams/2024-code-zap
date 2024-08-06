@@ -2,30 +2,34 @@ import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
+import { useCheckLoginState } from '@/hooks/authentication';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
-const Header = () => (
-  <S.HeaderContainer>
-    <S.HeaderContentContainer>
-      <Logo />
+const Header = () => {
+  useCheckLoginState();
 
-      <Flex align='center' gap='2rem' flex='1'>
-        <NavOption route='/' name='내 템플릿' />
-        <NavOption route='/explore' name='구경가기' />
-      </Flex>
+  return (
+    <S.HeaderContainer>
+      <S.HeaderContentContainer>
+        <Logo />
+        <Flex align='center' gap='2rem' flex='1'>
+          <NavOption route='/' name='내 템플릿' />
+          <NavOption route='/explore' name='구경가기' />
+        </Flex>
 
-      <Flex align='center' gap='2rem'>
-        <Link to={'/templates/upload'}>
-          <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-            <img src={newTemplateIcon} alt='' />새 템플릿
-          </Button>
-        </Link>
-        <UserMenuButton />
-      </Flex>
-    </S.HeaderContentContainer>
-  </S.HeaderContainer>
-);
+        <Flex align='center' gap='2rem'>
+          <Link to={'/templates/upload'}>
+            <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
+              <img src={newTemplateIcon} alt='' />새 템플릿
+            </Button>
+          </Link>
+          <UserMenuButton />
+        </Flex>
+      </S.HeaderContentContainer>
+    </S.HeaderContainer>
+  );
+};
 
 const Logo = () => (
   <Link to={'/'}>
