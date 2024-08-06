@@ -121,18 +121,18 @@ const TemplateEdit = ({
             </S.DeleteButton>
           </Flex>
         ))}
-        <Button size='filled' variant='outlined' onClick={handleAddButtonClick}>
+        <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
           + Add Snippet
         </Button>
 
         <TagInput {...tagProps} />
 
         <Flex justify='flex-end' padding='0.5rem 0 0 0' width='100%'>
-          <Flex gap='1.6rem'>
-            <Button size='small' variant='outlined' onClick={handleCancelButton}>
+          <Flex gap='0.5rem'>
+            <Button size='medium' variant='outlined' onClick={handleCancelButton}>
               cancel
             </Button>
-            <Button size='small' variant='contained' onClick={handleSaveButtonClick} disabled={snippets.length === 0}>
+            <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={snippets.length === 0}>
               Save
             </Button>
           </Flex>
