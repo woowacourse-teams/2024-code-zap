@@ -45,7 +45,7 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우",
                     exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다.")
     })
-    ResponseEntity<Void> updateCategory(Long id, UpdateCategoryRequest updateCategoryRequest);
+    ResponseEntity<Void> updateCategory(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto);
 
     @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")

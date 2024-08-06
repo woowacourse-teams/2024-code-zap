@@ -50,15 +50,23 @@ public class CategoryService {
     }
 
     @Transactional
-    public void update(Long id, UpdateCategoryRequest updateCategoryRequest) {
-        validateDuplicatedCategory(updateCategoryRequest.name(), null);
+    public void update(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        validateDuplicatedCategory(updateCategoryRequest.name(), member);
         Category category = categoryRepository.fetchById(id);
+        validateAuthorizeMember(category, member);
         category.updateName(updateCategoryRequest.name());
     }
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
         if (categoryRepository.existsByNameAndMember(categoryName, member)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
+        }
+    }
+
+    private void validateAuthorizeMember(Category category, Member member) {
+        if (category.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당 카테고리를 수정할 권한이 없는 유저입니다.");
         }
     }
 
