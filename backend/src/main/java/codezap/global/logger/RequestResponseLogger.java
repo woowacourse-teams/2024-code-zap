@@ -24,18 +24,22 @@ public class RequestResponseLogger extends OncePerRequestFilter {
             throws ServletException, IOException {
         ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
         ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+        String cookieHeader = requestWrapper.getHeader("Cookie");
 
         long startTime = System.currentTimeMillis();
         filterChain.doFilter(requestWrapper, responseWrapper);
         long duration = System.currentTimeMillis() - startTime;
 
-        String requestBody = new String(requestWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
-        String responseBody = new String(responseWrapper.getContentAsByteArray(), StandardCharsets.UTF_8);
-
-        log.info("[Request] {}, {}, 요청 바디: {}", request.getMethod(), request.getRequestURI(), requestBody);
-        log.info("[Response] Status: {}, Duration: {}ms, 응답 바디: {}", response.getStatus(), duration, responseBody);
+        log.info("[Request] {} {}, 쿠키 헤더 값: {} \n 요청 바디: {}", request.getMethod(), request.getRequestURI(),
+                cookieHeader, getBodyAsUtf8String(requestWrapper.getContentAsByteArray()));
+        log.info("[Response] Status: {}, Duration: {}ms, 응답 바디: {}", response.getStatus(), duration,
+                getBodyAsUtf8String(responseWrapper.getContentAsByteArray()));
 
         responseWrapper.copyBodyToResponse();
+    }
+
+    private String getBodyAsUtf8String(byte[] bytes) {
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     @Override
