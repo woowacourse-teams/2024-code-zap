@@ -10,8 +10,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
+import codezap.category.repository.CategoryJpaRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
+import codezap.member.repository.MemberJpaRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -24,7 +27,6 @@ import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
-import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -40,28 +42,33 @@ public class TemplateService {
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryJpaRepository categoryJpaRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
     public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
             TemplateRepository templateRepository, SnippetRepository snippetRepository,
-            CategoryRepository categoryRepository, TagRepository tagRepository,
-            TemplateTagRepository templateTagRepository
+            CategoryJpaRepository categoryJpaRepository, TagRepository tagRepository,
+            TemplateTagRepository templateTagRepository,
+            MemberJpaRepository memberJpaRepository
     ) {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
         this.snippetRepository = snippetRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryJpaRepository = categoryJpaRepository;
         this.tagRepository = tagRepository;
         this.templateTagRepository = templateTagRepository;
+        this.memberJpaRepository = memberJpaRepository;
     }
 
     @Transactional
-    public Long createTemplate(CreateTemplateRequest createTemplateRequest) {
-        Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
+    public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryJpaRepository.fetchById(createTemplateRequest.categoryId());
+        validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
-                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category)
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
         createTags(createTemplateRequest, template);
         snippetRepository.saveAll(
@@ -74,6 +81,12 @@ public class TemplateService {
                 .orElseThrow(this::throwNotFoundSnippet);
         thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
         return template.getId();
+    }
+
+    private void validateCategoryAuthorizeMember(Category category, Member member) {
+        if (!category.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없는 유저입니다.");
+        }
     }
 
     private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
@@ -104,13 +117,22 @@ public class TemplateService {
         return ExploreTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
 
-    public FindTemplateResponse findById(Long id) {
+    public FindTemplateResponse findByIdAndMember(Long id, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
+        validateTemplateAuthorizeMember(template, member);
+
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
                 .map(TemplateTag::getTag)
                 .toList();
         return FindTemplateResponse.of(template, snippets, tags);
+    }
+
+    private void validateTemplateAuthorizeMember(Template template, Member member) {
+        if (!template.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없는 유저입니다.");
+        }
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -166,9 +188,13 @@ public class TemplateService {
     }
 
     @Transactional
-    public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
+    public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryJpaRepository.fetchById(updateTemplateRequest.categoryId());
+        validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
+        validateTemplateAuthorizeMember(template, member);
+
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
         updateSnippets(updateTemplateRequest, template);
         updateTags(updateTemplateRequest, template);
@@ -239,7 +265,11 @@ public class TemplateService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Template template = templateRepository.fetchById(id);
+        validateTemplateAuthorizeMember(template, member);
+
         thumbnailSnippetRepository.deleteByTemplateId(id);
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
@@ -251,10 +281,10 @@ public class TemplateService {
     }
 
     private CodeZapException throwNotFoundTag() {
-        throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당하는 태그가 존재하지 않습니다.");
+        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 태그가 존재하지 않습니다.");
     }
 
     private CodeZapException throwNotFoundThumbnailSnippet() {
-        throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
+        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
     }
 }

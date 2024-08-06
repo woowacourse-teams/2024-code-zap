@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
@@ -39,7 +40,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "스니펫 순서가 잘못된 경우", exampleMessage = "스니펫 순서가 잘못되었습니다."),
             @ErrorCase(description = "스니펫 내용 65,535 byte를 초과한 경우", exampleMessage = "파일 내용은 최대 65,535 byte까지 입력 가능합니다.")
     })
-    ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest);
+    ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
     @Operation(summary = "템플릿 목록 조회", description = """
             조건에 맞는 모든 템플릿을 조회합니다.
@@ -63,16 +64,16 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<FindTemplateResponse> getTemplateById(Long id);
+    ResponseEntity<FindTemplateResponse> getTemplateById(Long id, MemberDto memberDto);
 
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest);
+    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto);
 
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
-    ResponseEntity<Void> deleteTemplate(Long id);
+    ResponseEntity<Void> deleteTemplate(Long id, MemberDto memberDto);
 }

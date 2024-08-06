@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.global.validation.ValidationSequence;
+import codezap.member.configuration.BasicAuthentication;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
@@ -35,9 +37,10 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        Long createdTemplateId = templateService.createTemplate(createTemplateRequest);
+        Long createdTemplateId = templateService.createTemplate(createTemplateRequest, memberDto);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
@@ -59,22 +62,23 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id) {
-        return ResponseEntity.ok(templateService.findById(id));
+    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
+        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
             @PathVariable Long id,
-            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        templateService.update(id, updateTemplateRequest);
+        templateService.update(id, updateTemplateRequest, memberDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTemplate(@PathVariable Long id) {
-        templateService.deleteById(id);
+    public ResponseEntity<Void> deleteTemplate(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
+        templateService.deleteById(id, memberDto);
         return ResponseEntity.noContent().build();
     }
 }

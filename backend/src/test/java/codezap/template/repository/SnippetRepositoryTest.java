@@ -16,7 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.MemberDtoFixture;
 import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
+import codezap.member.repository.MemberJpaRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Template;
 
@@ -32,12 +36,16 @@ class SnippetRepositoryTest {
     private TemplateRepository templateRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private MemberJpaRepository memberJpaRepository;
 
     @Test
     @DisplayName("단일 스니펫 찾기 성공: 템플릿과 순서")
     void findOneSnippetSuccessWithTemplateAndOrdinal() {
-        Category category = categoryRepository.save(new Category("category"));
-        Template template = templateRepository.save(new Template("title", "description", category));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.save(new Category("category", member));
+        Template template = templateRepository.save(new Template(member, "title", "description", category));
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
 
@@ -55,8 +63,10 @@ class SnippetRepositoryTest {
     @Test
     @DisplayName("스니펫 리스트 찾기 성공: 템플릿과 순서")
     void findSnippetsSuccessWithTemplateAndOrdinal() {
-        Category category = categoryRepository.save(new Category("category"));
-        Template template = templateRepository.save(new Template("title", "description", category));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Category category = categoryRepository.save(new Category("category", member));
+        Template template = templateRepository.save(new Template(member, "title", "description", category));
         Snippet snippet1 = snippetRepository.save(new Snippet(template, "filename1", "content1", 1));
         Snippet snippet2 = snippetRepository.save(new Snippet(template, "filename2", "content2", 2));
         Snippet snippet3 = snippetRepository.save(new Snippet(template, "filename3", "content3", 2));

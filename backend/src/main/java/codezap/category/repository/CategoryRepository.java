@@ -1,17 +1,21 @@
 package codezap.category.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
+import java.util.List;
 
 import codezap.category.domain.Category;
-import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository {
 
-    default Category fetchById(Long id) {
-        return findById(id).orElseThrow(
-                () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."));
-    }
+    Category fetchById(Long id);
 
-    boolean existsByName(String name);
+    List<Category> findAllByMember(Member member);
+
+    List<Category> findAll();
+
+    boolean existsByNameAndMember(String categoryName, Member member);
+
+    Category save(Category category);
+
+    void deleteById(Long id);
 }
