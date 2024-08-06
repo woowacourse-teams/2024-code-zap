@@ -9,13 +9,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import codezap.global.auditing.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(callSuper = false)
@@ -38,7 +39,7 @@ public class Member extends BaseTimeEntity {
         this(null, email, password, username);
     }
 
-    public boolean matchPassword(String other) {
-        return Objects.equals(password, other);
+    public boolean matchPassword(String password) {
+        return Objects.equals(this.password, password);
     }
 }
