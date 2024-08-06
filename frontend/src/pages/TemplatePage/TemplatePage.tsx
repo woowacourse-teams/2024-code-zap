@@ -1,99 +1,73 @@
-import { useRef, useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useTheme } from '@emotion/react';
+import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { pencilIcon, trashcanIcon } from '@/assets/images';
-import { Flex, SelectList, Text } from '@/components';
-import { useTemplateDeleteQuery, useTemplateQuery } from '@/hooks/template';
+import { chevron, pencilIcon, trashcanIcon } from '@/assets/images';
+import { Button, Flex, Heading, SelectList, TagButton, Text } from '@/components';
+import { ToastContext } from '@/context/ToastContext';
+import { useTemplate } from '@/hooks/template/useTemplate';
+import useCustomContext from '@/hooks/utils/useCustomContext';
 import { TemplateEditPage } from '@/pages';
+import { Snippet } from '@/types/template';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { data: template, error, isLoading } = useTemplateQuery(Number(id));
-  const { mutateAsync: deleteTemplate } = useTemplateDeleteQuery(Number(id));
+  const theme = useTheme();
 
-  const [currentFile, setCurrentFile] = useState<number | null>(null);
-  const [isEdit, setIsEdit] = useState(false);
+  const { infoAlert } = useCustomContext(ToastContext);
 
-  const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const copyCode = (snippet: Snippet) => () => {
+    navigator.clipboard.writeText(snippet.content);
+    infoAlert('코드가 복사되었습니다!');
+  };
 
-  useEffect(() => {
-    if (template && template.snippets.length > 0) {
-      setCurrentFile(template.snippets[0].id as number);
-    }
-  }, [template]);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const {
+    currentFile,
+    template,
+    isEdit,
+    snippetRefs,
+    toggleEditButton,
+    handleEditButtonClick,
+    handleSelectOption,
+    handleDelete,
+    isOpenList,
+    handleIsOpenList,
+  } = useTemplate(Number(id));
 
   if (!template) {
-    return <div>No data available</div>;
+    return <div>템플릿을 불러오는 중...</div>;
   }
-
-  const toggleEditButton = () => {
-    setIsEdit((prev) => !prev);
-  };
-
-  const handleEditButtonClick = () => {
-    toggleEditButton();
-  };
-
-  const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    const targetElement = snippetRefs.current[index];
-    const headerHeight = 68;
-
-    if (targetElement) {
-      const elementPosition = targetElement.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
-    }
-
-    const id = template.snippets[index].id;
-
-    if (!id) {
-      console.error('snippet id가 존재하지 않습니다.');
-
-      return;
-    }
-
-    setCurrentFile(() => id);
-  };
-
-  const handleDelete = () => {
-    deleteTemplate();
-    navigate('/');
-  };
 
   return (
     <>
       {isEdit ? (
         <TemplateEditPage template={template} toggleEditButton={toggleEditButton} />
       ) : (
-        <Flex direction='column' align='center' width='100%'>
+        <Flex justify='space-between' align='center' width='100%' css={{ position: 'relative' }}>
           <S.MainContainer>
             <Flex justify='space-between'>
-              <Flex direction='column' gap='1.6rem'>
-                <Text.XLarge color='white'>{template.title}</Text.XLarge>
-                <Text.Small color='#ffd369' weight='bold'>
+              <Flex direction='column' gap='0.75rem'>
+                <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
+                <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
+                  {template.title}
+                </Heading.Medium>
+                <Text.Medium color={theme.color.dark.secondary_500}>{template.description}</Text.Medium>
+                <Text.Small
+                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                  weight='bold'
+                >
                   {formatRelativeTime(template.modifiedAt)}
                 </Text.Small>
+                <Flex gap='0.25rem'>
+                  {template.tags.map((tag) => (
+                    <TagButton key={tag.id} id={tag.id} name={tag.name}></TagButton>
+                  ))}
+                </Flex>
               </Flex>
-              <Flex align='center' gap='1.6rem'>
+              <Flex align='center'>
                 <S.EditButton
                   size='small'
                   variant='text'
@@ -118,33 +92,55 @@ const TemplatePage = () => {
             {template.snippets.map((snippet, index) => (
               <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
                 <Flex
+                  justify='space-between'
                   align='center'
                   height='3rem'
                   padding='1rem 1.5rem'
                   style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
                 >
-                  <Text.Small color='#fff' weight='bold'>
-                    {snippet.filename}
-                  </Text.Small>
+                  <Flex align='center' gap='0.5rem' onClick={handleIsOpenList(index)} css={{ cursor: 'pointer' }}>
+                    <img
+                      src={chevron}
+                      width={24}
+                      height={24}
+                      alt=''
+                      css={{
+                        transition: 'transform 0.3s ease',
+                        transform: isOpenList[index] ? 'rotate(180deg)' : 'rotate(0deg)',
+                      }}
+                    />
+                    <Text.Small color='#fff' weight='bold'>
+                      {snippet.filename}
+                    </Text.Small>
+                  </Flex>
+                  <Button size='small' variant='text' onClick={copyCode(snippet)}>
+                    <Text.Small color={theme.color.light.primary_500} weight='bold'>
+                      {'복사'}
+                    </Text.Small>
+                  </Button>
                 </Flex>
-                <SyntaxHighlighter
-                  language={getLanguageByFilename(snippet.filename)}
-                  style={vscDarkPlus}
-                  showLineNumbers={true}
-                  customStyle={{
-                    borderRadius: '0 0 8px 8px',
-                    width: '100%',
-                    tabSize: 2,
-                    margin: 0,
-                  }}
-                  codeTagProps={{
-                    style: {
-                      fontSize: '1rem',
-                    },
-                  }}
-                >
-                  {snippet.content}
-                </SyntaxHighlighter>
+                <S.SyntaxHighlighterWrapper isOpen={isOpenList[index]}>
+                  {isOpenList[index] && (
+                    <SyntaxHighlighter
+                      language={getLanguageByFilename(snippet.filename)}
+                      style={vscDarkPlus}
+                      showLineNumbers={true}
+                      customStyle={{
+                        borderRadius: '0 0 8px 8px',
+                        width: '100%',
+                        tabSize: 2,
+                        margin: 0,
+                      }}
+                      codeTagProps={{
+                        style: {
+                          fontSize: '1rem',
+                        },
+                      }}
+                    >
+                      {snippet.content}
+                    </SyntaxHighlighter>
+                  )}
+                </S.SyntaxHighlighterWrapper>
               </div>
             ))}
           </S.MainContainer>

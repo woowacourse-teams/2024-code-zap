@@ -6,11 +6,11 @@ import { useCheckLoginState } from '@/hooks/authentication';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
-const Header = () => {
+const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   useCheckLoginState();
 
   return (
-    <S.HeaderContainer>
+    <S.HeaderContainer ref={headerRef}>
       <S.HeaderContentContainer>
         <Logo />
         <Flex align='center' gap='2rem' flex='1'>

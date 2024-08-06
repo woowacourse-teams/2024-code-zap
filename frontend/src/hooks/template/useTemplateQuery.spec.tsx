@@ -16,7 +16,7 @@ describe('useTemplateQuery', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
       expect(result.current.data?.id).toBe(2024);
-      expect(result.current.data?.title).toBe('회원가입 유효성 검증');
+      expect(result.current.data?.title).toBe('React 컴포넌트 기본 구조');
     });
   });
 });
