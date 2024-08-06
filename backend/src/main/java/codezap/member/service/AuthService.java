@@ -43,6 +43,9 @@ public class AuthService {
     }
 
     private String getAuthCookieValue(Cookie[] cookies) {
+        if (cookies == null || cookies.length == 0) {
+            throwUnauthorized();
+        }
         return Arrays.stream(cookies)
                 .filter(cookie -> Objects.equals(cookie.getName(), HttpHeaders.AUTHORIZATION))
                 .findFirst()
