@@ -7,6 +7,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
@@ -19,6 +21,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Table(
+        uniqueConstraints={
+                @UniqueConstraint(
+                        name="name_with_member",
+                        columnNames={"member_id", "name"}
+                )
+        }
+)
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
@@ -30,7 +40,7 @@ public class Category extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member member;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
