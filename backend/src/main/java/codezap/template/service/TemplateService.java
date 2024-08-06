@@ -15,6 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
+import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -48,11 +51,13 @@ public class TemplateService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
+    private final MemberRepository memberRepository;
 
     public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
             TemplateRepository templateRepository, SnippetRepository snippetRepository,
             CategoryRepository categoryRepository, TagRepository tagRepository,
-            TemplateTagRepository templateTagRepository
+            TemplateTagRepository templateTagRepository,
+            MemberRepository memberRepository
     ) {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
@@ -60,13 +65,14 @@ public class TemplateService {
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
         this.templateTagRepository = templateTagRepository;
+        this.memberRepository = memberRepository;
     }
 
     @Transactional
     public Long createTemplate(CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         Template template = templateRepository.save(
-                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category)
+                new Template(null, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
         createTags(createTemplateRequest, template);
         snippetRepository.saveAll(
@@ -251,8 +257,8 @@ public class TemplateService {
         templateRepository.deleteById(id);
     }
 
-    public FindAllMyTemplatesResponse findContainTopic(String topic, Pageable pageable) {
-        Page<Template> templates = getTemplates(topic, pageable);
+    public FindAllMyTemplatesResponse findContainTopic(Long memberId, String topic, Pageable pageable) {
+        Page<Template> templates = getTemplates(memberId, topic, pageable);
         List<FindMyTemplateResponse> myTemplateResponses = templates.stream()
                 .map(this::findByTemplate)
                 .toList();
@@ -260,10 +266,10 @@ public class TemplateService {
         return FindAllMyTemplatesResponse.of(myTemplateResponses, templates.getTotalPages());
     }
 
-    private Page<Template> getTemplates(String topic, Pageable pageable) {
+    private Page<Template> getTemplates(Long memberId, String topic, Pageable pageable) {
         String topicWithWildcards = "%" + topic + "%";
         Pageable newPageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
-        return templateRepository.searchByTopic(topicWithWildcards, newPageable);
+        return templateRepository.searchByTopic(memberId, topicWithWildcards, newPageable);
     }
 
     private FindMyTemplateResponse findByTemplate(Template template) {

@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.global.validation.ValidationSequence;
+import codezap.member.configuration.BasicAuthentication;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
+import codezap.template.service.MyTemplateFacadeService;
 import codezap.template.service.TemplateService;
 
 @RestController
@@ -33,9 +36,11 @@ import codezap.template.service.TemplateService;
 public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
+    private final MyTemplateFacadeService myTemplateFacadeService;
 
-    public TemplateController(TemplateService templateService) {
+    public TemplateController(TemplateService templateService, MyTemplateFacadeService myTemplateFacadeService) {
         this.templateService = templateService;
+        this.myTemplateFacadeService = myTemplateFacadeService;
     }
 
     @PostMapping
@@ -71,10 +76,14 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping("/search")
     public ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
+            @BasicAuthentication MemberDto memberDto,
+            @RequestParam("memberId") Long memberId,
             @RequestParam("topic") String topic,
             @PageableDefault Pageable pageable
     ) {
-        return ResponseEntity.ok(templateService.findContainTopic(topic, pageable));
+        FindAllMyTemplatesResponse response = myTemplateFacadeService
+                .searchMyTemplatesContainTopic(memberDto, memberId, topic, pageable);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{id}")

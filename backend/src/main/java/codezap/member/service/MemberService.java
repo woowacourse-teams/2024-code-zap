@@ -46,4 +46,14 @@ public class MemberService {
             throw new CodeZapException(HttpStatus.CONFLICT, "사용자명이 이미 존재합니다.");
         }
     }
+
+    public void validateMemberId(MemberDto memberDto, Long memberId) {
+        if (!memberId.equals(memberDto.id())) {
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "다른 사람의 템플릿은 확인할 수 없습니다.");
+        }
+
+        if(!memberRepository.existsById(memberId)) {
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "로그인 정보가 잘못되었습니다.");
+        }
+    }
 }

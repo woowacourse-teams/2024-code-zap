@@ -25,7 +25,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     @Query("""
             SELECT DISTINCT t
             FROM Template t JOIN Snippet s ON t.id = s.template.id
-            WHERE
+            WHERE t.member.id = :memberId AND
             (
                 t.title LIKE :topic
                 OR s.filename LIKE :topic
@@ -33,7 +33,7 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
                 OR t.description LIKE :topic
             )
             """)
-    Page<Template> searchByTopic(@Param("topic") String topic, Pageable pageable);
+    Page<Template> searchByTopic(@Param("memberId") Long memberId, @Param("topic") String topic, Pageable pageable);
 
     Page<Template> findBy(Pageable pageable);
 

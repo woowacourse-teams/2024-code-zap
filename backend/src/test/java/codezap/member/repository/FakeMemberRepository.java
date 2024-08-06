@@ -55,7 +55,7 @@ public class FakeMemberRepository implements MemberRepository {
         return idCounter.getAndIncrement();
     }
 
-    private boolean existsById(Long id) {
+    public boolean existsById(Long id) {
         return members.stream().anyMatch(member -> Objects.equals(member.getId(), id));
     }
 }

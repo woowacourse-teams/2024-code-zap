@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllMyTemplatesResponse;
@@ -71,7 +72,7 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "200", description = "템플릿 토픽 검색 성공",
             content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
     ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
-            String topic, Pageable pageable
+            MemberDto memberDto, Long memberId, String topic, Pageable pageable
     );
 
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
