@@ -14,6 +14,7 @@ public class MethodExecutionTimeAspect {
 
     @Around("execution(* codezap..*(..)) && " +
             "!within(codezap.global.logger.*) && " +
+            "!within(codezap.global.swagger.error.*) && " +
             "!within(codezap.global.exception.*)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         if (!log.isInfoEnabled()) {
