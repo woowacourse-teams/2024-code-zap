@@ -7,11 +7,13 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,7 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -123,11 +126,14 @@ class TemplateServiceTest {
         @BeforeEach
         void setUp() {
             //템플릿 30개 / 카테고리는 홀수 : 1번, 짝수 : 2번으로 매핑 / 태그는 16보다 작으면 1, 16 이상이면 2로 매핑
-            firstCategory = categoryRepository.save(new Category("category1"));
-            categoryRepository.save(new Category("category2"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberJpaRepository.fetchById(memberDto.id());
+            firstCategory = categoryRepository.save(new Category("category1", member));
+            categoryRepository.save(new Category("category2", member));
             for (int i = 1; i <= 30; i++) {
                 long categoryId = i % 2 == 0 ? firstCategory.getId() + 1 : firstCategory.getId();
                 templateRepository.save(new Template(
+                        member,
                         "title" + i,
                         "description",
                         categoryRepository.fetchById(categoryId)
