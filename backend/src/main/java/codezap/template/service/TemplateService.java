@@ -115,13 +115,16 @@ public class TemplateService {
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
         updateSnippets(updateTemplateRequest, template);
         updateTags(updateTemplateRequest, template);
-        validateSnippetsCount(updateTemplateRequest, template);
     }
 
     private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
+        validateSnippetsCount(updateTemplateRequest, template);
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
-        updateTemplateRequest.createSnippets()
-                .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
+        snippetRepository.saveAll(
+                updateTemplateRequest.createSnippets().stream()
+                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
+                        .toList()
+        );
 
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template)
                 .orElseThrow(this::throwNotFoundThumbnailSnippet);
@@ -172,7 +175,7 @@ public class TemplateService {
     }
 
     private void validateSnippetsCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
-        if (updateTemplateRequest.updateSnippets().size() + updateTemplateRequest.createSnippets().size()
+        if (updateTemplateRequest.updateSnippets().size() + updateTemplateRequest.deleteSnippetIds().size()
                 != snippetRepository.findAllByTemplate(template).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "스니펫의 정보가 정확하지 않습니다.");
         }

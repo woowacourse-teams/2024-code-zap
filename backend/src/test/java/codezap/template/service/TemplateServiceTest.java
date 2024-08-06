@@ -60,6 +60,7 @@ class TemplateServiceTest {
 
     @Autowired
     private TemplateTagRepository templateTagRepository;
+
     @Autowired
     private TagRepository tagRepository;
 
@@ -132,13 +133,15 @@ class TemplateServiceTest {
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
         templateService.update(template.getId(), updateTemplateRequest);
+
         Template updateTemplate = templateRepository.fetchById(template.getId());
-        List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
+        List<Snippet> snippets = snippetRepository.findAllByTemplate(updateTemplate);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
         List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
                 .map(TemplateTag::getTag)
                 .toList();
 
+        System.out.println(snippets.get(0).getFilename());
         // then
         assertAll(
                 () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
@@ -190,7 +193,7 @@ class TemplateServiceTest {
                         new CreateSnippetRequest("filename4", "content4", 3)
                 ),
                 List.of(
-                        new UpdateSnippetRequest(2L, "filename2", "content2", 1)
+                        new UpdateSnippetRequest(2L, "filenameff", "content2", 1)
                 ),
                 List.of(1L),
                 2L,
