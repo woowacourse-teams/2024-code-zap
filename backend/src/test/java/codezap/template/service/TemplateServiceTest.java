@@ -30,6 +30,7 @@ import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -387,7 +388,7 @@ class TemplateServiceTest {
             saveTemplate(makeTemplateRequest("hello topic !"));
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("topic");
+            FindAllMyTemplatesResponse templates = templateService.findContainTopic("topic", PageRequest.of(1, 3));
 
             //then
             assertThat(templates.templates()).hasSize(3);
@@ -402,7 +403,7 @@ class TemplateServiceTest {
             saveTemplateBySnippetFilename("tempate3", "login.js", "signup.java");
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("java");
+            FindAllMyTemplatesResponse templates = templateService.findContainTopic("java", PageRequest.of(1, 2));
 
             //then
             assertThat(templates.templates()).hasSize(2);
@@ -417,7 +418,7 @@ class TemplateServiceTest {
             saveTemplateBySnippetContent("tempate3", "console.log", "a+b=3");
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("Car");
+            FindAllMyTemplatesResponse templates = templateService.findContainTopic("Car", PageRequest.of(1, 2));
 
             //then
             assertThat(templates.templates()).hasSize(2);
@@ -452,10 +453,40 @@ class TemplateServiceTest {
             saveTemplate(request2);
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic("Login");
+            FindAllMyTemplatesResponse templates = templateService.findContainTopic("Login", PageRequest.of(1, 1));
 
             //then
             assertThat(templates.templates()).hasSize(1);
         }
+
+        @Test
+        @DisplayName("템플릿 토픽 검색 성공 : 페이징 성공")
+        void findAllContainTopicPaging() {
+            //given
+            saveTemplate(makeTemplateRequest("hello topic 1"));
+            saveTemplate(makeTemplateRequest("hello topic 2"));
+            saveTemplate(makeTemplateRequest("hello topic 3"));
+            saveTemplate(makeTemplateRequest("hello topic 4"));
+            saveTemplate(makeTemplateRequest("hello topic 5"));
+            saveTemplate(makeTemplateRequest("hello topic 6"));
+            saveTemplate(makeTemplateRequest("hello topic 7"));
+            saveTemplate(makeTemplateRequest("hello topic 8"));
+            saveTemplate(makeTemplateRequest("hello topic 9"));
+            saveTemplate(makeTemplateRequest("hello topic 10"));
+            saveTemplate(makeTemplateRequest("hello topic 11"));
+            saveTemplate(makeTemplateRequest("hello topic 12"));
+            saveTemplate(makeTemplateRequest("hello topic 13"));
+            saveTemplate(makeTemplateRequest("hello topic 14"));
+            saveTemplate(makeTemplateRequest("hello topic 15"));
+
+            //when
+            FindAllMyTemplatesResponse templates = templateService.findContainTopic("topic", PageRequest.of(2, 5));
+
+            //then
+            List<String> titles = templates.templates().stream().map(FindMyTemplateResponse::title).toList();
+            assertThat(titles).containsExactly(
+                    "hello topic 6", "hello topic 7", "hello topic 8", "hello topic 9", "hello topic 10");
+        }
+
     }
 }

@@ -3,6 +3,8 @@ package codezap.template.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
@@ -68,8 +70,11 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(@RequestParam("topic") String topic) {
-        return ResponseEntity.ok(templateService.findContainTopic(topic));
+    public ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
+            @RequestParam("topic") String topic,
+            @PageableDefault Pageable pageable
+    ) {
+        return ResponseEntity.ok(templateService.findContainTopic(topic, pageable));
     }
 
     @PostMapping("/{id}")

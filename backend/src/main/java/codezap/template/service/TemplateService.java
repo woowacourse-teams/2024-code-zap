@@ -5,6 +5,9 @@ import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -179,14 +182,10 @@ public class TemplateService {
 
     private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
-        snippetRepository.saveAll(
-                updateTemplateRequest.createSnippets().stream()
-                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
-                        .toList()
-        );
+        updateTemplateRequest.createSnippets()
+                .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
 
-        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template)
-                .orElseThrow(this::throwNotFoundThumbnailSnippet);
+        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template);
 
         if (isThumbnailSnippetDeleted(updateTemplateRequest, thumbnailSnippet)) {
             updateThumbnailSnippet(template, thumbnailSnippet);
@@ -248,12 +247,19 @@ public class TemplateService {
         templateRepository.deleteById(id);
     }
 
-    public FindAllMyTemplatesResponse findContainTopic(String topic) {
-        List<Template> templates = templateRepository.searchByTopic(topic);
+    public FindAllMyTemplatesResponse findContainTopic(String topic, Pageable pageable) {
+        Page<Template> templates = getTemplates(topic, pageable);
         List<FindMyTemplateResponse> myTemplateResponses = templates.stream()
                 .map(this::findByTemplate)
                 .toList();
-        return FindAllMyTemplatesResponse.from(myTemplateResponses);
+
+        return FindAllMyTemplatesResponse.of(myTemplateResponses, templates.getTotalPages());
+    }
+
+    private Page<Template> getTemplates(String topic, Pageable pageable) {
+        String topicWithWildcards = "%" + topic + "%";
+        Pageable newPageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
+        return templateRepository.searchByTopic(topicWithWildcards, newPageable);
     }
 
     private FindMyTemplateResponse findByTemplate(Template template) {
@@ -263,6 +269,8 @@ public class TemplateService {
                 .toList();
 
         return FindMyTemplateResponse.of(template, tags);
+    }
+
     private CodeZapException throwNotFoundSnippet() {
         throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 스니펫이 존재하지 않습니다.");
     }

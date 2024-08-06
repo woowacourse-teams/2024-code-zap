@@ -1,7 +1,7 @@
 package codezap.template.repository;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -20,17 +20,17 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     boolean existsByCategoryId(Long categoryId);
 
     @Query("""
-            SELECT t
+            SELECT DISTINCT t
             FROM Template t JOIN Snippet s ON t.id = s.template.id
             WHERE
             (
-                t.title LIKE %:topic%
-                OR s.filename LIKE %:topic%
-                OR s.content LIKE %:topic%
-                OR t.description LIKE %:topic%
+                t.title LIKE :topic
+                OR s.filename LIKE :topic
+                OR s.content LIKE :topic
+                OR t.description LIKE :topic
             )
             """)
-    List<Template> searchByTopic(@Param("topic") String topic);
+    Page<Template> searchByTopic(@Param("topic") String topic, Pageable pageable);
 
     Page<Template> findBy(Pageable pageable);
 

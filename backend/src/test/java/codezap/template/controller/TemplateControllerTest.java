@@ -513,7 +513,7 @@ class TemplateControllerTest {
             //when
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .get("/templates/search?topic=" + topic)
+                    .get("/templates/search?topic=" + topic + "&page=1&pageSize=2")
                     .then().log().all()
                     .statusCode(200)
                     .body("templates.size()", is(1));
@@ -545,7 +545,7 @@ class TemplateControllerTest {
             //when
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .get("/templates/search?topic=" + topic)
+                    .get("/templates/search?topic=" + topic + "&page=1&pageSize=2")
                     .then().log().all()
                     .statusCode(200)
                     .body("templates.size()", is(1));
@@ -576,7 +576,7 @@ class TemplateControllerTest {
             //when
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .get("/templates/search?topic=" + topic)
+                    .get("/templates/search?topic=" + topic + "&page=1&pageSize=2")
                     .then().log().all()
                     .statusCode(200)
                     .body("templates.size()", is(1));
@@ -607,7 +607,7 @@ class TemplateControllerTest {
             //when
             RestAssured.given().log().all()
                     .contentType(ContentType.JSON)
-                    .get("/templates/search?topic=" + topic)
+                    .get("/templates/search?topic=" + topic + "&page=1&pageSize=2")
                     .then().log().all()
                     .statusCode(200)
                     .body("templates.size()", is(1));
