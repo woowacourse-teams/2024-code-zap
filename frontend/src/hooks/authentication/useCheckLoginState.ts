@@ -2,10 +2,12 @@ import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useLoginStateQuery } from '@/queries/authentication/useLoginStateQuery';
+import { useAuth } from './useAuth';
 
 export const useCheckLoginState = () => {
-  const { error, isError } = useLoginStateQuery();
+  const { error, isError, isSuccess } = useLoginStateQuery();
   const navigate = useNavigate();
+  const { handleLoginState } = useAuth();
 
   const handleLoginNavigate = useCallback(() => {
     navigate('/login');
@@ -15,6 +17,11 @@ export const useCheckLoginState = () => {
     if (isError) {
       alert(error.message);
       handleLoginNavigate();
+      handleLoginState(false);
     }
-  }, [error, isError, handleLoginNavigate]);
+
+    if (isSuccess) {
+      handleLoginState(true);
+    }
+  }, [error, isError, isSuccess, handleLoginNavigate, handleLoginState]);
 };
