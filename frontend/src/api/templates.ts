@@ -34,13 +34,12 @@ export const getTemplate = async (id: number): Promise<Template> =>
     url: `${TEMPLATE_API_URL}/${id}`,
   });
 
-export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void> => {
+export const postTemplate = async (newTemplate: TemplateUploadRequest) =>
   await customFetch({
     method: 'POST',
     url: `${TEMPLATE_API_URL}`,
     body: JSON.stringify(newTemplate),
   });
-};
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({

@@ -17,6 +17,7 @@ describe('useTemplateEditQuery', () => {
 
     const template: TemplateEditRequest = {
       title: 'editTemplate',
+      description: '',
       createSnippets: [],
       updateSnippets: [
         {
@@ -26,6 +27,8 @@ describe('useTemplateEditQuery', () => {
         },
       ],
       deleteSnippetIds: [],
+      categoryId: 1,
+      tags: [],
     };
 
     await result.current.mutateAsync({ id: 2024, template });

@@ -6,13 +6,7 @@ interface Props {
   errorMessage?: string;
 }
 
-export const customFetch = async ({
-  url,
-  headers,
-  method = 'GET',
-  body,
-  errorMessage = '[Error] response was not ok',
-}: Props) => {
+export const customFetch = async ({ url, headers, method = 'GET', body }: Props) => {
   try {
     const response = await fetch(url, {
       method,
@@ -20,12 +14,9 @@ export const customFetch = async ({
         'Content-Type': 'application/json',
         ...headers,
       },
+      credentials: 'include',
       body,
     });
-
-    if (!response.ok) {
-      throw new Error(errorMessage);
-    }
 
     if (method !== 'GET') {
       return response;
@@ -35,6 +26,6 @@ export const customFetch = async ({
 
     return data;
   } catch (error) {
-    throw new Error(errorMessage);
+    throw new Error(String(error));
   }
 };

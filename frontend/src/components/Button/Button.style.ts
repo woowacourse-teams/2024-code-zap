@@ -27,7 +27,7 @@ const sizes = {
   small: css`
     gap: 0.25rem;
     height: 1.75rem;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
     font-size: ${theme.font.size.text.xsmall};
   `,
   medium: css`

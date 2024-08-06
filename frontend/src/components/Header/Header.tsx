@@ -2,26 +2,30 @@ import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Flex, Heading, Text } from '@/components';
+import { useCheckLoginState } from '@/hooks/authentication';
 import { theme } from '@/style/theme';
 import * as S from './Header.style';
 
-const Header = () => (
-  <S.HeaderContainer>
-    <S.HeaderContentContainer>
-      <Logo />
+const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
+  useCheckLoginState();
 
-      <Flex align='center' gap='2rem' flex='1'>
-        <NavOption route='/' name='내 템플릿' />
-        <NavOption route='/explore' name='구경가기' />
-      </Flex>
+  return (
+    <S.HeaderContainer ref={headerRef}>
+      <S.HeaderContentContainer>
+        <Logo />
+        <Flex align='center' gap='2rem' flex='1'>
+          <NavOption route='/' name='내 템플릿' />
+          <NavOption route='/explore' name='구경가기' />
+        </Flex>
 
-      <Flex align='center' gap='2rem'>
-        <NewTemplateButton />
-        <UserMenuButton />
-      </Flex>
-    </S.HeaderContentContainer>
-  </S.HeaderContainer>
-);
+        <Flex align='center' gap='2rem'>
+          <NewTemplateButton />
+          <UserMenuButton />
+        </Flex>
+      </S.HeaderContentContainer>
+    </S.HeaderContainer>
+  );
+};
 
 const Logo = () => (
   <Link to={'/'}>

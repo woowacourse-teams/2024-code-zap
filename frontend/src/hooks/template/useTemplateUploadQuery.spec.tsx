@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
+import type { TemplateUploadRequest } from '@/types';
 import { useTemplateUploadQuery } from './useTemplateUploadQuery';
 
 const queryClient = new QueryClient();
@@ -13,8 +14,11 @@ describe('useTemplateUploadQuery', () => {
   it('template을 생성할 수 있다.', async () => {
     const { result } = renderHook(() => useTemplateUploadQuery(), { wrapper: queryWrapper });
 
-    const body = {
+    const body: TemplateUploadRequest = {
       title: 'Upload Test',
+      description: '',
+      categoryId: 1,
+      tags: [],
       snippets: [
         {
           filename: 'filename1.txt',
