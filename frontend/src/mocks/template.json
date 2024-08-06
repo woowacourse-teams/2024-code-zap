@@ -1,7 +1,7 @@
 {
-  "id": 2024,
-  "title": "React 컴포넌트 기본 구조",
-  "description": "React 함수형 컴포넌트의 기본 구조와 props 타이핑",
+  "id": 1,
+  "title": "title1",
+  "description": "description1",
   "snippets": [
     {
       "id": 101,
@@ -16,23 +16,10 @@
       "ordinal": 2
     }
   ],
-  "category": {
-    "id": 2,
-    "name": "React"
-  },
+  "category": { "id": 2, "name": "CategoryID2" },
   "tags": [
-    {
-      "id": 1,
-      "name": "typescript"
-    },
-    {
-      "id": 2,
-      "name": "component"
-    },
-    {
-      "id": 3,
-      "name": "functional"
-    }
+    { "id": 3, "name": "JavaScript" },
+    { "id": 5, "name": "Backend" }
   ],
-  "modifiedAt": "2024-07-11 12:34"
+  "modifiedAt": "2024-07-01 12:34"
 }

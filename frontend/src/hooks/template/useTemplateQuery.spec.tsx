@@ -11,12 +11,18 @@ const queryWrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useTemplateQuery', () => {
   it('한 개의 template을 조회할 수 있다.', async () => {
-    const { result } = renderHook(() => useTemplateQuery(2024), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useTemplateQuery(1), { wrapper: queryWrapper });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
-      expect(result.current.data?.id).toBe(2024);
-      expect(result.current.data?.title).toBe('React 컴포넌트 기본 구조');
+      expect(result.current.data?.id).toBe(1);
+      expect(result.current.data?.title).toBe('title1');
+      expect(result.current.data?.description).toBe('description1');
+      expect(result.current.data?.category.id).toBe(2);
+      expect(result.current.data?.tags).toEqual([
+        { id: 3, name: 'JavaScript' },
+        { id: 5, name: 'Backend' },
+      ]);
     });
   });
 });

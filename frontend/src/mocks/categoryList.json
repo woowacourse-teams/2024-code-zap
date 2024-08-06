@@ -1,20 +1,16 @@
 {
   "categories": [
     {
-      "id": 1,
-      "name": "카테고리 없음"
-    },
-    {
       "id": 2,
-      "name": "카테고리1"
+      "name": "Category1"
     },
     {
       "id": 3,
-      "name": "카테고리2"
+      "name": "Category2"
     },
     {
       "id": 4,
-      "name": "카테고리3"
+      "name": "Category3"
     }
   ]
 }

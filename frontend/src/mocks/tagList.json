@@ -1,0 +1,14 @@
+{
+  "tags": [
+    { "id": 1, "name": "Java" },
+    { "id": 2, "name": "Example" },
+    { "id": 3, "name": "JavaScript" },
+    { "id": 4, "name": "React" },
+    { "id": 5, "name": "Backend" },
+    { "id": 6, "name": "CSS" },
+    { "id": 7, "name": "Styling" },
+    { "id": 8, "name": "OOP" },
+    { "id": 9, "name": "Frontend" },
+    { "id": 10, "name": "Python" }
+  ]
+}

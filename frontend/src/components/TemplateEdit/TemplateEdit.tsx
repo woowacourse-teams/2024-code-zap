@@ -1,13 +1,7 @@
 import { trashcanIcon } from '@/assets/images';
-import { useCategoryUpload } from '@/hooks/category/query/useCategoryUpload';
-import { Category } from '@/types/category';
-import { Snippet } from '@/types/template';
-import Button from '../Button/Button';
-import Dropdown from '../Dropdown/Dropdown';
-import Flex from '../Flex/Flex';
-import Input from '../Input/Input';
-import SnippetEditor from '../SnippetEditor/SnippetEditor';
-import TagInput from '../TagInput/TagInput';
+import { Button, Dropdown, Flex, Input, SnippetEditor, TagInput } from '@/components';
+import { useCategoryUpload } from '@/queries/category';
+import type { Category, Snippet } from '@/types';
 import * as S from './TemplateEdit.style';
 
 interface Props {

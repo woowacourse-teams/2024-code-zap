@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
-import { Button, Flex, Heading, Text } from '@/components';
+import { Flex, Heading, Text } from '@/components';
 import { useCheckLoginState } from '@/hooks/authentication';
-import { theme } from '../../style/theme';
+import { theme } from '@/style/theme';
 import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
@@ -19,11 +19,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         </Flex>
 
         <Flex align='center' gap='2rem'>
-          <Link to={'/templates/upload'}>
-            <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-              <img src={newTemplateIcon} alt='' />새 템플릿
-            </Button>
-          </Link>
+          <NewTemplateButton />
           <UserMenuButton />
         </Flex>
       </S.HeaderContentContainer>
@@ -47,6 +43,17 @@ const NavOption = ({ route, name }: { route: string; name: string }) => (
         {name}
       </Text.Medium>
     </S.NavOptionButton>
+  </Link>
+);
+
+const NewTemplateButton = () => (
+  <Link to={'/templates/upload'}>
+    <S.NewTemplateButton>
+      <img src={newTemplateIcon} alt='' />
+      <Text.Small weight='bold' color={theme.color.light.primary_800}>
+        새 템플릿
+      </Text.Small>
+    </S.NewTemplateButton>
   </Link>
 );
 
