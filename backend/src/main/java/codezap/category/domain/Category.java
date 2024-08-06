@@ -1,4 +1,4 @@
-package codezap.member.domain;
+package codezap.category.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -6,25 +6,27 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
-
+@Getter
+public class Category extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String email;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    @Column(nullable = false)
-    private String password;
+    public Category(String name) {
+        this.name = name;
+    }
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    public void updateName(String name) {
+        this.name = name;
+    }
 }

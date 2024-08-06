@@ -2,9 +2,8 @@ package codezap.template.controller;
 
 import java.net.URI;
 
-import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,10 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import codezap.global.validation.ValidationSequence;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.TemplateService;
 
 @RestController
@@ -30,8 +30,11 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody CreateTemplateRequest createTemplateRequest) {
-        return ResponseEntity.created(URI.create("/templates/" + templateService.create(createTemplateRequest)))
+    public ResponseEntity<Void> create(
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
+    ) {
+        Long createdTemplateId = templateService.createTemplate(createTemplateRequest);
+        return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
 
@@ -41,14 +44,14 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateByIdResponse> getTemplateById(@PathVariable Long id) {
+    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id) {
         return ResponseEntity.ok(templateService.findById(id));
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
             @PathVariable Long id,
-            @Valid @RequestBody UpdateTemplateRequest updateTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
         templateService.update(id, updateTemplateRequest);
         return ResponseEntity.ok().build();

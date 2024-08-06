@@ -5,14 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
+import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@NoArgsConstructor
 public class Template extends BaseTimeEntity {
 
     @Id
@@ -22,11 +25,21 @@ public class Template extends BaseTimeEntity {
     @Column(nullable = false)
     private String title;
 
-    public Template(String title) {
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @ManyToOne(optional = false)
+    private Category category;
+
+    public Template(String title, String description, Category category) {
         this.title = title;
+        this.description = description;
+        this.category = category;
     }
 
-    public void updateTitle(String title) {
+    public void updateTemplate(String title, String description, Category category) {
         this.title = title;
+        this.description = description;
+        this.category = category;
     }
 }
