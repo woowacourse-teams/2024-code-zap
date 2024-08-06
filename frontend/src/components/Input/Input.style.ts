@@ -26,6 +26,17 @@ const sizes = {
 
     border-radius: 12px;
   `,
+  xlarge: css`
+    gap: 0.75rem;
+
+    height: 4rem;
+    padding: 1rem;
+
+    font-size: 2rem;
+    line-height: 100%;
+
+    border-radius: 12px;
+  `,
 };
 
 const variants = {

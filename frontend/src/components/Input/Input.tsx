@@ -11,7 +11,7 @@ import {
 import * as S from './Input.style';
 
 export interface BaseProps extends HTMLAttributes<HTMLDivElement> {
-  size?: 'small' | 'medium';
+  size?: 'small' | 'medium' | 'xlarge';
   variant?: 'filled' | 'outlined' | 'text';
   isValid?: boolean;
 }
