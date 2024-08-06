@@ -7,57 +7,55 @@ on:
       - main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    env:
-      build-directory: ./backend
+  find-branch:
+    runs-on: self-hosted
     steps:
-      - name: Checkout
+      - name: 브랜치명을 통해 개발 환경 알아내기
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash find-env-by-branch.sh
+          
+  build:
+    needs: find-branch
+    runs-on: self-hosted
+    steps:
+      - name: 체크아웃
         uses: actions/checkout@v4
-
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: 17
-          distribution: temurin
-
-      - name: Gradle Caching
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+        
+      - name: gradle 캐싱
+        uses: gradle/actions/setup-gradle@v3
             
-      - name: Build BootJar
-        run: ./gradlew bootJar
-        working-directory: ${{ env.build-directory }}
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: code-zap-jar
-          path: backend/build/libs/*.jar
-
+      - name: bootJar로 jar 파일 생성
+        run: |
+          ./gradlew bootJar
+          mv build/libs/*.jar ${{ secrets.WORK_DIRECTORY }}/${{ env.ENVIRONMENT }}
+        working-directory: ./backend
+      
+      - name: 클린업
+        if: always()
+        run: rm -rf ../2024-code-zap/*
+        
   deploy:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: code-zap-jar
-          path: ${{ secrets.WORK_DIRECTORY }}
-          
-      - name: Run Deploy Script
+      - name: 브랜치명을 통해 개발 환경 알아내기
         run: |
-          cd ${{ secrets.WORK_DIRECTORY }}
-          unzip -o code-zap-jar.zip
-          RUNNER_TRACKING_ID="" && ./deploy.sh
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash find-env-by-branch.sh
           
-      - name: Verify Deploy Succeed
+      - name: 실행 프로세스 확인
         run: |
-          sleep 3
-          pgrep -f 'java -jar .*code-zap.*\.jar' || { echo "Deploy Failed"; exit 1; }
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash check-old-pids.sh
+        
+      - name: 배포 스크립트 실행
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          RUNNER_TRACKING_ID="" && bash start.sh ${{ env.ENVIRONMENT }}
+                    
+      - name: 실행 프로세스 확인으로 배포 검증 
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash verify-deploy.sh
+          

@@ -24,11 +24,12 @@ dependencies {
 
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 
-    compileOnly 'org.projectlombok:lombok:0.11.0'
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
     runtimeOnly 'com.mysql:mysql-connector-j:9.0.0'
-
+    runtimeOnly 'com.h2database:h2'
+    
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.rest-assured:rest-assured:5.5.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

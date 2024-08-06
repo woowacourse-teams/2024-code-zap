@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="5 seconds">
+    <include resource="logger/file/error-appender.xml"/>
+
+    <property name="LOG_FILE_PATH" value="./spring-log"/>
+
+    <root level="ERROR">
+        <appender-ref ref="error-appender"/>
+    </root>
+
+</configuration>
