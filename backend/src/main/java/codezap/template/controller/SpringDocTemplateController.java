@@ -1,14 +1,20 @@
 package codezap.template.controller;
 
+import org.springframework.data.domain.Pageable;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.FindAllMyTemplatesResponse;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateByIdResponse;
+import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,7 +27,7 @@ public interface SpringDocTemplateController {
 
     @Operation(summary = "템플릿 생성", description = """
             새로운 템플릿을 생성합니다. \n
-            템플릿의 제목, 썸네일 스니펫의 순서, 스니펫 목록이 필요합니다. \n
+            템플릿의 제목, 썸네일 스니펫의 순서, 스니펫 목록, 카테고리 ID, 태그 목록이 필요합니다. \n
             스니펫 목록은 파일 이름, 소스 코드, 해당 스니펫의 순서가 필요합니다. \n
             * 썸네일 스니펫은 1로 고정입니다. (2024.07.15 기준) \n
             * 모든 스니펫 순서는 1부터 시작합니다. \n
@@ -31,34 +37,52 @@ public interface SpringDocTemplateController {
             @Header(name = "생성된 템플릿의 API 경로", example = "/templates/1")})
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates", errorCases = {
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 이름 null 입니다."),
-            @ErrorCase(description = "제목 또는 스니펫 파일명이 255자를 초과한 경우", exampleMessage = "제목은 최대 255자까지 입력 가능합니다."),
+            @ErrorCase(description = "제목 또는 스니펫 파일 또는 태그 이름이 255자를 초과한 경우", exampleMessage = "제목은 최대 255자까지 입력 가능합니다."),
             @ErrorCase(description = "썸네일 스니펫의 순서가 1이 아닌 경우", exampleMessage = "썸네일 스니펫의 순서가 잘못되었습니다."),
             @ErrorCase(description = "스니펫 순서가 잘못된 경우", exampleMessage = "스니펫 순서가 잘못되었습니다."),
             @ErrorCase(description = "스니펫 내용 65,535 byte를 초과한 경우", exampleMessage = "파일 내용은 최대 65,535 byte까지 입력 가능합니다.")
     })
-    ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest);
+    ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
-    @Operation(summary = "템플릿 목록 조회", description = "작성된 모든 템플릿을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "조회 성공",
-            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
-    ResponseEntity<FindAllTemplatesResponse> getTemplates();
+    @Operation(summary = "템플릿 목록 조회", description = """
+            조건에 맞는 모든 템플릿을 조회합니다.
+            필터링 조건은 작성자 Id, 카테고리 Id, 태그 목록을 사용할 수 있습니다.
+            조회 조건으로 페이지 인덱스, 한 페이지에 들어갈 최대 템플릿의 개수를 변경할 수 있습니다.
+            페이지 인덱스는 1, 템플릿 개수는 20개가 기본 값입니다.
+            """)
+    @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
+            content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
+    ResponseEntity<FindAllTemplatesResponse> getTemplates(
+            //Long memberId,
+            Integer pageNumber,
+            Integer pageSize,
+            Long categoryId,
+            List<String> tagNames
+    );
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
-            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+            content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<FindTemplateByIdResponse> getTemplateById(Long id);
+    ResponseEntity<FindTemplateResponse> getTemplateById(Long id, MemberDto memberDto);
+
+    @Operation(summary = "템플릿 토픽 검색", description = "토픽이 포함된 템플릿들을 검색합니다.")
+    @ApiResponse(responseCode = "200", description = "템플릿 토픽 검색 성공",
+            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+    ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
+            MemberDto memberDto, Long memberId, String topic, Pageable pageable
+    );
 
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest);
+    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto);
 
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
-    ResponseEntity<Void> deleteTemplate(Long id);
+    ResponseEntity<Void> deleteTemplate(Long id, MemberDto memberDto);
 }

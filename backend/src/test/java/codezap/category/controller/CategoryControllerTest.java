@@ -1,0 +1,226 @@
+package codezap.category.controller;
+
+import static org.hamcrest.Matchers.is;
+
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+
+import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.service.CategoryService;
+import codezap.fixture.MemberDtoFixture;
+import codezap.member.dto.MemberDto;
+import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.dto.request.CreateTemplateRequest;
+import codezap.template.service.TemplateService;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Sql(value = "/clear.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/clear.sql", executionPhase = ExecutionPhase.AFTER_TEST_CLASS)
+class CategoryControllerTest {
+
+    private static final int MAX_LENGTH = 255;
+
+    @LocalServerPort
+    int port;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private TemplateService templateService;
+
+    String cookie;
+
+    @BeforeEach
+    void setting() {
+        RestAssured.port = port;
+        cookie = HttpHeaders.encodeBasicAuth("test1@email.com", "password1234", StandardCharsets.UTF_8);
+    }
+
+    @Nested
+    @DisplayName("카테고리 생성 테스트")
+    class createCategoryTest {
+        @Test
+        @DisplayName("카테고리 생성 성공")
+        void createCategorySuccess() {
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH));
+
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .contentType(ContentType.JSON)
+                    .body(createCategoryRequest)
+                    .when().post("/categories")
+                    .then().log().all()
+                    .header("Location", "/categories/3")
+                    .statusCode(201);
+        }
+
+        @Test
+        @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
+        void createCategoryFailWithLongName() {
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
+
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .contentType(ContentType.JSON)
+                    .body(createCategoryRequest)
+                    .when().post("/categories")
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("카테고리 이름은 최대 255자까지 입력 가능합니다."));
+        }
+    }
+
+    @Test
+    @DisplayName("카테고리 전체 조회 성공")
+    void findAllCategoriesSuccess() {
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category1");
+        categoryService.create(createCategoryRequest, memberDto);
+
+        RestAssured.given().log().all()
+                .cookie("Authorization", cookie)
+                .contentType(ContentType.JSON)
+                .when().get("/categories")
+                .then().log().all()
+                .statusCode(200)
+                .body("categories.size()", is(2));
+    }
+
+    @Nested
+    @DisplayName("카테고리 수정 테스트")
+    class updateCategoryTest {
+
+        Long savedCategoryId;
+
+        @BeforeEach
+        void saveCategory() {
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            savedCategoryId = categoryService.create(new CreateCategoryRequest("category1"), memberDto);
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 성공")
+        void updateCategorySuccess() {
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
+
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .contentType(ContentType.JSON)
+                    .body(updateCategoryRequest)
+                    .when().put("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(200);
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
+        void updateCategoryFailWithLongName() {
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH + 1));
+
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .contentType(ContentType.JSON)
+                    .body(updateCategoryRequest)
+                    .when().put("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("카테고리 이름은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 중복된 이름의 카테고리 존재")
+        void updateCategoryFailWithDuplicatedName() {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            String duplicatedName = "duplicatedName";
+            categoryService.create(new CreateCategoryRequest(duplicatedName), memberDto);
+
+            UpdateCategoryRequest createCategoryRequest = new UpdateCategoryRequest(duplicatedName);
+
+            // when & then
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .contentType(ContentType.JSON)
+                    .body(createCategoryRequest)
+                    .when().put("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(409)
+                    .body("detail", is("이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."));
+        }
+    }
+
+
+    @Nested
+    @DisplayName("카테고리 삭제 테스트")
+    class deleteCategoryTest {
+
+        Long savedCategoryId;
+
+        @BeforeEach
+        void saveCategory() {
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category1"), memberDto);
+            savedCategoryId = categoryService.create(new CreateCategoryRequest("category2"), memberDto);
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 성공")
+        void deleteCategorySuccess() {
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .when().delete("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(204);
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 성공: 존재하지 않는 카테고리의 삭제 요청")
+        void updateCategoryFailWithDuplicatedName() {
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .when().delete("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(204);
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
+        void updateCategoryFailWithLongName() {
+            // given
+            templateService.createTemplate(
+                    new CreateTemplateRequest(
+                            "title",
+                            "description",
+                            List.of(new CreateSnippetRequest("filename", "content", 1)),
+                            savedCategoryId,
+                            List.of("tag1", "tag2")
+                    ),
+                    MemberDtoFixture.getFirstMemberDto()
+            );
+
+            // when & then
+            RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
+                    .when().delete("/categories/" + savedCategoryId)
+                    .then().log().all()
+                    .statusCode(400)
+                    .body("detail", is("템플릿이 존재하는 카테고리는 삭제할 수 없습니다."));
+        }
+    }
+}
