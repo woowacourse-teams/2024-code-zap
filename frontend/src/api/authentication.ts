@@ -44,15 +44,6 @@ export const getLoginState = async () => {
   return {};
 };
 
-export const checkUsername = async (username: string) => {
-  const params = new URLSearchParams({ username });
-  const url = `${CHECK_USERNAME_API_URL}?${params}`;
-
-  return await customFetch({
-    url,
-  });
-};
-
 export const checkEmail = async (email: string) => {
   const params = new URLSearchParams({ email });
   const url = `${CHECK_EMAIL_API_URL}?${params}`;
@@ -61,6 +52,23 @@ export const checkEmail = async (email: string) => {
 
   if (response.status === 409) {
     throw new Error('중복된 이메일입니다.');
+  }
+
+  if (!response.ok) {
+    throw new Error('서버 에러가 발생했습니다.');
+  }
+
+  return {};
+};
+
+export const checkUsername = async (username: string) => {
+  const params = new URLSearchParams({ username });
+  const url = `${CHECK_USERNAME_API_URL}?${params}`;
+
+  const response = await customFetch({ url });
+
+  if (response.status === 409) {
+    throw new Error('중복된 닉네임입니다.');
   }
 
   if (!response.ok) {

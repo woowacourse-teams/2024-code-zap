@@ -21,7 +21,7 @@ const SignupPage = () => {
     isFormValid,
     handleSubmit,
     handleEmailCheck,
-    checkUserQuery,
+    handleUsernameCheck,
   } = useSignupForm();
 
   return (
@@ -52,7 +52,7 @@ const SignupPage = () => {
                 type='text'
                 value={username}
                 onChange={handleUsernameChange}
-                onBlur={() => checkUserQuery()}
+                onBlur={() => handleUsernameCheck()}
                 autoComplete='username'
               />
               <Input.HelperText>{errors.username}</Input.HelperText>
