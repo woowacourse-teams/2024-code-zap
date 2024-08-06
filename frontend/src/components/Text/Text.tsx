@@ -1,57 +1,58 @@
 import { PropsWithChildren } from 'react';
 
-import * as S from './style';
+import { theme } from '@/style/theme';
+import * as S from './Text.style';
 
-export type TextWeight = 'regular' | 'bold';
+type As = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'p' | 'span';
 
-export interface Props {
-  weight?: TextWeight;
+const weights = { ...theme.font.weight };
+const sizes = { ...theme.font.size.text };
+
+interface Props {
+  as?: As;
   color: string;
+  weight?: keyof typeof weights;
 }
 
-const Heading = ({ children, weight = 'bold', color }: PropsWithChildren<Props>) => (
-  <S.TextWrapper size='4.2rem' weight={weight} color={color}>
+const XLarge = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.xlarge}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
-const Title = ({ children, weight = 'bold', color }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as='h1' size='3.2rem' weight={weight} color={color}>
+const Large = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.large}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
-const SubTitle = ({ children, weight = 'bold', color }: PropsWithChildren<Props>) => (
-  <S.TextWrapper as='h2' size='2.4rem' weight={weight} color={color}>
+const Medium = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.medium}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
-const Label = ({ children, weight = 'bold', color }: PropsWithChildren<Props>) => (
-  <S.TextWrapper size='1.8rem' weight={weight} color={color}>
+const Small = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.small}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
-const Body = ({ children, weight = 'regular', color }: PropsWithChildren<Props>) => (
-  <S.TextWrapper size='1.6rem' weight={weight} color={color}>
+const XSmall = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.xsmall}>
     {children}
-  </S.TextWrapper>
+  </S.TextElement>
 );
 
-const Caption = ({ children, weight = 'regular', color }: PropsWithChildren<Props>) => (
-  <S.TextWrapper size='1.4rem' weight={weight} color={color}>
-    {children}
-  </S.TextWrapper>
+const Text = Object.assign(
+  {},
+  {
+    XLarge,
+    Large,
+    Medium,
+    Small,
+    XSmall,
+  },
 );
-
-const Text = {
-  Heading,
-  Title,
-  SubTitle,
-  Label,
-  Body,
-  Caption,
-};
 
 export default Text;

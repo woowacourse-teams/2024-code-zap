@@ -1,49 +1,526 @@
 {
   "templates": [
     {
-      "id": 2024,
+      "id": 1,
       "title": "title1",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
-      },
+      "description": "description1",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 2,
+      "title": "title2",
+      "description": "description2",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 4, "name": "React" }
+      ],
       "modifiedAt": "2024-07-11 12:34"
     },
     {
-      "id": 2025,
-      "title": "title2",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
-      },
+      "id": 3,
+      "title": "title3",
+      "description": "description3",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-10 12:34"
     },
     {
-      "id": 2026,
-      "title": "title3",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "const GlobalStyles = () => {"
-      },
+      "id": 4,
+      "title": "title4",
+      "description": "description4",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 6, "name": "CSS" },
+        { "id": 7, "name": "Styling" }
+      ],
       "modifiedAt": "2024-07-09 12:34"
     },
     {
-      "id": 2027,
-      "title": "title4",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
-      },
+      "id": 5,
+      "title": "title5",
+      "description": "description5",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-08 12:34"
     },
     {
-      "id": 2028,
-      "title": "title5",
-      "thumbnailSnippet": {
-        "filename": "title1.java",
-        "thumbnailContent": "public class ......"
-      },
+      "id": 6,
+      "title": "title6",
+      "description": "description6",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 2, "name": "Example" }
+      ],
       "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 7,
+      "title": "title7",
+      "description": "description7",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 8,
+      "title": "title8",
+      "description": "description8",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 9,
+      "title": "title9",
+      "description": "description9",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 10,
+      "title": "title10",
+      "description": "description10",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 9, "name": "Frontend" },
+        { "id": 10, "name": "Python" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 11,
+      "title": "title11",
+      "description": "description11",
+      "snippets": [],
+      "category": { "id": 1, "name": "" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 12,
+      "title": "title12",
+      "description": "description12",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 13,
+      "title": "title13",
+      "description": "description13",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 14,
+      "title": "title14",
+      "description": "description14",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 1, "name": "Java" }],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 15,
+      "title": "title15",
+      "description": "description15",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
+    },
+    {
+      "id": 16,
+      "title": "title16",
+      "description": "description16",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 17,
+      "title": "title17",
+      "description": "description17",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 18,
+      "title": "title18",
+      "description": "description18",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 19,
+      "title": "title19",
+      "description": "description19",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 1, "name": "Java" }],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 20,
+      "title": "title20",
+      "description": "description20",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 21,
+      "title": "title21",
+      "description": "description21",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 22,
+      "title": "title22",
+      "description": "description22",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 23,
+      "title": "title23",
+      "description": "description23",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 24,
+      "title": "title24",
+      "description": "description24",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 25,
+      "title": "title25",
+      "description": "description25",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 26,
+      "title": "title26",
+      "description": "description26",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
+    },
+    {
+      "id": 27,
+      "title": "title27",
+      "description": "description27",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 28,
+      "title": "title28",
+      "description": "description28",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 7, "name": "Styling" }],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 29,
+      "title": "title29",
+      "description": "description29",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 30,
+      "title": "title30",
+      "description": "description30",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [{ "id": 10, "name": "Python" }],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 31,
+      "title": "title31",
+      "description": "description31",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 3, "name": "JavaScript" }],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 32,
+      "title": "title32",
+      "description": "description32",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 33,
+      "title": "title33",
+      "description": "description33",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 34,
+      "title": "title34",
+      "description": "description34",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 35,
+      "title": "title35",
+      "description": "description35",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 10, "name": "Python" }],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 36,
+      "title": "title36",
+      "description": "description36",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 37,
+      "title": "title37",
+      "description": "description37",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
+    },
+    {
+      "id": 38,
+      "title": "title38",
+      "description": "description38",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 7, "name": "Styling" }],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 39,
+      "title": "title39",
+      "description": "description39",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 40,
+      "title": "title40",
+      "description": "description40",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 41,
+      "title": "title41",
+      "description": "description41",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 42,
+      "title": "title42",
+      "description": "description42",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 43,
+      "title": "title43",
+      "description": "description43",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 44,
+      "title": "title44",
+      "description": "description44",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 45,
+      "title": "title45",
+      "description": "description45",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [{ "id": 10, "name": "Python" }],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 46,
+      "title": "title46",
+      "description": "description46",
+      "snippets": [],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 47,
+      "title": "title47",
+      "description": "description47",
+      "snippets": [],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 4, "name": "React" }],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 48,
+      "title": "title48",
+      "description": "description48",
+      "snippets": [],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
     }
   ]
 }

@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react';
-import GlobalStyles from '../src/style/GlobalStyles';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import GlobalStyles from '../src/style/GlobalStyles';
 
 const preview: Preview = {
   parameters: {
@@ -16,14 +17,16 @@ const preview: Preview = {
     (Story) => (
       <>
         <GlobalStyles />
-        <div style={{ display: 'flex', gap: '1.6rem', flexWrap: 'wrap' }}>
-          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'white' }}>
-            <Story />
+        <MemoryRouter>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ border: '2px solid black', borderRadius: '8px', padding: '2rem', background: 'white' }}>
+              <Story />
+            </div>
+            <div style={{ border: '2px solid black', borderRadius: '8px', padding: '2rem', background: 'black' }}>
+              <Story />
+            </div>
           </div>
-          <div style={{ border: '0.2rem solid black', borderRadius: '8px', padding: '3.2rem', background: 'black' }}>
-            <Story />
-          </div>
-        </div>
+        </MemoryRouter>
       </>
     ),
   ],

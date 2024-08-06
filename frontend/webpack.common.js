@@ -1,3 +1,4 @@
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
@@ -28,12 +29,24 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/i,
+        type: 'asset/resource',
+        generator: {
+          filename: 'fonts/[name][ext][query]',
+        },
+      },
     ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: './public/index.html',
       filename: 'index.html',
+    }),
+    sentryWebpackPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: 'codezap',
+      project: 'javascript-react',
     }),
   ],
   resolve: {
@@ -42,4 +55,5 @@ module.exports = {
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
+  devtool: 'source-map',
 };
