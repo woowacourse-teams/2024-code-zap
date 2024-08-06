@@ -120,8 +120,11 @@ public class TemplateService {
 
     private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
-        updateTemplateRequest.createSnippets()
-                .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
+        snippetRepository.saveAll(
+                updateTemplateRequest.createSnippets().stream()
+                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
+                        .toList()
+        );
 
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template)
                 .orElseThrow(this::throwNotFoundThumbnailSnippet);
