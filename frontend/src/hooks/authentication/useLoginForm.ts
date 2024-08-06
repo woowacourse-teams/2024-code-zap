@@ -2,19 +2,23 @@ import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
-import { useInput } from '../useInput';
+import { useInputWithValidate } from '../useInputWithValidate';
 import { validateEmail, validatePassword } from './validates';
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
 
-  const { value: email, errorMessage: emailError, handleChange: handleEmailChange } = useInput('', validateEmail);
+  const {
+    value: email,
+    errorMessage: emailError,
+    handleChange: handleEmailChange,
+  } = useInputWithValidate('', validateEmail);
 
   const {
     value: password,
     errorMessage: passwordError,
     handleChange: handlePasswordChange,
-  } = useInput('', validatePassword);
+  } = useInputWithValidate('', validatePassword);
 
   const isFormValid = () => !emailError && !passwordError && email && password;
 

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { postSignup } from '@/api/authentication';
 import { useCheckEmailQuery } from '@/queries/authentication';
 import { useCheckUsernameQuery } from '@/queries/authentication/useCheckUsernameQuery';
-import { useInput } from '../useInput';
+import { useInputWithValidate } from '../useInputWithValidate';
 import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from './validates';
 
 export const useSignupForm = () => {
@@ -15,27 +15,27 @@ export const useSignupForm = () => {
     errorMessage: emailError,
     handleChange: handleEmailChange,
     handleErrorMessage: handleEmailErrorMessage,
-  } = useInput('', validateEmail);
+  } = useInputWithValidate('', validateEmail);
 
   const {
     value: username,
     errorMessage: usernameError,
     handleChange: handleUsernameChange,
     handleErrorMessage: handleUsernameErrorMessage,
-  } = useInput('', validateUsername);
+  } = useInputWithValidate('', validateUsername);
 
   const {
     value: password,
     errorMessage: passwordError,
     handleChange: handlePasswordChange,
-  } = useInput('', validatePassword);
+  } = useInputWithValidate('', validatePassword);
 
   const {
     value: confirmPassword,
     errorMessage: confirmPasswordError,
     handleChange: handleConfirmPasswordChange,
     handleErrorMessage: handleConfirmPasswordErrorMessage,
-  } = useInput('', (value, compareValue) => validateConfirmPassword(value, compareValue ?? ''));
+  } = useInputWithValidate('', (value, compareValue) => validateConfirmPassword(value, compareValue ?? ''));
 
   const { refetch: checkEmailQuery } = useCheckEmailQuery(email);
   const {

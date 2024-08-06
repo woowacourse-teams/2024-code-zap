@@ -1,6 +1,9 @@
 import { useCallback, useState } from 'react';
 
-export const useInput = (initialValue: string, validate?: (value: string, compareValue?: string) => string) => {
+export const useInputWithValidate = (
+  initialValue: string,
+  validate?: (value: string, compareValue?: string) => string,
+) => {
   const [value, setValue] = useState(initialValue);
   const [errorMessage, setErrorMessage] = useState('');
 
