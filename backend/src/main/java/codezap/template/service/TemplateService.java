@@ -182,10 +182,14 @@ public class TemplateService {
 
     private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
         updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
-        updateTemplateRequest.createSnippets()
-                .forEach(createSnippetRequest -> createSnippet(createSnippetRequest, template));
+        snippetRepository.saveAll(
+                updateTemplateRequest.createSnippets().stream()
+                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
+                        .toList()
+        );
 
-        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template);
+        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template)
+                .orElseThrow(this::throwNotFoundThumbnailSnippet);
 
         if (isThumbnailSnippetDeleted(updateTemplateRequest, thumbnailSnippet)) {
             updateThumbnailSnippet(template, thumbnailSnippet);
@@ -281,10 +285,5 @@ public class TemplateService {
 
     private CodeZapException throwNotFoundThumbnailSnippet() {
         throw new CodeZapException(HttpStatus.BAD_REQUEST, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
-    }
-
-    public FindAllTemplatesResponse findContainTopic(String topic) {
-        List<ThumbnailSnippet> thumbnailSnippets = thumbnailSnippetRepository.searchByTopic(topic);
-        return FindAllTemplatesResponse.from(thumbnailSnippets);
     }
 }

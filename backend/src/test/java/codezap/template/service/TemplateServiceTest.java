@@ -28,6 +28,7 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindMyTemplateResponse;
