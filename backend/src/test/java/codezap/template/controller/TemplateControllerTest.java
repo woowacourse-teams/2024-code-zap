@@ -2,6 +2,7 @@ package codezap.template.controller;
 
 import static org.hamcrest.Matchers.is;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.service.CategoryService;
+import codezap.fixture.MemberDtoFixture;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
@@ -43,9 +47,12 @@ class TemplateControllerTest {
     @LocalServerPort
     int port;
 
+    String cookie;
+
     @BeforeEach
     void setting() {
         RestAssured.port = port;
+        cookie = HttpHeaders.encodeBasicAuth("test1@email.com", "password1234", StandardCharsets.UTF_8);
     }
 
     @Nested
@@ -57,7 +64,6 @@ class TemplateControllerTest {
         @CsvSource({"a, 65535", "ㄱ, 21845"})
         void createTemplateSuccess(String repeatTarget, int maxLength) {
             String maxTitle = "a".repeat(MAX_LENGTH);
-            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     maxTitle,
                     repeatTarget.repeat(maxLength),
@@ -67,6 +73,7 @@ class TemplateControllerTest {
             );
 
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(templateRequest)
                     .when().post("/templates")
@@ -79,7 +86,6 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 템플릿 이름 길이 초과")
         void createTemplateFailWithLongTitle() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     exceededTitle,
                     "description",
@@ -101,7 +107,6 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
         void createTemplateFailWithLongFileName() {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
@@ -123,7 +128,6 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) {
-            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
@@ -145,7 +149,6 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void createTemplateFailWithLongDescription(String repeatTarget, int exceededLength) {
-            categoryService.create(new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     repeatTarget.repeat(exceededLength),
@@ -167,7 +170,7 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) {
-            categoryService.create(new CreateCategoryRequest("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
@@ -188,18 +191,19 @@ class TemplateControllerTest {
     }
 
     @Test
-    @DisplayName("템플릿 전체 탐색 성공")
+    @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
         // given
-        categoryService.create(new CreateCategoryRequest("category"));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
         CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
         CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
-        templateService.createTemplate(templateRequest1);
-        templateService.createTemplate(templateRequest2);
+        templateService.createTemplate(templateRequest1, memberDto);
+        templateService.createTemplate(templateRequest2, memberDto);
 
         // when & then
         RestAssured.given().log().all()
-                .get("/templates/explore")
+                .cookie("Authorization", cookie)
+                .get("/templates")
                 .then().log().all()
                 .statusCode(200)
                 .body("templates.size()", is(2));
@@ -213,19 +217,20 @@ class TemplateControllerTest {
         @DisplayName("템플릿 상세 조회 성공")
         void findOneTemplateSuccess() {
             // given
-            categoryService.create(new CreateCategoryRequest("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest);
+            templateService.createTemplate(templateRequest, memberDto);
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .get("/templates/1")
                     .then().log().all()
                     .statusCode(200)
                     .body("title", is(templateRequest.title()),
                             "snippets.size()", is(2),
                             "category.id", is(1),
-                            "category.name", is("category"),
+                            "category.name", is("카테고리 없음"),
                             "tags.size()", is(2));
         }
 
@@ -234,6 +239,7 @@ class TemplateControllerTest {
         void findOneTemplateFailWithNotFoundTemplate() {
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .get("/templates/1")
                     .then().log().all()
                     .statusCode(404)
@@ -261,12 +267,13 @@ class TemplateControllerTest {
                             new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
-                    2L,
+                    1L,
                     List.of("tag1", "tag3")
             );
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
                     .when().post("/templates/1")
@@ -297,6 +304,7 @@ class TemplateControllerTest {
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
                     .when().post("/templates/1")
@@ -306,7 +314,7 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
+        @DisplayName("템플릿 수정 실패: 파일 이름 길이 초과")
         void updateTemplateFailWithLongFileName() {
             // given
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
@@ -328,6 +336,7 @@ class TemplateControllerTest {
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
                     .when().post("/templates/1")
@@ -337,7 +346,7 @@ class TemplateControllerTest {
         }
 
         @ParameterizedTest
-        @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
+        @DisplayName("템플릿 수정 실패: 파일 내용 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void updateTemplateFailWithLongFileContent(String repeatTarget, int exceedLength) {
             // given
@@ -359,6 +368,7 @@ class TemplateControllerTest {
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
                     .when().post("/templates/1")
@@ -368,7 +378,7 @@ class TemplateControllerTest {
         }
 
         @ParameterizedTest
-        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
+        @DisplayName("템플릿 수정 실패: 템플릿 설명 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
         void updateTemplateFailWithLongContent(String repeatTarget, int exceedLength) {
             // given
@@ -390,6 +400,7 @@ class TemplateControllerTest {
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
                     .when().post("/templates/1")
@@ -422,6 +433,7 @@ class TemplateControllerTest {
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateTemplateRequest)
                     .when().post("/templates/1")
@@ -431,10 +443,11 @@ class TemplateControllerTest {
         }
 
         private void createTemplateAndTwoCategories() {
-            categoryService.create(new CreateCategoryRequest("category1"));
-            categoryService.create(new CreateCategoryRequest("category2"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category1"), memberDto);
+            categoryService.create(new CreateCategoryRequest("category2"), memberDto);
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest);
+            templateService.createTemplate(templateRequest, memberDto);
         }
     }
 
@@ -446,27 +459,29 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 성공")
         void deleteTemplateSuccess() {
             // given
-            categoryService.create(new CreateCategoryRequest("category"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category"), memberDto);
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest);
+            templateService.createTemplate(templateRequest, memberDto);
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .delete("/templates/1")
                     .then().log().all()
                     .statusCode(204);
         }
 
         @Test
-        @DisplayName("템플릿 삭제 성공: 존재하지 않는 템플릿 삭제")
-        void deleteTemplateSuccessWithNotFoundTemplate() {
+        @DisplayName("템플릿 삭제 실패: 존재하지 않는 템플릿 삭제")
+        void deleteTemplateFailWithNotFoundTemplate() {
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .delete("/templates/1")
                     .then().log().all()
-                    .statusCode(204);
+                    .statusCode(404);
         }
-
     }
 
     private CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {

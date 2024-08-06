@@ -2,6 +2,7 @@ package codezap.category.controller;
 
 import static org.hamcrest.Matchers.is;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,12 +13,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.service.CategoryService;
+import codezap.fixture.MemberDtoFixture;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.service.TemplateService;
@@ -36,12 +40,16 @@ class CategoryControllerTest {
 
     @Autowired
     private CategoryService categoryService;
+
     @Autowired
     private TemplateService templateService;
+
+    String cookie;
 
     @BeforeEach
     void setting() {
         RestAssured.port = port;
+        cookie = HttpHeaders.encodeBasicAuth("test1@email.com", "password1234", StandardCharsets.UTF_8);
     }
 
     @Nested
@@ -53,11 +61,12 @@ class CategoryControllerTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH));
 
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(createCategoryRequest)
                     .when().post("/categories")
                     .then().log().all()
-                    .header("Location", "/categories/1")
+                    .header("Location", "/categories/3")
                     .statusCode(201);
         }
 
@@ -67,6 +76,7 @@ class CategoryControllerTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(createCategoryRequest)
                     .when().post("/categories")
@@ -79,12 +89,12 @@ class CategoryControllerTest {
     @Test
     @DisplayName("카테고리 전체 조회 성공")
     void findAllCategoriesSuccess() {
-        CreateCategoryRequest createCategoryRequest1 = new CreateCategoryRequest("category1");
-        CreateCategoryRequest createCategoryRequest2 = new CreateCategoryRequest("category2");
-        categoryService.create(createCategoryRequest1);
-        categoryService.create(createCategoryRequest2);
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category1");
+        categoryService.create(createCategoryRequest, memberDto);
 
         RestAssured.given().log().all()
+                .cookie("Authorization", cookie)
                 .contentType(ContentType.JSON)
                 .when().get("/categories")
                 .then().log().all()
@@ -100,7 +110,8 @@ class CategoryControllerTest {
 
         @BeforeEach
         void saveCategory() {
-            savedCategoryId = categoryService.create(new CreateCategoryRequest("category1"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            savedCategoryId = categoryService.create(new CreateCategoryRequest("category1"), memberDto);
         }
 
         @Test
@@ -109,6 +120,7 @@ class CategoryControllerTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
 
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateCategoryRequest)
                     .when().put("/categories/" + savedCategoryId)
@@ -122,6 +134,7 @@ class CategoryControllerTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(updateCategoryRequest)
                     .when().put("/categories/" + savedCategoryId)
@@ -134,13 +147,15 @@ class CategoryControllerTest {
         @DisplayName("카테고리 수정 실패: 중복된 이름의 카테고리 존재")
         void updateCategoryFailWithDuplicatedName() {
             // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             String duplicatedName = "duplicatedName";
-            categoryService.create(new CreateCategoryRequest(duplicatedName));
+            categoryService.create(new CreateCategoryRequest(duplicatedName), memberDto);
 
             UpdateCategoryRequest createCategoryRequest = new UpdateCategoryRequest(duplicatedName);
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .contentType(ContentType.JSON)
                     .body(createCategoryRequest)
                     .when().put("/categories/" + savedCategoryId)
@@ -159,24 +174,27 @@ class CategoryControllerTest {
 
         @BeforeEach
         void saveCategory() {
-            categoryService.create(new CreateCategoryRequest("category1"));
-            savedCategoryId = categoryService.create(new CreateCategoryRequest("category2"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category1"), memberDto);
+            savedCategoryId = categoryService.create(new CreateCategoryRequest("category2"), memberDto);
         }
 
         @Test
         @DisplayName("카테고리 삭제 성공")
         void deleteCategorySuccess() {
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .when().delete("/categories/" + savedCategoryId)
                     .then().log().all()
                     .statusCode(204);
         }
 
         @Test
-        @DisplayName("카테고리 수정 성공: 존재하지 않는 카테고리의 삭제 요청")
+        @DisplayName("카테고리 삭제 성공: 존재하지 않는 카테고리의 삭제 요청")
         void updateCategoryFailWithDuplicatedName() {
             RestAssured.given().log().all()
-                    .when().delete("/categories/" + savedCategoryId + 1)
+                    .cookie("Authorization", cookie)
+                    .when().delete("/categories/" + savedCategoryId)
                     .then().log().all()
                     .statusCode(204);
         }
@@ -185,16 +203,20 @@ class CategoryControllerTest {
         @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
         void updateCategoryFailWithLongName() {
             // given
-            templateService.createTemplate(new CreateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)),
-                    savedCategoryId,
-                    List.of("tag1", "tag2")
-            ));
+            templateService.createTemplate(
+                    new CreateTemplateRequest(
+                            "title",
+                            "description",
+                            List.of(new CreateSnippetRequest("filename", "content", 1)),
+                            savedCategoryId,
+                            List.of("tag1", "tag2")
+                    ),
+                    MemberDtoFixture.getFirstMemberDto()
+            );
 
             // when & then
             RestAssured.given().log().all()
+                    .cookie("Authorization", cookie)
                     .when().delete("/categories/" + savedCategoryId)
                     .then().log().all()
                     .statusCode(400)

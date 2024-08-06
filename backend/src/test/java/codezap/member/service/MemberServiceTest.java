@@ -17,6 +17,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpHeaders;
 
+import codezap.category.repository.CategoryRepository;
+import codezap.category.repository.FakeCategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.LoginRequest;
@@ -28,8 +30,9 @@ import codezap.member.repository.MemberRepository;
 public class MemberServiceTest {
 
     private final MemberRepository memberRepository = new FakeMemberRepository();
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
     private final AuthService authService = new AuthService(memberRepository);
-    private final MemberService sut = new MemberService(memberRepository, authService);
+    private final MemberService sut = new MemberService(memberRepository, authService, categoryRepository);
 
     @Nested
     @DisplayName("이메일 중복 검사 테스트")

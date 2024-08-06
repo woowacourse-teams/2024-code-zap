@@ -45,9 +45,10 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        Long createdTemplateId = templateService.createTemplate(createTemplateRequest);
+        Long createdTemplateId = templateService.createTemplate(createTemplateRequest, memberDto);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
@@ -57,11 +58,11 @@ public class TemplateController implements SpringDocTemplateController {
             //@RequestParam Long memberId,
             @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(required = false, defaultValue = "20") Integer pageSize,
-            @RequestParam(required = false, defaultValue = "1") Long categoryId,
-            @RequestParam(required = false) List<String> tagNames
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> tags
     ) {
-        return ResponseEntity.ok(
-                templateService.findAllBy(PageRequest.of(pageNumber - 1, pageSize), categoryId, tagNames));
+
+        return ResponseEntity.ok(templateService.findAllBy(PageRequest.of(pageNumber - 1, pageSize), categoryId, tags));
     }
 
     @GetMapping("/explore")
@@ -70,8 +71,8 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id) {
-        return ResponseEntity.ok(templateService.findById(id));
+    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
+        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
     }
 
     @GetMapping("/search")
@@ -89,15 +90,16 @@ public class TemplateController implements SpringDocTemplateController {
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
             @PathVariable Long id,
-            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        templateService.update(id, updateTemplateRequest);
+        templateService.update(id, updateTemplateRequest, memberDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTemplate(@PathVariable Long id) {
-        templateService.deleteById(id);
+    public ResponseEntity<Void> deleteTemplate(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
+        templateService.deleteById(id, memberDto);
         return ResponseEntity.noContent().build();
     }
 }

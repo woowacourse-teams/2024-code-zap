@@ -16,9 +16,14 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.MemberDtoFixture;
+import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
+import codezap.member.repository.MemberJpaRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -43,6 +48,7 @@ import io.restassured.RestAssured;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Sql(value = "/clear.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(value = "/clear.sql", executionPhase = ExecutionPhase.AFTER_TEST_CLASS)
+@Transactional
 class TemplateServiceTest {
 
     @LocalServerPort
@@ -67,6 +73,8 @@ class TemplateServiceTest {
     private TemplateTagRepository templateTagRepository;
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private MemberJpaRepository memberJpaRepository;
 
     @BeforeEach
     void setting() {
@@ -77,18 +85,18 @@ class TemplateServiceTest {
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
         // given
-        categoryRepository.save(new Category("category"));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Long id = templateService.createTemplate(createTemplateRequest);
+        Long id = templateService.createTemplate(createTemplateRequest, memberDto);
         Template template = templateRepository.fetchById(id);
 
         // then
         assertAll(
                 () -> assertThat(templateRepository.findAll()).hasSize(1),
                 () -> assertThat(template.getTitle()).isEqualTo(createTemplateRequest.title()),
-                () -> assertThat(template.getCategory().getName()).isEqualTo("category")
+                () -> assertThat(template.getCategory().getName()).isEqualTo("카테고리 없음")
         );
     }
 
@@ -96,8 +104,10 @@ class TemplateServiceTest {
     @DisplayName("템플릿 전체 조회 성공")
     void findAllTemplatesSuccess() {
         // given
-        saveTemplate(makeTemplateRequest("title1"));
-        saveTemplate(makeTemplateRequest("title2"));
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
+        saveTemplate(makeTemplateRequest("title1"), new Category("category1", member), member);
+        saveTemplate(makeTemplateRequest("title2"), new Category("category2", member), member);
 
         // when
         ExploreTemplatesResponse allTemplates = templateService.findAll();
@@ -118,11 +128,14 @@ class TemplateServiceTest {
         @BeforeEach
         void setUp() {
             //템플릿 30개 / 카테고리는 홀수 : 1번, 짝수 : 2번으로 매핑 / 태그는 16보다 작으면 1, 16 이상이면 2로 매핑
-            firstCategory = categoryRepository.save(new Category("category1"));
-            categoryRepository.save(new Category("category2"));
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberJpaRepository.fetchById(memberDto.id());
+            firstCategory = categoryRepository.save(new Category("category1", member));
+            categoryRepository.save(new Category("category2", member));
             for (int i = 1; i <= 30; i++) {
                 long categoryId = i % 2 == 0 ? firstCategory.getId() + 1 : firstCategory.getId();
                 templateRepository.save(new Template(
+                        member,
                         "title" + i,
                         "description",
                         categoryRepository.fetchById(categoryId)
@@ -149,7 +162,7 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(20),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20),
-                    () -> assertThat(allBy.totalElement()).isEqualTo(30)
+                    () -> assertThat(allBy.totalElements()).isEqualTo(30)
             );
 
         }
@@ -162,7 +175,7 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(10),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() > 20),
-                    () -> assertThat(allBy.totalElement()).isEqualTo(30)
+                    () -> assertThat(allBy.totalElements()).isEqualTo(30)
             );
         }
 
@@ -175,7 +188,7 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(15),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
-                    () -> assertThat(allBy.totalElement()).isEqualTo(15)
+                    () -> assertThat(allBy.totalElements()).isEqualTo(15)
             );
         }
 
@@ -188,7 +201,7 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(15),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
-                    () -> assertThat(allBy.totalElement()).isEqualTo(15)
+                    () -> assertThat(allBy.totalElements()).isEqualTo(15)
             );
         }
 
@@ -201,7 +214,7 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(20),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 21),
-                    () -> assertThat(allBy.totalElement()).isEqualTo(30)
+                    () -> assertThat(allBy.totalElements()).isEqualTo(30)
             );
         }
 
@@ -215,7 +228,7 @@ class TemplateServiceTest {
                     () -> assertThat(allBy.templates().size()).isEqualTo(8),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
-                    () -> assertThat(allBy.totalElement()).isEqualTo(8)
+                    () -> assertThat(allBy.totalElements()).isEqualTo(8)
             );
         }
     }
@@ -224,11 +237,13 @@ class TemplateServiceTest {
     @DisplayName("템플릿 단건 조회 성공")
     void findOneTemplateSuccess() {
         // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate);
+        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        FindTemplateResponse foundTemplate = templateService.findById(template.getId());
+        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(template.getId(), memberDto);
 
         // then
         assertAll(
@@ -244,14 +259,15 @@ class TemplateServiceTest {
     @DisplayName("템플릿 수정 성공")
     void updateTemplateSuccess() {
         // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate);
-        categoryRepository.save(new Category("category2"));
+        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
+        categoryRepository.save(new Category("category2", member));
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
-        templateService.update(template.getId(), updateTemplateRequest);
-
+        templateService.update(template.getId(), updateTemplateRequest, memberDto);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
@@ -264,7 +280,7 @@ class TemplateServiceTest {
                 () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
                 () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),
                 () -> assertThat(snippets).hasSize(3),
-                () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(2L),
+                () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(1L),
                 () -> assertThat(tags).hasSize(2),
                 () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
         );
@@ -274,11 +290,13 @@ class TemplateServiceTest {
     @DisplayName("템플릿 삭제 성공")
     void deleteTemplateSuccess() {
         // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        saveTemplate(createdTemplate);
+        saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        templateService.deleteById(1L);
+        templateService.deleteById(1L, memberDto);
 
         // then
         assertAll(
@@ -310,21 +328,22 @@ class TemplateServiceTest {
                         new CreateSnippetRequest("filename4", "content4", 3)
                 ),
                 List.of(
-                        new UpdateSnippetRequest(2L, "filenameff", "content2", 1)
+                        new UpdateSnippetRequest(2L, "filename2", "content2", 1)
                 ),
                 List.of(1L),
-                2L,
+                1L,
                 List.of("tag1", "tag3")
         );
     }
 
-    private Template saveTemplate(CreateTemplateRequest createTemplateRequest) {
-        Category category = categoryRepository.save(new Category("category"));
+    private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Category category, Member member) {
+        Category savedCategory = categoryRepository.save(category);
         Template savedTemplate = templateRepository.save(
                 new Template(
+                        member,
                         createTemplateRequest.title(),
                         createTemplateRequest.description(),
-                        category
+                        savedCategory
                 )
         );
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));

@@ -6,6 +6,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.http.HttpStatus;
+
+import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 
 public class FakeMemberRepository implements MemberRepository {
@@ -16,6 +19,14 @@ public class FakeMemberRepository implements MemberRepository {
 
     public FakeMemberRepository() {
         this.members = new ArrayList<>();
+    }
+
+    @Override
+    public Member fetchById(Long id) {
+        return members.stream()
+                .filter(member -> Objects.equals(member.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 멤버가 존재하지 않습니다."));
     }
 
     @Override
