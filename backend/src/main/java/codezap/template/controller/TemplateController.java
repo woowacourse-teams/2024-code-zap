@@ -1,6 +1,7 @@
 package codezap.template.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.global.validation.ValidationSequence;
@@ -41,9 +43,12 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            Long memberId,
-            Integer pageNumber,
-            Integer pageSize) {
+            //@RequestParam Long memberId,
+            @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
+            @RequestParam(required = false, defaultValue = "20") Integer pageSize,
+            @RequestParam(required = false, defaultValue = "1") Long categoryId,
+            @RequestParam(required = false) List<String> tagNames
+    ) {
         return null;
     }
 

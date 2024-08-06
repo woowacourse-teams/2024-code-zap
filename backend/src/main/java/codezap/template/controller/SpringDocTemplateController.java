@@ -1,5 +1,7 @@
 package codezap.template.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -39,13 +41,20 @@ public interface SpringDocTemplateController {
     })
     ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest);
 
-    @Operation(summary = "템플릿 목록 조회", description = "작성된 모든 템플릿을 조회합니다.")
+    @Operation(summary = "템플릿 목록 조회", description = """
+            조건에 맞는 모든 템플릿을 조회합니다.
+            필터링 조건은 작성자 Id, 카테고리 Id, 태그 목록을 사용할 수 있습니다.
+            조회 조건으로 페이지 인덱스, 한 페이지에 들어갈 최대 템플릿의 개수를 변경할 수 있습니다.
+            페이지 인덱스는 1, 템플릿 개수는 20개가 기본 값입니다.
+            """)
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
             content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            Long memberId,
+            //Long memberId,
             Integer pageNumber,
-            Integer pageSize
+            Integer pageSize,
+            Long categoryId,
+            List<String> tagNames
     );
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
