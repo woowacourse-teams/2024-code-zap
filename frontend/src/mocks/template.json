@@ -1,7 +1,7 @@
 {
-  "id": 0,
-  "title": "title0",
-  "description": "description0",
+  "id": 1,
+  "title": "title1",
+  "description": "description1",
   "snippets": [
     {
       "id": 305,
@@ -16,10 +16,10 @@
       "ordinal": 2
     }
   ],
-  "category": { "id": 2, "name": "Category1" },
+  "category": { "id": 2, "name": "CategoryID2" },
   "tags": [
-    { "id": 0, "name": "Java" },
-    { "id": 1, "name": "Example" }
+    { "id": 3, "name": "JavaScript" },
+    { "id": 5, "name": "Backend" }
   ],
   "modifiedAt": "2024-07-01 12:34"
 }
