@@ -121,62 +121,44 @@ public class TemplateService {
             List<String> tagNames
     ) {
         if (categoryId != null && tagNames != null) {
-            return makeTemplatesResponseByCategoryAndTagNames(pageRequest, categoryId, tagNames);
+            List<Long> templateIds = filterTemplatesBy(tagNames);
+            Page<Template> templatePage =
+                    templateRepository.findByIdInAndCategoryId(pageRequest, templateIds, categoryId);
+            return makeTemplatesResponseBy(templatePage);
+
         }
         if (categoryId != null && tagNames == null) {
-            return makeTemplatesResponse(templateRepository.findByCategoryId(pageRequest, categoryId));
+            Page<Template> templatePage = templateRepository.findByCategoryId(pageRequest, categoryId);
+            return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId == null && tagNames != null) {
-            return makeTemplatesResponseByTagNames(pageRequest, tagNames);
+            List<Long> templateIds = filterTemplatesBy(tagNames);
+            Page<Template> templatePage = templateRepository.findByIdIn(pageRequest, templateIds);
+            return makeTemplatesResponseBy(templatePage);
         }
-
-        return makeTemplatesResponse(templateRepository.findBy(pageRequest));
+        Page<Template> templatePage = templateRepository.findBy(pageRequest);
+        return makeTemplatesResponseBy(templatePage);
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponseByCategoryAndTagNames(PageRequest pageRequest,
-            Long categoryId, List<String> tagNames
-    ) {
+    private List<Long> filterTemplatesBy(List<String> tagNames) {
         List<Tag> tags = tagRepository.findByNameIn(tagNames);
         List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
-        List<Long> templateIds = templateTags.stream()
+        return templateTags.stream()
                 .map(TemplateTag::getTemplate)
                 .map(Template::getId)
                 .toList();
-        Page<Template> page = templateRepository.findByIdInAndCategoryId(pageRequest, templateIds, categoryId);
-        return makeTemplatesResponse(page);
-
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponseByTagNames(PageRequest pageRequest, List<String> tagNames) {
-        List<Tag> tags = tagRepository.findByNameIn(tagNames);
-        List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
-        List<Long> templateIds = templateTags.stream()
-                .map(TemplateTag::getTemplate)
-                .map(Template::getId)
-                .toList();
-        Page<Template> page = templateRepository.findByIdIn(pageRequest, templateIds);
-        return makeTemplatesResponse(page);
-    }
-
-    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
+    private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
         List<ItemResponse> itemResponses = page.stream()
-                .map(this::findAllTemplatesResponses)
+                .map(template -> ItemResponse.of(template, getTemplateTags(template)))
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), itemResponses);
     }
 
-    private ItemResponse findAllTemplatesResponses(Template template) {
-        return new ItemResponse(template.getId(),
-                template.getTitle(),
-                template.getDescription(),
-                getTemplateTags(template),
-                template.getModifiedAt());
-    }
-
-    private List<FindTagResponse> getTemplateTags(Template template) {
+    private List<Tag> getTemplateTags(Template template) {
         return templateTagRepository.findAllByTemplate(template).stream()
                 .map(templateTag -> tagRepository.fetchById(templateTag.getTag().getId()))
-                .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
                 .toList();
     }
 

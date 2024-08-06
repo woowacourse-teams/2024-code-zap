@@ -3,6 +3,8 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import codezap.template.domain.Tag;
+import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindAllTemplatesResponse(
@@ -24,5 +26,16 @@ public record FindAllTemplatesResponse(
             @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
             LocalDateTime modifiedAt
     ) {
+        public static ItemResponse of(Template template, List<Tag> templateTags) {
+        return new ItemResponse(
+                template.getId(),
+                template.getTitle(),
+                template.getDescription(),
+                templateTags.stream()
+                        .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
+                        .toList(),
+                template.getModifiedAt()
+        );
+    }
     }
 }
