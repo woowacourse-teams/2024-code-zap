@@ -2,7 +2,7 @@ import { trashcanIcon } from '@/assets/images';
 import { useCategoryUpload } from '@/hooks/category/query/useCategoryUpload';
 import { Category } from '@/types/category';
 import { Snippet } from '@/types/template';
-import { Button } from '../Button/style';
+import Button from '../Button/Button';
 import Dropdown from '../Dropdown/Dropdown';
 import Flex from '../Flex/Flex';
 import Input from '../Input/Input';
@@ -78,8 +78,6 @@ const TemplateEdit = ({
                 placeholder='+ 새 카테고리 생성'
                 onKeyUpCapture={(e) => {
                   if (e.target instanceof HTMLInputElement && e.key === 'Enter') {
-                    console.log(e.target.value);
-
                     const newCategory = { name: e.target.value };
 
                     postCategory(newCategory);
@@ -92,7 +90,7 @@ const TemplateEdit = ({
         />
 
         <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
-          <Input size='medium' variant='text'>
+          <Input size='xlarge' variant='text'>
             <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
           </Input>
         </div>
@@ -103,7 +101,6 @@ const TemplateEdit = ({
           </Input>
         </div>
 
-        <TagInput {...tagProps} />
         {snippets.map((snippet, idx) => (
           <Flex key={idx} style={{ position: 'relative' }} width='100%'>
             <SnippetEditor
@@ -124,11 +121,13 @@ const TemplateEdit = ({
             </S.DeleteButton>
           </Flex>
         ))}
+        <Button size='filled' variant='outlined' onClick={handleAddButtonClick}>
+          + Add Snippet
+        </Button>
 
-        <Flex justify='space-between' padding='3rem 0 0 0' width='100%'>
-          <Button size='small' variant='outlined' onClick={handleAddButtonClick}>
-            + Add Snippet
-          </Button>
+        <TagInput {...tagProps} />
+
+        <Flex justify='flex-end' padding='0.5rem 0 0 0' width='100%'>
           <Flex gap='1.6rem'>
             <Button size='small' variant='outlined' onClick={handleCancelButton}>
               cancel
