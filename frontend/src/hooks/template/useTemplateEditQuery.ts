@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { QUERY_KEY } from '@/api/queryKeys';
-import { editTemplate } from '@/api/templates';
+import { QUERY_KEY, editTemplate } from '@/api';
 
 export const useTemplateEditQuery = (id: number) => {
   const queryClient = useQueryClient();

@@ -1,0 +1,16 @@
+{
+  "categories": [
+    {
+      "id": 2,
+      "name": "Category1"
+    },
+    {
+      "id": 3,
+      "name": "Category2"
+    },
+    {
+      "id": 4,
+      "name": "Category3"
+    }
+  ]
+}

@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import { PropsWithChildren } from 'react';
 
-import { TemplateEditRequest } from '@/types/template';
+import type { TemplateEditRequest } from '@/types';
 import { useTemplateEditQuery } from './useTemplateEditQuery';
 
 const queryClient = new QueryClient();
@@ -17,6 +17,7 @@ describe('useTemplateEditQuery', () => {
 
     const template: TemplateEditRequest = {
       title: 'editTemplate',
+      description: '',
       createSnippets: [],
       updateSnippets: [
         {
@@ -26,6 +27,8 @@ describe('useTemplateEditQuery', () => {
         },
       ],
       deleteSnippetIds: [],
+      categoryId: 1,
+      tags: [],
     };
 
     await result.current.mutateAsync({ id: 2024, template });

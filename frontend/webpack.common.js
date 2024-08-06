@@ -1,3 +1,4 @@
+const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 
@@ -42,6 +43,11 @@ module.exports = {
       template: './public/index.html',
       filename: 'index.html',
     }),
+    sentryWebpackPlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: 'codezap',
+      project: 'javascript-react',
+    }),
   ],
   resolve: {
     alias: {
@@ -49,4 +55,5 @@ module.exports = {
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
+  devtool: 'source-map',
 };

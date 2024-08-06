@@ -1,19 +1,25 @@
 {
-  "id": 2024,
-  "title": "회원가입 유효성 검증",
+  "id": 1,
+  "title": "title1",
+  "description": "description1",
   "snippets": [
     {
-      "id": 305,
-      "filename": "filename1.txt",
-      "content": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>\n        <span>CodeZap</span>\n\n        <SyntaxHighlighter language='javascript' style={monokaiSublime}>\n          {content}\n        </SyntaxHighlighter>\n      </Flex>\n    </>\n  );\n};\n\nexport default Template",
+      "id": 101,
+      "filename": "MyComponent.tsx",
+      "content": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};\n\nexport default MyComponent;",
       "ordinal": 1
     },
     {
-      "id": 306,
-      "filename": "filename2.java",
-      "content": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>\n        <span>CodeZap</span>\n\n        <SyntaxHighlighter language='javascript' style={monokaiSublime}>\n          {content}\n        </SyntaxHighlighter>\n      </Flex>\n    </>\n  );\n};\n\nexport default Template",
+      "id": 102,
+      "filename": "App.tsx",
+      "content": "import React from 'react';\nimport MyComponent from './MyComponent';\n\nconst App: React.FC = () => {\n  return (\n    <div>\n      <MyComponent name=\"John Doe\" age={30} />\n    </div>\n  );\n};\n\nexport default App;",
       "ordinal": 2
     }
   ],
-  "modifiedAt": "2024-07-11 12:34"
+  "category": { "id": 2, "name": "CategoryID2" },
+  "tags": [
+    { "id": 3, "name": "JavaScript" },
+    { "id": 5, "name": "Backend" }
+  ],
+  "modifiedAt": "2024-07-01 12:34"
 }
