@@ -5,6 +5,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const SIGNUP_API_URL = `${API_URL}/signup`;
 export const LOGIN_API_URL = `${API_URL}/login`;
+export const LOGIN_STATE_API_URL = `${API_URL}/login/check`;
 export const CHECK_USERNAME_API_URL = `${API_URL}/check-username`;
 export const CHECK_EMAIL_API_URL = `${API_URL}/check-email`;
 
@@ -25,6 +26,22 @@ export const postLogin = async (loginInfo: LoginRequest) => {
   localStorage.setItem('token', response.headers.get('Authorization'));
 
   return response;
+};
+
+export const getLoginState = async () => {
+  const url = `${LOGIN_STATE_API_URL}`;
+
+  const response = await customFetch({ url });
+
+  if (response.status === 401) {
+    throw new Error('로그인을 해주세요.');
+  }
+
+  if (!response.ok) {
+    throw new Error('서버 에러가 발생했습니다.');
+  }
+
+  return {};
 };
 
 export const checkUsername = async (username: string) => {
