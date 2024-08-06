@@ -10,26 +10,10 @@ import {
 import { TEMPLATE_API_URL } from '@/api/templates';
 import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
-import mockTemplateList_2 from './templateList_2.json';
-
-const mockToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
-
-const mockLogin = (token: string) => {
-  if (token === `Bearer Bearer ${mockToken}`) {
-    return mockTemplateList_2;
-  } else {
-    return mockTemplateList;
-  }
-};
 
 export const handlers = [
   // templates
-  http.get(`${TEMPLATE_API_URL}`, ({ request }) => {
-    const token = request.headers.get('Authorization') || '';
-
-    return HttpResponse.json(mockLogin(token));
-  }),
+  http.get(`${TEMPLATE_API_URL}`, () => HttpResponse.json(mockTemplateList)),
   http.get(`${TEMPLATE_API_URL}/:id`, () => HttpResponse.json(mockTemplate)),
   http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
   http.post(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 200 })),
@@ -42,12 +26,8 @@ export const handlers = [
     () =>
       new HttpResponse(null, {
         status: 200,
-        headers: {
-          Authorization: `Bearer ${mockToken}`,
-        },
       }),
   ),
-  // http.get(`${CHECK_EMAIL_API_URL}`, async () => HttpResponse.json({ check: true })),
   http.get(
     `${CHECK_EMAIL_API_URL}`,
     () =>
@@ -62,19 +42,35 @@ export const handlers = [
         },
       ),
   ),
-  http.get(`${CHECK_USERNAME_API_URL}`, async () => HttpResponse.json({ check: true })),
+  http.get(
+    `${CHECK_USERNAME_API_URL}`,
+    () =>
+      new HttpResponse(
+        JSON.stringify({
+          message: '사용 가능한 사용자 이름입니다.',
+          status: 200,
+          ok: true,
+        }),
+        {
+          status: 200,
+          statusText: 'Conflict',
+        },
+      ),
+  ),
   http.get(
     `${LOGIN_STATE_API_URL}`,
     () =>
       new HttpResponse(
         JSON.stringify({
-          ok: false,
-          message: '인증되지 않은 사용자입니다.',
-          status: 401,
+          ok: true,
+          // message: '인증되지 않은 사용자입니다.',
+          message: '인증완료',
+          status: 200,
         }),
         {
-          status: 401,
-          statusText: 'UNAUTHORIZED',
+          status: 200,
+          // statusText: 'UNAUTHORIZED',
+          statusText: 'AUTHORIZED',
         },
       ),
   ),

@@ -8,12 +8,10 @@ interface Props {
 
 export const customFetch = async ({ url, headers, method = 'GET', body }: Props) => {
   try {
-    const token = localStorage.getItem('token');
     const response = await fetch(url, {
       method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token ? `Bearer ${token}` : '',
         ...headers,
       },
       credentials: 'include',

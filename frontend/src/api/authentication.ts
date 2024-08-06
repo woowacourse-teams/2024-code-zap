@@ -23,8 +23,6 @@ export const postLogin = async (loginInfo: LoginRequest) => {
     body: JSON.stringify(loginInfo),
   });
 
-  localStorage.setItem('token', response.headers.get('Authorization'));
-
   return response;
 };
 
