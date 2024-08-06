@@ -38,7 +38,7 @@ const globalStyles = css`
 
   body {
     font-family: 'Pretendard', sans-serif;
-    line-height: '100%';
+    line-height: 100%;
     color: ${theme.color.dark.secondary_800};
     background-color: ${theme.mode === 'dark' ? theme.color.dark.tertiary_900 : theme.color.light.white};
   }

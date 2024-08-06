@@ -11,12 +11,12 @@ import {
 import * as S from './Input.style';
 
 export interface BaseProps extends HTMLAttributes<HTMLDivElement> {
-  size?: 'small' | 'medium' | 'xlarge';
+  size?: 'small' | 'medium' | 'large' | 'xlarge';
   variant?: 'filled' | 'outlined' | 'text';
   isValid?: boolean;
 }
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
-  inputSize?: 'small' | 'medium';
+  inputSize?: 'small' | 'medium' | 'large';
 }
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}

@@ -16,7 +16,7 @@ describe('useTemplateListQuery', () => {
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
-      expect(result.current.data?.templates[0].title).toBe('title1');
+      expect(result.current.data?.templates[0].title).toBe('월하의 템플릿');
     });
   });
 });
