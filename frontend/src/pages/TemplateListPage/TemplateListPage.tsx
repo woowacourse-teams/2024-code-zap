@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 
 import { Flex, TemplateItem, Text } from '@/components';
+import { useCheckLoginState } from '@/hooks/authentication';
 import { useTemplateListQuery } from '@/hooks/template';
 
 const TemplateListPage = () => {
   const { data, error, isLoading } = useTemplateListQuery();
+
+  useCheckLoginState();
 
   if (isLoading) {
     return <div>Loading...</div>;
