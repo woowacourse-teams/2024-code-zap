@@ -5,6 +5,8 @@ import jakarta.servlet.http.Cookie;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import codezap.category.domain.Category;
+import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.LoginRequest;
@@ -19,11 +21,13 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthService authService;
+    private final CategoryRepository categoryRepository;
 
     public Member signup(SignupRequest request) {
         assertUniqueEmail(request.email());
         assertUniqueUsername(request.username());
         Member member = new Member(request.email(), request.password(), request.username());
+        categoryRepository.save(Category.createDefaultCategory(member));
         return memberRepository.save(member);
     }
 
