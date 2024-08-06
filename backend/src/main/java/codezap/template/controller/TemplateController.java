@@ -47,10 +47,10 @@ public class TemplateController implements SpringDocTemplateController {
             //@RequestParam Long memberId,
             @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(required = false, defaultValue = "20") Integer pageSize,
-            @RequestParam(required = false, defaultValue = "1") Long categoryId,
-            @RequestParam(required = false) List<String> tagNames
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<String> tags
     ) {
-        return ResponseEntity.ok(templateService.findAllBy(PageRequest.of(pageNumber - 1, pageSize), categoryId, tagNames));
+        return ResponseEntity.ok(templateService.findAllBy(PageRequest.of(pageNumber - 1, pageSize), categoryId, tags));
     }
 
     @GetMapping("/explore")
