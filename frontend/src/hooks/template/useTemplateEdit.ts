@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
 
+import { ToastContext } from '@/context/ToastContext';
 import { Template, TemplateEditRequest } from '@/types/template';
 import { useCategory } from '../category/useCategory';
+import useCustomContext from '../utils/useCustomContext';
 import { useInput } from '../utils/useInput';
 import { useTemplateEditQuery } from './useTemplateEditQuery';
 
@@ -11,6 +13,8 @@ interface Props {
 }
 
 export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
+  const { failAlert } = useCustomContext(ToastContext);
+
   const [title, handleTitleChange] = useInput(template.title);
   const [description, handleDescriptionChange] = useInput(template.description);
 
@@ -66,7 +70,29 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
     setSnippets((prevSnippets) => prevSnippets.filter((_, idx) => index !== idx));
   };
 
+  const validateTemplate = () => {
+    if (!title) {
+      return '제목을 입력해주세요';
+    }
+
+    if (snippets.filter((snippet) => !snippet.filename).length) {
+      return '파일 명을 입력해주세요';
+    }
+
+    if (snippets.filter((snippet) => !snippet.content).length) {
+      return '스니펫 내용을 입력해주세요';
+    }
+
+    return '';
+  };
+
   const handleSaveButtonClick = async () => {
+    if (validateTemplate()) {
+      failAlert(validateTemplate());
+
+      return;
+    }
+
     const orderedSnippets = snippets.map((snippet, index) => ({
       ...snippet,
       ordinal: index + 1,
@@ -83,8 +109,6 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
       categoryId: categoryProps.currentValue.id,
       tags,
     };
-
-    console.log(templateUpdate, '???');
 
     try {
       await mutateAsync({ id: template.id, template: templateUpdate });

@@ -1,13 +1,16 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ToastContext } from '@/context/ToastContext';
 import { Snippet, TemplateUploadRequest } from '@/types/template';
 import { useCategory } from '../category/useCategory';
+import useCustomContext from '../utils/useCustomContext';
 import { useInput } from '../utils/useInput';
 import { useTemplateUploadQuery } from './useTemplateUploadQuery';
 
 export const useTemplateUpload = () => {
   const navigate = useNavigate();
+  const { failAlert } = useCustomContext(ToastContext);
 
   const categoryProps = useCategory();
 
@@ -62,7 +65,29 @@ export const useTemplateUpload = () => {
     navigate(-1);
   };
 
+  const validateTemplate = () => {
+    if (!title) {
+      return '제목을 입력해주세요';
+    }
+
+    if (snippets.filter((snippet) => !snippet.filename).length) {
+      return '파일 명을 입력해주세요';
+    }
+
+    if (snippets.filter((snippet) => !snippet.content).length) {
+      return '스니펫 내용을 입력해주세요';
+    }
+
+    return '';
+  };
+
   const handleSaveButtonClick = async () => {
+    if (validateTemplate()) {
+      failAlert(validateTemplate());
+
+      return;
+    }
+
     const newTemplate: TemplateUploadRequest = {
       title,
       description,
@@ -74,7 +99,7 @@ export const useTemplateUpload = () => {
     try {
       await uploadTemplate(newTemplate, {
         onSuccess: (res) => {
-          navigate(res.headers.get('Location'));
+          navigate(res.headers.get('Location') || '/');
         },
       });
     } catch (error) {
