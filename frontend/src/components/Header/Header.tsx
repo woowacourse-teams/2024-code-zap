@@ -3,10 +3,13 @@ import { Link } from 'react-router-dom';
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { useCheckLoginState } from '@/hooks/authentication';
+import { useAuth } from '@/hooks/authentication/useAuth';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = () => {
+  const { isLogin } = useAuth();
+
   useCheckLoginState();
 
   return (
@@ -24,7 +27,7 @@ const Header = () => {
               <img src={newTemplateIcon} alt='' />새 템플릿
             </Button>
           </Link>
-          <UserMenuButton />
+          {isLogin ? <UserMenuButton /> : <LoginButton />}
         </Flex>
       </S.HeaderContentContainer>
     </S.HeaderContainer>
@@ -54,6 +57,14 @@ const UserMenuButton = () => (
   <S.UserMenuButton>
     <img src={userMenuIcon} alt='사용자 메뉴' />
   </S.UserMenuButton>
+);
+
+const LoginButton = () => (
+  <Link to='/login'>
+    <Button variant='text' size='medium' weight='bold' hoverStyle='none'>
+      로그인
+    </Button>
+  </Link>
 );
 
 export default Header;
