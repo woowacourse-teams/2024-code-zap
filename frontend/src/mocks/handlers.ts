@@ -10,6 +10,8 @@ export const handlers = [
     const url = new URL(req.request.url);
     const categoryId = url.searchParams.get('category');
     const tagId = url.searchParams.get('tag');
+    const page = parseInt(url.searchParams.get('page') || '1', 10);
+    const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
 
     let filteredTemplates = mockTemplateList.templates;
 
@@ -23,7 +25,19 @@ export const handlers = [
       );
     }
 
-    return HttpResponse.json({ templates: filteredTemplates });
+    const totalElements = filteredTemplates.length;
+    const totalPages = Math.ceil(totalElements / pageSize);
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
+    const numberOfElements = paginatedTemplates.length;
+
+    return HttpResponse.json({
+      templates: paginatedTemplates,
+      totalPages,
+      totalElements,
+      numberOfElements,
+    });
   }),
   http.get(`${TEMPLATE_API_URL}/:id`, () => HttpResponse.json(mockTemplate)),
   http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),

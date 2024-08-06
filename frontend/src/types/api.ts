@@ -9,6 +9,7 @@ export interface TemplateEditRequest {
 
 export interface TemplateListResponse {
   templates: Template[];
+  totalPages: number;
 }
 
 export interface TemplateUploadRequest {
