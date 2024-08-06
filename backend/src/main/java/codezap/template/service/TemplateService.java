@@ -12,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
+import codezap.member.repository.MemberJpaRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -43,11 +46,13 @@ public class TemplateService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
     public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
             TemplateRepository templateRepository, SnippetRepository snippetRepository,
             CategoryRepository categoryRepository, TagRepository tagRepository,
-            TemplateTagRepository templateTagRepository
+            TemplateTagRepository templateTagRepository,
+            MemberJpaRepository memberJpaRepository
     ) {
         this.thumbnailSnippetRepository = thumbnailSnippetRepository;
         this.templateRepository = templateRepository;
@@ -55,13 +60,15 @@ public class TemplateService {
         this.categoryRepository = categoryRepository;
         this.tagRepository = tagRepository;
         this.templateTagRepository = templateTagRepository;
+        this.memberJpaRepository = memberJpaRepository;
     }
 
     @Transactional
-    public Long createTemplate(CreateTemplateRequest createTemplateRequest) {
+    public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
+        Member member = memberJpaRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         Template template = templateRepository.save(
-                new Template(createTemplateRequest.title(), createTemplateRequest.description(), category)
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
         createTags(createTemplateRequest, template);
         snippetRepository.saveAll(

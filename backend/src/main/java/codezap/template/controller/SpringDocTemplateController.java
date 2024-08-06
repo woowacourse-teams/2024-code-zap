@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
@@ -39,7 +40,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "스니펫 순서가 잘못된 경우", exampleMessage = "스니펫 순서가 잘못되었습니다."),
             @ErrorCase(description = "스니펫 내용 65,535 byte를 초과한 경우", exampleMessage = "파일 내용은 최대 65,535 byte까지 입력 가능합니다.")
     })
-    ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest);
+    ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
     @Operation(summary = "템플릿 목록 조회", description = """
             조건에 맞는 모든 템플릿을 조회합니다.

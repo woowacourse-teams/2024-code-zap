@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.global.validation.ValidationSequence;
+import codezap.member.configuration.BasicAuthentication;
+import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
@@ -35,9 +37,10 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping
     public ResponseEntity<Void> create(
-            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        Long createdTemplateId = templateService.createTemplate(createTemplateRequest);
+        Long createdTemplateId = templateService.createTemplate(createTemplateRequest, memberDto);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
