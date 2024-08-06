@@ -3,6 +3,8 @@ package codezap.template.service;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +21,10 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
+import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -95,8 +100,8 @@ public class TemplateService {
         );
     }
 
-    public FindAllTemplatesResponse findAll() {
-        return FindAllTemplatesResponse.from(thumbnailSnippetRepository.findAll());
+    public ExploreTemplatesResponse findAll() {
+        return ExploreTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
 
     public FindTemplateResponse findById(Long id) {
@@ -106,6 +111,58 @@ public class TemplateService {
                 .map(TemplateTag::getTag)
                 .toList();
         return FindTemplateResponse.of(template, snippets, tags);
+    }
+
+    public FindAllTemplatesResponse findAllBy(
+            //long memberId,
+            PageRequest pageRequest,
+            Long categoryId,
+            List<String> tagNames
+    ) {
+        if (categoryId != null && tagNames != null) {
+            List<Long> templateIds = filterTemplatesBy(tagNames);
+            Page<Template> templatePage =
+                    templateRepository.findByIdInAndCategoryId(pageRequest, templateIds, categoryId);
+            long totalTemplatesCount = templateRepository.countByIdInAndCategoryId(templateIds, categoryId);
+            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+
+        }
+        if (categoryId != null && tagNames == null) {
+            Page<Template> templatePage = templateRepository.findByCategoryId(pageRequest, categoryId);
+            long totalTemplatesCount = templateRepository.countByCategoryId(categoryId);
+            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        }
+        if (categoryId == null && tagNames != null) {
+            List<Long> templateIds = filterTemplatesBy(tagNames);
+            Page<Template> templatePage = templateRepository.findByIdIn(pageRequest, templateIds);
+            long totalTemplatesCount = templateRepository.countByIdIn(templateIds);
+            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        }
+        Page<Template> templatePage = templateRepository.findBy(pageRequest);
+        long totalTemplatesCount = templateRepository.count();
+        return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+    }
+
+    private List<Long> filterTemplatesBy(List<String> tagNames) {
+        List<Tag> tags = tagRepository.findByNameIn(tagNames);
+        List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
+        return templateTags.stream()
+                .map(TemplateTag::getTemplate)
+                .map(Template::getId)
+                .toList();
+    }
+
+    private FindAllTemplatesResponse makeTemplatesResponseBy(long totalTemplatesCount, Page<Template> page) {
+        List<ItemResponse> itemResponses = page.stream()
+                .map(template -> ItemResponse.of(template, getTemplateTags(template)))
+                .toList();
+        return new FindAllTemplatesResponse(page.getTotalPages(), totalTemplatesCount, itemResponses);
+    }
+
+    private List<Tag> getTemplateTags(Template template) {
+        return templateTagRepository.findAllByTemplate(template).stream()
+                .map(templateTag -> tagRepository.fetchById(templateTag.getTag().getId()))
+                .toList();
     }
 
     @Transactional

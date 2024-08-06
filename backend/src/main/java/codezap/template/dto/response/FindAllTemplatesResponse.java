@@ -3,36 +3,40 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import codezap.template.domain.ThumbnailSnippet;
+import codezap.template.domain.Tag;
+import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindAllTemplatesResponse(
+        @Schema(description = "전체 페이지 개수", example = "1")
+        int totalPage,
+        @Schema(description = "총 템플릿 개수", example = "134")
+        long totalElement,
         @Schema(description = "템플릿 목록")
         List<ItemResponse> templates
 ) {
-    public static FindAllTemplatesResponse from(List<ThumbnailSnippet> thumbnailSnippets) {
-        List<ItemResponse> templatesBySummaryResponse = thumbnailSnippets.stream()
-                .map(ItemResponse::from)
-                .toList();
-        return new FindAllTemplatesResponse(templatesBySummaryResponse);
-    }
 
     public record ItemResponse(
             @Schema(description = "템플릿 식별자", example = "0")
             Long id,
             @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
             String title,
-            @Schema(description = "목록 조회 시 보여질 대표 스니펫 정보")
-            FindThumbnailSnippetResponse thumbnailSnippet,
+            @Schema(description = "템플릿 설명", example = "Jwt 토큰을 이용하여 로그인 기능을 구현합니다.")
+            String description,
+            @Schema(description = "태그 리스트")
+            List<FindTagResponse> tags,
             @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
             LocalDateTime modifiedAt
     ) {
-        public static ItemResponse from(ThumbnailSnippet thumbnailSnippet) {
+        public static ItemResponse of(Template template, List<Tag> templateTags) {
             return new ItemResponse(
-                    thumbnailSnippet.getTemplate().getId(),
-                    thumbnailSnippet.getTemplate().getTitle(),
-                    FindThumbnailSnippetResponse.from(thumbnailSnippet.getSnippet()),
-                    thumbnailSnippet.getModifiedAt()
+                    template.getId(),
+                    template.getTitle(),
+                    template.getDescription(),
+                    templateTags.stream()
+                            .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
+                            .toList(),
+                    template.getModifiedAt()
             );
         }
     }

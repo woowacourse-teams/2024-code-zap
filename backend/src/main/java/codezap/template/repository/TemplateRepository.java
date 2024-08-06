@@ -1,5 +1,10 @@
 package codezap.template.repository;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 
@@ -14,4 +19,19 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     }
 
     boolean existsByCategoryId(Long categoryId);
+
+    Page<Template> findBy(Pageable pageable);
+
+    Page<Template> findByCategoryId(Pageable pageable, Long categoryId);
+
+    Page<Template> findByIdIn(PageRequest pageRequest, List<Long> templateIds);
+
+    Page<Template> findByIdInAndCategoryId(PageRequest pageRequest, List<Long> templateIds, Long categoryId);
+
+    long countByCategoryId(Long categoryId);
+
+    long countByIdInAndCategoryId(List<Long> templateIds, Long categoryId);
+
+    long countByIdIn(List<Long> templateIds);
+
 }
