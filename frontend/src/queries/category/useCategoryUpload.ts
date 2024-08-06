@@ -8,7 +8,7 @@ export const useCategoryUpload = () => {
   return useMutation({
     mutationFn: postCategory,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CATEGORY] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CATEGORY_LIST] });
     },
   });
 };

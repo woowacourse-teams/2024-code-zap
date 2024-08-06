@@ -1,5 +1,4 @@
 export const QUERY_KEY = {
-  CATEGORY: 'category',
   CATEGORY_LIST: 'categoryList',
   CHECK_EMAIL: 'checkEmail',
   CHECK_USERNAME: 'userName',
