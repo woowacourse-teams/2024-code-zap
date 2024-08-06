@@ -15,4 +15,5 @@ export {
   LOGIN_API_URL,
   LOGIN_STATE_API_URL,
   SIGNUP_API_URL,
+  LOGOUT_API_URL,
 } from './authentication';
