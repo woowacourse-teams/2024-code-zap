@@ -135,7 +135,7 @@ class TemplateServiceTest {
         templateService.update(template.getId(), updateTemplateRequest);
 
         Template updateTemplate = templateRepository.fetchById(template.getId());
-        List<Snippet> snippets = snippetRepository.findAllByTemplate(updateTemplate);
+        List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findById(template.getId()).get();
         List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
                 .map(TemplateTag::getTag)
