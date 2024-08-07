@@ -1,4 +1,5 @@
 import type { LoginRequest, SignupRequest } from '@/types';
+import { MemberInfo } from '@/types/authentication';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -17,14 +18,16 @@ export const postSignup = async (signupInfo: SignupRequest) =>
     body: JSON.stringify(signupInfo),
   });
 
-export const postLogin = async (loginInfo: LoginRequest) => {
+export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> => {
   const response = await customFetch({
     method: 'POST',
     url: `${LOGIN_API_URL}`,
     body: JSON.stringify(loginInfo),
   });
 
-  return response;
+  const data = await response.json();
+
+  return data;
 };
 
 export const postLogout = async () => {
