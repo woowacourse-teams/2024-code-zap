@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { searchIcon } from '@/assets/images';
 import { CategoryMenu, Flex, Heading, Input, TemplateGrid, PagingButton } from '@/components';
 import { useWindowWidth, useDebounce } from '@/hooks';
+import { useInput } from '@/hooks/utils/useInput';
 import { useCategoryListQuery } from '@/queries/category';
 import { useTemplateListQuery } from '@/queries/template';
 import { theme } from '@/style/theme';
@@ -15,15 +16,13 @@ const MyTemplatePage = () => {
   const windowWidth = useWindowWidth();
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [page, setPage] = useState<number>(1);
-  const [pageSize] = useState<number>(20);
-  const [keyword, setKeyword] = useState<string>('');
+  const [keyword, handleKeywordChange] = useInput('');
 
   const debouncedKeyword = useDebounce(keyword, 250);
 
   const { data: templateData } = useTemplateListQuery({
     categoryId: selectedCategoryId,
     page,
-    pageSize,
     keyword: debouncedKeyword,
   });
   const { data: categoryData } = useCategoryListQuery();
@@ -33,10 +32,6 @@ const MyTemplatePage = () => {
     setSelectedCategoryId(categoryId);
     setPage(1);
   }, []);
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -77,7 +72,7 @@ const MyTemplatePage = () => {
               <Input.TextField
                 placeholder='검색'
                 value={keyword}
-                onChange={handleSearchChange}
+                onChange={handleKeywordChange}
                 onKeyDown={handleSearchSubmit}
               />
             </S.SearchInput>
