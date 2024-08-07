@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 import { searchIcon } from '@/assets/images';
 import { CategoryMenu, Flex, Heading, Input, TemplateGrid, PagingButton } from '@/components';
-import { useWindowWidth } from '@/hooks';
+import { useWindowWidth, useDebounce } from '@/hooks';
 import { useCategoryListQuery } from '@/queries/category';
 import { useTemplateListQuery } from '@/queries/template';
 import { theme } from '@/style/theme';
@@ -16,11 +16,15 @@ const MyTemplatePage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [page, setPage] = useState<number>(1);
   const [pageSize] = useState<number>(20);
+  const [keyword, setKeyword] = useState<string>('');
+
+  const debouncedKeyword = useDebounce(keyword, 250);
 
   const { data: templateData } = useTemplateListQuery({
     categoryId: selectedCategoryId,
     page,
     pageSize,
+    keyword: debouncedKeyword,
   });
   const { data: categoryData } = useCategoryListQuery();
 
@@ -29,6 +33,16 @@ const MyTemplatePage = () => {
     setSelectedCategoryId(categoryId);
     setPage(1);
   }, []);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+  };
+
+  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setPage(1);
+    }
+  };
 
   const templates = templateData?.templates || [];
   const categories = categoryData?.categories || [];
@@ -60,7 +74,12 @@ const MyTemplatePage = () => {
               <Input.Adornment>
                 <img src={searchIcon} />
               </Input.Adornment>
-              <Input.TextField placeholder='검색' />
+              <Input.TextField
+                placeholder='검색'
+                value={keyword}
+                onChange={handleSearchChange}
+                onKeyDown={handleSearchSubmit}
+              />
             </S.SearchInput>
           </Flex>
           <TemplateGrid templates={templates} cols={getGridCols(windowWidth)} />

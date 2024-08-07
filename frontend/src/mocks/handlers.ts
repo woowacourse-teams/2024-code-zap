@@ -17,12 +17,22 @@ import mockTemplateList from './templateList.json';
 export const templateHandlers = [
   http.get(`${TEMPLATE_API_URL}`, (req) => {
     const url = new URL(req.request.url);
-    const categoryId = url.searchParams.get('category');
-    const tagId = url.searchParams.get('tag');
+    const keyword = url.searchParams.get('keyword');
+    const categoryId = url.searchParams.get('categoryId');
+    const tagId = url.searchParams.get('tagId');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
 
     let filteredTemplates = mockTemplateList.templates;
+
+    if (keyword) {
+      filteredTemplates = filteredTemplates.filter(
+        (template) =>
+          template.title.includes(keyword) ||
+          template.description.includes(keyword) ||
+          template.snippets.some((snippet) => snippet.content.includes(keyword)),
+      );
+    }
 
     if (categoryId) {
       filteredTemplates = filteredTemplates.filter((template) => template.category.id.toString() === categoryId);
