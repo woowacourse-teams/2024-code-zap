@@ -96,7 +96,7 @@ class CategoryControllerTest {
         RestAssured.given().log().all()
                 .cookie("Authorization", cookie)
                 .contentType(ContentType.JSON)
-                .when().get("/categories")
+                .when().get("/categories?memberId=1")
                 .then().log().all()
                 .statusCode(200)
                 .body("categories.size()", is(2));
