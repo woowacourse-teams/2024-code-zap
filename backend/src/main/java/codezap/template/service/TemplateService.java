@@ -152,11 +152,11 @@ public class TemplateService {
                     templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
-        if (categoryId != null && tagIds == null) {
+        if (categoryId != null) {
             Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
-        if (categoryId == null && tagIds != null) {
+        if (tagIds != null) {
             List<Long> templateIds = filterTemplatesBy(tagIds);
             Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
