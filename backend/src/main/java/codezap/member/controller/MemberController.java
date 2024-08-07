@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.member.dto.LoginRequest;
+import codezap.member.dto.LoginResponse;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
 import codezap.member.service.MemberService;
@@ -48,7 +49,7 @@ public class MemberController implements SpringDocMemberController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public void login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
+    public LoginResponse login(@Valid @RequestBody LoginRequest request, HttpServletResponse response) {
         MemberDto member = memberService.login(request);
         String basicAuth = HttpHeaders.encodeBasicAuth(member.email(), member.password(), StandardCharsets.UTF_8);
         ResponseCookie cookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, basicAuth)
@@ -59,6 +60,7 @@ public class MemberController implements SpringDocMemberController {
                 .httpOnly(true)
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return new LoginResponse(member.id(), member.username());
     }
 
     @GetMapping("/login/check")
@@ -66,7 +68,6 @@ public class MemberController implements SpringDocMemberController {
     public void checkLogin(HttpServletRequest request) {
         memberService.checkLogin(request.getCookies());
     }
-
 
     @PostMapping("/logout")
     @ResponseStatus(HttpStatus.NO_CONTENT)
