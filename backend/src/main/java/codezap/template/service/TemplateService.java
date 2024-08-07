@@ -34,8 +34,10 @@ import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailSnippetRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class TemplateService {
 
     public static final int FIRST_ORDINAL = 1;
@@ -47,21 +49,6 @@ public class TemplateService {
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
     private final MemberRepository memberRepository;
-
-    public TemplateService(ThumbnailSnippetRepository thumbnailSnippetRepository,
-            TemplateRepository templateRepository, SnippetRepository snippetRepository,
-            CategoryRepository categoryRepository, TagRepository tagRepository,
-            TemplateTagRepository templateTagRepository,
-            MemberRepository memberRepository
-    ) {
-        this.thumbnailSnippetRepository = thumbnailSnippetRepository;
-        this.templateRepository = templateRepository;
-        this.snippetRepository = snippetRepository;
-        this.categoryRepository = categoryRepository;
-        this.tagRepository = tagRepository;
-        this.templateTagRepository = templateTagRepository;
-        this.memberRepository = memberRepository;
-    }
 
     @Transactional
     public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {

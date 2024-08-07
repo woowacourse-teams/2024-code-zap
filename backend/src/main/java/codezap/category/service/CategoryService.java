@@ -12,29 +12,22 @@ import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
-import codezap.member.repository.MemberJpaRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.template.repository.TemplateRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
-    private final MemberRepository memberJpaRepository;
-
-    public CategoryService(CategoryRepository categoryRepository, TemplateRepository templateRepository,
-            MemberJpaRepository memberJpaRepository
-    ) {
-        this.categoryRepository = categoryRepository;
-        this.templateRepository = templateRepository;
-        this.memberJpaRepository = memberJpaRepository;
-    }
+    private final MemberRepository memberRepository;
 
     @Transactional
     public Long create(CreateCategoryRequest createCategoryRequest, MemberDto memberDto) {
         String categoryName = createCategoryRequest.name();
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
         Category category = new Category(categoryName, member);
         return categoryRepository.save(category).getId();
@@ -51,7 +44,7 @@ public class CategoryService {
 
     @Transactional
     public void update(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
         Category category = categoryRepository.fetchById(id);
         validateAuthorizeMember(category, member);
@@ -65,7 +58,7 @@ public class CategoryService {
     }
 
     public void deleteById(Long id, MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+        Member member = memberRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(id);
         validateAuthorizeMember(category, member);
 
