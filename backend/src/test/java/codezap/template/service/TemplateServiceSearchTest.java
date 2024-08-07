@@ -83,21 +83,21 @@ class TemplateServiceSearchTest {
     }
 
     private void saveDefault15Templates(Member member, Category category) {
-        saveTemplate(makeTemplateRequest("hello topic 1"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 2"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 3"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 4"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 5"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 6"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 7"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 8"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 9"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 10"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 11"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 12"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 13"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 14"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 15"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 2"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 3"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 4"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 5"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 6"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 7"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 8"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 9"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 10"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 11"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 12"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 13"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 14"), member, category);
+        saveTemplate(makeTemplateRequest("hello keyword 15"), member, category);
 
         tagRepository.save(new Tag("tag1"));
         tagRepository.save(new Tag("tag2"));
@@ -143,22 +143,22 @@ class TemplateServiceSearchTest {
 
     @Nested
     @DisplayName("템플릿 토픽 검색")
-    class searchContainTopic {
+    class searchContainKeyword {
         @Test
         @DisplayName("템플릿 토픽 검색 성공 : 템플릿 제목에 포함")
-        void findAllTemplatesTitleContainTopicSuccess() {
+        void findAllTemplatesTitleContainKeywordSuccess() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
             Category category = categoryRepository.save(new Category("category", member));
             saveTemplate(makeTemplateRequest("hello"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic"), member, category);
-            saveTemplate(makeTemplateRequest("topic hello"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic !"), member, category);
+            saveTemplate(makeTemplateRequest("hello keyword"), member, category);
+            saveTemplate(makeTemplateRequest("keyword hello"), member, category);
+            saveTemplate(makeTemplateRequest("hello keyword !"), member, category);
 
             //when
             FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "topic", null, null, PageRequest.of(1, 3)
+                    member.getId(), "keyword", null, null, PageRequest.of(1, 3)
             );
 
             //then
@@ -167,7 +167,7 @@ class TemplateServiceSearchTest {
 
         @Test
         @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
-        void findAllSnippetFilenameContainTopicSuccess() {
+        void findAllSnippetFilenameContainKeywordSuccess() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
@@ -187,7 +187,7 @@ class TemplateServiceSearchTest {
 
         @Test
         @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
-        void findAllSnippetContentContainTopicSuccess() {
+        void findAllSnippetContentContainKeywordSuccess() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
@@ -207,7 +207,7 @@ class TemplateServiceSearchTest {
 
         @Test
         @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 설명에 포함")
-        void findAllDescriptionContainTopicSuccess() {
+        void findAllDescriptionContainKeywordSuccess() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
@@ -252,7 +252,7 @@ class TemplateServiceSearchTest {
 
         @Test
         @DisplayName("템플릿 토픽 검색 성공 : 페이징 성공")
-        void findAllContainTopicPaging() {
+        void findAllContainKeywordPaging() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
@@ -261,13 +261,13 @@ class TemplateServiceSearchTest {
 
             //when
             FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "topic", null, null, PageRequest.of(2, 5)
+                    member.getId(), "keyword", null, null, PageRequest.of(2, 5)
             );
 
             //then
             List<String> titles = templates.templates().stream().map(ItemResponse::title).toList();
-            assertThat(titles).containsExactly("hello topic 6", "hello topic 7", "hello topic 8", "hello topic 9",
-                    "hello topic 10");
+            assertThat(titles).containsExactly("hello keyword 6", "hello keyword 7", "hello keyword 8", "hello keyword 9",
+                    "hello keyword 10");
         }
     }
 

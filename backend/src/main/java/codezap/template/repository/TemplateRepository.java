@@ -27,15 +27,15 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             FROM Template t JOIN Snippet s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             (
-                t.title LIKE :topic
-                OR s.filename LIKE :topic
-                OR s.content LIKE :topic
-                OR t.description LIKE :topic
+                t.title LIKE :keyword
+                OR s.filename LIKE :keyword
+                OR s.content LIKE :keyword
+                OR t.description LIKE :keyword
             )
             """)
     Page<Template> searchBy(
             @Param("memberId") Long memberId,
-            @Param("topic") String topic,
+            @Param("keyword") String keyword,
             Pageable pageable
     );
 
@@ -45,15 +45,15 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             WHERE t.member.id = :memberId AND
             t.id in :templateIds AND
             (
-                t.title LIKE :topic
-                OR s.filename LIKE :topic
-                OR s.content LIKE :topic
-                OR t.description LIKE :topic
+                t.title LIKE :keyword
+                OR s.filename LIKE :keyword
+                OR s.content LIKE :keyword
+                OR t.description LIKE :keyword
             )
             """)
     Page<Template> searchBy(
             @Param("memberId") Long memberId,
-            @Param("topic") String topic,
+            @Param("keyword") String keyword,
             @Param("templateIds") List<Long> templateIds,
             Pageable pageable
     );
@@ -64,15 +64,15 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             WHERE t.member.id = :memberId AND
             t.category.id = :categoryId AND
             (
-                t.title LIKE :topic
-                OR s.filename LIKE :topic
-                OR s.content LIKE :topic
-                OR t.description LIKE :topic
+                t.title LIKE :keyword
+                OR s.filename LIKE :keyword
+                OR s.content LIKE :keyword
+                OR t.description LIKE :keyword
             )
             """)
     Page<Template> searchBy(
             @Param("memberId") Long memberId,
-            @Param("topic") String topic,
+            @Param("keyword") String keyword,
             @Param("categoryId") Long categoryId,
             Pageable pageable
     );
@@ -84,15 +84,15 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             t.category.id = :categoryId AND
             t.id in :templateIds AND
             (
-                t.title LIKE :topic
-                OR s.filename LIKE :topic
-                OR s.content LIKE :topic
-                OR t.description LIKE :topic
+                t.title LIKE :keyword
+                OR s.filename LIKE :keyword
+                OR s.content LIKE :keyword
+                OR t.description LIKE :keyword
             )
             """)
     Page<Template> searchBy(
             @Param("memberId") Long memberId,
-            @Param("topic") String topic,
+            @Param("keyword") String keyword,
             @Param("categoryId") Long categoryId,
             @Param("templateIds") List<Long> templateIds,
             Pageable pageable

@@ -50,13 +50,13 @@ public class TemplateController implements SpringDocTemplateController {
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
             @BasicAuthentication MemberDto memberDto,
             @RequestParam Long memberId,
-            @RequestParam("topic") String topic,
+            @RequestParam("keyword") String keyword,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<String> tags,
             @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
         FindAllTemplatesResponse response =
-                templateService.findAllBy(memberId, topic, categoryId, tags, pageable);
+                templateService.findAllBy(memberId, keyword, categoryId, tags, pageable);
         return ResponseEntity.ok(response);
     }
 

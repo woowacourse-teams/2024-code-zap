@@ -138,30 +138,30 @@ public class TemplateService {
 
     public FindAllTemplatesResponse findAllBy(
             long memberId,
-            String topic,
+            String keyword,
             Long categoryId,
             List<String> tagNames,
             Pageable pageable
     ) {
-        topic = "%" + topic + "%";
+        keyword = "%" + keyword + "%";
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         if (categoryId != null && tagNames != null) {
             List<Long> templateIds = filterTemplatesBy(tagNames);
             Page<Template> templatePage =
-                    templateRepository.searchBy(memberId, topic, categoryId, templateIds, pageable);
+                    templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId != null && tagNames == null) {
-            Page<Template> templatePage = templateRepository.searchBy(memberId, topic, categoryId, pageable);
+            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId == null && tagNames != null) {
             List<Long> templateIds = filterTemplatesBy(tagNames);
-            Page<Template> templatePage = templateRepository.searchBy(memberId, topic, templateIds, pageable);
+            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
-        Page<Template> templatePage = templateRepository.searchBy(memberId, topic, pageable);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, pageable);
         return makeTemplatesResponseBy(templatePage);
     }
 

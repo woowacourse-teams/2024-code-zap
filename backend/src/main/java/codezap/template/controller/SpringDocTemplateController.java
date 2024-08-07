@@ -54,7 +54,7 @@ public interface SpringDocTemplateController {
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
             MemberDto memberDto,
             Long memberId,
-            String topic,
+            String keyword,
             Long categoryId,
             List<String> tags,
             Pageable pageable
