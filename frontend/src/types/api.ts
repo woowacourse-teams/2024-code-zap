@@ -35,7 +35,7 @@ export interface CategoryRequest {
 
 export interface TemplateListRequest {
   categoryId?: number;
-  tagId?: number;
+  tagIds?: number[];
   page?: number;
   pageSize?: number;
   keyword?: string;

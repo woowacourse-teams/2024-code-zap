@@ -19,7 +19,7 @@ export const templateHandlers = [
     const url = new URL(req.request.url);
     const keyword = url.searchParams.get('keyword');
     const categoryId = url.searchParams.get('categoryId');
-    const tagId = url.searchParams.get('tagId');
+    const tagIds = url.searchParams.get('tagIds');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
 
@@ -38,9 +38,9 @@ export const templateHandlers = [
       filteredTemplates = filteredTemplates.filter((template) => template.category.id.toString() === categoryId);
     }
 
-    if (tagId) {
+    if (tagIds) {
       filteredTemplates = filteredTemplates.filter((template) =>
-        template.tags.some((tag) => tag.id.toString() === tagId),
+        template.tags.some((tag) => tagIds.split(',').includes(tag.id.toString())),
       );
     }
 

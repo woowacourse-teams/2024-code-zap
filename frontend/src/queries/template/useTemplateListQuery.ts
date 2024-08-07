@@ -5,15 +5,15 @@ import type { TemplateListResponse } from '@/types';
 
 interface Props {
   categoryId?: number;
-  tagId?: number;
+  tagIds?: number[];
   page?: number;
   pageSize?: number;
   keyword?: string;
 }
 
-export const useTemplateListQuery = ({ categoryId, tagId, page = 1, pageSize = PAGE_SIZE, keyword }: Props) =>
+export const useTemplateListQuery = ({ categoryId, tagIds, page = 1, pageSize = PAGE_SIZE, keyword }: Props) =>
   useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagId, page, pageSize, keyword],
-    queryFn: () => getTemplateList({ categoryId, tagId, page, pageSize, keyword }),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagIds, page, pageSize, keyword],
+    queryFn: () => getTemplateList({ categoryId, tagIds, page, pageSize, keyword }),
     placeholderData: keepPreviousData,
   });

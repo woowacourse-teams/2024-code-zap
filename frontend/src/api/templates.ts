@@ -15,7 +15,7 @@ export const PAGE_SIZE = 20;
 
 export const getTemplateList = async ({
   categoryId,
-  tagId,
+  tagIds,
   page = 1,
   pageSize = PAGE_SIZE,
   keyword = '',
@@ -28,8 +28,8 @@ export const getTemplateList = async ({
     url.searchParams.append('categoryId', categoryId.toString());
   }
 
-  if (tagId) {
-    url.searchParams.append('tagId', tagId.toString());
+  if (tagIds) {
+    url.searchParams.append('tagIds', tagIds.toString());
   }
 
   url.searchParams.append('pageNumber', page.toString());
