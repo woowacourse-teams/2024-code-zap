@@ -50,7 +50,7 @@ public class TemplateController implements SpringDocTemplateController {
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
             @BasicAuthentication MemberDto memberDto,
             @RequestParam Long memberId,
-            @RequestParam("keyword") String keyword,
+            @RequestParam String keyword,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20, page = 1) Pageable pageable
