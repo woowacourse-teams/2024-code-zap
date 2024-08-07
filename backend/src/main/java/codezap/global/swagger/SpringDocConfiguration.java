@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
 public class SpringDocConfiguration {
@@ -20,6 +21,7 @@ public class SpringDocConfiguration {
                         """);
 
         return new OpenAPI()
+                .addServersItem(new Server().url("https://api.code-zap.com"))
                 .info(info);
     }
 }
