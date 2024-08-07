@@ -20,6 +20,7 @@ export const templateHandlers = [
     const keyword = url.searchParams.get('keyword');
     const categoryId = url.searchParams.get('categoryId');
     const tagIds = url.searchParams.get('tagIds');
+    const sort = url.searchParams.get('sort');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
 
@@ -42,6 +43,28 @@ export const templateHandlers = [
       filteredTemplates = filteredTemplates.filter((template) =>
         template.tags.some((tag) => tagIds.split(',').includes(tag.id.toString())),
       );
+    }
+
+    // API에서 createdAt가 추가되면 'createdAt'으로 변경한다.
+    switch (sort) {
+      case 'createdAt,asc':
+        filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
+        break;
+
+      case 'createdAt,desc':
+        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+        break;
+
+      case 'modifiedAt,asc':
+        filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
+        break;
+
+      case 'modifiedAt,desc':
+        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+        break;
+
+      default:
+        break;
     }
 
     const totalElements = filteredTemplates.length;
