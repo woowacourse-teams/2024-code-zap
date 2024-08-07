@@ -13,81 +13,15 @@ public interface TemplateRepository {
 
     boolean existsByCategoryId(Long categoryId);
 
-    @Query("""
-            SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
-            WHERE t.member.id = :memberId AND
-            (
-                t.title LIKE :keyword
-                OR s.filename LIKE :keyword
-                OR s.content LIKE :keyword
-                OR t.description LIKE :keyword
-            )
-            """)
-    Page<Template> searchBy(
-            @Param("memberId") Long memberId,
-            @Param("keyword") String keyword,
-            Pageable pageable
-    );
+    List<Template> findAll();
 
-    @Query("""
-            SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
-            WHERE t.member.id = :memberId AND
-            t.id in :templateIds AND
-            (
-                t.title LIKE :keyword
-                OR s.filename LIKE :keyword
-                OR s.content LIKE :keyword
-                OR t.description LIKE :keyword
-            )
-            """)
-    Page<Template> searchBy(
-            @Param("memberId") Long memberId,
-            @Param("keyword") String keyword,
-            @Param("templateIds") List<Long> templateIds,
-            Pageable pageable
-    );
+    Page<Template> searchBy(Long memberId, String keyword, Pageable pageable);
 
-    @Query("""
-            SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
-            WHERE t.member.id = :memberId AND
-            t.category.id = :categoryId AND
-            (
-                t.title LIKE :keyword
-                OR s.filename LIKE :keyword
-                OR s.content LIKE :keyword
-                OR t.description LIKE :keyword
-            )
-            """)
-    Page<Template> searchBy(
-            @Param("memberId") Long memberId,
-            @Param("keyword") String keyword,
-            @Param("categoryId") Long categoryId,
-            Pageable pageable
-    );
+    Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable);
 
-    @Query("""
-            SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
-            WHERE t.member.id = :memberId AND
-            t.category.id = :categoryId AND
-            t.id in :templateIds AND
-            (
-                t.title LIKE :keyword
-                OR s.filename LIKE :keyword
-                OR s.content LIKE :keyword
-                OR t.description LIKE :keyword
-            )
-            """)
-    Page<Template> searchBy(
-            @Param("memberId") Long memberId,
-            @Param("keyword") String keyword,
-            @Param("categoryId") Long categoryId,
-            @Param("templateIds") List<Long> templateIds,
-            Pageable pageable
-    );
+    Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable);
+
+    Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable);
 
     long count();
 

@@ -7,7 +7,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
@@ -38,10 +37,46 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public Page<Template> searchByTopic(Long memberId, String topic, Pageable pageable) {
+    public Page<Template> searchBy(Long memberId, String keyword, Pageable pageable) {
         List<Template> searchedTemplates = templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), memberId))
-                .filter(template -> containTopic(topic, template))
+                .filter(template -> containTopic(keyword, template))
+                .toList();
+
+        return pageTemplates(pageable, searchedTemplates);
+    }
+
+    @Override
+    public Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable) {
+        List<Template> searchedTemplates = templates.stream()
+                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
+                .filter(template -> templateIds.contains(template.getId()))
+                .filter(template -> containTopic(keyword, template))
+                .toList();
+
+        return pageTemplates(pageable, searchedTemplates);
+    }
+
+    @Override
+    public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable) {
+        List<Template> searchedTemplates = templates.stream()
+                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
+                .filter(template -> Objects.equals(template.getCategory().getId(), categoryId))
+                .filter(template -> containTopic(keyword, template))
+                .toList();
+
+        return pageTemplates(pageable, searchedTemplates);
+    }
+
+    @Override
+    public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds,
+            Pageable pageable
+    ) {
+        List<Template> searchedTemplates = templates.stream()
+                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
+                .filter(template -> Objects.equals(template.getCategory().getId(), categoryId))
+                .filter(template -> templateIds.contains(template.getId()))
+                .filter(template -> containTopic(keyword, template))
                 .toList();
 
         return pageTemplates(pageable, searchedTemplates);
@@ -63,49 +98,8 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public Page<Template> findBy(Pageable pageable) {
-        return pageTemplates(pageable, templates);
-    }
-
-    @Override
-    public Page<Template> findByCategoryId(Pageable pageable, Long categoryId) {
-        return pageTemplates(
-                pageable,
-                templates.stream()
-                        .filter(template -> Objects.equals(template.getCategory().getId(), categoryId))
-                        .toList()
-        );
-    }
-
-    @Override
-    public Page<Template> findByIdIn(PageRequest pageRequest, List<Long> templateIds) {
-        return null;
-    }
-
-    @Override
-    public Page<Template> findByIdInAndCategoryId(PageRequest pageRequest, List<Long> templateIds, Long categoryId) {
-        return null;
-    }
-
-    @Override
     public List<Template> findAll() {
         return templates;
-    }
-
-    @Override
-    public long countByCategoryId(Long categoryId) {
-        return templates.stream().filter(template -> Objects.equals(template.getCategory().getId(), categoryId))
-                .count();
-    }
-
-    @Override
-    public long countByIdInAndCategoryId(List<Long> templateIds, Long categoryId) {
-        return 0;
-    }
-
-    @Override
-    public long countByIdIn(List<Long> templateIds) {
-        return 0;
     }
 
     @Override

@@ -40,8 +40,8 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
-    public List<Tag> findByNameIn(List<String> tagNames) {
-        return tags.stream().filter(tag -> tagNames.contains(tag.getName())).toList();
+    public List<Tag> findByIdIn(List<Long> tagIds) {
+        return tags.stream().filter(tag -> tagIds.contains(tag.getId())).toList();
     }
 
     @Override
