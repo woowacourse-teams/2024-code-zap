@@ -150,26 +150,19 @@ public class TemplateService {
             List<Long> templateIds = filterTemplatesBy(tagNames);
             Page<Template> templatePage =
                     templateRepository.searchBy(memberId, topic, categoryId, templateIds, pageable);
-            long totalTemplatesCount = templateRepository.countByIdInAndCategoryId(templateIds, categoryId);
-            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+            return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId != null && tagNames == null) {
             Page<Template> templatePage = templateRepository.searchBy(memberId, topic, categoryId, pageable);
-            long totalTemplatesCount = templateRepository.countByCategoryId(categoryId);
-            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+            return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId == null && tagNames != null) {
             List<Long> templateIds = filterTemplatesBy(tagNames);
-            Page<Template> templatePage =
-                    templateRepository.searchBy(memberId, topic, templateIds, pageable);
-
-            long totalTemplatesCount = templateRepository.countByIdIn(templateIds);
-            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+            Page<Template> templatePage = templateRepository.searchBy(memberId, topic, templateIds, pageable);
+            return makeTemplatesResponseBy(templatePage);
         }
-        Page<Template> templatePage =
-                templateRepository.searchBy(memberId, topic, pageable);
-        long totalTemplatesCount = templateRepository.count();
-        return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, topic, pageable);
+        return makeTemplatesResponseBy(templatePage);
     }
 
     private List<Long> filterTemplatesBy(List<String> tagNames) {
@@ -181,11 +174,11 @@ public class TemplateService {
                 .toList();
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponseBy(long totalTemplatesCount, Page<Template> page) {
+    private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
         List<ItemResponse> itemResponses = page.stream()
                 .map(template -> ItemResponse.of(template, getTemplateTags(template)))
                 .toList();
-        return new FindAllTemplatesResponse(page.getTotalPages(), totalTemplatesCount, itemResponses);
+        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
     }
 
     private List<Tag> getTemplateTags(Template template) {
