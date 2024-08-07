@@ -1,7 +1,7 @@
 package codezap.member.dto;
 
 public record LoginResponse(
-        long id,
+        long memberId,
         String username
 ) {
 }
