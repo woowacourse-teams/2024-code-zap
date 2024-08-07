@@ -65,6 +65,7 @@ public interface SpringDocTemplateController {
             content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+            @ErrorCase(description = "템플릿을 가져올 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(Long id, MemberDto memberDto);
 
@@ -79,10 +80,17 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+            @ErrorCase(description = "템플릿을 수정할 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
+
     })
     ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto);
 
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+            @ErrorCase(description = "템플릿을 수정할 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
+
+    })
     ResponseEntity<Void> deleteTemplate(Long id, MemberDto memberDto);
 }
