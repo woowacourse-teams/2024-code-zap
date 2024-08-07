@@ -1,8 +1,8 @@
 package codezap.template.controller;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,7 +11,6 @@ import codezap.global.swagger.error.ErrorCase;
 import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
@@ -44,20 +43,28 @@ public interface SpringDocTemplateController {
     })
     ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
-    @Operation(summary = "템플릿 목록 조회", description = """
-            조건에 맞는 모든 템플릿을 조회합니다.
-            필터링 조건은 작성자 Id, 카테고리 Id, 태그 목록을 사용할 수 있습니다.
+    @Operation(summary = "템플릿 검색", description = """
+            필터링 조건에 맞는 모든 템플릿을 조회합니다.
+            - 필터링 조건
+              - 멤버 ID
+              - 검색 키워드 (템플릿 제목, 템플릿 설명, 스니펫 파일명, 소스 코드)
+              - 카테고리 ID
+              - 태그 ID
+            - 정렬 방식
+              - 최신순 (createdAt,asc)
+              - 오래된순 (createdAt,desc)
             조회 조건으로 페이지 인덱스, 한 페이지에 들어갈 최대 템플릿의 개수를 변경할 수 있습니다.
             페이지 인덱스는 1, 템플릿 개수는 20개가 기본 값입니다.
             """)
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
             content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            //Long memberId,
-            Integer pageNumber,
-            Integer pageSize,
+            MemberDto memberDto,
+            Long memberId,
+            String keyword,
             Long categoryId,
-            List<String> tagNames
+            List<Long> tagIds,
+            Pageable pageable
     );
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
@@ -68,13 +75,6 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "템플릿을 가져올 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(Long id, MemberDto memberDto);
-
-    @Operation(summary = "템플릿 토픽 검색", description = "토픽이 포함된 템플릿들을 검색합니다.")
-    @ApiResponse(responseCode = "200", description = "템플릿 토픽 검색 성공",
-            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
-    ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
-            MemberDto memberDto, Long memberId, String topic, Pageable pageable
-    );
 
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")

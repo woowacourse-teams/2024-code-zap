@@ -195,7 +195,9 @@ public interface SpringDocMemberController {
     @ApiResponse(
             responseCode = "200",
             description = "로그인 성공",
-            headers = {@Header(name = "Set-Cookie", description = "base64(${email}:${password}); path=\"/\"; HttpOnly; Secure;")}
+            headers = {
+                    @Header(name = "Set-Cookie", description = "base64(${email}:${password}); path=\"/\"; HttpOnly; "
+                            + "Secure;")}
     )
     @ApiResponse(
             responseCode = "400",
