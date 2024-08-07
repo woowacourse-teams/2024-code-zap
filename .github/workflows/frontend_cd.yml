@@ -23,9 +23,15 @@ jobs:
         run: |
           echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
           echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_DSN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: Set environment file permissions
         run: chmod 644 ${{ env.frontend-directory }}/.env.production
+
+      - name: Set Sentry environment file permissions
+        run: chmod 644 ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: Install Dependencies
         run: npm install

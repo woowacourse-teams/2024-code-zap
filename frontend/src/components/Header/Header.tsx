@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 
-import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
+import { logoIcon, newTemplateIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
-import { useCheckLoginState } from '@/hooks/authentication';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { theme } from '../../style/theme';
@@ -10,8 +9,6 @@ import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   const { isLogin } = useAuth();
-
-  useCheckLoginState();
 
   return (
     <S.HeaderContainer ref={headerRef}>
@@ -28,7 +25,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
               <img src={newTemplateIcon} alt='' />새 템플릿
             </Button>
           </Link>
-          {isLogin ? <UserMenuButton /> : <LoginButton />}
+          {isLogin ? <LogoutButton /> : <LoginButton />}
         </Flex>
       </S.HeaderContentContainer>
     </S.HeaderContainer>
@@ -54,7 +51,7 @@ const NavOption = ({ route, name }: { route: string; name: string }) => (
   </Link>
 );
 
-const UserMenuButton = () => {
+const LogoutButton = () => {
   const { mutateAsync } = useLogoutMutation();
 
   const handleLogoutButton = async () => {
@@ -62,9 +59,9 @@ const UserMenuButton = () => {
   };
 
   return (
-    <S.UserMenuButton onClick={handleLogoutButton}>
-      <img src={userMenuIcon} alt='사용자 메뉴' />
-    </S.UserMenuButton>
+    <Button variant='text' size='medium' weight='bold' hoverStyle='none' onClick={handleLogoutButton}>
+      로그아웃
+    </Button>
   );
 };
 
