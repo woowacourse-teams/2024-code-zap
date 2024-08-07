@@ -5,11 +5,14 @@ import { postLogin } from '@/api/authentication';
 import { ToastContext } from '@/context/ToastContext';
 import { useInputWithValidate } from '../useInputWithValidate';
 import useCustomContext from '../utils/useCustomContext';
+import { useAuth } from './useAuth';
 import { validateEmail, validatePassword } from './validates';
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
   const { failAlert, successAlert } = useCustomContext(ToastContext);
+
+  const { handleLoginState } = useAuth();
 
   const {
     value: email,
@@ -38,6 +41,7 @@ export const useLoginForm = () => {
         return;
       }
 
+      handleLoginState(true);
       navigate('/');
       successAlert('로그인 성공!');
     }

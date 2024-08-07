@@ -18,8 +18,6 @@ export const useCheckLoginState = () => {
 
   useEffect(() => {
     if (isError) {
-      infoAlert('로그인을 해주세요');
-      handleLoginNavigate();
       handleLoginState(false);
     }
 

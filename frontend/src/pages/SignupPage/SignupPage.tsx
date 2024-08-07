@@ -90,8 +90,8 @@ const SignupPage = () => {
               회원가입
             </Button>
 
-            <Flex justify='flex-end' width='100%' gap='1rem'>
-              <Text.Small color='#6B7079'>이미 계정이 있으신가요?</Text.Small>
+            <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
+              <Text.XSmall color='#6B7079'>이미 계정이 있으신가요?</Text.XSmall>
               <Link to={'/login'}>
                 <Button variant='text' size='small'>
                   로그인
