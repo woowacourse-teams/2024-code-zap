@@ -21,6 +21,10 @@ public class FakeCategoryRepository implements CategoryRepository {
         this.categories = new ArrayList<>();
     }
 
+    public FakeCategoryRepository(List<Category> categories) {
+        this.categories = categories;
+    }
+
     @Override
     public Category fetchById(Long id) {
         return categories.stream()

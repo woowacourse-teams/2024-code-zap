@@ -4,20 +4,12 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.HttpStatus;
 
-import codezap.global.exception.CodeZapException;
 import codezap.template.domain.Template;
 
-public interface TemplateRepository extends JpaRepository<Template, Long> {
+public interface TemplateRepository {
 
-    default Template fetchById(Long id) {
-        return findById(id).orElseThrow(
-                () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
-    }
+    Template fetchById(Long id);
 
     boolean existsByCategoryId(Long categoryId);
 
@@ -97,4 +89,11 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             Pageable pageable
     );
 
+    long count();
+
+    Template save(Template template);
+
+    List<Template> saveAll(List<Template> templates);
+
+    void deleteById(Long id);
 }

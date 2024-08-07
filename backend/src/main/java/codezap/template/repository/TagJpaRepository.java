@@ -9,7 +9,8 @@ import org.springframework.http.HttpStatus;
 import codezap.global.exception.CodeZapException;
 import codezap.template.domain.Tag;
 
-public interface TagRepository extends JpaRepository<Tag, Long> {
+@SuppressWarnings("unused")
+public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long> {
 
     default Tag fetchById(Long id) {
         return findById(id).orElseThrow(
@@ -20,9 +21,5 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
     Optional<Tag> findByName(String name);
 
-    List<Tag> findByIdIn(List<Long> tagIds);
-
-    Tag save(Tag tag);
-
-    List<Tag> saveAll(List<Tag> tags);
+    List<Tag> findByNameIn(List<String> tagNames);
 }

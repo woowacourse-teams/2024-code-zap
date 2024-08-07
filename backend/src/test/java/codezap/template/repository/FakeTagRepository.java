@@ -1,0 +1,73 @@
+package codezap.template.repository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.http.HttpStatus;
+
+import codezap.global.exception.CodeZapException;
+import codezap.template.domain.Tag;
+
+public class FakeTagRepository implements TagRepository {
+
+    private final AtomicLong idCounter = new AtomicLong(1);
+
+    private final List<Tag> tags;
+
+    public FakeTagRepository() {
+        this.tags = new ArrayList<>();
+    }
+
+    @Override
+    public Tag fetchById(Long id) {
+        return tags.stream()
+                .filter(tag -> Objects.equals(tag.getId(), id))
+                .findFirst()
+                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 태그 존재하지 않습니다."));
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return tags.stream().anyMatch(tag -> Objects.equals(tag.getName(), name));
+    }
+
+    @Override
+    public Optional<Tag> findByName(String name) {
+        return tags.stream().filter(tag -> Objects.equals(tag.getName(), name)).findFirst();
+    }
+
+    @Override
+    public List<Tag> findByNameIn(List<String> tagNames) {
+        return tags.stream().filter(tag -> tagNames.contains(tag.getName())).toList();
+    }
+
+    @Override
+    public Tag save(Tag entity) {
+        var saved = new Tag(
+                getOrGenerateId(entity),
+                entity.getName()
+        );
+        tags.removeIf(tag -> Objects.equals(tag.getId(), entity.getId()));
+        tags.add(saved);
+        return saved;
+    }
+
+    @Override
+    public List<Tag> saveAll(List<Tag> tags) {
+        return tags.stream().map(this::save).toList();
+    }
+
+    private long getOrGenerateId(Tag entity) {
+        if (existsById(entity.getId())) {
+            return entity.getId();
+        }
+        return idCounter.getAndIncrement();
+    }
+
+    public boolean existsById(Long id) {
+        return tags.stream().anyMatch(tag -> Objects.equals(tag.getId(), id));
+    }
+}
