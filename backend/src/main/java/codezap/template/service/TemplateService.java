@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
-import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -144,6 +144,8 @@ public class TemplateService {
             Pageable pageable
     ) {
         topic = "%" + topic + "%";
+        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+
         if (categoryId != null && tagNames != null) {
             List<Long> templateIds = filterTemplatesBy(tagNames);
             Page<Template> templatePage =
@@ -279,15 +281,6 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    private FindMyTemplateResponse findByTemplate(Template template) {
-        List<Tag> tags = templateTagRepository.findAllByTemplate(template)
-                .stream()
-                .map(TemplateTag::getTag)
-                .toList();
-
-        return FindMyTemplateResponse.of(template, tags);
     }
 
     private CodeZapException throwNotFoundSnippet() {

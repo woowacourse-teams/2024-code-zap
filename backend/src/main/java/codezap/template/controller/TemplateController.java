@@ -3,8 +3,8 @@ package codezap.template.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -48,14 +48,13 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
+            @BasicAuthentication MemberDto memberDto,
             @RequestParam Long memberId,
             @RequestParam("topic") String topic,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<String> tags,
-            @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
-            @RequestParam(required = false, defaultValue = "20") Integer pageSize
+            @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
-        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         FindAllTemplatesResponse response =
                 templateService.findAllBy(memberId, topic, categoryId, tags, pageable);
         return ResponseEntity.ok(response);

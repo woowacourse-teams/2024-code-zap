@@ -2,6 +2,7 @@ package codezap.template.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -51,12 +52,12 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
             content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
+            MemberDto memberDto,
             Long memberId,
             String topic,
             Long categoryId,
             List<String> tags,
-            Integer pageNumber,
-            Integer pageSize
+            Pageable pageable
     );
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
