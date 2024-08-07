@@ -22,6 +22,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     boolean existsByCategoryId(Long categoryId);
 
+
+
     @Query("""
             SELECT DISTINCT t
             FROM Template t JOIN Snippet s ON t.id = s.template.id
@@ -33,7 +35,66 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
                 OR t.description LIKE :topic
             )
             """)
-    Page<Template> searchByTopic(@Param("memberId") Long memberId, @Param("topic") String topic, Pageable pageable);
+    Page<Template> searchBy(
+            @Param("memberId") Long memberId,
+            @Param("topic") String topic,
+            Pageable pageable);
+
+    @Query("""
+            SELECT DISTINCT t
+            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            WHERE t.member.id = :memberId AND
+            t.id in :templateIds AND
+            (
+                t.title LIKE :topic
+                OR s.filename LIKE :topic
+                OR s.content LIKE :topic
+                OR t.description LIKE :topic
+            )
+            """)
+    Page<Template> searchBy(
+            @Param("templateIds") List<Long> templateIds,
+            @Param("memberId") Long memberId,
+            @Param("topic") String topic,
+            Pageable pageable);
+
+    @Query("""
+            SELECT DISTINCT t
+            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            WHERE t.member.id = :memberId AND
+            t.category.id = :categoryId AND
+            (
+                t.title LIKE :topic
+                OR s.filename LIKE :topic
+                OR s.content LIKE :topic
+                OR t.description LIKE :topic
+            )
+            """)
+    Page<Template> searchBy(
+            @Param("categoryId") Long categoryId,
+            @Param("memberId") Long memberId,
+            @Param("topic") String topic,
+            Pageable pageable);
+
+    @Query("""
+            SELECT DISTINCT t
+            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            WHERE t.member.id = :memberId AND
+            t.category.id = :categoryId AND
+            t.id in :templateIds AND
+            (
+                t.title LIKE :topic
+                OR s.filename LIKE :topic
+                OR s.content LIKE :topic
+                OR t.description LIKE :topic
+            )
+            """)
+    Page<Template> searchBy(
+            @Param("categoryId") Long categoryId,
+            @Param("templateIds") List<Long> templateIds,
+            @Param("memberId") Long memberId,
+            @Param("topic") String topic,
+            Pageable pageable);
 
     Page<Template> findBy(Pageable pageable);
 

@@ -291,7 +291,7 @@ public class TemplateService {
     private Page<Template> getTemplates(Long memberId, String topic, Pageable pageable) {
         String topicWithWildcards = "%" + topic + "%";
         Pageable newPageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
-        return templateRepository.searchByTopic(memberId, topicWithWildcards, newPageable);
+        return templateRepository.searchBy(memberId, topicWithWildcards, newPageable);
     }
 
     private FindMyTemplateResponse findByTemplate(Template template) {
