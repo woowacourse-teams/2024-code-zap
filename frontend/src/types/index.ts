@@ -1,5 +1,7 @@
 export type { Snippet, Tag, Category, Template } from './template';
 export type {
+  SortingKey,
+  SortingOption,
   TemplateEditRequest,
   TemplateListResponse,
   TemplateUploadRequest,
