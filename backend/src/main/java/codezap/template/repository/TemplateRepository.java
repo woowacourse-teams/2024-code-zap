@@ -22,8 +22,6 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
 
     boolean existsByCategoryId(Long categoryId);
 
-
-
     @Query("""
             SELECT DISTINCT t
             FROM Template t JOIN Snippet s ON t.id = s.template.id
@@ -53,9 +51,9 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             )
             """)
     Page<Template> searchBy(
-            @Param("templateIds") List<Long> templateIds,
             @Param("memberId") Long memberId,
             @Param("topic") String topic,
+            @Param("templateIds") List<Long> templateIds,
             Pageable pageable);
 
     @Query("""
@@ -71,9 +69,9 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             )
             """)
     Page<Template> searchBy(
-            @Param("categoryId") Long categoryId,
             @Param("memberId") Long memberId,
             @Param("topic") String topic,
+            @Param("categoryId") Long categoryId,
             Pageable pageable);
 
     @Query("""
@@ -90,10 +88,10 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             )
             """)
     Page<Template> searchBy(
-            @Param("categoryId") Long categoryId,
-            @Param("templateIds") List<Long> templateIds,
             @Param("memberId") Long memberId,
             @Param("topic") String topic,
+            @Param("categoryId") Long categoryId,
+            @Param("templateIds") List<Long> templateIds,
             Pageable pageable);
 
     Page<Template> findBy(Pageable pageable);

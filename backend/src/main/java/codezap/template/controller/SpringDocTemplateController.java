@@ -1,8 +1,8 @@
 package codezap.template.controller;
 
-import org.springframework.data.domain.Pageable;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -11,8 +11,8 @@ import codezap.global.swagger.error.ErrorCase;
 import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
+import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,11 +53,12 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
             content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            //Long memberId,
+            Long memberId,
+            String topic,
             Integer pageNumber,
             Integer pageSize,
             Long categoryId,
-            List<String> tagNames
+            List<String> tags
     );
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")

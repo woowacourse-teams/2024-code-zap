@@ -55,14 +55,17 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            //@RequestParam Long memberId,
+            @RequestParam Long memberId,
+            @RequestParam("topic") String topic,
             @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
             @RequestParam(required = false, defaultValue = "20") Integer pageSize,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<String> tags
     ) {
-
-        return ResponseEntity.ok(templateService.findAllBy(PageRequest.of(pageNumber - 1, pageSize), categoryId, tags));
+        Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
+        FindAllTemplatesResponse response =
+                templateService.findAllBy(memberId, topic, categoryId, tags, pageable);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/explore")
