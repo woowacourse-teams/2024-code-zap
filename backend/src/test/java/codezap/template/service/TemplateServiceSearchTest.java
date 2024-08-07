@@ -5,23 +5,18 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.category.repository.FakeCategoryRepository;
 import codezap.fixture.MemberDtoFixture;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
+import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Snippet;
 import codezap.template.domain.Tag;
@@ -32,49 +27,37 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
+import codezap.template.repository.FakeSnippetRepository;
+import codezap.template.repository.FakeTagRepository;
+import codezap.template.repository.FakeTemplateRepository;
+import codezap.template.repository.FakeTemplateTagRepository;
+import codezap.template.repository.FakeThumbnailSnippetRepository;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailSnippetRepository;
-import io.restassured.RestAssured;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@Sql(value = "/clear.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(value = "/clear.sql", executionPhase = ExecutionPhase.AFTER_TEST_CLASS)
 class TemplateServiceSearchTest {
 
-    @LocalServerPort
-    int port;
+    private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
+    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
 
-    @Autowired
-    private TemplateService templateService;
-
-    @Autowired
-    private TemplateRepository templateRepository;
-
-    @Autowired
-    private SnippetRepository snippetRepository;
-
-    @Autowired
-    private ThumbnailSnippetRepository thumbnailSnippetRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private TemplateTagRepository templateTagRepository;
-
-    @Autowired
-    private TagRepository tagRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @BeforeEach
-    void setting() {
-        RestAssured.port = port;
-    }
+    private final TemplateRepository templateRepository = new FakeTemplateRepository();
+    private final SnippetRepository snippetRepository = new FakeSnippetRepository();
+    private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
+    private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
+    private final TagRepository tagRepository = new FakeTagRepository();
+    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
+    private final TemplateService templateService = new TemplateService(
+            thumbnailSnippetRepository,
+            templateRepository,
+            snippetRepository,
+            categoryRepository,
+            tagRepository,
+            templateTagRepository,
+            memberRepository);
 
     private void saveDefault15Templates(Member member, Category category) {
         saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);
@@ -107,6 +90,7 @@ class TemplateServiceSearchTest {
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
+        savedTemplate.updateSnippets(List.of(savedFirstSnippet));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
 
         return savedTemplate;
@@ -115,28 +99,20 @@ class TemplateServiceSearchTest {
     private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename,
             Member member, Category category
     ) {
-        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(templateTitle, "설명",
-                List.of(new CreateSnippetRequest(firstFilename, "content1", 1),
-                        new CreateSnippetRequest(secondFilename, "content2", 2)), category.getId(), List.of());
-        Template savedTemplate = templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-
+        Template savedTemplate = templateRepository.save(new Template(member, templateTitle, "설명", category));
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
-        snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
+        Snippet savedSecondSnippet = snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
+        savedTemplate.updateSnippets(List.of(savedFirstSnippet, savedSecondSnippet));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 
     private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent,
             Member member, Category category
     ) {
-        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(templateTitle, "설명",
-                List.of(new CreateSnippetRequest("filename1", firstContent, 1),
-                        new CreateSnippetRequest("filename2", secondContent, 2)), category.getId(), List.of());
-        Template savedTemplate = templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-
+        Template savedTemplate = templateRepository.save(new Template(member, templateTitle, "설명", category));
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
-        snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
+        Snippet savedSecondSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
+        savedTemplate.updateSnippets(List.of(savedFirstSnippet, savedSecondSnippet));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 
@@ -265,7 +241,8 @@ class TemplateServiceSearchTest {
 
             //then
             List<String> titles = templates.templates().stream().map(ItemResponse::title).toList();
-            assertThat(titles).containsExactly("hello keyword 6", "hello keyword 7", "hello keyword 8", "hello keyword 9",
+            assertThat(titles).containsExactly("hello keyword 6", "hello keyword 7", "hello keyword 8",
+                    "hello keyword 9",
                     "hello keyword 10");
         }
     }
@@ -339,8 +316,7 @@ class TemplateServiceSearchTest {
         @Test
         @DisplayName("단일 태그 탐색 성공")
         void findBySingleTagPageSuccess() {
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            Member member = memberRepository.fetchById(memberDto.id());
+            Member member = memberRepository.fetchById(1L);
             Category category1 = categoryRepository.save(new Category("category1", member));
             tagRepository.save(new Tag("tag1"));
             tagRepository.save(new Tag("tag2"));
