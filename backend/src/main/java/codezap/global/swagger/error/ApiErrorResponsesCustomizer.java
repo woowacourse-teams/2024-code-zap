@@ -21,7 +21,8 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
         if (handlerMethod.hasMethodAnnotation(ApiErrorResponse.class)) {
-            ApiErrorResponse apiErrorResponse = Objects.requireNonNull(handlerMethod.getMethodAnnotation(ApiErrorResponse.class));
+            ApiErrorResponse apiErrorResponse = Objects.requireNonNull(
+                    handlerMethod.getMethodAnnotation(ApiErrorResponse.class));
             ApiResponses responses = operation.getResponses();
             String statusCode = String.valueOf(apiErrorResponse.status().value());
             responses.addApiResponse(statusCode, makeFailResponse(apiErrorResponse));

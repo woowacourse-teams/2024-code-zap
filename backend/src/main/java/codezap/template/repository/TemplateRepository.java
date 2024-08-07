@@ -36,7 +36,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
     Page<Template> searchBy(
             @Param("memberId") Long memberId,
             @Param("topic") String topic,
-            Pageable pageable);
+            Pageable pageable
+    );
 
     @Query("""
             SELECT DISTINCT t
@@ -54,7 +55,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             @Param("memberId") Long memberId,
             @Param("topic") String topic,
             @Param("templateIds") List<Long> templateIds,
-            Pageable pageable);
+            Pageable pageable
+    );
 
     @Query("""
             SELECT DISTINCT t
@@ -72,7 +74,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             @Param("memberId") Long memberId,
             @Param("topic") String topic,
             @Param("categoryId") Long categoryId,
-            Pageable pageable);
+            Pageable pageable
+    );
 
     @Query("""
             SELECT DISTINCT t
@@ -92,7 +95,8 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             @Param("topic") String topic,
             @Param("categoryId") Long categoryId,
             @Param("templateIds") List<Long> templateIds,
-            Pageable pageable);
+            Pageable pageable
+    );
 
     Page<Template> findBy(Pageable pageable);
 
