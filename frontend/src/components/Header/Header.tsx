@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 
 import { logoIcon, newTemplateIcon, userMenuIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
-import { useCheckLoginState } from '@/hooks/authentication';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { theme } from '../../style/theme';
@@ -10,8 +9,6 @@ import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   const { isLogin } = useAuth();
-
-  useCheckLoginState();
 
   return (
     <S.HeaderContainer ref={headerRef}>
