@@ -8,11 +8,12 @@ interface Props {
   tagId?: number;
   page?: number;
   pageSize?: number;
+  keyword?: string;
 }
 
-export const useTemplateListQuery = ({ categoryId, tagId, page = 1, pageSize = 20 }: Props) =>
+export const useTemplateListQuery = ({ categoryId, tagId, page = 1, pageSize = 20, keyword }: Props) =>
   useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagId, page, pageSize],
-    queryFn: () => getTemplateList(categoryId, tagId, page, pageSize),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagId, page, pageSize, keyword],
+    queryFn: () => getTemplateList({ categoryId, tagId, page, pageSize, keyword }),
     placeholderData: keepPreviousData,
   });
