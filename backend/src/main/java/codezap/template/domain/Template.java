@@ -1,5 +1,6 @@
 package codezap.template.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,7 +47,7 @@ public class Template extends BaseTimeEntity {
     private Category category;
 
     @OneToMany(mappedBy = "template")
-    private List<Snippet> snippets;
+    private List<Snippet> snippets = new ArrayList<>();
 
     public Template(Member member, String title, String description, Category category) {
         this.member = member;
