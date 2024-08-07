@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import codezap.global.swagger.error.ProblemDetailSchema;
 import codezap.member.dto.LoginRequest;
+import codezap.member.dto.LoginResponse;
 import codezap.member.dto.SignupRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
@@ -297,7 +298,7 @@ public interface SpringDocMemberController {
                     }
             )
     )
-    void login(LoginRequest request, HttpServletResponse response);
+    LoginResponse login(LoginRequest request, HttpServletResponse response);
 
     @Operation(summary = "이메일 로그인 후 쿠키 인증")
     @ApiResponse(responseCode = "200", description = "쿠키 인증 성공")
