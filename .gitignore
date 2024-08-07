@@ -9,3 +9,8 @@
 
 ### Environment Variable ###
 .env
+
+*.crt
+*.csr
+*.key
+*.pem
