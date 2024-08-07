@@ -22,10 +22,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @Table(
-        uniqueConstraints={
+        uniqueConstraints = {
                 @UniqueConstraint(
-                        name="name_with_member",
-                        columnNames={"member_id", "name"}
+                        name = "name_with_member",
+                        columnNames = {"member_id", "name"}
                 )
         }
 )

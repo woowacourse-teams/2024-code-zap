@@ -25,10 +25,8 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
@@ -139,37 +137,36 @@ public class TemplateService {
     }
 
     public FindAllTemplatesResponse findAllBy(
-            //long memberId,
-            PageRequest pageRequest,
+            long memberId,
+            String keyword,
             Long categoryId,
-            List<String> tagNames
+            List<Long> tagIds,
+            Pageable pageable
     ) {
-        if (categoryId != null && tagNames != null) {
-            List<Long> templateIds = filterTemplatesBy(tagNames);
-            Page<Template> templatePage =
-                    templateRepository.findByIdInAndCategoryId(pageRequest, templateIds, categoryId);
-            long totalTemplatesCount = templateRepository.countByIdInAndCategoryId(templateIds, categoryId);
-            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        keyword = "%" + keyword + "%";
+        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
+        if (categoryId != null && tagIds != null) {
+            List<Long> templateIds = filterTemplatesBy(tagIds);
+            Page<Template> templatePage =
+                    templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
+            return makeTemplatesResponseBy(templatePage);
         }
-        if (categoryId != null && tagNames == null) {
-            Page<Template> templatePage = templateRepository.findByCategoryId(pageRequest, categoryId);
-            long totalTemplatesCount = templateRepository.countByCategoryId(categoryId);
-            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        if (categoryId != null) {
+            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
+            return makeTemplatesResponseBy(templatePage);
         }
-        if (categoryId == null && tagNames != null) {
-            List<Long> templateIds = filterTemplatesBy(tagNames);
-            Page<Template> templatePage = templateRepository.findByIdIn(pageRequest, templateIds);
-            long totalTemplatesCount = templateRepository.countByIdIn(templateIds);
-            return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        if (tagIds != null) {
+            List<Long> templateIds = filterTemplatesBy(tagIds);
+            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
+            return makeTemplatesResponseBy(templatePage);
         }
-        Page<Template> templatePage = templateRepository.findBy(pageRequest);
-        long totalTemplatesCount = templateRepository.count();
-        return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, pageable);
+        return makeTemplatesResponseBy(templatePage);
     }
 
-    private List<Long> filterTemplatesBy(List<String> tagNames) {
-        List<Tag> tags = tagRepository.findByNameIn(tagNames);
+    private List<Long> filterTemplatesBy(List<Long> tagIds) {
+        List<Tag> tags = tagRepository.findByIdIn(tagIds);
         List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
         return templateTags.stream()
                 .map(TemplateTag::getTemplate)
@@ -177,11 +174,11 @@ public class TemplateService {
                 .toList();
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponseBy(long totalTemplatesCount, Page<Template> page) {
+    private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
         List<ItemResponse> itemResponses = page.stream()
                 .map(template -> ItemResponse.of(template, getTemplateTags(template)))
                 .toList();
-        return new FindAllTemplatesResponse(page.getTotalPages(), totalTemplatesCount, itemResponses);
+        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
     }
 
     private List<Tag> getTemplateTags(Template template) {
@@ -277,30 +274,6 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    public FindAllMyTemplatesResponse findContainTopic(Long memberId, String topic, Pageable pageable) {
-        Page<Template> templates = getTemplates(memberId, topic, pageable);
-        List<FindMyTemplateResponse> myTemplateResponses = templates.stream()
-                .map(this::findByTemplate)
-                .toList();
-
-        return FindAllMyTemplatesResponse.of(myTemplateResponses, templates.getTotalPages());
-    }
-
-    private Page<Template> getTemplates(Long memberId, String topic, Pageable pageable) {
-        String topicWithWildcards = "%" + topic + "%";
-        Pageable newPageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
-        return templateRepository.searchByTopic(memberId, topicWithWildcards, newPageable);
-    }
-
-    private FindMyTemplateResponse findByTemplate(Template template) {
-        List<Tag> tags = templateTagRepository.findAllByTemplate(template)
-                .stream()
-                .map(TemplateTag::getTag)
-                .toList();
-
-        return FindMyTemplateResponse.of(template, tags);
     }
 
     private CodeZapException throwNotFoundSnippet() {

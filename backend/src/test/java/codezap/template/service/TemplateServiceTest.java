@@ -7,13 +7,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +32,6 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
-import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -114,123 +109,6 @@ class TemplateServiceTest {
 
         // then
         assertThat(allTemplates.templates()).hasSize(2);
-    }
-
-    @Nested
-    @DisplayName("조건에 따른 페이지 조회 메서드 동작 확인")
-    class FilteringPageTest {
-
-        private static final PageRequest DEFUALT_PAGING_REQUEST = PageRequest.of(0, 20);
-        private static Category firstCategory;
-        private static Tag tag1;
-        private static Tag tag2;
-
-        @BeforeEach
-        void setUp() {
-            //템플릿 30개 / 카테고리는 홀수 : 1번, 짝수 : 2번으로 매핑 / 태그는 16보다 작으면 1, 16 이상이면 2로 매핑
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            Member member = memberJpaRepository.fetchById(memberDto.id());
-            firstCategory = categoryRepository.save(new Category("category1", member));
-            categoryRepository.save(new Category("category2", member));
-            for (int i = 1; i <= 30; i++) {
-                long categoryId = i % 2 == 0 ? firstCategory.getId() + 1 : firstCategory.getId();
-                templateRepository.save(new Template(
-                        member,
-                        "title" + i,
-                        "description",
-                        categoryRepository.fetchById(categoryId)
-                ));
-
-            }
-            tag1 = tagRepository.save(new Tag("tag1"));
-            tag2 = tagRepository.save(new Tag("tag2"));
-            for (long i = 1L; i <= 30L; i++) {
-                templateTagRepository.save(new TemplateTag(
-                        templateRepository.fetchById(i),
-                        tagRepository.fetchById((i / 16) + 1)
-                ));
-            }
-
-            System.out.println();
-        }
-
-        @Test
-        @DisplayName("전체 탐색 / 1페이지 성공")
-        void findAllFirstPageSuccess() {
-            FindAllTemplatesResponse allBy = templateService.findAllBy(DEFUALT_PAGING_REQUEST, null, null);
-
-            assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30)
-            );
-
-        }
-
-        @Test
-        @DisplayName("전체 탐색 / 2페이지 성공")
-        void findAllSecondPageSuccess() {
-            FindAllTemplatesResponse allBy = templateService.findAllBy(PageRequest.of(1, 20), null, null);
-
-            assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(10),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() > 20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30)
-            );
-        }
-
-        @Test
-        @DisplayName("카테고리 탐색 성공")
-        void findByCategoryPageSuccess() {
-            FindAllTemplatesResponse allBy = templateService.findAllBy(DEFUALT_PAGING_REQUEST, firstCategory.getId(),
-                    null);
-
-            assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(15)
-            );
-        }
-
-        @Test
-        @DisplayName("단일 태그 탐색 성공")
-        void findBySingleTagPageSuccess() {
-            FindAllTemplatesResponse allBy = templateService.findAllBy(DEFUALT_PAGING_REQUEST, null,
-                    List.of(tag1.getName()));
-
-            assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(15)
-            );
-        }
-
-        @Test
-        @DisplayName("복수 태그 탐색 성공")
-        void findByMultipleTagPageSuccess() {
-            FindAllTemplatesResponse allBy = templateService.findAllBy(DEFUALT_PAGING_REQUEST, null,
-                    List.of(tag1.getName(), tag2.getName()));
-
-            assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 21),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30)
-            );
-        }
-
-        @Test
-        @DisplayName("카테고리 & 단일 태그 탐색 성공")
-        void findByCategoryAndSingleTagPageSuccess() {
-            FindAllTemplatesResponse allBy = templateService.findAllBy(DEFUALT_PAGING_REQUEST, firstCategory.getId(),
-                    List.of(tag1.getName()));
-
-            assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(8),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(8)
-            );
-        }
     }
 
     @Test
@@ -398,4 +276,5 @@ class TemplateServiceTest {
         snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
+
 }

@@ -57,7 +57,7 @@ public class MemberService {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "다른 사람의 템플릿은 확인할 수 없습니다.");
         }
 
-        if(!memberRepository.existsById(memberId)) {
+        if (!memberRepository.existsById(memberId)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "로그인 정보가 잘못되었습니다.");
         }
     }
