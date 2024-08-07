@@ -27,8 +27,9 @@ public class MemberService {
         assertUniqueEmail(request.email());
         assertUniqueUsername(request.username());
         Member member = new Member(request.email(), request.password(), request.username());
-        categoryJpaRepository.save(Category.createDefaultCategory(member));
-        return memberRepository.save(member);
+        Member saved = memberRepository.save(member);
+        categoryJpaRepository.save(Category.createDefaultCategory(saved));
+        return saved;
     }
 
     public MemberDto login(LoginRequest request) {

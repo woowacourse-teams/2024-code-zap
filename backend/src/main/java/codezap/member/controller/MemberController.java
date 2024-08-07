@@ -54,6 +54,7 @@ public class MemberController implements SpringDocMemberController {
         ResponseCookie cookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, basicAuth)
                 .maxAge(-1)
                 .path("/")
+                .sameSite("None")
                 .secure(true)
                 .httpOnly(true)
                 .build();
@@ -73,6 +74,7 @@ public class MemberController implements SpringDocMemberController {
         ResponseCookie cookie = ResponseCookie.from(HttpHeaders.AUTHORIZATION, "")
                 .maxAge(0)
                 .path("/")
+                .sameSite("None")
                 .secure(true)
                 .httpOnly(true)
                 .build();
