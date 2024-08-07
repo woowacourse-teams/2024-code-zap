@@ -18,7 +18,7 @@ const MyTemplatePage = () => {
   const [page, setPage] = useState<number>(1);
   const [keyword, handleKeywordChange] = useInput('');
 
-  const debouncedKeyword = useDebounce(keyword, 250);
+  const debouncedKeyword = useDebounce(keyword, 300);
 
   const { data: templateData } = useTemplateListQuery({
     categoryId: selectedCategoryId,
