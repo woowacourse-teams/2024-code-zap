@@ -25,16 +25,14 @@ import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.TemplateService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/templates")
 public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
-
-    public TemplateController(TemplateService templateService) {
-        this.templateService = templateService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> create(
