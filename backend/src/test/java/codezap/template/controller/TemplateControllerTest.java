@@ -203,6 +203,8 @@ class TemplateControllerTest {
         // when & then
         RestAssured.given().log().all()
                 .cookie("Authorization", cookie)
+                .params("memberId", 1,
+                        "keyword", "")
                 .get("/templates")
                 .then().log().all()
                 .statusCode(200)
