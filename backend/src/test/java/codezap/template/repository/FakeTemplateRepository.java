@@ -91,20 +91,16 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     private static boolean containTopic(String topic, Template template) {
-        return template.getTitle().contains(topic) ||
-                template.getSnippets().stream().anyMatch(snippet -> snippet.getFilename().contains(topic)) ||
-                template.getSnippets().stream().anyMatch(snippet -> snippet.getContent().contains(topic)) ||
-                template.getDescription().contains(topic);
+        String keyword = topic.substring(1, topic.length() - 1);
+        return template.getTitle().contains(keyword) ||
+                template.getSnippets().stream().anyMatch(snippet -> snippet.getFilename().contains(keyword)) ||
+                template.getSnippets().stream().anyMatch(snippet -> snippet.getContent().contains(keyword)) ||
+                template.getDescription().contains(keyword);
     }
 
     @Override
     public List<Template> findAll() {
         return templates;
-    }
-
-    @Override
-    public long count() {
-        return templates.size();
     }
 
     @Override
@@ -120,11 +116,6 @@ public class FakeTemplateRepository implements TemplateRepository {
         templates.removeIf(template -> Objects.equals(template.getId(), entity.getId()));
         templates.add(saved);
         return saved;
-    }
-
-    @Override
-    public List<Template> saveAll(List<Template> templates) {
-        return templates.stream().map(this::save).toList();
     }
 
     @Override

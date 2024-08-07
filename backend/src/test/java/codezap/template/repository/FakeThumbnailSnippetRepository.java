@@ -57,7 +57,7 @@ public class FakeThumbnailSnippetRepository implements ThumbnailSnippetRepositor
 
     @Override
     public void deleteByTemplateId(Long id) {
-
+        thumbnailSnippets.removeIf(thumbnailSnippet -> Objects.equals(thumbnailSnippet.getId(), id));
     }
 
     private long getOrGenerateId(ThumbnailSnippet entity) {
