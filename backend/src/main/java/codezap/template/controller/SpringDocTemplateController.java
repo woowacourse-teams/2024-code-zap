@@ -56,7 +56,7 @@ public interface SpringDocTemplateController {
             Long memberId,
             String keyword,
             Long categoryId,
-            List<String> tags,
+            List<Long> tagIds,
             Pageable pageable
     );
 

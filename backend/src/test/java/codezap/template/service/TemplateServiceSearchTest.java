@@ -76,12 +76,6 @@ class TemplateServiceSearchTest {
         RestAssured.port = port;
     }
 
-    private CreateTemplateRequest makeTemplateRequest(String title) {
-        return new CreateTemplateRequest(title, "description",
-                List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                        new CreateSnippetRequest("filename2", "content2", 2)), 1L, List.of("tag1", "tag2"));
-    }
-
     private void saveDefault15Templates(Member member, Category category) {
         saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);
         saveTemplate(makeTemplateRequest("hello keyword 2"), member, category);
@@ -98,9 +92,14 @@ class TemplateServiceSearchTest {
         saveTemplate(makeTemplateRequest("hello keyword 13"), member, category);
         saveTemplate(makeTemplateRequest("hello keyword 14"), member, category);
         saveTemplate(makeTemplateRequest("hello keyword 15"), member, category);
+    }
 
-        tagRepository.save(new Tag("tag1"));
-        tagRepository.save(new Tag("tag2"));
+    private CreateTemplateRequest makeTemplateRequest(String title) {
+        return new CreateTemplateRequest(title, "description",
+                List.of(new CreateSnippetRequest("filename1", "content1", 1),
+                        new CreateSnippetRequest("filename2", "content2", 2)),
+                1L,
+                List.of());
     }
 
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
@@ -343,19 +342,20 @@ class TemplateServiceSearchTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
             Category category1 = categoryRepository.save(new Category("category1", member));
-            Category category2 = categoryRepository.save(new Category("category2", member));
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
             saveDefault15Templates(member, category1);
-            saveDefault15Templates(member, category2);
+            saveDefault15Templates(member, category1);
             for (long i = 1L; i <= 30L; i++) {
                 templateTagRepository.save(
                         new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
             }
             FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, List.of("tag1"), DEFAULT_PAGING_REQUEST
+                    member.getId(), "", null, List.of(1L), DEFAULT_PAGING_REQUEST
             );
 
             assertAll(() -> assertThat(allBy.templates()).hasSize(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0), // 테그
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0), // 태그
                     () -> assertThat(allBy.totalElements()).isEqualTo(15));
         }
 
@@ -366,20 +366,22 @@ class TemplateServiceSearchTest {
             Member member = memberRepository.fetchById(memberDto.id());
             Category category1 = categoryRepository.save(new Category("category1", member));
             Category category2 = categoryRepository.save(new Category("category2", member));
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+            tagRepository.save(new Tag("tag3"));
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
             for (long i = 1L; i <= 30L; i++) {
                 templateTagRepository.save(
-                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i / 15) + 1)));
+                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 3) + 1)));
             }
 
             FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, List.of("tag1", "tag2"), DEFAULT_PAGING_REQUEST
+                    member.getId(), "", null, List.of(1L, 2L), DEFAULT_PAGING_REQUEST
             );
 
             assertAll(() -> assertThat(allBy.templates()).hasSize(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 21),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30));
+                    () -> assertThat(allBy.totalElements()).isEqualTo(20));
         }
 
         @Test
@@ -391,12 +393,14 @@ class TemplateServiceSearchTest {
             Category category2 = categoryRepository.save(new Category("category2", member));
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
             for (long i = 1L; i <= 30L; i++) {
                 templateTagRepository.save(
                         new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
             }
             FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", category1.getId(), List.of("tag1"), DEFAULT_PAGING_REQUEST
+                    member.getId(), "", category1.getId(), List.of(1L), DEFAULT_PAGING_REQUEST
             );
 
             assertAll(() -> assertThat(allBy.templates()).hasSize(7),

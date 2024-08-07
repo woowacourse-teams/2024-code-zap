@@ -140,24 +140,24 @@ public class TemplateService {
             long memberId,
             String keyword,
             Long categoryId,
-            List<String> tagNames,
+            List<Long> tagIds,
             Pageable pageable
     ) {
         keyword = "%" + keyword + "%";
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
-        if (categoryId != null && tagNames != null) {
-            List<Long> templateIds = filterTemplatesBy(tagNames);
+        if (categoryId != null && tagIds != null) {
+            List<Long> templateIds = filterTemplatesBy(tagIds);
             Page<Template> templatePage =
                     templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
-        if (categoryId != null && tagNames == null) {
+        if (categoryId != null && tagIds == null) {
             Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
-        if (categoryId == null && tagNames != null) {
-            List<Long> templateIds = filterTemplatesBy(tagNames);
+        if (categoryId == null && tagIds != null) {
+            List<Long> templateIds = filterTemplatesBy(tagIds);
             Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
@@ -165,8 +165,8 @@ public class TemplateService {
         return makeTemplatesResponseBy(templatePage);
     }
 
-    private List<Long> filterTemplatesBy(List<String> tagNames) {
-        List<Tag> tags = tagRepository.findByNameIn(tagNames);
+    private List<Long> filterTemplatesBy(List<Long> tagIds) {
+        List<Tag> tags = tagRepository.findByIdIn(tagIds);
         List<TemplateTag> templateTags = templateTagRepository.findByTagIn(tags);
         return templateTags.stream()
                 .map(TemplateTag::getTemplate)
