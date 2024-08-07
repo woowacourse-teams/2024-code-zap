@@ -2,11 +2,17 @@ import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
+import { ToastContext } from '@/context/ToastContext';
 import { useInputWithValidate } from '../useInputWithValidate';
+import useCustomContext from '../utils/useCustomContext';
+import { useAuth } from './useAuth';
 import { validateEmail, validatePassword } from './validates';
 
 export const useLoginForm = () => {
   const navigate = useNavigate();
+  const { failAlert, successAlert } = useCustomContext(ToastContext);
+
+  const { handleLoginState } = useAuth();
 
   const {
     value: email,
@@ -30,11 +36,14 @@ export const useLoginForm = () => {
 
       if (!response.ok) {
         console.error(response);
+        failAlert('로그인에 실패하였습니다.');
 
         return;
       }
 
+      handleLoginState(true);
       navigate('/');
+      successAlert('로그인 성공!');
     }
   };
 

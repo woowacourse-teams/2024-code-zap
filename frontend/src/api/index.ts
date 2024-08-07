@@ -3,6 +3,7 @@ export { customFetch } from './customFetch';
 export { QUERY_KEY } from './queryKeys';
 export {
   TEMPLATE_API_URL,
+  PAGE_SIZE,
   getTemplateList,
   getTemplate,
   postTemplate,

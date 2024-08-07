@@ -1,18 +1,19 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { QUERY_KEY, getTemplateList } from '@/api';
+import { PAGE_SIZE, QUERY_KEY, getTemplateList } from '@/api';
 import type { TemplateListResponse } from '@/types';
 
 interface Props {
   categoryId?: number;
-  tagId?: number;
+  tagIds?: number[];
   page?: number;
   pageSize?: number;
+  keyword?: string;
 }
 
-export const useTemplateListQuery = ({ categoryId, tagId, page = 1, pageSize = 20 }: Props) =>
+export const useTemplateListQuery = ({ categoryId, tagIds, page = 1, pageSize = PAGE_SIZE, keyword }: Props) =>
   useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagId, page, pageSize],
-    queryFn: () => getTemplateList(categoryId, tagId, page, pageSize),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagIds, page, pageSize, keyword],
+    queryFn: () => getTemplateList({ categoryId, tagIds, page, pageSize, keyword }),
     placeholderData: keepPreviousData,
   });

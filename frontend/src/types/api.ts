@@ -32,3 +32,11 @@ export interface CategoryListResponse {
 export interface CategoryRequest {
   name: string;
 }
+
+export interface TemplateListRequest {
+  categoryId?: number;
+  tagIds?: number[];
+  page?: number;
+  pageSize?: number;
+  keyword?: string;
+}

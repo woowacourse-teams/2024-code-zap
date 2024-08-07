@@ -1,13 +1,16 @@
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ToastContext } from '@/context/ToastContext';
 import { useLoginStateQuery } from '@/queries/authentication/useLoginStateQuery';
+import useCustomContext from '../utils/useCustomContext';
 import { useAuth } from './useAuth';
 
 export const useCheckLoginState = () => {
-  const { error, isError, isSuccess } = useLoginStateQuery();
+  const { error, isError, status } = useLoginStateQuery();
   const navigate = useNavigate();
   const { handleLoginState } = useAuth();
+  const { infoAlert } = useCustomContext(ToastContext);
 
   const handleLoginNavigate = useCallback(() => {
     navigate('/login');
@@ -15,13 +18,11 @@ export const useCheckLoginState = () => {
 
   useEffect(() => {
     if (isError) {
-      alert(error.message);
-      handleLoginNavigate();
       handleLoginState(false);
     }
 
-    if (isSuccess) {
+    if (status === 'success') {
       handleLoginState(true);
     }
-  }, [error, isError, isSuccess, handleLoginNavigate, handleLoginState]);
+  }, [error, isError, status, handleLoginNavigate, handleLoginState, infoAlert]);
 };

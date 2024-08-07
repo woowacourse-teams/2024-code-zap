@@ -3,6 +3,7 @@ export type {
   TemplateEditRequest,
   TemplateListResponse,
   TemplateUploadRequest,
+  TemplateListRequest,
   CategoryRequest,
   CategoryListResponse,
 } from './api';

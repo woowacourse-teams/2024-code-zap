@@ -2,6 +2,8 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
 import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage } from '@/pages';
+import AuthGuard from './AuthGuard';
+import GuestGuard from './GuestGuard';
 
 const router = createBrowserRouter([
   {
@@ -9,23 +11,43 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <MyTemplatePage />,
+        element: (
+          <GuestGuard>
+            <MyTemplatePage />,
+          </GuestGuard>
+        ),
       },
       {
         path: 'templates/:id',
-        element: <TemplatePage />,
+        element: (
+          <GuestGuard>
+            <TemplatePage />
+          </GuestGuard>
+        ),
       },
       {
         path: 'templates/upload',
-        element: <TemplateUploadPage />,
+        element: (
+          <GuestGuard>
+            <TemplateUploadPage />
+          </GuestGuard>
+        ),
       },
       {
         path: 'signup',
-        element: <SignupPage />,
+        element: (
+          <AuthGuard>
+            <SignupPage />
+          </AuthGuard>
+        ),
       },
       {
         path: 'login',
-        element: <LoginPage />,
+        element: (
+          <AuthGuard>
+            <LoginPage />,
+          </AuthGuard>
+        ),
       },
     ],
   },
