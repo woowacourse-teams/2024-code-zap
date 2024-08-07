@@ -35,7 +35,7 @@ public interface SpringDocCategoryController {
     @Operation(summary = "카테고리 목록 조회", description = "생성된 모든 카테고리를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회 성공",
             content = {@Content(schema = @Schema(implementation = FindAllCategoriesResponse.class))})
-    ResponseEntity<FindAllCategoriesResponse> getCategories(MemberDto memberDto);
+    ResponseEntity<FindAllCategoriesResponse> getCategories(MemberDto memberDto, Long memberId);
 
     @Operation(summary = "카테고리 수정", description = "해당하는 식별자의 카테고리를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
