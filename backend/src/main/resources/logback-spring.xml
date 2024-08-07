@@ -8,11 +8,19 @@
         <include resource="logger/logback-spring-local.xml"/>
     </springProfile>
 
-    <springProfile name="dev">
+    <springProfile name="dev-1">
         <include resource="logger/logback-spring-dev.xml"/>
     </springProfile>
 
-    <springProfile name="prod">
+    <springProfile name="dev-2">
+        <include resource="logger/logback-spring-dev.xml"/>
+    </springProfile>
+
+    <springProfile name="prod-1">
+        <include resource="logger/logback-spring-prod.xml"/>
+    </springProfile>
+
+    <springProfile name="prod-2">
         <include resource="logger/logback-spring-prod.xml"/>
     </springProfile>
 
