@@ -19,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class TemplateTag extends BaseTimeEntity {
 
     @Embeddable

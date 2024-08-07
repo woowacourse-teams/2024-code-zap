@@ -16,12 +16,16 @@ import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class Template extends BaseTimeEntity {
 
     @Id
