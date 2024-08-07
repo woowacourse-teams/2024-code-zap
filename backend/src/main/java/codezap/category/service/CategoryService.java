@@ -40,8 +40,8 @@ public class CategoryService {
         return categoryRepository.save(category).getId();
     }
 
-    public FindAllCategoriesResponse findAllByMember(MemberDto memberDto) {
-        Member member = memberJpaRepository.fetchById(memberDto.id());
+    public FindAllCategoriesResponse findAllByMember(Long memberId) {
+        Member member = memberJpaRepository.fetchById(memberId);
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMember(member));
     }
 
