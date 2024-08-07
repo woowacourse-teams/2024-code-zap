@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="5 seconds">
+
+    <property name="LOG_FILE_PATH" value="/home/ubuntu/srv/code-zap/dev/spring-log/"/>
+
     <include resource="logger/file/info-appender.xml"/>
     <include resource="logger/file/warn-appender.xml"/>
     <include resource="logger/file/error-appender.xml"/>
