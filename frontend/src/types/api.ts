@@ -39,4 +39,5 @@ export interface TemplateListRequest {
   page?: number;
   pageSize?: number;
   keyword?: string;
+  memberId: number | undefined;
 }

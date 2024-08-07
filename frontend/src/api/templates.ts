@@ -19,10 +19,12 @@ export const getTemplateList = async ({
   page = 1,
   pageSize = PAGE_SIZE,
   keyword = '',
+  memberId,
 }: TemplateListRequest): Promise<TemplateListResponse> => {
   const url = new URL(TEMPLATE_API_URL);
 
   url.searchParams.append('keyword', keyword);
+  url.searchParams.append('memberId', String(memberId));
 
   if (categoryId) {
     url.searchParams.append('categoryId', categoryId.toString());
