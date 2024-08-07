@@ -17,5 +17,6 @@ public interface TagRepository {
 
     Tag save(Tag tag);
 
-    List<Tag> saveAll(List<Tag> tags);
+    <S extends Tag> List<S> saveAll(Iterable<S> entities);
+
 }

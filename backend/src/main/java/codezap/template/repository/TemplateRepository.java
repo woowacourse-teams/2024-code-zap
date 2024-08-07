@@ -23,11 +23,7 @@ public interface TemplateRepository {
 
     Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable);
 
-    long count();
-
     Template save(Template template);
-
-    List<Template> saveAll(List<Template> templates);
 
     void deleteById(Long id);
 }

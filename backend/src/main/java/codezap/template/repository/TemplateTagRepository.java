@@ -14,7 +14,10 @@ public interface TemplateTagRepository {
 
     TemplateTag save(TemplateTag templateTag);
 
-    List<TemplateTag> saveAll(List<TemplateTag> templateTags);
+    <S extends TemplateTag> List<S> saveAll(Iterable<S> entities);
+
 
     void deleteAllByTemplateId(Long id);
+
+    List<TemplateTag> findAll();
 }

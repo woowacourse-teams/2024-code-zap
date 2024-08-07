@@ -56,8 +56,9 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
-    public List<Tag> saveAll(List<Tag> tags) {
-        return tags.stream().map(this::save).toList();
+    public <S extends Tag> List<S> saveAll(Iterable<S> entities) {
+        entities.forEach(this::save);
+        return (List<S>) tags;
     }
 
     private long getOrGenerateId(Tag entity) {

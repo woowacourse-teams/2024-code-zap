@@ -19,7 +19,7 @@ public interface SnippetRepository {
 
     Snippet save(Snippet snippet);
 
-    List<Snippet> saveAll(List<Snippet> snippets);
+    <S extends Snippet> List<S> saveAll(Iterable<S> entities);
 
     void deleteById(Long id);
 

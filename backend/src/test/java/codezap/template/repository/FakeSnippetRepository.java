@@ -75,10 +75,9 @@ public class FakeSnippetRepository implements SnippetRepository {
     }
 
     @Override
-    public List<Snippet> saveAll(List<Snippet> snippets) {
-        return snippets.stream()
-                .map(this::save)
-                .toList();
+    public <S extends Snippet> List<S> saveAll(Iterable<S> entities) {
+        entities.forEach(this::save);
+        return (List<S>) snippets;
     }
 
     @Override

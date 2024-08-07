@@ -25,7 +25,9 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
 
     @Override
     public List<TemplateTag> findByTagIn(List<Tag> tags) {
-        return List.of();
+        return templateTags.stream()
+                .filter(templateTag -> tags.contains(templateTag.getTag()))
+                .toList();
     }
 
     @Override
@@ -40,12 +42,18 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
-    public List<TemplateTag> saveAll(List<TemplateTag> templateTags) {
-        return templateTags.stream().map(this::save).toList();
+    public <S extends TemplateTag> List<S> saveAll(Iterable<S> entities) {
+        entities.forEach(this::save);
+        return (List<S>) templateTags;
     }
 
     @Override
     public void deleteAllByTemplateId(Long id) {
         templateTags.removeIf(templateTag -> Objects.equals(templateTag.getTemplate().getId(), id));
+    }
+
+    @Override
+    public List<TemplateTag> findAll() {
+        return templateTags;
     }
 }
