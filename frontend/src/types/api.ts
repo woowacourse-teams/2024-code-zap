@@ -34,10 +34,15 @@ export interface CategoryRequest {
 }
 
 export interface TemplateListRequest {
+  keyword?: string;
   categoryId?: number;
   tagIds?: number[];
+  sort?: SortingKey;
   page?: number;
   pageSize?: number;
-  keyword?: string;
   memberId: number | undefined;
 }
+
+export type SortingKey = 'createdAt,asc' | 'createdAt,desc';
+
+export type SortingOption = { key: SortingKey; value: string };

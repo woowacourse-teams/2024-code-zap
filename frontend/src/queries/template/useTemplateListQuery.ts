@@ -1,25 +1,34 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { PAGE_SIZE, QUERY_KEY, getTemplateList } from '@/api';
+import { PAGE_SIZE, QUERY_KEY, getTemplateList, DEFAULT_SORTING_OPTION } from '@/api';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import type { TemplateListResponse } from '@/types';
+import type { TemplateListResponse, SortingKey } from '@/types';
 
 interface Props {
+  keyword?: string;
   categoryId?: number;
   tagIds?: number[];
+  sort?: SortingKey;
   page?: number;
   pageSize?: number;
-  keyword?: string;
 }
 
-export const useTemplateListQuery = ({ categoryId, tagIds, page = 1, pageSize = PAGE_SIZE, keyword }: Props) => {
+export const useTemplateListQuery = ({
+  keyword,
+  categoryId,
+  tagIds,
+  sort = DEFAULT_SORTING_OPTION.key,
+  page = 1,
+  pageSize = PAGE_SIZE,
+}: Props) => {
   const {
     memberInfo: { memberId },
   } = useAuth();
 
   return useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, categoryId, tagIds, page, pageSize, keyword, memberId],
-    queryFn: () => getTemplateList({ categoryId, tagIds, page, pageSize, keyword, memberId }),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, keyword, categoryId, tagIds, sort, page, pageSize, memberId],
+    queryFn: () => getTemplateList({ keyword, categoryId, tagIds, sort, page, pageSize, memberId }),
+
     placeholderData: keepPreviousData,
   });
 };

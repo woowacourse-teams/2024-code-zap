@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react';
 
+import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { searchIcon } from '@/assets/images';
-import { CategoryMenu, Flex, Heading, Input, TemplateGrid, PagingButton } from '@/components';
+import { CategoryMenu, Flex, Heading, Input, TemplateGrid, PagingButton, Dropdown } from '@/components';
 import { useWindowWidth, useDebounce } from '@/hooks';
+import { useDropdown } from '@/hooks/utils/useDropdown';
 import { useInput } from '@/hooks/utils/useInput';
 import { useCategoryListQuery } from '@/queries/category';
 import { useTemplateListQuery } from '@/queries/template';
@@ -14,18 +16,25 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const MyTemplatePage = () => {
   const windowWidth = useWindowWidth();
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
-  const [page, setPage] = useState<number>(1);
+
   const [keyword, handleKeywordChange] = useInput('');
-
   const debouncedKeyword = useDebounce(keyword, 300);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
+  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
 
-  const { data: templateData } = useTemplateListQuery({
-    categoryId: selectedCategoryId,
-    page,
-    keyword: debouncedKeyword,
-  });
+  const [page, setPage] = useState<number>(1);
+
   const { data: categoryData } = useCategoryListQuery();
+  const { data: templateData } = useTemplateListQuery({
+    keyword: debouncedKeyword,
+    categoryId: selectedCategoryId,
+    sort: sortingOption.key,
+    page,
+  });
+
+  const templates = templateData?.templates || [];
+  const categories = categoryData?.categories || [];
+  const totalPages = templateData?.totalPages || 0;
 
   const handleCategorySelect = useCallback((categoryId: number) => {
     scroll.top();
@@ -38,10 +47,6 @@ const MyTemplatePage = () => {
       setPage(1);
     }
   };
-
-  const templates = templateData?.templates || [];
-  const categories = categoryData?.categories || [];
-  const totalPages = templateData?.totalPages || 0;
 
   const handlePageChange = (page: number) => {
     scroll.top();
@@ -63,8 +68,8 @@ const MyTemplatePage = () => {
           <CategoryMenu categories={categories} onSelectCategory={handleCategorySelect} />
         </Flex>
 
-        <Flex direction='column' width='100%' gap='2rem'>
-          <Flex width='100%'>
+        <Flex direction='column' width='100%' gap='1rem'>
+          <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
                 <img src={searchIcon} />
@@ -76,6 +81,12 @@ const MyTemplatePage = () => {
                 onKeyDown={handleSearchSubmit}
               />
             </S.SearchInput>
+            <Dropdown
+              {...dropdownProps}
+              options={SORTING_OPTIONS}
+              currentValue={sortingOption}
+              getOptionLabel={(option) => option.value}
+            />
           </Flex>
           <TemplateGrid templates={templates} cols={getGridCols(windowWidth)} />
           <Flex justify='center'>
