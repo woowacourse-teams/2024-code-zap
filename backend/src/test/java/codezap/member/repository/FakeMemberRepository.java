@@ -22,7 +22,8 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     public FakeMemberRepository(List<Member> members) {
-        this.members = members;
+        this.members = new ArrayList<>(members);
+        idCounter.set(1 + members.size());
     }
 
     @Override

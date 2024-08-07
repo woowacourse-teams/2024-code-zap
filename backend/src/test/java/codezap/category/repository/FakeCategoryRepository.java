@@ -22,7 +22,8 @@ public class FakeCategoryRepository implements CategoryRepository {
     }
 
     public FakeCategoryRepository(List<Category> categories) {
-        this.categories = categories;
+        this.categories = new ArrayList<>(categories);
+        idCounter.set(1 + categories.size());
     }
 
     @Override
