@@ -3,11 +3,8 @@ package codezap.template.controller;
 import java.net.URI;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,11 +21,9 @@ import codezap.member.configuration.BasicAuthentication;
 import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.service.MyTemplateFacadeService;
 import codezap.template.service.TemplateService;
 
 @RestController
@@ -36,11 +31,9 @@ import codezap.template.service.TemplateService;
 public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
-    private final MyTemplateFacadeService myTemplateFacadeService;
 
-    public TemplateController(TemplateService templateService, MyTemplateFacadeService myTemplateFacadeService) {
+    public TemplateController(TemplateService templateService) {
         this.templateService = templateService;
-        this.myTemplateFacadeService = myTemplateFacadeService;
     }
 
     @PostMapping
@@ -57,10 +50,10 @@ public class TemplateController implements SpringDocTemplateController {
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
             @RequestParam Long memberId,
             @RequestParam("topic") String topic,
-            @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
-            @RequestParam(required = false, defaultValue = "20") Integer pageSize,
             @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) List<String> tags
+            @RequestParam(required = false) List<String> tags,
+            @RequestParam(required = false, defaultValue = "1") Integer pageNumber,
+            @RequestParam(required = false, defaultValue = "20") Integer pageSize
     ) {
         Pageable pageable = PageRequest.of(pageNumber - 1, pageSize);
         FindAllTemplatesResponse response =
@@ -74,20 +67,10 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
-        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<FindAllMyTemplatesResponse> getMyTemplatesContainTopic(
-            @BasicAuthentication MemberDto memberDto,
-            @RequestParam("memberId") Long memberId,
-            @RequestParam("topic") String topic,
-            @PageableDefault Pageable pageable
+    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id,
+            @BasicAuthentication MemberDto memberDto
     ) {
-        FindAllMyTemplatesResponse response = myTemplateFacadeService
-                .searchMyTemplatesContainTopic(memberDto, memberId, topic, pageable);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
     }
 
     @PostMapping("/{id}")

@@ -3,7 +3,6 @@ package codezap.template.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -31,9 +30,8 @@ import codezap.template.domain.TemplateTag;
 import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindMyTemplateResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
@@ -103,10 +101,6 @@ class TemplateServiceSearchTest {
         Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
         snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
-        createTemplateRequest.tags().stream()
-                .map(Tag::new)
-                .map(tagRepository::save)
-                .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
 
         return savedTemplate;
     }
@@ -151,6 +145,29 @@ class TemplateServiceSearchTest {
         thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 
+    private void saveDefault15Templates(Member member, Category category) {
+        saveTemplate(makeTemplateRequest("hello topic 1"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 2"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 3"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 4"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 5"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 6"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 7"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 8"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 9"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 10"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 11"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 12"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 13"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 14"), member, category);
+        saveTemplate(makeTemplateRequest("hello topic 15"), member, category);
+
+        tagRepository.save(new Tag("tag1"));
+        tagRepository.save(new Tag("tag2"));
+    }
+
+    //
+
     @Nested
     @DisplayName("템플릿 토픽 검색")
     class searchContainTopic {
@@ -167,8 +184,8 @@ class TemplateServiceSearchTest {
             saveTemplate(makeTemplateRequest("hello topic !"), member, category);
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic(member.getId(), "topic",
-                    PageRequest.of(1, 3));
+            FindAllTemplatesResponse templates = templateService.findAllBy(
+                    member.getId(), "topic", null, null, PageRequest.of(0, 3));
 
             //then
             assertThat(templates.templates()).hasSize(3);
@@ -186,8 +203,8 @@ class TemplateServiceSearchTest {
             saveTemplateBySnippetFilename("tempate3", "login.js", "signup.java", member, category);
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic(member.getId(), "java",
-                    PageRequest.of(1, 2));
+            FindAllTemplatesResponse templates = templateService.findAllBy(
+                    member.getId(), "java", null, null, PageRequest.of(0, 3));
 
             //then
             assertThat(templates.templates()).hasSize(2);
@@ -205,8 +222,8 @@ class TemplateServiceSearchTest {
             saveTemplateBySnippetContent("tempate3", "console.log", "a+b=3", member, category);
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic(member.getId(), "Car",
-                    PageRequest.of(1, 2));
+            FindAllTemplatesResponse templates = templateService.findAllBy(
+                    member.getId(), "Car", null, null, PageRequest.of(0, 3));
 
             //then
             assertThat(templates.templates()).hasSize(2);
@@ -243,8 +260,8 @@ class TemplateServiceSearchTest {
             saveTemplate(request2, member, category);
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic(member.getId(), "Login",
-                    PageRequest.of(1, 1));
+            FindAllTemplatesResponse templates = templateService.findAllBy(
+                    member.getId(), "Login", null, null, PageRequest.of(0, 3));
 
             //then
             assertThat(templates.templates()).hasSize(1);
@@ -255,33 +272,18 @@ class TemplateServiceSearchTest {
         void findAllFirstPageSuccess() {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
-            Category category = categoryRepository.save(new Category("category", member));
-
-
-            saveTemplate(makeTemplateRequest("hello topic 1"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 2"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 3"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 4"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 5"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 6"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 7"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 8"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 9"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 10"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 11"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 12"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 13"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 14"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 15"), member, category);
+            Category category1 = categoryRepository.save(new Category("category1", member));
+            Category category2 = categoryRepository.save(new Category("category2", member));
+            saveDefault15Templates(member, category1);
+            saveDefault15Templates(member, category2);
             FindAllTemplatesResponse allBy
-                    = templateService.findAllBy(member.getId(), "", null, null, PageRequest.of(1, 5));
+                    = templateService.findAllBy(member.getId(), "", null, null, PageRequest.of(0, 20));
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(20),
                     () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20),
                     () -> assertThat(allBy.totalElements()).isEqualTo(30)
             );
-
         }
 
         @Test
@@ -291,75 +293,25 @@ class TemplateServiceSearchTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
             Category category = categoryRepository.save(new Category("category", member));
-            saveTemplate(makeTemplateRequest("hello topic 1"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 2"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 3"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 4"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 5"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 6"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 7"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 8"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 9"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 10"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 11"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 12"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 13"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 14"), member, category);
-            saveTemplate(makeTemplateRequest("hello topic 15"), member, category);
+            saveDefault15Templates(member, category);
 
             //when
-            FindAllMyTemplatesResponse templates = templateService.findContainTopic(member.getId(), "topic",
-                    PageRequest.of(2, 5));
+            FindAllTemplatesResponse templates = templateService.findAllBy(
+                    member.getId(), "topic", null, null, PageRequest.of(1, 5));
 
             //then
-            List<String> titles = templates.templates().stream().map(FindMyTemplateResponse::title).toList();
+            List<String> titles = templates.templates().stream().map(ItemResponse::title).toList();
             assertThat(titles).containsExactly(
                     "hello topic 6", "hello topic 7", "hello topic 8", "hello topic 9", "hello topic 10");
         }
     }
-
-
-    //
 
     @Nested
     @DisplayName("조건에 따른 페이지 조회 메서드 동작 확인")
     class FilteringPageTest {
 
         private static final PageRequest DEFUALT_PAGING_REQUEST = PageRequest.of(0, 20);
-        private static Category firstCategory;
-        private static Tag tag1;
-        private static Tag tag2;
-        private static Member member;
 
-        /*@BeforeEach
-        void setUp() {
-            //템플릿 30개 / 카테고리는 홀수 : 1번, 짝수 : 2번으로 매핑 / 태그는 16보다 작으면 1, 16 이상이면 2로 매핑
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            member = memberJpaRepository.fetchById(memberDto.id());
-            firstCategory = categoryRepository.save(new Category("category1", member));
-            categoryRepository.save(new Category("category2", member));
-            for (int i = 1; i <= 30; i++) {
-                long categoryId = i % 2 == 0 ? firstCategory.getId() + 1 : firstCategory.getId();
-                templateRepository.save(new Template(
-                        member,
-                        "title" + i,
-                        "description",
-                        categoryRepository.fetchById(categoryId)
-                ));
-
-            }
-            tag1 = tagRepository.save(new Tag("tag1"));
-            tag2 = tagRepository.save(new Tag("tag2"));
-            for (long i = 1L; i <= 30L; i++) {
-                templateTagRepository.save(new TemplateTag(
-                        templateRepository.fetchById(i),
-                        tagRepository.fetchById((i / 16) + 1)
-                ));
-            }
-
-            System.out.println();
-        }
-*/
         @Test
         @DisplayName("전체 탐색 / 1페이지 성공")
         void findAllFirstPageSuccess() {
@@ -435,7 +387,7 @@ class TemplateServiceSearchTest {
             for (long i = 1L; i <= 30L; i++) {
                 templateTagRepository.save(new TemplateTag(
                         templateRepository.fetchById(i),
-                        tagRepository.fetchById((i / 15) + 1)
+                        tagRepository.fetchById((i % 2) + 1)
                 ));
             }
             FindAllTemplatesResponse allBy
@@ -443,7 +395,7 @@ class TemplateServiceSearchTest {
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0), // 테그
                     () -> assertThat(allBy.totalElements()).isEqualTo(15)
             );
         }
@@ -465,7 +417,8 @@ class TemplateServiceSearchTest {
             }
 
             FindAllTemplatesResponse allBy
-                    = templateService.findAllBy(member.getId(), "", null, List.of("tag1", "tag2"), DEFUALT_PAGING_REQUEST);
+                    = templateService.findAllBy(member.getId(), "", null, List.of("tag1", "tag2"),
+                    DEFUALT_PAGING_REQUEST);
 
             assertAll(
                     () -> assertThat(allBy.templates().size()).isEqualTo(20),
@@ -483,36 +436,22 @@ class TemplateServiceSearchTest {
             Category category2 = categoryRepository.save(new Category("category2", member));
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
+            for (long i = 1L; i <= 30L; i++) {
+                templateTagRepository.save(new TemplateTag(
+                        templateRepository.fetchById(i),
+                        tagRepository.fetchById((i % 2) + 1)
+                ));
+            }
             FindAllTemplatesResponse allBy
-                    = templateService.findAllBy(member.getId(), "", firstCategory.getId(), List.of("tag1"), DEFUALT_PAGING_REQUEST);
+                    = templateService.findAllBy(member.getId(), "", category1.getId(), List.of("tag1"),
+                    DEFUALT_PAGING_REQUEST);
 
             assertAll(
-                    () -> assertThat(allBy.templates().size()).isEqualTo(8),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 1),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(8)
+                    () -> assertThat(allBy.templates().size()).isEqualTo(7), // 태그 및 카테고리
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16), //카테고리
+                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0), // 테그
+                    () -> assertThat(allBy.totalElements()).isEqualTo(7)
             );
         }
-    }
-
-    private void saveDefault15Templates(Member member, Category category) {
-        saveTemplate(makeTemplateRequest("hello topic 1"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 2"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 3"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 4"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 5"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 6"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 7"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 8"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 9"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 10"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 11"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 12"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 13"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 14"), member, category);
-        saveTemplate(makeTemplateRequest("hello topic 15"), member, category);
-
-        tagRepository.save(new Tag("tag1"));
-        tagRepository.save(new Tag("tag2"));
     }
 }

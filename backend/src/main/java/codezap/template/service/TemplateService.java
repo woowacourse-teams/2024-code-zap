@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,11 +24,10 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllMyTemplatesResponse;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
+import codezap.template.dto.response.FindMyTemplateResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -144,12 +142,12 @@ public class TemplateService {
             Long categoryId,
             List<String> tagNames,
             Pageable pageable
-            ) {
+    ) {
         topic = "%" + topic + "%";
         if (categoryId != null && tagNames != null) {
             List<Long> templateIds = filterTemplatesBy(tagNames);
             Page<Template> templatePage =
-                    templateRepository.searchBy(memberId,topic, categoryId, templateIds, pageable);
+                    templateRepository.searchBy(memberId, topic, categoryId, templateIds, pageable);
             long totalTemplatesCount = templateRepository.countByIdInAndCategoryId(templateIds, categoryId);
             return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
         }
@@ -167,8 +165,7 @@ public class TemplateService {
             return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
         }
         Page<Template> templatePage =
-                //templateRepository.searchBy(memberId, topic, pageable);
-                getTemplates(memberId, topic, pageable);
+                templateRepository.searchBy(memberId, topic, pageable);
         long totalTemplatesCount = templateRepository.count();
         return makeTemplatesResponseBy(totalTemplatesCount, templatePage);
     }
@@ -282,21 +279,6 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    public FindAllMyTemplatesResponse findContainTopic(Long memberId, String topic, Pageable pageable) {
-        Page<Template> templates = getTemplates(memberId, topic, pageable);
-        List<FindMyTemplateResponse> myTemplateResponses = templates.stream()
-                .map(this::findByTemplate)
-                .toList();
-
-        return FindAllMyTemplatesResponse.of(myTemplateResponses, templates.getTotalPages());
-    }
-
-    private Page<Template> getTemplates(Long memberId, String topic, Pageable pageable) {
-        String topicWithWildcards = "%" + topic + "%";
-        Pageable newPageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize());
-        return templateRepository.searchBy(memberId, topicWithWildcards, newPageable);
     }
 
     private FindMyTemplateResponse findByTemplate(Template template) {
