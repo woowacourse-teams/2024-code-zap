@@ -49,7 +49,6 @@ export const getTemplateList = async ({
     url.searchParams.append('tagIds', tagIds.toString());
   }
 
-  url.searchParams.append('keyword', keyword);
   url.searchParams.append('sort', sort);
   url.searchParams.append('pageNumber', page.toString());
   url.searchParams.append('pageSize', pageSize.toString());
