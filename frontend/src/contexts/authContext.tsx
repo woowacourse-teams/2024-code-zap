@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const handleMemberInfo = (newMemberInfo: MemberInfo) => {
     setMemberInfo(newMemberInfo);
 
-    console.log('newMemberInfo', newMemberInfo);
   };
 
   return (
