@@ -14,6 +14,8 @@ public interface TemplateTagRepository extends JpaRepository<TemplateTag, Long> 
 
     void deleteAllByTemplateId(Long id);
 
+    List<TemplateTag> findByTemplateIn(List<Template> templates);
+  
     @Query("""
             SELECT DISTINCT tt.id.templateId
             FROM TemplateTag tt

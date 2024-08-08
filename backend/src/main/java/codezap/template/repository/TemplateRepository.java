@@ -97,4 +97,5 @@ public interface TemplateRepository extends JpaRepository<Template, Long> {
             Pageable pageable
     );
 
+    List<Template> findByMemberId(Long memberId);
 }

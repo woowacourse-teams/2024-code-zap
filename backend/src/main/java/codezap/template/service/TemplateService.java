@@ -26,8 +26,10 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
+import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
+import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SnippetRepository;
 import codezap.template.repository.TagRepository;
@@ -277,5 +279,17 @@ public class TemplateService {
 
     private CodeZapException throwNotFoundThumbnailSnippet() {
         throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
+    }
+
+    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
+        List<Template> byMemberId = templateRepository.findByMemberId(memberId);
+        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(byMemberId);
+        return new FindAllTagsResponse(
+                templateTags.stream()
+                        .map(TemplateTag::getTag)
+                        .distinct()
+                        .map(FindTagResponse::from)
+                        .toList()
+        );
     }
 }
