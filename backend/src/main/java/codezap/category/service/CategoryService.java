@@ -42,7 +42,7 @@ public class CategoryService {
 
     public FindAllCategoriesResponse findAllByMember(Long memberId) {
         Member member = memberJpaRepository.fetchById(memberId);
-        return FindAllCategoriesResponse.from(categoryRepository.findAllByMember(member));
+        return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberOrderById(member));
     }
 
     public FindAllCategoriesResponse findAll() {
