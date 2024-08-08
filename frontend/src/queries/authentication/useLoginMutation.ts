@@ -18,7 +18,7 @@ export const useLoginMutation = () => {
       if (res.memberId === undefined) {
         handleLoginState(false);
         handleMemberInfo(res);
-        successAlert('로그인에 실패하였습니다.');
+        failAlert('로그인에 실패하였습니다.');
       } else {
         handleLoginState(true);
         handleMemberInfo(res);
