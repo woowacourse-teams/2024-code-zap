@@ -35,7 +35,7 @@ const Logo = () => (
   <Link to={'/'}>
     <Flex align='center' gap='0.5rem'>
       <img src={codezapLogo} alt='로고 버튼' width={36} height={18} />
-      <Heading.XSmall color={theme.color.light.primary_800}>코드잽</Heading.XSmall>
+      <Heading.XSmall color={theme.color.light.primary_500}>코드잽</Heading.XSmall>
     </Flex>
   </Link>
 );

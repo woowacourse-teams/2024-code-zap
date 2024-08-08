@@ -7,17 +7,17 @@ import type { Props } from './Button';
 const variants = {
   contained: css`
     color: ${theme.mode === 'light' ? theme.color.light.white : theme.color.dark.secondary_800};
-    background: ${theme.mode === 'light' ? theme.color.light.primary_800 : theme.color.light.primary_300};
+    background: ${theme.mode === 'light' ? theme.color.light.primary_600 : theme.color.light.primary_300};
     border: none;
   `,
   outlined: css`
-    color: ${theme.mode === 'light' ? theme.color.light.primary_800 : theme.color.light.primary_300};
+    color: ${theme.mode === 'light' ? theme.color.light.primary_600 : theme.color.light.primary_300};
     background: none;
     border: solid;
-    border-color: ${theme.mode === 'light' ? theme.color.light.primary_800 : theme.color.light.primary_300};
+    border-color: ${theme.mode === 'light' ? theme.color.light.primary_600 : theme.color.light.primary_300};
   `,
   text: css`
-    color: ${theme.mode === 'light' ? theme.color.light.primary_800 : theme.color.light.primary_300};
+    color: ${theme.mode === 'light' ? theme.color.light.primary_600 : theme.color.light.primary_300};
     background: none;
     border: none;
   `,
