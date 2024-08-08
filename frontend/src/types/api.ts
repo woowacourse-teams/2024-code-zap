@@ -43,6 +43,6 @@ export interface TemplateListRequest {
   memberId: number | undefined;
 }
 
-export type SortingKey = 'createdAt,asc' | 'createdAt,desc';
+export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc';
 
 export type SortingOption = { key: SortingKey; value: string };

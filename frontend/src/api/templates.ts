@@ -16,11 +16,11 @@ export const PAGE_SIZE = 20;
 
 export const SORTING_OPTIONS: SortingOption[] = [
   {
-    key: 'createdAt,desc',
+    key: 'modifiedAt,desc',
     value: '최근 순',
   },
   {
-    key: 'createdAt,asc',
+    key: 'modifiedAt,asc',
     value: '오래된 순',
   },
 ];
