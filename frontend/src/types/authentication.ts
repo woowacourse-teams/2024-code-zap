@@ -12,3 +12,8 @@ export interface LoginRequest {
 export interface CheckUsernameResponse {
   check: boolean;
 }
+
+export interface MemberInfo {
+  memberId: number | undefined;
+  username: string | undefined;
+}

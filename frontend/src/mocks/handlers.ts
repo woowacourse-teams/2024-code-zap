@@ -10,7 +10,9 @@ import {
   LOGOUT_API_URL,
   SIGNUP_API_URL,
 } from '@/api';
+import { TAG_API_URL } from '../api/tags';
 import mockCategoryList from './categoryList.json';
+import mockTagList from './tagList.json';
 import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
 
@@ -20,6 +22,7 @@ export const templateHandlers = [
     const keyword = url.searchParams.get('keyword');
     const categoryId = url.searchParams.get('categoryId');
     const tagIds = url.searchParams.get('tagIds');
+    const sort = url.searchParams.get('sort');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
     const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
 
@@ -40,8 +43,21 @@ export const templateHandlers = [
 
     if (tagIds) {
       filteredTemplates = filteredTemplates.filter((template) =>
-        template.tags.some((tag) => tagIds.split(',').includes(tag.id.toString())),
+        tagIds.split(',').every((tagId) => template.tags.some((tag) => tag.id.toString() === tagId)),
       );
+    }
+
+    switch (sort) {
+      case 'modifiedAt,asc':
+        filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
+        break;
+
+      case 'modifiedAt,desc':
+        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+        break;
+
+      default:
+        break;
     }
 
     const totalElements = filteredTemplates.length;
@@ -134,4 +150,6 @@ const categoryHandlers = [
   http.post(`${CATEGORY_API_URL}`, async () => HttpResponse.json({ status: 201 })),
 ];
 
-export const handlers = [...templateHandlers, ...categoryHandlers, ...authenticationHandler];
+const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];
+
+export const handlers = [...templateHandlers, ...categoryHandlers, ...authenticationHandler, ...tagHandlers];

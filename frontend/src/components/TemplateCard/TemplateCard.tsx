@@ -29,7 +29,7 @@ const TemplateCard = ({ template }: Props) => {
 
         <Flex gap='.5rem'>
           {tags.map((tag: Tag) => (
-            <TagButton key={tag.id} id={tag.id} name={tag.name} disabled={true} />
+            <TagButton key={tag.id} name={tag.name} disabled={true} />
           ))}
         </Flex>
       </S.TemplateCardContainer>

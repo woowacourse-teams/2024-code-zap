@@ -45,7 +45,7 @@ export const NewTemplateButton = styled.button`
   height: 2.375rem;
 
   background-color: white;
-  border: 2px solid ${theme.color.light.primary_800};
+  border: 2px solid ${theme.color.light.primary_500};
   border-radius: 8px;
 `;
 export const UserMenuButton = styled.button`
@@ -54,7 +54,7 @@ export const UserMenuButton = styled.button`
   width: 2.375rem;
   height: 2.375rem;
 
-  color: ${theme.color.light.primary_800};
+  color: ${theme.color.light.primary_500};
 
   object-fit: contain;
   background-color: white;
