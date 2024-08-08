@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { Text } from '@/components';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
-import * as S from './CategoryMenu.style';
+import * as S from './CategoryFilterMenu.style';
 
 interface MenuProps {
   categories: Category[];
@@ -16,7 +16,7 @@ interface ButtonProps {
   onClick: () => void;
 }
 
-const CategoryMenu = ({ categories, onSelectCategory }: MenuProps) => {
+const CategoryFilterMenu = ({ categories, onSelectCategory }: MenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
 
   const reorderedCategories = useMemo(() => {
@@ -67,4 +67,4 @@ const CategoryButton = ({ name, disabled, onClick }: ButtonProps) => (
   </S.CategoryButtonWrapper>
 );
 
-export default CategoryMenu;
+export default CategoryFilterMenu;

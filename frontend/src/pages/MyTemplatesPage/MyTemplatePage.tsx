@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { searchIcon } from '@/assets/images';
-import { CategoryMenu, Flex, Heading, Input, TemplateGrid, PagingButton, Dropdown } from '@/components';
+import { CategoryFilterMenu, Flex, Heading, Input, TemplateGrid, PagingButton, Dropdown } from '@/components';
 import { useWindowWidth, useDebounce } from '@/hooks';
 import { useDropdown } from '@/hooks/utils/useDropdown';
 import { useInput } from '@/hooks/utils/useInput';
@@ -65,7 +65,7 @@ const MyTemplatePage = () => {
       </S.TopBannerContainer>
       <S.MainContainer>
         <Flex style={{ marginTop: '72px' }}>
-          <CategoryMenu categories={categories} onSelectCategory={handleCategorySelect} />
+          <CategoryFilterMenu categories={categories} onSelectCategory={handleCategorySelect} />
         </Flex>
 
         <Flex direction='column' width='100%' gap='1rem'>
