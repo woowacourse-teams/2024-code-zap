@@ -1,14 +1,17 @@
 import styled from '@emotion/styled';
 
-export const TagButtonWrapper = styled.button<{ bgColor: string; borderColor: string }>`
+import { theme } from '@/style/theme';
+
+export const TagButtonWrapper = styled.button<{ isFocused: boolean }>`
   cursor: pointer;
 
   box-sizing: border-box;
   height: 1.75rem;
   padding: 0 0.75rem;
 
-  background-color: ${({ bgColor }) => bgColor};
-  border: 1px solid ${({ borderColor }) => borderColor};
+  background-color: ${({ isFocused }) => (isFocused ? theme.color.light.primary_400 : theme.color.light.tertiary_50)};
+  border: ${({ isFocused }) =>
+    isFocused ? `2px solid ${theme.color.light.primary_600}` : `1px solid ${theme.color.light.tertiary_200}`};
   border-radius: 2.5rem;
 
   &:not(:disabled):hover {

@@ -7,7 +7,7 @@ import * as S from './CategoryFilterMenu.style';
 
 interface MenuProps {
   categories: Category[];
-  onSelectCategory: (categoryId: number) => void;
+  onSelectCategory: (selectedCategoryId: number) => void;
 }
 
 interface ButtonProps {
