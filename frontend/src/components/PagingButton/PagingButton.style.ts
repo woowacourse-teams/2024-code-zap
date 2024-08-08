@@ -15,7 +15,7 @@ export const StyledPagingButton = styled.button`
   border: none;
 
   :disabled {
-    background-color: ${theme.color.light.primary_800};
+    background-color: ${theme.color.light.primary_500};
 
     span {
       color: ${theme.color.light.white};

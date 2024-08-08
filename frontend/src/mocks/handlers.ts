@@ -47,16 +47,7 @@ export const templateHandlers = [
       );
     }
 
-    // API에서 createdAt가 추가되면 'createdAt'으로 변경한다.
     switch (sort) {
-      case 'createdAt,asc':
-        filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
-        break;
-
-      case 'createdAt,desc':
-        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
-        break;
-
       case 'modifiedAt,asc':
         filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
         break;

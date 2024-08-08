@@ -16,12 +16,12 @@ export const PAGE_SIZE = 20;
 
 export const SORTING_OPTIONS: SortingOption[] = [
   {
-    key: 'createdAt,desc',
-    value: '최근 생성 순',
+    key: 'modifiedAt,desc',
+    value: '최근 순',
   },
   {
-    key: 'createdAt,asc',
-    value: '오래된 생성 순',
+    key: 'modifiedAt,asc',
+    value: '오래된 순',
   },
 ];
 
@@ -49,7 +49,6 @@ export const getTemplateList = async ({
     url.searchParams.append('tagIds', tagIds.toString());
   }
 
-  url.searchParams.append('keyword', keyword);
   url.searchParams.append('sort', sort);
   url.searchParams.append('pageNumber', page.toString());
   url.searchParams.append('pageSize', pageSize.toString());

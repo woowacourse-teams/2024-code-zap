@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
 import { ToastContext } from '@/context/ToastContext';
@@ -13,9 +13,13 @@ const GuestGuard = ({ children }: GuestGuardProps) => {
   const { isLogin } = useAuth();
   const { infoAlert } = useCustomContext(ToastContext);
 
-  if (!isLogin) {
-    infoAlert('로그인을 해주세요.');
+  useEffect(() => {
+    if (!isLogin) {
+      infoAlert('로그인을 해주세요.');
+    }
+  }, [isLogin, infoAlert]);
 
+  if (!isLogin) {
     return <Navigate to='/login' />;
   }
 
