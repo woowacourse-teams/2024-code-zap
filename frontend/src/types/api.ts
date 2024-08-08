@@ -1,4 +1,4 @@
-import { Category, Snippet, Template } from './template';
+import { Category, Snippet, Tag, Template } from './template';
 
 export interface TemplateListResponse {
   templates: Template[];
@@ -31,6 +31,10 @@ export interface CategoryListResponse {
 
 export interface CategoryRequest {
   name: string;
+}
+
+export interface TagListResponse {
+  tags: Tag[];
 }
 
 export interface TemplateListRequest {

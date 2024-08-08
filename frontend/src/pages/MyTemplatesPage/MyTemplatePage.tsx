@@ -2,12 +2,22 @@ import { useState, useCallback } from 'react';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { searchIcon } from '@/assets/images';
-import { CategoryMenu, Flex, Heading, Input, TemplateGrid, PagingButton, Dropdown } from '@/components';
+import {
+  CategoryFilterMenu,
+  Flex,
+  Heading,
+  Input,
+  TemplateGrid,
+  PagingButton,
+  Dropdown,
+  TagFilterMenu,
+} from '@/components';
 import { useWindowWidth, useDebounce } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useDropdown } from '@/hooks/utils/useDropdown';
 import { useInput } from '@/hooks/utils/useInput';
 import { useCategoryListQuery } from '@/queries/category';
+import { useTagListQuery } from '@/queries/tag';
 import { useTemplateListQuery } from '@/queries/template';
 import { theme } from '@/style/theme';
 import { scroll } from '@/utils';
@@ -24,26 +34,34 @@ const MyTemplatePage = () => {
   const [keyword, handleKeywordChange] = useInput('');
   const debouncedKeyword = useDebounce(keyword, 300);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
 
   const [page, setPage] = useState<number>(1);
 
-  const { data: categoryData } = useCategoryListQuery();
   const { data: templateData } = useTemplateListQuery({
     keyword: debouncedKeyword,
     categoryId: selectedCategoryId,
+    tagIds: selectedTagIds,
     sort: sortingOption.key,
     page,
   });
+  const { data: categoryData } = useCategoryListQuery();
+  const { data: tagData } = useTagListQuery();
 
   const templates = templateData?.templates || [];
   const categories = categoryData?.categories || [];
+  const tags = tagData?.tags || [];
   const totalPages = templateData?.totalPages || 0;
 
-  const handleCategorySelect = useCallback((categoryId: number) => {
+  const handleCategoryMenuClick = useCallback((selectedCategoryId: number) => {
     scroll.top();
-    setSelectedCategoryId(categoryId);
+    setSelectedCategoryId(selectedCategoryId);
     setPage(1);
+  }, []);
+
+  const handleTagMenuClick = useCallback((selectedTagIds: number[]) => {
+    setSelectedTagIds(selectedTagIds);
   }, []);
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -68,8 +86,9 @@ const MyTemplatePage = () => {
         </S.TopBannerTextWrapper>
       </S.TopBannerContainer>
       <S.MainContainer>
-        <Flex style={{ marginTop: '72px' }}>
-          <CategoryMenu categories={categories} onSelectCategory={handleCategorySelect} />
+        <Flex direction='column' gap='2.5rem' style={{ marginTop: '3.5rem' }}>
+          <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
+          <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
         </Flex>
 
         <Flex direction='column' width='100%' gap='1rem'>
