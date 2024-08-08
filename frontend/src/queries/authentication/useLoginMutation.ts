@@ -15,10 +15,16 @@ export const useLoginMutation = () => {
   return useMutation({
     mutationFn: (loginInfo: LoginRequest) => postLogin(loginInfo),
     onSuccess: (res) => {
-      handleLoginState(true);
-      handleMemberInfo(res);
-      navigate('/');
-      successAlert('로그인 성공!');
+      if (res.memberId === undefined) {
+        handleLoginState(false);
+        handleMemberInfo(res);
+        successAlert('로그인에 실패하였습니다.');
+      } else {
+        handleLoginState(true);
+        handleMemberInfo(res);
+        navigate('/');
+        successAlert('로그인 성공!');
+      }
     },
     onError: (error) => {
       console.error(error);

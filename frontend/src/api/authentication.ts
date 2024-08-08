@@ -25,6 +25,10 @@ export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> =>
     body: JSON.stringify(loginInfo),
   });
 
+  if (!response.ok) {
+    return { memberId: undefined, username: undefined };
+  }
+
   const data = await response.json();
 
   return data;
