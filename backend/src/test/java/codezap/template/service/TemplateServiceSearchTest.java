@@ -373,15 +373,20 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
             for (long i = 1L; i <= 30L; i++) {
                 templateTagRepository.save(
-                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 3) + 1)));
+                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
+            }
+
+            for (long i = 1L; i <= 30L; i++) {
+                templateTagRepository.save(
+                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById(3L)));
             }
 
             FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, List.of(1L, 2L), DEFAULT_PAGING_REQUEST
+                    member.getId(), "", null, List.of(1L, 3L), DEFAULT_PAGING_REQUEST
             );
 
-            assertAll(() -> assertThat(allBy.templates()).hasSize(20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(20));
+            assertAll(() -> assertThat(allBy.templates()).hasSize(15),
+                    () -> assertThat(allBy.totalElements()).isEqualTo(15));
         }
 
         @Test
