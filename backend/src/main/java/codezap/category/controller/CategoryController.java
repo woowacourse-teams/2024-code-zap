@@ -21,16 +21,14 @@ import codezap.category.service.CategoryService;
 import codezap.global.validation.ValidationSequence;
 import codezap.member.configuration.BasicAuthentication;
 import codezap.member.dto.MemberDto;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/categories")
 public class CategoryController implements SpringDocCategoryController {
 
     private final CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
 
     @PostMapping
     public ResponseEntity<Void> createCategory(

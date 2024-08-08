@@ -1,14 +1,20 @@
 package codezap.template.repository;
 
+import java.util.List;
 import java.util.Optional;
-
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import codezap.template.domain.Template;
 import codezap.template.domain.ThumbnailSnippet;
 
-public interface ThumbnailSnippetRepository extends JpaRepository<ThumbnailSnippet, Long> {
+public interface ThumbnailSnippetRepository {
+
+    ThumbnailSnippet fetchById(Long id);
+
     Optional<ThumbnailSnippet> findByTemplate(Template template);
+
+    List<ThumbnailSnippet> findAll();
+
+    ThumbnailSnippet save(ThumbnailSnippet thumbnailSnippet);
 
     void deleteByTemplateId(Long id);
 }

@@ -13,12 +13,16 @@ import jakarta.persistence.ManyToOne;
 
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class Snippet extends BaseTimeEntity {
 
     private static final String LINE_BREAK = "\n";

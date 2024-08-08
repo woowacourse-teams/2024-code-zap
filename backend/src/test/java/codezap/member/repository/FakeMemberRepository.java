@@ -21,6 +21,11 @@ public class FakeMemberRepository implements MemberRepository {
         this.members = new ArrayList<>();
     }
 
+    public FakeMemberRepository(List<Member> members) {
+        this.members = new ArrayList<>(members);
+        idCounter.set(1 + members.size());
+    }
+
     @Override
     public Member fetchById(Long id) {
         return members.stream()

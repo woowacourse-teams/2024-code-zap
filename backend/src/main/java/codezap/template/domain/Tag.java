@@ -8,12 +8,16 @@ import jakarta.persistence.Id;
 
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = false)
 public class Tag extends BaseTimeEntity {
 
     @Id

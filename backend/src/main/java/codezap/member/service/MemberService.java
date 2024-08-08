@@ -21,14 +21,14 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AuthService authService;
-    private final CategoryRepository categoryJpaRepository;
+    private final CategoryRepository categoryRepository;
 
     public Member signup(SignupRequest request) {
         assertUniqueEmail(request.email());
         assertUniqueUsername(request.username());
         Member member = new Member(request.email(), request.password(), request.username());
         Member saved = memberRepository.save(member);
-        categoryJpaRepository.save(Category.createDefaultCategory(saved));
+        categoryRepository.save(Category.createDefaultCategory(saved));
         return saved;
     }
 
