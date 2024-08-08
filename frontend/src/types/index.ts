@@ -8,5 +8,6 @@ export type {
   TemplateListRequest,
   CategoryRequest,
   CategoryListResponse,
+  TagListResponse,
 } from './api';
 export type { LoginRequest, SignupRequest, CheckUsernameResponse } from './authentication';
