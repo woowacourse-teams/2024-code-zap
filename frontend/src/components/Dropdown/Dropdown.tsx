@@ -1,4 +1,6 @@
 import { chevron } from '@/assets/images';
+import { theme } from '../../style/theme';
+import Text from '../Text/Text';
 import * as S from './Dropdown.style';
 
 interface Props<T> {
@@ -46,7 +48,7 @@ const Dropdown = <T,>({
       <S.OptionList>
         {options?.map((option, idx) => (
           <S.Option key={idx} onClick={() => handleCurrentValue(option)}>
-            {getOptionLabel(option)}
+            <Text.Small color={theme.color.light.black}>{getOptionLabel(option)}</Text.Small>
           </S.Option>
         ))}
       </S.OptionList>
@@ -60,11 +62,11 @@ type SelectedButtonProps<T> = Pick<Props<T>, 'toggleDropdown' | 'getOptionLabel'
 
 const SelectedButton = <T,>({ toggleDropdown, getOptionLabel, currentValue, isOpen }: SelectedButtonProps<T>) => (
   <S.SelectedButton onClick={toggleDropdown}>
-    {getOptionLabel(currentValue)}
+    <Text.Small color={theme.color.light.black}>{getOptionLabel(currentValue)}</Text.Small>
     <img
       src={chevron}
-      width={24}
-      height={24}
+      width={16}
+      height={16}
       alt=''
       css={{
         transition: 'transform 0.3s ease',

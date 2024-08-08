@@ -3,20 +3,15 @@ import { theme } from '@/style/theme';
 import * as S from './TagButton.style';
 
 interface Props {
-  id: number;
   name: string;
+  isFocused?: boolean;
   disabled?: boolean;
-  onClick?: (id: number) => void;
+  onClick?: () => void;
 }
 
-const TagButton = ({ id, name, disabled, onClick }: Props) => (
-  <S.TagButtonWrapper
-    bgColor={theme.color.light.tertiary_50}
-    borderColor={theme.color.light.tertiary_200}
-    disabled={disabled}
-    onClick={() => onClick && onClick(id)}
-  >
-    <Text.Small color={theme.color.light.secondary_700}>{name}</Text.Small>
+const TagButton = ({ name, isFocused = false, disabled, onClick }: Props) => (
+  <S.TagButtonWrapper isFocused={isFocused} disabled={disabled} onClick={() => onClick && onClick()}>
+    <Text.Small color={isFocused ? theme.color.light.white : theme.color.light.secondary_700}>{name}</Text.Small>
   </S.TagButtonWrapper>
 );
 

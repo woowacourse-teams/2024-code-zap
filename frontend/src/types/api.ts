@@ -1,4 +1,4 @@
-import { Category, Snippet, Template } from './template';
+import { Category, Snippet, Tag, Template } from './template';
 
 export interface TemplateListResponse {
   templates: Template[];
@@ -33,10 +33,20 @@ export interface CategoryRequest {
   name: string;
 }
 
+export interface TagListResponse {
+  tags: Tag[];
+}
+
 export interface TemplateListRequest {
+  keyword?: string;
   categoryId?: number;
   tagIds?: number[];
+  sort?: SortingKey;
   page?: number;
   pageSize?: number;
-  keyword?: string;
+  memberId: number | undefined;
 }
+
+export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc';
+
+export type SortingOption = { key: SortingKey; value: string };

@@ -54,7 +54,7 @@ export const HighlightBox = styled.div<{ selectedIndex: number; categoryCount: n
   width: 12.5rem;
   height: var(--button_height_D);
 
-  border: 3px solid ${theme.color.light.primary_600};
+  border: 3px solid ${theme.color.light.primary_500};
   border-radius: 8px;
 
   transition: top 0.25s ease-out;
