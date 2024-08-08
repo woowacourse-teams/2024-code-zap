@@ -1,5 +1,5 @@
 export { default as logoIcon } from './logo_24x24.png';
-export { default as newTemplateIcon } from './newTemplate_12x12.png';
+export { default as newTemplateIcon } from './newTemplate.png';
 export { default as pencilIcon } from './pencil.png';
 export { default as searchIcon } from './search.png';
 export { default as trashcanIcon } from './trashcan.png';
