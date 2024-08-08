@@ -25,7 +25,7 @@ jobs:
           echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
-          echo "SENTRY_DSN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: 파일 접근 권한 변경
         run: |
