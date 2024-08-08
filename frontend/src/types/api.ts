@@ -40,6 +40,7 @@ export interface TemplateListRequest {
   sort?: SortingKey;
   page?: number;
   pageSize?: number;
+  memberId: number | undefined;
 }
 
 export type SortingKey = 'createdAt,asc' | 'createdAt,desc';
