@@ -7,13 +7,14 @@ import GuestGuard from './GuestGuard';
 
 const router = createBrowserRouter([
   {
+    errorElement: <div>Global Error Element</div>,
     element: <Layout />,
     children: [
       {
         path: '/',
         element: (
           <GuestGuard>
-            <MyTemplatePage />,
+            <MyTemplatePage />
           </GuestGuard>
         ),
       },
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
         path: 'login',
         element: (
           <AuthGuard>
-            <LoginPage />,
+            <LoginPage />
           </AuthGuard>
         ),
       },
