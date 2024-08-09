@@ -1,8 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage } from '@/pages';
-import LandingPage from '@/pages/LandingPage/LandingPage';
+import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage, LandingPage } from '@/pages';
 import AuthGuard from './AuthGuard';
 import GuestGuard from './GuestGuard';
 
