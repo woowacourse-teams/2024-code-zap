@@ -41,6 +41,7 @@
     "@storybook/react-webpack5": "^8.2.1",
     "@storybook/test": "^8.2.1",
     "@testing-library/dom": "^10.3.2",
+    "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
     "@types/dotenv-webpack": "^7.0.7",
     "@types/jest": "^29.5.12",
