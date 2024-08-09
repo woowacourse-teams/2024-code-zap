@@ -19,23 +19,25 @@ export const postSignup = async (signupInfo: SignupRequest) =>
   });
 
 export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> => {
-  const response = await customFetch({
+  const response = await customFetch<MemberInfo>({
     method: 'POST',
     url: `${LOGIN_API_URL}`,
     body: JSON.stringify(loginInfo),
   });
 
-  if (!response.ok) {
+  if ('memberId' in response) {
+    return response;
+  }
+
+  if (response.status >= 400) {
     return { memberId: undefined, username: undefined };
   }
 
-  const data = await response.json();
-
-  return data;
+  throw new Error(response.detail);
 };
 
 export const postLogout = async () => {
-  const response = await customFetch({
+  const response = await customFetch<unknown>({
     method: 'POST',
     url: `${LOGOUT_API_URL}`,
   });

@@ -77,14 +77,7 @@ export const useSignupForm = () => {
     e.preventDefault();
 
     if (isFormValid()) {
-      const response = await postSignup({ email, username, password });
-
-      if (!response.ok) {
-        console.error(response);
-
-        return;
-      }
-
+      await postSignup({ email, username, password });
       navigate('/login');
     }
   };
