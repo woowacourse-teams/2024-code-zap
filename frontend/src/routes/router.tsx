@@ -14,7 +14,7 @@ const router = createBrowserRouter([
         path: '/',
         element: (
           <GuestGuard>
-            <MyTemplatePage />,
+            <MyTemplatePage />
           </GuestGuard>
         ),
       },
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
         path: 'login',
         element: (
           <AuthGuard>
-            <LoginPage />,
+            <LoginPage />
           </AuthGuard>
         ),
       },
