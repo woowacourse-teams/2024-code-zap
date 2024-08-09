@@ -15,7 +15,7 @@ const TemplateCard = ({ template }: Props) => {
 
   return (
     <Link to={`/templates/${id}`}>
-      <S.TemplateCardContainer>
+      <S.TemplateCardContainer data-testid='template-card'>
         <Flex justify='space-between' width='100%'>
           <Flex direction='column' gap='.5rem'>
             <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>

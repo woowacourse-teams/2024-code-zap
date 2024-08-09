@@ -24,7 +24,7 @@ const Dropdown = <T,>({
   handleCurrentValue,
   replaceChildrenWhenIsOpen,
 }: Props<T>) => (
-  <S.DropdownContainer ref={dropdownRef}>
+  <S.DropdownContainer ref={dropdownRef} data-testid='dropdown-container'>
     <S.Wrapper>
       {isOpen ? (
         replaceChildrenWhenIsOpen || (
@@ -45,7 +45,7 @@ const Dropdown = <T,>({
       )}
     </S.Wrapper>
     {isOpen && (
-      <S.OptionList>
+      <S.OptionList data-testid='dropdown-option-list'>
         {options?.map((option, idx) => (
           <S.Option key={idx} onClick={() => handleCurrentValue(option)}>
             <Text.Small color={theme.color.light.black}>{getOptionLabel(option)}</Text.Small>

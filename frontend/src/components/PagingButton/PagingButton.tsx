@@ -9,7 +9,7 @@ interface PagingButtonProps {
 }
 
 const PagingButton = ({ page, isActive, onClick }: PagingButtonProps) => (
-  <S.StyledPagingButton disabled={isActive} onClick={() => onClick(page)}>
+  <S.StyledPagingButton data-testid='paging-button' disabled={isActive} onClick={() => onClick(page)}>
     <Text.Medium color={theme.color.light.secondary_500}>{page}</Text.Medium>
   </S.StyledPagingButton>
 );

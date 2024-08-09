@@ -48,7 +48,6 @@ const MyTemplatePage = () => {
   });
   const { data: categoryData } = useCategoryListQuery();
   const { data: tagData } = useTagListQuery();
-
   const templates = templateData?.templates || [];
   const categories = categoryData?.categories || [];
   const tags = tagData?.tags || [];
