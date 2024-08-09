@@ -1,13 +1,13 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage } from '@/pages';
+import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage, NotFoundPage } from '@/pages';
 import AuthGuard from './AuthGuard';
 import GuestGuard from './GuestGuard';
 
 const router = createBrowserRouter([
   {
-    errorElement: <div>Global Error Element</div>,
+    errorElement: <NotFoundPage />,
     element: <Layout />,
     children: [
       {
@@ -49,6 +49,10 @@ const router = createBrowserRouter([
             <LoginPage />
           </AuthGuard>
         ),
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },

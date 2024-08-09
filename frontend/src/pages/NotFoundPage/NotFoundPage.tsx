@@ -4,7 +4,7 @@ import { tigger } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { theme } from '@/style/theme';
 
-const ErrorPage = () => {
+const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (
@@ -36,4 +36,4 @@ const ErrorPage = () => {
   );
 };
 
-export default ErrorPage;
+export default NotFoundPage;
