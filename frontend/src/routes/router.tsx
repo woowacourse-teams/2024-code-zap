@@ -7,6 +7,7 @@ import GuestGuard from './GuestGuard';
 
 const router = createBrowserRouter([
   {
+    errorElement: <div>Global Error Element</div>,
     element: <Layout />,
     children: [
       {
