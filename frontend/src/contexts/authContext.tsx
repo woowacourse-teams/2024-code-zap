@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 
 import { MemberInfo } from '@/types/authentication';
 
@@ -17,6 +17,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     memberId: undefined,
     username: undefined,
   });
+
+  useEffect(() => {
+    const savedUsername = localStorage.getItem('username');
+    const savedMemberId = localStorage.getItem('memberId');
+
+    if (savedUsername && savedMemberId) {
+      setIsLogin(true);
+      setMemberInfo({
+        username: savedUsername,
+        memberId: Number(savedMemberId),
+      });
+    }
+  }, []);
 
   const handleLoginState = (state: boolean) => {
     setIsLogin(state);
