@@ -1,19 +1,20 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage } from '@/pages';
+import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage, NotFoundPage } from '@/pages';
 import AuthGuard from './AuthGuard';
 import GuestGuard from './GuestGuard';
 
 const router = createBrowserRouter([
   {
+    errorElement: <NotFoundPage />,
     element: <Layout />,
     children: [
       {
         path: '/',
         element: (
           <GuestGuard>
-            <MyTemplatePage />,
+            <MyTemplatePage />
           </GuestGuard>
         ),
       },
@@ -45,9 +46,13 @@ const router = createBrowserRouter([
         path: 'login',
         element: (
           <AuthGuard>
-            <LoginPage />,
+            <LoginPage />
           </AuthGuard>
         ),
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },
