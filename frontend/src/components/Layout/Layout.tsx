@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 
 import { Header } from '@/components';
 import { useHeaderHeight } from '@/hooks/utils/useHeaderHeight';
+import { NotFoundPage } from '@/pages';
 import * as S from './Layout.style';
 
 const Layout = () => {
@@ -20,13 +21,7 @@ const Layout = () => {
     <S.LayoutContainer>
       <Header headerRef={headerRef} />
       <S.Wrapper>
-        <ErrorBoundary
-          fallback={({ error }) => (
-            <div>
-              <span>{String(error)}</span>Local Sentry 에러바운더리입니다.
-            </div>
-          )}
-        >
+        <ErrorBoundary fallback={() => <NotFoundPage />}>
           <Outlet />
         </ErrorBoundary>
       </S.Wrapper>
