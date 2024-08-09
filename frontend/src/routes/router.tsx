@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
 import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage } from '@/pages';
+import LandingPage from '@/pages/LandingPage/LandingPage';
 import AuthGuard from './AuthGuard';
 import GuestGuard from './GuestGuard';
 
@@ -46,6 +47,14 @@ const router = createBrowserRouter([
         element: (
           <AuthGuard>
             <LoginPage />,
+          </AuthGuard>
+        ),
+      },
+      {
+        path: 'home',
+        element: (
+          <AuthGuard>
+            <LandingPage />,
           </AuthGuard>
         ),
       },
