@@ -4,10 +4,11 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { chevron, pencilIcon, trashcanIcon } from '@/assets/images';
-import { Button, Flex, Heading, SelectList, TagButton, Text } from '@/components';
+import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
 import { ToastContext } from '@/context/ToastContext';
 import { useTemplate } from '@/hooks/template/useTemplate';
 import useCustomContext from '@/hooks/utils/useCustomContext';
+import { useModal } from '@/hooks/utils/useModal';
 import { TemplateEditPage } from '@/pages';
 import type { Snippet } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
@@ -18,6 +19,7 @@ const TemplatePage = () => {
   const theme = useTheme();
 
   const { infoAlert } = useCustomContext(ToastContext);
+  const { isOpen, toggleModal } = useModal();
 
   const copyCode = (snippet: Snippet) => () => {
     navigator.clipboard.writeText(snippet.content);
@@ -77,17 +79,29 @@ const TemplatePage = () => {
                 >
                   <img src={pencilIcon} width={24} height={24} alt='Delete snippet' />
                 </S.EditButton>
-                <S.DeleteButton
-                  size='small'
-                  variant='text'
-                  onClick={() => {
-                    handleDelete();
-                  }}
-                >
+                <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
                   <img src={trashcanIcon} width={28} height={28} alt='Delete snippet' />
                 </S.DeleteButton>
               </Flex>
             </Flex>
+            {isOpen && (
+              <Modal isOpen={isOpen} toggleModal={toggleModal} size='xsmall'>
+                <Flex direction='column' justify='space-between' align='center' margin='1rem 0 0 0' gap='2rem'>
+                  <Flex direction='column' justify='center' align='center' gap='0.75rem'>
+                    <Text.Large color='black' weight='bold'>
+                      정말 삭제하시겠습니까?
+                    </Text.Large>
+                    <Text.Medium color='black'>삭제된 템플릿은 복구할 수 없습니다.</Text.Medium>
+                  </Flex>
+                  <Flex justify='center' align='center' gap='0.5rem'>
+                    <Button variant='outlined' onClick={toggleModal}>
+                      취소
+                    </Button>
+                    <Button onClick={handleDelete}>삭제</Button>
+                  </Flex>
+                </Flex>
+              </Modal>
+            )}
 
             {template.snippets.map((snippet, index) => (
               <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
