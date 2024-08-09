@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
@@ -75,7 +73,7 @@ public interface SpringDocTemplateController {
             """)
     @ApiResponse(responseCode = "200", description = "태그 목록 조회 성공",
             content = {@Content(schema = @Schema(implementation = FindAllTagsResponse.class))})
-    ResponseEntity<FindAllTagsResponse> getTags(Long memberId);
+    ResponseEntity<FindAllTagsResponse> getTags(MemberDto memberDto, Long memberId);
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",

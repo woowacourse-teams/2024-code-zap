@@ -62,7 +62,10 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/tags")
-    public ResponseEntity<FindAllTagsResponse> getTags(@RequestParam Long memberId) {
+    public ResponseEntity<FindAllTagsResponse> getTags(
+            @BasicAuthentication MemberDto memberDto,
+            @RequestParam Long memberId
+    ) {
         FindAllTagsResponse response = templateService.findAllTagsByMemberId(memberId);
         return ResponseEntity.ok(response);
     }
