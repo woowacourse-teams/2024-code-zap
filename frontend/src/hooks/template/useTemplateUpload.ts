@@ -96,15 +96,11 @@ export const useTemplateUpload = () => {
       tags,
     };
 
-    try {
-      await uploadTemplate(newTemplate, {
-        onSuccess: (res) => {
-          navigate(res.headers.get('Location') || '/');
-        },
-      });
-    } catch (error) {
-      console.error('Failed to update template:', error);
-    }
+    await uploadTemplate(newTemplate, {
+      onSuccess: () => {
+        navigate('/');
+      },
+    });
   };
 
   return {
