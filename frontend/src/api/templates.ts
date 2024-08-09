@@ -35,7 +35,7 @@ export const getTemplateList = async ({
   page = 1,
   pageSize = PAGE_SIZE,
   memberId,
-}: TemplateListRequest): Promise<TemplateListResponse> => {
+}: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
     keyword,
     memberId: String(memberId),
@@ -48,28 +48,44 @@ export const getTemplateList = async ({
     queryParams.append('categoryId', categoryId.toString());
   }
 
-  if (tagIds?.length) {
+  if (tagIds?.length !== 0 && tagIds !== undefined) {
     queryParams.append('tagIds', tagIds.toString());
   }
 
   const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 
-  return await customFetch({
+  const response = await customFetch<TemplateListResponse>({
     url,
   });
+
+  if ('templates' in response) {
+    return response;
+  }
+
+  throw new Error(response.detail);
 };
 
-export const getTemplate = async (id: number): Promise<Template> =>
-  await customFetch({
+export const getTemplate = async (id: number) => {
+  const response = await customFetch<Template>({
     url: `${TEMPLATE_API_URL}/${id}`,
   });
 
-export const postTemplate = async (newTemplate: TemplateUploadRequest) =>
-  await customFetch({
+  if ('snippets' in response) {
+    return response;
+  }
+
+  throw new Error(response.detail);
+};
+
+export const postTemplate = async (newTemplate: TemplateUploadRequest) => {
+  const response = await customFetch({
     method: 'POST',
     url: `${TEMPLATE_API_URL}`,
     body: JSON.stringify(newTemplate),
   });
+
+  return response;
+};
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({

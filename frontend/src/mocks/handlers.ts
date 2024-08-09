@@ -162,4 +162,4 @@ const categoryHandlers = [
 
 const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];
 
-export const handlers = [...templateHandlers, ...categoryHandlers, ...authenticationHandler, ...tagHandlers];
+export const handlers = [...tagHandlers, ...templateHandlers, ...categoryHandlers, ...authenticationHandler];

@@ -17,7 +17,9 @@ const config: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$': '<rootDir>/src/mocks/fileMock.js',
+    'react-syntax-highlighter/dist/esm': 'react-syntax-highlighter/dist/cjs',
   },
+  transformIgnorePatterns: ['/node_modules/(?!react-syntax-highlighter)'],
 };
 
 export default config;

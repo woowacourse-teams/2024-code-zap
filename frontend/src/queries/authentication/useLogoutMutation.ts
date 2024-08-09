@@ -10,6 +10,8 @@ export const useLogoutMutation = () => {
     mutationFn: () => postLogout(),
     onSuccess: () => {
       handleLoginState(false);
+      localStorage.removeItem('username');
+      localStorage.removeItem('memberId');
     },
     onError: () => {
       console.log('mutation');

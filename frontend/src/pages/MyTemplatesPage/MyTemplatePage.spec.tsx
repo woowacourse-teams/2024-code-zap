@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from '../../contexts/authContext';
 import MyTemplatePage from './MyTemplatePage';
 
-const renderWithProviders = (ui: React.ReactElement) => {
+const renderWithProviders = (ui: React.ReactNode) => {
   const queryClient = new QueryClient();
 
   return render(

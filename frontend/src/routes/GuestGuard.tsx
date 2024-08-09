@@ -4,18 +4,34 @@ import { Navigate } from 'react-router-dom';
 import { ToastContext } from '@/context/ToastContext';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import useCustomContext from '@/hooks/utils/useCustomContext';
+import { useLoginStateQuery } from '@/queries/authentication';
 
 type GuestGuardProps = {
   children: ReactNode;
 };
 
 const GuestGuard = ({ children }: GuestGuardProps) => {
-  const { isLogin } = useAuth();
+  const { isLogin, handleLoginState, memberInfo } = useAuth();
   const { infoAlert } = useCustomContext(ToastContext);
+
+  const { isSuccess } = useLoginStateQuery();
+
+  useEffect(() => {
+    if (isSuccess) {
+      localStorage.setItem('username', String(memberInfo.username));
+      localStorage.setItem('memberId', String(memberInfo.memberId));
+      handleLoginState(true);
+    }
+  }, [isSuccess]);
 
   useEffect(() => {
     if (!isLogin) {
-      infoAlert('로그인을 해주세요.');
+      const savedUsername = localStorage.getItem('username');
+      const savedMemberId = localStorage.getItem('memberId');
+
+      if (savedMemberId === undefined && savedUsername === undefined) {
+        infoAlert('로그인을 해주세요.');
+      }
     }
   }, [isLogin, infoAlert]);
 

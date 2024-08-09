@@ -11,3 +11,5 @@ export type {
   TagListResponse,
 } from './api';
 export type { LoginRequest, SignupRequest, CheckUsernameResponse } from './authentication';
+
+export type { CustomError } from './fetch';

@@ -12,5 +12,6 @@ export const useTagListQuery = () => {
   return useQuery<TagListResponse, Error>({
     queryKey: [QUERY_KEY.TAG_LIST],
     queryFn: () => getTagList({ memberId }),
+    throwOnError: true,
   });
 };
