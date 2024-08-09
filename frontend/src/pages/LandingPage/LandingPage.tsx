@@ -1,0 +1,149 @@
+import styled from '@emotion/styled';
+import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight';
+import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+import { chevron, codezapLogo } from '@/assets/images';
+import { Button, Flex, Heading, Text } from '@/components';
+import { theme } from '@/style/theme';
+import * as S from '../TemplatePage/TemplatePage.style';
+
+const LandingPage = () => (
+  <Flex direction='column' justify='center' align='center' height='100vh' gap='2rem' width='70rem'>
+    <Flex justify='center' align='center' gap='1rem' width='27.5rem'>
+      <img src={codezapLogo} alt='로고 버튼' width={100} />
+      <Heading.XLarge color='#F79037'>코드잽</Heading.XLarge>
+    </Flex>
+
+    <Flex direction='column' justify='center' align='center' gap='2rem'>
+      <Heading.XSmall color='black'>자주 쓰는 코드를 나만의 템플릿으로 저장해보세요.</Heading.XSmall>
+      <Heading.XSmall color='black'> 코드잽에서 나의 코드를 빠르게 찾고, 효율적으로 관리할 수 있습니다.</Heading.XSmall>
+    </Flex>
+
+    <Flex justify='center' align='center' gap='1rem'>
+      <Card>
+        <Heading.XSmall color='white'>💾 간편한 저장</Heading.XSmall>
+        <Text.Medium color='white' weight='bold'>
+          자주 쓰는 나의 코드를 ZAP하게 저장하세요.
+        </Text.Medium>
+      </Card>
+
+      <Card>
+        <Heading.XSmall color='white'>🔍 빠른 검색</Heading.XSmall>
+        <Text.Medium color='white' weight='bold'>
+          필요한 나의 코드를 ZAP하게 찾아 사용하세요.
+        </Text.Medium>
+      </Card>
+
+      <Card>
+        <Heading.XSmall color='white'>📊 체계적인 관리</Heading.XSmall>
+        <Text.Medium color='white' weight='bold'>
+          직관적인 분류 시스템으로 ZAP하게 정리하세요.
+        </Text.Medium>
+      </Card>
+    </Flex>
+
+    <Flex justify='center' align='center' gap='3rem'>
+      <ExamCode />
+      <Flex direction='column' gap='5rem'>
+        <Flex direction='column' gap='1.5rem'>
+          <Heading.XSmall color='black' weight='bold'>
+            ⚡️ 템플릿이란?
+          </Heading.XSmall>
+          <Text.XLarge color='black' weight='bold'>
+            템플릿은 반복적으로 작성하게 되는 코드 블럭 모음
+          </Text.XLarge>
+        </Flex>
+        <Flex direction='column' gap='1.5rem'>
+          <Heading.XSmall color='black' weight='bold'>
+            🙌 코드잽은 이런 분들에게 딱이에요
+          </Heading.XSmall>
+          <Text.XLarge color='black' weight='bold'>
+            • 자주 쓰는 코드 템플릿을 간편하게 저장하고 싶은 분
+          </Text.XLarge>
+          <Text.XLarge color='black' weight='bold'>
+            • 프로젝트 파일을 뒤적거리는 대신 필요한 코드를 빠르게 찾고 싶은 분
+          </Text.XLarge>
+          <Text.XLarge color='black' weight='bold'>
+            • 체계적으로 코드를 정리하고 싶지만 방법을 모르셨던 분
+          </Text.XLarge>
+        </Flex>
+      </Flex>
+    </Flex>
+  </Flex>
+);
+
+export default LandingPage;
+
+const ExamCode = () => {
+  const snippet = {
+    id: 102,
+    filename: 'App.tsx',
+    content:
+      "import React from 'react';\nimport MyComponent from './MyComponent';\n\nconst App: React.FC = () => {\n  return (\n    <div>\n      <MyComponent name=\"John Doe\" age={30} />\n    </div>\n  );\n};\n\nexport default App;",
+    ordinal: 2,
+  };
+
+  return (
+    <div>
+      <Flex
+        justify='space-between'
+        align='center'
+        height='3rem'
+        padding='1rem 1.5rem'
+        style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
+      >
+        <Flex align='center' gap='0.5rem' css={{ cursor: 'pointer' }}>
+          <img src={chevron} width={24} height={24} alt='' />
+          <Text.Small color='#fff' weight='bold'>
+            {snippet.filename}
+          </Text.Small>
+        </Flex>
+        <Button size='small' variant='text'>
+          <Text.Small color={theme.color.light.primary_500} weight='bold'>
+            {'복사'}
+          </Text.Small>
+        </Button>
+      </Flex>
+      <S.SyntaxHighlighterWrapper isOpen>
+        <SyntaxHighlighter
+          language={'javascript'}
+          style={vscDarkPlus}
+          showLineNumbers={true}
+          customStyle={{
+            borderRadius: '0 0 8px 8px',
+            width: '100%',
+            tabSize: 2,
+            margin: 0,
+          }}
+          codeTagProps={{
+            style: {
+              fontSize: '1rem',
+            },
+          }}
+        >
+          {snippet.content}
+        </SyntaxHighlighter>
+      </S.SyntaxHighlighterWrapper>
+    </div>
+  );
+};
+
+const Card = styled.div`
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  padding: 2rem;
+
+  background-color: ${theme.color.light.primary_500};
+  border-radius: 24px;
+
+  transition: 0.1s ease;
+  &:hover {
+    bottom: 0.5rem;
+    transform: scale(1.025);
+    box-shadow: 1px 2px 8px 1px #00000030;
+  }
+`;
