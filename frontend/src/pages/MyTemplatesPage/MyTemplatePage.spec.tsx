@@ -6,6 +6,13 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from '../../contexts/authContext';
 import MyTemplatePage from './MyTemplatePage';
 
+beforeAll(() => {
+  Object.defineProperty(window, 'scrollTo', {
+    value: jest.fn(),
+    writable: true,
+  });
+});
+
 const renderWithProviders = (ui: React.ReactNode) => {
   const queryClient = new QueryClient();
 
