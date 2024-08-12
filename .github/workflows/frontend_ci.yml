@@ -3,7 +3,8 @@ name: Frontend CI
 on:
   pull_request:
     branches:
-      - '**'
+      - main
+      - dev/fe
 
 jobs:
   build-with-test:
