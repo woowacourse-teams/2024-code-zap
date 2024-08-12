@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -92,6 +93,14 @@ public class MemberController implements SpringDocMemberController {
 
     @GetMapping("/members/{id}")
     public ResponseEntity<FindMemberResponse> findMember(@BasicAuthentication MemberDto memberDto, @PathVariable Long id) {
+        throw new NotImplementedException("접근이 불가능한 기능입니다. 서버 개발자에게 문의해주세요.");
+    }
+
+
+    @PutMapping("/members/{id}")
+    public ResponseEntity<UpdateMemberProfileResponse> updateMemberProfile(
+            @Valid @RequestBody UpdateMemberProfileRequest updateMemberProfileRequest, @PathVariable Long id
+    ) {
         throw new NotImplementedException("접근이 불가능한 기능입니다. 서버 개발자에게 문의해주세요.");
     }
 }

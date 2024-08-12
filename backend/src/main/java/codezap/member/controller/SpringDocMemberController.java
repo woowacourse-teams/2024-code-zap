@@ -15,7 +15,9 @@ import codezap.member.dto.LoginRequest;
 import codezap.member.dto.LoginResponse;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
+import codezap.member.dto.request.UpdateMemberProfileRequest;
 import codezap.member.dto.response.FindMemberResponse;
+import codezap.member.dto.response.UpdateMemberProfileResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -365,4 +367,29 @@ public interface SpringDocMemberController {
             @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 회원이 존재하지 않습니다.")
     })
     ResponseEntity<FindMemberResponse> findMember(MemberDto memberDto, Long id);
+
+    @SecurityRequirement(name = "쿠키 인증 토큰")
+    @Operation(summary = "회원 정보 수정", description = "회원의 정보(사용자명, 비밀번호)을 수정합니다.")
+    @ApiResponse(responseCode = "200", description = "회원 정보 수정 성공")
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/members/1", errorCases = {
+            @ErrorCase(description = "사용자명 입력 없음", exampleMessage = "사용자명이 입력되지 않았습니다."),
+            @ErrorCase(description = "사용자명 형식 오류", exampleMessage = "사용자명은 2~255자 사이로 입력해주세요."),
+            @ErrorCase(description = "사용자명 글자수 오류", exampleMessage = "사용자명이 입력되지 않았습니다."),
+            @ErrorCase(description = "비밀번호 입력 없음", exampleMessage = "비밀번호가 입력되지 않았습니다."),
+            @ErrorCase(description = "비밀번호 형식 오류", exampleMessage = "영어와 숫자를 포함해야합니다."),
+            @ErrorCase(description = "비밀번호 글자수 오류", exampleMessage = "비밀번호는 8~16자 사이로 입력해주세요."),
+    })
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/members/1", errorCases = {
+            @ErrorCase(description = "쿠키 값 오류", exampleMessage = "인증에 실패했습니다.")
+    })
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/members/1", errorCases = {
+            @ErrorCase(description = "조회하려는 회원에 대해 권한이 없는 경우", exampleMessage = "권한이 없어 식별자 1에 해당하는 회원 정보를 수정할 수 없습니다.")
+    })
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1", errorCases = {
+            @ErrorCase(description = "수정하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 회원이 존재하지 않습니다.")
+    })
+    @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/members/1", errorCases = {
+            @ErrorCase(description = "사용자명 중복", exampleMessage = "사용자명이 이미 존재합니다."),
+    })
+    ResponseEntity<UpdateMemberProfileResponse> updateMemberProfile(UpdateMemberProfileRequest updateMemberProfileRequest, Long id);
 }
