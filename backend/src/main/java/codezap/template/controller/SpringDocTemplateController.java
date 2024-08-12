@@ -84,7 +84,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
             instance = "/templates?memberId=1&keyword=\"java\"", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
-            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "해당 템플릿들에 대한 권한이 없습니다."),
+            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "자신의 템플릿들만 조회할 수 있습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND,
             instance = "/templates?memberId=1&keyword=\"java\"&categoryId=1&tagIds=1,2", errorCases = {
@@ -110,6 +110,7 @@ public interface SpringDocTemplateController {
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
+            @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
@@ -131,6 +132,7 @@ public interface SpringDocTemplateController {
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
+            @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
             @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
@@ -142,12 +144,21 @@ public interface SpringDocTemplateController {
     ResponseEntity<Void> updateTemplate(MemberDto memberDto, Long id, UpdateTemplateRequest updateTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
+    @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿들을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
             @ErrorCase(description = "템플릿을 수정할 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
-
     })
-    ResponseEntity<Void> deleteTemplate(Long id, MemberDto memberDto);
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
+            @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
+            @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.GONE, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "해당하는 id 값이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+    })
+    ResponseEntity<Void> deleteTemplates(MemberDto memberDto, List<Long> ids);
 }

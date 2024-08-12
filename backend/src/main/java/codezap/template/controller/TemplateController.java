@@ -91,9 +91,12 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTemplate(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
-        templateService.deleteById(id, memberDto);
+    @DeleteMapping("/{ids}")
+    public ResponseEntity<Void> deleteTemplates(
+            @BasicAuthentication MemberDto memberDto,
+            @PathVariable List<Long> ids
+            ) {
+        templateService.deleteByIds(memberDto, ids);
         return ResponseEntity.noContent().build();
     }
 }

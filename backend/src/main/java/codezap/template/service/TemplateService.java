@@ -245,7 +245,13 @@ public class TemplateService {
     }
 
     @Transactional
-    public void deleteById(Long id, MemberDto memberDto) {
+    public void deleteByIds(MemberDto memberDto, List<Long> ids) {
+        for (Long id : ids) {
+            deleteById(memberDto, id);
+        }
+    }
+
+    private void deleteById(MemberDto memberDto, Long id) {
         Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);

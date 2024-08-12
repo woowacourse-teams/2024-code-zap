@@ -200,7 +200,7 @@ class TemplateServiceTest {
         saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        templateService.deleteById(1L, memberDto);
+        templateService.deleteByIds(memberDto, List.of(1L));
 
         // then
         assertAll(
@@ -223,7 +223,7 @@ class TemplateServiceTest {
         MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
 
         // then
-        assertThatCode(() -> templateService.deleteById(1L, otherMemberDto))
+        assertThatCode(() -> templateService.deleteByIds(otherMemberDto, List.of(1L)))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
