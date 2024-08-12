@@ -1,7 +1,9 @@
 package codezap.global.swagger.error;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.http.HttpStatusCode;
@@ -20,14 +22,26 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
 
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
-        if (handlerMethod.hasMethodAnnotation(ApiErrorResponse.class)) {
-            ApiErrorResponse apiErrorResponse = Objects.requireNonNull(
-                    handlerMethod.getMethodAnnotation(ApiErrorResponse.class));
-            ApiResponses responses = operation.getResponses();
-            String statusCode = String.valueOf(apiErrorResponse.status().value());
-            responses.addApiResponse(statusCode, makeFailResponse(apiErrorResponse));
-        }
+        getApiErrorResponses(handlerMethod).ifPresent(responses ->
+                addApiErrorResponses(responses, operation.getResponses())
+        );
+
         return operation;
+    }
+
+    private Optional<ApiErrorResponse[]> getApiErrorResponses(HandlerMethod handlerMethod) {
+        if (handlerMethod.hasMethodAnnotation(ApiErrorResponses.class)) {
+            return Optional.ofNullable(handlerMethod.getMethodAnnotation(ApiErrorResponses.class))
+                    .map(ApiErrorResponses::value);
+        }
+        return Optional.ofNullable(handlerMethod.getMethodAnnotation(ApiErrorResponse.class))
+                .map(response -> new ApiErrorResponse[]{response});
+    }
+
+    private void addApiErrorResponses(ApiErrorResponse[] apiErrorResponses, ApiResponses responses) {
+        Arrays.stream(apiErrorResponses)
+                .map(this::makeFailResponse)
+                .forEach(apiResponse -> responses.addApiResponse(apiResponse.getDescription(), apiResponse));
     }
 
     private ApiResponse makeFailResponse(ApiErrorResponse apiErrorResponse) {
