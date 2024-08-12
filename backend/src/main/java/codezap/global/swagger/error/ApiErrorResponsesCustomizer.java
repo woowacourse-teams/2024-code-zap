@@ -31,8 +31,9 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
     }
 
     private ApiResponse makeFailResponse(ApiErrorResponse apiErrorResponse) {
-        ApiResponse apiResponse = new ApiResponse().description(getDescriptionByStatus(apiErrorResponse.status()));
-        return apiResponse.content(new Content().addMediaType("application/json", makeMediaType(apiErrorResponse)));
+        return new ApiResponse()
+                .description(getDescriptionByStatus(apiErrorResponse.status()))
+                .content(new Content().addMediaType("application/json", makeMediaType(apiErrorResponse)));
     }
 
     private String getDescriptionByStatus(HttpStatusCode httpStatusCode) {
@@ -54,8 +55,9 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
         return mediaType;
     }
 
-    private Example makeExample(ApiErrorResponse apiErrorResponse, ErrorCase failResponse) {
-        Example example = new Example().summary(failResponse.description());
-        return example.value(ProblemDetailSchema.of(apiErrorResponse, failResponse.exampleMessage()));
+    private Example makeExample(ApiErrorResponse apiErrorResponse, ErrorCase errorCase) {
+        return new Example()
+                .summary(errorCase.description())
+                .value(ProblemDetailSchema.of(apiErrorResponse, errorCase.exampleMessage()));
     }
 }
