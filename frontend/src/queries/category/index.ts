@@ -1,2 +1,2 @@
 export { useCategoryListQuery } from './useCategoryListQuery';
-export { useCategoryUpload } from './useCategoryUpload';
+export { useCategoryUploadMutation as useCategoryUpload } from './useCategoryUploadMutation';
