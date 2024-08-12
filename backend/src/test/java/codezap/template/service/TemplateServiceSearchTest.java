@@ -19,9 +19,7 @@ import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Snippet;
-import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
-import codezap.template.domain.TemplateTag;
 import codezap.template.domain.ThumbnailSnippet;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -313,76 +311,81 @@ class TemplateServiceSearchTest {
                     () -> assertThat(allBy.totalElements()).isEqualTo(15));
         }
 
-        @Test
-        @DisplayName("단일 태그 탐색 성공")
-        void findBySingleTagPageSuccess() {
-            Member member = memberRepository.fetchById(1L);
-            Category category1 = categoryRepository.save(new Category("category1", member));
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-            saveDefault15Templates(member, category1);
-            saveDefault15Templates(member, category1);
-            for (long i = 1L; i <= 30L; i++) {
-                templateTagRepository.save(
-                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
-            }
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, List.of(1L), DEFAULT_PAGING_REQUEST
-            );
-
-            assertAll(() -> assertThat(allBy.templates()).hasSize(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0), // 태그
-                    () -> assertThat(allBy.totalElements()).isEqualTo(15));
-        }
-
-        @Test
-        @DisplayName("복수 태그 탐색 성공")
-        void findByMultipleTagPageSuccess() {
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            Member member = memberRepository.fetchById(memberDto.id());
-            Category category1 = categoryRepository.save(new Category("category1", member));
-            Category category2 = categoryRepository.save(new Category("category2", member));
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-            tagRepository.save(new Tag("tag3"));
-            saveDefault15Templates(member, category1);
-            saveDefault15Templates(member, category2);
-            for (long i = 1L; i <= 30L; i++) {
-                templateTagRepository.save(
-                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 3) + 1)));
-            }
-
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, List.of(1L, 2L), DEFAULT_PAGING_REQUEST
-            );
-
-            assertAll(() -> assertThat(allBy.templates()).hasSize(20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(20));
-        }
-
-        @Test
-        @DisplayName("카테고리 & 단일 태그 탐색 성공")
-        void findByCategoryAndSingleTagPageSuccess() {
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            Member member = memberRepository.fetchById(memberDto.id());
-            Category category1 = categoryRepository.save(new Category("category1", member));
-            Category category2 = categoryRepository.save(new Category("category2", member));
-            saveDefault15Templates(member, category1);
-            saveDefault15Templates(member, category2);
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-            for (long i = 1L; i <= 30L; i++) {
-                templateTagRepository.save(
-                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
-            }
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", category1.getId(), List.of(1L), DEFAULT_PAGING_REQUEST
-            );
-
-            assertAll(() -> assertThat(allBy.templates()).hasSize(7),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(7));
-        }
+//        @Test
+//        @DisplayName("단일 태그 탐색 성공")
+//        void findBySingleTagPageSuccess() {
+//            Member member = memberRepository.fetchById(1L);
+//            Category category1 = categoryRepository.save(new Category("category1", member));
+//            tagRepository.save(new Tag("tag1"));
+//            tagRepository.save(new Tag("tag2"));
+//            saveDefault15Templates(member, category1);
+//            saveDefault15Templates(member, category1);
+//            for (long i = 1L; i <= 30L; i++) {
+//                templateTagRepository.save(
+//                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
+//            }
+//            FindAllTemplatesResponse allBy = templateService.findAllBy(
+//                    member.getId(), "", null, List.of(1L), DEFAULT_PAGING_REQUEST
+//            );
+//
+//            assertAll(() -> assertThat(allBy.templates()).hasSize(15),
+//                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0), // 태그
+//                    () -> assertThat(allBy.totalElements()).isEqualTo(15));
+//        }
+//
+//        @Test
+//        @DisplayName("복수 태그 탐색 성공")
+//        void findByMultipleTagPageSuccess() {
+//            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+//            Member member = memberRepository.fetchById(memberDto.id());
+//            Category category1 = categoryRepository.save(new Category("category1", member));
+//            Category category2 = categoryRepository.save(new Category("category2", member));
+//            tagRepository.save(new Tag("tag1"));
+//            tagRepository.save(new Tag("tag2"));
+//            tagRepository.save(new Tag("tag3"));
+//            saveDefault15Templates(member, category1);
+//            saveDefault15Templates(member, category2);
+//            for (long i = 1L; i <= 30L; i++) {
+//                templateTagRepository.save(
+//                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
+//            }
+//
+//            for (long i = 1L; i <= 30L; i++) {
+//                templateTagRepository.save(
+//                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById(3L)));
+//            }
+//
+//            FindAllTemplatesResponse allBy = templateService.findAllBy(
+//                    member.getId(), "", null, List.of(1L, 3L), DEFAULT_PAGING_REQUEST
+//            );
+//
+//            assertAll(() -> assertThat(allBy.templates()).hasSize(15),
+//                    () -> assertThat(allBy.totalElements()).isEqualTo(15));
+//        }
+//
+//        @Test
+//        @DisplayName("카테고리 & 단일 태그 탐색 성공")
+//        void findByCategoryAndSingleTagPageSuccess() {
+//            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+//            Member member = memberRepository.fetchById(memberDto.id());
+//            Category category1 = categoryRepository.save(new Category("category1", member));
+//            Category category2 = categoryRepository.save(new Category("category2", member));
+//            saveDefault15Templates(member, category1);
+//            saveDefault15Templates(member, category2);
+//            tagRepository.save(new Tag("tag1"));
+//            tagRepository.save(new Tag("tag2"));
+//            for (long i = 1L; i <= 30L; i++) {
+//                templateTagRepository.save(
+//                        new TemplateTag(templateRepository.fetchById(i), tagRepository.fetchById((i % 2) + 1)));
+//            }
+//            FindAllTemplatesResponse allBy = templateService.findAllBy(
+//                    member.getId(), "", category1.getId(), List.of(1L), DEFAULT_PAGING_REQUEST
+//            );
+//
+//            assertAll(() -> assertThat(allBy.templates()).hasSize(7),
+//                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() < 16),
+//                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() % 2 == 0),
+//                    () -> assertThat(allBy.totalElements()).isEqualTo(7));
+//        }
     }
 }

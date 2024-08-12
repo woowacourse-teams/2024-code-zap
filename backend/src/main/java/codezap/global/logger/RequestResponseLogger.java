@@ -62,6 +62,6 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-        return path.contains("/swagger") || path.contains("/v3/api-docs");
+        return path.contains("/swagger") || path.contains("/v3/api-docs") || path.contains("/actuator/prometheus");
     }
 }

@@ -1,16 +1,18 @@
-import { FlexProps } from './Flex';
 import styled from '@emotion/styled';
 
-export const FlexContainer = styled.div<FlexProps>`
+import type { Props } from './Flex';
+
+export const FlexContainer = styled.div<Props>`
   display: flex;
-  flex-direction: ${(props) => props.direction};
-  justify-content: ${(props) => props.justify};
-  align-items: ${(props) => props.align};
-  flex-wrap: ${(props) => props.wrap};
-  flex: ${(props) => props.flex};
-  gap: ${(props) => props.gap};
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
-  padding: ${(props) => props.padding};
-  margin: ${(props) => props.margin};
+  flex: ${({ flex }) => flex};
+  flex-direction: ${({ direction }) => direction};
+  flex-wrap: ${({ wrap }) => wrap};
+  gap: ${({ gap }) => gap};
+  align-items: ${({ align }) => align};
+  justify-content: ${({ justify }) => justify};
+
+  width: ${({ width }) => width};
+  height: ${({ height }) => height};
+  margin: ${({ margin }) => margin};
+  padding: ${({ padding }) => padding};
 `;

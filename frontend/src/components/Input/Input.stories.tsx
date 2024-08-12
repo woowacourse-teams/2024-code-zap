@@ -1,20 +1,28 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
+
+import { searchIcon } from '@/assets/images';
 import Input from './Input';
 
 const meta: Meta<typeof Input> = {
   title: 'Input',
   component: Input,
-  args: {
-    placeholder: 'Enter text',
-    type: 'text',
-    disabled: false,
-  },
   argTypes: {
-    type: {
+    variant: {
       control: {
-        type: 'select',
-        options: ['text', 'email', 'password', 'search'],
+        type: 'radio',
+        options: ['filled', 'outlined', 'text'],
+      },
+    },
+    size: {
+      control: {
+        type: 'radio',
+        options: ['small', 'medium', 'large'],
+      },
+    },
+    isValid: {
+      control: {
+        type: 'boolean',
       },
     },
   },
@@ -24,56 +32,145 @@ export default meta;
 
 type Story = StoryObj<typeof Input>;
 
-export const TextType: Story = {
+export const Filled: Story = {
   args: {
-    type: 'text',
-    placeholder: 'Enter text',
+    variant: 'filled',
+    size: 'medium',
+    isValid: true,
   },
   render: (args) => {
     const [value, setValue] = useState('');
 
-    return <Input {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+        </Input>
+      </div>
+    );
   },
 };
 
-export const EmailType: Story = {
+export const Outlined: Story = {
   args: {
-    type: 'email',
-    placeholder: 'Enter email',
+    variant: 'outlined',
+    size: 'medium',
+    isValid: true,
   },
   render: (args) => {
     const [value, setValue] = useState('');
 
-    return <Input {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+        </Input>
+      </div>
+    );
   },
 };
 
-export const PasswordType: Story = {
+export const Text: Story = {
   args: {
-    type: 'password',
-    placeholder: 'Enter password',
+    variant: 'text',
+    size: 'medium',
+    isValid: true,
   },
   render: (args) => {
     const [value, setValue] = useState('');
 
-    return <Input {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+        </Input>
+      </div>
+    );
   },
 };
 
-export const SearchType: Story = {
+export const StartAdornment: Story = {
   args: {
-    type: 'search',
-    placeholder: 'Search...',
+    variant: 'outlined',
+    size: 'medium',
+    isValid: true,
   },
   render: (args) => {
     const [value, setValue] = useState('');
 
-    return <Input {...args} value={value} onChange={(e) => setValue(e.target.value)} />;
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.Adornment>
+            <img src={searchIcon} style={{ height: '100%' }} />
+          </Input.Adornment>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+        </Input>
+      </div>
+    );
   },
 };
 
-export const Disabled: Story = {
+export const EndAdornment: Story = {
   args: {
-    disabled: true,
+    variant: 'outlined',
+    size: 'medium',
+    isValid: true,
+  },
+  render: (args) => {
+    const [value, setValue] = useState('');
+
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.Adornment>
+            <img src={searchIcon} style={{ height: '100%' }} />
+          </Input.Adornment>
+        </Input>
+      </div>
+    );
+  },
+};
+
+export const Invalid: Story = {
+  args: {
+    variant: 'outlined',
+    size: 'medium',
+    isValid: false,
+  },
+  render: (args) => {
+    const [value, setValue] = useState('');
+
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+        </Input>
+      </div>
+    );
+  },
+};
+
+export const HelperText: Story = {
+  args: {
+    variant: 'outlined',
+    size: 'medium',
+    isValid: false,
+  },
+  render: (args) => {
+    const [value, setValue] = useState('');
+
+    return (
+      <div style={{ width: '500px' }}>
+        <Input size={args.size} variant={args.variant} isValid={args.isValid}>
+          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.Adornment>
+            <img src={searchIcon} style={{ height: '100%' }} />
+          </Input.Adornment>
+          <Input.HelperText>설명입니다.</Input.HelperText>
+        </Input>
+      </div>
+    );
   },
 };

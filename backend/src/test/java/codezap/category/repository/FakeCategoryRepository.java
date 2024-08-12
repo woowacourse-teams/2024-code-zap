@@ -1,6 +1,7 @@
 package codezap.category.repository;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -35,9 +36,10 @@ public class FakeCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findAllByMember(Member member) {
+    public List<Category> findAllByMemberOrderById(Member member) {
         return categories.stream()
                 .filter(category -> Objects.equals(category.getMember(), member))
+                .sorted(Comparator.comparing(Category::getId))
                 .toList();
     }
 

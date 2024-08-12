@@ -1,69 +1,922 @@
 {
   "templates": [
     {
-      "id": 2024,
+      "id": 1,
       "title": "title1",
-      "member": {
-        "id": 20,
-        "nickname": "짱수"
-      },
-      "representative_snippet": {
-        "filename": "title1.java",
-        "content_summary": "import { Flex } from '@/components/Flex';\nimport { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';\nimport { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs';\n\nconst Template = () => {\n  const content = '';\n  return (\n    <>\n      <Flex direction='column' justify='flex-start' align='center'>\n        <h1>회원 가입 검증</h1>"
-      },
-      "modified_at": "2024-07-11 12:34"
+      "description": "description1",
+      "snippets": [
+        {
+          "id": 1,
+          "filename": "MyComponent.tsx",
+          "content": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};\n\nexport default MyComponent;",
+          "ordinal": 1
+        },
+        {
+          "id": 2,
+          "filename": "App.tsx",
+          "content": "import React from 'react';\nimport MyComponent from './MyComponent';\n\nconst App: React.FC = () => {\n  return (\n    <div>\n      <MyComponent name=\"John Doe\" age={30} />\n    </div>\n  );\n};\n\nexport default App;",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-01 12:34"
     },
     {
-      "id": 2025,
-      "title": "title1",
-      "member": {
-        "id": 21,
-        "nickname": "몰리"
-      },
-      "representative_snippet": {
-        "filename": "title1.java",
-        "content_summary": "public class ......"
-      },
-      "modified_at": "2024-07-10 12:34"
+      "id": 2,
+      "title": "title2",
+      "description": "description2",
+      "snippets": [
+        {
+          "id": 3,
+          "filename": "script1.js",
+          "content": "console.log('Hello, world!');",
+          "ordinal": 1
+        },
+        {
+          "id": 4,
+          "filename": "script2.js",
+          "content": "const add = (a, b) => a + b;",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 4, "name": "React" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
     },
     {
-      "id": 2026,
-      "title": "title1",
-      "member": {
-        "id": 22,
-        "nickname": "마스터위"
-      },
-      "representative_snippet": {
-        "filename": "title1.java",
-        "content_summary": "const GlobalStyles = () => {"
-      },
-      "modified_at": "2024-07-09 12:34"
+      "id": 3,
+      "title": "title3",
+      "description": "description3",
+      "snippets": [
+        {
+          "id": 5,
+          "filename": "example.java",
+          "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 1, "name": "Java" }],
+      "modifiedAt": "2024-07-10 12:34"
     },
     {
-      "id": 2027,
-      "title": "title1",
-      "member": {
-        "id": 23,
-        "nickname": "초롱"
-      },
-      "representative_snippet": {
-        "filename": "title1.java",
-        "content_summary": "public class ......"
-      },
-      "modified_at": "2024-07-08 12:34"
+      "id": 4,
+      "title": "title4",
+      "description": "description4",
+      "snippets": [
+        {
+          "id": 6,
+          "filename": "style.css",
+          "content": "body { margin: 0; padding: 0; }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 6, "name": "CSS" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
     },
     {
-      "id": 2028,
-      "title": "title1",
-      "member": {
-        "id": 24,
-        "nickname": "켬미"
-      },
-      "representative_snippet": {
-        "filename": "title1.java",
-        "content_summary": "public class ......"
-      },
-      "modified_at": "2024-07-07 12:34"
+      "id": 5,
+      "title": "title5",
+      "description": "description5",
+      "snippets": [
+        {
+          "id": 7,
+          "filename": "program.java",
+          "content": "public class Program { public static void main(String[] args) { System.out.println(\"Run program\"); } }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 1, "name": "Java" }],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 6,
+      "title": "title6",
+      "description": "description6",
+      "snippets": [
+        {
+          "id": 8,
+          "filename": "Example.java",
+          "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, Example!\"); } }",
+          "ordinal": 1
+        },
+        {
+          "id": 9,
+          "filename": "Sample.java",
+          "content": "public class Sample { public static void main(String[] args) { System.out.println(\"Sample code\"); } }",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 7,
+      "title": "title7",
+      "description": "description7",
+      "snippets": [
+        {
+          "id": 10,
+          "filename": "App.js",
+          "content": "console.log('App running');",
+          "ordinal": 1
+        },
+        {
+          "id": 11,
+          "filename": "Component.js",
+          "content": "export const Component = () => console.log('Component loaded');",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 8,
+      "title": "title8",
+      "description": "description8",
+      "snippets": [
+        {
+          "id": 12,
+          "filename": "index.js",
+          "content": "console.log('Index file');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 9,
+      "title": "title9",
+      "description": "description9",
+      "snippets": [
+        {
+          "id": 13,
+          "filename": "main.js",
+          "content": "console.log('Main file');",
+          "ordinal": 1
+        },
+        {
+          "id": 14,
+          "filename": "helper.js",
+          "content": "export const helper = () => console.log('Helper function');",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 10,
+      "title": "title10",
+      "description": "description10",
+      "snippets": [
+        {
+          "id": 15,
+          "filename": "frontend.py",
+          "content": "print('Hello, Frontend!')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 9, "name": "Frontend" },
+        { "id": 10, "name": "Python" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 11,
+      "title": "title11",
+      "description": "description11",
+      "snippets": [
+        {
+          "id": 16,
+          "filename": "backend.js",
+          "content": "console.log('Backend logic');",
+          "ordinal": 1
+        },
+        {
+          "id": 17,
+          "filename": "database.js",
+          "content": "console.log('Database connection');",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 1, "name": "" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 12,
+      "title": "title12",
+      "description": "description12",
+      "snippets": [
+        {
+          "id": 18,
+          "filename": "example1.js",
+          "content": "console.log('Example snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 13,
+      "title": "title13",
+      "description": "description13",
+      "snippets": [
+        {
+          "id": 19,
+          "filename": "oop.js",
+          "content": "class OOPExample { constructor() { console.log('OOP Example'); } }",
+          "ordinal": 1
+        },
+        {
+          "id": 20,
+          "filename": "styling.js",
+          "content": "const style = { color: 'blue' };",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 14,
+      "title": "title14",
+      "description": "description14",
+      "snippets": [
+        {
+          "id": 21,
+          "filename": "hello.java",
+          "content": "public class Hello { public static void main(String[] args) { System.out.println(\"Hello\"); } }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 1, "name": "Java" }],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 15,
+      "title": "title15",
+      "description": "description15",
+      "snippets": [
+        {
+          "id": 22,
+          "filename": "example.py",
+          "content": "print('Example snippet')",
+          "ordinal": 1
+        },
+        {
+          "id": 23,
+          "filename": "sample.py",
+          "content": "print('Sample code')",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
+    },
+    {
+      "id": 16,
+      "title": "title16",
+      "description": "description16",
+      "snippets": [
+        {
+          "id": 24,
+          "filename": "backend.java",
+          "content": "public class Backend { public static void main(String[] args) { System.out.println(\"Backend\"); } }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 17,
+      "title": "title17",
+      "description": "description17",
+      "snippets": [
+        {
+          "id": 25,
+          "filename": "react.js",
+          "content": "import React from 'react';",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 18,
+      "title": "title18",
+      "description": "description18",
+      "snippets": [
+        {
+          "id": 26,
+          "filename": "oop.js",
+          "content": "class OOP { constructor() { console.log('OOP'); } }",
+          "ordinal": 1
+        },
+        {
+          "id": 27,
+          "filename": "example.js",
+          "content": "console.log('Example');",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 19,
+      "title": "title19",
+      "description": "description19",
+      "snippets": [
+        {
+          "id": 28,
+          "filename": "java_snippet.java",
+          "content": "public class JavaSnippet { public static void main(String[] args) { System.out.println(\"Java Snippet\"); } }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 1, "name": "Java" }],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 20,
+      "title": "title20",
+      "description": "description20",
+      "snippets": [
+        {
+          "id": 29,
+          "filename": "python_example.py",
+          "content": "print('Python example')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 21,
+      "title": "title21",
+      "description": "description21",
+      "snippets": [
+        {
+          "id": 30,
+          "filename": "log.js",
+          "content": "console.log('Log snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 22,
+      "title": "title22",
+      "description": "description22",
+      "snippets": [
+        {
+          "id": 31,
+          "filename": "react_component.js",
+          "content": "import React from 'react';\n\nconst Component = () => <div>React Component</div>;\n\nexport default Component;",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 23,
+      "title": "title23",
+      "description": "description23",
+      "snippets": [
+        {
+          "id": 32,
+          "filename": "snippet.js",
+          "content": "console.log('Snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 24,
+      "title": "title24",
+      "description": "description24",
+      "snippets": [
+        {
+          "id": 33,
+          "filename": "frontend_snippet.js",
+          "content": "console.log('Frontend snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 25,
+      "title": "title25",
+      "description": "description25",
+      "snippets": [
+        {
+          "id": 34,
+          "filename": "python_code.py",
+          "content": "print('Python code')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 26,
+      "title": "title26",
+      "description": "description26",
+      "snippets": [
+        {
+          "id": 35,
+          "filename": "backend_code.js",
+          "content": "console.log('Backend code');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
+    },
+    {
+      "id": 27,
+      "title": "title27",
+      "description": "description27",
+      "snippets": [
+        {
+          "id": 36,
+          "filename": "react_code.js",
+          "content": "console.log('React code');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 28,
+      "title": "title28",
+      "description": "description28",
+      "snippets": [
+        {
+          "id": 37,
+          "filename": "style_snippet.js",
+          "content": "console.log('Style snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 7, "name": "Styling" }],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 29,
+      "title": "title29",
+      "description": "description29",
+      "snippets": [
+        {
+          "id": 38,
+          "filename": "frontend_code.js",
+          "content": "console.log('Frontend code');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 30,
+      "title": "title30",
+      "description": "description30",
+      "snippets": [
+        {
+          "id": 39,
+          "filename": "python_example2.py",
+          "content": "print('Another Python example')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [{ "id": 10, "name": "Python" }],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 31,
+      "title": "title31",
+      "description": "description31",
+      "snippets": [
+        {
+          "id": 40,
+          "filename": "javascript_example.js",
+          "content": "console.log('JavaScript example');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [{ "id": 3, "name": "JavaScript" }],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 32,
+      "title": "title32",
+      "description": "description32",
+      "snippets": [
+        {
+          "id": 41,
+          "filename": "react_component2.js",
+          "content": "const Component = () => <div>Another React Component</div>;\n\nexport default Component;",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 33,
+      "title": "title33",
+      "description": "description33",
+      "snippets": [
+        {
+          "id": 42,
+          "filename": "empty_snippet.js",
+          "content": "console.log('Empty snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 34,
+      "title": "title34",
+      "description": "description34",
+      "snippets": [
+        {
+          "id": 43,
+          "filename": "frontend_snippet2.js",
+          "content": "console.log('Another frontend snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 1, "name": "Java" },
+        { "id": 9, "name": "Frontend" }
+      ],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 35,
+      "title": "title35",
+      "description": "description35",
+      "snippets": [
+        {
+          "id": 44,
+          "filename": "python_code2.py",
+          "content": "print('Another Python code')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 10, "name": "Python" }],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 36,
+      "title": "title36",
+      "description": "description36",
+      "snippets": [
+        {
+          "id": 45,
+          "filename": "javascript_code.js",
+          "content": "console.log('JavaScript code');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" }
+      ],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 37,
+      "title": "title37",
+      "description": "description37",
+      "snippets": [
+        {
+          "id": 46,
+          "filename": "react_styling.js",
+          "content": "console.log('React styling');",
+          "ordinal": 1
+        },
+        {
+          "id": 47,
+          "filename": "css_styling.js",
+          "content": "console.log('CSS styling');",
+          "ordinal": 2
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
+    },
+    {
+      "id": 38,
+      "title": "title38",
+      "description": "description38",
+      "snippets": [
+        {
+          "id": 48,
+          "filename": "style_example.js",
+          "content": "console.log('Style example');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 7, "name": "Styling" }],
+      "modifiedAt": "2024-07-08 12:34"
+    },
+    {
+      "id": 39,
+      "title": "title39",
+      "description": "description39",
+      "snippets": [
+        {
+          "id": 49,
+          "filename": "empty.js",
+          "content": "console.log('Empty file');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [],
+      "modifiedAt": "2024-07-07 12:34"
+    },
+    {
+      "id": 40,
+      "title": "title40",
+      "description": "description40",
+      "snippets": [
+        {
+          "id": 50,
+          "filename": "python_log.py",
+          "content": "print('Python log')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 10, "name": "Python" },
+        { "id": 2, "name": "Example" }
+      ],
+      "modifiedAt": "2024-07-06 12:34"
+    },
+    {
+      "id": 41,
+      "title": "title41",
+      "description": "description41",
+      "snippets": [
+        {
+          "id": 51,
+          "filename": "empty_file.js",
+          "content": "console.log('Empty file content');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [],
+      "modifiedAt": "2024-07-05 12:34"
+    },
+    {
+      "id": 42,
+      "title": "title42",
+      "description": "description42",
+      "snippets": [
+        {
+          "id": 52,
+          "filename": "react_css.js",
+          "content": "console.log('React and CSS');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 4, "name": "React" },
+        { "id": 6, "name": "CSS" }
+      ],
+      "modifiedAt": "2024-07-04 12:34"
+    },
+    {
+      "id": 43,
+      "title": "title43",
+      "description": "description43",
+      "snippets": [
+        {
+          "id": 53,
+          "filename": "oop_snippet.js",
+          "content": "class OOPSnippet { constructor() { console.log('OOP Snippet'); } }",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" }
+      ],
+      "modifiedAt": "2024-07-03 12:34"
+    },
+    {
+      "id": 44,
+      "title": "title44",
+      "description": "description44",
+      "snippets": [
+        {
+          "id": 54,
+          "filename": "log_file.js",
+          "content": "console.log('Log file');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [],
+      "modifiedAt": "2024-07-02 12:34"
+    },
+    {
+      "id": 45,
+      "title": "title45",
+      "description": "description45",
+      "snippets": [
+        {
+          "id": 55,
+          "filename": "python_log2.py",
+          "content": "print('Another Python log')",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [{ "id": 10, "name": "Python" }],
+      "modifiedAt": "2024-07-01 12:34"
+    },
+    {
+      "id": 46,
+      "title": "title46",
+      "description": "description46",
+      "snippets": [
+        {
+          "id": 56,
+          "filename": "backend_snippet.js",
+          "content": "console.log('Backend snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 3, "name": "CategoryID3" },
+      "tags": [
+        { "id": 3, "name": "JavaScript" },
+        { "id": 5, "name": "Backend" },
+        { "id": 7, "name": "Styling" }
+      ],
+      "modifiedAt": "2024-07-11 12:34"
+    },
+    {
+      "id": 47,
+      "title": "title47",
+      "description": "description47",
+      "snippets": [
+        {
+          "id": 57,
+          "filename": "react_snippet.js",
+          "content": "console.log('React snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 4, "name": "CategoryID4" },
+      "tags": [{ "id": 4, "name": "React" }],
+      "modifiedAt": "2024-07-10 12:34"
+    },
+    {
+      "id": 48,
+      "title": "title48",
+      "description": "description48",
+      "snippets": [
+        {
+          "id": 58,
+          "filename": "styling_snippet.js",
+          "content": "console.log('Styling snippet');",
+          "ordinal": 1
+        }
+      ],
+      "category": { "id": 2, "name": "CategoryID2" },
+      "tags": [
+        { "id": 7, "name": "Styling" },
+        { "id": 8, "name": "OOP" }
+      ],
+      "modifiedAt": "2024-07-09 12:34"
     }
   ]
 }

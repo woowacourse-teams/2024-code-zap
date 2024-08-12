@@ -15,6 +15,8 @@ public interface TemplateRepository {
 
     List<Template> findAll();
 
+    List<Template> findByMemberId(Long id);
+
     Page<Template> searchBy(Long memberId, String keyword, Pageable pageable);
 
     Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable);

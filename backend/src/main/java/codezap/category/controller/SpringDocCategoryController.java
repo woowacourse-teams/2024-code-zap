@@ -14,11 +14,13 @@ import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "카테고리 CRUD API", description = "카테고리 생성, 목록 조회, 삭제, 수정 API")
 public interface SpringDocCategoryController {
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 생성", description = """
             새로운 카테고리를 생성합니다. \n
             새로운 카테고리의 이름이 필요합니다. \n
@@ -32,11 +34,13 @@ public interface SpringDocCategoryController {
     })
     ResponseEntity<Void> createCategory(CreateCategoryRequest createCategoryRequest, MemberDto memberDto);
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 목록 조회", description = "생성된 모든 카테고리를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "조회 성공",
             content = {@Content(schema = @Schema(implementation = FindAllCategoriesResponse.class))})
     ResponseEntity<FindAllCategoriesResponse> getCategories(MemberDto memberDto, Long memberId);
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 수정", description = "해당하는 식별자의 카테고리를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories/1", errorCases = {
@@ -49,6 +53,7 @@ public interface SpringDocCategoryController {
     })
     ResponseEntity<Void> updateCategory(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto);
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories/1", errorCases = {

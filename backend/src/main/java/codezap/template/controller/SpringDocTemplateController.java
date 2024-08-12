@@ -19,11 +19,13 @@ import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "템플릿 CRUD API", description = "템플릿 생성, 단건 및 목록 조회, 삭제, 수정 API")
 public interface SpringDocTemplateController {
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 생성", description = """
             새로운 템플릿을 생성합니다. \n
             템플릿의 제목, 썸네일 스니펫의 순서, 스니펫 목록, 카테고리 ID, 태그 목록이 필요합니다. \n
@@ -43,6 +45,7 @@ public interface SpringDocTemplateController {
     })
     ResponseEntity<Void> create(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 검색", description = """
             필터링 조건에 맞는 모든 템플릿을 조회합니다.
             - 필터링 조건
@@ -67,6 +70,7 @@ public interface SpringDocTemplateController {
             Pageable pageable
     );
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
             content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
@@ -76,6 +80,7 @@ public interface SpringDocTemplateController {
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(Long id, MemberDto memberDto);
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
@@ -85,6 +90,7 @@ public interface SpringDocTemplateController {
     })
     ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto);
 
+    @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
