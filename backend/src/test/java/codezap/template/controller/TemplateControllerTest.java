@@ -59,15 +59,17 @@ class TemplateControllerTest {
     private static final int MAX_LENGTH = 255;
 
     private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
+    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
     private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
+    private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
     private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory));
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember));
+    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
     private final TemplateService templateService = new TemplateService(
             thumbnailSnippetRepository,
             templateRepository,
@@ -92,7 +94,7 @@ class TemplateControllerTest {
 
     @BeforeEach
     void setCookie() {
-        String basicAuth = HttpHeaders.encodeBasicAuth("test1@email.com", "password1234", StandardCharsets.UTF_8);
+        String basicAuth = HttpHeaders.encodeBasicAuth(firstMember.getEmail(), firstMember.getPassword(), StandardCharsets.UTF_8);
         cookie = new Cookie("Authorization", basicAuth);
     }
 
@@ -119,6 +121,25 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isCreated());
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 로그인을 하지 않은 유저")
+        void createTemplateFailWithNotLogin() throws Exception {
+            String maxTitle = "title";
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    "description",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isUnauthorized());
         }
 
         @Test
@@ -287,6 +308,27 @@ class TemplateControllerTest {
                     .andExpect(status().isNotFound())
                     .andExpect(jsonPath("$.detail").value("식별자 1에 해당하는 템플릿이 존재하지 않습니다."));
         }
+
+        @Test
+        @DisplayName("템플릿 상세 조회 실패: 권한 없음")
+        void findOneTemplateFailWithUnauthorized() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.createTemplate(templateRequest, memberDto);
+
+            // when
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            cookie = new Cookie("Authorization", basicAuth);
+
+            // then
+            mvc.perform(get("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+        }
     }
 
     @Nested
@@ -320,6 +362,40 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isOk());
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 권한 없음")
+        void updateTemplateFailWithUnauthorized() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSnippetRequest("filename3", "content3", 2),
+                            new CreateSnippetRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            cookie = new Cookie("Authorization", basicAuth);
+
+            // then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
         }
 
         @Test
@@ -507,6 +583,28 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @DisplayName("템플릿 삭제 실패: 권한 없음")
+        void deleteTemplateFailWithUnauthorized() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category"), memberDto);
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.createTemplate(templateRequest, memberDto);
+
+            // when
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            cookie = new Cookie("Authorization", basicAuth);
+
+            // then
+            mvc.perform(delete("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
         }
 
         @Test

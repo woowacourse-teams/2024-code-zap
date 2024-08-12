@@ -1,6 +1,7 @@
 package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -8,10 +9,12 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import codezap.CodeZapApplication;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
 import codezap.fixture.MemberDtoFixture;
+import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
@@ -43,11 +46,12 @@ class TemplateServiceTest {
     private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
     private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
     private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
+    private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
     private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory));
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
@@ -118,6 +122,24 @@ class TemplateServiceTest {
     }
 
     @Test
+    @DisplayName("템플릿 단건 조회 실패: 권한 없음")
+    void findOneTemplateFailWithUnauthorized() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
+        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
+
+        // when
+        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+
+        // then
+        assertThatCode(() -> templateService.findByIdAndMember(template.getId(), otherMemberDto))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+    }
+
+    @Test
     @DisplayName("템플릿 수정 성공")
     void updateTemplateSuccess() {
         // given
@@ -128,7 +150,7 @@ class TemplateServiceTest {
         categoryRepository.save(new Category("category2", member));
 
         // when
-        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle");
+        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 1L);
         templateService.update(template.getId(), updateTemplateRequest, memberDto);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
@@ -146,6 +168,26 @@ class TemplateServiceTest {
                 () -> assertThat(tags).hasSize(2),
                 () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
         );
+    }
+
+    @Test
+    @DisplayName("템플릿 수정 실패: 권한 없음")
+    void updateTemplateFailWithUnauthorized() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
+        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
+        categoryRepository.save(new Category("category2", member));
+
+        // when
+        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 2L);
+
+        // then
+        assertThatCode(() -> templateService.update(template.getId(), updateTemplateRequest, otherMemberDto))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
     }
 
     @Test
@@ -168,6 +210,24 @@ class TemplateServiceTest {
         );
     }
 
+    @Test
+    @DisplayName("템플릿 삭제 실패: 권한 없음")
+    void deleteTemplateFailWithUnauthorized() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
+        saveTemplate(createdTemplate, new Category("category1", member), member);
+
+        // when
+        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+
+        // then
+        assertThatCode(() -> templateService.deleteById(1L, otherMemberDto))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+    }
+
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(
                 title,
@@ -181,7 +241,7 @@ class TemplateServiceTest {
         );
     }
 
-    private UpdateTemplateRequest makeUpdateTemplateRequest(String title) {
+    private UpdateTemplateRequest makeUpdateTemplateRequest(String title, Long categoryId) {
         return new UpdateTemplateRequest(
                 title,
                 "description",
@@ -193,7 +253,7 @@ class TemplateServiceTest {
                         new UpdateSnippetRequest(2L, "filename2", "content2", 1)
                 ),
                 List.of(1L),
-                1L,
+                categoryId,
                 List.of("tag1", "tag3")
         );
     }

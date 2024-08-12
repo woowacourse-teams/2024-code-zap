@@ -57,6 +57,7 @@ class CategoryControllerTest {
     private static final int MAX_LENGTH = 255;
 
     private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
+    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
     private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
@@ -90,7 +91,7 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setting() {
-        String basicAuth = HttpHeaders.encodeBasicAuth("test1@email.com", "password1234", StandardCharsets.UTF_8);
+        String basicAuth = HttpHeaders.encodeBasicAuth(firstMember.getEmail(), firstMember.getPassword(), StandardCharsets.UTF_8);
         cookie = new Cookie("Authorization", basicAuth);
     }
 
@@ -108,6 +109,18 @@ class CategoryControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(createCategoryRequest)))
                     .andExpect(status().isCreated());
+        }
+
+        @Test
+        @DisplayName("카테고리 생성 실패: 로그인을 하지 않은 유저")
+        void createCategoryFailWithNotLogin() throws Exception {
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH));
+
+            mvc.perform(post("/categories")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(createCategoryRequest)))
+                    .andExpect(status().isUnauthorized());
         }
 
         @Test
@@ -167,6 +180,23 @@ class CategoryControllerTest {
         }
 
         @Test
+        @DisplayName("카테고리 수정 실패: 권한 없음")
+        void updateCategoryFailWithUnauthorized() throws Exception {
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
+
+            // when
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            cookie = new Cookie("Authorization", basicAuth);
+
+            mvc.perform(put("/categories/" + savedCategoryId)
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateCategoryRequest)))
+                    .andExpect(status().isUnauthorized());
+        }
+
+        @Test
         @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
         void updateCategoryFailWithLongName() throws Exception {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH + 1));
@@ -223,6 +253,19 @@ class CategoryControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 실패: 권한 없음")
+        void deleteCategoryFailWithUnauthorized() throws Exception {
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            cookie = new Cookie("Authorization", basicAuth);
+
+            mvc.perform(delete("/categories/" + savedCategoryId)
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized());
         }
 
         @Test

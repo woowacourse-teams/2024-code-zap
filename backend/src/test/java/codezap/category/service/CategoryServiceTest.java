@@ -1,6 +1,7 @@
 package codezap.category.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
@@ -53,8 +54,8 @@ class CategoryServiceTest {
         }
 
         @Test
-        @DisplayName("카테고리 생성 실패: 중복된 이름의 카테고리 이름 생성")
-        void createCategoryFailWithDuplicateName() {
+        @DisplayName("카테고리 생성 실패: 동일한 멤버, 중복된 이름의 카테고리 이름 생성")
+        void createCategoryFailWithSameMemberAndDuplicateName() {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
             categoryRepository.save(new Category("category", member));
@@ -63,6 +64,20 @@ class CategoryServiceTest {
             assertThatThrownBy(() -> categoryService.create(createCategoryRequest, memberDto))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + createCategoryRequest.name() + "인 카테고리가 이미 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 생성 성공: 다른 멤버, 중복된 이름의 카테고리 이름 생성")
+        void createCategorySuccessWithOtherMemberAndSameName() {
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            Member member = memberRepository.fetchById(memberDto.id());
+            categoryRepository.save(new Category("category", member));
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
+
+            MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+            Long categoryId = categoryService.create(createCategoryRequest, otherMemberDto);
+
+            assertThat(categoryId).isEqualTo(2L);
         }
     }
 
@@ -94,6 +109,23 @@ class CategoryServiceTest {
     }
 
     @Test
+    @DisplayName("카테고리 수정 실패: 권한 없음")
+    void updateCategoryFailWithUnauthorized() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        Category savedCategory = categoryRepository.save(new Category("category1", member));
+
+        // when
+        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+
+        // then
+        assertThatCode(() -> categoryService.update(savedCategory.getId(), new UpdateCategoryRequest("updateName"), otherMemberDto))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+    }
+
+    @Test
     @DisplayName("카테고리 삭제 성공")
     void deleteCategorySuccess() {
         // given
@@ -107,5 +139,23 @@ class CategoryServiceTest {
 
         // then
         assertThat(categoryRepository.findAllByMemberOrderById(member)).hasSize(1);
+    }
+
+    @Test
+    @DisplayName("카테고리 삭제 실패")
+    void deleteCategoryFailWithUnauthorized() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        categoryRepository.save(new Category("category1", member));
+        Category savedCategory = categoryRepository.save(new Category("category1", member));
+
+        // when
+        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+
+        // then
+        assertThatCode(() -> categoryService.deleteById(savedCategory.getId(), otherMemberDto))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
     }
 }
