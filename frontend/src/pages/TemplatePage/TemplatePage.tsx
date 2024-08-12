@@ -5,10 +5,9 @@ import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { chevron, pencilIcon, trashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
-import { ToastContext } from '@/context/ToastContext';
-import { useTemplate } from '@/hooks/template/useTemplate';
-import useCustomContext from '@/hooks/utils/useCustomContext';
-import { useModal } from '@/hooks/utils/useModal';
+import { ToastContext } from '@/contexts';
+import { useTemplate } from '@/hooks/template';
+import { useCustomContext, useModal } from '@/hooks/utils';
 import { TemplateEditPage } from '@/pages';
 import type { Snippet } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';

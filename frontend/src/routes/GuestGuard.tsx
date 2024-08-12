@@ -1,9 +1,9 @@
 import { ReactNode, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { ToastContext } from '@/context/ToastContext';
-import { useAuth } from '@/hooks/authentication/useAuth';
-import useCustomContext from '@/hooks/utils/useCustomContext';
+import { ToastContext } from '@/contexts';
+import { useAuth } from '@/hooks/authentication';
+import { useCustomContext } from '@/hooks/utils';
 import { useLoginStateQuery } from '@/queries/authentication';
 
 type GuestGuardProps = {

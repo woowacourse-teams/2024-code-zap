@@ -20,4 +20,10 @@ export {
   LOGIN_STATE_API_URL,
   SIGNUP_API_URL,
   LOGOUT_API_URL,
+  postSignup,
+  postLogin,
+  postLogout,
+  getLoginState,
+  checkEmail,
+  checkUsername,
 } from './authentication';

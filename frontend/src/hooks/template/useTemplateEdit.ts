@@ -1,11 +1,10 @@
 import { useCallback, useState } from 'react';
 
-import { ToastContext } from '@/context/ToastContext';
+import { ToastContext } from '@/contexts';
+import { useTemplateEditMutation } from '@/queries/template';
 import type { Template, TemplateEditRequest } from '@/types';
-import { useCategory } from '../category/useCategory';
-import useCustomContext from '../utils/useCustomContext';
-import { useInput } from '../utils/useInput';
-import { useTemplateEditQuery } from './useTemplateEditQuery';
+import { useCategory } from '../category';
+import { useCustomContext, useInput } from '../utils';
 
 interface Props {
   template: Template;
@@ -27,7 +26,7 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
   const [tags, setTags] = useState<string[]>(initTags);
   const [value, handleValue, resetValue] = useInput('');
 
-  const { mutateAsync, error } = useTemplateEditQuery(template.id);
+  const { mutateAsync, error } = useTemplateEditMutation(template.id);
 
   const handleAddButtonClick = () => {
     setSnippets((prevSnippets) => [

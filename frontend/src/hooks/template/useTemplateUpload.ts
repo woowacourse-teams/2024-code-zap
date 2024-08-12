@@ -1,12 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ToastContext } from '@/context/ToastContext';
+import { ToastContext } from '@/contexts';
+import { useTemplateUploadMutation } from '@/queries/template';
 import type { Snippet, TemplateUploadRequest } from '@/types';
-import { useCategory } from '../category/useCategory';
-import useCustomContext from '../utils/useCustomContext';
-import { useInput } from '../utils/useInput';
-import { useTemplateUploadQuery } from './useTemplateUploadQuery';
+import { useCategory } from '../category';
+import { useCustomContext, useInput } from '../utils';
 
 export const useTemplateUpload = () => {
   const navigate = useNavigate();
@@ -28,7 +27,7 @@ export const useTemplateUpload = () => {
   const [value, handleValue, resetValue] = useInput('');
   const [tags, setTags] = useState<string[]>([]);
 
-  const { mutateAsync: uploadTemplate, error } = useTemplateUploadQuery();
+  const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
 
   const handleCodeChange = useCallback((newContent: string, idx: number) => {
     setSnippets((prevSnippets) =>
