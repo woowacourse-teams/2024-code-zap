@@ -58,20 +58,41 @@ public interface SpringDocTemplateController {
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 검색", description = """
-            필터링 조건에 맞는 모든 템플릿을 조회합니다.
-            - 필터링 조건
+            필터링 조건에 맞는 모든 템플릿을 조회합니다. \n
+            - 필터링 조건 \n
               - 멤버 ID
-              - 검색 키워드 (템플릿 제목, 템플릿 설명, 스니펫 파일명, 소스 코드)
+              - 검색 키워드 (템플릿명, 템플릿 설명, 스니펫 파일명, 소스 코드)
               - 카테고리 ID
-              - 태그 ID
-            - 정렬 방식
-              - 최신순 (createdAt,asc)
-              - 오래된순 (createdAt,desc)
-            조회 조건으로 페이지 인덱스, 한 페이지에 들어갈 최대 템플릿의 개수를 변경할 수 있습니다.
-            페이지 인덱스는 1, 템플릿 개수는 20개가 기본 값입니다.
+              - 태그 ID들 \n
+              
+            페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
+            - 페이징 조건 \n
+              - 페이지 번호(page)
+              - 한 페이지에 템플릿 개수(size)
+              - 페이지 정렬 방식(sort) \n
+              
+            - 정렬 방식 \n
+              - 최신순 (modifiedAt,asc)
+              - 오래된순 (modifiedAt,desc) \n
             """)
-    @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
-            content = {@Content(schema = @Schema(implementation = ExploreTemplatesResponse.class))})
+    @ApiResponse(responseCode = "200", description = "템플릿 검색 성공",
+            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST,
+            instance = "/templates?memberId=1&keyword=\"java\"&tagIds=", errorCases = {
+            @ErrorCase(description = "태그 ID가 0개인 경우", exampleMessage = "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요."),
+            @ErrorCase(description = "페이지 번호가 1보다 작을 경우", exampleMessage = "페이지 번호는 1 이상이어야 합니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
+            instance = "/templates?memberId=1&keyword=\"java\"", errorCases = {
+            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
+            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "해당 템플릿들에 대한 권한이 없습니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND,
+            instance = "/templates?memberId=1&keyword=\"java\"&categoryId=1&tagIds=1,2", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
+            @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
+            @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
+    })
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
             MemberDto memberDto,
             Long memberId,
