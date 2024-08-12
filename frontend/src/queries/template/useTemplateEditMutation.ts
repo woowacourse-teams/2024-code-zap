@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { QUERY_KEY, editTemplate } from '@/api';
 
-export const useTemplateEditQuery = (id: number) => {
+export const useTemplateEditMutation = (id: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
