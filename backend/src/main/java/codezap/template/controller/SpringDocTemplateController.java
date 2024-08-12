@@ -121,11 +121,25 @@ public interface SpringDocTemplateController {
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "해당하는 id 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
-            @ErrorCase(description = "템플릿을 수정할 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
-
+            @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 설명이 null 입니다."),
+            @ErrorCase(description = "템플릿명, 스니펫 파일명, 스니펫 소스 코드가 공백일 경우", exampleMessage = "템플릿명이 비어 있거나 공백입니다."),
+            @ErrorCase(description = "템플릿명, 스니펫 파일명, 태그명이 255자를 초과한 경우", exampleMessage = "템플릿명은 최대 255자까지 입력 가능합니다."),
+            @ErrorCase(description = "스니펫 소스 코드가 65,535 byte를 초과한 경우", exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 "
+                    + "가능합니다."),
+            @ErrorCase(description = "스니펫 순서가 잘못된 경우", exampleMessage = "스니펫 순서가 잘못되었습니다."),
+            @ErrorCase(description = "해당 템플릿의 실제 스니펫 수와 인자로 받은 스니펫 수가 다를 경우", exampleMessage = "스니펫의 정보가 정확하지 않습니다."),
     })
-    ResponseEntity<Void> updateTemplate(Long id, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto);
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
+            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
+            @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
+            @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
+            @ErrorCase(description = "스니펫이 없는 경우", exampleMessage = "식별자 1에 해당하는 스니펫이 존재하지 않습니다."),
+    })
+    ResponseEntity<Void> updateTemplate(MemberDto memberDto, Long id, UpdateTemplateRequest updateTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿을 삭제합니다.")

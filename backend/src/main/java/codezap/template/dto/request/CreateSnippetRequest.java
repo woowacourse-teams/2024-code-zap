@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record CreateSnippetRequest(
         @Schema(description = "파일명", example = "Main.java")
         @NotBlank(message = "파일명이 비어 있거나 공백입니다.", groups = NotNullGroup.class)
-        @Size(max = 255, message = "파일 이름은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
+        @Size(max = 255, message = "파일명은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String filename,
 
         @Schema(description = "소스 코드", example = "public class Main { // ...")

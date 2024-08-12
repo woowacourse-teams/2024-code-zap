@@ -168,7 +168,7 @@ public class TemplateService {
     }
 
     @Transactional
-    public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
+    public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Member member = memberRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);

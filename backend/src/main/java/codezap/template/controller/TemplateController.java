@@ -83,11 +83,11 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
+            @BasicAuthentication MemberDto memberDto,
             @PathVariable Long id,
-            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest,
-            @BasicAuthentication MemberDto memberDto
+            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
-        templateService.update(id, updateTemplateRequest, memberDto);
+        templateService.update(memberDto, id, updateTemplateRequest);
         return ResponseEntity.ok().build();
     }
 

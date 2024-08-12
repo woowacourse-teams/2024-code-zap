@@ -185,7 +185,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -433,7 +433,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
         }
 
         @Test
@@ -464,7 +464,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
         }
 
         @ParameterizedTest

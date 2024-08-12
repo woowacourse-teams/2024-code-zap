@@ -151,7 +151,7 @@ class TemplateServiceTest {
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 1L);
-        templateService.update(template.getId(), updateTemplateRequest, memberDto);
+        templateService.update(memberDto, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.fetchById(template.getId());
@@ -185,7 +185,7 @@ class TemplateServiceTest {
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 2L);
 
         // then
-        assertThatCode(() -> templateService.update(template.getId(), updateTemplateRequest, otherMemberDto))
+        assertThatCode(() -> templateService.update(otherMemberDto, template.getId(), updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
