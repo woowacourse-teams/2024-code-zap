@@ -6,20 +6,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import codezap.member.configuration.BasicAuthentication;
 import codezap.member.dto.LoginRequest;
 import codezap.member.dto.LoginResponse;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.SignupRequest;
+import codezap.member.dto.request.UpdateMemberProfileRequest;
+import codezap.member.dto.response.FindMemberResponse;
+import codezap.member.dto.response.UpdateMemberProfileResponse;
 import codezap.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
@@ -80,5 +88,10 @@ public class MemberController implements SpringDocMemberController {
                 .httpOnly(true)
                 .build();
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    @GetMapping("/members/{id}")
+    public ResponseEntity<FindMemberResponse> findMember(@BasicAuthentication MemberDto memberDto, @PathVariable Long id) {
+        throw new NotImplementedException("접근이 불가능한 기능입니다. 서버 개발자에게 문의해주세요.");
     }
 }
