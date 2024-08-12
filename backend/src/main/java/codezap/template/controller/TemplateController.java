@@ -36,7 +36,7 @@ public class TemplateController implements SpringDocTemplateController {
     private final TemplateService templateService;
 
     @PostMapping
-    public ResponseEntity<Void> create(
+    public ResponseEntity<Void> createTemplate(
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest,
             @BasicAuthentication MemberDto memberDto
     ) {

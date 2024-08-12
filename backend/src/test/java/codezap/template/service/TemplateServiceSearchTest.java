@@ -79,6 +79,7 @@ class TemplateServiceSearchTest {
         return new CreateTemplateRequest(title, "description",
                 List.of(new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)),
+                1,
                 1L,
                 List.of());
     }
@@ -187,12 +188,16 @@ class TemplateServiceSearchTest {
             Category category = categoryRepository.save(new Category("category", member));
             CreateTemplateRequest request1 = new CreateTemplateRequest("타이틀", "Login 구현",
                     List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)), category.getId(),
+                            new CreateSnippetRequest("filename2", "content2", 2)),
+                    1,
+                    category.getId(),
                     List.of("tag1", "tag2"));
             saveTemplate(request1, member, category);
             CreateTemplateRequest request2 = new CreateTemplateRequest("타이틀", "Signup 구현",
                     List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)), category.getId(),
+                            new CreateSnippetRequest("filename2", "content2", 2)),
+                    1,
+                    category.getId(),
                     List.of("tag1", "tag2"));
             saveTemplate(request2, member, category);
 

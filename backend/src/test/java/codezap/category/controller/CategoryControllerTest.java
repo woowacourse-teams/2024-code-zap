@@ -289,6 +289,7 @@ class CategoryControllerTest {
                             "title",
                             "description",
                             List.of(new CreateSnippetRequest("filename", "content", 1)),
+                            1,
                             savedCategoryId,
                             List.of("tag1", "tag2")
                     ),

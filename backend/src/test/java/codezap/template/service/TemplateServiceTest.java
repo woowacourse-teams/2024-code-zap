@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import codezap.CodeZapApplication;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
@@ -51,7 +50,8 @@ class TemplateServiceTest {
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
     private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory, secondCategory));
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
+            List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
@@ -236,6 +236,7 @@ class TemplateServiceTest {
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
                 ),
+                1,
                 1L,
                 List.of("tag1", "tag2")
         );
@@ -277,47 +278,5 @@ class TemplateServiceTest {
                 .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
 
         return savedTemplate;
-    }
-
-    private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename) {
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        Category category = categoryRepository.save(new Category("category", member));
-        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                templateTitle, "설명",
-                List.of(
-                        new CreateSnippetRequest(firstFilename, "content1", 1),
-                        new CreateSnippetRequest(secondFilename, "content2", 2)
-                ),
-                category.getId(),
-                List.of()
-        );
-        Template savedTemplate = templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
-        snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
-    }
-
-    private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent) {
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        Category category = categoryRepository.save(new Category("category", member));
-        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                templateTitle, "설명",
-                List.of(
-                        new CreateSnippetRequest("filename1", firstContent, 1),
-                        new CreateSnippetRequest("filename2", secondContent, 2)
-                ),
-                category.getId(),
-                List.of()
-        );
-        Template savedTemplate = templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
-        snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 }

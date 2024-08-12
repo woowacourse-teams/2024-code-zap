@@ -111,6 +111,7 @@ class TemplateControllerTest {
                     maxTitle,
                     repeatTarget.repeat(maxLength),
                     List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -131,6 +132,7 @@ class TemplateControllerTest {
                     maxTitle,
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -150,6 +152,7 @@ class TemplateControllerTest {
                     exceededTitle,
                     "description",
                     List.of(new CreateSnippetRequest("a", "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -160,7 +163,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
         }
 
         @Test
@@ -171,6 +174,7 @@ class TemplateControllerTest {
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -192,6 +196,7 @@ class TemplateControllerTest {
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -202,7 +207,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -213,6 +218,7 @@ class TemplateControllerTest {
                     "title",
                     repeatTarget.repeat(exceededLength),
                     List.of(new CreateSnippetRequest("title", "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -230,12 +236,13 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) throws Exception {
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
                             new CreateSnippetRequest("title", "content", secondIndex)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -488,7 +495,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -627,6 +634,7 @@ class TemplateControllerTest {
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
                 ),
+                1,
                 1L,
                 List.of("tag1", "tag2")
         );

@@ -78,6 +78,7 @@ public class TagSearchTest {
         return new CreateTemplateRequest(title, "description",
                 List.of(new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)),
+                1,
                 1L,
                 List.of());
     }
