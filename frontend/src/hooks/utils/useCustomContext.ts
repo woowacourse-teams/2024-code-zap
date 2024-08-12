@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-const useCustomContext = <T,>(context: React.Context<T>) => {
+export const useCustomContext = <T>(context: React.Context<T>) => {
   const value = useContext(context);
 
   if (!value) {
@@ -9,5 +9,3 @@ const useCustomContext = <T,>(context: React.Context<T>) => {
 
   return value;
 };
-
-export default useCustomContext;

@@ -2,9 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
-import { ToastContext } from '@/context/ToastContext';
+import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import useCustomContext from '@/hooks/utils/useCustomContext';
+import { useCustomContext } from '@/hooks/utils';
 import { LoginRequest } from '@/types';
 
 export const useLoginMutation = () => {

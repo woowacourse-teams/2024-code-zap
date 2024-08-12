@@ -1,16 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useScrollToTargetElement } from '../utils/useScrollToTargetElement';
-import { useTemplateDeleteQuery } from './useTemplateDeleteQuery';
-import { useTemplateQuery } from './useTemplateQuery';
+import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/template';
+import { useScrollToTargetElement } from '../utils';
 
 export const useTemplate = (id: number) => {
   const navigate = useNavigate();
   const scrollTo = useScrollToTargetElement();
 
   const { data: template } = useTemplateQuery(Number(id));
-  const { mutateAsync: deleteTemplate } = useTemplateDeleteQuery(Number(id));
+  const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation(Number(id));
 
   const [currentFile, setCurrentFile] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);

@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { QUERY_KEY, deleteTemplate } from '@/api';
+import { QUERY_KEY, postTemplate } from '@/api';
 
-export const useTemplateDeleteQuery = (id: number) => {
+export const useTemplateUploadMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => deleteTemplate(id),
+    mutationFn: postTemplate,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.TEMPLATE_LIST] });
     },

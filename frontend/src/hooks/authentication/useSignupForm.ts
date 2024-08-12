@@ -2,10 +2,9 @@ import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { postSignup } from '@/api/authentication';
-import { useCheckEmailQuery } from '@/queries/authentication';
-import { useCheckUsernameQuery } from '@/queries/authentication/useCheckUsernameQuery';
-import { useInputWithValidate } from '../useInputWithValidate';
-import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from './validates';
+import { useInputWithValidate } from '@/hooks/utils';
+import { useCheckEmailQuery, useCheckUsernameQuery } from '@/queries/authentication';
+import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from '@/service';
 
 export const useSignupForm = () => {
   const navigate = useNavigate();

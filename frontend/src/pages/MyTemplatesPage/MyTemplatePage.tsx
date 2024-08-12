@@ -12,8 +12,8 @@ import {
   Dropdown,
   TagFilterMenu,
 } from '@/components';
-import { useWindowWidth, useDebounce } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
+import { useWindowWidth, useDebounce } from '@/hooks/utils';
 import { useDropdown } from '@/hooks/utils/useDropdown';
 import { useInput } from '@/hooks/utils/useInput';
 import { useCategoryListQuery } from '@/queries/category';
