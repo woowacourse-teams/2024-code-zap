@@ -334,7 +334,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
     }
 
@@ -402,7 +402,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 
         @Test
@@ -611,7 +611,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 
         @Test

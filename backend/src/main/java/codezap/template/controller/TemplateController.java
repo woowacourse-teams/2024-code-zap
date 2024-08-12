@@ -59,6 +59,14 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FindTemplateResponse> getTemplateById(
+            @BasicAuthentication MemberDto memberDto,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
+    }
+
     @GetMapping("/tags")
     public ResponseEntity<FindAllTagsResponse> getTags(
             @BasicAuthentication MemberDto memberDto,
@@ -71,13 +79,6 @@ public class TemplateController implements SpringDocTemplateController {
     @GetMapping("/explore")
     public ResponseEntity<ExploreTemplatesResponse> explore() {
         return ResponseEntity.ok(templateService.findAll());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id,
-            @BasicAuthentication MemberDto memberDto
-    ) {
-        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
     }
 
     @PostMapping("/{id}")

@@ -136,7 +136,7 @@ class TemplateServiceTest {
         // then
         assertThatCode(() -> templateService.findByIdAndMember(template.getId(), otherMemberDto))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     @Test
@@ -187,7 +187,7 @@ class TemplateServiceTest {
         // then
         assertThatCode(() -> templateService.update(template.getId(), updateTemplateRequest, otherMemberDto))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     @Test
@@ -225,7 +225,7 @@ class TemplateServiceTest {
         // then
         assertThatCode(() -> templateService.deleteById(1L, otherMemberDto))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     private CreateTemplateRequest makeTemplateRequest(String title) {

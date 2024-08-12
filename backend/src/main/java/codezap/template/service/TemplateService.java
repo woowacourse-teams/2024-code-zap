@@ -121,7 +121,7 @@ public class TemplateService {
 
     private void validateTemplateAuthorizeMember(Template template, Member member) {
         if (!template.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
         }
     }
 
