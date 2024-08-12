@@ -1,63 +1,58 @@
 import { PropsWithChildren } from 'react';
-import { styleText } from './style';
 
-export type FontWeight = 'regular' | 'bold';
+import { theme } from '@/style/theme';
+import * as S from './Text.style';
 
-export interface TextProps {
-  weight?: FontWeight;
-  color?: string;
+type As = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'p' | 'span';
+
+const weights = { ...theme.font.weight };
+const sizes = { ...theme.font.size.text };
+
+interface Props {
+  as?: As;
+  color: string;
+  weight?: keyof typeof weights;
 }
 
-const Text = ({ children }: PropsWithChildren<TextProps>) => {
-  return <span>{children}</span>;
-};
+const XLarge = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.xlarge}>
+    {children}
+  </S.TextElement>
+);
+
+const Large = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.large}>
+    {children}
+  </S.TextElement>
+);
+
+const Medium = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.medium}>
+    {children}
+  </S.TextElement>
+);
+
+const Small = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.small}>
+    {children}
+  </S.TextElement>
+);
+
+const XSmall = ({ children, as = 'span', color, weight = 'regular' }: PropsWithChildren<Props>) => (
+  <S.TextElement as={as} color={color} weight={weights[weight]} size={sizes.xsmall}>
+    {children}
+  </S.TextElement>
+);
+
+const Text = Object.assign(
+  {},
+  {
+    XLarge,
+    Large,
+    Medium,
+    Small,
+    XSmall,
+  },
+);
 
 export default Text;
-
-Text.Heading = function Heading({
-  children,
-  weight,
-  color,
-}: PropsWithChildren<TextProps>) {
-  return <div css={styleText('4.2', weight, color)}>{children}</div>;
-};
-
-Text.Title = function Title({
-  children,
-  weight,
-  color,
-}: PropsWithChildren<TextProps>) {
-  return <h1 css={styleText('3.2', weight, color)}>{children}</h1>;
-};
-
-Text.SubTitle = function SubTitle({
-  children,
-  weight,
-  color,
-}: PropsWithChildren<TextProps>) {
-  return <h2 css={styleText('2.4', weight, color)}>{children}</h2>;
-};
-
-Text.Label = function Label({
-  children,
-  weight,
-  color,
-}: PropsWithChildren<TextProps>) {
-  return <span css={styleText('1.8', weight, color)}>{children}</span>;
-};
-
-Text.Body = function Body({
-  children,
-  weight,
-  color,
-}: PropsWithChildren<TextProps>) {
-  return <span css={styleText('1.6', weight, color)}>{children}</span>;
-};
-
-Text.Caption = function Caption({
-  children,
-  weight,
-  color,
-}: PropsWithChildren<TextProps>) {
-  return <span css={styleText('1.4', weight, color)}>{children}</span>;
-};

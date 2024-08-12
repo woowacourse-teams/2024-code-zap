@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  find-branch:
+  build:
     runs-on: self-hosted
     steps:
       - name: 브랜치명을 통해 개발 환경 알아내기
@@ -15,10 +15,6 @@ jobs:
           cd ${{ secrets.SCRIPT_DIRECTORY }}
           bash find-env-by-branch.sh
           
-  build:
-    needs: find-branch
-    runs-on: self-hosted
-    steps:
       - name: 체크아웃
         uses: actions/checkout@v4
         

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 
@@ -20,13 +19,6 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     public List<TemplateTag> findAllByTemplate(Template template) {
         return templateTags.stream()
                 .filter(templateTag -> Objects.equals(templateTag.getTemplate(), template))
-                .toList();
-    }
-
-    @Override
-    public List<TemplateTag> findByTagIn(List<Tag> tags) {
-        return templateTags.stream()
-                .filter(templateTag -> tags.contains(templateTag.getTag()))
                 .toList();
     }
 
@@ -55,5 +47,17 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     @Override
     public List<TemplateTag> findAll() {
         return templateTags;
+    }
+
+    @Override
+    public List<TemplateTag> findByTemplateIn(List<Template> templates) {
+        return templateTags.stream()
+                .filter(templateTag -> templates.contains(templateTag.getTemplate()))
+                .toList();
+    }
+
+    @Override
+    public List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize) {
+        return List.of();
     }
 }

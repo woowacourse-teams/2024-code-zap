@@ -1,36 +1,74 @@
-import { Outlet, createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 
-import Template from '@/pages/Template';
-import TemplateList from '@/pages/TemplateList';
-import UploadsTemplate from '@/pages/UploadsTemplate';
-import { Header } from '@/components/Header';
-
-const Layout = () => {
-  const style = { maxWidth: '1024px', margin: 'auto', padding: '0 2rem' };
-
-  return (
-    <div css={style}>
-      <Header />
-      <Outlet />
-    </div>
-  );
-};
+import { Layout } from '@/components';
+import {
+  TemplatePage,
+  MyTemplatePage,
+  TemplateUploadPage,
+  SignupPage,
+  LoginPage,
+  LandingPage,
+  NotFoundPage,
+} from '@/pages';
+import AuthGuard from './AuthGuard';
+import GuestGuard from './GuestGuard';
 
 const router = createBrowserRouter([
   {
+    errorElement: <NotFoundPage />,
     element: <Layout />,
     children: [
       {
         path: '/',
-        element: <TemplateList />,
+        element: (
+          <GuestGuard>
+            <MyTemplatePage />
+          </GuestGuard>
+        ),
       },
       {
         path: 'templates/:id',
-        element: <Template />,
+        element: (
+          <GuestGuard>
+            <TemplatePage />
+          </GuestGuard>
+        ),
       },
       {
-        path: 'templates/uploads',
-        element: <UploadsTemplate />,
+        path: 'templates/upload',
+        element: (
+          <GuestGuard>
+            <TemplateUploadPage />
+          </GuestGuard>
+        ),
+      },
+      {
+        path: 'signup',
+        element: (
+          <AuthGuard>
+            <SignupPage />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: 'login',
+        element: (
+          <AuthGuard>
+            <LoginPage />
+          </AuthGuard>
+        ),
+      },
+      {
+        path: 'home',
+        element: (
+          <AuthGuard>
+            <LandingPage />,
+          </AuthGuard>
+        ),
+      },
+      {
+        path: '*',
+        element: <NotFoundPage />,
       },
     ],
   },

@@ -106,6 +106,6 @@ class CategoryServiceTest {
         categoryService.deleteById(savedCategory.getId(), memberDto);
 
         // then
-        assertThat(categoryRepository.findAllByMember(member)).hasSize(1);
+        assertThat(categoryRepository.findAllByMemberOrderById(member)).hasSize(1);
     }
 }

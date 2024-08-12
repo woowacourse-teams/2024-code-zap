@@ -1,9 +1,5 @@
 package codezap.category.service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +35,7 @@ public class CategoryService {
 
     public FindAllCategoriesResponse findAllByMember(Long memberId) {
         Member member = memberRepository.fetchById(memberId);
-        List<Category> categories = categoryRepository.findAllByMember(member);
-        categories.sort(Comparator.comparing(Category::getId));
-        categories.forEach(category -> System.out.println(category.getId()));
-        return FindAllCategoriesResponse.from(categoryRepository.findAllByMember(member));
+        return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberOrderById(member));
     }
 
     public FindAllCategoriesResponse findAll() {

@@ -5,38 +5,22 @@ export interface Snippet {
   ordinal: number;
 }
 
+export interface Tag {
+  id: number;
+  name: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+}
+
 export interface Template {
   id: number;
   title: string;
-  member: {
-    id: number;
-    nickname: string;
-  };
-  representative_snippet_ordinal: number;
+  description: string;
   snippets: Snippet[];
-  modified_at: string;
-}
-
-export interface TemplateListItem {
-  id: number;
-  title: string;
-  member: {
-    id: number;
-    nickname: string;
-  };
-  representative_snippet: {
-    filename: string;
-    content_summary: string;
-  };
-  modified_at: string;
-}
-
-export interface TemplateListResponse {
-  templates: TemplateListItem[];
-}
-
-export interface CreateTemplateRequest {
-  title: string;
-  representative_snippet_ordinal: number;
-  snippets: Snippet[];
+  category: Category;
+  tags: Tag[];
+  modifiedAt: string;
 }

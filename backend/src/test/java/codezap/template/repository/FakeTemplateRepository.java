@@ -104,6 +104,13 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     @Override
+    public List<Template> findByMemberId(Long id) {
+        return templates.stream()
+                .filter(template -> Objects.equals(template.getMember().getId(), id))
+                .toList();
+    }
+
+    @Override
     public Template save(Template entity) {
         var saved = new Template(
                 getOrGenerateId(entity),

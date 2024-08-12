@@ -23,6 +23,8 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     boolean existsByCategoryId(Long categoryId);
 
+    List<Template> findByMemberId(Long id);
+
     @Query("""
             SELECT DISTINCT t
             FROM Template t JOIN Snippet s ON t.id = s.template.id

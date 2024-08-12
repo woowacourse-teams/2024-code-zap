@@ -12,6 +12,7 @@ import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
+import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -66,6 +67,13 @@ public interface SpringDocTemplateController {
             List<Long> tagIds,
             Pageable pageable
     );
+
+    @Operation(summary = "태그 목록 조회", description = """
+            유저가 가지고 있는 태그 목록을 조회합니다.
+            """)
+    @ApiResponse(responseCode = "200", description = "태그 목록 조회 성공",
+            content = {@Content(schema = @Schema(implementation = FindAllTagsResponse.class))})
+    ResponseEntity<FindAllTagsResponse> getTags(MemberDto memberDto, Long memberId);
 
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",

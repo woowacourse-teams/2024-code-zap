@@ -1,0 +1,20 @@
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "카테고리 없음"
+    },
+    {
+      "id": 2,
+      "name": "Category1"
+    },
+    {
+      "id": 3,
+      "name": "Category2"
+    },
+    {
+      "id": 4,
+      "name": "Category3"
+    }
+  ]
+}
