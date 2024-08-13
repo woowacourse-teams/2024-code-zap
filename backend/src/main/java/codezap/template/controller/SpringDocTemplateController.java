@@ -29,7 +29,7 @@ public interface SpringDocTemplateController {
             새로운 템플릿을 생성합니다. \n
             템플릿명, 템플릿 설명, 스니펫 목록, 썸네일 스니펫 순서, 카테고리 ID, 태그 목록이 필요합니다. \n
             * 템플릿 이름은 비어있거나 공백일 수 없다.
-            
+                        
             스니펫 목록은 파일명, 소스 코드, 스니펫 순서가 필요합니다. \n
             * 스니펫 순서는 1부터 시작합니다.
             * 스니펫 순서는 오름차순으로 정렬하여 보내야 합니다.
@@ -74,8 +74,7 @@ public interface SpringDocTemplateController {
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc) \n
             """)
-    @ApiResponse(responseCode = "200", description = "템플릿 검색 성공",
-            content = {@Content(schema = @Schema(implementation = FindAllTemplatesResponse.class))})
+    @ApiResponse(responseCode = "200", description = "템플릿 검색 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST,
             instance = "/templates?memberId=1&keyword=\"java\"&tagIds=", errorCases = {
             @ErrorCase(description = "태그 ID가 0개인 경우", exampleMessage = "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요."),
@@ -103,8 +102,7 @@ public interface SpringDocTemplateController {
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공",
-            content = {@Content(schema = @Schema(implementation = FindTemplateResponse.class))})
+    @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
