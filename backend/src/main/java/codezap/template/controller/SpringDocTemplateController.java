@@ -49,8 +49,8 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
             @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-            @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
-            @ErrorCase(description = "스니펫이 없는 경우", exampleMessage = "식별자 1에 해당하는 스니펫이 존재하지 않습니다."),
+            @ErrorCase(description = "이름에 맞는 태그가 없는 경우", exampleMessage = "이름이 tag1인 태그는 존재하지 않습니다."),
+            @ErrorCase(description = "해당 순서인 스니펫 없는 경우", exampleMessage = "템플릿에 1번째 스니펫이 존재하지 않습니다."),
     })
     ResponseEntity<Void> createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
@@ -111,7 +111,6 @@ public interface SpringDocTemplateController {
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
-            @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(MemberDto memberDto, Long id);
 
