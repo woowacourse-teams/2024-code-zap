@@ -43,6 +43,13 @@ public class FakeSnippetRepository implements SnippetRepository {
     }
 
     @Override
+    public Snippet fetchByTemplateAndOrdinal(Template template, int ordinal) {
+        return findByTemplateAndOrdinal(template, ordinal)
+                .orElseThrow(
+                        () -> new CodeZapException(HttpStatus.NOT_FOUND, "템플릿에 " + ordinal + "번째 스니펫이 존재하지 않습니다."));
+    }
+
+    @Override
     public Optional<Snippet> findByTemplateAndOrdinal(Template template, int ordinal) {
         return snippets.stream()
                 .filter(snippet ->

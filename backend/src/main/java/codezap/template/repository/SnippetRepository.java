@@ -13,6 +13,8 @@ public interface SnippetRepository {
 
     List<Snippet> findAllByTemplate(Template template);
 
+    Snippet fetchByTemplateAndOrdinal(Template template, int ordinal);
+
     Optional<Snippet> findByTemplateAndOrdinal(Template template, int ordinal);
 
     List<Snippet> findAllByTemplateAndOrdinal(Template template, int ordinal);

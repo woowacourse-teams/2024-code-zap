@@ -19,6 +19,12 @@ public interface SnippetJpaRepository extends SnippetRepository, JpaRepository<S
 
     List<Snippet> findAllByTemplate(Template template);
 
+    default Snippet fetchByTemplateAndOrdinal(Template template, int ordinal) {
+        return findByTemplateAndOrdinal(template, ordinal)
+                .orElseThrow(
+                        () -> new CodeZapException(HttpStatus.NOT_FOUND, "템플릿에 " + ordinal + "번째 스니펫이 존재하지 않습니다."));
+    }
+
     Optional<Snippet> findByTemplateAndOrdinal(Template template, int ordinal);
 
     List<Snippet> findAllByTemplateAndOrdinal(Template template, int ordinal);

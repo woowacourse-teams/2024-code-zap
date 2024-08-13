@@ -35,6 +35,12 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
+    public Tag fetchByName(String name) {
+        return findByName(name).orElseThrow(
+                () -> new CodeZapException(HttpStatus.NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
+    }
+
+    @Override
     public Optional<Tag> findByName(String name) {
         return tags.stream().filter(tag -> Objects.equals(tag.getName(), name)).findFirst();
     }

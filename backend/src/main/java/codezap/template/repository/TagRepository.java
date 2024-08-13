@@ -11,6 +11,8 @@ public interface TagRepository {
 
     boolean existsByName(String name);
 
+    Tag fetchByName(String name);
+
     Optional<Tag> findByName(String name);
 
     List<Tag> findByIdIn(List<Long> tagIds);

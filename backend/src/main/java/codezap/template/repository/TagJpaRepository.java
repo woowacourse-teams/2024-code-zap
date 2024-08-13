@@ -19,6 +19,11 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
 
     boolean existsByName(String name);
 
+    default Tag fetchByName(String name) {
+        return findByName(name).orElseThrow(
+                () -> new CodeZapException(HttpStatus.NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
+    }
+
     Optional<Tag> findByName(String name);
 
     List<Tag> findByNameIn(List<String> tagNames);
