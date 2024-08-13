@@ -54,13 +54,17 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: MenuProps) => {
         <CategoryButton key={id} name={name} disabled={selectedId === id} onClick={() => handleButtonClick(id)} />
       ))}
 
-      <S.HighlightBox selectedIndex={indexById[selectedId]} categoryCount={reorderedCategories.length + 1} />
+      <S.HighlightBox
+        data-testid='category-highlighter-box'
+        selectedIndex={indexById[selectedId]}
+        categoryCount={reorderedCategories.length + 1}
+      />
     </S.CategoryContainer>
   );
 };
 
 const CategoryButton = ({ name, disabled, onClick }: ButtonProps) => (
-  <S.CategoryButtonWrapper disabled={disabled} onClick={onClick}>
+  <S.CategoryButtonWrapper data-testid='category-button' disabled={disabled} onClick={onClick}>
     <Text.Medium color={theme.color.light.secondary_700} weight='bold'>
       {name}
     </Text.Medium>

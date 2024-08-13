@@ -36,25 +36,26 @@ export const getTemplateList = async ({
   pageSize = PAGE_SIZE,
   memberId,
 }: TemplateListRequest) => {
-  const url = new URL(TEMPLATE_API_URL);
-
-  url.searchParams.append('keyword', keyword);
-  url.searchParams.append('memberId', String(memberId));
+  const queryParams = new URLSearchParams({
+    keyword,
+    memberId: String(memberId),
+    sort,
+    pageNumber: page.toString(),
+    pageSize: pageSize.toString(),
+  });
 
   if (categoryId) {
-    url.searchParams.append('categoryId', categoryId.toString());
+    queryParams.append('categoryId', categoryId.toString());
   }
 
   if (tagIds?.length !== 0 && tagIds !== undefined) {
-    url.searchParams.append('tagIds', tagIds.toString());
+    queryParams.append('tagIds', tagIds.toString());
   }
 
-  url.searchParams.append('sort', sort);
-  url.searchParams.append('pageNumber', page.toString());
-  url.searchParams.append('pageSize', pageSize.toString());
+  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 
   const response = await customFetch<TemplateListResponse>({
-    url: url.toString(),
+    url,
   });
 
   if ('templates' in response) {

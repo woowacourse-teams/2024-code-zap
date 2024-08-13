@@ -13,7 +13,6 @@ import {
 import { TAG_API_URL } from '../api/tags';
 import mockCategoryList from './categoryList.json';
 import mockTagList from './tagList.json';
-import mockTemplate from './template.json';
 import mockTemplateList from './templateList.json';
 
 export const templateHandlers = [
@@ -68,13 +67,24 @@ export const templateHandlers = [
     const numberOfElements = paginatedTemplates.length;
 
     return HttpResponse.json({
+      status: 200,
       templates: paginatedTemplates,
       totalPages,
       totalElements,
       numberOfElements,
     });
   }),
-  http.get(`${TEMPLATE_API_URL}/:id`, () => HttpResponse.json(mockTemplate)),
+  http.get(`${TEMPLATE_API_URL}/:id`, (req) => {
+    const { id } = req.params;
+
+    const template = mockTemplateList.templates.find((template) => template.id.toString() === id);
+
+    if (template) {
+      return HttpResponse.json(template);
+    } else {
+      return HttpResponse.json({ status: 404, message: 'Template not found' });
+    }
+  }),
   http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
   http.post(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 200 })),
   http.delete(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 204 })),
@@ -152,4 +162,4 @@ const categoryHandlers = [
 
 const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];
 
-export const handlers = [...templateHandlers, ...categoryHandlers, ...authenticationHandler, ...tagHandlers];
+export const handlers = [...tagHandlers, ...templateHandlers, ...categoryHandlers, ...authenticationHandler];

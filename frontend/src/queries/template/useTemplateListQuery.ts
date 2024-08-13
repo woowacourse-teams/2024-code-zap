@@ -28,7 +28,6 @@ export const useTemplateListQuery = ({
   return useQuery<TemplateListResponse, Error>({
     queryKey: [QUERY_KEY.TEMPLATE_LIST, keyword, categoryId, tagIds, sort, page, pageSize, memberId],
     queryFn: () => getTemplateList({ keyword, categoryId, tagIds, sort, page, pageSize, memberId }),
-
     placeholderData: keepPreviousData,
   });
 };
