@@ -43,8 +43,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TemplateService {
 
-    public static final int FIRST_ORDINAL = 1;
-
     private final ThumbnailSnippetRepository thumbnailSnippetRepository;
     private final TemplateRepository templateRepository;
     private final SnippetRepository snippetRepository;
@@ -68,8 +66,8 @@ public class TemplateService {
                         .toList()
         );
 
-        Snippet thumbnailSnippet = snippetRepository.findByTemplateAndOrdinal(template, FIRST_ORDINAL)
-                .orElseThrow(this::throwNotFoundSnippet);
+        Snippet thumbnailSnippet = snippetRepository.fetchByTemplateAndOrdinal(template,
+                createTemplateRequest.thumbnailOrdinal());
         thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
         return template.getId();
     }
@@ -90,7 +88,7 @@ public class TemplateService {
 
         templateTagRepository.saveAll(
                 createTemplateRequest.tags().stream()
-                        .map(tag -> tagRepository.findByName(tag).orElseThrow(this::throwNotFoundTag))
+                        .map(tagRepository::fetchByName)
                         .map(tag -> new TemplateTag(template, tag))
                         .toList()
         );
@@ -233,7 +231,8 @@ public class TemplateService {
     }
 
     private void updateThumbnailSnippet(Template template, ThumbnailSnippet thumbnailSnippet) {
-        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
+        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template,
+                thumbnailSnippet.getSnippet().getOrdinal());
         snippets.stream()
                 .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
                 .findFirst()
@@ -251,7 +250,7 @@ public class TemplateService {
 
         templateTagRepository.saveAll(
                 updateTemplateRequest.tags().stream()
-                        .map(tag -> tagRepository.findByName(tag).orElseThrow(this::throwNotFoundTag))
+                        .map(tagRepository::fetchByName)
                         .map(tag -> new TemplateTag(template, tag))
                         .toList()
         );
@@ -283,14 +282,6 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    private CodeZapException throwNotFoundSnippet() {
-        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 스니펫이 존재하지 않습니다.");
-    }
-
-    private CodeZapException throwNotFoundTag() {
-        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 태그가 존재하지 않습니다.");
     }
 
     private CodeZapException throwNotFoundThumbnailSnippet() {

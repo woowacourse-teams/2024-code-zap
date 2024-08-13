@@ -135,27 +135,7 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 생성 실패: 로그인을 하지 않은 유저")
-        void createTemplateFailWithNotLogin() throws Exception {
-            String maxTitle = "title";
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    maxTitle,
-                    "description",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)),
-                    1,
-                    1L,
-                    List.of("tag1", "tag2")
-            );
-
-            mvc.perform(post("/templates")
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(templateRequest)))
-                    .andExpect(status().isUnauthorized());
-        }
-
-        @Test
-        @DisplayName("템플릿 생성 실패: 템플릿 이름 길이 초과")
+        @DisplayName("템플릿 생성 실패: 템플릿명 길이 초과")
         void createTemplateFailWithLongTitle() throws Exception {
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
@@ -174,50 +154,6 @@ class TemplateControllerTest {
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
-        }
-
-        @Test
-        @DisplayName("템플릿 생성 실패: 파일 이름 길이 초과")
-        void createTemplateFailWithLongFileName() throws Exception {
-            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
-                    1,
-                    1L,
-                    List.of("tag1", "tag2")
-            );
-
-            mvc.perform(post("/templates")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(templateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
-        }
-
-        @ParameterizedTest
-        @DisplayName("템플릿 생성 실패: 파일 내용 길이 초과")
-        @CsvSource({"a, 65536", "ㄱ, 21846"})
-        void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) throws Exception {
-            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
-                    1,
-                    1L,
-                    List.of("tag1", "tag2")
-            );
-
-            mvc.perform(post("/templates")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(templateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -242,6 +178,50 @@ class TemplateControllerTest {
                     .andExpect(jsonPath("$.detail").value("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
+        @Test
+        @DisplayName("템플릿 생성 실패: 파일명 길이 초과")
+        void createTemplateFailWithLongFileName() throws Exception {
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 소스 코드 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
         @ParameterizedTest
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
@@ -264,6 +244,93 @@ class TemplateControllerTest {
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("스니펫 순서가 잘못되었습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 인증 정보가 없거나 잘못된 경우")
+        void createTemplateFailWithNotLogin() throws Exception {
+            String maxTitle = "title";
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    "description",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("인증에 실패했습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 카테고리 권한이 없는 경우")
+        void createTemplateFailWithNoMatchCategory() throws Exception {
+            String maxTitle = "title";
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    "description",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    1,
+                    2L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("해당 카테고리에 대한 권한이 없습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 카테고리가 없는 경우")
+        void createTemplateFailWithNotCategory() throws Exception {
+            String maxTitle = "title";
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    "description",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    1,
+                    3L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.detail").value("식별자 3에 해당하는 카테고리가 존재하지 않습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 해당 순서인 스니펫 없는 경우")
+        void createTemplateFailWithNotSnippet() throws Exception {
+            String maxTitle = "title";
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    maxTitle,
+                    "description",
+                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    10,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.detail").value("템플릿에 10번째 스니펫이 존재하지 않습니다."));
         }
     }
 
@@ -391,11 +458,10 @@ class TemplateControllerTest {
     }
 
     @Nested
-    @DisplayName("템플릿 상세 조회 테스트")
+    @DisplayName("템플릿 단건 조회 테스트")
     class findTemplateTest {
-
         @Test
-        @DisplayName("템플릿 상세 조회 성공")
+        @DisplayName("템플릿 단건 조회 성공")
         void findOneTemplateSuccess() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
@@ -416,7 +482,7 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 상세 조회 실패: 존재하지 않는 템플릿 조회")
+        @DisplayName("템플릿 단건 조회 실패: 존재하지 않는 템플릿 조회")
         void findOneTemplateFailWithNotFoundTemplate() throws Exception {
             // when & then
             mvc.perform(get("/templates/1")
@@ -428,8 +494,24 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 상세 조회 실패: 권한 없음")
+        @DisplayName("템플릿 단건 조회 실패: 자신의 템플릿이 아닐 경우")
         void findOneTemplateFailWithUnauthorized() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.createTemplate(templateRequest, memberDto);
+
+            // then
+            mvc.perform(get("/templates/1")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("인증에 실패했습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 단건 조회 실패: 자신의 템플릿이 아닐 경우")
+        void findOneTemplateFailWithNotMine() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
@@ -519,7 +601,7 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 수정 실패: 템플릿 이름 길이 초과")
+        @DisplayName("템플릿 수정 실패: 템플릿명 길이 초과")
         void updateTemplateFailWithLongName() throws Exception {
             // given
             String exceededTitle = "a".repeat(MAX_LENGTH + 1);
