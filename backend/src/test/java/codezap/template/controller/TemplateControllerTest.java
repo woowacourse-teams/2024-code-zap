@@ -265,25 +265,50 @@ class TemplateControllerTest {
         }
     }
 
-    @Test
-    @DisplayName("템플릿 전체 조회 성공")
-    void findAllTemplatesSuccess() throws Exception {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
-        CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
-        templateService.createTemplate(templateRequest1, memberDto);
-        templateService.createTemplate(templateRequest2, memberDto);
+    @Nested
+    @DisplayName("템플릿 검색 테스트")
+    class getTemplatesTest {
 
-        // when & then
-        mvc.perform(get("/templates")
-                        .cookie(cookie)
-                        .param("memberId", "1")
-                        .param("keyword", "")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.templates.size()").value(2));
+        @Test
+        @DisplayName("템플릿 검색 성공")
+        void findAllTemplatesSuccess() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
+            templateService.createTemplate(templateRequest1, memberDto);
+            templateService.createTemplate(templateRequest2, memberDto);
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .cookie(cookie)
+                            .param("memberId", "1")
+                            .param("keyword", "")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.templates.size()").value(2));
+        }
+
+        @Test
+        @DisplayName("템플릿 검색 실패: 태그 ID가 0개인 경우")
+        void findAllTemplatesFailWithZeroTagIds() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            templateService.createTemplate(templateRequest1, memberDto);
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .cookie(cookie)
+                            .param("memberId", "1")
+                            .param("keyword", "")
+                            .param("tagIds", "")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요."));
+        }
     }
 
     @Nested
