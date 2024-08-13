@@ -26,7 +26,7 @@ public class FakeTagRepository implements TagRepository {
         return tags.stream()
                 .filter(tag -> Objects.equals(tag.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 태그 존재하지 않습니다."));
+                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 태그가 존재하지 않습니다."));
     }
 
     @Override

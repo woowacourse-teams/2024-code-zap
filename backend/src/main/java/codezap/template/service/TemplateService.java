@@ -137,11 +137,13 @@ public class TemplateService {
 
         if (categoryId != null && tagIds != null) {
             List<Long> templateIds = findTemplateIdContainsTagIds(tagIds);
+            categoryRepository.fetchById(categoryId);
             Page<Template> templatePage =
                     templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId != null) {
+            categoryRepository.fetchById(categoryId);
             Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
@@ -157,6 +159,9 @@ public class TemplateService {
     private List<Long> findTemplateIdContainsTagIds(List<Long> tagIds) {
         if(tagIds.isEmpty()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
+        }
+        for (Long id : tagIds) {
+            tagRepository.fetchById(id);
         }
         return templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
     }

@@ -60,10 +60,10 @@ class TemplateControllerTest {
 
     private static final int MAX_LENGTH = 255;
 
-    private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
-    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
-    private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
-    private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
+    private final Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
+    private final Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
+    private final Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
+    private final Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
@@ -309,6 +309,83 @@ class TemplateControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요."));
         }
+
+        @Test
+        @DisplayName("템플릿 검색 실패: 인증 정보가 없거나 잘못된 경우")
+        void findAllTemplatesFailWithCookie() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            templateService.createTemplate(templateRequest1, memberDto);
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .param("memberId", "1")
+                            .param("keyword", "")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("인증에 실패했습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 검색 실패: 인증 정보와 멤버 ID가 다른 경우")
+        void findAllTemplatesFailNonMatchMemberIdAndMemberDto() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            templateService.createTemplate(templateRequest1, memberDto);
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .cookie(cookie)
+                            .param("memberId", "100")
+                            .param("keyword", "")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 검색 실패: 카테고리가 없는 경우")
+        void findAllTemplatesFailNotFoundCategory() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            templateService.createTemplate(templateRequest1, memberDto);
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .cookie(cookie)
+                            .param("memberId", "1")
+                            .param("keyword", "")
+                            .param("categoryId", "100")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.detail").value("식별자 100에 해당하는 카테고리가 존재하지 않습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 검색 실패: 태그가 없는 경우")
+        void findAllTemplatesFailNotFoundTag() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            templateService.createTemplate(templateRequest1, memberDto);
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .cookie(cookie)
+                            .param("memberId", "1")
+                            .param("keyword", "")
+                            .param("tagIds", "100")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.detail").value("식별자 100에 해당하는 태그가 존재하지 않습니다."));
+        }
     }
 
     @Nested
@@ -357,7 +434,8 @@ class TemplateControllerTest {
             templateService.createTemplate(templateRequest, memberDto);
 
             // when
-            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(),
+                    StandardCharsets.UTF_8);
             cookie = new Cookie("Authorization", basicAuth);
 
             // then
@@ -424,7 +502,8 @@ class TemplateControllerTest {
             );
 
             // when
-            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(),
+                    StandardCharsets.UTF_8);
             cookie = new Cookie("Authorization", basicAuth);
 
             // then
@@ -634,7 +713,8 @@ class TemplateControllerTest {
             templateService.createTemplate(templateRequest, memberDto);
 
             // when
-            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(),
+                    StandardCharsets.UTF_8);
             cookie = new Cookie("Authorization", basicAuth);
 
             // then
