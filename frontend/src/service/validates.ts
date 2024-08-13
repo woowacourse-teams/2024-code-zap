@@ -1,7 +1,7 @@
 export const validateEmail = (email: string) => {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  return regex.test(email) && !/\s/.test(email) ? '' : '유효한 이메일을 입력해주세요.';
+  return regex.test(email) && !/\s/.test(email) ? '' : '올바른 이메일을 입력해주세요. ex) codezap@example.com';
 };
 
 export const validateUsername = (username: string) => {
