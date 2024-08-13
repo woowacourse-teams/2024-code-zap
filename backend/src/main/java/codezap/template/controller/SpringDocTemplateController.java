@@ -15,8 +15,6 @@ import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,7 +38,8 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 설명이 null 입니다."),
             @ErrorCase(description = "템플릿명, 스니펫 파일명, 스니펫 소스 코드가 공백일 경우", exampleMessage = "템플릿명이 비어 있거나 공백입니다."),
             @ErrorCase(description = "템플릿명, 스니펫 파일명, 태그명이 255자를 초과한 경우", exampleMessage = "템플릿명은 최대 255자까지 입력 가능합니다."),
-            @ErrorCase(description = "스니펫 소스 코드가 65,535 byte를 초과한 경우", exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
+            @ErrorCase(description = "스니펫 소스 코드가 65,535 byte를 초과한 경우", exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 "
+                    + "가능합니다."),
             @ErrorCase(description = "스니펫 순서가 잘못된 경우", exampleMessage = "스니펫 순서가 잘못되었습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
@@ -83,7 +82,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
             instance = "/templates?memberId=1&keyword=\"java\"", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
-            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "자신의 템플릿들만 조회할 수 있습니다."),
+            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND,
             instance = "/templates?memberId=1&keyword=\"java\"&categoryId=1&tagIds=1,2", errorCases = {
