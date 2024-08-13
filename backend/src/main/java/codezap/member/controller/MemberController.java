@@ -96,7 +96,6 @@ public class MemberController implements SpringDocMemberController {
         throw new NotImplementedException("접근이 불가능한 기능입니다. 서버 개발자에게 문의해주세요.");
     }
 
-
     @PutMapping("/members/{id}")
     public ResponseEntity<UpdateMemberProfileResponse> updateMemberProfile(
             @Valid @RequestBody UpdateMemberProfileRequest updateMemberProfileRequest, @PathVariable Long id

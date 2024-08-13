@@ -353,7 +353,6 @@ public interface SpringDocMemberController {
     )
     void logout(HttpServletResponse response);
 
-
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "회원 정보 조회", description = "회원의 정보(이메일, 닉네임)을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공")
