@@ -1,7 +1,7 @@
 package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -42,10 +42,10 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 
 class TemplateServiceTest {
 
-    private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
-    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
-    private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
-    private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
+    private final Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
+    private final Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
+    private final Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
+    private final Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
@@ -134,7 +134,8 @@ class TemplateServiceTest {
         MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
 
         // then
-        assertThatCode(() -> templateService.findByIdAndMember(template.getId(), otherMemberDto))
+        Long templateId = template.getId();
+        assertThatThrownBy(() -> templateService.findByIdAndMember(templateId, otherMemberDto))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -150,7 +151,7 @@ class TemplateServiceTest {
         categoryRepository.save(new Category("category2", member));
 
         // when
-        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 1L);
+        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
         templateService.update(memberDto, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
@@ -182,16 +183,17 @@ class TemplateServiceTest {
 
         // when
         MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
-        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 2L);
+        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(2L);
 
         // then
-        assertThatCode(() -> templateService.update(otherMemberDto, template.getId(), updateTemplateRequest))
+        Long templateId = template.getId();
+        assertThatThrownBy(() -> templateService.update(otherMemberDto, templateId, updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     @Test
-    @DisplayName("템플릿 삭제 성공")
+    @DisplayName("템플릿 삭제 성공: 1개")
     void deleteTemplateSuccess() {
         // given
         MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
@@ -201,6 +203,28 @@ class TemplateServiceTest {
 
         // when
         templateService.deleteByIds(memberDto, List.of(1L));
+
+        // then
+        assertAll(
+                () -> assertThat(templateRepository.findAll()).isEmpty(),
+                () -> assertThat(snippetRepository.findAll()).isEmpty(),
+                () -> assertThat(thumbnailSnippetRepository.findAll()).isEmpty()
+        );
+    }
+
+    @Test
+    @DisplayName("템플릿 삭제 성공: 2개")
+    void deleteTemplatesSuccess() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        CreateTemplateRequest createdTemplate1 = makeTemplateRequest("title1");
+        CreateTemplateRequest createdTemplate2 = makeTemplateRequest("title2");
+        saveTemplate(createdTemplate1, new Category("category1", member), member);
+        saveTemplate(createdTemplate2, new Category("category1", member), member);
+
+        // when
+        templateService.deleteByIds(memberDto, List.of(1L, 2L));
 
         // then
         assertAll(
@@ -223,9 +247,28 @@ class TemplateServiceTest {
         MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
 
         // then
-        assertThatCode(() -> templateService.deleteByIds(otherMemberDto, List.of(1L)))
+        List<Long> ids = List.of(1L);
+        assertThatThrownBy(() -> templateService.deleteByIds(otherMemberDto, ids))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
+    }
+
+    @Test
+    @DisplayName("템플릿 삭제 실패: 동일한 ID 2개가 들어왔을 때")
+    void deleteTemplatesFailWithSameTemplateId() {
+        // given
+        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = memberRepository.fetchById(memberDto.id());
+        CreateTemplateRequest createdTemplate1 = makeTemplateRequest("title1");
+        CreateTemplateRequest createdTemplate2 = makeTemplateRequest("title2");
+        saveTemplate(createdTemplate1, new Category("category1", member), member);
+        saveTemplate(createdTemplate2, new Category("category1", member), member);
+
+        // when & then
+        List<Long> ids = List.of(1L, 1L);
+        assertThatThrownBy(() -> templateService.deleteByIds(memberDto, ids))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("");
     }
 
     private CreateTemplateRequest makeTemplateRequest(String title) {
@@ -242,9 +285,9 @@ class TemplateServiceTest {
         );
     }
 
-    private UpdateTemplateRequest makeUpdateTemplateRequest(String title, Long categoryId) {
+    private UpdateTemplateRequest makeUpdateTemplateRequest(Long categoryId) {
         return new UpdateTemplateRequest(
-                title,
+                "updateTitle",
                 "description",
                 List.of(
                         new CreateSnippetRequest("filename3", "content3", 2),
