@@ -4,11 +4,11 @@ on:
   push:
     branches:
       - main
-      - develop
+      - dev/fe
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       frontend-directory: ./frontend
     steps:
