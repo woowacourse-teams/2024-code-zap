@@ -270,7 +270,7 @@ class TemplateServiceTest {
         List<Long> ids = List.of(1L, 1L);
         assertThatThrownBy(() -> templateService.deleteByIds(memberDto, ids))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("식별자 1에 해당하는 템플릿이 존재하지 않습니다.");
+                .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
     }
 
     private CreateTemplateRequest makeTemplateRequest(String title) {

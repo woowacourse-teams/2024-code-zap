@@ -1,5 +1,6 @@
 package codezap.template.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -157,7 +158,7 @@ public class TemplateService {
     }
 
     private List<Long> findTemplateIdContainsTagIds(List<Long> tagIds) {
-        if(tagIds.isEmpty()) {
+        if (tagIds.isEmpty()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
         }
         for (Long id : tagIds) {
@@ -265,6 +266,9 @@ public class TemplateService {
 
     @Transactional
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {
+        if (ids.size() != new HashSet<>(ids).size()) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
+        }
         for (Long id : ids) {
             deleteById(memberDto, id);
         }

@@ -68,7 +68,8 @@ class TemplateControllerTest {
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
     private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory, secondCategory));
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
+            List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
@@ -102,7 +103,8 @@ class TemplateControllerTest {
 
     @BeforeEach
     void setCookie() {
-        String basicAuth = HttpHeaders.encodeBasicAuth(firstMember.getEmail(), firstMember.getPassword(), StandardCharsets.UTF_8);
+        String basicAuth = HttpHeaders.encodeBasicAuth(firstMember.getEmail(), firstMember.getPassword(),
+                StandardCharsets.UTF_8);
         cookie = new Cookie("Authorization", basicAuth);
     }
 
@@ -687,7 +689,7 @@ class TemplateControllerTest {
     class deleteTemplateTest {
 
         @Test
-        @DisplayName("템플릿 삭제 성공")
+        @DisplayName("템플릿 삭제 성공: 1개")
         void deleteTemplateSuccess() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
@@ -704,8 +706,62 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 삭제 실패: 권한 없음")
+        @DisplayName("템플릿 삭제 성공: 여러개")
+        void deleteTemplatesSuccess() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category"), memberDto);
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title");
+            templateService.createTemplate(templateRequest1, memberDto);
+            templateService.createTemplate(templateRequest2, memberDto);
+
+            // when & then
+            mvc.perform(delete("/templates/1,2")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @DisplayName("템플릿 삭제 실패: 템플릿 ID가 중복된 경우")
+        void deleteTemplateFailWithDuplication() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category"), memberDto);
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.createTemplate(templateRequest, memberDto);
+
+            // when & then
+            mvc.perform(delete("/templates/1,1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("삭제하고자 하는 템플릿 ID가 중복되었습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 삭제 실패: 인증 정보가 없거나 잘못된 경우")
         void deleteTemplateFailWithUnauthorized() throws Exception {
+            // given
+            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+            categoryService.create(new CreateCategoryRequest("category"), memberDto);
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            templateService.createTemplate(templateRequest, memberDto);
+
+            // when & then
+            mvc.perform(delete("/templates/1")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.detail").value("인증에 실패했습니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 삭제 실패: 자신의 템플릿이 아닐 경우")
+        void deleteTemplateFailNotMine() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
@@ -727,19 +783,20 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 삭제 실패: 존재하지 않는 템플릿 삭제")
+        @DisplayName("템플릿 삭제 실패: 존재 하지 않는 템플릿 삭제")
         void deleteTemplateFailWithNotFoundTemplate() throws Exception {
             // when & then
             mvc.perform(delete("/templates/1")
                             .cookie(cookie)
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound());
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.detail").value("식별자 1에 해당하는 템플릿이 존재하지 않습니다."));
         }
     }
 
     private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
-        CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+        return new CreateTemplateRequest(
                 title,
                 "description",
                 List.of(
@@ -750,6 +807,5 @@ class TemplateControllerTest {
                 1L,
                 List.of("tag1", "tag2")
         );
-        return templateRequest;
     }
 }
