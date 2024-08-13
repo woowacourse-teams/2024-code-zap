@@ -21,10 +21,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface SpringDocMemberController {
 
     @Operation(summary = "회원가입")
-    @ApiResponse(
-            responseCode = "201",
-            description = "회원가입 성공"
-    )
+    @ApiResponse(responseCode = "201", description = "회원가입 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/signup", errorCases = {
             @ErrorCase(description = "이메일 입력 없음", exampleMessage = "이메일이 입력되지 않았습니다."),
             @ErrorCase(description = "이메일 형식 오류", exampleMessage = "이메일 형식이 아닙니다."),
@@ -33,7 +30,7 @@ public interface SpringDocMemberController {
             @ErrorCase(description = "비밀번호 형식 오류", exampleMessage = "영어와 숫자를 포함해야합니다."),
             @ErrorCase(description = "비밀번호 글자수 오류", exampleMessage = "비밀번호는 8~16자 사이로 입력해주세요."),
             @ErrorCase(description = "사용자명 입력 없음", exampleMessage = "사용자명이 입력되지 않았습니다."),
-            @ErrorCase(description = "사용자명 글자수 오류", exampleMessage = "사용자명이 입력되지 않았습니다.")
+            @ErrorCase(description = "사용자명 글자수 오류", exampleMessage = "사용자명이 입력되지 않았습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/signup", errorCases = {
             @ErrorCase(description = "이메일 중복", exampleMessage = "이메일이 이미 존재합니다."),
