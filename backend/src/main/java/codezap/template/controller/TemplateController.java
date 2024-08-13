@@ -25,6 +25,7 @@ import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
+import codezap.template.service.TemplateApplicationService;
 import codezap.template.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
+    private final TemplateApplicationService applicationService;
 
     @PostMapping
     public ResponseEntity<Void> createTemplate(
@@ -55,7 +57,7 @@ public class TemplateController implements SpringDocTemplateController {
             @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
         FindAllTemplatesResponse response =
-                templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+                applicationService.findAllBy(memberDto, memberId, keyword, categoryId, tagIds, pageable);
         return ResponseEntity.ok(response);
     }
 

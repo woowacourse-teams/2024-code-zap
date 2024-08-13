@@ -38,6 +38,7 @@ import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.member.service.AuthService;
+import codezap.member.service.MemberService;
 import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
@@ -52,6 +53,7 @@ import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.service.TemplateApplicationService;
 import codezap.template.service.TemplateService;
 
 class TemplateControllerTest {
@@ -81,7 +83,13 @@ class TemplateControllerTest {
     private final CategoryService categoryService = new CategoryService(categoryRepository, templateRepository,
             memberRepository);
     private final AuthService authService = new AuthService(memberRepository);
-    private final TemplateController templateController = new TemplateController(templateService);
+
+    private final MemberService memberService = new MemberService(memberRepository, authService, categoryRepository);
+
+    private final TemplateApplicationService applicationService = new TemplateApplicationService(memberService,
+            templateService);
+
+    private final TemplateController templateController = new TemplateController(templateService, applicationService);
 
     private final MockMvc mvc = MockMvcBuilders.standaloneSetup(templateController)
             .setControllerAdvice(new GlobalExceptionHandler())
