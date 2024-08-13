@@ -156,7 +156,7 @@ public class TemplateService {
 
     private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
         List<ItemResponse> itemResponses = page.stream()
-                .map(template -> ItemResponse.of(template, getTemplateTags(template)))
+                .map(template -> ItemResponse.of(template, getTemplateTags(template), getThumbnailSnippet(template)))
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
     }
@@ -165,6 +165,13 @@ public class TemplateService {
         return templateTagRepository.findAllByTemplate(template).stream()
                 .map(templateTag -> tagRepository.fetchById(templateTag.getTag().getId()))
                 .toList();
+    }
+
+    private Snippet getThumbnailSnippet(Template template) {
+        return thumbnailSnippetRepository.findByTemplate(template).orElseThrow(
+                        () -> new CodeZapException(HttpStatus.NOT_FOUND,
+                                "템플릿 식별자 " + template.getId() + "에 해당하는 썸네일 스니펫이 없습니다."))
+                .getSnippet();
     }
 
     @Transactional
