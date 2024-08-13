@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
@@ -27,7 +28,7 @@ import codezap.template.dto.request.CreateSnippetRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSnippetRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.ExploreTemplatesResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.FakeSnippetRepository;
 import codezap.template.repository.FakeTagRepository;
@@ -93,7 +94,8 @@ class TemplateServiceTest {
         saveTemplate(makeTemplateRequest("title2"), new Category("category2", member), member);
 
         // when
-        ExploreTemplatesResponse allTemplates = templateService.findAll();
+        FindAllTemplatesResponse allTemplates = templateService.findAllBy(
+                member.getId(), "", null, null, PageRequest.of(1, 10));
 
         // then
         assertThat(allTemplates.templates()).hasSize(2);

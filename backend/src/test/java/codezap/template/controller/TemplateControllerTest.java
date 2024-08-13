@@ -284,7 +284,6 @@ class TemplateControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.templates.size()").value(2));
-
     }
 
     @Nested
