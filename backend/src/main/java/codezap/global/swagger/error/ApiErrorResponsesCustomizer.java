@@ -1,8 +1,9 @@
 package codezap.global.swagger.error;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springdoc.core.customizers.OperationCustomizer;
@@ -19,29 +20,32 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 
 @Component
 public class ApiErrorResponsesCustomizer implements OperationCustomizer {
-
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
-        getApiErrorResponses(handlerMethod).ifPresent(responses ->
-                addApiErrorResponses(responses, operation.getResponses())
-        );
-
+        List<ApiErrorResponse> apiErrorResponses = getApiErrorResponses(handlerMethod);
+        Map<String, ApiResponse> customResponses = makeApiResponses(apiErrorResponses);
+        ApiResponses apiResponses = operation.getResponses();
+        apiResponses.putAll(customResponses);
         return operation;
     }
 
-    private Optional<ApiErrorResponse[]> getApiErrorResponses(HandlerMethod handlerMethod) {
+    private List<ApiErrorResponse> getApiErrorResponses(HandlerMethod handlerMethod) {
         if (handlerMethod.hasMethodAnnotation(ApiErrorResponses.class)) {
-            return Optional.ofNullable(handlerMethod.getMethodAnnotation(ApiErrorResponses.class))
-                    .map(ApiErrorResponses::value);
+            ApiErrorResponse[] responses = Objects.requireNonNull(
+                    handlerMethod.getMethodAnnotation(ApiErrorResponses.class)).value();
+            return Arrays.stream(responses).toList();
         }
-        return Optional.ofNullable(handlerMethod.getMethodAnnotation(ApiErrorResponse.class))
-                .map(response -> new ApiErrorResponse[]{response});
+        if (handlerMethod.hasMethodAnnotation(ApiErrorResponse.class)) {
+            ApiErrorResponse response = handlerMethod.getMethodAnnotation(ApiErrorResponse.class);
+            return List.of(Objects.requireNonNull(response));
+        }
+        return List.of();
     }
 
-    private void addApiErrorResponses(ApiErrorResponse[] apiErrorResponses, ApiResponses responses) {
-        Arrays.stream(apiErrorResponses)
+    private Map<String, ApiResponse> makeApiResponses(List<ApiErrorResponse> apiErrorResponses) {
+        return apiErrorResponses.stream()
                 .map(this::makeFailResponse)
-                .forEach(apiResponse -> responses.addApiResponse(apiResponse.getDescription(), apiResponse));
+                .collect(Collectors.toMap(ApiResponse::getDescription, response -> response));
     }
 
     private ApiResponse makeFailResponse(ApiErrorResponse apiErrorResponse) {
