@@ -16,9 +16,9 @@ import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateTemplateRequest(
-        @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
-        @NotBlank(message = "템플릿 이름이 null 입니다.", groups = NotNullGroup.class)
-        @Size(max = 255, message = "템플릿 이름은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
+        @Schema(description = "템플릿명", example = "스프링 로그인 구현")
+        @NotBlank(message = "템플릿명이 비어 있거나 공백입니다.", groups = NotNullGroup.class)
+        @Size(max = 255, message = "템플릿명은 최대 255자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String title,
 
         @Schema(description = "템플릿 설명", example = "JWT를 사용하여 로그인 기능을 구현함")
@@ -26,26 +26,26 @@ public record UpdateTemplateRequest(
         @ByteLength(max = 65_535, message = "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String description,
 
-        @Schema(description = "새로 추가한 스니펫 내역")
-        @NotNull(message = "createSnippets 리스트가 null 입니다.", groups = NotNullGroup.class)
+        @Schema(description = "추가하는 스니펫 목록")
+        @NotNull(message = "추가하는 스니펫 목록이 null 입니다.", groups = NotNullGroup.class)
         @Valid
         List<CreateSnippetRequest> createSnippets,
 
-        @Schema(description = "삭제, 생성 스니펫을 제외한 모든 스니펫 내역")
-        @NotNull(message = "updateSnippets 리스트가 null 입니다.", groups = NotNullGroup.class)
+        @Schema(description = "삭제, 생성 스니펫을 제외한 모든 스니펫 목록")
+        @NotNull(message = "삭제, 생성 스니펫을 제외한 모든 스니펫 목록이 null 입니다.", groups = NotNullGroup.class)
         @Valid
         List<UpdateSnippetRequest> updateSnippets,
 
-        @Schema(description = "삭제한 스니펫 식별자")
-        @NotNull(message = "deleteSnippetIds 리스트가 null 입니다.")
+        @Schema(description = "삭제하는 스니펫 ID 목록")
+        @NotNull(message = "삭제하는 스니펫 ID 목록이 null 입니다.")
         List<Long> deleteSnippetIds,
 
         @Schema(description = "카테고리 ID", example = "1")
-        @NotNull(message = "카테고리 id가 null 입니다.")
+        @NotNull(message = "카테고리 ID가 null 입니다.")
         Long categoryId,
 
-        @Schema(description = "태그 리스트")
-        @NotNull(message = "태그 리스트가 null 입니다.")
+        @Schema(description = "태그 목록")
+        @NotNull(message = "태그 목록이 null 입니다.")
         List<String> tags
 ) implements ValidatedSnippetsOrdinalRequest, ValidatedSnippetsCountRequest {
     @Override

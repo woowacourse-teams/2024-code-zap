@@ -16,14 +16,16 @@ public record FindAllTemplatesResponse(
         List<ItemResponse> templates
 ) {
     public record ItemResponse(
-            @Schema(description = "템플릿 식별자", example = "0")
+            @Schema(description = "템플릿 ID", example = "0")
             Long id,
-            @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
+            @Schema(description = "템플릿명", example = "스프링 로그인 구현")
             String title,
             @Schema(description = "템플릿 설명", example = "Jwt 토큰을 이용하여 로그인 기능을 구현합니다.")
             String description,
             @Schema(description = "태그 목록")
             List<FindTagResponse> tags,
+            @Schema(description = "썸네일 스니펫")
+            FindThumbnailSnippetResponse thumbnailSnippet,
             @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00", type = "string")
             LocalDateTime createdAt,
             @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
@@ -37,6 +39,7 @@ public record FindAllTemplatesResponse(
                     templateTags.stream()
                             .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
                             .toList(),
+                    null,
                     template.getCreatedAt(),
                     template.getModifiedAt()
             );

@@ -36,11 +36,11 @@ public class TemplateController implements SpringDocTemplateController {
     private final TemplateService templateService;
 
     @PostMapping
-    public ResponseEntity<Void> create(
-            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest,
-            @BasicAuthentication MemberDto memberDto
+    public ResponseEntity<Void> createTemplate(
+            @BasicAuthentication MemberDto memberDto,
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        Long createdTemplateId = templateService.createTemplate(createTemplateRequest, memberDto);
+        Long createdTemplateId = templateService.createTemplate(memberDto, createTemplateRequest);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
@@ -59,6 +59,14 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<FindTemplateResponse> getTemplateById(
+            @BasicAuthentication MemberDto memberDto,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
+    }
+
     @GetMapping("/tags")
     public ResponseEntity<FindAllTagsResponse> getTags(
             @BasicAuthentication MemberDto memberDto,
@@ -73,26 +81,22 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(templateService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id,
-            @BasicAuthentication MemberDto memberDto
-    ) {
-        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
-    }
-
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
+            @BasicAuthentication MemberDto memberDto,
             @PathVariable Long id,
-            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest,
-            @BasicAuthentication MemberDto memberDto
+            @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
-        templateService.update(id, updateTemplateRequest, memberDto);
+        templateService.update(memberDto, id, updateTemplateRequest);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTemplate(@PathVariable Long id, @BasicAuthentication MemberDto memberDto) {
-        templateService.deleteById(id, memberDto);
+    @DeleteMapping("/{ids}")
+    public ResponseEntity<Void> deleteTemplates(
+            @BasicAuthentication MemberDto memberDto,
+            @PathVariable List<Long> ids
+            ) {
+        templateService.deleteByIds(memberDto, ids);
         return ResponseEntity.noContent().build();
     }
 }

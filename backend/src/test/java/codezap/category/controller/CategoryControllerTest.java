@@ -285,14 +285,15 @@ class CategoryControllerTest {
         void updateCategoryFailWithLongName() throws Exception {
             // given
             templateService.createTemplate(
+                    MemberDtoFixture.getFirstMemberDto(),
                     new CreateTemplateRequest(
                             "title",
                             "description",
                             List.of(new CreateSnippetRequest("filename", "content", 1)),
+                            1,
                             savedCategoryId,
                             List.of("tag1", "tag2")
-                    ),
-                    MemberDtoFixture.getFirstMemberDto()
+                    )
             );
 
             // when & then

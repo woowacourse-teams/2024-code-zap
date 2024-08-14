@@ -53,7 +53,7 @@ public class TemplateService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
+    public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
         Member member = memberRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
@@ -75,7 +75,7 @@ public class TemplateService {
 
     private void validateCategoryAuthorizeMember(Category category, Member member) {
         if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
         }
     }
 
@@ -121,7 +121,7 @@ public class TemplateService {
 
     private void validateTemplateAuthorizeMember(Template template, Member member) {
         if (!template.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
         }
     }
 
@@ -168,7 +168,7 @@ public class TemplateService {
     }
 
     @Transactional
-    public void update(Long templateId, UpdateTemplateRequest updateTemplateRequest, MemberDto memberDto) {
+    public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Member member = memberRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
@@ -245,7 +245,13 @@ public class TemplateService {
     }
 
     @Transactional
-    public void deleteById(Long id, MemberDto memberDto) {
+    public void deleteByIds(MemberDto memberDto, List<Long> ids) {
+        for (Long id : ids) {
+            deleteById(memberDto, id);
+        }
+    }
+
+    private void deleteById(MemberDto memberDto, Long id) {
         Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
