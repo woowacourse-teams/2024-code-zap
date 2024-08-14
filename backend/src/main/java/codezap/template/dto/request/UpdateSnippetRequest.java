@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateSnippetRequest(
         @Schema(description = "스니펫 ID", example = "0")
-        @NotNull(message = "슨니펫 ID가 null 입니다.")
+        @NotNull(message = "스니펫 ID가 null 입니다.")
         Long id,
 
         @Schema(description = "파일명", example = "Main.java")
