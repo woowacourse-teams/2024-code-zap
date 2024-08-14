@@ -39,20 +39,20 @@ import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.member.service.AuthService;
 import codezap.member.service.MemberService;
-import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateSnippetRequest;
+import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.repository.FakeSnippetRepository;
+import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
-import codezap.template.repository.FakeThumbnailSnippetRepository;
-import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.FakeThumbnailRepository;
+import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailRepository;
 import codezap.template.service.TemplateApplicationService;
 import codezap.template.service.TemplateService;
 
@@ -66,17 +66,17 @@ class TemplateControllerTest {
     private final Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SnippetRepository snippetRepository = new FakeSnippetRepository();
-    private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
+    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
+    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(
             List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
     private final TemplateService templateService = new TemplateService(
-            thumbnailSnippetRepository,
+            thumbnailRepository,
             templateRepository,
-            snippetRepository,
+            sourceCodeRepository,
             categoryRepository,
             tagRepository,
             templateTagRepository,
@@ -120,7 +120,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     maxTitle,
                     repeatTarget.repeat(maxLength),
-                    List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
+                    List.of(new CreateSourceCodeRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -141,7 +141,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     exceededTitle,
                     "description",
-                    List.of(new CreateSnippetRequest("a", "content", 1)),
+                    List.of(new CreateSourceCodeRequest("a", "content", 1)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -163,7 +163,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     repeatTarget.repeat(exceededLength),
-                    List.of(new CreateSnippetRequest("title", "content", 1)),
+                    List.of(new CreateSourceCodeRequest("title", "content", 1)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -185,7 +185,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
+                    List.of(new CreateSourceCodeRequest(exceededTitle, "content", 1)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -207,7 +207,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
+                    List.of(new CreateSourceCodeRequest("title", repeatTarget.repeat(exceededLength), 1)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -223,14 +223,14 @@ class TemplateControllerTest {
         }
 
         @ParameterizedTest
-        @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
+        @DisplayName("템플릿 생성 실패: 잘못된 소스 코드 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
-        void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) throws Exception {
+        void createTemplateFailWithWrongSourceCodeOrdinal(int firstIndex, int secondIndex) throws Exception {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest("title", "content", firstIndex),
-                            new CreateSnippetRequest("title", "content", secondIndex)),
+                    List.of(new CreateSourceCodeRequest("title", "content", firstIndex),
+                            new CreateSourceCodeRequest("title", "content", secondIndex)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -242,7 +242,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("스니펫 순서가 잘못되었습니다."));
+                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
         }
 
         @Test
@@ -251,7 +251,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     1,
                     1L,
                     List.of("tag1", "tag2")
@@ -271,7 +271,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     1,
                     2L,
                     List.of("tag1", "tag2")
@@ -292,7 +292,7 @@ class TemplateControllerTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     1,
                     3L,
                     List.of("tag1", "tag2")
@@ -308,12 +308,12 @@ class TemplateControllerTest {
         }
 
         @Test
-        @DisplayName("템플릿 생성 실패: 해당 순서인 스니펫 없는 경우")
-        void createTemplateFailWithNotSnippet() throws Exception {
+        @DisplayName("템플릿 생성 실패: 해당 순서인 소스 코드 없는 경우")
+        void createTemplateFailWithNotSourceCode() throws Exception {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
-                    List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     10,
                     1L,
                     List.of("tag1", "tag2")
@@ -325,7 +325,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.detail").value("템플릿에 10번째 스니펫이 존재하지 않습니다."));
+                    .andExpect(jsonPath("$.detail").value("템플릿에 10번째 소스 코드가 존재하지 않습니다."));
         }
     }
 
@@ -338,8 +338,8 @@ class TemplateControllerTest {
         void findAllTemplatesSuccess() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
-            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
+            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title2");
             templateService.createTemplate(memberDto, templateRequest1);
             templateService.createTemplate(memberDto, templateRequest2);
 
@@ -359,7 +359,7 @@ class TemplateControllerTest {
         void findAllTemplatesFailWithZeroTagIds() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
             templateService.createTemplate(memberDto, templateRequest1);
 
             // when & then
@@ -379,7 +379,7 @@ class TemplateControllerTest {
         void findAllTemplatesFailWithCookie() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
             templateService.createTemplate(memberDto, templateRequest1);
 
             // when & then
@@ -397,7 +397,7 @@ class TemplateControllerTest {
         void findAllTemplatesFailNonMatchMemberIdAndMemberDto() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
             templateService.createTemplate(memberDto, templateRequest1);
 
             // when & then
@@ -416,7 +416,7 @@ class TemplateControllerTest {
         void findAllTemplatesFailNotFoundCategory() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
             templateService.createTemplate(memberDto, templateRequest1);
 
             // when & then
@@ -436,7 +436,7 @@ class TemplateControllerTest {
         void findAllTemplatesFailNotFoundTag() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
             templateService.createTemplate(memberDto, templateRequest1);
 
             // when & then
@@ -460,7 +460,7 @@ class TemplateControllerTest {
         void findOneTemplateSuccess() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // when & then
@@ -470,7 +470,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.title").value(templateRequest.title()))
-                    .andExpect(jsonPath("$.snippets.size()").value(2))
+                    .andExpect(jsonPath("$.sourceCodes.size()").value(2))
                     .andExpect(jsonPath("$.category.id").value(1))
                     .andExpect(jsonPath("$.category.name").value("카테고리 없음"))
                     .andExpect(jsonPath("$.tags.size()").value(2));
@@ -493,7 +493,7 @@ class TemplateControllerTest {
         void findOneTemplateFailWithUnauthorized() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // then
@@ -509,7 +509,7 @@ class TemplateControllerTest {
         void findOneTemplateFailWithNotMine() throws Exception {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // when
@@ -540,11 +540,11 @@ class TemplateControllerTest {
                     "updateTitle",
                     "description",
                     List.of(
-                            new CreateSnippetRequest("filename3", "content3", 2),
-                            new CreateSnippetRequest("filename4", "content4", 3)
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
                     1L,
@@ -569,11 +569,11 @@ class TemplateControllerTest {
                     "updateTitle",
                     "description",
                     List.of(
-                            new CreateSnippetRequest("filename3", "content3", 2),
-                            new CreateSnippetRequest("filename4", "content4", 3)
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
                     2L,
@@ -605,11 +605,11 @@ class TemplateControllerTest {
                     exceededTitle,
                     "description",
                     List.of(
-                            new CreateSnippetRequest("filename3", "content3", 2),
-                            new CreateSnippetRequest("filename4", "content4", 3)
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
                     2L,
@@ -636,11 +636,11 @@ class TemplateControllerTest {
                     "title",
                     "description",
                     List.of(
-                            new CreateSnippetRequest(exceededTitle, "content3", 2),
-                            new CreateSnippetRequest("filename4", "content4", 3)
+                            new CreateSourceCodeRequest(exceededTitle, "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
                     2L,
@@ -667,11 +667,11 @@ class TemplateControllerTest {
                     "title",
                     "description",
                     List.of(
-                            new CreateSnippetRequest("filename3", repeatTarget.repeat(exceedLength), 2),
-                            new CreateSnippetRequest("filename4", "content4", 3)
+                            new CreateSourceCodeRequest("filename3", repeatTarget.repeat(exceedLength), 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
                     2L,
@@ -698,11 +698,11 @@ class TemplateControllerTest {
                     "title",
                     repeatTarget.repeat(exceedLength),
                     List.of(
-                            new CreateSnippetRequest("filename3", "content3", 2),
-                            new CreateSnippetRequest("filename4", "content4", 3)
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", 1)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
                     ),
                     List.of(1L),
                     2L,
@@ -721,9 +721,9 @@ class TemplateControllerTest {
 
         // 정상 요청: 2, 3, 1
         @ParameterizedTest
-        @DisplayName("템플릿 수정 실패: 잘못된 스니펫 순서 입력")
+        @DisplayName("템플릿 수정 실패: 잘못된 소스 코드 순서 입력")
         @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
-        void updateTemplateFailWithWrongSnippetOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal)
+        void updateTemplateFailWithWrongSourceCodeOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal)
                 throws Exception {
             // given
             createTemplateAndTwoCategories();
@@ -731,11 +731,11 @@ class TemplateControllerTest {
                     "updateTitle",
                     "description",
                     List.of(
-                            new CreateSnippetRequest("filename3", "content3", createOrdinal1),
-                            new CreateSnippetRequest("filename4", "content4", createOrdinal2)
+                            new CreateSourceCodeRequest("filename3", "content3", createOrdinal1),
+                            new CreateSourceCodeRequest("filename4", "content4", createOrdinal2)
                     ),
                     List.of(
-                            new UpdateSnippetRequest(2L, "updateFilename2", "updateContent2", updateOrdinal)
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", updateOrdinal)
                     ),
                     List.of(1L),
                     2L,
@@ -749,14 +749,14 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("스니펫 순서가 잘못되었습니다."));
+                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
         }
 
         private void createTemplateAndTwoCategories() {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category1"), memberDto);
             categoryService.create(new CreateCategoryRequest("category2"), memberDto);
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
         }
     }
@@ -771,7 +771,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // when & then
@@ -788,8 +788,8 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title");
-            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest1);
             templateService.createTemplate(memberDto, templateRequest2);
 
@@ -807,7 +807,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // when & then
@@ -825,7 +825,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // when & then
@@ -842,7 +842,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
+            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             templateService.createTemplate(memberDto, templateRequest);
 
             // when
@@ -872,13 +872,13 @@ class TemplateControllerTest {
         }
     }
 
-    private static CreateTemplateRequest createTemplateRequestWithTwoSnippets(String title) {
+    private static CreateTemplateRequest createTemplateRequestWithTwoSourceCodes(String title) {
         return new CreateTemplateRequest(
                 title,
                 "description",
                 List.of(
-                        new CreateSnippetRequest("filename1", "content1", 1),
-                        new CreateSnippetRequest("filename2", "content2", 2)
+                        new CreateSourceCodeRequest("filename1", "content1", 1),
+                        new CreateSourceCodeRequest("filename2", "content2", 2)
                 ),
                 1,
                 1L,

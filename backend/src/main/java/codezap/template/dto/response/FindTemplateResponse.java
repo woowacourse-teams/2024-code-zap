@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import codezap.category.dto.response.FindCategoryResponse;
-import codezap.template.domain.Snippet;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,8 +19,8 @@ public record FindTemplateResponse(
         @Schema(description = "템플릿 설명", example = "JWT를 사용하여 로그인 기능을 구현함")
         String description,
 
-        @Schema(description = "스니펫 목록")
-        List<FindAllSnippetByTemplateResponse> snippets,
+        @Schema(description = "소스 코드 목록")
+        List<FindAllSourceCodeByTemplateResponse> sourceCodes,
 
         @Schema(description = "카테고리 정보")
         FindCategoryResponse category,
@@ -33,12 +33,12 @@ public record FindTemplateResponse(
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
-    public static FindTemplateResponse of(Template template, List<Snippet> snippets, List<Tag> tags) {
+    public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags) {
         return new FindTemplateResponse(
                 template.getId(),
                 template.getTitle(),
                 template.getDescription(),
-                mapToFindAllSnippetByTemplateResponse(snippets),
+                mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
                 FindCategoryResponse.from(template.getCategory()),
                 mapToFindTagByTemplateResponse(tags),
                 template.getCreatedAt(),
@@ -46,11 +46,11 @@ public record FindTemplateResponse(
         );
     }
 
-    private static List<FindAllSnippetByTemplateResponse> mapToFindAllSnippetByTemplateResponse(
-            List<Snippet> snippets
+    private static List<FindAllSourceCodeByTemplateResponse> mapToFindAllSourceCodeByTemplateResponse(
+            List<SourceCode> sourceCodes
     ) {
-        return snippets.stream()
-                .map(FindAllSnippetByTemplateResponse::from)
+        return sourceCodes.stream()
+                .map(FindAllSourceCodeByTemplateResponse::from)
                 .toList();
     }
 

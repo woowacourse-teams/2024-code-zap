@@ -38,18 +38,18 @@ import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.member.service.AuthService;
-import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.repository.FakeSnippetRepository;
+import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
-import codezap.template.repository.FakeThumbnailSnippetRepository;
-import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.FakeThumbnailRepository;
+import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailRepository;
 import codezap.template.service.TemplateService;
 
 class CategoryControllerTest {
@@ -61,16 +61,16 @@ class CategoryControllerTest {
     private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SnippetRepository snippetRepository = new FakeSnippetRepository();
-    private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
+    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
+    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember));
     private final TemplateService templateService = new TemplateService(
-            thumbnailSnippetRepository,
+            thumbnailRepository,
             templateRepository,
-            snippetRepository,
+            sourceCodeRepository,
             categoryRepository,
             tagRepository,
             templateTagRepository,
@@ -301,7 +301,7 @@ class CategoryControllerTest {
                     new CreateTemplateRequest(
                             "title",
                             "description",
-                            List.of(new CreateSnippetRequest("filename", "content", 1)),
+                            List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                             1,
                             savedCategoryId,
                             List.of("tag1", "tag2")

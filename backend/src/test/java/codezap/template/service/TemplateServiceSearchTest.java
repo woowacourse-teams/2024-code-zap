@@ -18,23 +18,23 @@ import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.template.domain.Snippet;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
-import codezap.template.domain.ThumbnailSnippet;
-import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.domain.Thumbnail;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
-import codezap.template.repository.FakeSnippetRepository;
+import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
-import codezap.template.repository.FakeThumbnailSnippetRepository;
-import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.FakeThumbnailRepository;
+import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailRepository;
 
 class TemplateServiceSearchTest {
 
@@ -42,16 +42,16 @@ class TemplateServiceSearchTest {
     private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SnippetRepository snippetRepository = new FakeSnippetRepository();
-    private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
+    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
+    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository();
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
     private final TemplateService templateService = new TemplateService(
-            thumbnailSnippetRepository,
+            thumbnailRepository,
             templateRepository,
-            snippetRepository,
+            sourceCodeRepository,
             categoryRepository,
             tagRepository,
             templateTagRepository,
@@ -77,8 +77,8 @@ class TemplateServiceSearchTest {
 
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(title, "description",
-                List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                        new CreateSnippetRequest("filename2", "content2", 2)),
+                List.of(new CreateSourceCodeRequest("filename1", "content1", 1),
+                        new CreateSourceCodeRequest("filename2", "content2", 2)),
                 1,
                 1L,
                 List.of());
@@ -87,32 +87,32 @@ class TemplateServiceSearchTest {
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
         Template savedTemplate = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
-        snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
-        savedTemplate.updateSnippets(List.of(savedFirstSnippet));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", "content1", 1));
+        sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
+        savedTemplate.updateSourceCodes(List.of(savedFirstSourceCode));
+        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
 
         return savedTemplate;
     }
 
-    private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename,
+    private void saveTemplateByFilename(String templateTitle, String firstFilename, String secondFilename,
             Member member, Category category
     ) {
         Template savedTemplate = templateRepository.save(new Template(member, templateTitle, "설명", category));
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
-        Snippet savedSecondSnippet = snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
-        savedTemplate.updateSnippets(List.of(savedFirstSnippet, savedSecondSnippet));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, firstFilename, "content1", 1));
+        SourceCode savedSecondSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, secondFilename, "content2", 2));
+        savedTemplate.updateSourceCodes(List.of(savedFirstSourceCode, savedSecondSourceCode));
+        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
     }
 
-    private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent,
+    private void saveTemplateBySourceCode(String templateTitle, String firstContent, String secondContent,
             Member member, Category category
     ) {
         Template savedTemplate = templateRepository.save(new Template(member, templateTitle, "설명", category));
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
-        Snippet savedSecondSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
-        savedTemplate.updateSnippets(List.of(savedFirstSnippet, savedSecondSnippet));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", firstContent, 1));
+        SourceCode savedSecondSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", secondContent, 2));
+        savedTemplate.updateSourceCodes(List.of(savedFirstSourceCode, savedSecondSourceCode));
+        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
     }
 
     @Nested
@@ -140,15 +140,15 @@ class TemplateServiceSearchTest {
         }
 
         @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 파일명 중 하나라도 포함")
-        void findAllSnippetFilenameContainKeywordSuccess() {
+        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 파일명 중 하나라도 포함")
+        void findAllFilenameContainKeywordSuccess() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
             Category category = categoryRepository.save(new Category("category", member));
-            saveTemplateBySnippetFilename("tempate1", "login.js", "signup.js", member, category);
-            saveTemplateBySnippetFilename("tempate2", "login.java", "signup.java", member, category);
-            saveTemplateBySnippetFilename("tempate3", "login.js", "signup.java", member, category);
+            saveTemplateByFilename("tempate1", "login.js", "signup.js", member, category);
+            saveTemplateByFilename("tempate2", "login.java", "signup.java", member, category);
+            saveTemplateByFilename("tempate3", "login.js", "signup.java", member, category);
 
             //when
             FindAllTemplatesResponse templates = templateService.findAllBy(
@@ -160,15 +160,15 @@ class TemplateServiceSearchTest {
         }
 
         @Test
-        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 스니펫 코드 중 하나라도 포함")
-        void findAllSnippetContentContainKeywordSuccess() {
+        @DisplayName("템플릿 토픽 검색 성공 : 탬플릿 내에 소스 코드 중 하나라도 포함")
+        void findAllSourceCodeContainKeywordSuccess() {
             //given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             Member member = memberRepository.fetchById(memberDto.id());
             Category category = categoryRepository.save(new Category("category", member));
-            saveTemplateBySnippetContent("tempate1", "public Main {", "new Car();", member, category);
-            saveTemplateBySnippetContent("tempate2", "private Car", "public Movement", member, category);
-            saveTemplateBySnippetContent("tempate3", "console.log", "a+b=3", member, category);
+            saveTemplateBySourceCode("tempate1", "public Main {", "new Car();", member, category);
+            saveTemplateBySourceCode("tempate2", "private Car", "public Movement", member, category);
+            saveTemplateBySourceCode("tempate3", "console.log", "a+b=3", member, category);
 
             //when
             FindAllTemplatesResponse templates = templateService.findAllBy(
@@ -187,15 +187,15 @@ class TemplateServiceSearchTest {
             Member member = memberRepository.fetchById(memberDto.id());
             Category category = categoryRepository.save(new Category("category", member));
             CreateTemplateRequest request1 = new CreateTemplateRequest("타이틀", "Login 구현",
-                    List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)),
+                    List.of(new CreateSourceCodeRequest("filename1", "content1", 1),
+                            new CreateSourceCodeRequest("filename2", "content2", 2)),
                     1,
                     category.getId(),
                     List.of("tag1", "tag2"));
             saveTemplate(request1, member, category);
             CreateTemplateRequest request2 = new CreateTemplateRequest("타이틀", "Signup 구현",
-                    List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                            new CreateSnippetRequest("filename2", "content2", 2)),
+                    List.of(new CreateSourceCodeRequest("filename1", "content1", 1),
+                            new CreateSourceCodeRequest("filename2", "content2", 2)),
                     1,
                     category.getId(),
                     List.of("tag1", "tag2"));

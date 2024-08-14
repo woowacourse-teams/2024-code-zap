@@ -47,7 +47,7 @@ public class Template extends BaseTimeEntity {
     private Category category;
 
     @OneToMany(mappedBy = "template")
-    private List<Snippet> snippets = new ArrayList<>();
+    private List<SourceCode> sourceCodes = new ArrayList<>();
 
     public Template(Member member, String title, String description, Category category) {
         this.member = member;
@@ -62,12 +62,12 @@ public class Template extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void updateSnippets(List<Snippet> snippet) {
-        snippets.addAll(snippet);
+    public void updateSourceCodes(List<SourceCode> sourceCode) {
+        sourceCodes.addAll(sourceCode);
     }
 
-    public void deleteSnippet(Long deletedId) {
-        snippets.removeIf(snippet -> Objects.equals(snippet.getId(), deletedId));
+    public void deleteSourceCode(Long deletedId) {
+        sourceCodes.removeIf(sourceCode -> Objects.equals(sourceCode.getId(), deletedId));
     }
 
     @Override

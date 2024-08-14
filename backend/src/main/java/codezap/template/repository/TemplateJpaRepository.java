@@ -24,7 +24,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             (
                 t.title LIKE :keyword
@@ -41,7 +41,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             t.id in :templateIds AND
             (
@@ -60,7 +60,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             t.category.id = :categoryId AND
             (
@@ -79,7 +79,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             t.category.id = :categoryId AND
             t.id in :templateIds AND

@@ -9,9 +9,9 @@ import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-public record UpdateSnippetRequest(
-        @Schema(description = "스니펫 ID", example = "0")
-        @NotNull(message = "스니펫 ID가 null 입니다.")
+public record UpdateSourceCodeRequest(
+        @Schema(description = "소스 코드 ID", example = "0")
+        @NotNull(message = "소스 코드 ID가 null 입니다.")
         Long id,
 
         @Schema(description = "파일명", example = "Main.java")
@@ -24,8 +24,8 @@ public record UpdateSnippetRequest(
         @ByteLength(max = 65_535, message = "소스 코드는 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String content,
 
-        @Schema(description = "스니펫 순서", example = "1")
-        @NotNull(message = "스니펫 순서가 null 입니다.")
+        @Schema(description = "소스 코드 순서", example = "1")
+        @NotNull(message = "소스 코드 순서가 null 입니다.")
         int ordinal
 ) {
 }

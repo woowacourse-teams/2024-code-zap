@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-public class ThumbnailSnippet extends BaseTimeEntity {
+public class Thumbnail extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +30,15 @@ public class ThumbnailSnippet extends BaseTimeEntity {
     private Template template;
 
     @OneToOne(optional = false)
-    private Snippet snippet;
+    private SourceCode sourceCode;
 
-    public ThumbnailSnippet(Template template, Snippet snippet) {
+    public Thumbnail(Template template, SourceCode sourceCode) {
         this.template = template;
-        this.snippet = snippet;
+        this.sourceCode = sourceCode;
     }
 
-    public void updateThumbnailSnippet(Snippet snippet) {
-        this.snippet = snippet;
+    public void updateThumbnail(SourceCode sourceCode) {
+        this.sourceCode = sourceCode;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ThumbnailSnippet extends BaseTimeEntity {
         if (!thisEffectiveClass.equals(oEffectiveClass)) {
             return false;
         }
-        ThumbnailSnippet that = (ThumbnailSnippet) o;
+        Thumbnail that = (Thumbnail) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 

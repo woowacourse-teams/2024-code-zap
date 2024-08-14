@@ -19,27 +19,27 @@ import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.template.domain.Snippet;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.domain.ThumbnailSnippet;
-import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.domain.Thumbnail;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateSnippetRequest;
+import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.repository.FakeSnippetRepository;
+import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
-import codezap.template.repository.FakeThumbnailSnippetRepository;
-import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.FakeThumbnailRepository;
+import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailRepository;
 
 class TemplateServiceTest {
 
@@ -49,17 +49,17 @@ class TemplateServiceTest {
     private final Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SnippetRepository snippetRepository = new FakeSnippetRepository();
-    private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
+    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
+    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(
             List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
     private final TemplateService templateService = new TemplateService(
-            thumbnailSnippetRepository,
+            thumbnailRepository,
             templateRepository,
-            snippetRepository,
+            sourceCodeRepository,
             categoryRepository,
             tagRepository,
             templateTagRepository,
@@ -116,8 +116,8 @@ class TemplateServiceTest {
         // then
         assertAll(
                 () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
-                () -> assertThat(foundTemplate.snippets()).hasSize(
-                        snippetRepository.findAllByTemplate(template).size()),
+                () -> assertThat(foundTemplate.sourceCodes()).hasSize(
+                        sourceCodeRepository.findAllByTemplate(template).size()),
                 () -> assertThat(foundTemplate.category().id()).isEqualTo(template.getCategory().getId()),
                 () -> assertThat(foundTemplate.tags()).hasSize(2)
         );
@@ -156,8 +156,8 @@ class TemplateServiceTest {
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
         templateService.update(memberDto, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
-        List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
-        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.fetchById(template.getId());
+        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
+        Thumbnail thumbnail = thumbnailRepository.fetchById(template.getId());
         List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
                 .map(TemplateTag::getTag)
                 .toList();
@@ -165,8 +165,8 @@ class TemplateServiceTest {
         // then
         assertAll(
                 () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
-                () -> assertThat(thumbnailSnippet.getSnippet().getId()).isEqualTo(2L),
-                () -> assertThat(snippets).hasSize(3),
+                () -> assertThat(thumbnail.getSourceCode().getId()).isEqualTo(2L),
+                () -> assertThat(sourceCodes).hasSize(3),
                 () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(1L),
                 () -> assertThat(tags).hasSize(2),
                 () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
@@ -209,8 +209,8 @@ class TemplateServiceTest {
         // then
         assertAll(
                 () -> assertThat(templateRepository.findAll()).isEmpty(),
-                () -> assertThat(snippetRepository.findAll()).isEmpty(),
-                () -> assertThat(thumbnailSnippetRepository.findAll()).isEmpty()
+                () -> assertThat(sourceCodeRepository.findAll()).isEmpty(),
+                () -> assertThat(thumbnailRepository.findAll()).isEmpty()
         );
     }
 
@@ -231,8 +231,8 @@ class TemplateServiceTest {
         // then
         assertAll(
                 () -> assertThat(templateRepository.findAll()).isEmpty(),
-                () -> assertThat(snippetRepository.findAll()).isEmpty(),
-                () -> assertThat(thumbnailSnippetRepository.findAll()).isEmpty()
+                () -> assertThat(sourceCodeRepository.findAll()).isEmpty(),
+                () -> assertThat(thumbnailRepository.findAll()).isEmpty()
         );
     }
 
@@ -278,8 +278,8 @@ class TemplateServiceTest {
                 title,
                 "description",
                 List.of(
-                        new CreateSnippetRequest("filename1", "content1", 1),
-                        new CreateSnippetRequest("filename2", "content2", 2)
+                        new CreateSourceCodeRequest("filename1", "content1", 1),
+                        new CreateSourceCodeRequest("filename2", "content2", 2)
                 ),
                 1,
                 1L,
@@ -292,11 +292,11 @@ class TemplateServiceTest {
                 "updateTitle",
                 "description",
                 List.of(
-                        new CreateSnippetRequest("filename3", "content3", 2),
-                        new CreateSnippetRequest("filename4", "content4", 3)
+                        new CreateSourceCodeRequest("filename3", "content3", 2),
+                        new CreateSourceCodeRequest("filename4", "content4", 3)
                 ),
                 List.of(
-                        new UpdateSnippetRequest(2L, "filename2", "content2", 1)
+                        new UpdateSourceCodeRequest(2L, "filename2", "content2", 1)
                 ),
                 List.of(1L),
                 categoryId,
@@ -314,9 +314,9 @@ class TemplateServiceTest {
                         savedCategory
                 )
         );
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
-        snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", "content1", 1));
+        sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
+        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
         createTemplateRequest.tags().stream()
                 .map(Tag::new)
                 .map(tagRepository::save)

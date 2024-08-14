@@ -3,9 +3,9 @@ package codezap.global.validation;
 public class ValidationGroups {
     public interface NotNullGroup {}
 
-    public interface SnippetOrdinalGroup {}
+    public interface SourceCodeOrdinalGroup {}
 
-    public interface SnippetCountGroup {}
+    public interface SourceCodeCountGroup {}
 
     public interface SizeCheckGroup {}
 }
