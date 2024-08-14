@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import codezap.member.dto.MemberDto;
 import codezap.member.service.MemberService;
+import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -26,5 +27,10 @@ public class TemplateApplicationService {
     ) {
         memberService.validateMemberIdentity(memberDto, memberId);
         return templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+    }
+
+    public FindAllTagsResponse findAllTagsByMemberId(MemberDto memberDto, Long memberId) {
+        memberService.validateMemberIdentity(memberDto, memberId);
+        return templateService.findAllTagsByMemberId(memberId);
     }
 }

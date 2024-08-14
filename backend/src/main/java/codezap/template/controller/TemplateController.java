@@ -74,7 +74,7 @@ public class TemplateController implements SpringDocTemplateController {
             @BasicAuthentication MemberDto memberDto,
             @RequestParam Long memberId
     ) {
-        FindAllTagsResponse response = templateService.findAllTagsByMemberId(memberId);
+        FindAllTagsResponse response = applicationService.findAllTagsByMemberId(memberDto, memberId);
         return ResponseEntity.ok(response);
     }
 
