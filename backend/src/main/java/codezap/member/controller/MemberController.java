@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import codezap.member.configuration.BasicAuthentication;
+import codezap.member.configuration.AuthenticationPrinciple;
 import codezap.member.dto.request.LoginRequest;
 import codezap.member.dto.response.LoginResponse;
 import codezap.member.dto.MemberDto;
@@ -91,7 +91,7 @@ public class MemberController implements SpringDocMemberController {
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<FindMemberResponse> findMember(@BasicAuthentication MemberDto memberDto, @PathVariable Long id) {
+    public ResponseEntity<FindMemberResponse> findMember(@AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id) {
         throw new NotImplementedException("접근이 불가능한 기능입니다. 서버 개발자에게 문의해주세요.");
     }
 
