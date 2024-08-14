@@ -13,12 +13,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import org.hibernate.Hibernate;
+
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,7 +27,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode(callSuper = false)
 public class Template extends BaseTimeEntity {
 
     @Id
@@ -68,5 +68,28 @@ public class Template extends BaseTimeEntity {
 
     public void deleteSnippet(Long deletedId) {
         snippets.removeIf(snippet -> Objects.equals(snippet.getId(), deletedId));
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public final boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null) {
+            return false;
+        }
+        Class<?> oEffectiveClass = Hibernate.getClass(o);
+        Class<?> thisEffectiveClass = Hibernate.getClass(this);
+        if (!thisEffectiveClass.equals(oEffectiveClass)) {
+            return false;
+        }
+        Template template = (Template) o;
+        return getId() != null && Objects.equals(getId(), template.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Hibernate.getClass(this).hashCode();
     }
 }
