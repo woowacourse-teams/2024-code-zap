@@ -259,6 +259,18 @@ public class TemplateService {
         }
     }
 
+    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
+        List<Template> byMemberId = templateRepository.findByMemberId(memberId);
+        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(byMemberId);
+        return new FindAllTagsResponse(
+                templateTags.stream()
+                        .map(TemplateTag::getTag)
+                        .distinct()
+                        .map(FindTagResponse::from)
+                        .toList()
+        );
+    }
+
     @Transactional
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
@@ -278,17 +290,5 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
-        List<Template> byMemberId = templateRepository.findByMemberId(memberId);
-        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(byMemberId);
-        return new FindAllTagsResponse(
-                templateTags.stream()
-                        .map(TemplateTag::getTag)
-                        .distinct()
-                        .map(FindTagResponse::from)
-                        .toList()
-        );
     }
 }
