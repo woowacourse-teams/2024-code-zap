@@ -226,7 +226,6 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) throws Exception {
-            MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
