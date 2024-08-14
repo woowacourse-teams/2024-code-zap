@@ -9,13 +9,11 @@ public interface TagRepository {
 
     Tag fetchById(Long id);
 
-    boolean existsByName(String name);
-
     Tag fetchByName(String name);
 
     Optional<Tag> findByName(String name);
 
-    List<Tag> findByIdIn(List<Long> tagIds);
+    boolean existsByName(String name);
 
     Tag save(Tag tag);
 

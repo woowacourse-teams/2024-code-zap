@@ -17,8 +17,6 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 태그가 존재하지 않습니다."));
     }
 
-    boolean existsByName(String name);
-
     default Tag fetchByName(String name) {
         return findByName(name).orElseThrow(
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
@@ -26,5 +24,5 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
 
     Optional<Tag> findByName(String name);
 
-    List<Tag> findByNameIn(List<String> tagNames);
+    boolean existsByName(String name);
 }

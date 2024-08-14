@@ -21,8 +21,6 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
     }
 
-    boolean existsByCategoryId(Long categoryId);
-
     List<Template> findByMemberId(Long id);
 
     @Query("""
@@ -101,17 +99,5 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
             Pageable pageable
     );
 
-    Page<Template> findBy(Pageable pageable);
-
-    Page<Template> findByCategoryId(Pageable pageable, Long categoryId);
-
-    Page<Template> findByIdIn(PageRequest pageRequest, List<Long> templateIds);
-
-    Page<Template> findByIdInAndCategoryId(PageRequest pageRequest, List<Long> templateIds, Long categoryId);
-
-    long countByCategoryId(Long categoryId);
-
-    long countByIdInAndCategoryId(List<Long> templateIds, Long categoryId);
-
-    long countByIdIn(List<Long> templateIds);
+    boolean existsByCategoryId(Long categoryId);
 }

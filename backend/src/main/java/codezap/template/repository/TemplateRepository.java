@@ -11,8 +11,6 @@ public interface TemplateRepository {
 
     Template fetchById(Long id);
 
-    boolean existsByCategoryId(Long categoryId);
-
     List<Template> findAll();
 
     List<Template> findByMemberId(Long id);
@@ -24,6 +22,8 @@ public interface TemplateRepository {
     Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable);
 
     Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable);
+
+    boolean existsByCategoryId(Long categoryId);
 
     Template save(Template template);
 

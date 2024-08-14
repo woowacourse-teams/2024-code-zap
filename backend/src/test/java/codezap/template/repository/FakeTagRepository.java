@@ -46,11 +46,6 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
-    public List<Tag> findByIdIn(List<Long> tagIds) {
-        return tags.stream().filter(tag -> tagIds.contains(tag.getId())).toList();
-    }
-
-    @Override
     public Tag save(Tag entity) {
         var saved = new Tag(
                 getOrGenerateId(entity),

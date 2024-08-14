@@ -9,8 +9,6 @@ import codezap.template.domain.Template;
 public interface SnippetRepository {
     Snippet fetchById(Long id);
 
-    List<Snippet> findAll();
-
     List<Snippet> findAllByTemplate(Template template);
 
     Snippet fetchByTemplateAndOrdinal(Template template, int ordinal);
@@ -18,6 +16,8 @@ public interface SnippetRepository {
     Optional<Snippet> findByTemplateAndOrdinal(Template template, int ordinal);
 
     List<Snippet> findAllByTemplateAndOrdinal(Template template, int ordinal);
+
+    List<Snippet> findAll();
 
     Snippet save(Snippet snippet);
 

@@ -10,8 +10,8 @@ import codezap.template.domain.Template;
 import codezap.template.domain.ThumbnailSnippet;
 
 @SuppressWarnings("unused")
-public interface ThumbnailSnippetJpaRepository extends ThumbnailSnippetRepository,
-        JpaRepository<ThumbnailSnippet, Long> {
+public interface ThumbnailSnippetJpaRepository extends
+        ThumbnailSnippetRepository, JpaRepository<ThumbnailSnippet, Long> {
 
     default ThumbnailSnippet fetchById(Long id) {
         return findById(id).orElseThrow(

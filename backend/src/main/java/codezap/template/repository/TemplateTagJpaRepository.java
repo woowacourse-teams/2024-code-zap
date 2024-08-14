@@ -13,8 +13,6 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
 
     List<TemplateTag> findAllByTemplate(Template template);
 
-    void deleteAllByTemplateId(Long id);
-
     List<TemplateTag> findByTemplateIn(List<Template> templates);
 
     @Query("""
@@ -25,4 +23,6 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             HAVING COUNT(DISTINCT tt.id.tagId) = :tagSize
             """)
     List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize);
+
+    void deleteAllByTemplateId(Long id);
 }
