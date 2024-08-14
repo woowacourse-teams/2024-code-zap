@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.LoginRequest;
-import codezap.member.dto.LoginResponse;
+import codezap.member.dto.request.LoginRequest;
+import codezap.member.dto.response.LoginResponse;
 import codezap.member.dto.MemberDto;
-import codezap.member.dto.SignupRequest;
+import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.request.UpdateMemberProfileRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.dto.response.UpdateMemberProfileResponse;

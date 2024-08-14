@@ -9,9 +9,9 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.LoginRequest;
+import codezap.member.dto.request.LoginRequest;
 import codezap.member.dto.MemberDto;
-import codezap.member.dto.SignupRequest;
+import codezap.member.dto.request.SignupRequest;
 import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 

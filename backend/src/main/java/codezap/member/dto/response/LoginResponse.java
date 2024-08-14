@@ -1,4 +1,4 @@
-package codezap.member.dto;
+package codezap.member.dto.response;
 
 public record LoginResponse(
         long memberId,

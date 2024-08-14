@@ -21,9 +21,9 @@ import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.LoginRequest;
+import codezap.member.dto.request.LoginRequest;
 import codezap.member.dto.MemberDto;
-import codezap.member.dto.SignupRequest;
+import codezap.member.dto.request.SignupRequest;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
