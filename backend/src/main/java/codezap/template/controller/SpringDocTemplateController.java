@@ -51,7 +51,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "이름에 맞는 태그가 없는 경우", exampleMessage = "이름이 tag1인 태그는 존재하지 않습니다."),
             @ErrorCase(description = "해당 순서인 스니펫 없는 경우", exampleMessage = "템플릿에 1번째 스니펫이 존재하지 않습니다."),
     })
-    ResponseEntity<Void> createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
+    ResponseEntity<Void> createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 검색", description = """

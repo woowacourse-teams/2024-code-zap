@@ -285,6 +285,7 @@ class CategoryControllerTest {
         void updateCategoryFailWithLongName() throws Exception {
             // given
             templateService.createTemplate(
+                    MemberDtoFixture.getFirstMemberDto(),
                     new CreateTemplateRequest(
                             "title",
                             "description",
@@ -292,8 +293,7 @@ class CategoryControllerTest {
                             1,
                             savedCategoryId,
                             List.of("tag1", "tag2")
-                    ),
-                    MemberDtoFixture.getFirstMemberDto()
+                    )
             );
 
             // when & then
