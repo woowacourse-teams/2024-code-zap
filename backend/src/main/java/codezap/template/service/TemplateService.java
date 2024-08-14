@@ -52,7 +52,7 @@ public class TemplateService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto) {
+    public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
         Member member = memberRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);

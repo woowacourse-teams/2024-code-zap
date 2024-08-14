@@ -39,10 +39,10 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping
     public ResponseEntity<Void> createTemplate(
-            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest,
-            @BasicAuthentication MemberDto memberDto
+            @BasicAuthentication MemberDto memberDto,
+            @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        Long createdTemplateId = templateService.createTemplate(createTemplateRequest, memberDto);
+        Long createdTemplateId = templateService.createTemplate(memberDto, createTemplateRequest);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }

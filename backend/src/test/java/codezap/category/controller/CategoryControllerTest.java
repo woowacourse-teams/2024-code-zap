@@ -91,7 +91,8 @@ class CategoryControllerTest {
 
     @BeforeEach
     void setting() {
-        String basicAuth = HttpHeaders.encodeBasicAuth(firstMember.getEmail(), firstMember.getPassword(), StandardCharsets.UTF_8);
+        String basicAuth = HttpHeaders.encodeBasicAuth(firstMember.getEmail(), firstMember.getPassword(),
+                StandardCharsets.UTF_8);
         cookie = new Cookie("Authorization", basicAuth);
     }
 
@@ -185,7 +186,8 @@ class CategoryControllerTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
 
             // when
-            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(),
+                    StandardCharsets.UTF_8);
             cookie = new Cookie("Authorization", basicAuth);
 
             mvc.perform(put("/categories/" + savedCategoryId)
@@ -258,7 +260,8 @@ class CategoryControllerTest {
         @Test
         @DisplayName("카테고리 삭제 실패: 권한 없음")
         void deleteCategoryFailWithUnauthorized() throws Exception {
-            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
+            String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(),
+                    StandardCharsets.UTF_8);
             cookie = new Cookie("Authorization", basicAuth);
 
             mvc.perform(delete("/categories/" + savedCategoryId)
@@ -285,6 +288,7 @@ class CategoryControllerTest {
         void updateCategoryFailWithLongName() throws Exception {
             // given
             templateService.createTemplate(
+                    MemberDtoFixture.getFirstMemberDto(),
                     new CreateTemplateRequest(
                             "title",
                             "description",
@@ -292,8 +296,7 @@ class CategoryControllerTest {
                             1,
                             savedCategoryId,
                             List.of("tag1", "tag2")
-                    ),
-                    MemberDtoFixture.getFirstMemberDto()
+                    )
             );
 
             // when & then
