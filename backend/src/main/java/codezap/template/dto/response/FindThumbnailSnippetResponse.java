@@ -4,11 +4,11 @@ import codezap.template.domain.Snippet;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindThumbnailSnippetResponse(
-        @Schema(description = "파일 이름", example = "Main.java")
+        @Schema(description = "썸네일 파일명", example = "Main.java")
         String filename,
 
-        @Schema(description = "목록 조회 시 보여질 코드", example = "public class Main { // ...")
-        String thumbnailContent
+        @Schema(description = "썸네일 소스 코드", example = "public class Main { // ...")
+        String content
 ) {
     public static FindThumbnailSnippetResponse from(Snippet snippet) {
         return new FindThumbnailSnippetResponse(

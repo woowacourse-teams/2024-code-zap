@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import codezap.CodeZapApplication;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
@@ -51,7 +50,8 @@ class TemplateServiceTest {
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();
     private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory, secondCategory));
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
+            List.of(firstCategory, secondCategory));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
@@ -72,7 +72,7 @@ class TemplateServiceTest {
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Long id = templateService.createTemplate(createTemplateRequest, memberDto);
+        Long id = templateService.createTemplate(memberDto, createTemplateRequest);
         Template template = templateRepository.fetchById(id);
 
         // then
@@ -136,7 +136,7 @@ class TemplateServiceTest {
         // then
         assertThatCode(() -> templateService.findByIdAndMember(template.getId(), otherMemberDto))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     @Test
@@ -151,7 +151,7 @@ class TemplateServiceTest {
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 1L);
-        templateService.update(template.getId(), updateTemplateRequest, memberDto);
+        templateService.update(memberDto, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
         ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.fetchById(template.getId());
@@ -185,9 +185,9 @@ class TemplateServiceTest {
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest("updateTitle", 2L);
 
         // then
-        assertThatCode(() -> templateService.update(template.getId(), updateTemplateRequest, otherMemberDto))
+        assertThatCode(() -> templateService.update(otherMemberDto, template.getId(), updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     @Test
@@ -200,7 +200,7 @@ class TemplateServiceTest {
         saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        templateService.deleteById(1L, memberDto);
+        templateService.deleteByIds(memberDto, List.of(1L));
 
         // then
         assertAll(
@@ -223,9 +223,9 @@ class TemplateServiceTest {
         MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
 
         // then
-        assertThatCode(() -> templateService.deleteById(1L, otherMemberDto))
+        assertThatCode(() -> templateService.deleteByIds(otherMemberDto, List.of(1L)))
                 .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없는 유저입니다.");
+                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     private CreateTemplateRequest makeTemplateRequest(String title) {
@@ -236,6 +236,7 @@ class TemplateServiceTest {
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
                 ),
+                1,
                 1L,
                 List.of("tag1", "tag2")
         );
@@ -277,47 +278,5 @@ class TemplateServiceTest {
                 .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
 
         return savedTemplate;
-    }
-
-    private void saveTemplateBySnippetFilename(String templateTitle, String firstFilename, String secondFilename) {
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        Category category = categoryRepository.save(new Category("category", member));
-        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                templateTitle, "설명",
-                List.of(
-                        new CreateSnippetRequest(firstFilename, "content1", 1),
-                        new CreateSnippetRequest(secondFilename, "content2", 2)
-                ),
-                category.getId(),
-                List.of()
-        );
-        Template savedTemplate = templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, firstFilename, "content1", 1));
-        snippetRepository.save(new Snippet(savedTemplate, secondFilename, "content2", 2));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
-    }
-
-    private void saveTemplateBySnippetContent(String templateTitle, String firstContent, String secondContent) {
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        Category category = categoryRepository.save(new Category("category", member));
-        CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                templateTitle, "설명",
-                List.of(
-                        new CreateSnippetRequest("filename1", firstContent, 1),
-                        new CreateSnippetRequest("filename2", secondContent, 2)
-                ),
-                category.getId(),
-                List.of()
-        );
-        Template savedTemplate = templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", firstContent, 1));
-        snippetRepository.save(new Snippet(savedTemplate, "filename2", secondContent, 2));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
     }
 }

@@ -111,6 +111,7 @@ class TemplateControllerTest {
                     maxTitle,
                     repeatTarget.repeat(maxLength),
                     List.of(new CreateSnippetRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -131,6 +132,7 @@ class TemplateControllerTest {
                     maxTitle,
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -150,6 +152,7 @@ class TemplateControllerTest {
                     exceededTitle,
                     "description",
                     List.of(new CreateSnippetRequest("a", "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -160,7 +163,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
         }
 
         @Test
@@ -171,6 +174,7 @@ class TemplateControllerTest {
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest(exceededTitle, "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -181,7 +185,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -192,6 +196,7 @@ class TemplateControllerTest {
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest("title", repeatTarget.repeat(exceededLength), 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -202,7 +207,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -213,6 +218,7 @@ class TemplateControllerTest {
                     "title",
                     repeatTarget.repeat(exceededLength),
                     List.of(new CreateSnippetRequest("title", "content", 1)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -230,12 +236,12 @@ class TemplateControllerTest {
         @DisplayName("템플릿 생성 실패: 잘못된 스니펫 순서 입력")
         @CsvSource({"0, 1", "1, 3", "2, 1"})
         void createTemplateFailWithWrongSnippetOrdinal(int firstIndex, int secondIndex) throws Exception {
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
                     List.of(new CreateSnippetRequest("title", "content", firstIndex),
                             new CreateSnippetRequest("title", "content", secondIndex)),
+                    1,
                     1L,
                     List.of("tag1", "tag2")
             );
@@ -257,8 +263,8 @@ class TemplateControllerTest {
         MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
         CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSnippets("title1");
         CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSnippets("title2");
-        templateService.createTemplate(templateRequest1, memberDto);
-        templateService.createTemplate(templateRequest2, memberDto);
+        templateService.createTemplate(memberDto, templateRequest1);
+        templateService.createTemplate(memberDto, templateRequest2);
 
         // when & then
         mvc.perform(get("/templates")
@@ -282,7 +288,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest, memberDto);
+            templateService.createTemplate(memberDto, templateRequest);
 
             // when & then
             mvc.perform(get("/templates/1")
@@ -315,7 +321,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest, memberDto);
+            templateService.createTemplate(memberDto, templateRequest);
 
             // when
             String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
@@ -327,7 +333,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
     }
 
@@ -395,7 +401,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 
         @Test
@@ -426,7 +432,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
         }
 
         @Test
@@ -457,7 +463,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -488,7 +494,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일 내용은 최대 65,535 Byte까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
         }
 
         @ParameterizedTest
@@ -560,7 +566,7 @@ class TemplateControllerTest {
             categoryService.create(new CreateCategoryRequest("category1"), memberDto);
             categoryService.create(new CreateCategoryRequest("category2"), memberDto);
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest, memberDto);
+            templateService.createTemplate(memberDto, templateRequest);
         }
     }
 
@@ -575,7 +581,7 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest, memberDto);
+            templateService.createTemplate(memberDto, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -592,7 +598,7 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(new CreateCategoryRequest("category"), memberDto);
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSnippets("title");
-            templateService.createTemplate(templateRequest, memberDto);
+            templateService.createTemplate(memberDto, templateRequest);
 
             // when
             String basicAuth = HttpHeaders.encodeBasicAuth(secondMember.getEmail(), secondMember.getPassword(), StandardCharsets.UTF_8);
@@ -604,7 +610,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없는 유저입니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 
         @Test
@@ -627,6 +633,7 @@ class TemplateControllerTest {
                         new CreateSnippetRequest("filename1", "content1", 1),
                         new CreateSnippetRequest("filename2", "content2", 2)
                 ),
+                1,
                 1L,
                 List.of("tag1", "tag2")
         );
