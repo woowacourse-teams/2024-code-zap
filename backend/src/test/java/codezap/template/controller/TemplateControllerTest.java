@@ -248,9 +248,8 @@ class TemplateControllerTest {
         @Test
         @DisplayName("템플릿 생성 실패: 인증 정보가 없거나 잘못된 경우")
         void createTemplateFailWithNotLogin() throws Exception {
-            String maxTitle = "title";
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    maxTitle,
+                    "title",
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
                     1,
@@ -269,9 +268,8 @@ class TemplateControllerTest {
         @Test
         @DisplayName("템플릿 생성 실패: 카테고리 권한이 없는 경우")
         void createTemplateFailWithNoMatchCategory() throws Exception {
-            String maxTitle = "title";
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    maxTitle,
+                    "title",
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
                     1,
@@ -291,9 +289,8 @@ class TemplateControllerTest {
         @Test
         @DisplayName("템플릿 생성 실패: 카테고리가 없는 경우")
         void createTemplateFailWithNotCategory() throws Exception {
-            String maxTitle = "title";
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    maxTitle,
+                    "title",
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
                     1,
@@ -313,9 +310,8 @@ class TemplateControllerTest {
         @Test
         @DisplayName("템플릿 생성 실패: 해당 순서인 스니펫 없는 경우")
         void createTemplateFailWithNotSnippet() throws Exception {
-            String maxTitle = "title";
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
-                    maxTitle,
+                    "title",
                     "description",
                     List.of(new CreateSnippetRequest("filename", "content", 1)),
                     10,
