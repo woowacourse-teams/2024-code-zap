@@ -67,8 +67,11 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
 
     private MediaType makeMediaType(ApiErrorResponse apiErrorResponse) {
         MediaType mediaType = new MediaType();
-        Arrays.stream(apiErrorResponse.errorCases()).forEach(
-                errorCase -> mediaType.addExamples(errorCase.description(), makeExample(apiErrorResponse, errorCase)));
+        ErrorCase[] errorCases = apiErrorResponse.errorCases();
+        for (ErrorCase errorCase : errorCases) {
+            Example example = makeExample(apiErrorResponse, errorCase);
+            mediaType.addExamples(errorCase.description(), example);
+        }
         return mediaType;
     }
 
