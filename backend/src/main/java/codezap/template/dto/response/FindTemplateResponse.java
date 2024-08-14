@@ -28,9 +28,9 @@ public record FindTemplateResponse(
         @Schema(description = "태그 목록")
         List<FindTagResponse> tags,
 
-        @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00", type = "string")
+        @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
         LocalDateTime createdAt,
-        @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
+        @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
     public static FindTemplateResponse of(Template template, List<Snippet> snippets, List<Tag> tags) {
