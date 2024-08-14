@@ -179,10 +179,7 @@ public class TemplateService {
     }
 
     private Snippet getThumbnailSnippet(Template template) {
-        return thumbnailSnippetRepository.findByTemplate(template).orElseThrow(
-                        () -> new CodeZapException(HttpStatus.NOT_FOUND,
-                                "템플릿 식별자 " + template.getId() + "에 해당하는 썸네일 스니펫이 없습니다."))
-                .getSnippet();
+        return thumbnailSnippetRepository.fetchByTemplate(template).getSnippet();
     }
 
     @Transactional
@@ -207,8 +204,7 @@ public class TemplateService {
                         .toList()
         );
 
-        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template)
-                .orElseThrow(this::throwNotFoundThumbnailSnippet);
+        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.fetchByTemplate(template);
 
         if (isThumbnailSnippetDeleted(updateTemplateRequest, thumbnailSnippet)) {
             updateThumbnailSnippet(template, thumbnailSnippet);
@@ -282,10 +278,6 @@ public class TemplateService {
         snippetRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    private CodeZapException throwNotFoundThumbnailSnippet() {
-        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
     }
 
     public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {

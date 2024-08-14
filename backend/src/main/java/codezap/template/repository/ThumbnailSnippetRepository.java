@@ -10,6 +10,8 @@ public interface ThumbnailSnippetRepository {
 
     ThumbnailSnippet fetchById(Long id);
 
+    ThumbnailSnippet fetchByTemplate(Template template);
+
     Optional<ThumbnailSnippet> findByTemplate(Template template);
 
     List<ThumbnailSnippet> findAll();

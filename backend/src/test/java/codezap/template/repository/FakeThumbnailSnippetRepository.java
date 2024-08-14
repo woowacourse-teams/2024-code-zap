@@ -32,6 +32,13 @@ public class FakeThumbnailSnippetRepository implements ThumbnailSnippetRepositor
     }
 
     @Override
+    public ThumbnailSnippet fetchByTemplate(Template template) {
+        return findByTemplate(template).orElseThrow(
+                () -> new CodeZapException(HttpStatus.NOT_FOUND,
+                        "템플릿 식별자 " + template.getId() + "에 해당하는 썸네일 스니펫이 없습니다."));
+    }
+
+    @Override
     public Optional<ThumbnailSnippet> findByTemplate(Template template) {
         return thumbnailSnippets.stream()
                 .filter(thumbnailSnippet -> Objects.equals(thumbnailSnippet.getTemplate(), template))

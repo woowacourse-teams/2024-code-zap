@@ -18,6 +18,12 @@ public interface ThumbnailSnippetJpaRepository extends
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 썸네일 스니펫이 존재하지 않습니다."));
     }
 
+    default ThumbnailSnippet fetchByTemplate(Template template) {
+        return findByTemplate(template).orElseThrow(
+                () -> new CodeZapException(HttpStatus.NOT_FOUND,
+                        "템플릿 식별자 " + template.getId() + "에 해당하는 썸네일 스니펫이 없습니다."));
+    }
+
     Optional<ThumbnailSnippet> findByTemplate(Template template);
 
     void deleteByTemplateId(Long id);
