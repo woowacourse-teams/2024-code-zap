@@ -15,8 +15,6 @@ import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,8 +48,8 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
             @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-            @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
-            @ErrorCase(description = "스니펫이 없는 경우", exampleMessage = "식별자 1에 해당하는 스니펫이 존재하지 않습니다."),
+            @ErrorCase(description = "이름에 맞는 태그가 없는 경우", exampleMessage = "이름이 tag1인 태그는 존재하지 않습니다."),
+            @ErrorCase(description = "해당 순서인 스니펫 없는 경우", exampleMessage = "템플릿에 1번째 스니펫이 존재하지 않습니다."),
     })
     ResponseEntity<Void> createTemplate(CreateTemplateRequest createTemplateRequest, MemberDto memberDto);
 
@@ -83,7 +81,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
             instance = "/templates?memberId=1&keyword=\"java\"", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
-            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "자신의 템플릿들만 조회할 수 있습니다."),
+            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND,
             instance = "/templates?memberId=1&keyword=\"java\"&categoryId=1&tagIds=1,2", errorCases = {
@@ -112,7 +110,6 @@ public interface SpringDocTemplateController {
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
-            @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(MemberDto memberDto, Long id);
 
@@ -144,8 +141,8 @@ public interface SpringDocTemplateController {
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿들을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "템플릿을 수정할 권한이 없는 경우", exampleMessage = "해당 템플릿에 대한 권한이 없는 유저입니다."),
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1,1", errorCases = {
+            @ErrorCase(description = "템플릿 ID가 중복된 경우", exampleMessage = "삭제하고자 하는 템플릿 ID가 중복되었습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
@@ -154,9 +151,6 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
             @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.GONE, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "해당하는 id 값이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     ResponseEntity<Void> deleteTemplates(MemberDto memberDto, List<Long> ids);
 }
