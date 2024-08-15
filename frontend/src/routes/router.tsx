@@ -1,17 +1,10 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import {
-  TemplatePage,
-  MyTemplatePage,
-  TemplateUploadPage,
-  SignupPage,
-  LoginPage,
-  LandingPage,
-  NotFoundPage,
-} from '@/pages';
+import { TemplatePage, TemplateUploadPage, SignupPage, LoginPage, LandingPage, NotFoundPage } from '@/pages';
 import AuthGuard from './AuthGuard';
 import GuestGuard from './GuestGuard';
+import HomeRouter from './HomeRouter';
 
 const router = createBrowserRouter([
   {
@@ -22,7 +15,7 @@ const router = createBrowserRouter([
         path: '/',
         element: (
           <GuestGuard>
-            <MyTemplatePage />
+            <HomeRouter />
           </GuestGuard>
         ),
       },

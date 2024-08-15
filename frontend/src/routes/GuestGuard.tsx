@@ -1,5 +1,4 @@
 import { ReactNode, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
 
 import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication';
@@ -34,10 +33,6 @@ const GuestGuard = ({ children }: GuestGuardProps) => {
       }
     }
   }, [isLogin, infoAlert]);
-
-  if (!isLogin) {
-    return <Navigate to='/login' />;
-  }
 
   return children;
 };
