@@ -1,4 +1,4 @@
-package codezap.auth;
+package codezap.auth.provider.basic;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

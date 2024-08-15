@@ -1,4 +1,4 @@
-package codezap.auth.provider;
+package codezap.auth.provider.basic;
 
 import java.nio.charset.StandardCharsets;
 
@@ -6,7 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import codezap.auth.BasicAuthDecoder;
+import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;

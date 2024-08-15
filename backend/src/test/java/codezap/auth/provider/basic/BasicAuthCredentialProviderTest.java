@@ -1,4 +1,4 @@
-package codezap.auth.provider;
+package codezap.auth.provider.basic;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
