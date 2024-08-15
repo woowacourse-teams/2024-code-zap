@@ -46,15 +46,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
 
-    if (refetchSuccess) {
-      localStorage.setItem('username', String(memberInfo.username));
-      localStorage.setItem('memberId', String(memberInfo.memberId));
+    if (refetchSuccess && savedUsername && savedUsername) {
       setIsLogin(true);
 
       return true;
     }
 
-    if (error) {
+    if ((error && savedUsername === undefined) || savedMemberId === undefined) {
       localStorage.removeItem('username');
       localStorage.removeItem('memberId');
       setIsLogin(false);

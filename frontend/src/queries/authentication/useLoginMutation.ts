@@ -23,6 +23,7 @@ export const useLoginMutation = () => {
         localStorage.setItem('username', String(res.username));
         localStorage.setItem('memberId', String(res.memberId));
         handleMemberInfo(res);
+        handleLoginState(true);
         navigate('/');
         successAlert('로그인 성공!');
       }
