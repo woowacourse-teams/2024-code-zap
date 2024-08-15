@@ -16,7 +16,7 @@ import codezap.global.exception.CodeZapException;
 @Component
 public class CookieCredentialManager implements CredentialManager {
 
-    private final String CREDENTIAL_COOKIE_NAME = "credential";
+    private static final String CREDENTIAL_COOKIE_NAME = "credential";
 
     @Override
     public String getCredential(final HttpServletRequest httpServletRequest) {
@@ -55,8 +55,9 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public void removeCredential(final HttpServletResponse httpServletResponse) {
-        Cookie cookie = new Cookie(CREDENTIAL_COOKIE_NAME, null);
-        cookie.setMaxAge(0);
-        httpServletResponse.addCookie(cookie);
+        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME)
+                .maxAge(0)
+                .build();
+        httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
     }
 }

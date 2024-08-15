@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Objects;
 
@@ -89,6 +88,8 @@ class CookieCredentialManagerTest {
 
         cookieCredentialManager.removeCredential(response);
 
-        assertNull(response.getCookie("credencial"));
+        assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
     }
 }
