@@ -54,7 +54,7 @@ const TemplateCard = ({ template }: Props) => {
         </Flex>
 
         <SyntaxHighlighter
-          language={getLanguageByFilename(thumbnailSnippet?.filename)}
+          language={getLanguageByFilename(thumbnailSnippet?.filename ?? '')}
           style={oneLight}
           showLineNumbers={true}
           customStyle={{ margin: '1rem 0', borderRadius: '8px', width: '100%', tabSize: 2 }}
