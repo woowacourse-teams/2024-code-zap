@@ -39,7 +39,7 @@ const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) 
   }, [checkAlreadyLogin, handleLoginState, infoAlert, isLoginRequired, navigate, redirectTo]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return null;
   }
 
   return children;
