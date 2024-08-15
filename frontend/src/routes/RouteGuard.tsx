@@ -10,32 +10,31 @@ type RouteGuardProps = {
 };
 
 const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) => {
-  const { checkAlreadyLogin } = useAuth();
-  const [isChecking, setIsChecking] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const { isLogin, handleLoginState, checkAlreadyLogin } = useAuth();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const checkLogin = async () => {
       const result = await checkAlreadyLogin();
 
-      setIsLoggedIn(result);
-      setIsChecking(false);
+      handleLoginState(result);
+      setIsLoading(false);
     };
 
     checkLogin();
   }, []);
 
-  if (isChecking) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (isLoginRequired && !isLoggedIn) {
+  if (isLoginRequired && !isLogin) {
     console.log('로그인되지 않은 사용자입니다.');
 
     return <Navigate to={redirectTo} />;
   }
 
-  if (!isLoginRequired && isLoggedIn) {
+  if (!isLoginRequired && isLogin) {
     console.log('이미 로그인된 사용자입니다.');
 
     return <Navigate to={redirectTo} />;
