@@ -32,8 +32,14 @@ export const CategoryButtonWrapper = styled.button`
 
   position: relative;
 
+  overflow: hidden;
+
   width: 12.5rem;
   height: var(--button_height_D);
+  padding: 0.5rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   background-color: white;
   border-radius: 8px;
