@@ -10,8 +10,7 @@ import {
   LandingPage,
   NotFoundPage,
 } from '@/pages';
-import AuthGuard from './AuthGuard';
-import GuestGuard from './GuestGuard';
+import RouteGuard from './RouteGuard';
 
 const router = createBrowserRouter([
   {
@@ -21,49 +20,49 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: (
-          <GuestGuard>
+          <RouteGuard isLoginRequired redirectTo='/login'>
             <MyTemplatePage />
-          </GuestGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'templates/:id',
         element: (
-          <GuestGuard>
+          <RouteGuard isLoginRequired redirectTo='/login'>
             <TemplatePage />
-          </GuestGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'templates/upload',
         element: (
-          <GuestGuard>
+          <RouteGuard isLoginRequired redirectTo='/login'>
             <TemplateUploadPage />
-          </GuestGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'signup',
         element: (
-          <AuthGuard>
+          <RouteGuard isLoginRequired={false} redirectTo='/'>
             <SignupPage />
-          </AuthGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'login',
         element: (
-          <AuthGuard>
+          <RouteGuard isLoginRequired={false} redirectTo='/'>
             <LoginPage />
-          </AuthGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'home',
         element: (
-          <AuthGuard>
+          <RouteGuard isLoginRequired={false} redirectTo='/'>
             <LandingPage />,
-          </AuthGuard>
+          </RouteGuard>
         ),
       },
       {
