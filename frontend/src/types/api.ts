@@ -1,7 +1,7 @@
-import { Category, Snippet, Tag, Template } from './template';
+import { Category, Snippet, Tag, TemplateListItem } from './template';
 
 export interface TemplateListResponse {
-  templates: Template[];
+  templates: TemplateListItem[];
   totalPages: number;
   totalElements: number;
   numberOfElements: number;
