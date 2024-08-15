@@ -9,6 +9,7 @@ import org.springframework.web.method.HandlerMethod;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codezap.global.swagger.error.ProblemDetailSchema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.examples.Example;
@@ -32,7 +33,7 @@ public class AuthOperationCustomizer implements OperationCustomizer {
     @Override
     public Operation customize(final Operation operation, final HandlerMethod handlerMethod) {
         if (hasSecurityRequirement(handlerMethod)) {
-//            generateAuthErrorResponse(operation);
+            generateAuthErrorResponse(operation);
             hideAuthInfoParameter(operation);
         }
         return operation;
@@ -53,10 +54,10 @@ public class AuthOperationCustomizer implements OperationCustomizer {
         ApiResponses apiResponses = operation.getResponses();
 
         Example noTokenCookieExample = new Example()
-                .externalValue("Authorization 쿠키 없음")
+                .externalValue("인증 쿠키 없음")
                 .description("쿠키는 있지만 Authorization 대한 담은 쿠키가 없는 경우")
                 .value(getExampleJsonString(ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,
-                        "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.")));
+                        "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.")));
 
         Example noCookiesExample = new Example()
                 .externalValue("모든 쿠키 없음")
@@ -65,7 +66,7 @@ public class AuthOperationCustomizer implements OperationCustomizer {
                         "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.")));
 
         MediaType mediaType = new MediaType().schema(new Schema<>().$ref("#/components/schemas/Error"));
-        mediaType.addExamples("Authorization 쿠키 없음", noTokenCookieExample);
+        mediaType.addExamples("인증 쿠키 없음", noTokenCookieExample);
         mediaType.addExamples("모든 쿠키 없음", noCookiesExample);
 
         ApiResponse unauthorizedResponse = new ApiResponse()

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.auth.dto.LoginAndCredentialDto;
-import codezap.auth.manager.CredentialManager;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
+import codezap.auth.manager.CredentialManager;
 import codezap.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
 

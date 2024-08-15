@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
 import codezap.global.validation.ValidationSequence;
-import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 
@@ -32,8 +32,8 @@ public class CategoryController implements SpringDocCategoryController {
 
     @PostMapping
     public ResponseEntity<Void> createCategory(
-            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest,
-            @AuthenticationPrinciple MemberDto memberDto
+            @AuthenticationPrinciple MemberDto memberDto,
+            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
         Long createdCategoryId = categoryService.create(createCategoryRequest, memberDto);
         return ResponseEntity.created(URI.create("/categories/" + createdCategoryId))
@@ -50,16 +50,16 @@ public class CategoryController implements SpringDocCategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(
+            @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id,
-            @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest,
-            @AuthenticationPrinciple MemberDto memberDto
+            @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
         categoryService.update(id, updateCategoryRequest, memberDto);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id, @AuthenticationPrinciple MemberDto memberDto) {
+    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id) {
         categoryService.deleteById(id, memberDto);
         return ResponseEntity.noContent()
                 .build();

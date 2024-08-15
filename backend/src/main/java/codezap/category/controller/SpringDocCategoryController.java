@@ -32,7 +32,7 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리 이름이 255자를 초과한 경우", exampleMessage = "카테고리 이름은 최대 255자까지 입력 가능합니다."),
             @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다."),
     })
-    ResponseEntity<Void> createCategory(CreateCategoryRequest createCategoryRequest, MemberDto memberDto);
+    ResponseEntity<Void> createCategory(MemberDto memberDto, CreateCategoryRequest createCategoryRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 목록 조회", description = "생성된 모든 카테고리를 조회합니다.")
@@ -51,7 +51,7 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우",
                     exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
-    ResponseEntity<Void> updateCategory(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto);
+    ResponseEntity<Void> updateCategory(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
@@ -62,5 +62,5 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리를 삭제할 권한이 없는 경우",
                     exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
-    ResponseEntity<Void> deleteCategory(Long id, MemberDto memberDto);
+    ResponseEntity<Void> deleteCategory(MemberDto memberDto, Long id);
 }

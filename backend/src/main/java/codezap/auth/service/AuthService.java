@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import codezap.auth.dto.LoginAndCredentialDto;
+import codezap.auth.dto.request.LoginRequest;
+import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.auth.dto.request.LoginRequest;
-import codezap.auth.dto.response.LoginResponse;
 import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
