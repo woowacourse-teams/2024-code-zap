@@ -6,6 +6,7 @@ public class MemberFixture {
 
     public static Member memberFixture() {
         return new Member(
+                1L,
                 "code@zap.com",
                 "password1234",
                 "몰리"

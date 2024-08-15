@@ -12,7 +12,10 @@ import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
+import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
+import codezap.member.dto.response.FindMemberResponse;
+import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
@@ -109,6 +112,30 @@ public class MemberServiceTest {
             assertThatThrownBy(() -> memberService.signup(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessageContaining("사용자명이 이미 존재합니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("회원 조회 테스트")
+    class findMember {
+
+        @Test
+        @DisplayName("회원 정보 조회 성공")
+        void findMember() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            assertThat(memberService.findMember(MemberDto.from(member), member.getId()))
+                    .isEqualTo(FindMemberResponse.from(member));
+        }
+
+        @Test
+        @DisplayName("회원 정보 조회 실패: 본인 정보가 아닌 경우")
+        void findMember_Throw() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            assertThatThrownBy(() -> memberService.findMember(MemberDto.from(member), member.getId() + 1))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("본인의 정보만 조회할 수 있습니다.");
         }
     }
 }

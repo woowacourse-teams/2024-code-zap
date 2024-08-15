@@ -48,10 +48,10 @@ public class MemberController implements SpringDocMemberController {
     }
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<FindMemberResponse> findMember(@AuthenticationPrinciple MemberDto memberDto,
-            @PathVariable Long id
+    public ResponseEntity<FindMemberResponse> findMember(
+            @AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id
     ) {
-        throw new NotImplementedException("접근이 불가능한 기능입니다. 서버 개발자에게 문의해주세요.");
+        return ResponseEntity.ok(memberService.findMember(memberDto, id));
     }
 
     @PutMapping("/members/{id}")
