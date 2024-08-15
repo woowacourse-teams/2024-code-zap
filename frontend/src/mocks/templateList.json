@@ -2,8 +2,13 @@
   "templates": [
     {
       "id": 1,
-      "title": "title1",
-      "description": "description1",
+      "title": "title1akdsfhlskadjf;ljadl;fkjlkadsjflakjsdlfjlasdkjflkadsjl;fkjalsdkjfl;aj",
+      "description": "description1aos;idefijhoweijfr;opqaewijf;jadsl;fkjaw;epoifjh;poswdjf;apdsjofo;ai",
+      "thumbnailSnippet": {
+        "filename": "dlkjfa;lfdskj.jsx",
+        "thumbnailContent": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};",
+        "ordinal": 2
+      },
       "snippets": [
         {
           "id": 1,
@@ -27,8 +32,13 @@
     },
     {
       "id": 2,
-      "title": "title2",
-      "description": "description2",
+      "title": "title2awlefkth;olsdekjfmla;ekjsf;loajkiwe",
+      "description": "description2awl;erftkijwe;oifjh;apwejmfkp;lsdjkf'p;owejgftpjewds;flkjaews'dpftojawefklrm'a;pwesljkf'powerjfp'ojersdpf가 끝인줄 알았는데 말이지 어디까지 하나 볼까?",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Hello, world!');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 3,
@@ -54,6 +64,11 @@
       "id": 3,
       "title": "title3",
       "description": "description3",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 5,
@@ -70,6 +85,11 @@
       "id": 4,
       "title": "title4",
       "description": "description4",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "body { margin: 0; padding: 0; }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 6,
@@ -89,6 +109,11 @@
       "id": 5,
       "title": "title5",
       "description": "description5",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "public class Program { public static void main(String[] args) { System.out.println(\"Run program\"); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 7,
@@ -105,6 +130,11 @@
       "id": 6,
       "title": "title6",
       "description": "description6",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, Example!\"); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 8,
@@ -130,6 +160,11 @@
       "id": 7,
       "title": "title7",
       "description": "description7",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('App running');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 10,
@@ -155,6 +190,11 @@
       "id": 8,
       "title": "title8",
       "description": "description8",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Index file');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 12,
@@ -171,6 +211,11 @@
       "id": 9,
       "title": "title9",
       "description": "description9",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Main file');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 13,
@@ -196,6 +241,11 @@
       "id": 10,
       "title": "title10",
       "description": "description10",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Hello, Frontend!')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 15,
@@ -215,6 +265,11 @@
       "id": 11,
       "title": "title11",
       "description": "description11",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Backend logic');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 16,
@@ -240,6 +295,11 @@
       "id": 12,
       "title": "title12",
       "description": "description12",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Example snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 18,
@@ -256,6 +316,11 @@
       "id": 13,
       "title": "title13",
       "description": "description13",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "class OOPExample { constructor() { console.log('OOP Example'); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 19,
@@ -281,6 +346,11 @@
       "id": 14,
       "title": "title14",
       "description": "description14",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "public class Hello { public static void main(String[] args) { System.out.println(\"Hello\"); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 21,
@@ -297,6 +367,11 @@
       "id": 15,
       "title": "title15",
       "description": "description15",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Example snippet')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 22,
@@ -322,6 +397,11 @@
       "id": 16,
       "title": "title16",
       "description": "description16",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "public class Backend { public static void main(String[] args) { System.out.println(\"Backend\"); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 24,
@@ -341,6 +421,11 @@
       "id": 17,
       "title": "title17",
       "description": "description17",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "import React from 'react';",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 25,
@@ -360,6 +445,11 @@
       "id": 18,
       "title": "title18",
       "description": "description18",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "class OOP { constructor() { console.log('OOP'); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 26,
@@ -386,6 +476,11 @@
       "id": 19,
       "title": "title19",
       "description": "description19",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "public class JavaSnippet { public static void main(String[] args) { System.out.println(\"Java Snippet\"); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 28,
@@ -402,6 +497,11 @@
       "id": 20,
       "title": "title20",
       "description": "description20",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Python example')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 29,
@@ -421,6 +521,11 @@
       "id": 21,
       "title": "title21",
       "description": "description21",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Log snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 30,
@@ -437,6 +542,11 @@
       "id": 22,
       "title": "title22",
       "description": "description22",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "import React from 'react';\n\nconst Component = () => <div>React Component</div>;\n\nexport default Component;",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 31,
@@ -456,6 +566,11 @@
       "id": 23,
       "title": "title23",
       "description": "description23",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 32,
@@ -472,6 +587,11 @@
       "id": 24,
       "title": "title24",
       "description": "description24",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Frontend snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 33,
@@ -491,6 +611,11 @@
       "id": 25,
       "title": "title25",
       "description": "description25",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Python code')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 34,
@@ -510,6 +635,11 @@
       "id": 26,
       "title": "title26",
       "description": "description26",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Backend code');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 35,
@@ -529,6 +659,11 @@
       "id": 27,
       "title": "title27",
       "description": "description27",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('React code');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 36,
@@ -548,6 +683,11 @@
       "id": 28,
       "title": "title28",
       "description": "description28",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Style snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 37,
@@ -564,6 +704,11 @@
       "id": 29,
       "title": "title29",
       "description": "description29",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Frontend code');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 38,
@@ -583,6 +728,11 @@
       "id": 30,
       "title": "title30",
       "description": "description30",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Another Python example')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 39,
@@ -599,6 +749,11 @@
       "id": 31,
       "title": "title31",
       "description": "description31",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('JavaScript example');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 40,
@@ -615,6 +770,11 @@
       "id": 32,
       "title": "title32",
       "description": "description32",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "const Component = () => <div>Another React Component</div>;\n\nexport default Component;",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 41,
@@ -634,6 +794,11 @@
       "id": 33,
       "title": "title33",
       "description": "description33",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Empty snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 42,
@@ -650,6 +815,11 @@
       "id": 34,
       "title": "title34",
       "description": "description34",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Another frontend snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 43,
@@ -669,6 +839,11 @@
       "id": 35,
       "title": "title35",
       "description": "description35",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Another Python code')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 44,
@@ -685,6 +860,11 @@
       "id": 36,
       "title": "title36",
       "description": "description36",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('JavaScript code');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 45,
@@ -704,6 +884,11 @@
       "id": 37,
       "title": "title37",
       "description": "description37",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('React styling');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 46,
@@ -730,6 +915,11 @@
       "id": 38,
       "title": "title38",
       "description": "description38",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Style example');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 48,
@@ -746,6 +936,11 @@
       "id": 39,
       "title": "title39",
       "description": "description39",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Empty file');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 49,
@@ -762,6 +957,11 @@
       "id": 40,
       "title": "title40",
       "description": "description40",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Python log')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 50,
@@ -781,6 +981,11 @@
       "id": 41,
       "title": "title41",
       "description": "description41",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Empty file content');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 51,
@@ -797,6 +1002,11 @@
       "id": 42,
       "title": "title42",
       "description": "description42",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('React and CSS');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 52,
@@ -816,6 +1026,11 @@
       "id": 43,
       "title": "title43",
       "description": "description43",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "class OOPSnippet { constructor() { console.log('OOP Snippet'); } }",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 53,
@@ -835,6 +1050,11 @@
       "id": 44,
       "title": "title44",
       "description": "description44",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Log file');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 54,
@@ -851,6 +1071,11 @@
       "id": 45,
       "title": "title45",
       "description": "description45",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "print('Another Python log')",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 55,
@@ -867,6 +1092,11 @@
       "id": 46,
       "title": "title46",
       "description": "description46",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Backend snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 56,
@@ -887,6 +1117,11 @@
       "id": 47,
       "title": "title47",
       "description": "description47",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('React snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 57,
@@ -903,6 +1138,11 @@
       "id": 48,
       "title": "title48",
       "description": "description48",
+      "thumbnailSnippet": {
+        "filename": "thumbnail.jsx",
+        "thumbnailContent": "console.log('Styling snippet');",
+        "ordinal": 1
+      },
       "snippets": [
         {
           "id": 58,
