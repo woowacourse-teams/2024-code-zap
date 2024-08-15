@@ -4,7 +4,7 @@ import codezap.member.domain.Member;
 
 public record LoginResponse(
         long memberId,
-        String username
+        String loginId
 ) {
     public static LoginResponse from(Member member) {
         return new LoginResponse(member.getId(), member.getLoginId());

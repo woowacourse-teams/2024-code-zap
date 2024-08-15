@@ -38,8 +38,8 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 
 class TemplateServiceSearchTest {
 
-    private Member firstMember = new Member(1L, "username1", "password1234");
-    private Member secondMember = new Member(2L, "username2", "password1234");
+    private Member firstMember = new Member(1L, "loginId1", "password1234");
+    private Member secondMember = new Member(2L, "loginId2", "password1234");
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SnippetRepository snippetRepository = new FakeSnippetRepository();

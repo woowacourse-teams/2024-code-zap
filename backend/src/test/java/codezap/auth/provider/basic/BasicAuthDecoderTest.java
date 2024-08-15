@@ -59,7 +59,7 @@ class BasicAuthDecoderTest {
     @ParameterizedTest
     @ValueSource(strings = {":", "user:", ":password"})
     @DisplayName("BasicAuth 인증 정보 디코딩 실패: 빈 사용자 이름 또는 비밀번호")
-    void throwExceptionForEmptyUsernameOrPassword(String auth) {
+    void throwExceptionForEmptyLoginIdOrPassword(String auth) {
         String invalidCredential = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
 
         assertThatThrownBy(() -> BasicAuthDecoder.decodeBasicAuth(invalidCredential))

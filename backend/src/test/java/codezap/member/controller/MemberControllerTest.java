@@ -40,7 +40,7 @@ class MemberControllerTest extends MockMvcTest {
     @Test
     @DisplayName("사용자명 중복 확인 성공")
     void checkUniqueLoginIdSuccess() throws Exception {
-        String loginId = "username";
+        String loginId = "loginId";
 
         doNothing().when(memberService).assertUniqueLoginId(any(String.class));
 

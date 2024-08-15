@@ -11,7 +11,7 @@ public interface MemberRepository {
 
     Member fetchById(Long id);
 
-    boolean existsByLoginId(String username);
+    boolean existsByLoginId(String loginId);
 
     boolean existsById(Long id);
 

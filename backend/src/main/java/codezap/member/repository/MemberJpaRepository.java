@@ -14,5 +14,5 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 멤버가 존재하지 않습니다."));
     }
 
-    boolean existsByLoginId(String username);
+    boolean existsByLoginId(String loginId);
 }
