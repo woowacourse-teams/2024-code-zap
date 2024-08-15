@@ -58,8 +58,8 @@ public class CategoryService {
     }
 
     public void deleteById(Long id, MemberDto memberDto) {
-        Member member = memberRepository.fetchById(memberDto.id());
         Category category = categoryRepository.fetchById(id);
+        Member member = memberRepository.fetchById(memberDto.id());
         validateAuthorizeMember(category, member);
 
         if (templateRepository.existsByCategoryId(id)) {
