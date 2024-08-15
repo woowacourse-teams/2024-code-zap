@@ -124,10 +124,10 @@ const TemplateEdit = ({
         <Flex justify='flex-end' padding='0.5rem 0 0 0' width='100%'>
           <Flex gap='0.5rem'>
             <Button size='medium' variant='outlined' onClick={handleCancelButton}>
-              cancel
+              취소
             </Button>
             <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={snippets.length === 0}>
-              Save
+              저장
             </Button>
           </Flex>
         </Flex>
