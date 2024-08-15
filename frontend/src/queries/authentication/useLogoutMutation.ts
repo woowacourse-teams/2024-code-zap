@@ -1,15 +1,15 @@
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 import { postLogout } from '@/api/authentication';
-import { useAuth } from '@/hooks/authentication/useAuth';
 
 export const useLogoutMutation = () => {
-  const { handleLoginState } = useAuth();
+  const navigate = useNavigate();
 
   return useMutation({
     mutationFn: () => postLogout(),
     onSuccess: () => {
-      handleLoginState(false);
+      navigate('/login');
       localStorage.removeItem('username');
       localStorage.removeItem('memberId');
     },
