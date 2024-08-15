@@ -1,7 +1,9 @@
 import { ReactNode, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
+import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication';
+import { useCustomContext } from '@/hooks/utils';
 
 type RouteGuardProps = {
   children: ReactNode;
@@ -10,8 +12,10 @@ type RouteGuardProps = {
 };
 
 const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) => {
-  const { isLogin, handleLoginState, checkAlreadyLogin } = useAuth();
+  const { handleLoginState, checkAlreadyLogin } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
+  const { infoAlert } = useCustomContext(ToastContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -19,25 +23,23 @@ const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) 
 
       handleLoginState(result);
       setIsLoading(false);
+
+      if (isLoginRequired && !result) {
+        infoAlert('로그인을 해주세요.');
+        navigate(redirectTo);
+      }
+
+      if (!isLoginRequired && result) {
+        infoAlert('이미 로그인된 사용자입니다.');
+        navigate(redirectTo);
+      }
     };
 
     checkLogin();
-  }, []);
+  }, [checkAlreadyLogin, handleLoginState, infoAlert, isLoginRequired, navigate, redirectTo]);
 
   if (isLoading) {
     return <div>Loading...</div>;
-  }
-
-  if (isLoginRequired && !isLogin) {
-    console.log('로그인되지 않은 사용자입니다.');
-
-    return <Navigate to={redirectTo} />;
-  }
-
-  if (!isLoginRequired && isLogin) {
-    console.log('이미 로그인된 사용자입니다.');
-
-    return <Navigate to={redirectTo} />;
   }
 
   return children;
