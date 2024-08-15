@@ -7,6 +7,6 @@ public record LoginResponse(
         String username
 ) {
     public static LoginResponse from(Member member) {
-        return new LoginResponse(member.getId(), member.getUsername());
+        return new LoginResponse(member.getId(), member.getLoginId());
     }
 }

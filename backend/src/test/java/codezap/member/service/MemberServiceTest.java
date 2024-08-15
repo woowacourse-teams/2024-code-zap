@@ -3,6 +3,7 @@ package codezap.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,92 +27,51 @@ public class MemberServiceTest {
     private final MemberService memberService = new MemberService(memberRepository, categoryRepository);
 
     @Nested
-    @DisplayName("이메일 중복 검사 테스트")
-    class CheckEmail {
-
-        @Test
-        @DisplayName("이메일 중복 검사 통과: 사용가능한 이메일")
-        void assertUniqueEmail() {
-            var email = "code@zap.com";
-
-            assertThatCode(() -> memberService.assertUniqueEmail(email))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("이메일 중복 검사 실패: 중복된 이메일")
-        void assertUniqueEmail_fail_duplicate() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            memberRepository.save(savedMember);
-
-            assertThatThrownBy(() -> memberService.assertUniqueEmail("code@zap.com"))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이메일이 이미 존재합니다.");
-        }
-    }
-
-    @Nested
-    @DisplayName("사용자명 중복 검사 테스트")
-    class CheckUsername {
-
-        @Test
-        @DisplayName("사용자명 중복 검사 통과: 사용가능한 사용자명")
-        void assertUniqueUsername() {
-            var username = "zappy";
-
-            assertThatCode(() -> memberService.assertUniqueUsername(username))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("사용자명 중복 검사 실패: 중복된 사용자명")
-        void assertUniqueUsername_fail_duplicate() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            memberRepository.save(savedMember);
-
-            assertThatThrownBy(() -> memberService.assertUniqueUsername("zappy"))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("사용자명이 이미 존재합니다.");
-        }
-    }
-
-    @Nested
     @DisplayName("회원가입 테스트")
     class SignupTest {
 
         @Test
         @DisplayName("회원가입 성공")
         void signup() {
-            var request = new SignupRequest("code@zap.com", "password", "chorong");
+            Member member = MemberFixture.memberFixture();
+            SignupRequest signupRequest = new SignupRequest(member.getLoginId(), member.getPassword());
 
-            var actual = memberService.signup(request);
-
-            var expect = new Member(1L, request.email(), request.password(), request.username());
-            assertThat(actual).isEqualTo(expect);
+            assertEquals(memberService.signup(signupRequest), 1L);
         }
 
         @Test
-        @DisplayName("회원가입 실패: 이메일 중복")
-        void signup_fail_email_duplicate() {
-            var saved = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(saved);
-            var request = new SignupRequest("code@zap.com", "password", "chorong");
+        @DisplayName("회원가입 실패: 아이디 중복")
+        void signup_fail_loginId_duplicate() {
+            Member savedMember = memberRepository.save(MemberFixture.memberFixture());
+            SignupRequest signupRequest = new SignupRequest(savedMember.getLoginId(), savedMember.getPassword());
 
-            assertThatThrownBy(() -> memberService.signup(request))
+            assertThatThrownBy(() -> memberService.signup(signupRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("이메일이 이미 존재합니다.");
+                    .hasMessageContaining("아이디가 이미 존재합니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("아이디 중복 검사 테스트")
+    class AssertUniqueLoginId {
+
+        @Test
+        @DisplayName("아이디 중복 검사 통과: 사용가능한 아이디")
+        void assertUniqueLoginId() {
+            String loginId = "code";
+
+            assertThatCode(() -> memberService.assertUniqueLoginId(loginId))
+                    .doesNotThrowAnyException();
         }
 
         @Test
-        @DisplayName("회원가입 실패: 사용자명 중복")
-        void signup_fail_username_duplicate() {
-            var saved = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(saved);
-            var request = new SignupRequest("chorong@zangsu.com", "password", "zappy");
+        @DisplayName("아이디 중복 검사 실패: 중복된 아이디")
+        void assertUniqueLoginId_fail_duplicate() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            assertThatThrownBy(() -> memberService.signup(request))
+            assertThatThrownBy(() -> memberService.assertUniqueLoginId(member.getLoginId()))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("사용자명이 이미 존재합니다.");
+                    .hasMessage("아이디가 이미 존재합니다.");
         }
     }
 

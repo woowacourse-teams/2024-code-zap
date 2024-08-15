@@ -11,17 +11,15 @@ public interface MemberRepository {
 
     Member fetchById(Long id);
 
-    boolean existsByEmail(String email);
-
-    boolean existsByUsername(String username);
+    boolean existsByLoginId(String username);
 
     boolean existsById(Long id);
 
-    Optional<Member> findByEmail(String email);
+    Optional<Member> findByLoginId(String loginId);
 
-    default Member fetchByEmail(String email) {
-        return findByEmail(email)
-                .orElseThrow(() -> new CodeZapException(HttpStatus.UNAUTHORIZED, "존재하지 않는 이메일 " + email + " 입니다."));
+    default Member fetchByLoginId(String loginId) {
+        return findByLoginId(loginId)
+                .orElseThrow(() -> new CodeZapException(HttpStatus.UNAUTHORIZED, "존재하지 않는 아이디 " + loginId + " 입니다."));
     }
 
     Member save(Member member);

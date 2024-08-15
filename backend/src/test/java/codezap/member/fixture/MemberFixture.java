@@ -7,18 +7,15 @@ public class MemberFixture {
     public static Member memberFixture() {
         return new Member(
                 1L,
-                "code@zap.com",
-                "password1234",
-                "몰리"
+                "몰리",
+                "password1234"
         );
     }
 
-    public static Member createMember(String email) {
+    public static Member createFixture(String loginId) {
         return new Member(
-                1L,
-                email,
-                "password1234",
-                "몰리"
+                "몰리",
+                "password1234"
         );
     }
 }

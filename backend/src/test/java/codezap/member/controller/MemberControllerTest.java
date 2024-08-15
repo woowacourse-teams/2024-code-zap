@@ -15,13 +15,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import codezap.global.MockMvcTest;
-import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.fixture.MemberFixture;
@@ -32,34 +29,26 @@ class MemberControllerTest extends MockMvcTest {
     @Test
     @DisplayName("회원가입 성공")
     void signupSuccess() throws Exception {
-        SignupRequest signupRequest = new SignupRequest("test@email.com", "password123", "testuser");
+        SignupRequest signupRequest = new SignupRequest("testuser", "password123");
 
-        mvc.perform(post("/signup")
+        mvc.perform(post("/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signupRequest)))
                 .andExpect(status().isCreated());
     }
 
     @Test
-    @DisplayName("이메일 중복 확인 성공")
-    void checkUniqueEmailSuccess() throws Exception {
-        doNothing().when(memberService).assertUniqueEmail(any(String.class));
-
-        mvc.perform(get("/check-email")
-                        .param("email", "unique@email.com"))
-                .andExpect(status().isOk());
-        verify(memberService, times(1)).assertUniqueEmail("unique@email.com");
-    }
-
-    @Test
     @DisplayName("사용자명 중복 확인 성공")
-    void checkUniqueUsernameSuccess() throws Exception {
-        doNothing().when(memberService).assertUniqueUsername(any(String.class));
+    void checkUniqueLoginIdSuccess() throws Exception {
+        String loginId = "username";
 
-        mvc.perform(get("/check-username")
-                        .param("username", "uniqueuser"))
+        doNothing().when(memberService).assertUniqueLoginId(any(String.class));
+
+        mvc.perform(get("/check-login-id")
+                        .param("loginId", loginId))
+                .andDo(print())
                 .andExpect(status().isOk());
-        verify(memberService, times(1)).assertUniqueUsername("uniqueuser");
+        verify(memberService, times(1)).assertUniqueLoginId(loginId);
     }
 
 
@@ -74,7 +63,6 @@ class MemberControllerTest extends MockMvcTest {
         mvc.perform(get("/members/" + member.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value(member.getUsername()))
-                .andExpect(jsonPath("$.email").value(member.getEmail()));
+                .andExpect(jsonPath("$.loginId").value(member.getLoginId()));
     }
 }

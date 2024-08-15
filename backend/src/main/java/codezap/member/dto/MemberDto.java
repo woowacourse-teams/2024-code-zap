@@ -4,11 +4,10 @@ import codezap.member.domain.Member;
 
 public record MemberDto(
         Long id,
-        String email,
-        String password,
-        String username
+        String loginId,
+        String password
 ) {
     public static MemberDto from(Member member) {
-        return new MemberDto(member.getId(), member.getEmail(), member.getPassword(), member.getUsername());
+        return new MemberDto(member.getId(), member.getLoginId(), member.getPassword());
     }
 }

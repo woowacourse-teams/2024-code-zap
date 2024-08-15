@@ -20,13 +20,13 @@ public class AuthService {
     private final MemberRepository memberRepository;
 
     public LoginAndCredentialDto login(LoginRequest loginRequest) {
-        Member member = getMemberByIdAndPassword(loginRequest.email(), loginRequest.password());
+        Member member = getMemberByIdAndPassword(loginRequest.loginId(), loginRequest.password());
         String credential = credentialProvider.createCredential(member);
         return LoginAndCredentialDto.from(LoginResponse.from(member), credential);
     }
 
-    private Member getMemberByIdAndPassword(String email, String password) {
-        Member member = memberRepository.fetchByEmail(email);
+    private Member getMemberByIdAndPassword(String loginId, String password) {
+        Member member = memberRepository.fetchByLoginId(loginId);
         validateCorrectPassword(member, password);
         return member;
     }

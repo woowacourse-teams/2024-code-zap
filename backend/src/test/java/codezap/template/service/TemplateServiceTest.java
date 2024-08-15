@@ -42,8 +42,8 @@ import codezap.template.repository.ThumbnailSnippetRepository;
 
 class TemplateServiceTest {
 
-    private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
-    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
+    private Member firstMember = new Member(1L, "username1", "password1234");
+    private Member secondMember = new Member(2L, "username2", "password1234");
     private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
     private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
 

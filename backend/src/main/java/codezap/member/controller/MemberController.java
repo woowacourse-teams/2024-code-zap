@@ -1,5 +1,7 @@
 package codezap.member.controller;
 
+import java.net.URI;
+
 import jakarta.validation.Valid;
 
 import org.apache.commons.lang3.NotImplementedException;
@@ -29,22 +31,15 @@ public class MemberController implements SpringDocMemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void signup(@Valid @RequestBody SignupRequest request) {
-        memberService.signup(request);
+    @PostMapping("/members")
+    public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
+        return ResponseEntity.created(URI.create("/members/" + memberService.signup(request))).build();
     }
 
-    @GetMapping("/check-email")
+    @GetMapping("/check-login-id")
     @ResponseStatus(HttpStatus.OK)
-    public void checkUniqueEmail(@RequestParam String email) {
-        memberService.assertUniqueEmail(email);
-    }
-
-    @GetMapping("/check-username")
-    @ResponseStatus(HttpStatus.OK)
-    public void checkUniqueUsername(@RequestParam String username) {
-        memberService.assertUniqueUsername(username);
+    public void checkUniqueLoginId(@RequestParam String loginId) {
+        memberService.assertUniqueLoginId(loginId);
     }
 
     @GetMapping("/members/{id}")

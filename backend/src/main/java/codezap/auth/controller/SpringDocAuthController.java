@@ -19,7 +19,7 @@ public interface SpringDocAuthController {
 
     @Operation(summary = "이메일 로그인")
     @ApiResponse(responseCode = "200", description = "로그인 성공",
-            headers = @Header(name = "Set-Cookie", description = "base64(${email}:${password}); path=\"/\"; HttpOnly;"
+            headers = @Header(name = "Set-Cookie", description = "base64(${loginId}:${password}); path=\"/\"; HttpOnly;"
                     + " Secure;"))
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/login", errorCases = {
             @ErrorCase(description = "이메일 입력 없음", exampleMessage = "이메일이 입력되지 않았습니다."),

@@ -22,20 +22,20 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
 
     @Override
     public String createCredential(Member member) {
-        return HttpHeaders.encodeBasicAuth(member.getEmail(), member.getPassword(), StandardCharsets.UTF_8);
+        return HttpHeaders.encodeBasicAuth(member.getLoginId(), member.getPassword(), StandardCharsets.UTF_8);
     }
 
     @Override
     public Member extractMember(String credential) {
-        String[] emailAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
-        Member member = memberRepository.fetchByEmail(emailAndPassword[0]);
-        checkMatchPassword(member, emailAndPassword[1]);
+        String[] loginIdAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
+        Member member = memberRepository.fetchByLoginId( loginIdAndPassword[0]);
+        checkMatchPassword(member,  loginIdAndPassword[1]);
         return member;
     }
 
     private void checkMatchPassword(Member member, String password) {
         if (!member.matchPassword(password)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "이메일 또는 비밀번호가 일치하지 않습니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "아이디 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 }

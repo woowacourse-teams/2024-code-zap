@@ -22,24 +22,16 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
 
-    public Member signup(SignupRequest request) {
-        assertUniqueEmail(request.email());
-        assertUniqueUsername(request.username());
-        Member member = new Member(request.email(), request.password(), request.username());
-        Member saved = memberRepository.save(member);
-        categoryRepository.save(Category.createDefaultCategory(saved));
-        return saved;
+    public Long signup(SignupRequest request) {
+        assertUniqueLoginId(request.loginId());
+        Member member = memberRepository.save(new Member(request.loginId(), request.password()));
+        categoryRepository.save(Category.createDefaultCategory(member));
+        return member.getId();
     }
 
-    public void assertUniqueEmail(String email) {
-        if (memberRepository.existsByEmail(email)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "이메일이 이미 존재합니다.");
-        }
-    }
-
-    public void assertUniqueUsername(String username) {
-        if (memberRepository.existsByUsername(username)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "사용자명이 이미 존재합니다.");
+    public void assertUniqueLoginId(String loginId) {
+        if (memberRepository.existsByLoginId(loginId)) {
+            throw new CodeZapException(HttpStatus.CONFLICT, "아이디가 이미 존재합니다.");
         }
     }
 

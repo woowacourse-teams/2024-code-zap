@@ -36,7 +36,7 @@ class BasicAuthCredentialProviderTest {
         Member member = MemberFixture.memberFixture();
         String actualCredential = basicAuthCredentialProvider.createCredential(member);
 
-        String expectedCredential = HttpHeaders.encodeBasicAuth(member.getEmail(), member.getPassword(),
+        String expectedCredential = HttpHeaders.encodeBasicAuth(member.getLoginId(), member.getPassword(),
                 StandardCharsets.UTF_8);
         assertEquals(actualCredential, expectedCredential);
     }
@@ -60,7 +60,7 @@ class BasicAuthCredentialProviderTest {
 
             assertThatThrownBy(() -> basicAuthCredentialProvider.extractMember(credential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("존재하지 않는 이메일 " + unsaverdMember.getEmail() + " 입니다.");
+                    .hasMessage("존재하지 않는 아이디 " + unsaverdMember.getLoginId() + " 입니다.");
         }
 
         @ParameterizedTest
@@ -68,12 +68,12 @@ class BasicAuthCredentialProviderTest {
         @DisplayName("회원 추출 실패: 잘못된 비밀번호로 생성된 인증 값")
         void extractMemberThrow(String wrongPassword) {
             Member savedMember = memberRepository.save(MemberFixture.memberFixture());
-            String wrongCredential = HttpHeaders.encodeBasicAuth(savedMember.getEmail(), wrongPassword,
+            String wrongCredential = HttpHeaders.encodeBasicAuth(savedMember.getLoginId(), wrongPassword,
                     StandardCharsets.UTF_8);
 
             assertThatThrownBy(() -> basicAuthCredentialProvider.extractMember(wrongCredential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이메일 또는 비밀번호가 일치하지 않습니다.");
+                    .hasMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 }

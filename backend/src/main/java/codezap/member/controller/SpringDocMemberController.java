@@ -36,21 +36,14 @@ public interface SpringDocMemberController {
             @ErrorCase(description = "이메일 중복", exampleMessage = "이메일이 이미 존재합니다."),
             @ErrorCase(description = "사용자명 중복", exampleMessage = "사용자명이 이미 존재합니다."),
     })
-    void signup(@RequestBody SignupRequest request);
-
-    @Operation(summary = "이메일 중복 확인")
-    @ApiResponse(responseCode = "200", description = "사용가능한 이메일")
-    @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/check-email", errorCases = {
-            @ErrorCase(description = "이메일 중복", exampleMessage = "이메일이 이미 존재합니다."),
-    })
-    void checkUniqueEmail(@RequestParam String email);
+    ResponseEntity<Void> signup(@RequestBody SignupRequest request);
 
     @Operation(summary = "사용자명 중복 확인")
     @ApiResponse(responseCode = "200", description = "사용가능한 사용자명")
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/check-username", errorCases = {
             @ErrorCase(description = "사용자명 중복", exampleMessage = "사용자명이 이미 존재합니다."),
     })
-    void checkUniqueUsername(@RequestParam String username);
+    void checkUniqueLoginId(@RequestParam String loginId);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "회원 정보 조회", description = "회원의 정보(이메일, 닉네임)을 조회합니다.")

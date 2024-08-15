@@ -35,19 +35,14 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return members.stream().anyMatch(member -> Objects.equals(member.getEmail(), email));
+    public boolean existsByLoginId(String loginId) {
+        return members.stream().anyMatch(member -> Objects.equals(member.getLoginId(), loginId));
     }
 
     @Override
-    public boolean existsByUsername(String username) {
-        return members.stream().anyMatch(member -> Objects.equals(member.getUsername(), username));
-    }
-
-    @Override
-    public Optional<Member> findByEmail(String email) {
+    public Optional<Member> findByLoginId(String loginId) {
         return members.stream()
-                .filter(member -> Objects.equals(member.getEmail(), email))
+                .filter(member -> Objects.equals(member.getLoginId(), loginId))
                 .findFirst();
     }
 
@@ -55,9 +50,8 @@ public class FakeMemberRepository implements MemberRepository {
     public Member save(Member entity) {
         var saved = new Member(
                 getOrGenerateId(entity),
-                entity.getEmail(),
                 entity.getPassword(),
-                entity.getUsername()
+                entity.getLoginId()
         );
         members.removeIf(member -> Objects.equals(member.getId(), entity.getId()));
         members.add(saved);

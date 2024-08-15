@@ -36,7 +36,7 @@ public class AuthServiceTest {
         @DisplayName("로그인 성공")
         void login() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            LoginRequest loginRequest = new LoginRequest(member.getEmail(), member.getPassword());
+            LoginRequest loginRequest = new LoginRequest(member.getLoginId(), member.getPassword());
 
             LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
 
@@ -47,16 +47,16 @@ public class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("로그인 실패: 이메일 오류")
-        void login_WithInvalidEmail_ThrowsException() {
+        @DisplayName("로그인 실패: 아이디 오류")
+        void login_WithInvalidLoginId_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            String wrongEmail = "wrong" + member.getEmail();
+            String wrongLoginId = "wrong" + member.getLoginId();
 
-            LoginRequest loginRequest = new LoginRequest(wrongEmail, member.getPassword());
+            LoginRequest loginRequest = new LoginRequest(wrongLoginId, member.getPassword());
 
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("존재하지 않는 이메일 " + wrongEmail + " 입니다.");
+                    .hasMessage("존재하지 않는 아이디 " + wrongLoginId + " 입니다.");
         }
 
         @Test
@@ -64,7 +64,7 @@ public class AuthServiceTest {
         void login_WithInvalidPassword_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            LoginRequest loginRequest = new LoginRequest(member.getEmail(), member.getPassword() + "wrong");
+            LoginRequest loginRequest = new LoginRequest(member.getLoginId(), member.getPassword() + "wrong");
 
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
@@ -90,11 +90,11 @@ public class AuthServiceTest {
         @DisplayName("쿠키 인증 실패: 잘못된 크레덴셜")
         void checkLogin_WithInvalidCredential_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            String invalidCredential = HttpHeaders.encodeBasicAuth(member.getEmail(),  member.getPassword() + "wrong", StandardCharsets.UTF_8);
+            String invalidCredential = HttpHeaders.encodeBasicAuth(member.getLoginId(),  member.getPassword() + "wrong", StandardCharsets.UTF_8);
 
             assertThatThrownBy(() -> authService.checkLogin(invalidCredential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("이메일 또는 비밀번호가 일치하지 않습니다.");
+                    .hasMessageContaining("아이디 또는 비밀번호가 일치하지 않습니다.");
         }
     }
 }
