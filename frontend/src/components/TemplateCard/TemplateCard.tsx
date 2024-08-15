@@ -57,7 +57,7 @@ const TemplateCard = ({ template }: Props) => {
           language={getLanguageByFilename(thumbnailSnippet?.filename ?? '')}
           style={oneLight}
           showLineNumbers={true}
-          customStyle={{ margin: '1rem 0', borderRadius: '8px', width: '100%', tabSize: 2 }}
+          customStyle={{ margin: '1rem 0', borderRadius: '8px', width: '100%', height: '17rem', tabSize: 2 }}
           codeTagProps={{
             style: {
               fontSize: '0.875rem',
