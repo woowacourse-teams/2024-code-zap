@@ -26,7 +26,7 @@ export const customFetch = async <T>({ url, headers, method = 'GET', body }: Pro
     let responseBody;
     const contentType = response.headers.get('Content-Type');
 
-    if (contentType && contentType.includes('application/json')) {
+    if (contentType && (contentType.includes('application/json') || contentType.includes('application/problem+json'))) {
       responseBody = await response.json();
     } else {
       responseBody = null;

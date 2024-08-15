@@ -1,13 +1,13 @@
 import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { postSignup } from '@/api/authentication';
 import { useInputWithValidate } from '@/hooks/utils';
-import { useCheckEmailQuery, useCheckUsernameQuery } from '@/queries/authentication';
+import { useCheckEmailQuery, useCheckUsernameQuery, useSignupMutation } from '@/queries/authentication';
 import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from '@/service';
 
 export const useSignupForm = () => {
   const navigate = useNavigate();
+  const { mutateAsync: postSignup } = useSignupMutation();
 
   const {
     value: email,

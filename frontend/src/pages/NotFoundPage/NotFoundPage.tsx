@@ -4,7 +4,11 @@ import { tigger } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { theme } from '@/style/theme';
 
-const NotFoundPage = () => {
+interface props {
+  resetError?: () => void;
+}
+
+const NotFoundPage = ({ resetError }: props) => {
   const navigate = useNavigate();
 
   return (
@@ -27,6 +31,7 @@ const NotFoundPage = () => {
       <Button
         weight='bold'
         onClick={() => {
+          resetError && resetError();
           navigate('/');
         }}
       >

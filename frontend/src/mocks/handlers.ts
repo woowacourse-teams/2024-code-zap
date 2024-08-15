@@ -95,8 +95,12 @@ const authenticationHandler = [
   http.post(
     `${LOGIN_API_URL}`,
     () =>
-      new HttpResponse(null, {
+      new HttpResponse(JSON.stringify({ memberId: 1, username: 'jay' }), {
         status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Set-Cookie': 'Authorization=abc123; HttpOnly; Path=/; Max-Age=3600',
+        },
       }),
   ),
   http.post(
