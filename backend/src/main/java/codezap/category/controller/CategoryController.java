@@ -19,7 +19,7 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
 import codezap.global.validation.ValidationSequence;
-import codezap.member.configuration.AuthenticationPrinciple;
+import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.member.dto.MemberDto;
 import lombok.RequiredArgsConstructor;
 

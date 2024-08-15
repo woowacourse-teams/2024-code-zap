@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import codezap.member.configuration.AuthenticationPrinciple;
+import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.request.UpdateMemberProfileRequest;

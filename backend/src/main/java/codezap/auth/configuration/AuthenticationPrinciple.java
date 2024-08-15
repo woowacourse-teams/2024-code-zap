@@ -1,4 +1,4 @@
-package codezap.member.configuration;
+package codezap.auth.configuration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
