@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { chevron, pencilIcon, trashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
@@ -9,7 +9,7 @@ import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
 import { useCustomContext, useToggle } from '@/hooks/utils';
 import { TemplateEditPage } from '@/pages';
-import type { Snippet } from '@/types';
+import type { SourceCodes } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 import * as S from './TemplatePage.style';
 
@@ -20,8 +20,8 @@ const TemplatePage = () => {
   const { infoAlert } = useCustomContext(ToastContext);
   const [isOpen, toggleModal] = useToggle();
 
-  const copyCode = (snippet: Snippet) => () => {
-    navigator.clipboard.writeText(snippet.content);
+  const copyCode = (sourceCode: SourceCodes) => () => {
+    navigator.clipboard.writeText(sourceCode.content);
     infoAlert('코드가 복사되었습니다!');
   };
 
@@ -29,7 +29,7 @@ const TemplatePage = () => {
     currentFile,
     template,
     isEdit,
-    snippetRefs,
+    sourceCodeRefs,
     toggleEditButton,
     handleEditButtonClick,
     handleSelectOption,
@@ -47,11 +47,38 @@ const TemplatePage = () => {
       {isEdit ? (
         <TemplateEditPage template={template} toggleEditButton={toggleEditButton} />
       ) : (
-        <Flex justify='space-between' align='center' width='100%' css={{ position: 'relative' }}>
+        <Flex justify='space-between' align='center' width='100%'>
           <S.MainContainer>
-            <Flex justify='space-between'>
-              <Flex direction='column' gap='0.75rem'>
-                <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
+            <Flex
+              justify='space-between'
+              gap='1rem'
+              width='100%'
+              css={{
+                wordBreak: 'break-word',
+                overflowWrap: 'break-word',
+                whiteSpace: 'normal',
+                lineHeight: 'normal',
+              }}
+            >
+              <Flex direction='column' gap='0.75rem' width='100%'>
+                <Flex justify='space-between'>
+                  <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
+                  <Flex justify='flex-end'>
+                    <S.EditButton
+                      size='small'
+                      variant='text'
+                      onClick={() => {
+                        handleEditButtonClick();
+                      }}
+                    >
+                      <img src={pencilIcon} width={24} height={24} alt='소스코드 수정' />
+                    </S.EditButton>
+                    <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
+                      <img src={trashcanIcon} width={28} height={28} alt='소스코드 삭제' />
+                    </S.DeleteButton>
+                  </Flex>
+                </Flex>
+
                 <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                   {template.title}
                 </Heading.Medium>
@@ -62,27 +89,14 @@ const TemplatePage = () => {
                 >
                   {formatRelativeTime(template.modifiedAt)}
                 </Text.Small>
-                <Flex gap='0.25rem'>
+                <Flex gap='0.25rem' wrap='wrap'>
                   {template.tags.map((tag) => (
                     <TagButton key={tag.id} name={tag.name}></TagButton>
                   ))}
                 </Flex>
               </Flex>
-              <Flex align='center'>
-                <S.EditButton
-                  size='small'
-                  variant='text'
-                  onClick={() => {
-                    handleEditButtonClick();
-                  }}
-                >
-                  <img src={pencilIcon} width={24} height={24} alt='Delete snippet' />
-                </S.EditButton>
-                <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                  <img src={trashcanIcon} width={28} height={28} alt='Delete snippet' />
-                </S.DeleteButton>
-              </Flex>
             </Flex>
+
             {isOpen && (
               <Modal isOpen={isOpen} toggleModal={toggleModal} size='xsmall'>
                 <Flex direction='column' justify='space-between' align='center' margin='1rem 0 0 0' gap='2rem'>
@@ -102,14 +116,14 @@ const TemplatePage = () => {
               </Modal>
             )}
 
-            {template.snippets.map((snippet, index) => (
-              <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
+            {template.sourceCodes.map((sourceCode, index) => (
+              <div id={sourceCode.filename} key={sourceCode.id} ref={(el) => (sourceCodeRefs.current[index] = el)}>
                 <Flex
                   justify='space-between'
                   align='center'
                   height='3rem'
                   padding='1rem 1.5rem'
-                  style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
+                  style={{ background: `${theme.color.light.tertiary_600}`, borderRadius: '8px 8px 0 0' }}
                 >
                   <Flex align='center' gap='0.5rem' onClick={handleIsOpenList(index)} css={{ cursor: 'pointer' }}>
                     <img
@@ -123,10 +137,10 @@ const TemplatePage = () => {
                       }}
                     />
                     <Text.Small color='#fff' weight='bold'>
-                      {snippet.filename}
+                      {sourceCode.filename}
                     </Text.Small>
                   </Flex>
-                  <Button size='small' variant='text' onClick={copyCode(snippet)}>
+                  <Button size='small' variant='text' onClick={copyCode(sourceCode)}>
                     <Text.Small color={theme.color.light.primary_500} weight='bold'>
                       {'복사'}
                     </Text.Small>
@@ -135,8 +149,8 @@ const TemplatePage = () => {
                 <S.SyntaxHighlighterWrapper isOpen={isOpenList[index]}>
                   {isOpenList[index] && (
                     <SyntaxHighlighter
-                      language={getLanguageByFilename(snippet.filename)}
-                      style={vscDarkPlus}
+                      language={getLanguageByFilename(sourceCode.filename)}
+                      style={oneLight}
                       showLineNumbers={true}
                       customStyle={{
                         borderRadius: '0 0 8px 8px',
@@ -150,7 +164,7 @@ const TemplatePage = () => {
                         },
                       }}
                     >
-                      {snippet.content}
+                      {sourceCode.content}
                     </SyntaxHighlighter>
                   )}
                 </S.SyntaxHighlighterWrapper>
@@ -160,13 +174,13 @@ const TemplatePage = () => {
 
           <S.SidebarContainer>
             <SelectList>
-              {template.snippets.map((snippet, index) => (
+              {template.sourceCodes.map((sourceCode, index) => (
                 <SelectList.Option
-                  key={snippet.id}
+                  key={sourceCode.id}
                   onClick={handleSelectOption(index)}
-                  isSelected={currentFile === snippet.id}
+                  isSelected={currentFile === sourceCode.id}
                 >
-                  {snippet.filename}
+                  {sourceCode.filename}
                 </SelectList.Option>
               ))}
             </SelectList>

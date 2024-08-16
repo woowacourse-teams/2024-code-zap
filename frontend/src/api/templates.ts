@@ -70,7 +70,7 @@ export const getTemplate = async (id: number) => {
     url: `${TEMPLATE_API_URL}/${id}`,
   });
 
-  if ('snippets' in response) {
+  if ('sourceCodes' in response) {
     return response;
   }
 
@@ -95,9 +95,9 @@ export const editTemplate = async ({ id, template }: { id: number; template: Tem
   });
 };
 
-export const deleteTemplate = async (id: number): Promise<void> => {
+export const deleteTemplate = async (idList: number[]): Promise<void> => {
   await customFetch({
     method: 'DELETE',
-    url: `${TEMPLATE_API_URL}/${id}`,
+    url: `${TEMPLATE_API_URL}/${idList.join(',')}`,
   });
 };

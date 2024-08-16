@@ -9,8 +9,7 @@ export const DropdownContainer = styled.div`
 export const Wrapper = styled.div`
   width: 9.125rem;
   background-color: white;
-  border: 1px solid #788496;
-  border-radius: 8px;
+  border-radius: 10px;
 `;
 
 export const SelectedButton = styled.button`
@@ -20,10 +19,11 @@ export const SelectedButton = styled.button`
 
   width: 100%;
   height: 2.5rem;
-  padding: 0.75rem;
+  padding: 0.625rem;
 
   object-fit: contain;
-  border-radius: 8px;
+  border: 1px solid ${theme.color.light.tertiary_400};
+  border-radius: 10px;
 `;
 
 export const OptionList = styled.ul`
@@ -34,14 +34,14 @@ export const OptionList = styled.ul`
   margin: 2px 0 0 0;
 
   background-color: white;
-  border: 1px solid #788496;
-  border-radius: 8px;
+  border: 1px solid ${theme.color.light.tertiary_400};
+  border-radius: 10px;
 `;
 
 export const Option = styled.li`
   width: 100%;
-  padding: 0.75rem;
-  border-radius: 7px;
+  padding: 0.625rem;
+  border-radius: 9px;
   &:hover {
     color: ${theme.color.light.white};
     background-color: ${theme.color.light.primary_500};

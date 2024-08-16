@@ -18,15 +18,15 @@ describe('useTemplateEditMutation', () => {
     const template: TemplateEditRequest = {
       title: 'editTemplate',
       description: '',
-      createSnippets: [],
-      updateSnippets: [
+      createSourceCodes: [],
+      updateSourceCodes: [
         {
           filename: 'filename1.txt',
           content: 'content edit',
           ordinal: 1,
         },
       ],
-      deleteSnippetIds: [],
+      deleteSourceCodeIds: [],
       categoryId: 1,
       tags: [],
     };

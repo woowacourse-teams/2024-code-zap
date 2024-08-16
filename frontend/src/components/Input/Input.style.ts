@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { theme } from '@/style/theme';
 import type { BaseProps, TextFieldProps } from './Input';
 
 const sizes = {
@@ -56,7 +57,7 @@ const variants = {
   `,
   outlined: css`
     background: none;
-    border: 1px solid #808080;
+    border: 1px solid ${theme.color.light.tertiary_400};
   `,
   text: css`
     background: none;
@@ -107,7 +108,7 @@ export const TextField = styled.input<TextFieldProps>`
   background: none;
 
   &::placeholder {
-    color: #788496;
+    color: ${theme.color.light.tertiary_400};
   }
 
   &:focus {
