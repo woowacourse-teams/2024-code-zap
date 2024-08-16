@@ -11,6 +11,7 @@ import {
   SIGNUP_API_URL,
 } from '@/api';
 import { TAG_API_URL } from '../api/tags';
+import { Category } from '../types/template';
 import mockCategoryList from './categoryList.json';
 import mockTagList from './tagList.json';
 import mockTemplateList from './templateList.json';
@@ -157,7 +158,45 @@ const authenticationHandler = [
 
 const categoryHandlers = [
   http.get(`${CATEGORY_API_URL}`, () => HttpResponse.json(mockCategoryList)),
-  http.post(`${CATEGORY_API_URL}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${CATEGORY_API_URL}`, async (req) => {
+    const newCategory = await req.request.json();
+
+    if (typeof newCategory === 'object' && newCategory !== null) {
+      const newId = mockCategoryList.categories.length + 1;
+      const category = { id: newId, ...newCategory } as Category;
+
+      mockCategoryList.categories.push(category);
+
+      return HttpResponse.json({ status: 201, category });
+    }
+
+    return HttpResponse.json({ status: 400, message: 'Invalid category data' });
+  }),
+  http.post(`${CATEGORY_API_URL}/:id`, async (req) => {
+    const { id } = req.params;
+    const updatedCategory = await req.request.json();
+    const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
+
+    if (categoryIndex !== -1 && typeof updatedCategory === 'object' && updatedCategory !== null) {
+      mockCategoryList.categories[categoryIndex] = { id: parseInt(id as string), ...updatedCategory } as Category;
+
+      return HttpResponse.json({ status: 200, category: mockCategoryList.categories[categoryIndex] });
+    } else {
+      return HttpResponse.json({ status: 404, message: 'Category not found or invalid data' });
+    }
+  }),
+  http.delete(`${CATEGORY_API_URL}/:id`, (req) => {
+    const { id } = req.params;
+    const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
+
+    if (categoryIndex !== -1) {
+      mockCategoryList.categories.splice(categoryIndex, 1);
+
+      return HttpResponse.json({ status: 204 });
+    } else {
+      return HttpResponse.json({ status: 404, message: 'Category not found' });
+    }
+  }),
 ];
 
 const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];

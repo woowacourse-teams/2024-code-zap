@@ -1,6 +1,6 @@
 import { trashcanIcon } from '@/assets/images';
 import { Button, Dropdown, Flex, Input, SnippetEditor, TagInput } from '@/components';
-import { useCategoryUpload } from '@/queries/category';
+import { useCategoryUploadQuery } from '@/queries/category';
 import type { Category, Snippet } from '@/types';
 import * as S from './TemplateEdit.style';
 
@@ -51,7 +51,7 @@ const TemplateEdit = ({
   handleSaveButtonClick,
   error,
 }: Props) => {
-  const { mutateAsync: postCategory } = useCategoryUpload();
+  const { mutateAsync: postCategory } = useCategoryUploadQuery();
 
   return (
     <Flex
