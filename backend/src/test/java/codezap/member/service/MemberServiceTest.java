@@ -34,16 +34,16 @@ public class MemberServiceTest {
         @DisplayName("회원가입 성공")
         void signup() {
             Member member = MemberFixture.memberFixture();
-            SignupRequest signupRequest = new SignupRequest(member.getLoginId(), member.getPassword());
+            SignupRequest signupRequest = new SignupRequest(member.getName(), member.getPassword());
 
             assertEquals(memberService.signup(signupRequest), 1L);
         }
 
         @Test
         @DisplayName("회원가입 실패: 아이디 중복")
-        void signup_fail_loginId_duplicate() {
+        void signup_fail_name_duplicate() {
             Member savedMember = memberRepository.save(MemberFixture.memberFixture());
-            SignupRequest signupRequest = new SignupRequest(savedMember.getLoginId(), savedMember.getPassword());
+            SignupRequest signupRequest = new SignupRequest(savedMember.getName(), savedMember.getPassword());
 
             assertThatThrownBy(() -> memberService.signup(signupRequest))
                     .isInstanceOf(CodeZapException.class)
@@ -53,23 +53,23 @@ public class MemberServiceTest {
 
     @Nested
     @DisplayName("아이디 중복 검사 테스트")
-    class AssertUniqueLoginId {
+    class AssertUniquename {
 
         @Test
         @DisplayName("아이디 중복 검사 통과: 사용가능한 아이디")
-        void assertUniqueLoginId() {
-            String loginId = "code";
+        void assertUniquename() {
+            String name = "code";
 
-            assertThatCode(() -> memberService.assertUniqueLoginId(loginId))
+            assertThatCode(() -> memberService.assertUniquename(name))
                     .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("아이디 중복 검사 실패: 중복된 아이디")
-        void assertUniqueLoginId_fail_duplicate() {
+        void assertUniquename_fail_duplicate() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            assertThatThrownBy(() -> memberService.assertUniqueLoginId(member.getLoginId()))
+            assertThatThrownBy(() -> memberService.assertUniquename(member.getName()))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("아이디가 이미 존재합니다.");
         }

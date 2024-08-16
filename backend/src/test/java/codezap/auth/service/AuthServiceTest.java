@@ -36,7 +36,7 @@ public class AuthServiceTest {
         @DisplayName("로그인 성공")
         void login() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            LoginRequest loginRequest = new LoginRequest(member.getLoginId(), member.getPassword());
+            LoginRequest loginRequest = new LoginRequest(member.getName(), member.getPassword());
 
             LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
 
@@ -48,15 +48,15 @@ public class AuthServiceTest {
 
         @Test
         @DisplayName("로그인 실패: 아이디 오류")
-        void login_WithInvalidLoginId_ThrowsException() {
+        void login_WithInvalidname_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            String wrongLoginId = "wrong" + member.getLoginId();
+            String wrongname = "wrong" + member.getName();
 
-            LoginRequest loginRequest = new LoginRequest(wrongLoginId, member.getPassword());
+            LoginRequest loginRequest = new LoginRequest(wrongname, member.getPassword());
 
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("존재하지 않는 아이디 " + wrongLoginId + " 입니다.");
+                    .hasMessage("존재하지 않는 아이디 " + wrongname + " 입니다.");
         }
 
         @Test
@@ -64,7 +64,7 @@ public class AuthServiceTest {
         void login_WithInvalidPassword_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            LoginRequest loginRequest = new LoginRequest(member.getLoginId(), member.getPassword() + "wrong");
+            LoginRequest loginRequest = new LoginRequest(member.getName(), member.getPassword() + "wrong");
 
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
@@ -90,7 +90,7 @@ public class AuthServiceTest {
         @DisplayName("쿠키 인증 실패: 잘못된 크레덴셜")
         void checkLogin_WithInvalidCredential_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            String invalidCredential = HttpHeaders.encodeBasicAuth(member.getLoginId(),  member.getPassword() + "wrong", StandardCharsets.UTF_8);
+            String invalidCredential = HttpHeaders.encodeBasicAuth(member.getName(),  member.getPassword() + "wrong", StandardCharsets.UTF_8);
 
             assertThatThrownBy(() -> authService.checkLogin(invalidCredential))
                     .isInstanceOf(CodeZapException.class)

@@ -20,14 +20,14 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
 
     @Override
     public String createCredential(Member member) {
-        return HttpHeaders.encodeBasicAuth(member.getLoginId(), member.getPassword(), StandardCharsets.UTF_8);
+        return HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8);
     }
 
     @Override
     public Member extractMember(String credential) {
-        String[] loginIdAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
-        Member member = memberRepository.fetchByLoginId(loginIdAndPassword[0]);
-        checkMatchPassword(member, loginIdAndPassword[1]);
+        String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
+        Member member = memberRepository.fetchByname(nameAndPassword[0]);
+        checkMatchPassword(member, nameAndPassword[1]);
         return member;
     }
 

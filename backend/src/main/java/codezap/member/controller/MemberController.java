@@ -34,8 +34,8 @@ public class MemberController implements SpringDocMemberController {
 
     @GetMapping("/check-login-id")
     @ResponseStatus(HttpStatus.OK)
-    public void checkUniqueLoginId(@RequestParam String loginId) {
-        memberService.assertUniqueLoginId(loginId);
+    public void checkUniquename(@RequestParam String name) {
+        memberService.assertUniquename(name);
     }
 
     @GetMapping("/members/{id}")

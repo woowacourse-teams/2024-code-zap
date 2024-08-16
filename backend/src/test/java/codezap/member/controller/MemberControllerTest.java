@@ -39,16 +39,16 @@ class MemberControllerTest extends MockMvcTest {
 
     @Test
     @DisplayName("사용자명 중복 확인 성공")
-    void checkUniqueLoginIdSuccess() throws Exception {
-        String loginId = "loginId";
+    void checkUniquenameSuccess() throws Exception {
+        String name = "name";
 
-        doNothing().when(memberService).assertUniqueLoginId(any(String.class));
+        doNothing().when(memberService).assertUniquename(any(String.class));
 
         mvc.perform(get("/check-login-id")
-                        .param("loginId", loginId))
+                        .param("name", name))
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(memberService, times(1)).assertUniqueLoginId(loginId);
+        verify(memberService, times(1)).assertUniquename(name);
     }
 
 
@@ -63,6 +63,6 @@ class MemberControllerTest extends MockMvcTest {
         mvc.perform(get("/members/" + member.getId()))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.loginId").value(member.getLoginId()));
+                .andExpect(jsonPath("$.name").value(member.getName()));
     }
 }

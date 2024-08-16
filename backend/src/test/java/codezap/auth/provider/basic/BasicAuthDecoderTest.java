@@ -22,15 +22,15 @@ class BasicAuthDecoderTest {
     @Test
     @DisplayName("BasicAuth 인증 정보 디코딩 성공")
     void decodeValidBasicAuth() {
-        String loginId = "codezap";
+        String name = "codezap";
         String password = "password123";
-        String credential = HttpHeaders.encodeBasicAuth(loginId, password, StandardCharsets.UTF_8);
+        String credential = HttpHeaders.encodeBasicAuth(name, password, StandardCharsets.UTF_8);
 
         String[] result = BasicAuthDecoder.decodeBasicAuth(credential);
 
         assertAll(
                 () -> assertEquals(2, result.length),
-                () -> assertEquals(loginId, result[0]),
+                () -> assertEquals(name, result[0]),
                 () -> assertEquals(password, result[1])
         );
     }
@@ -59,7 +59,7 @@ class BasicAuthDecoderTest {
     @ParameterizedTest
     @ValueSource(strings = {":", "user:", ":password"})
     @DisplayName("BasicAuth 인증 정보 디코딩 실패: 빈 사용자 이름 또는 비밀번호")
-    void throwExceptionForEmptyLoginIdOrPassword(String auth) {
+    void throwExceptionForEmptynameOrPassword(String auth) {
         String invalidCredential = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
 
         assertThatThrownBy(() -> BasicAuthDecoder.decodeBasicAuth(invalidCredential))
@@ -70,13 +70,13 @@ class BasicAuthDecoderTest {
     @Test
     @DisplayName("BasicAuth 인증 정보 디코딩 성공: 여러 개의 구분자 포함일 경우 첫 구분자 이후 문자열을 비밀번호로 인식")
     void decodeValidAuthWithMultipleSeparators() {
-        String loginId = "codezap";
+        String name = "codezap";
         String password = "pass:word:123";
-        String credential = HttpHeaders.encodeBasicAuth(loginId, password, StandardCharsets.UTF_8);
+        String credential = HttpHeaders.encodeBasicAuth(name, password, StandardCharsets.UTF_8);
 
         String[] result = BasicAuthDecoder.decodeBasicAuth(credential);
 
         assertThat(result).hasSize(2)
-                .containsExactly(loginId, password);
+                .containsExactly(name, password);
     }
 }

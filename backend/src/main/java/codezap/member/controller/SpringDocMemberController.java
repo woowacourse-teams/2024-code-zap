@@ -37,7 +37,7 @@ public interface SpringDocMemberController {
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/check-login-id", errorCases = {
             @ErrorCase(description = "아이디 중복", exampleMessage = "아이디가 이미 존재합니다."),
     })
-    void checkUniqueLoginId(@RequestParam String loginId);
+    void checkUniquename(@RequestParam String name);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "회원 정보 조회", description = "회원의 정보(아이디일, 닉네임)을 조회합니다.")

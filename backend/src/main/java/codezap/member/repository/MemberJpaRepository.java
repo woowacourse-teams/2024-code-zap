@@ -16,12 +16,12 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 멤버가 존재하지 않습니다."));
     }
 
-    default Member fetchByLoginId(String loginId) {
-        return findByLoginId(loginId)
-                .orElseThrow(() -> new CodeZapException(HttpStatus.UNAUTHORIZED, "존재하지 않는 아이디 " + loginId + " 입니다."));
+    default Member fetchByname(String name) {
+        return findByname(name)
+                .orElseThrow(() -> new CodeZapException(HttpStatus.UNAUTHORIZED, "존재하지 않는 아이디 " + name + " 입니다."));
     }
 
-    Optional<Member> findByLoginId(String loginId);
+    Optional<Member> findByname(String name);
 
-    boolean existsByLoginId(String loginId);
+    boolean existsByname(String name);
 }

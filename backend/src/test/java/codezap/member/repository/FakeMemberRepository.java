@@ -34,25 +34,24 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member fetchByLoginId(String loginId) {
+    public Member fetchByname(String name) {
         return members.stream()
-                .filter(member -> Objects.equals(member.getLoginId(), loginId))
+                .filter(member -> Objects.equals(member.getName(), name))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디 " + loginId + " 입니다."));
+                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디 " + name + " 입니다."));
     }
 
     @Override
-    public boolean existsByLoginId(String loginId) {
-        return members.stream().anyMatch(member -> Objects.equals(member.getLoginId(), loginId));
+    public boolean existsByname(String name) {
+        return members.stream().anyMatch(member -> Objects.equals(member.getName(), name));
     }
-
 
     @Override
     public Member save(Member entity) {
         var saved = new Member(
                 getOrGenerateId(entity),
                 entity.getPassword(),
-                entity.getLoginId()
+                entity.getName()
         );
         members.removeIf(member -> Objects.equals(member.getId(), entity.getId()));
         members.add(saved);

@@ -23,14 +23,14 @@ public class MemberService {
     private final CategoryRepository categoryRepository;
 
     public Long signup(SignupRequest request) {
-        assertUniqueLoginId(request.loginId());
-        Member member = memberRepository.save(new Member(request.loginId(), request.password()));
+        assertUniquename(request.name());
+        Member member = memberRepository.save(new Member(request.name(), request.password()));
         categoryRepository.save(Category.createDefaultCategory(member));
         return member.getId();
     }
 
-    public void assertUniqueLoginId(String loginId) {
-        if (memberRepository.existsByLoginId(loginId)) {
+    public void assertUniquename(String name) {
+        if (memberRepository.existsByname(name)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "아이디가 이미 존재합니다.");
         }
     }

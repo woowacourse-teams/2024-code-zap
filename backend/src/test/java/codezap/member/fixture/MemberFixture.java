@@ -12,7 +12,7 @@ public class MemberFixture {
         );
     }
 
-    public static Member createFixture(String loginId) {
+    public static Member createFixture(String name) {
         return new Member(
                 "몰리",
                 "password1234"
