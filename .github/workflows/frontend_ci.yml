@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-with-test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       frontend-directory: ./frontend
     steps:
