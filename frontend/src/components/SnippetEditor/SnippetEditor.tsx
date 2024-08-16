@@ -25,9 +25,11 @@ const SnippetEditor = ({ fileName, content, onChangeContent, onChangeFileName }:
     <S.SnippetEditorContainer>
       <S.SnippetFileNameInput value={fileName} onChange={handleFileNameChange} placeholder={'파일명.js'} />
       <ReactCodeMirror
-        placeholder={'// your code'}
+        placeholder={'// 코드를 입력해주세요'}
         value={content}
-        height='200px'
+        height='100%'
+        minHeight='10rem'
+        maxHeight='40rem'
         style={{ width: '100%' }}
         theme={vscodeDark}
         extensions={[javascript({ jsx: true })]}
