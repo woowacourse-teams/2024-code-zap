@@ -1,13 +1,13 @@
-export interface Snippet {
+export interface SourceCodes {
   id?: number;
   filename: string;
   content: string;
   ordinal: number;
 }
 
-export interface ThumbnailSnippet {
+export interface Thumbnail {
   filename: string;
-  thumbnailContent: string;
+  content: string;
 }
 
 export interface Tag {
@@ -24,17 +24,19 @@ export interface Template {
   id: number;
   title: string;
   description: string;
-  snippets: Snippet[];
+  sourceCodes: SourceCodes[];
   category: Category;
   tags: Tag[];
+  createdAt: string;
   modifiedAt: string;
 }
 
 export interface TemplateListItem {
   id: number;
   title: string;
-  thumbnailSnippet: ThumbnailSnippet;
   description: string;
+  thumbnail: Thumbnail;
   tags: Tag[];
+  createdAt: string;
   modifiedAt: string;
 }

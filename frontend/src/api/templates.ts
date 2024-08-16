@@ -70,7 +70,7 @@ export const getTemplate = async (id: number) => {
     url: `${TEMPLATE_API_URL}/${id}`,
   });
 
-  if ('snippets' in response) {
+  if ('sourceCodes' in response) {
     return response;
   }
 

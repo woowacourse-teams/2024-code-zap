@@ -58,7 +58,7 @@ describe('MyTemplatePage', () => {
     });
   });
 
-  test('키워드 검색 (스니펫): "Hello, World"를 검색하면 템플릿의 snippet에 "Hello, World"이 포함되어 있는지 확인', async () => {
+  test('키워드 검색 (스니펫): "Hello, World"를 검색하면 템플릿의 sourceCode에 "Hello, World"이 포함되어 있는지 확인', async () => {
     const { getByPlaceholderText, getAllByText } = renderWithProviders(<MyTemplatePage />);
 
     const searchInput = getByPlaceholderText('검색');

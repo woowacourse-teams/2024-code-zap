@@ -4,12 +4,12 @@
       "id": 1,
       "title": "title1",
       "description": "description1",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "MyComponent.tsx",
-        "thumbnailContent": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};",
+        "content": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};",
         "ordinal": 2
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 1,
           "filename": "MyComponent.tsx",
@@ -28,18 +28,19 @@
         { "id": 3, "name": "JavaScript" },
         { "id": 5, "name": "Backend" }
       ],
-      "modifiedAt": "2024-07-01 12:34"
+      "modifiedAt": "2024-07-01 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 2,
       "title": "title2",
       "description": "description2가 끝인줄 알았는데 말이지 description이 과연 어디까지 길어질 수 있을지 계속 타이핑 해볼까?",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Hello, world!');",
+        "content": "console.log('Hello, world!');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 3,
           "filename": "script1.js",
@@ -58,18 +59,19 @@
         { "id": 3, "name": "JavaScript" },
         { "id": 4, "name": "React" }
       ],
-      "modifiedAt": "2024-07-11 12:34"
+      "modifiedAt": "2024-07-11 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 3,
       "title": "title3",
       "description": "description3",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }",
+        "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 5,
           "filename": "example.java",
@@ -79,18 +81,19 @@
       ],
       "category": { "id": 4, "name": "CategoryID4" },
       "tags": [{ "id": 1, "name": "Java" }],
-      "modifiedAt": "2024-07-10 12:34"
+      "modifiedAt": "2024-07-10 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 4,
       "title": "title4",
       "description": "description4",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "body { margin: 0; padding: 0; }",
+        "content": "body { margin: 0; padding: 0; }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 6,
           "filename": "style.css",
@@ -103,18 +106,19 @@
         { "id": 6, "name": "CSS" },
         { "id": 7, "name": "Styling" }
       ],
-      "modifiedAt": "2024-07-09 12:34"
+      "modifiedAt": "2024-07-09 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 5,
       "title": "title5",
       "description": "description5",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "public class Program { public static void main(String[] args) { System.out.println(\"Run program\"); } }",
+        "content": "public class Program { public static void main(String[] args) { System.out.println(\"Run program\"); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 7,
           "filename": "program.java",
@@ -124,18 +128,19 @@
       ],
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 1, "name": "Java" }],
-      "modifiedAt": "2024-07-08 12:34"
+      "modifiedAt": "2024-07-08 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 6,
       "title": "title6",
       "description": "description6",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, Example!\"); } }",
+        "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, Example!\"); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 8,
           "filename": "Example.java",
@@ -154,18 +159,19 @@
         { "id": 1, "name": "Java" },
         { "id": 2, "name": "Example" }
       ],
-      "modifiedAt": "2024-07-07 12:34"
+      "modifiedAt": "2024-07-07 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 7,
       "title": "title7",
       "description": "description7",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('App running');",
+        "content": "console.log('App running');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 10,
           "filename": "App.js",
@@ -184,18 +190,19 @@
         { "id": 4, "name": "React" },
         { "id": 9, "name": "Frontend" }
       ],
-      "modifiedAt": "2024-07-06 12:34"
+      "modifiedAt": "2024-07-06 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 8,
       "title": "title8",
       "description": "description8",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Index file');",
+        "content": "console.log('Index file');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 12,
           "filename": "index.js",
@@ -205,18 +212,19 @@
       ],
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [],
-      "modifiedAt": "2024-07-05 12:34"
+      "modifiedAt": "2024-07-05 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 9,
       "title": "title9",
       "description": "description9",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Main file');",
+        "content": "console.log('Main file');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 13,
           "filename": "main.js",
@@ -235,18 +243,19 @@
         { "id": 3, "name": "JavaScript" },
         { "id": 7, "name": "Styling" }
       ],
-      "modifiedAt": "2024-07-04 12:34"
+      "modifiedAt": "2024-07-04 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 10,
       "title": "title10",
       "description": "description10",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Hello, Frontend!')",
+        "content": "print('Hello, Frontend!')",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 15,
           "filename": "frontend.py",
@@ -259,18 +268,19 @@
         { "id": 9, "name": "Frontend" },
         { "id": 10, "name": "Python" }
       ],
-      "modifiedAt": "2024-07-03 12:34"
+      "modifiedAt": "2024-07-03 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 11,
       "title": "title11",
       "description": "description11",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Backend logic');",
+        "content": "console.log('Backend logic');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 16,
           "filename": "backend.js",
@@ -289,18 +299,19 @@
         { "id": 3, "name": "JavaScript" },
         { "id": 5, "name": "Backend" }
       ],
-      "modifiedAt": "2024-07-02 12:34"
+      "modifiedAt": "2024-07-02 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 12,
       "title": "title12",
       "description": "description12",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Example snippet');",
+        "content": "console.log('Example snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 18,
           "filename": "example1.js",
@@ -310,18 +321,19 @@
       ],
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [],
-      "modifiedAt": "2024-07-01 12:34"
+      "modifiedAt": "2024-07-01 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 13,
       "title": "title13",
       "description": "description13",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "class OOPExample { constructor() { console.log('OOP Example'); } }",
+        "content": "class OOPExample { constructor() { console.log('OOP Example'); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 19,
           "filename": "oop.js",
@@ -340,18 +352,19 @@
         { "id": 7, "name": "Styling" },
         { "id": 8, "name": "OOP" }
       ],
-      "modifiedAt": "2024-07-11 12:34"
+      "modifiedAt": "2024-07-11 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 14,
       "title": "title14",
       "description": "description14",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "public class Hello { public static void main(String[] args) { System.out.println(\"Hello\"); } }",
+        "content": "public class Hello { public static void main(String[] args) { System.out.println(\"Hello\"); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 21,
           "filename": "hello.java",
@@ -361,18 +374,19 @@
       ],
       "category": { "id": 4, "name": "CategoryID4" },
       "tags": [{ "id": 1, "name": "Java" }],
-      "modifiedAt": "2024-07-10 12:34"
+      "modifiedAt": "2024-07-10 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 15,
       "title": "title15",
       "description": "description15",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Example snippet')",
+        "content": "print('Example snippet')",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 22,
           "filename": "example.py",
@@ -391,18 +405,19 @@
         { "id": 10, "name": "Python" },
         { "id": 2, "name": "Example" }
       ],
-      "modifiedAt": "2024-07-09 12:34"
+      "modifiedAt": "2024-07-09 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 16,
       "title": "title16",
       "description": "description16",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "public class Backend { public static void main(String[] args) { System.out.println(\"Backend\"); } }",
+        "content": "public class Backend { public static void main(String[] args) { System.out.println(\"Backend\"); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 24,
           "filename": "backend.java",
@@ -415,18 +430,19 @@
         { "id": 3, "name": "JavaScript" },
         { "id": 5, "name": "Backend" }
       ],
-      "modifiedAt": "2024-07-08 12:34"
+      "modifiedAt": "2024-07-08 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 17,
       "title": "title17",
       "description": "description17",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "import React from 'react';",
+        "content": "import React from 'react';",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 25,
           "filename": "react.js",
@@ -439,18 +455,19 @@
         { "id": 4, "name": "React" },
         { "id": 6, "name": "CSS" }
       ],
-      "modifiedAt": "2024-07-07 12:34"
+      "modifiedAt": "2024-07-07 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 18,
       "title": "title18",
       "description": "description18",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "class OOP { constructor() { console.log('OOP'); } }",
+        "content": "class OOP { constructor() { console.log('OOP'); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 26,
           "filename": "oop.js",
@@ -470,18 +487,19 @@
         { "id": 8, "name": "OOP" },
         { "id": 2, "name": "Example" }
       ],
-      "modifiedAt": "2024-07-06 12:34"
+      "modifiedAt": "2024-07-06 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 19,
       "title": "title19",
       "description": "description19",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "public class JavaSnippet { public static void main(String[] args) { System.out.println(\"Java Snippet\"); } }",
+        "content": "public class JavaSnippet { public static void main(String[] args) { System.out.println(\"Java Snippet\"); } }",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 28,
           "filename": "java_snippet.java",
@@ -491,18 +509,19 @@
       ],
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 1, "name": "Java" }],
-      "modifiedAt": "2024-07-05 12:34"
+      "modifiedAt": "2024-07-05 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 20,
       "title": "title20",
       "description": "description20",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Python example')",
+        "content": "print('Python example')",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 29,
           "filename": "python_example.py",
@@ -515,18 +534,19 @@
         { "id": 10, "name": "Python" },
         { "id": 2, "name": "Example" }
       ],
-      "modifiedAt": "2024-07-04 12:34"
+      "modifiedAt": "2024-07-04 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 21,
       "title": "title21",
       "description": "description21",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Log snippet');",
+        "content": "console.log('Log snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 30,
           "filename": "log.js",
@@ -536,18 +556,19 @@
       ],
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [],
-      "modifiedAt": "2024-07-03 12:34"
+      "modifiedAt": "2024-07-03 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 22,
       "title": "title22",
       "description": "description22",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "import React from 'react';\n\nconst Component = () => <div>React Component</div>;\n\nexport default Component;",
+        "content": "import React from 'react';\n\nconst Component = () => <div>React Component</div>;\n\nexport default Component;",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 31,
           "filename": "react_component.js",
@@ -560,18 +581,19 @@
         { "id": 4, "name": "React" },
         { "id": 6, "name": "CSS" }
       ],
-      "modifiedAt": "2024-07-02 12:34"
+      "modifiedAt": "2024-07-02 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 23,
       "title": "title23",
       "description": "description23",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Snippet');",
+        "content": "console.log('Snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 32,
           "filename": "snippet.js",
@@ -581,18 +603,19 @@
       ],
       "category": { "id": 4, "name": "CategoryID4" },
       "tags": [],
-      "modifiedAt": "2024-07-01 12:34"
+      "modifiedAt": "2024-07-01 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 24,
       "title": "title24",
       "description": "description24",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Frontend snippet');",
+        "content": "console.log('Frontend snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 33,
           "filename": "frontend_snippet.js",
@@ -605,18 +628,19 @@
         { "id": 1, "name": "Java" },
         { "id": 9, "name": "Frontend" }
       ],
-      "modifiedAt": "2024-07-11 12:34"
+      "modifiedAt": "2024-07-11 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 25,
       "title": "title25",
       "description": "description25",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Python code')",
+        "content": "print('Python code')",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 34,
           "filename": "python_code.py",
@@ -629,18 +653,19 @@
         { "id": 10, "name": "Python" },
         { "id": 2, "name": "Example" }
       ],
-      "modifiedAt": "2024-07-10 12:34"
+      "modifiedAt": "2024-07-10 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 26,
       "title": "title26",
       "description": "description26",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Backend code');",
+        "content": "console.log('Backend code');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 35,
           "filename": "backend_code.js",
@@ -653,18 +678,19 @@
         { "id": 3, "name": "JavaScript" },
         { "id": 5, "name": "Backend" }
       ],
-      "modifiedAt": "2024-07-09 12:34"
+      "modifiedAt": "2024-07-09 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 27,
       "title": "title27",
       "description": "description27",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('React code');",
+        "content": "console.log('React code');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 36,
           "filename": "react_code.js",
@@ -677,18 +703,19 @@
         { "id": 4, "name": "React" },
         { "id": 6, "name": "CSS" }
       ],
-      "modifiedAt": "2024-07-08 12:34"
+      "modifiedAt": "2024-07-08 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 28,
       "title": "title28",
       "description": "description28",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Style snippet');",
+        "content": "console.log('Style snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 37,
           "filename": "style_snippet.js",
@@ -698,18 +725,19 @@
       ],
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 7, "name": "Styling" }],
-      "modifiedAt": "2024-07-07 12:34"
+      "modifiedAt": "2024-07-07 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 29,
       "title": "title29",
       "description": "description29",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Frontend code');",
+        "content": "console.log('Frontend code');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 38,
           "filename": "frontend_code.js",
@@ -722,18 +750,19 @@
         { "id": 1, "name": "Java" },
         { "id": 9, "name": "Frontend" }
       ],
-      "modifiedAt": "2024-07-06 12:34"
+      "modifiedAt": "2024-07-06 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 30,
       "title": "title30",
       "description": "description30",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Another Python example')",
+        "content": "print('Another Python example')",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 39,
           "filename": "python_example2.py",
@@ -743,18 +772,19 @@
       ],
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [{ "id": 10, "name": "Python" }],
-      "modifiedAt": "2024-07-05 12:34"
+      "modifiedAt": "2024-07-05 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 31,
       "title": "title31",
       "description": "description31",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('JavaScript example');",
+        "content": "console.log('JavaScript example');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 40,
           "filename": "javascript_example.js",
@@ -764,18 +794,19 @@
       ],
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 3, "name": "JavaScript" }],
-      "modifiedAt": "2024-07-04 12:34"
+      "modifiedAt": "2024-07-04 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 32,
       "title": "title32",
       "description": "description32",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "const Component = () => <div>Another React Component</div>;\n\nexport default Component;",
+        "content": "const Component = () => <div>Another React Component</div>;\n\nexport default Component;",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 41,
           "filename": "react_component2.js",
@@ -788,18 +819,19 @@
         { "id": 4, "name": "React" },
         { "id": 6, "name": "CSS" }
       ],
-      "modifiedAt": "2024-07-03 12:34"
+      "modifiedAt": "2024-07-03 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 33,
       "title": "title33",
       "description": "description33",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Empty snippet');",
+        "content": "console.log('Empty snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 42,
           "filename": "empty_snippet.js",
@@ -809,18 +841,19 @@
       ],
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [],
-      "modifiedAt": "2024-07-02 12:34"
+      "modifiedAt": "2024-07-02 12:34",
+      "createdAt": "2024-07-09 12:34"
     },
     {
       "id": 34,
       "title": "title34",
       "description": "description34",
-      "thumbnailSnippet": {
+      "thumbnail": {
         "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Another frontend snippet');",
+        "content": "console.log('Another frontend snippet');",
         "ordinal": 1
       },
-      "snippets": [
+      "sourceCodes": [
         {
           "id": 43,
           "filename": "frontend_snippet2.js",
@@ -833,330 +866,8 @@
         { "id": 1, "name": "Java" },
         { "id": 9, "name": "Frontend" }
       ],
-      "modifiedAt": "2024-07-01 12:34"
-    },
-    {
-      "id": 35,
-      "title": "title35",
-      "description": "description35",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Another Python code')",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 44,
-          "filename": "python_code2.py",
-          "content": "print('Another Python code')",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 4, "name": "CategoryID4" },
-      "tags": [{ "id": 10, "name": "Python" }],
-      "modifiedAt": "2024-07-11 12:34"
-    },
-    {
-      "id": 36,
-      "title": "title36",
-      "description": "description36",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('JavaScript code');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 45,
-          "filename": "javascript_code.js",
-          "content": "console.log('JavaScript code');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 2, "name": "CategoryID2" },
-      "tags": [
-        { "id": 3, "name": "JavaScript" },
-        { "id": 5, "name": "Backend" }
-      ],
-      "modifiedAt": "2024-07-10 12:34"
-    },
-    {
-      "id": 37,
-      "title": "title37",
-      "description": "description37",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('React styling');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 46,
-          "filename": "react_styling.js",
-          "content": "console.log('React styling');",
-          "ordinal": 1
-        },
-        {
-          "id": 47,
-          "filename": "css_styling.js",
-          "content": "console.log('CSS styling');",
-          "ordinal": 2
-        }
-      ],
-      "category": { "id": 3, "name": "CategoryID3" },
-      "tags": [
-        { "id": 4, "name": "React" },
-        { "id": 6, "name": "CSS" },
-        { "id": 7, "name": "Styling" }
-      ],
-      "modifiedAt": "2024-07-09 12:34"
-    },
-    {
-      "id": 38,
-      "title": "title38",
-      "description": "description38",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Style example');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 48,
-          "filename": "style_example.js",
-          "content": "console.log('Style example');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 4, "name": "CategoryID4" },
-      "tags": [{ "id": 7, "name": "Styling" }],
-      "modifiedAt": "2024-07-08 12:34"
-    },
-    {
-      "id": 39,
-      "title": "title39",
-      "description": "description39",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Empty file');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 49,
-          "filename": "empty.js",
-          "content": "console.log('Empty file');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 2, "name": "CategoryID2" },
-      "tags": [],
-      "modifiedAt": "2024-07-07 12:34"
-    },
-    {
-      "id": 40,
-      "title": "title40",
-      "description": "description40",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Python log')",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 50,
-          "filename": "python_log.py",
-          "content": "print('Python log')",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 3, "name": "CategoryID3" },
-      "tags": [
-        { "id": 10, "name": "Python" },
-        { "id": 2, "name": "Example" }
-      ],
-      "modifiedAt": "2024-07-06 12:34"
-    },
-    {
-      "id": 41,
-      "title": "title41",
-      "description": "description41",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Empty file content');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 51,
-          "filename": "empty_file.js",
-          "content": "console.log('Empty file content');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 4, "name": "CategoryID4" },
-      "tags": [],
-      "modifiedAt": "2024-07-05 12:34"
-    },
-    {
-      "id": 42,
-      "title": "title42",
-      "description": "description42",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('React and CSS');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 52,
-          "filename": "react_css.js",
-          "content": "console.log('React and CSS');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 2, "name": "CategoryID2" },
-      "tags": [
-        { "id": 4, "name": "React" },
-        { "id": 6, "name": "CSS" }
-      ],
-      "modifiedAt": "2024-07-04 12:34"
-    },
-    {
-      "id": 43,
-      "title": "title43",
-      "description": "description43",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "class OOPSnippet { constructor() { console.log('OOP Snippet'); } }",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 53,
-          "filename": "oop_snippet.js",
-          "content": "class OOPSnippet { constructor() { console.log('OOP Snippet'); } }",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 3, "name": "CategoryID3" },
-      "tags": [
-        { "id": 7, "name": "Styling" },
-        { "id": 8, "name": "OOP" }
-      ],
-      "modifiedAt": "2024-07-03 12:34"
-    },
-    {
-      "id": 44,
-      "title": "title44",
-      "description": "description44",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Log file');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 54,
-          "filename": "log_file.js",
-          "content": "console.log('Log file');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 4, "name": "CategoryID4" },
-      "tags": [],
-      "modifiedAt": "2024-07-02 12:34"
-    },
-    {
-      "id": 45,
-      "title": "title45",
-      "description": "description45",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "print('Another Python log')",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 55,
-          "filename": "python_log2.py",
-          "content": "print('Another Python log')",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 2, "name": "CategoryID2" },
-      "tags": [{ "id": 10, "name": "Python" }],
-      "modifiedAt": "2024-07-01 12:34"
-    },
-    {
-      "id": 46,
-      "title": "title46",
-      "description": "description46",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Backend snippet');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 56,
-          "filename": "backend_snippet.js",
-          "content": "console.log('Backend snippet');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 3, "name": "CategoryID3" },
-      "tags": [
-        { "id": 3, "name": "JavaScript" },
-        { "id": 5, "name": "Backend" },
-        { "id": 7, "name": "Styling" }
-      ],
-      "modifiedAt": "2024-07-11 12:34"
-    },
-    {
-      "id": 47,
-      "title": "title47",
-      "description": "description47",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('React snippet');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 57,
-          "filename": "react_snippet.js",
-          "content": "console.log('React snippet');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 4, "name": "CategoryID4" },
-      "tags": [{ "id": 4, "name": "React" }],
-      "modifiedAt": "2024-07-10 12:34"
-    },
-    {
-      "id": 48,
-      "title": "title48",
-      "description": "description48",
-      "thumbnailSnippet": {
-        "filename": "thumbnail.jsx",
-        "thumbnailContent": "console.log('Styling snippet');",
-        "ordinal": 1
-      },
-      "snippets": [
-        {
-          "id": 58,
-          "filename": "styling_snippet.js",
-          "content": "console.log('Styling snippet');",
-          "ordinal": 1
-        }
-      ],
-      "category": { "id": 2, "name": "CategoryID2" },
-      "tags": [
-        { "id": 7, "name": "Styling" },
-        { "id": 8, "name": "OOP" }
-      ],
-      "modifiedAt": "2024-07-09 12:34"
+      "modifiedAt": "2024-07-01 12:34",
+      "createdAt": "2024-07-09 12:34"
     }
   ]
 }

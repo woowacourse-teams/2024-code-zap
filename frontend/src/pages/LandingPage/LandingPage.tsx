@@ -75,7 +75,7 @@ const LandingPage = () => (
 export default LandingPage;
 
 const ExamCode = () => {
-  const snippet = {
+  const sourceCode = {
     id: 102,
     filename: 'App.tsx',
     content:
@@ -95,7 +95,7 @@ const ExamCode = () => {
         <Flex align='center' gap='0.5rem' css={{ cursor: 'pointer' }}>
           <img src={chevron} width={24} height={24} alt='' />
           <Text.Small color='#fff' weight='bold'>
-            {snippet.filename}
+            {sourceCode.filename}
           </Text.Small>
         </Flex>
         <Button size='small' variant='text'>
@@ -121,7 +121,7 @@ const ExamCode = () => {
             },
           }}
         >
-          {snippet.content}
+          {sourceCode.content}
         </SyntaxHighlighter>
       </S.SyntaxHighlighterWrapper>
     </div>

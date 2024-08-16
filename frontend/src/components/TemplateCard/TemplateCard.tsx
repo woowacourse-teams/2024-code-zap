@@ -14,7 +14,7 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const { title, description, thumbnailSnippet, tags, modifiedAt } = template;
+  const { title, description, thumbnail, tags, modifiedAt } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
 
   const blockMovingToDetailPage = (
@@ -51,7 +51,7 @@ const TemplateCard = ({ template }: Props) => {
       </Flex>
 
       <SyntaxHighlighter
-        language={getLanguageByFilename(thumbnailSnippet?.filename ?? '')}
+        language={getLanguageByFilename(thumbnail?.filename ?? '')}
         style={oneLight}
         showLineNumbers={true}
         customStyle={{ margin: '1rem 0', borderRadius: '8px', width: '100%', height: '9.5rem', tabSize: 2 }}
@@ -61,7 +61,7 @@ const TemplateCard = ({ template }: Props) => {
           },
         }}
       >
-        {thumbnailSnippet?.thumbnailContent}
+        {thumbnail?.content}
       </SyntaxHighlighter>
 
       <Flex justify='space-between' onClick={blockMovingToDetailPage}>

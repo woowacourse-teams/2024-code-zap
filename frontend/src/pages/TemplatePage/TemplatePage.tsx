@@ -9,7 +9,7 @@ import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
 import { useCustomContext, useToggle } from '@/hooks/utils';
 import { TemplateEditPage } from '@/pages';
-import type { Snippet } from '@/types';
+import type { SourceCodes } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 import * as S from './TemplatePage.style';
 
@@ -20,8 +20,8 @@ const TemplatePage = () => {
   const { infoAlert } = useCustomContext(ToastContext);
   const [isOpen, toggleModal] = useToggle();
 
-  const copyCode = (snippet: Snippet) => () => {
-    navigator.clipboard.writeText(snippet.content);
+  const copyCode = (sourceCode: SourceCodes) => () => {
+    navigator.clipboard.writeText(sourceCode.content);
     infoAlert('코드가 복사되었습니다!');
   };
 
@@ -29,7 +29,7 @@ const TemplatePage = () => {
     currentFile,
     template,
     isEdit,
-    snippetRefs,
+    sourceCodeRefs,
     toggleEditButton,
     handleEditButtonClick,
     handleSelectOption,
@@ -71,10 +71,10 @@ const TemplatePage = () => {
                         handleEditButtonClick();
                       }}
                     >
-                      <img src={pencilIcon} width={24} height={24} alt='Delete snippet' />
+                      <img src={pencilIcon} width={24} height={24} alt='소스코드 수정' />
                     </S.EditButton>
                     <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                      <img src={trashcanIcon} width={28} height={28} alt='Delete snippet' />
+                      <img src={trashcanIcon} width={28} height={28} alt='소스코드 삭제' />
                     </S.DeleteButton>
                   </Flex>
                 </Flex>
@@ -116,8 +116,8 @@ const TemplatePage = () => {
               </Modal>
             )}
 
-            {template.snippets.map((snippet, index) => (
-              <div id={snippet.filename} key={snippet.id} ref={(el) => (snippetRefs.current[index] = el)}>
+            {template.sourceCodes.map((sourceCode, index) => (
+              <div id={sourceCode.filename} key={sourceCode.id} ref={(el) => (sourceCodeRefs.current[index] = el)}>
                 <Flex
                   justify='space-between'
                   align='center'
@@ -137,10 +137,10 @@ const TemplatePage = () => {
                       }}
                     />
                     <Text.Small color='#fff' weight='bold'>
-                      {snippet.filename}
+                      {sourceCode.filename}
                     </Text.Small>
                   </Flex>
-                  <Button size='small' variant='text' onClick={copyCode(snippet)}>
+                  <Button size='small' variant='text' onClick={copyCode(sourceCode)}>
                     <Text.Small color={theme.color.light.primary_500} weight='bold'>
                       {'복사'}
                     </Text.Small>
@@ -149,7 +149,7 @@ const TemplatePage = () => {
                 <S.SyntaxHighlighterWrapper isOpen={isOpenList[index]}>
                   {isOpenList[index] && (
                     <SyntaxHighlighter
-                      language={getLanguageByFilename(snippet.filename)}
+                      language={getLanguageByFilename(sourceCode.filename)}
                       style={oneLight}
                       showLineNumbers={true}
                       customStyle={{
@@ -164,7 +164,7 @@ const TemplatePage = () => {
                         },
                       }}
                     >
-                      {snippet.content}
+                      {sourceCode.content}
                     </SyntaxHighlighter>
                   )}
                 </S.SyntaxHighlighterWrapper>
@@ -174,13 +174,13 @@ const TemplatePage = () => {
 
           <S.SidebarContainer>
             <SelectList>
-              {template.snippets.map((snippet, index) => (
+              {template.sourceCodes.map((sourceCode, index) => (
                 <SelectList.Option
-                  key={snippet.id}
+                  key={sourceCode.id}
                   onClick={handleSelectOption(index)}
-                  isSelected={currentFile === snippet.id}
+                  isSelected={currentFile === sourceCode.id}
                 >
-                  {snippet.filename}
+                  {sourceCode.filename}
                 </SelectList.Option>
               ))}
             </SelectList>

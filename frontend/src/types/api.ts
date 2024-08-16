@@ -1,4 +1,4 @@
-import { Category, Snippet, Tag, TemplateListItem } from './template';
+import { Category, SourceCodes, Tag, TemplateListItem } from './template';
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
@@ -10,7 +10,7 @@ export interface TemplateListResponse {
 export interface TemplateUploadRequest {
   title: string;
   description: string;
-  snippets: Snippet[];
+  sourceCodes: SourceCodes[];
   categoryId: number;
   tags: string[];
 }
@@ -18,9 +18,9 @@ export interface TemplateUploadRequest {
 export interface TemplateEditRequest {
   title: string;
   description: string;
-  createSnippets: Snippet[];
-  updateSnippets: Snippet[];
-  deleteSnippetIds: number[];
+  createSourceCodes: SourceCodes[];
+  updateSourceCodes: SourceCodes[];
+  deleteSourceCodeIds: number[];
   categoryId: number;
   tags: string[];
 }
