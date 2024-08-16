@@ -1,5 +1,5 @@
 import type { CategoryListResponse, CategoryRequest } from '@/types';
-import { MemberInfo } from '@/types/authentication';
+import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
