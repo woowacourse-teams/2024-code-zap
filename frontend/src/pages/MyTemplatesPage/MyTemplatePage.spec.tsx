@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import { render, fireEvent, waitFor, within } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { AuthProvider } from '../../contexts/authContext';
+import { AuthProvider } from '@/contexts';
 import MyTemplatePage from './MyTemplatePage';
 
 beforeAll(() => {

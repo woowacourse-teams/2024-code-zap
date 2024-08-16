@@ -1,0 +1,57 @@
+name: Backend CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev/be
+
+jobs:
+  build:
+    runs-on: self-hosted
+    steps:
+      - name: 브랜치명을 통해 개발 환경 알아내기
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash find-env-by-branch.sh
+          
+      - name: 체크아웃
+        uses: actions/checkout@v4
+        
+      - name: gradle 캐싱
+        uses: gradle/actions/setup-gradle@v3
+            
+      - name: bootJar로 jar 파일 생성
+        run: |
+          ./gradlew bootJar
+          mv build/libs/*.jar ${{ secrets.WORK_DIRECTORY }}/${{ env.ENVIRONMENT }}
+        working-directory: ./backend
+      
+      - name: 클린업
+        if: always()
+        run: rm -rf ../2024-code-zap/*
+        
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: 브랜치명을 통해 개발 환경 알아내기
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash find-env-by-branch.sh
+          
+      - name: 실행 프로세스 확인
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash check-old-pids.sh
+        
+      - name: 배포 스크립트 실행
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          RUNNER_TRACKING_ID="" && bash start.sh ${{ env.ENVIRONMENT }}
+                    
+      - name: 실행 프로세스 확인으로 배포 검증 
+        run: |
+          cd ${{ secrets.SCRIPT_DIRECTORY }}
+          bash verify-deploy.sh
+          

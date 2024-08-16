@@ -1,15 +1,8 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import {
-  TemplatePage,
-  MyTemplatePage,
-  TemplateUploadPage,
-  SignupPage,
-  LoginPage,
-  LandingPage,
-  NotFoundPage,
-} from '@/pages';
+import { TemplatePage, TemplateUploadPage, SignupPage, LoginPage, LandingPage, NotFoundPage } from '@/pages';
+import HomeRouter from './HomeRouter';
 import RouteGuard from './RouteGuard';
 
 const router = createBrowserRouter([
@@ -19,11 +12,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: (
-          <RouteGuard isLoginRequired redirectTo='/login'>
-            <MyTemplatePage />
-          </RouteGuard>
-        ),
+        element: <HomeRouter />,
       },
       {
         path: 'templates/:id',
