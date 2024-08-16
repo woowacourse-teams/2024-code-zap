@@ -1,4 +1,4 @@
-import { createContext, useState, ReactNode, useEffect } from 'react';
+import { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
 
 import { useLoginStateQuery } from '@/queries/authentication';
 import { MemberInfo } from '@/types';
@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  const checkAlreadyLogin = async () => {
+  const checkAlreadyLogin = useCallback(async () => {
     const { error, isSuccess: refetchSuccess } = await getLoginState();
 
     const savedName = localStorage.getItem('name');
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
 
-    if (refetchSuccess && savedName && savedName) {
+    if (refetchSuccess && savedName && savedMemberId) {
       setIsLogin(true);
 
       return true;
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return false;
-  };
+  }, [getLoginState]);
 
   const handleLoginState = (state: boolean) => {
     setIsLogin(state);
