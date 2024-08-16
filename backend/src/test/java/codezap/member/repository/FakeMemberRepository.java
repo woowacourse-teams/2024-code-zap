@@ -3,7 +3,6 @@ package codezap.member.repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.http.HttpStatus;
@@ -35,16 +34,18 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
+    public Member fetchByLoginId(String loginId) {
+        return members.stream()
+                .filter(member -> Objects.equals(member.getLoginId(), loginId))
+                .findFirst()
+                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "존재하지 않는 아이디 " + loginId + " 입니다."));
+    }
+
+    @Override
     public boolean existsByLoginId(String loginId) {
         return members.stream().anyMatch(member -> Objects.equals(member.getLoginId(), loginId));
     }
 
-    @Override
-    public Optional<Member> findByLoginId(String loginId) {
-        return members.stream()
-                .filter(member -> Objects.equals(member.getLoginId(), loginId))
-                .findFirst();
-    }
 
     @Override
     public Member save(Member entity) {

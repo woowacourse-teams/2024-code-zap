@@ -31,7 +31,7 @@ class MemberControllerTest extends MockMvcTest {
     void signupSuccess() throws Exception {
         SignupRequest signupRequest = new SignupRequest("testuser", "password123");
 
-        mvc.perform(post("/members")
+        mvc.perform(post("/signup")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(signupRequest)))
                 .andExpect(status().isCreated());

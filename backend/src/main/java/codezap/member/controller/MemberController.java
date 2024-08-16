@@ -27,7 +27,7 @@ public class MemberController implements SpringDocMemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/members")
+    @PostMapping("/signup")
     public ResponseEntity<Void> signup(@Valid @RequestBody SignupRequest request) {
         return ResponseEntity.created(URI.create("/members/" + memberService.signup(request))).build();
     }
