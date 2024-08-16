@@ -16,7 +16,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Logo />
         <Flex align='center' gap='2rem' flex='1'>
           {isLogin && <NavOption route='/' name='내 템플릿' />}
-          <NavOption route='/' name='서비스 소개' />
+          <NavOption route='/aboutus' name='서비스 소개' />
         </Flex>
 
         <Flex align='center' gap='2rem'>
