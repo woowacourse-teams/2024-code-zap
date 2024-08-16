@@ -49,6 +49,11 @@ public class FakeCategoryRepository implements CategoryRepository {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return categories.stream().anyMatch(category -> Objects.equals(category.getId(), id));
+    }
+
+    @Override
     public boolean existsByNameAndMember(String categoryName, Member member) {
         return categories.stream()
                 .anyMatch(category ->
@@ -74,10 +79,6 @@ public class FakeCategoryRepository implements CategoryRepository {
             return entity.getId();
         }
         return idCounter.getAndIncrement();
-    }
-
-    private boolean existsById(Long id) {
-        return categories.stream().anyMatch(category -> Objects.equals(category.getId(), id));
     }
 
     @Override

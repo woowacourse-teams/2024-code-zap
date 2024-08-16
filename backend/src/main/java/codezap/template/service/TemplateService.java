@@ -136,13 +136,13 @@ public class TemplateService {
 
         if (categoryId != null && tagIds != null) {
             List<Long> templateIds = findTemplateIdContainsTagIds(tagIds);
-            categoryRepository.fetchById(categoryId);
+            validateCategoryId(categoryId);
             Page<Template> templatePage =
                     templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
         if (categoryId != null) {
-            categoryRepository.fetchById(categoryId);
+            validateCategoryId(categoryId);
             Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponseBy(templatePage);
         }
@@ -160,9 +160,21 @@ public class TemplateService {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
         }
         for (Long id : tagIds) {
-            tagRepository.fetchById(id);
+            validateTagId(id);
         }
         return templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
+    }
+
+    private void validateTagId(Long tagId) {
+        if(!tagRepository.existsById(tagId)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + tagId + "에 해당하는 태그가 존재하지 않습니다.");
+        }
+    }
+
+    private void validateCategoryId(Long categoryId) {
+        if(!categoryRepository.existsById(categoryId)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + categoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
     }
 
     private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {

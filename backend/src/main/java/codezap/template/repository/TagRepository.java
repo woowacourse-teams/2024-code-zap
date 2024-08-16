@@ -13,6 +13,8 @@ public interface TagRepository {
 
     Optional<Tag> findByName(String name);
 
+    boolean existsById(Long id);
+
     boolean existsByName(String name);
 
     Tag save(Tag tag);

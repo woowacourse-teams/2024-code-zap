@@ -13,6 +13,8 @@ public interface CategoryRepository {
 
     List<Category> findAll();
 
+    boolean existsById(Long categoryId);
+
     boolean existsByNameAndMember(String categoryName, Member member);
 
     Category save(Category category);
