@@ -20,7 +20,7 @@ export const useLoginMutation = () => {
         handleMemberInfo(res);
         failAlert('로그인에 실패하였습니다.');
       } else {
-        localStorage.setItem('username', String(res.username));
+        localStorage.setItem('name', String(res.name));
         localStorage.setItem('memberId', String(res.memberId));
         handleMemberInfo(res);
         handleLoginState(true);
