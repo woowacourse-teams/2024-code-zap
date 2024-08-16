@@ -1,19 +1,14 @@
 export interface SignupRequest {
-  email: string;
-  username: string;
+  name: string;
   password: string;
 }
 
 export interface LoginRequest {
-  email: string;
+  name: string;
   password: string;
-}
-
-export interface CheckUsernameResponse {
-  check: boolean;
 }
 
 export interface MemberInfo {
   memberId: number | undefined;
-  username: string | undefined;
+  name: string | undefined;
 }

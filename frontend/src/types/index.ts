@@ -10,6 +10,6 @@ export type {
   CategoryListResponse,
   TagListResponse,
 } from './api';
-export type { LoginRequest, SignupRequest, CheckUsernameResponse } from './authentication';
+export type { LoginRequest, SignupRequest, MemberInfo } from './authentication';
 
 export type { CustomError } from './fetch';
