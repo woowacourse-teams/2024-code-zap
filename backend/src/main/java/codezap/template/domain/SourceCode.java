@@ -1,7 +1,6 @@
 package codezap.template.domain;
 
 import java.util.Arrays;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
@@ -12,11 +11,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 
-import org.hibernate.Hibernate;
-
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = true, of = {"id"})
 public class SourceCode extends BaseTimeEntity {
 
     private static final String LINE_BREAK = "\n";
@@ -62,29 +61,5 @@ public class SourceCode extends BaseTimeEntity {
         this.filename = filename;
         this.content = content;
         this.ordinal = ordinal;
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        Class<?> oEffectiveClass = Hibernate.getClass(o);
-        Class<?> thisEffectiveClass = Hibernate.getClass(this);
-        if (!thisEffectiveClass.equals(oEffectiveClass)) {
-            return false;
-        }
-
-        SourceCode sourceCode = (SourceCode) o;
-        return getId() != null && Objects.equals(getId(), sourceCode.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return Hibernate.getClass(this).hashCode();
     }
 }

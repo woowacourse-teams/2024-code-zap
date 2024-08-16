@@ -2,7 +2,6 @@ package codezap.template.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,13 +12,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-import org.hibernate.Hibernate;
-
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode(callSuper = true, of = {"id"})
 public class Template extends BaseTimeEntity {
 
     @Id
@@ -64,32 +63,5 @@ public class Template extends BaseTimeEntity {
 
     public void updateSourceCodes(List<SourceCode> sourceCode) {
         sourceCodes.addAll(sourceCode);
-    }
-
-    public void deleteSourceCode(Long deletedId) {
-        sourceCodes.removeIf(sourceCode -> Objects.equals(sourceCode.getId(), deletedId));
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public final boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null) {
-            return false;
-        }
-        Class<?> oEffectiveClass = Hibernate.getClass(o);
-        Class<?> thisEffectiveClass = Hibernate.getClass(this);
-        if (!thisEffectiveClass.equals(oEffectiveClass)) {
-            return false;
-        }
-        Template template = (Template) o;
-        return getId() != null && Objects.equals(getId(), template.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return Hibernate.getClass(this).hashCode();
     }
 }
