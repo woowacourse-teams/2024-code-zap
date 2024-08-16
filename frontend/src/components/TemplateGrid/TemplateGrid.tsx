@@ -1,5 +1,5 @@
 import { TemplateCard } from '@/components';
-import { TemplateListItem } from '@/types/template';
+import { TemplateListItem } from '@/types';
 import * as S from './TemplateGrid.style';
 
 interface Props {
