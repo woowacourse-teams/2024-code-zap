@@ -20,12 +20,12 @@ public class AuthService {
     private final MemberRepository memberRepository;
 
     public LoginAndCredentialDto login(LoginRequest loginRequest) {
-        Member member = getMemberByIdAndPassword(loginRequest.loginId(), loginRequest.password());
+        Member member = getVerifiedMember(loginRequest.loginId(), loginRequest.password());
         String credential = credentialProvider.createCredential(member);
         return new LoginAndCredentialDto(LoginResponse.from(member), credential);
     }
 
-    private Member getMemberByIdAndPassword(String loginId, String password) {
+    private Member getVerifiedMember(String loginId, String password) {
         Member member = memberRepository.fetchByLoginId(loginId);
         validateCorrectPassword(member, password);
         return member;
