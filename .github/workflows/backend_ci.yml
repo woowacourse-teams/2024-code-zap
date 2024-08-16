@@ -1,0 +1,33 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches:
+      - dev/be
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: H2 스프링 설정 생성
+        run: |
+          echo "spring:
+            h2:
+              console:
+                enabled: true
+                path: /h2-console
+            datasource:
+              url: jdbc:h2:mem:database" > backend/src/main/resources/application.yml
+          
+      - name: 테스트 코드 실행
+        run: ./gradlew test
+        working-directory: ./backend
+
+      - name: 클린업
+        if: always()
+        run: rm -rf ../2024-code-zap/*
