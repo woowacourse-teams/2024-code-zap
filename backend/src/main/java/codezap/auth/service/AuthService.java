@@ -22,7 +22,7 @@ public class AuthService {
     public LoginAndCredentialDto login(LoginRequest loginRequest) {
         Member member = getMemberByIdAndPassword(loginRequest.loginId(), loginRequest.password());
         String credential = credentialProvider.createCredential(member);
-        return LoginAndCredentialDto.from(LoginResponse.from(member), credential);
+        return new LoginAndCredentialDto(LoginResponse.from(member), credential);
     }
 
     private Member getMemberByIdAndPassword(String loginId, String password) {
