@@ -47,12 +47,8 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: 'home',
-        element: (
-          <RouteGuard isLoginRequired={false} redirectTo='/'>
-            <LandingPage />,
-          </RouteGuard>
-        ),
+        path: 'aboutus',
+        element: <LandingPage />,
       },
       {
         path: '*',
