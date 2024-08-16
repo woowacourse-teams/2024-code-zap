@@ -73,7 +73,7 @@ public class CategoryService {
 
     private void validateAuthorizeMember(Category category, Member member) {
         if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.FORBIDDEN, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
     }
 }

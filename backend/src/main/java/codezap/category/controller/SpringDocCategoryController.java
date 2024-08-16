@@ -48,6 +48,8 @@ public interface SpringDocCategoryController {
                     exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
             @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우",
                     exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories/1", errorCases = {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우",
                     exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
@@ -59,12 +61,14 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories/1", errorCases = {
             @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우",
                     exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
-            @ErrorCase(description = "카테고리를 삭제할 권한이 없는 경우",
-                    exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories/1", errorCases = {
             @ErrorCase(description = "존재하지 않는 카테고리인 경우",
                     exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories/1", errorCases = {
+            @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우",
+                    exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
     ResponseEntity<Void> deleteCategory(MemberDto memberDto, Long id);
 }
