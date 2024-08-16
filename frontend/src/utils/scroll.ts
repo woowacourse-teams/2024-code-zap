@@ -1,7 +1,7 @@
-const top = () => {
+const top = (behavior?: 'smooth' | 'instant' | 'auto') => {
   window.scrollTo({
     top: 0,
-    behavior: 'auto',
+    behavior: behavior ? behavior : 'auto',
   });
 };
 
