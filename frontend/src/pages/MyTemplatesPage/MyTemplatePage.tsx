@@ -83,6 +83,16 @@ const MyTemplatePage = () => {
     setPage(page);
   };
 
+  const handleAllSelected = () => {
+    if (selectedList.length === templates.length) {
+      setSelectedList([]);
+
+      return;
+    }
+
+    setSelectedList(templates.map((template) => template.id));
+  };
+
   const handleDelete = () => {
     deleteTemplates();
     toggleIsEditMode();
@@ -112,17 +122,7 @@ const MyTemplatePage = () => {
                 <Button variant='text' size='small' onClick={toggleIsEditMode}>
                   돌아가기
                 </Button>
-                <Button
-                  variant='outlined'
-                  size='small'
-                  onClick={
-                    selectedList.length === templates.length
-                      ? () => {
-                          setSelectedList([]);
-                        }
-                      : () => setSelectedList(templates.map((template) => template.id))
-                  }
-                >
+                <Button variant='outlined' size='small' onClick={handleAllSelected}>
                   {selectedList.length === templates.length ? '전체 해제' : '전체 선택'}
                 </Button>
                 <Button
