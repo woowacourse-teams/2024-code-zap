@@ -294,8 +294,8 @@ public class TemplateService {
     }
 
     public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
-        List<Template> byMemberId = templateRepository.findByMemberId(memberId);
-        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(byMemberId);
+        List<Template> templates = templateRepository.findByMemberId(memberId);
+        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(templates);
         return new FindAllTagsResponse(
                 templateTags.stream()
                         .map(TemplateTag::getTag)
