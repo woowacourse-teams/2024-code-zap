@@ -35,7 +35,7 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
     public Thumbnail fetchByTemplate(Template template) {
         return findByTemplate(template).orElseThrow(
                 () -> new CodeZapException(HttpStatus.NOT_FOUND,
-                        "템플릿 식별자 " + template.getId() + "에 해당하는 썸네일이 없습니다."));
+                        "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
     }
 
     @Override
