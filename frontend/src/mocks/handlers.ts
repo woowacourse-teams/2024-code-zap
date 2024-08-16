@@ -3,8 +3,7 @@ import { HttpResponse, http } from 'msw';
 import {
   CATEGORY_API_URL,
   TEMPLATE_API_URL,
-  CHECK_EMAIL_API_URL,
-  CHECK_USERNAME_API_URL,
+  CHECK_NAME_API_URL,
   LOGIN_API_URL,
   LOGIN_STATE_API_URL,
   LOGOUT_API_URL,
@@ -96,8 +95,12 @@ const authenticationHandler = [
   http.post(
     `${LOGIN_API_URL}`,
     () =>
-      new HttpResponse(null, {
+      new HttpResponse(JSON.stringify({ memberId: 1, name: 'jay' }), {
         status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          'Set-Cookie': 'Authorization=abc123; HttpOnly; Path=/; Max-Age=3600',
+        },
       }),
   ),
   http.post(
@@ -109,25 +112,11 @@ const authenticationHandler = [
       }),
   ),
   http.get(
-    `${CHECK_EMAIL_API_URL}`,
+    `${CHECK_NAME_API_URL}`,
     () =>
       new HttpResponse(
         JSON.stringify({
-          message: '중복된 이메일입니다.',
-          status: 409,
-        }),
-        {
-          status: 409,
-          statusText: 'Conflict',
-        },
-      ),
-  ),
-  http.get(
-    `${CHECK_USERNAME_API_URL}`,
-    () =>
-      new HttpResponse(
-        JSON.stringify({
-          message: '사용 가능한 사용자 이름입니다.',
+          message: '사용 가능한 아이디입니다.',
           status: 200,
           ok: true,
         }),

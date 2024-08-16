@@ -1,5 +1,5 @@
 import type { CategoryListResponse, CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
-import { MemberInfo } from '@/types/authentication';
+import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -7,7 +7,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 export const CATEGORY_API_URL = `${API_URL}/categories`;
 
 export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>) => {
-  const url = `${CATEGORY_API_URL}/?memberId=${memberId}`;
+  const url = `${CATEGORY_API_URL}?memberId=${memberId}`;
 
   const response = await customFetch<CategoryListResponse>({
     url,

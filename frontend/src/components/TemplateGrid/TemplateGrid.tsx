@@ -1,9 +1,9 @@
 import { TemplateCard } from '@/components';
-import type { Template } from '@/types';
+import { TemplateListItem } from '@/types';
 import * as S from './TemplateGrid.style';
 
 interface Props {
-  templates: Template[];
+  templates: TemplateListItem[];
   cols?: number;
 }
 

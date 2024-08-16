@@ -14,10 +14,14 @@ export {
   deleteTemplate,
 } from './templates';
 export {
-  CHECK_EMAIL_API_URL,
-  CHECK_USERNAME_API_URL,
+  CHECK_NAME_API_URL,
   LOGIN_API_URL,
   LOGIN_STATE_API_URL,
   SIGNUP_API_URL,
   LOGOUT_API_URL,
+  postSignup,
+  postLogin,
+  postLogout,
+  getLoginState,
+  checkName,
 } from './authentication';

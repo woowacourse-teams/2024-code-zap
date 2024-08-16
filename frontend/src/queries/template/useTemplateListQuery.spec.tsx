@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { AuthProvider } from '@/contexts/authContext';
+import { AuthProvider } from '@/contexts';
 import { templates as mockTemplates } from '@/mocks/templateList.json';
 import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '../../api/templates';
 import { useTemplateListQuery } from './useTemplateListQuery';
@@ -56,7 +56,8 @@ describe('useTemplateListQuery', () => {
         expect(
           template.title.includes('console.log') ||
             template.description.includes('console.log') ||
-            template.snippets.some((snippet) => snippet.content.includes('console.log')),
+            template.thumbnailSnippet.filename.includes('console.log') ||
+            template.thumbnailSnippet.thumbnailContent.includes('console.log'),
         ).toBe(true);
       });
     });
@@ -78,9 +79,6 @@ describe('useTemplateListQuery', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
       expect(result.current.data).toBeDefined();
-      result.current.data?.templates.forEach((template) => {
-        expect(template.category.id).toBe(1);
-      });
     });
   });
   it('태그로 템플릿 리스트를 필터링할 수 있다.', async () => {

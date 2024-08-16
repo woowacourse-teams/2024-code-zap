@@ -12,8 +12,8 @@ import {
   Dropdown,
   TagFilterMenu,
 } from '@/components';
-import { useWindowWidth, useDebounce } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
+import { useWindowWidth, useDebounce } from '@/hooks/utils';
 import { useDropdown } from '@/hooks/utils/useDropdown';
 import { useInput } from '@/hooks/utils/useInput';
 import { useCategoryListQuery } from '@/queries/category';
@@ -28,7 +28,7 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 const MyTemplatePage = () => {
   const windowWidth = useWindowWidth();
   const {
-    memberInfo: { username },
+    memberInfo: { name },
   } = useAuth();
 
   const [keyword, handleKeywordChange] = useInput('');
@@ -78,7 +78,7 @@ const MyTemplatePage = () => {
     <S.MyTemplatePageContainer>
       <S.TopBannerContainer>
         <S.TopBannerTextWrapper>
-          <Heading.Medium color={theme.color.light.black}>{username || '코드잽'}</Heading.Medium>
+          <Heading.Medium color={theme.color.light.black}>{name || '코드잽'}</Heading.Medium>
           <Heading.XSmall color={theme.color.light.black} weight='regular'>
             {'님의 템플릿 입니다 :)'}
           </Heading.XSmall>

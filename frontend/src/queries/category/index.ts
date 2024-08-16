@@ -1,4 +1,4 @@
 export { useCategoryListQuery } from './useCategoryListQuery';
-export { useCategoryUploadQuery } from './useCategoryUploadQuery';
+export { useCategoryUploadMutation as useCategoryUploadQuery } from './useCategoryUploadMutationQuery';
 export { useCategoryEditQuery } from './useCategoryEditQuery';
 export { useCategoryDeleteQuery } from './useCategoryDeleteQuery';

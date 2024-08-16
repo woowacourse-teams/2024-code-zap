@@ -3,7 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { PropsWithChildren } from 'react';
 
 import type { TemplateEditRequest } from '@/types';
-import { useTemplateEditQuery } from './useTemplateEditQuery';
+import { useTemplateEditMutation } from './useTemplateEditMutation';
 
 const queryClient = new QueryClient();
 
@@ -11,9 +11,9 @@ const queryWrapper = ({ children }: PropsWithChildren) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
-describe('useTemplateEditQuery', () => {
+describe('useTemplateEditMutation', () => {
   it('templates울 수정할 수 있다.', async () => {
-    const { result } = renderHook(() => useTemplateEditQuery(2024), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useTemplateEditMutation(2024), { wrapper: queryWrapper });
 
     const template: TemplateEditRequest = {
       title: 'editTemplate',

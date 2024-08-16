@@ -32,12 +32,17 @@ export const CategoryButtonContainer = styled.div`
 export const CategoryButtonWrapper = styled.button`
   cursor: pointer;
 
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 
   width: 100%;
   height: 3rem;
+  padding: 0.5rem;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
   background-color: white;
   border-radius: 8px;

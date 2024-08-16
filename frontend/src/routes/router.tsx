@@ -1,9 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout } from '@/components';
-import { TemplatePage, MyTemplatePage, TemplateUploadPage, SignupPage, LoginPage, NotFoundPage } from '@/pages';
-import AuthGuard from './AuthGuard';
-import GuestGuard from './GuestGuard';
+import { TemplatePage, TemplateUploadPage, SignupPage, LoginPage, LandingPage, NotFoundPage } from '@/pages';
+import HomeRouter from './HomeRouter';
+import RouteGuard from './RouteGuard';
 
 const router = createBrowserRouter([
   {
@@ -12,43 +12,43 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: (
-          <GuestGuard>
-            <MyTemplatePage />
-          </GuestGuard>
-        ),
+        element: <HomeRouter />,
       },
       {
         path: 'templates/:id',
         element: (
-          <GuestGuard>
+          <RouteGuard isLoginRequired redirectTo='/login'>
             <TemplatePage />
-          </GuestGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'templates/upload',
         element: (
-          <GuestGuard>
+          <RouteGuard isLoginRequired redirectTo='/login'>
             <TemplateUploadPage />
-          </GuestGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'signup',
         element: (
-          <AuthGuard>
+          <RouteGuard isLoginRequired={false} redirectTo='/'>
             <SignupPage />
-          </AuthGuard>
+          </RouteGuard>
         ),
       },
       {
         path: 'login',
         element: (
-          <AuthGuard>
+          <RouteGuard isLoginRequired={false} redirectTo='/'>
             <LoginPage />
-          </AuthGuard>
+          </RouteGuard>
         ),
+      },
+      {
+        path: 'aboutus',
+        element: <LandingPage />,
       },
       {
         path: '*',
