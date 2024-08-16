@@ -22,8 +22,8 @@ export const useLoginMutation = () => {
       } else {
         localStorage.setItem('username', String(res.username));
         localStorage.setItem('memberId', String(res.memberId));
-        handleLoginState(true);
         handleMemberInfo(res);
+        handleLoginState(true);
         navigate('/');
         successAlert('로그인 성공!');
       }
