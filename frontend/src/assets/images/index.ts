@@ -9,3 +9,5 @@ export { default as xCircle } from './x_circle.png';
 export { default as passwordEyeIcon } from './passwordEye.png';
 export { default as codezapLogo } from './codezapLogo.png';
 export { default as tigger } from './tigger.png';
+export { default as settingIcon } from './setting.png';
+export { default as spinArrowIcon } from './spinArrow.png';
