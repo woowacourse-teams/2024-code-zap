@@ -12,7 +12,7 @@ const queryWrapper = ({ children }: PropsWithChildren) => (
 
 describe('useTemplateDeleteMutation', () => {
   it('templates을 삭제할 수 있다.', async () => {
-    const { result } = renderHook(() => useTemplateDeleteMutation(2024), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useTemplateDeleteMutation([2024]), { wrapper: queryWrapper });
 
     await result.current.mutateAsync();
 

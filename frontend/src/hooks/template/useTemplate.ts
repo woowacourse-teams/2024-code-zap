@@ -9,7 +9,7 @@ export const useTemplate = (id: number) => {
   const scrollTo = useScrollToTargetElement();
 
   const { data: template } = useTemplateQuery(Number(id));
-  const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation(Number(id));
+  const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
 
   const [currentFile, setCurrentFile] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);

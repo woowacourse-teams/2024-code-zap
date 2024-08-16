@@ -95,9 +95,9 @@ export const editTemplate = async ({ id, template }: { id: number; template: Tem
   });
 };
 
-export const deleteTemplate = async (id: number): Promise<void> => {
+export const deleteTemplate = async (ids: number[]): Promise<void> => {
   await customFetch({
     method: 'DELETE',
-    url: `${TEMPLATE_API_URL}/${id}`,
+    url: `${TEMPLATE_API_URL}/${ids.join(',')}`,
   });
 };
