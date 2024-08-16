@@ -3,7 +3,8 @@ import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { chevron, pencilIcon, trashcanIcon } from '@/assets/images';
+import { chevron, trashcanIcon } from '@/assets/images';
+import Pencil from '@/assets/images/pencil.svg';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
@@ -71,7 +72,7 @@ const TemplatePage = () => {
                         handleEditButtonClick();
                       }}
                     >
-                      <img src={pencilIcon} width={24} height={24} alt='소스코드 수정' />
+                      <Pencil width={28} height={28} />
                     </S.EditButton>
                     <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
                       <img src={trashcanIcon} width={28} height={28} alt='소스코드 삭제' />
