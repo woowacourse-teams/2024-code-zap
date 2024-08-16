@@ -35,7 +35,7 @@ public class CategoryController implements SpringDocCategoryController {
             @AuthenticationPrinciple MemberDto memberDto,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
-        Long createdCategoryId = categoryService.create(createCategoryRequest, memberDto);
+        Long createdCategoryId = categoryService.create(memberDto, createCategoryRequest);
         return ResponseEntity.created(URI.create("/categories/" + createdCategoryId))
                 .build();
     }
@@ -54,13 +54,13 @@ public class CategoryController implements SpringDocCategoryController {
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
-        categoryService.update(id, updateCategoryRequest, memberDto);
+        categoryService.update(memberDto, id, updateCategoryRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id) {
-        categoryService.deleteById(id, memberDto);
+        categoryService.deleteById(memberDto, id);
         return ResponseEntity.noContent()
                 .build();
     }

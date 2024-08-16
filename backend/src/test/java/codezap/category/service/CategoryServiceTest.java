@@ -42,7 +42,7 @@ class CategoryServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category1");
 
-            Long categoryId = categoryService.create(createCategoryRequest, MemberDto.from(member));
+            Long categoryId = categoryService.create(MemberDto.from(member), createCategoryRequest);
 
             assertThat(categoryId).isEqualTo(1L);
         }
@@ -57,7 +57,7 @@ class CategoryServiceTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
 
             assertThatThrownBy(
-                    () -> categoryService.create(createCategoryRequest, MemberDto.from(member))).isInstanceOf(
+                    () -> categoryService.create(MemberDto.from(member), createCategoryRequest)).isInstanceOf(
                     CodeZapException.class).hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
         }
 
@@ -70,7 +70,7 @@ class CategoryServiceTest {
 
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            assertThat(categoryService.create(createCategoryRequest, MemberDto.from(otherMember))).isEqualTo(2L);
+            assertThat(categoryService.create(MemberDto.from(otherMember), createCategoryRequest)).isEqualTo(2L);
         }
     }
 
@@ -94,8 +94,8 @@ class CategoryServiceTest {
         Member member = memberRepository.save(MemberFixture.memberFixture());
         Category savedCategory = categoryRepository.save(new Category("category1", member));
 
-        categoryService.update(savedCategory.getId(), new UpdateCategoryRequest(updateCategoryName),
-                MemberDto.from(member));
+        categoryService.update(MemberDto.from(member), savedCategory.getId(),
+                new UpdateCategoryRequest(updateCategoryName));
 
         assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo(updateCategoryName);
     }
@@ -109,8 +109,8 @@ class CategoryServiceTest {
         Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
 
         assertThatCode(
-                () -> categoryService.update(savedCategory.getId(), new UpdateCategoryRequest("updateName"),
-                        MemberDto.from(otherMember)))
+                () -> categoryService.update(MemberDto.from(otherMember), savedCategory.getId(),
+                        new UpdateCategoryRequest("updateName")))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
     }
@@ -123,7 +123,7 @@ class CategoryServiceTest {
         Category savedCategory = categoryRepository.save(new Category("category1", member));
         int beforeDeleteSize = categoryRepository.findAllByMemberOrderById(member).size();
 
-        categoryService.deleteById(savedCategory.getId(), MemberDto.from(member));
+        categoryService.deleteById(MemberDto.from(member), savedCategory.getId());
 
         assertThat(categoryRepository.findAllByMemberOrderById(member)).hasSize(beforeDeleteSize - 1);
     }
@@ -135,7 +135,7 @@ class CategoryServiceTest {
         Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
         Category savedCategory = categoryRepository.save(new Category("category1", member));
 
-        assertThatCode(() -> categoryService.deleteById(savedCategory.getId(), MemberDto.from(otherMember)))
+        assertThatCode(() -> categoryService.deleteById(MemberDto.from(otherMember), savedCategory.getId()))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
     }
@@ -146,9 +146,9 @@ class CategoryServiceTest {
         Member member = memberRepository.save(MemberFixture.memberFixture());
         Category category = categoryRepository.save(new Category("category1", member));
 
-        categoryService.deleteById(category.getId(), MemberDto.from(member));
+        categoryService.deleteById(MemberDto.from(member), category.getId());
 
-        assertThatCode(() -> categoryService.deleteById(category.getId(), MemberDto.from(member)))
+        assertThatCode(() -> categoryService.deleteById(MemberDto.from(member), category.getId()))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("식별자 " + category.getId() + "에 해당하는 카테고리가 존재하지 않습니다.");
     }

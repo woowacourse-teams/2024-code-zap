@@ -49,8 +49,7 @@ class CategoryControllerTest extends MockMvcTest {
             Long categoryId = 1L;
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            when(categoryService.create(createCategoryRequest,
-                    MemberDto.from(MemberFixture.memberFixture()))).thenReturn(categoryId);
+            when(categoryService.create(MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest)).thenReturn(categoryId);
 
             mvc.perform(post("/categories")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -187,7 +186,7 @@ class CategoryControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
 
-            verify(categoryService, times(1)).deleteById(categoryId, MemberDto.from(MemberFixture.memberFixture()));
+            verify(categoryService, times(1)).deleteById(MemberDto.from(MemberFixture.memberFixture()), categoryId);
         }
 
         @Test

@@ -25,7 +25,7 @@ public class CategoryService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long create(CreateCategoryRequest createCategoryRequest, MemberDto memberDto) {
+    public Long create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
@@ -43,7 +43,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void update(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto) {
+    public void update(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest) {
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
         Category category = categoryRepository.fetchById(id);
@@ -57,7 +57,7 @@ public class CategoryService {
         }
     }
 
-    public void deleteById(Long id, MemberDto memberDto) {
+    public void deleteById(MemberDto memberDto, Long id) {
         Category category = categoryRepository.fetchById(id);
         Member member = memberRepository.fetchById(memberDto.id());
         validateAuthorizeMember(category, member);
