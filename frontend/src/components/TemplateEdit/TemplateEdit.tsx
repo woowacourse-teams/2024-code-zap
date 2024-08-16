@@ -1,6 +1,7 @@
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput } from '@/components';
 import { useCategoryUpload } from '@/queries/category';
+import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
 
@@ -83,14 +84,14 @@ const TemplateEdit = ({
           }
         />
 
-        <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
+        <div css={{ borderBottom: `1px solid ${theme.color.light.tertiary_400}`, width: '100%' }}>
           <Input size='xlarge' variant='text'>
             <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
           </Input>
         </div>
 
-        <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
-          <Input size='medium' variant='text'>
+        <div css={{ borderBottom: `1px solid ${theme.color.light.tertiary_400}`, width: '100%' }}>
+          <Input size='large' variant='text'>
             <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
           </Input>
         </div>

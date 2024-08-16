@@ -1,5 +1,6 @@
 import { XCircleIcon } from '@/assets/images';
-import { Flex, Input } from '@/components';
+import { Flex, Input, Text } from '@/components';
+import { theme } from '@/style/theme';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
 import * as S from './TagInput.style';
 
@@ -24,6 +25,10 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
       return;
     }
 
+    if (tags.includes(value)) {
+      return;
+    }
+
     setTags((prev) => [...prev, removeAllWhitespace(value)]);
   };
 
@@ -31,13 +36,21 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
     <Flex
       justify='center'
       align='center'
+      gap='0.5rem'
       css={{
         width: '100%',
         flexWrap: 'wrap',
         marginTop: '1rem',
       }}
     >
-      <Flex gap='0.125rem' css={{ flexWrap: 'wrap', width: '100%' }}>
+      {tags.length !== 0 && (
+        <Flex justify='flex-end' width='100%'>
+          <Text.XSmall color={theme.color.light.tertiary_400}>
+            등록된 태그를 누르면 태그 등록을 쉽게 취소할 수 있어요!
+          </Text.XSmall>
+        </Flex>
+      )}
+      <Flex gap='0.25rem' css={{ flexWrap: 'wrap', width: '100%' }}>
         {tags?.map((tag, idx) => (
           <S.Tag
             key={idx}
@@ -50,13 +63,15 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
           </S.Tag>
         ))}
       </Flex>
-      <Input>
+      <Input size='large'>
         <Input.TextField
           placeholder='enter 또는 space bar로 태그를 등록해보세요'
           value={value}
           onChange={handleValue}
           onKeyUpCapture={handleSpaceBarAndEnterKeydown}
-          onBlur={() => resetValue()}
+          onBlur={() => {
+            resetValue();
+          }}
         />
       </Input>
     </Flex>
