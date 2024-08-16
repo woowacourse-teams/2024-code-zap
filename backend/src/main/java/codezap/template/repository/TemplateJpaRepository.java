@@ -3,7 +3,6 @@ package codezap.template.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,13 +20,11 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
     }
 
-    boolean existsByCategoryId(Long categoryId);
-
     List<Template> findByMemberId(Long id);
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             (
                 t.title LIKE :keyword
@@ -44,7 +41,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             t.id in :templateIds AND
             (
@@ -63,7 +60,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             t.category.id = :categoryId AND
             (
@@ -82,7 +79,7 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
 
     @Query("""
             SELECT DISTINCT t
-            FROM Template t JOIN Snippet s ON t.id = s.template.id
+            FROM Template t JOIN SourceCode s ON t.id = s.template.id
             WHERE t.member.id = :memberId AND
             t.category.id = :categoryId AND
             t.id in :templateIds AND
@@ -101,17 +98,5 @@ public interface TemplateJpaRepository extends TemplateRepository, JpaRepository
             Pageable pageable
     );
 
-    Page<Template> findBy(Pageable pageable);
-
-    Page<Template> findByCategoryId(Pageable pageable, Long categoryId);
-
-    Page<Template> findByIdIn(PageRequest pageRequest, List<Long> templateIds);
-
-    Page<Template> findByIdInAndCategoryId(PageRequest pageRequest, List<Long> templateIds, Long categoryId);
-
-    long countByCategoryId(Long categoryId);
-
-    long countByIdInAndCategoryId(List<Long> templateIds, Long categoryId);
-
-    long countByIdIn(List<Long> templateIds);
+    boolean existsByCategoryId(Long categoryId);
 }

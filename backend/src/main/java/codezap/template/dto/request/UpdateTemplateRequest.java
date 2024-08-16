@@ -11,8 +11,8 @@ import jakarta.validation.constraints.Size;
 import codezap.global.validation.ByteLength;
 import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
-import codezap.template.dto.request.validation.ValidatedSnippetsCountRequest;
-import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
+import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
+import codezap.template.dto.request.validation.ValidatedSourceCodesOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateTemplateRequest(
@@ -26,19 +26,19 @@ public record UpdateTemplateRequest(
         @ByteLength(max = 65_535, message = "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String description,
 
-        @Schema(description = "추가하는 스니펫 목록")
-        @NotNull(message = "추가하는 스니펫 목록이 null 입니다.", groups = NotNullGroup.class)
+        @Schema(description = "추가하는 소스 코드 목록")
+        @NotNull(message = "추가하는 소스 코드 목록이 null 입니다.", groups = NotNullGroup.class)
         @Valid
-        List<CreateSnippetRequest> createSnippets,
+        List<CreateSourceCodeRequest> createSourceCodes,
 
-        @Schema(description = "삭제, 생성 스니펫을 제외한 모든 스니펫 목록")
-        @NotNull(message = "삭제, 생성 스니펫을 제외한 모든 스니펫 목록이 null 입니다.", groups = NotNullGroup.class)
+        @Schema(description = "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록")
+        @NotNull(message = "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록이 null 입니다.", groups = NotNullGroup.class)
         @Valid
-        List<UpdateSnippetRequest> updateSnippets,
+        List<UpdateSourceCodeRequest> updateSourceCodes,
 
-        @Schema(description = "삭제하는 스니펫 ID 목록")
-        @NotNull(message = "삭제하는 스니펫 ID 목록이 null 입니다.")
-        List<Long> deleteSnippetIds,
+        @Schema(description = "삭제하는 소스 코드 ID 목록")
+        @NotNull(message = "삭제하는 소스 코드 ID 목록이 null 입니다.")
+        List<Long> deleteSourceCodeIds,
 
         @Schema(description = "카테고리 ID", example = "1")
         @NotNull(message = "카테고리 ID가 null 입니다.")
@@ -47,17 +47,17 @@ public record UpdateTemplateRequest(
         @Schema(description = "태그 목록")
         @NotNull(message = "태그 목록이 null 입니다.")
         List<String> tags
-) implements ValidatedSnippetsOrdinalRequest, ValidatedSnippetsCountRequest {
+) implements ValidatedSourceCodesOrdinalRequest, ValidatedSourceCodesCountRequest {
     @Override
-    public List<Integer> extractSnippetsOrdinal() {
+    public List<Integer> extractSourceCodesOrdinal() {
         return Stream.concat(
-                updateSnippets.stream().map(UpdateSnippetRequest::ordinal),
-                createSnippets.stream().map(CreateSnippetRequest::ordinal)
+                updateSourceCodes.stream().map(UpdateSourceCodeRequest::ordinal),
+                createSourceCodes.stream().map(CreateSourceCodeRequest::ordinal)
         ).toList();
     }
 
     @Override
-    public Integer countSnippets() {
-        return updateSnippets.size() + createSnippets.size();
+    public Integer countSourceCodes() {
+        return updateSourceCodes.size() + createSourceCodes.size();
     }
 }

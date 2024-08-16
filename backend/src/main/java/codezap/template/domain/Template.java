@@ -2,7 +2,6 @@ package codezap.template.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true, of = {"id"})
 public class Template extends BaseTimeEntity {
 
     @Id
@@ -47,7 +46,7 @@ public class Template extends BaseTimeEntity {
     private Category category;
 
     @OneToMany(mappedBy = "template")
-    private List<Snippet> snippets = new ArrayList<>();
+    private List<SourceCode> sourceCodes = new ArrayList<>();
 
     public Template(Member member, String title, String description, Category category) {
         this.member = member;
@@ -62,11 +61,7 @@ public class Template extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void updateSnippets(List<Snippet> snippet) {
-        snippets.addAll(snippet);
-    }
-
-    public void deleteSnippet(Long deletedId) {
-        snippets.removeIf(snippet -> Objects.equals(snippet.getId(), deletedId));
+    public void updateSourceCodes(List<SourceCode> sourceCode) {
+        sourceCodes.addAll(sourceCode);
     }
 }

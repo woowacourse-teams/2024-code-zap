@@ -3,6 +3,7 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,14 +25,14 @@ public record FindAllTemplatesResponse(
             String description,
             @Schema(description = "태그 목록")
             List<FindTagResponse> tags,
-            @Schema(description = "썸네일 스니펫")
-            FindThumbnailSnippetResponse thumbnailSnippet,
-            @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00", type = "string")
+            @Schema(description = "썸네일")
+            FindThumbnailResponse thumbnail,
+            @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
             LocalDateTime createdAt,
-            @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
+            @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
             LocalDateTime modifiedAt
     ) {
-        public static ItemResponse of(Template template, List<Tag> templateTags) {
+        public static ItemResponse of(Template template, List<Tag> templateTags, SourceCode thumbnailSourceCode) {
             return new ItemResponse(
                     template.getId(),
                     template.getTitle(),
@@ -39,7 +40,7 @@ public record FindAllTemplatesResponse(
                     templateTags.stream()
                             .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
                             .toList(),
-                    null,
+                    FindThumbnailResponse.from(thumbnailSourceCode),
                     template.getCreatedAt(),
                     template.getModifiedAt()
             );

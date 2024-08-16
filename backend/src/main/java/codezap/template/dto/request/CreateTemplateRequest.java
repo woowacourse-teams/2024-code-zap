@@ -10,7 +10,7 @@ import jakarta.validation.constraints.Size;
 import codezap.global.validation.ByteLength;
 import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
-import codezap.template.dto.request.validation.ValidatedSnippetsOrdinalRequest;
+import codezap.template.dto.request.validation.ValidatedSourceCodesOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record CreateTemplateRequest(
@@ -24,14 +24,14 @@ public record CreateTemplateRequest(
         @ByteLength(max = 65_535, message = "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String description,
 
-        @Schema(description = "스니펫 목록")
-        @NotNull(message = "스니펫 목록이 null 입니다.", groups = NotNullGroup.class)
-        @Size(min = 1, message = "스니펫은 최소 1개 입력해야 합니다.", groups = SizeCheckGroup.class)
+        @Schema(description = "소스 코드 목록")
+        @NotNull(message = "소스 코드 목록이 null 입니다.", groups = NotNullGroup.class)
+        @Size(min = 1, message = "소스 코드 최소 1개 입력해야 합니다.", groups = SizeCheckGroup.class)
         @Valid
-        List<CreateSnippetRequest> snippets,
+        List<CreateSourceCodeRequest> sourceCodes,
 
-        @Schema(description = "썸네일 스니펫 순서", example = "1")
-        @NotNull(message = "썸네일 스니펫 순서가 null 입니다.")
+        @Schema(description = "썸네일 순서", example = "1")
+        @NotNull(message = "썸네일 순서가 null 입니다.")
         int thumbnailOrdinal,
 
         @Schema(description = "카테고리 ID", example = "1")
@@ -41,9 +41,9 @@ public record CreateTemplateRequest(
         @Schema(description = "태그 목록")
         @NotNull(message = "태그 목록이 null 입니다.")
         List<String> tags
-) implements ValidatedSnippetsOrdinalRequest {
+) implements ValidatedSourceCodesOrdinalRequest {
     @Override
-    public List<Integer> extractSnippetsOrdinal() {
-        return snippets.stream().map(CreateSnippetRequest::ordinal).toList();
+    public List<Integer> extractSourceCodesOrdinal() {
+        return sourceCodes.stream().map(CreateSourceCodeRequest::ordinal).toList();
     }
 }

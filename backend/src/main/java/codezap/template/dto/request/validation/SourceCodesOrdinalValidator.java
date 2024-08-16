@@ -6,13 +6,13 @@ import java.util.stream.IntStream;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class SnippetsOrdinalValidator implements ConstraintValidator<SnippetsOrdinal, ValidatedSnippetsOrdinalRequest> {
+public class SourceCodesOrdinalValidator implements ConstraintValidator<SourceCodesOrdinal, ValidatedSourceCodesOrdinalRequest> {
 
     @Override
-    public boolean isValid(ValidatedSnippetsOrdinalRequest validatedSnippetsOrdinalRequest,
+    public boolean isValid(ValidatedSourceCodesOrdinalRequest validatedSourceCodesOrdinalRequest,
             ConstraintValidatorContext constraintValidatorContext
     ) {
-        List<Integer> indexes = validatedSnippetsOrdinalRequest.extractSnippetsOrdinal();
+        List<Integer> indexes = validatedSourceCodesOrdinalRequest.extractSourceCodesOrdinal();
         return IntStream.range(0, indexes.size())
                 .allMatch(index -> indexes.get(index) == index + 1);
     }

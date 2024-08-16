@@ -1,5 +1,6 @@
 package codezap.template.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,14 +17,14 @@ import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.MemberRepository;
-import codezap.template.domain.Snippet;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.domain.ThumbnailSnippet;
-import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.domain.Thumbnail;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateSnippetRequest;
+import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTagsResponse;
@@ -31,22 +32,20 @@ import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class TemplateService {
 
-    public static final int FIRST_ORDINAL = 1;
-
-    private final ThumbnailSnippetRepository thumbnailSnippetRepository;
+    private final ThumbnailRepository thumbnailRepository;
     private final TemplateRepository templateRepository;
-    private final SnippetRepository snippetRepository;
+    private final SourceCodeRepository sourceCodeRepository;
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
@@ -61,15 +60,15 @@ public class TemplateService {
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
         createTags(createTemplateRequest, template);
-        snippetRepository.saveAll(
-                createTemplateRequest.snippets().stream()
-                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
+        sourceCodeRepository.saveAll(
+                createTemplateRequest.sourceCodes().stream()
+                        .map(createSourceCodeRequest -> createSourceCode(createSourceCodeRequest, template))
                         .toList()
         );
 
-        Snippet thumbnailSnippet = snippetRepository.findByTemplateAndOrdinal(template, FIRST_ORDINAL)
-                .orElseThrow(this::throwNotFoundSnippet);
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(template, thumbnailSnippet));
+        SourceCode thumbnail = sourceCodeRepository.fetchByTemplateAndOrdinal(
+                template, createTemplateRequest.thumbnailOrdinal());
+        thumbnailRepository.save(new Thumbnail(template, thumbnail));
         return template.getId();
     }
 
@@ -89,22 +88,22 @@ public class TemplateService {
 
         templateTagRepository.saveAll(
                 createTemplateRequest.tags().stream()
-                        .map(tag -> tagRepository.findByName(tag).orElseThrow(this::throwNotFoundTag))
+                        .map(tagRepository::fetchByName)
                         .map(tag -> new TemplateTag(template, tag))
                         .toList()
         );
     }
 
-    private Snippet createSnippet(CreateSnippetRequest createSnippetRequest, Template template) {
-        return new Snippet(
-                template, createSnippetRequest.filename(),
-                createSnippetRequest.content(),
-                createSnippetRequest.ordinal()
+    private SourceCode createSourceCode(CreateSourceCodeRequest createSourceCodeRequest, Template template) {
+        return new SourceCode(
+                template, createSourceCodeRequest.filename(),
+                createSourceCodeRequest.content(),
+                createSourceCodeRequest.ordinal()
         );
     }
 
     public ExploreTemplatesResponse findAll() {
-        return ExploreTemplatesResponse.from(thumbnailSnippetRepository.findAll());
+        return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }
 
     public FindTemplateResponse findByIdAndMember(MemberDto memberDto, Long id) {
@@ -112,11 +111,11 @@ public class TemplateService {
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 
-        List<Snippet> snippets = snippetRepository.findAllByTemplate(template);
+        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
         List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
                 .map(TemplateTag::getTag)
                 .toList();
-        return FindTemplateResponse.of(template, snippets, tags);
+        return FindTemplateResponse.of(template, sourceCodes, tags);
     }
 
     private void validateTemplateAuthorizeMember(Template template, Member member) {
@@ -136,27 +135,73 @@ public class TemplateService {
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         if (categoryId != null && tagIds != null) {
-            List<Long> templateIds = templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
-            Page<Template> templatePage =
-                    templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
-            return makeTemplatesResponseBy(templatePage);
+            return getTemplatesResponseByCategoryAndTag(memberId, keyword, categoryId, tagIds, pageable);
         }
         if (categoryId != null) {
-            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
-            return makeTemplatesResponseBy(templatePage);
+            return getTemplatesResponseCategory(memberId, keyword, categoryId, pageable);
         }
         if (tagIds != null) {
-            List<Long> templateIds = templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
-            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
-            return makeTemplatesResponseBy(templatePage);
+            return getTemplatesResponseByTag(memberId, keyword, tagIds, pageable);
         }
+        return getTemplatesResponse(memberId, keyword, pageable);
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponseByCategoryAndTag(
+            long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
+    ) {
+        List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
+        validateCategoryId(categoryId);
+        Page<Template> templatePage =
+                templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
+        return makeTemplatesResponseBy(templatePage);
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponseCategory(
+            long memberId, String keyword, Long categoryId, Pageable pageable
+    ) {
+        validateCategoryId(categoryId);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
+        return makeTemplatesResponseBy(templatePage);
+    }
+
+    private void validateCategoryId(Long categoryId) {
+        if(!categoryRepository.existsById(categoryId)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + categoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponseByTag(
+            long memberId, String keyword, List<Long> tagIds, Pageable pageable
+    ) {
+        List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
+        return makeTemplatesResponseBy(templatePage);
+    }
+
+    private List<Long> fetchTemplateIdContainsTagIds(List<Long> tagIds) {
+        if (tagIds.isEmpty()) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
+        }
+        for (Long id : tagIds) {
+            validateTagId(id);
+        }
+        return templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
+    }
+
+    private void validateTagId(Long tagId) {
+        if(!tagRepository.existsById(tagId)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + tagId + "에 해당하는 태그가 존재하지 않습니다.");
+        }
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponse(long memberId, String keyword, Pageable pageable) {
         Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, pageable);
         return makeTemplatesResponseBy(templatePage);
     }
 
     private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
         List<ItemResponse> itemResponses = page.stream()
-                .map(template -> ItemResponse.of(template, getTemplateTags(template)))
+                .map(template -> ItemResponse.of(template, getTemplateTags(template), getThumbnail(template)))
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
     }
@@ -165,6 +210,10 @@ public class TemplateService {
         return templateTagRepository.findAllByTemplate(template).stream()
                 .map(templateTag -> tagRepository.fetchById(templateTag.getTag().getId()))
                 .toList();
+    }
+
+    private SourceCode getThumbnail(Template template) {
+        return thumbnailRepository.fetchByTemplate(template).getSourceCode();
     }
 
     @Transactional
@@ -176,48 +225,48 @@ public class TemplateService {
         validateTemplateAuthorizeMember(template, member);
 
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
-        updateSnippets(updateTemplateRequest, template);
+        updateSourceCodes(updateTemplateRequest, template);
         updateTags(updateTemplateRequest, template);
-        validateSnippetsCount(updateTemplateRequest, template);
+        validateSourceCodesCount(updateTemplateRequest, template);
     }
 
-    private void updateSnippets(UpdateTemplateRequest updateTemplateRequest, Template template) {
-        updateTemplateRequest.updateSnippets().forEach(this::updateSnippet);
-        snippetRepository.saveAll(
-                updateTemplateRequest.createSnippets().stream()
-                        .map(createSnippetRequest -> createSnippet(createSnippetRequest, template))
+    private void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template) {
+        updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
+        sourceCodeRepository.saveAll(
+                updateTemplateRequest.createSourceCodes().stream()
+                        .map(createSourceCodeRequest -> createSourceCode(createSourceCodeRequest, template))
                         .toList()
         );
 
-        ThumbnailSnippet thumbnailSnippet = thumbnailSnippetRepository.findByTemplate(template)
-                .orElseThrow(this::throwNotFoundThumbnailSnippet);
+        Thumbnail thumbnail = thumbnailRepository.fetchByTemplate(template);
 
-        if (isThumbnailSnippetDeleted(updateTemplateRequest, thumbnailSnippet)) {
-            updateThumbnailSnippet(template, thumbnailSnippet);
+        if (isThumbnailDeleted(updateTemplateRequest, thumbnail)) {
+            updateThumbnail(template, thumbnail);
         }
 
-        updateTemplateRequest.deleteSnippetIds().forEach(snippetRepository::deleteById);
+        updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
     }
 
-    private void updateSnippet(UpdateSnippetRequest updateSnippetRequest) {
-        Snippet snippet = snippetRepository.fetchById(updateSnippetRequest.id());
-        snippet.updateSnippet(updateSnippetRequest.filename(), updateSnippetRequest.content(),
-                updateSnippetRequest.ordinal());
+    private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
+        SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
+        sourceCode.updateSourceCode(updateSourceCodeRequest.filename(), updateSourceCodeRequest.content(),
+                updateSourceCodeRequest.ordinal());
     }
 
-    private boolean isThumbnailSnippetDeleted(
+    private boolean isThumbnailDeleted(
             UpdateTemplateRequest updateTemplateRequest,
-            ThumbnailSnippet thumbnailSnippet
+            Thumbnail thumbnail
     ) {
-        return updateTemplateRequest.deleteSnippetIds().contains(thumbnailSnippet.getId());
+        return updateTemplateRequest.deleteSourceCodeIds().contains(thumbnail.getId());
     }
 
-    private void updateThumbnailSnippet(Template template, ThumbnailSnippet thumbnailSnippet) {
-        List<Snippet> snippets = snippetRepository.findAllByTemplateAndOrdinal(template, FIRST_ORDINAL);
-        snippets.stream()
-                .filter(snippet -> !Objects.equals(thumbnailSnippet.getSnippet().getId(), snippet.getId()))
+    private void updateThumbnail(Template template, Thumbnail thumbnail) {
+        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplateAndOrdinal(template,
+                thumbnail.getSourceCode().getOrdinal());
+        sourceCodes.stream()
+                .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode().getId(), sourceCode.getId()))
                 .findFirst()
-                .ifPresent(thumbnailSnippet::updateThumbnailSnippet);
+                .ifPresent(thumbnail::updateThumbnail);
     }
 
     private void updateTags(UpdateTemplateRequest updateTemplateRequest, Template template) {
@@ -231,21 +280,36 @@ public class TemplateService {
 
         templateTagRepository.saveAll(
                 updateTemplateRequest.tags().stream()
-                        .map(tag -> tagRepository.findByName(tag).orElseThrow(this::throwNotFoundTag))
+                        .map(tagRepository::fetchByName)
                         .map(tag -> new TemplateTag(template, tag))
                         .toList()
         );
     }
 
-    private void validateSnippetsCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
-        if (updateTemplateRequest.updateSnippets().size() + updateTemplateRequest.createSnippets().size()
-                != snippetRepository.findAllByTemplate(template).size()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "스니펫의 정보가 정확하지 않습니다.");
+    private void validateSourceCodesCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
+        if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
+                != sourceCodeRepository.findAllByTemplate(template).size()) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
+    }
+
+    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
+        List<Template> templates = templateRepository.findByMemberId(memberId);
+        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(templates);
+        return new FindAllTagsResponse(
+                templateTags.stream()
+                        .map(TemplateTag::getTag)
+                        .distinct()
+                        .map(FindTagResponse::from)
+                        .toList()
+        );
     }
 
     @Transactional
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {
+        if (ids.size() != new HashSet<>(ids).size()) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
+        }
         for (Long id : ids) {
             deleteById(memberDto, id);
         }
@@ -256,33 +320,9 @@ public class TemplateService {
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 
-        thumbnailSnippetRepository.deleteByTemplateId(id);
-        snippetRepository.deleteByTemplateId(id);
+        thumbnailRepository.deleteByTemplateId(id);
+        sourceCodeRepository.deleteByTemplateId(id);
         templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
-    }
-
-    private CodeZapException throwNotFoundSnippet() {
-        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 스니펫이 존재하지 않습니다.");
-    }
-
-    private CodeZapException throwNotFoundTag() {
-        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 태그가 존재하지 않습니다.");
-    }
-
-    private CodeZapException throwNotFoundThumbnailSnippet() {
-        throw new CodeZapException(HttpStatus.NOT_FOUND, "해당하는 썸네일 스니펫이 존재하지 않습니다.");
-    }
-
-    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
-        List<Template> byMemberId = templateRepository.findByMemberId(memberId);
-        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(byMemberId);
-        return new FindAllTagsResponse(
-                templateTags.stream()
-                        .map(TemplateTag::getTag)
-                        .distinct()
-                        .map(FindTagResponse::from)
-                        .toList()
-        );
     }
 }

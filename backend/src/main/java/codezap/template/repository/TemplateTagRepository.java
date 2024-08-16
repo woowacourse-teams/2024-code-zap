@@ -9,16 +9,15 @@ public interface TemplateTagRepository {
 
     List<TemplateTag> findAllByTemplate(Template template);
 
+    List<TemplateTag> findByTemplateIn(List<Template> templates);
+
+    List<TemplateTag> findAll();
+
+    List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize);
+
     TemplateTag save(TemplateTag templateTag);
 
     <S extends TemplateTag> List<S> saveAll(Iterable<S> entities);
 
-
     void deleteAllByTemplateId(Long id);
-
-    List<TemplateTag> findAll();
-
-    List<TemplateTag> findByTemplateIn(List<Template> templates);
-
-    List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize);
 }

@@ -93,8 +93,8 @@ public class FakeTemplateRepository implements TemplateRepository {
     private static boolean containTopic(String topic, Template template) {
         String keyword = topic.substring(1, topic.length() - 1);
         return template.getTitle().contains(keyword) ||
-                template.getSnippets().stream().anyMatch(snippet -> snippet.getFilename().contains(keyword)) ||
-                template.getSnippets().stream().anyMatch(snippet -> snippet.getContent().contains(keyword)) ||
+                template.getSourceCodes().stream().anyMatch(sourceCode -> sourceCode.getFilename().contains(keyword)) ||
+                template.getSourceCodes().stream().anyMatch(sourceCode -> sourceCode.getContent().contains(keyword)) ||
                 template.getDescription().contains(keyword);
     }
 
@@ -118,7 +118,7 @@ public class FakeTemplateRepository implements TemplateRepository {
                 entity.getTitle(),
                 entity.getDescription(),
                 entity.getCategory(),
-                entity.getSnippets()
+                entity.getSourceCodes()
         );
         templates.removeIf(template -> Objects.equals(template.getId(), entity.getId()));
         templates.add(saved);

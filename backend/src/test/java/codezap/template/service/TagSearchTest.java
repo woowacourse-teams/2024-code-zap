@@ -12,27 +12,29 @@ import org.junit.jupiter.api.Test;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberDtoFixture;
+import codezap.fixture.MemberFixture;
 import codezap.member.domain.Member;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.template.domain.Snippet;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.domain.ThumbnailSnippet;
-import codezap.template.dto.request.CreateSnippetRequest;
+import codezap.template.domain.Thumbnail;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.repository.FakeSnippetRepository;
+import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
-import codezap.template.repository.FakeThumbnailSnippetRepository;
-import codezap.template.repository.SnippetRepository;
+import codezap.template.repository.FakeThumbnailRepository;
+import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailSnippetRepository;
+import codezap.template.repository.ThumbnailRepository;
 
 public class TagSearchTest {
 
@@ -41,16 +43,20 @@ public class TagSearchTest {
     private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SnippetRepository snippetRepository = new FakeSnippetRepository();
-    private final ThumbnailSnippetRepository thumbnailSnippetRepository = new FakeThumbnailSnippetRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory));
+    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
+    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
+            List.of(CategoryFixture.getFirstCategory()));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
+    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(
+            MemberFixture.getFirstMember(), MemberFixture.getSecondMember()
+    ));
+
     private final TemplateService templateService = new TemplateService(
-            thumbnailSnippetRepository,
+            thumbnailRepository,
             templateRepository,
-            snippetRepository,
+            sourceCodeRepository,
             categoryRepository,
             tagRepository,
             templateTagRepository,
@@ -76,8 +82,8 @@ public class TagSearchTest {
 
     private CreateTemplateRequest makeTemplateRequest(String title) {
         return new CreateTemplateRequest(title, "description",
-                List.of(new CreateSnippetRequest("filename1", "content1", 1),
-                        new CreateSnippetRequest("filename2", "content2", 2)),
+                List.of(new CreateSourceCodeRequest("filename1", "content1", 1),
+                        new CreateSourceCodeRequest("filename2", "content2", 2)),
                 1,
                 1L,
                 List.of());
@@ -86,9 +92,10 @@ public class TagSearchTest {
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
         Template savedTemplate = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-        Snippet savedFirstSnippet = snippetRepository.save(new Snippet(savedTemplate, "filename1", "content1", 1));
-        snippetRepository.save(new Snippet(savedTemplate, "filename2", "content2", 2));
-        thumbnailSnippetRepository.save(new ThumbnailSnippet(savedTemplate, savedFirstSnippet));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename1", "content1", 1));
+        sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
+        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
 
         return savedTemplate;
     }

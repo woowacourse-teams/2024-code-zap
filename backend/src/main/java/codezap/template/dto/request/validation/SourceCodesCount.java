@@ -10,8 +10,8 @@ import jakarta.validation.Payload;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = SnippetsOrdinalValidator.class)
-public @interface SnippetsOrdinal {
+@Constraint(validatedBy = SourceCodesCountValidator.class)
+public @interface SourceCodesCount {
 
     String message();
 

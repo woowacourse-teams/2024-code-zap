@@ -10,7 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 @Configuration
 public class DateTimeFormatConfiguration {
-    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
