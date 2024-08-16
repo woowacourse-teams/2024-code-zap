@@ -33,7 +33,8 @@ class CookieCredentialManagerTest {
     }
 
     @Nested
-    class 인증_정보_반환 {
+    @DisplayName("인증 정보 반환")
+    class getCredential {
 
         @Test
         @DisplayName("인증 정보 반환 성공")

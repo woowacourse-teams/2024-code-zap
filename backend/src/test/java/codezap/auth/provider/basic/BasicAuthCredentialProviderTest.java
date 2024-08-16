@@ -42,7 +42,8 @@ class BasicAuthCredentialProviderTest {
     }
 
     @Nested
-    class 회원_추출_성공 {
+    @DisplayName("인증 정보로부터 회원 추출")
+    class extractMember {
         @Test
         @DisplayName("회원 추출 성공")
         void extractMember() {
