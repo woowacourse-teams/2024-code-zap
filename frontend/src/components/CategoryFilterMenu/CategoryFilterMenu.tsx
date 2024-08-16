@@ -1,74 +1,219 @@
 import { useMemo, useState } from 'react';
 
-import { Text } from '@/components';
+import { settingIcon, trashcanIcon, spinArrowIcon, pencilIcon } from '@/assets/images';
+import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
+import { useModal } from '@/hooks/utils/useModal';
+import { useCategoryDeleteQuery, useCategoryEditQuery } from '@/queries/category';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
 import * as S from './CategoryFilterMenu.style';
 
-interface MenuProps {
+interface CategoryMenuProps {
   categories: Category[];
   onSelectCategory: (selectedCategoryId: number) => void;
 }
 
-interface ButtonProps {
-  name: string;
-  disabled: boolean;
-  onClick: () => void;
-}
-
-const CategoryFilterMenu = ({ categories, onSelectCategory }: MenuProps) => {
+const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
+  const { isOpen, toggleModal } = useModal();
 
-  const reorderedCategories = useMemo(() => {
-    if (categories.length === 0) {
-      return [];
-    }
-
-    const [first, ...rest] = categories;
-
-    return [...rest, first];
-  }, [categories]);
-
-  const indexById: Record<number, number> = useMemo(() => {
-    const map: Record<number, number> = {
-      0: 0,
-    };
-
-    reorderedCategories.forEach(({ id }, index) => {
-      map[id] = index + 1;
-    });
-
-    return map;
-  }, [reorderedCategories]);
-
-  const handleButtonClick = (id: number) => {
+  const handleCategorySelect = (id: number) => {
     setSelectedId(id);
     onSelectCategory(id);
   };
 
+  const [defaultCategory, ...userCategories] = categories.length ? categories : [{ id: 0, name: '' }];
+
+  const indexById: Record<number, number> = useMemo(() => {
+    const map: Record<number, number> = { 0: 0, [defaultCategory.id]: categories.length };
+
+    userCategories.forEach(({ id }, index) => {
+      map[id] = index + 1;
+    });
+
+    return map;
+  }, [categories.length, defaultCategory.id, userCategories]);
+
   return (
     <S.CategoryContainer>
-      <CategoryButton name='전체보기' disabled={selectedId === 0} onClick={() => handleButtonClick(0)} />
+      <S.SettingButton onClick={toggleModal}>
+        <img src={settingIcon} alt='카테고리 설정' width={18} height={18} />
+      </S.SettingButton>
+      <S.CategoryListContainer>
+        <S.CategoryButtonContainer>
+          <CategoryButton name='전체보기' disabled={selectedId === 0} onClick={() => handleCategorySelect(0)} />
+        </S.CategoryButtonContainer>
 
-      {reorderedCategories.map(({ id, name }) => (
-        <CategoryButton key={id} name={name} disabled={selectedId === id} onClick={() => handleButtonClick(id)} />
-      ))}
+        {userCategories.map(({ id, name }) => (
+          <S.CategoryButtonContainer key={id}>
+            <CategoryButton name={name} disabled={selectedId === id} onClick={() => handleCategorySelect(id)} />
+          </S.CategoryButtonContainer>
+        ))}
 
-      <S.HighlightBox
-        data-testid='category-highlighter-box'
-        selectedIndex={indexById[selectedId]}
-        categoryCount={reorderedCategories.length + 1}
+        <S.CategoryButtonContainer>
+          <CategoryButton
+            name={defaultCategory.name}
+            disabled={selectedId === defaultCategory.id}
+            onClick={() => handleCategorySelect(defaultCategory.id)}
+          />
+        </S.CategoryButtonContainer>
+
+        <S.HighlightBox
+          data-testid='category-highlighter-box'
+          selectedIndex={indexById[selectedId]}
+          categoryCount={categories.length}
+        />
+      </S.CategoryListContainer>
+
+      <CategoryEditModal
+        isOpen={isOpen}
+        toggleModal={toggleModal}
+        categories={userCategories}
+        defaultCategory={defaultCategory}
       />
     </S.CategoryContainer>
   );
 };
 
-const CategoryButton = ({ name, disabled, onClick }: ButtonProps) => (
-  <S.CategoryButtonWrapper data-testid='category-button' disabled={disabled} onClick={onClick}>
+interface CategoryButtonProps {
+  name: string;
+  disabled: boolean;
+  onClick: () => void;
+}
+
+const CategoryButton = ({ name, disabled, onClick }: CategoryButtonProps) => (
+  <S.CategoryButtonWrapper disabled={disabled} onClick={onClick}>
     <Text.Medium color={theme.color.light.secondary_700} weight='bold'>
       {name}
     </Text.Medium>
   </S.CategoryButtonWrapper>
 );
+
+interface CategoryEditModalProps {
+  isOpen: boolean;
+  toggleModal: () => void;
+  categories: Category[];
+  defaultCategory: Category;
+}
+
+const CategoryEditModal = ({ isOpen, toggleModal, categories }: CategoryEditModalProps) => {
+  const [editedCategories, setEditedCategories] = useState<Record<number, string>>({});
+  const [categoriesToDelete, setCategoriesToDelete] = useState<number[]>([]);
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+
+  const { mutateAsync: editCategory } = useCategoryEditQuery();
+  const { mutateAsync: deleteCategory } = useCategoryDeleteQuery();
+
+  const handleNameInputChange = (id: number, name: string) => {
+    setEditedCategories((prev) => ({ ...prev, [id]: name }));
+  };
+
+  const handleDeleteClick = (id: number) => {
+    setCategoriesToDelete((prev) => [...prev, id]);
+  };
+
+  const handleRestoreClick = (id: number) => {
+    setCategoriesToDelete((prev) => prev.filter((categoryId) => categoryId !== id));
+  };
+
+  const handleEditClick = (id: number) => {
+    setEditingCategoryId(id);
+  };
+
+  const handleNameInputBlur = () => {
+    setEditingCategoryId(null);
+  };
+
+  const handleSaveChanges = async () => {
+    await Promise.all(
+      Object.entries(editedCategories).map(async ([id, name]) => {
+        const originalCategory = categories.find((category) => category.id === Number(id));
+
+        if (originalCategory && originalCategory.name !== name) {
+          await editCategory({ id: Number(id), name });
+        }
+      }),
+    );
+    await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+    toggleModal();
+  };
+
+  const handleCancelEdit = () => {
+    setEditedCategories({});
+    setCategoriesToDelete([]);
+    setEditingCategoryId(null);
+    toggleModal();
+  };
+
+  return (
+    <Modal isOpen={isOpen} toggleModal={toggleModal} size='small'>
+      <Modal.Header>
+        <Heading.XSmall color={theme.color.light.secondary_900}>카테고리 편집</Heading.XSmall>
+      </Modal.Header>
+      <Modal.Body>
+        <S.EditCategoryItemList>
+          {categories.map(({ id, name }) => (
+            <S.EditCategoryItem key={id}>
+              {categoriesToDelete.includes(id) ? (
+                <>
+                  <Flex align='center' width='100%' height='2.5rem'>
+                    <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
+                      {name}
+                    </Text.Medium>
+                  </Flex>
+                  <S.IconButtonWrapper>
+                    <img src={pencilIcon} alt='편집' width={16} height={16} style={{ visibility: 'hidden' }} />
+                  </S.IconButtonWrapper>
+                  <S.IconButtonWrapper onClick={() => handleRestoreClick(id)}>
+                    <img src={spinArrowIcon} alt='복구' width={16} height={16} />
+                  </S.IconButtonWrapper>
+                </>
+              ) : (
+                <>
+                  <Flex align='center' width='100%' height='2.5rem'>
+                    {editingCategoryId === id ? (
+                      <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
+                        <Input.TextField
+                          type='text'
+                          value={editedCategories[id] ?? name}
+                          onChange={(e) => handleNameInputChange(id, e.target.value)}
+                          onBlur={() => handleNameInputBlur()}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              handleNameInputBlur();
+                            }
+                          }}
+                          autoFocus
+                        />
+                      </Input>
+                    ) : (
+                      <Text.Medium color={theme.color.light.secondary_700}>
+                        {editedCategories[id] !== undefined ? editedCategories[id] : name}
+                      </Text.Medium>
+                    )}
+                  </Flex>
+                  <S.IconButtonContainer>
+                    <S.IconButtonWrapper onClick={() => handleEditClick(id)}>
+                      <img src={pencilIcon} alt='편집' width={18} height={18} />
+                    </S.IconButtonWrapper>
+                    <S.IconButtonWrapper onClick={() => handleDeleteClick(id)}>
+                      <img src={trashcanIcon} alt='삭제' width={20} height={20} />
+                    </S.IconButtonWrapper>
+                  </S.IconButtonContainer>
+                </>
+              )}
+            </S.EditCategoryItem>
+          ))}
+        </S.EditCategoryItemList>
+      </Modal.Body>
+      <Flex justify='flex-end' gap='1rem'>
+        <Button variant='outlined' onClick={handleCancelEdit}>
+          취소
+        </Button>
+        <Button onClick={handleSaveChanges}>저장</Button>
+      </Flex>
+    </Modal>
+  );
+};
 
 export default CategoryFilterMenu;
