@@ -2,16 +2,16 @@ import { FormEvent } from 'react';
 
 import { useInputWithValidate } from '@/hooks/utils';
 import { useLoginMutation } from '@/queries/authentication';
-import { validateEmail, validatePassword } from '@/service';
+import { validateName, validatePassword } from '@/service';
 
 export const useLoginForm = () => {
   const { mutateAsync } = useLoginMutation();
 
   const {
-    value: email,
-    errorMessage: emailError,
-    handleChange: handleEmailChange,
-  } = useInputWithValidate('', validateEmail);
+    value: name,
+    errorMessage: nameError,
+    handleChange: handleNameChange,
+  } = useInputWithValidate('', validateName);
 
   const {
     value: password,
@@ -19,24 +19,24 @@ export const useLoginForm = () => {
     handleChange: handlePasswordChange,
   } = useInputWithValidate('', validatePassword);
 
-  const isFormValid = () => !emailError && !passwordError && email && password;
+  const isFormValid = () => !nameError && !passwordError && name && password;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isFormValid()) {
-      await mutateAsync({ email, password });
+      await mutateAsync({ name, password });
     }
   };
 
   return {
-    email,
+    name,
     password,
     errors: {
-      email: emailError,
+      name: nameError,
       password: passwordError,
     },
-    handleEmailChange,
+    handleNameChange,
     handlePasswordChange,
     isFormValid,
     handleSubmit,

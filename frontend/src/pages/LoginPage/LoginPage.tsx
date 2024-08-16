@@ -7,8 +7,7 @@ import { useToggle } from '@/hooks/utils';
 
 const LoginPage = () => {
   const [showPassword, handlePasswordToggle] = useToggle();
-  const { email, password, errors, handleEmailChange, handlePasswordChange, isFormValid, handleSubmit } =
-    useLoginForm();
+  const { name, password, errors, handleNameChange, handlePasswordChange, isFormValid, handleSubmit } = useLoginForm();
 
   return (
     <>
@@ -20,10 +19,10 @@ const LoginPage = () => {
             onSubmit={handleSubmit}
             style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
           >
-            <Input variant='outlined' size='medium' isValid={!errors.email}>
-              <Input.Label>이메일</Input.Label>
-              <Input.TextField type='email' value={email} onChange={handleEmailChange} autoComplete='email' />
-              <Input.HelperText>{errors.email}</Input.HelperText>
+            <Input variant='outlined' size='medium' isValid={!errors.name}>
+              <Input.Label>아이디</Input.Label>
+              <Input.TextField type='text' value={name} onChange={handleNameChange} autoComplete='username' />
+              <Input.HelperText>{errors.name}</Input.HelperText>
             </Input>
 
             <Input variant='outlined' size='medium' isValid={!errors.password}>
