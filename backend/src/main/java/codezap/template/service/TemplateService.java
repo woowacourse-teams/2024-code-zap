@@ -135,23 +135,46 @@ public class TemplateService {
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         if (categoryId != null && tagIds != null) {
-            List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
-            validateCategoryId(categoryId);
-            Page<Template> templatePage =
-                    templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
-            return makeTemplatesResponseBy(templatePage);
+            return getTemplatesResponseByCategoryAndTag(memberId, keyword, categoryId, tagIds, pageable);
         }
         if (categoryId != null) {
-            validateCategoryId(categoryId);
-            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
-            return makeTemplatesResponseBy(templatePage);
+            return getTemplatesResponseCategory(memberId, keyword, categoryId, pageable);
         }
         if (tagIds != null) {
-            List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
-            Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
-            return makeTemplatesResponseBy(templatePage);
+            return getTemplatesResponseByTag(memberId, keyword, tagIds, pageable);
         }
-        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, pageable);
+        return getTemplatesResponse(memberId, keyword, pageable);
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponseByCategoryAndTag(
+            long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
+    ) {
+        List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
+        validateCategoryId(categoryId);
+        Page<Template> templatePage =
+                templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
+        return makeTemplatesResponseBy(templatePage);
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponseCategory(
+            long memberId, String keyword, Long categoryId, Pageable pageable
+    ) {
+        validateCategoryId(categoryId);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
+        return makeTemplatesResponseBy(templatePage);
+    }
+
+    private void validateCategoryId(Long categoryId) {
+        if(!categoryRepository.existsById(categoryId)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + categoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
+    private FindAllTemplatesResponse getTemplatesResponseByTag(
+            long memberId, String keyword, List<Long> tagIds, Pageable pageable
+    ) {
+        List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
         return makeTemplatesResponseBy(templatePage);
     }
 
@@ -171,10 +194,9 @@ public class TemplateService {
         }
     }
 
-    private void validateCategoryId(Long categoryId) {
-        if(!categoryRepository.existsById(categoryId)) {
-            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + categoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
-        }
+    private FindAllTemplatesResponse getTemplatesResponse(long memberId, String keyword, Pageable pageable) {
+        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, pageable);
+        return makeTemplatesResponseBy(templatePage);
     }
 
     private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
