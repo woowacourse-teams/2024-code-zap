@@ -2,26 +2,19 @@ import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useInputWithValidate } from '@/hooks/utils';
-import { useCheckEmailQuery, useCheckUsernameQuery, useSignupMutation } from '@/queries/authentication';
-import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from '@/service';
+import { useCheckNameQuery, useSignupMutation } from '@/queries/authentication';
+import { validateName, validatePassword, validateConfirmPassword } from '@/service';
 
 export const useSignupForm = () => {
   const navigate = useNavigate();
   const { mutateAsync: postSignup } = useSignupMutation();
 
   const {
-    value: email,
-    errorMessage: emailError,
-    handleChange: handleEmailChange,
-    handleErrorMessage: handleEmailErrorMessage,
-  } = useInputWithValidate('', validateEmail);
-
-  const {
-    value: username,
-    errorMessage: usernameError,
-    handleChange: handleUsernameChange,
-    handleErrorMessage: handleUsernameErrorMessage,
-  } = useInputWithValidate('', validateUsername);
+    value: name,
+    errorMessage: nameError,
+    handleChange: handleNameChange,
+    handleErrorMessage: handleNameErrorMessage,
+  } = useInputWithValidate('', validateName);
 
   const {
     value: password,
@@ -36,24 +29,14 @@ export const useSignupForm = () => {
     handleErrorMessage: handleConfirmPasswordErrorMessage,
   } = useInputWithValidate('', (value, compareValue) => validateConfirmPassword(value, compareValue ?? ''));
 
-  const { refetch: checkEmailQuery } = useCheckEmailQuery(email);
-  const { refetch: checkUsernameQuery } = useCheckUsernameQuery(username);
+  const { refetch: checkNameQuery } = useCheckNameQuery(name);
 
-  const handleEmailCheck = async () => {
-    const { error } = await checkEmailQuery();
-
-    // refetch does not exist onError
-    if (error) {
-      handleEmailErrorMessage(error.message);
-    }
-  };
-
-  const handleUsernameCheck = async () => {
-    const { error } = await checkUsernameQuery();
+  const handleNameCheck = async () => {
+    const { error } = await checkNameQuery();
 
     // refetch does not exist onError
     if (error) {
-      handleUsernameErrorMessage(error.message);
+      handleNameErrorMessage(error.message);
     }
   };
 
@@ -63,42 +46,31 @@ export const useSignupForm = () => {
   }, [password, confirmPassword, handleConfirmPasswordErrorMessage]);
 
   const isFormValid = () =>
-    !emailError &&
-    !usernameError &&
-    !passwordError &&
-    !confirmPasswordError &&
-    email &&
-    username &&
-    password &&
-    confirmPassword;
+    !nameError && !passwordError && !confirmPasswordError && name && password && confirmPassword;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (isFormValid()) {
-      await postSignup({ email, username, password });
+      await postSignup({ name, password });
       navigate('/login');
     }
   };
 
   return {
-    email,
-    username,
+    name,
     password,
     confirmPassword,
     errors: {
-      email: emailError,
-      username: usernameError,
+      name: nameError,
       password: passwordError,
       confirmPassword: confirmPasswordError,
     },
-    handleEmailChange,
-    handleUsernameChange,
+    handleNameChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
     isFormValid,
     handleSubmit,
-    handleEmailCheck,
-    handleUsernameCheck,
+    handleNameCheck,
   };
 };

@@ -1,5 +1,5 @@
+import { MemberInfo } from '@/types';
 import { TagListResponse } from '@/types/api';
-import { MemberInfo } from '@/types/authentication';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;

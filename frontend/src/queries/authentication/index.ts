@@ -1,5 +1,4 @@
-export { useCheckEmailQuery } from './useCheckEmailQuery';
-export { useCheckUsernameQuery } from './useCheckUsernameQuery';
+export { useCheckNameQuery } from './useCheckNameQuery';
 export { useLoginStateQuery } from './useLoginStateQuery';
 export { useLoginMutation } from './useLoginMutation';
 export { useLogoutMutation } from './useLogoutMutation';

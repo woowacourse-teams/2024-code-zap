@@ -9,7 +9,7 @@ export const useLogoutMutation = () => {
   return useMutation({
     mutationFn: () => postLogout(),
     onSuccess: () => {
-      localStorage.removeItem('username');
+      localStorage.removeItem('name');
       localStorage.removeItem('memberId');
       handleLoginState(false);
     },
