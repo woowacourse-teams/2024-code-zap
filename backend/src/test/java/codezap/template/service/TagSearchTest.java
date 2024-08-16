@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberDtoFixture;
+import codezap.fixture.MemberFixture;
 import codezap.member.domain.Member;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
@@ -36,17 +38,17 @@ import codezap.template.repository.ThumbnailRepository;
 
 public class TagSearchTest {
 
-    private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
-    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
-    private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
-
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(List.of(firstCategory));
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
+            List.of(CategoryFixture.getFirstCategory()));
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
+    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(
+            MemberFixture.getFirstMember(), MemberFixture.getSecondMember()
+    ));
+
     private final TemplateService templateService = new TemplateService(
             thumbnailRepository,
             templateRepository,
@@ -86,7 +88,8 @@ public class TagSearchTest {
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
         Template savedTemplate = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", "content1", 1));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename1", "content1", 1));
         sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
         thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
 

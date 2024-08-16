@@ -13,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberDtoFixture;
+import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
@@ -43,19 +45,18 @@ import codezap.template.repository.ThumbnailRepository;
 
 class TemplateServiceTest {
 
-    private final Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
-    private final Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
-    private final Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
-    private final Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
-
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(
-            List.of(firstCategory, secondCategory));
+            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
+    );
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
+
+    private final MemberRepository memberRepository = new FakeMemberRepository(
+            List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
+    );
     private final TemplateService templateService = new TemplateService(
             thumbnailRepository,
             templateRepository,
@@ -314,7 +315,8 @@ class TemplateServiceTest {
                         savedCategory
                 )
         );
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", "content1", 1));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename1", "content1", 1));
         sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
         thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
         createTemplateRequest.tags().stream()

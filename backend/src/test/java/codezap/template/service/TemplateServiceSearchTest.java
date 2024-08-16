@@ -14,6 +14,7 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
 import codezap.fixture.MemberDtoFixture;
+import codezap.fixture.MemberFixture;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
@@ -38,16 +39,15 @@ import codezap.template.repository.ThumbnailRepository;
 
 class TemplateServiceSearchTest {
 
-    private Member firstMember = new Member(1L, "test1@email.com", "password1234", "username1");
-    private Member secondMember = new Member(2L, "test2@email.com", "password1234", "username2");
-
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository();
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     private final TagRepository tagRepository = new FakeTagRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(firstMember, secondMember));
+    private final MemberRepository memberRepository = new FakeMemberRepository(List.of(
+            MemberFixture.getFirstMember(), MemberFixture.getSecondMember()
+    ));
     private final TemplateService templateService = new TemplateService(
             thumbnailRepository,
             templateRepository,
@@ -87,7 +87,8 @@ class TemplateServiceSearchTest {
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
         Template savedTemplate = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category));
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", "content1", 1));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename1", "content1", 1));
         sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
         savedTemplate.updateSourceCodes(List.of(savedFirstSourceCode));
         thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
@@ -99,8 +100,10 @@ class TemplateServiceSearchTest {
             Member member, Category category
     ) {
         Template savedTemplate = templateRepository.save(new Template(member, templateTitle, "설명", category));
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, firstFilename, "content1", 1));
-        SourceCode savedSecondSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, secondFilename, "content2", 2));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, firstFilename, "content1", 1));
+        SourceCode savedSecondSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, secondFilename, "content2", 2));
         savedTemplate.updateSourceCodes(List.of(savedFirstSourceCode, savedSecondSourceCode));
         thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
     }
@@ -109,8 +112,10 @@ class TemplateServiceSearchTest {
             Member member, Category category
     ) {
         Template savedTemplate = templateRepository.save(new Template(member, templateTitle, "설명", category));
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename1", firstContent, 1));
-        SourceCode savedSecondSourceCode = sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", secondContent, 2));
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename1", firstContent, 1));
+        SourceCode savedSecondSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename2", secondContent, 2));
         savedTemplate.updateSourceCodes(List.of(savedFirstSourceCode, savedSecondSourceCode));
         thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
     }

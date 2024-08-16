@@ -6,6 +6,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import codezap.category.domain.Category;
+import codezap.fixture.CategoryFixture;
+import codezap.fixture.MemberFixture;
 import codezap.member.domain.Member;
 
 class SourceCodeTest {
@@ -14,8 +16,8 @@ class SourceCodeTest {
     @DisplayName("성공: 썸네일(5줄) 추출 잘 되는지 확인")
     void getThumbnailContent() {
         // given
-        Member member = new Member(1L, "codezap@code.zap", "1234", "zappy");
-        Category category = new Category(1L, member, "category", false);
+        Member member = MemberFixture.getFirstMember();
+        Category category = CategoryFixture.getFirstCategory();
         Template template = new Template(member, "title", "description", category);
         SourceCode sourceCode = new SourceCode(
                 1L,
