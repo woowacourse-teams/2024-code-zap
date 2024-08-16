@@ -19,16 +19,22 @@ jobs:
         with:
           node-version: 20
 
-      - name: Create .env.production file
+      - name: Create environment file
         run: |
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
-          echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+          else
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_BETA_API_URL }}" > ${{ env.frontend-directory }}/.env.development
+            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BETA_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.development
+          fi
+
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
-      - name: Set environment file permissions
-        run: chmod 644 ${{ env.frontend-directory }}/.env.production
+     - name: Set environment file permissions
+        run: chmod 644 ${{ env.frontend-directory }}/.env.*
 
       - name: Set Sentry environment file permissions
         run: chmod 644 ${{ env.frontend-directory }}/.env.sentry-build-plugin
@@ -60,5 +66,9 @@ jobs:
           path: ${{ secrets.FRONT_DIRECTORY }}
       - name: Move To S3
         run: |
-          aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
+          else
+            aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap-staging
+          fi
           rm -rf ${{ secrets.FRONT_DIRECTORY }}
