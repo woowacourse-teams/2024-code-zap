@@ -6,14 +6,14 @@ import java.util.Base64;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BasicAuthDecoder {
 
     private static final String BASIC_AUTH_SEPARATOR = ":";
     private static final int BASIC_AUTH_LENGTH = 2;
-
-    private BasicAuthDecoder() {
-    }
 
     public static String[] decodeBasicAuth(String credential) {
         String[] values = decodeBase64(credential).split(BASIC_AUTH_SEPARATOR, BASIC_AUTH_LENGTH);
