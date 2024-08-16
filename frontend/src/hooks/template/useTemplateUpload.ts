@@ -93,6 +93,7 @@ export const useTemplateUpload = () => {
       title,
       description,
       sourceCodes,
+      thumbnailOrdinal: 1,
       categoryId: categoryProps.currentValue.id,
       tags,
     };

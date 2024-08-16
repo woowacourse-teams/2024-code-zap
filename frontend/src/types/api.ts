@@ -11,6 +11,7 @@ export interface TemplateUploadRequest {
   title: string;
   description: string;
   sourceCodes: SourceCodes[];
+  thumbnailOrdinal: number;
   categoryId: number;
   tags: string[];
 }
