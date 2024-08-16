@@ -10,10 +10,10 @@ import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class BasicAuthCredentialProvider implements CredentialProvider {
 
     private final MemberRepository memberRepository;
