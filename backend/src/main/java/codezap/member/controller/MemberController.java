@@ -32,7 +32,7 @@ public class MemberController implements SpringDocMemberController {
         return ResponseEntity.created(URI.create("/members/" + memberService.signup(request))).build();
     }
 
-    @GetMapping("/check-login-id")
+    @GetMapping("/check-name")
     @ResponseStatus(HttpStatus.OK)
     public void checkUniquename(@RequestParam String name) {
         memberService.assertUniquename(name);

@@ -44,7 +44,7 @@ class MemberControllerTest extends MockMvcTest {
 
         doNothing().when(memberService).assertUniquename(any(String.class));
 
-        mvc.perform(get("/check-login-id")
+        mvc.perform(get("/check-name")
                         .param("name", name))
                 .andDo(print())
                 .andExpect(status().isOk());
