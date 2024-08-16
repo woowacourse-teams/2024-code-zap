@@ -3,27 +3,6 @@ import { css, Global } from '@emotion/react';
 import { theme } from './theme';
 
 const globalStyles = css`
-  @font-face {
-    font-family: 'Pretendard';
-    font-weight: ${theme.font.weight.light};
-    font-style: normal;
-    src: url('/fonts/Pretendard-ExtraLight.woff2') format('woff2');
-  }
-
-  @font-face {
-    font-family: 'Pretendard';
-    font-weight: ${theme.font.weight.regular};
-    font-style: normal;
-    src: url('/fonts/Pretendard-Regular.woff2') format('woff2');
-  }
-
-  @font-face {
-    font-family: 'Pretendard';
-    font-weight: ${theme.font.weight.bold};
-    font-style: normal;
-    src: url('/fonts/Pretendard-Bold.woff2') format('woff2');
-  }
-
   * {
     box-sizing: border-box;
     margin: 0;
