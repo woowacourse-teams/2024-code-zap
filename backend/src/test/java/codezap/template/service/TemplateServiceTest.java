@@ -1,7 +1,6 @@
 package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -144,8 +143,7 @@ class TemplateServiceTest {
 
         // then
         Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.findByIdAndMember(otherMemberDto, templateId));
-        assertThatCode(() -> templateService.findByIdAndMember(otherMemberDto, template.getId()))
+        assertThatThrownBy(() -> templateService.findByIdAndMember(otherMemberDto, templateId))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }

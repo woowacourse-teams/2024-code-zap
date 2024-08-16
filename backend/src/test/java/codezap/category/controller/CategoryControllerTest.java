@@ -49,7 +49,9 @@ class CategoryControllerTest extends MockMvcTest {
             Long categoryId = 1L;
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            when(categoryService.create(MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest)).thenReturn(categoryId);
+            when(categoryService.create(
+                    MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest))
+                    .thenReturn(categoryId);
 
             mvc.perform(post("/categories")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -76,7 +78,7 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
         void createCategoryFailWithLongName() throws Exception {
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a" .repeat(MAX_LENGTH + 1));
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             mvc.perform(post("/categories")
                             .accept(MediaType.APPLICATION_JSON)
@@ -127,7 +129,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 실패: 권한 없음")
         void updateCategoryFailWithUnauthorized() throws Exception {
             Long categoryId = 1L;
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a" .repeat(MAX_LENGTH));
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
 
             doThrow(new CodeZapException(HttpStatus.UNAUTHORIZED, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialProvider).extractMember(anyString());
@@ -143,7 +145,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
         void updateCategoryFailWithLongName() throws Exception {
             Long categoryId = 1L;
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a" .repeat(MAX_LENGTH + 1));
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             mvc.perform(put("/categories/" + categoryId)
                             .contentType(MediaType.APPLICATION_JSON)

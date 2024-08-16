@@ -27,7 +27,8 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
         return sourceCodes.stream()
                 .filter(sourceCode -> Objects.equals(sourceCode.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
+                .orElseThrow(
+                        () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
     }
 
     @Override

@@ -90,7 +90,11 @@ public class AuthServiceTest {
         @DisplayName("쿠키 인증 실패: 잘못된 크레덴셜")
         void checkLogin_WithInvalidCredential_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            String invalidCredential = HttpHeaders.encodeBasicAuth(member.getName(),  member.getPassword() + "wrong", StandardCharsets.UTF_8);
+            String invalidCredential = HttpHeaders.encodeBasicAuth(
+                    member.getName(),
+                    member.getPassword() + "wrong",
+                    StandardCharsets.UTF_8
+            );
 
             assertThatThrownBy(() -> authService.checkLogin(invalidCredential))
                     .isInstanceOf(CodeZapException.class)

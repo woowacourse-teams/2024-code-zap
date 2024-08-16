@@ -20,7 +20,8 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler
+    ) {
         String token = credentialManager.getCredential(request);
         validatedTokeIsBlank(token);
         validatedExistMember(token);

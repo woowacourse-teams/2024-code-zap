@@ -165,7 +165,7 @@ public class TemplateService {
     }
 
     private void validateCategoryId(Long categoryId) {
-        if(!categoryRepository.existsById(categoryId)) {
+        if (!categoryRepository.existsById(categoryId)) {
             throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + categoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
     }
@@ -189,7 +189,7 @@ public class TemplateService {
     }
 
     private void validateTagId(Long tagId) {
-        if(!tagRepository.existsById(tagId)) {
+        if (!tagRepository.existsById(tagId)) {
             throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + tagId + "에 해당하는 태그가 존재하지 않습니다.");
         }
     }
