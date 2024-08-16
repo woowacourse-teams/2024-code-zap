@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
@@ -32,7 +33,7 @@ public interface SpringDocAuthController {
             @ErrorCase(description = "아이디 불일치", exampleMessage = "존재하지 않는 아이디 moly 입니다."),
             @ErrorCase(description = "비밀번호 불일치", exampleMessage = "로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인해주세요."),
     })
-    LoginResponse login(LoginRequest request, HttpServletResponse response);
+    ResponseEntity<LoginResponse> login(LoginRequest request, HttpServletResponse response);
 
     @Operation(summary = "아이디 로그인 후 쿠키 인증")
     @ApiResponse(responseCode = "200", description = "쿠키 인증 성공")

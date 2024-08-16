@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements SpringDocAuthController {
 
     private final CredentialManager credentialManager;
     private final AuthService authService;
