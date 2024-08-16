@@ -6,8 +6,13 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
+import io.swagger.v3.oas.models.security.SecurityScheme.Type;
 import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
@@ -23,7 +28,15 @@ public class SpringDocConfiguration {
                         모든 예외 응답의 메시지는 "detail" : "내부 서버 오류입니다." 와 같은 형태로 응답합니다. \n
                         """);
 
+        Components cookieComponent = new Components()
+                .addSecuritySchemes("쿠키 인증 토큰", new SecurityScheme()
+                        .type(Type.APIKEY)
+                        .in(In.COOKIE)
+                        .name("credential"));
+
         return new OpenAPI()
+                .info(info)
+                .components(cookieComponent)
                 .servers(
                         List.of(
                                 new Server()
@@ -34,7 +47,7 @@ public class SpringDocConfiguration {
                                         .description("BE 팀에서 사용할 로컬 환경 테스트를 위한 서버입니다.")
                         )
                 )
-                .info(info);
+                .addSecurityItem(new SecurityRequirement().addList("쿠키 인증 토큰"));
     }
 
     @Bean
