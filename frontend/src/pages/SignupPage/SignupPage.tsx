@@ -2,11 +2,12 @@ import { Link } from 'react-router-dom';
 
 import { passwordEyeIcon } from '@/assets/images';
 import { Button, Flex, Heading, Input, Text } from '@/components';
-import { useShowPassword, useSignupForm } from '@/hooks/authentication';
+import { useSignupForm } from '@/hooks/authentication';
+import { useToggle } from '@/hooks/utils';
 
 const SignupPage = () => {
-  const { showPassword, handlePasswordToggle } = useShowPassword();
-  const { showPassword: showPasswordConfirm, handlePasswordToggle: handlePasswordConfirmToggle } = useShowPassword();
+  const [showPassword, handlePasswordToggle] = useToggle();
+  const [showPasswordConfirm, handlePasswordConfirmToggle] = useToggle();
 
   const {
     email,

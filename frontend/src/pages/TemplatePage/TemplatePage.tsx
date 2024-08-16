@@ -7,7 +7,7 @@ import { chevron, pencilIcon, trashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
-import { useCustomContext, useModal } from '@/hooks/utils';
+import { useCustomContext, useToggle } from '@/hooks/utils';
 import { TemplateEditPage } from '@/pages';
 import type { Snippet } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
@@ -18,7 +18,7 @@ const TemplatePage = () => {
   const theme = useTheme();
 
   const { infoAlert } = useCustomContext(ToastContext);
-  const { isOpen, toggleModal } = useModal();
+  const [isOpen, toggleModal] = useToggle();
 
   const copyCode = (snippet: Snippet) => () => {
     navigator.clipboard.writeText(snippet.content);
