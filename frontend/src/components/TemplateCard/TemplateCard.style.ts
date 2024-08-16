@@ -59,7 +59,7 @@ export const AllTagListContainer = styled.div`
   padding: 0.5rem 1rem;
 
   background-color: white;
-  border: 1px solid gray;
+  border: 1px solid ${theme.color.light.secondary_500};
   border-radius: 8px;
 
   -ms-overflow-style: none;
