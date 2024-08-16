@@ -1,13 +1,7 @@
-export const validateEmail = (email: string) => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  return regex.test(email) && !/\s/.test(email) ? '' : '올바른 이메일을 입력해주세요. ex) codezap@example.com';
-};
-
-export const validateUsername = (username: string) => {
+export const validateName = (name: string) => {
   const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
-  return regex.test(username) && username.length > 0 ? '' : '1자 이상의 닉네임을 입력해주세요.';
+  return regex.test(name) && name.length > 0 ? '' : '1자 이상의 아이디를 입력해주세요.';
 };
 
 export const validatePassword = (password: string) => {

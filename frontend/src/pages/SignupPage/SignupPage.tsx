@@ -10,19 +10,16 @@ const SignupPage = () => {
   const [showPasswordConfirm, handlePasswordConfirmToggle] = useToggle();
 
   const {
-    email,
-    username,
+    name,
     password,
     confirmPassword,
     errors,
-    handleEmailChange,
-    handleUsernameChange,
+    handleNameChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
+    handleNameCheck,
     isFormValid,
     handleSubmit,
-    handleEmailCheck,
-    handleUsernameCheck,
   } = useSignupForm();
 
   return (
@@ -35,28 +32,16 @@ const SignupPage = () => {
             onSubmit={handleSubmit}
             style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
           >
-            <Input variant='outlined' size='medium' isValid={!errors.email}>
-              <Input.Label>이메일</Input.Label>
-              <Input.TextField
-                type='email'
-                value={email}
-                onChange={handleEmailChange}
-                onBlur={() => handleEmailCheck()}
-                autoComplete='email'
-              />
-              <Input.HelperText>{errors.email}</Input.HelperText>
-            </Input>
-
-            <Input variant='outlined' size='medium' isValid={!errors.username}>
-              <Input.Label>닉네임</Input.Label>
+            <Input variant='outlined' size='medium' isValid={!errors.name}>
+              <Input.Label>아이디</Input.Label>
               <Input.TextField
                 type='text'
-                value={username}
-                onChange={handleUsernameChange}
-                onBlur={() => handleUsernameCheck()}
+                value={name}
+                onChange={handleNameChange}
+                onBlur={() => handleNameCheck()}
                 autoComplete='username'
               />
-              <Input.HelperText>{errors.username}</Input.HelperText>
+              <Input.HelperText>{errors.name}</Input.HelperText>
             </Input>
 
             <Input variant='outlined' size='medium' isValid={!errors.password}>
