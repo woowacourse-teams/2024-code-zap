@@ -27,16 +27,13 @@ public class Member extends BaseTimeEntity {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String email;
+    private String name;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true, nullable = false)
-    private String username;
-
-    public Member(String email, String password, String username) {
-        this(null, email, password, username);
+    public Member(String name, String password) {
+        this(null, name, password);
     }
 
     public boolean matchPassword(String password) {

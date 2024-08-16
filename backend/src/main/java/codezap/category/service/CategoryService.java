@@ -25,7 +25,7 @@ public class CategoryService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long create(CreateCategoryRequest createCategoryRequest, MemberDto memberDto) {
+    public Long create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
@@ -43,7 +43,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void update(Long id, UpdateCategoryRequest updateCategoryRequest, MemberDto memberDto) {
+    public void update(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest) {
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
         Category category = categoryRepository.fetchById(id);
@@ -57,9 +57,9 @@ public class CategoryService {
         }
     }
 
-    public void deleteById(Long id, MemberDto memberDto) {
-        Member member = memberRepository.fetchById(memberDto.id());
+    public void deleteById(MemberDto memberDto, Long id) {
         Category category = categoryRepository.fetchById(id);
+        Member member = memberRepository.fetchById(memberDto.id());
         validateAuthorizeMember(category, member);
 
         if (templateRepository.existsByCategoryId(id)) {
@@ -73,7 +73,7 @@ public class CategoryService {
 
     private void validateAuthorizeMember(Category category, Member member) {
         if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+            throw new CodeZapException(HttpStatus.FORBIDDEN, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
     }
 }

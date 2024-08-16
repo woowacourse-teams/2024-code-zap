@@ -107,7 +107,7 @@ public class TemplateService {
         return ExploreTemplatesResponse.from(thumbnailSnippetRepository.findAll());
     }
 
-    public FindTemplateResponse findByIdAndMember(Long id, MemberDto memberDto) {
+    public FindTemplateResponse findByIdAndMember(MemberDto memberDto, Long id) {
         Member member = memberRepository.fetchById(memberDto.id());
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
