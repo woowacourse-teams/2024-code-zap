@@ -29,8 +29,17 @@ export interface CategoryListResponse {
   categories: Category[];
 }
 
-export interface CategoryRequest {
+export interface CategoryUploadRequest {
   name: string;
+}
+
+export interface CategoryEditRequest {
+  id: number;
+  name: string;
+}
+
+export interface CategoryDeleteRequest {
+  id: number;
 }
 
 export interface TagListResponse {

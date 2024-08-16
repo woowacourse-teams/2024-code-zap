@@ -1,4 +1,4 @@
-import type { CategoryListResponse, CategoryRequest } from '@/types';
+import type { CategoryListResponse, CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
 import { MemberInfo } from '@/types/authentication';
 import { customFetch } from './customFetch';
 
@@ -20,9 +20,22 @@ export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>
   throw new Error(response.detail);
 };
 
-export const postCategory = async (newCategory: CategoryRequest) =>
+export const postCategory = async (newCategory: CategoryUploadRequest) =>
   await customFetch({
     method: 'POST',
     url: `${CATEGORY_API_URL}`,
     body: JSON.stringify(newCategory),
+  });
+
+export const editCategory = async ({ id, name }: CategoryEditRequest) =>
+  await customFetch({
+    method: 'POST',
+    url: `${CATEGORY_API_URL}/${id}`,
+    body: JSON.stringify({ name }),
+  });
+
+export const deleteCategory = async ({ id }: CategoryDeleteRequest) =>
+  await customFetch({
+    method: 'DELETE',
+    url: `${CATEGORY_API_URL}/${id}`,
   });
