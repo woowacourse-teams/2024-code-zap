@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { QUERY_KEY, deleteTemplate } from '@/api';
 
-export const useTemplateDeleteMutation = (ids: number[]) => {
+export const useTemplateDeleteMutation = (idList: number[]) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: () => deleteTemplate(ids),
+    mutationFn: () => deleteTemplate(idList),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.TEMPLATE_LIST] });
     },
