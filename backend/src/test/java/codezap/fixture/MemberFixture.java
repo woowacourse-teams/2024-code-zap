@@ -4,10 +4,18 @@ import codezap.member.domain.Member;
 
 public class MemberFixture {
     public static Member getFirstMember() {
-        return new Member(1L, "test1@email.com", "password1234", "username1");
+        return new Member(
+                1L,
+                "몰리",
+                "password1234"
+        );
     }
 
     public static Member getSecondMember() {
-        return new Member(2L, "test2@email.com", "password1234", "username2");
+        return new Member(
+                2L,
+                "몰리2",
+                "password1234"
+        );
     }
 }

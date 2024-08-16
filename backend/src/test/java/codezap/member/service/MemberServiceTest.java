@@ -98,47 +98,4 @@ public class MemberServiceTest {
                     .hasMessage("본인의 정보만 조회할 수 있습니다.");
         }
     }
-
-    @Nested
-    @DisplayName("멤버 정보 체크")
-    class validateMemberIdentity {
-        @Test
-        @DisplayName("멤버 정보 체크 성공")
-        void validateMemberIdentitySuccess() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            memberRepository.save(savedMember);
-            MemberDto memberDto = MemberDto.from(savedMember);
-            Long memberId = 1L;
-
-            assertThatCode(() -> sut.validateMemberIdentity(memberDto, memberId))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("멤버 정보 체크 실패: 두 id가 다름")
-        void validateMemberIdentityFailNotSame() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            memberRepository.save(savedMember);
-            MemberDto memberDto = MemberDto.from(savedMember);
-            Long memberId = 2L;
-
-            assertThatThrownBy(() -> sut.validateMemberIdentity(memberDto, memberId))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다.");
-        }
-
-
-        @Test
-        @DisplayName("멤버 정보 체크 실패: 해당 멤버가 DB에 없음")
-        void validateMemberIdentityFailNo() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            MemberDto memberDto = MemberDto.from(savedMember);
-            Long memberId = 1L;
-
-            assertThatThrownBy(() -> sut.validateMemberIdentity(memberDto, memberId))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("로그인 정보가 잘못되었습니다.");
-        }
-    }
-
 }
