@@ -66,7 +66,7 @@ const TemplateEdit = ({
         <Dropdown
           {...categoryProps}
           replaceChildrenWhenIsOpen={
-            <Input size='medium'>
+            <Input size='medium' variant='outlined'>
               <Input.TextField
                 autoFocus
                 placeholder='+ 새 카테고리 생성'
