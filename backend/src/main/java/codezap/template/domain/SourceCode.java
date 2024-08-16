@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 public class SourceCode extends BaseTimeEntity {
 
     private static final String LINE_BREAK = "\n";
-    private static final int THUMBNAIL_LINE_HEIGHT = 10;
+    private static final int THUMBNAIL_LINE_HEIGHT = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
