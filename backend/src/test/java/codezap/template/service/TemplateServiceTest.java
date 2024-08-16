@@ -45,6 +45,11 @@ import codezap.template.repository.ThumbnailRepository;
 
 class TemplateServiceTest {
 
+    private Member firstMember = new Member(1L, "name1", "password1234");
+    private Member secondMember = new Member(2L, "name2", "password1234");
+    private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
+    private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
+
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
@@ -112,7 +117,7 @@ class TemplateServiceTest {
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(template.getId(), memberDto);
+        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(memberDto, template.getId());
 
         // then
         assertAll(
@@ -139,6 +144,7 @@ class TemplateServiceTest {
         // then
         Long templateId = template.getId();
         assertThatThrownBy(() -> templateService.findByIdAndMember(templateId, otherMemberDto))
+        assertThatCode(() -> templateService.findByIdAndMember(otherMemberDto, template.getId()))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }

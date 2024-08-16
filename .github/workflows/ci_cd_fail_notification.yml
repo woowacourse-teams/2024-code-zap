@@ -9,7 +9,7 @@ on:
 jobs:
   notify:
     if: ${{ github.event.workflow_run.conclusion == 'failure' }}
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: 변수 추출
       run: |

@@ -5,7 +5,7 @@ on:
 
 jobs:
   notify_pr_author:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: 변수 추출
       run: |

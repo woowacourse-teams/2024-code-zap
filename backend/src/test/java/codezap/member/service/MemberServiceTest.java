@@ -3,27 +3,20 @@ package codezap.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.stream.Stream;
-
-import jakarta.servlet.http.Cookie;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.springframework.http.HttpHeaders;
 
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.LoginRequest;
 import codezap.member.dto.MemberDto;
-import codezap.member.dto.SignupRequest;
+import codezap.member.dto.request.SignupRequest;
+import codezap.member.dto.response.FindMemberResponse;
+import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
@@ -31,58 +24,7 @@ public class MemberServiceTest {
 
     private final MemberRepository memberRepository = new FakeMemberRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private final AuthService authService = new AuthService(memberRepository);
-    private final MemberService sut = new MemberService(memberRepository, authService, categoryRepository);
-
-    @Nested
-    @DisplayName("이메일 중복 검사 테스트")
-    class CheckEmail {
-
-        @Test
-        @DisplayName("이메일 중복 검사 통과: 사용가능한 이메일")
-        void assertUniqueEmail() {
-            var email = "code@zap.com";
-
-            assertThatCode(() -> sut.assertUniqueEmail(email))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("이메일 중복 검사 실패: 중복된 이메일")
-        void assertUniqueEmail_fail_duplicate() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            memberRepository.save(savedMember);
-
-            assertThatThrownBy(() -> sut.assertUniqueEmail("code@zap.com"))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이메일이 이미 존재합니다.");
-        }
-    }
-
-    @Nested
-    @DisplayName("사용자명 중복 검사 테스트")
-    class CheckUsername {
-
-        @Test
-        @DisplayName("사용자명 중복 검사 통과: 사용가능한 사용자명")
-        void assertUniqueUsername() {
-            var username = "zappy";
-
-            assertThatCode(() -> sut.assertUniqueUsername(username))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("사용자명 중복 검사 실패: 중복된 사용자명")
-        void assertUniqueUsername_fail_duplicate() {
-            var savedMember = new Member(1L, "code@zap.com", "password", "zappy");
-            memberRepository.save(savedMember);
-
-            assertThatThrownBy(() -> sut.assertUniqueUsername("zappy"))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("사용자명이 이미 존재합니다.");
-        }
-    }
+    private final MemberService memberService = new MemberService(memberRepository, categoryRepository);
 
     @Nested
     @DisplayName("회원가입 테스트")
@@ -91,109 +33,69 @@ public class MemberServiceTest {
         @Test
         @DisplayName("회원가입 성공")
         void signup() {
-            var request = new SignupRequest("code@zap.com", "password", "chorong");
+            Member member = MemberFixture.memberFixture();
+            SignupRequest signupRequest = new SignupRequest(member.getName(), member.getPassword());
 
-            var actual = sut.signup(request);
-
-            var expect = new Member(1L, request.email(), request.password(), request.username());
-            assertThat(actual).isEqualTo(expect);
+            assertEquals(memberService.signup(signupRequest), 1L);
         }
 
         @Test
-        @DisplayName("회원가입 실패: 이메일 중복")
-        void signup_fail_email_duplicate() {
-            var saved = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(saved);
-            var request = new SignupRequest("code@zap.com", "password", "chorong");
+        @DisplayName("회원가입 실패: 아이디 중복")
+        void signup_fail_name_duplicate() {
+            Member savedMember = memberRepository.save(MemberFixture.memberFixture());
+            SignupRequest signupRequest = new SignupRequest(savedMember.getName(), savedMember.getPassword());
 
-            assertThatThrownBy(() -> sut.signup(request))
+            assertThatThrownBy(() -> memberService.signup(signupRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("이메일이 이미 존재합니다.");
-        }
-
-        @Test
-        @DisplayName("회원가입 실패: 사용자명 중복")
-        void signup_fail_username_duplicate() {
-            var saved = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(saved);
-            var request = new SignupRequest("chorong@zangsu.com", "password", "zappy");
-
-            assertThatThrownBy(() -> sut.signup(request))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("사용자명이 이미 존재합니다.");
+                    .hasMessageContaining("아이디가 이미 존재합니다.");
         }
     }
 
     @Nested
-    @DisplayName("로그인 테스트")
-    class LoginTest {
+    @DisplayName("아이디 중복 검사 테스트")
+    class AssertUniquename {
 
         @Test
-        @DisplayName("로그인 성공")
-        void login() {
-            var member = new Member(1L, "code@zap.com", "pw1234", "zappy");
-            memberRepository.save(member);
-            var request = new LoginRequest(member.getEmail(), member.getPassword());
+        @DisplayName("아이디 중복 검사 통과: 사용가능한 아이디")
+        void assertUniquename() {
+            String name = "code";
 
-            var actual = sut.login(request);
-
-            var expect = MemberDto.from(member);
-            assertThat(actual).isEqualTo(expect);
-        }
-
-        @Test
-        @DisplayName("로그인 실패: 비밀번호 오류")
-        void login_fail_wrong_password() {
-            var member = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(member);
-            var request = new LoginRequest(member.getEmail(), "wrongpassword");
-
-            assertThatThrownBy(() -> sut.login(request))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("인증에 실패했습니다.");
-        }
-    }
-
-    @Nested
-    @DisplayName("쿠키 인증 테스트")
-    class CheckLoginTest {
-
-        @Test
-        @DisplayName("쿠키 인증 성공")
-        void checkLogin() {
-            var member = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(member);
-            var basicAuthCredentials = encodeToBase64(member.getEmail() + ":" + member.getPassword());
-            var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, basicAuthCredentials);
-            var cookies = new Cookie[]{basicAuthCookie};
-
-            assertThatCode(() -> sut.checkLogin(cookies))
+            assertThatCode(() -> memberService.assertUniquename(name))
                     .doesNotThrowAnyException();
         }
 
-        @ParameterizedTest
-        @DisplayName("쿠키 인증 실패: 쿠키 값 오류")
-        @MethodSource
-        void checkLogin_fail_wrong_cookie_value(String wrongCredentials) {
-            var member = new Member("code@zap.com", "pw1234", "zappy");
-            memberRepository.save(member);
-            var basicAuthCookie = new Cookie(HttpHeaders.AUTHORIZATION, wrongCredentials);
-            var cookies = new Cookie[]{basicAuthCookie};
+        @Test
+        @DisplayName("아이디 중복 검사 실패: 중복된 아이디")
+        void assertUniquename_fail_duplicate() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            assertThatThrownBy(() -> sut.checkLogin(cookies))
+            assertThatThrownBy(() -> memberService.assertUniquename(member.getName()))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("인증에 실패했습니다.");
+                    .hasMessage("아이디가 이미 존재합니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("회원 조회 테스트")
+    class findMember {
+
+        @Test
+        @DisplayName("회원 정보 조회 성공")
+        void findMember() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            assertThat(memberService.findMember(MemberDto.from(member), member.getId()))
+                    .isEqualTo(FindMemberResponse.from(member));
         }
 
-        static Stream<String> checkLogin_fail_wrong_cookie_value() {
-            return Stream.of(
-                    encodeToBase64("wrong@email.kr:nopassword"),
-                    encodeToBase64("Hello world!")
-            );
-        }
+        @Test
+        @DisplayName("회원 정보 조회 실패: 본인 정보가 아닌 경우")
+        void findMember_Throw() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
 
-        static String encodeToBase64(String plainText) {
-            return Base64.getEncoder().encodeToString(plainText.getBytes(StandardCharsets.UTF_8));
+            assertThatThrownBy(() -> memberService.findMember(MemberDto.from(member), member.getId() + 1))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("본인의 정보만 조회할 수 있습니다.");
         }
     }
 

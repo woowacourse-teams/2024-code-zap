@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.global.validation.ValidationSequence;
-import codezap.member.configuration.BasicAuthentication;
 import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
@@ -39,7 +39,7 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping
     public ResponseEntity<Void> createTemplate(
-            @BasicAuthentication MemberDto memberDto,
+            @AuthenticationPrinciple MemberDto memberDto,
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
         Long createdTemplateId = templateService.createTemplate(memberDto, createTemplateRequest);
@@ -49,7 +49,7 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            @BasicAuthentication MemberDto memberDto,
+            @AuthenticationPrinciple MemberDto memberDto,
             @RequestParam Long memberId,
             @RequestParam String keyword,
             @RequestParam(required = false) Long categoryId,
@@ -63,15 +63,15 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateResponse> getTemplateById(
-            @BasicAuthentication MemberDto memberDto,
+            @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(templateService.findByIdAndMember(id, memberDto));
+        return ResponseEntity.ok(templateService.findByIdAndMember(memberDto, id));
     }
 
     @GetMapping("/tags")
     public ResponseEntity<FindAllTagsResponse> getTags(
-            @BasicAuthentication MemberDto memberDto,
+            @AuthenticationPrinciple MemberDto memberDto,
             @RequestParam Long memberId
     ) {
         FindAllTagsResponse response = applicationService.findAllTagsByMemberId(memberDto, memberId);
@@ -85,7 +85,7 @@ public class TemplateController implements SpringDocTemplateController {
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
-            @BasicAuthentication MemberDto memberDto,
+            @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
@@ -95,7 +95,7 @@ public class TemplateController implements SpringDocTemplateController {
 
     @DeleteMapping("/{ids}")
     public ResponseEntity<Void> deleteTemplates(
-            @BasicAuthentication MemberDto memberDto,
+            @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable List<Long> ids
     ) {
         templateService.deleteByIds(memberDto, ids);

@@ -4,7 +4,7 @@ on:
     types: [opened, reopened]
 jobs:
   notify_reviewers:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
     - name: 변수 추출
       run: |
