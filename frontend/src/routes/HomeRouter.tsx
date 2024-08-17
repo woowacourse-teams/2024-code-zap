@@ -1,28 +1,18 @@
-import { useEffect, useState } from 'react';
-
 import { useAuth } from '@/hooks/authentication';
 import { LandingPage, MyTemplatePage } from '@/pages';
 
 const HomeRouter = () => {
-  const { isLogin, handleLoginState, checkAlreadyLogin } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLogin, isChecking } = useAuth();
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      const result = await checkAlreadyLogin();
-
-      handleLoginState(result);
-      setIsLoading(false);
-    };
-
-    checkLogin();
-  }, [checkAlreadyLogin, handleLoginState]);
-
-  if (isLoading) {
+  if (isChecking) {
     return null;
   }
 
-  return isLogin ? <MyTemplatePage /> : <LandingPage />;
+  if (isLogin) {
+    return <MyTemplatePage />;
+  }
+
+  return <LandingPage />;
 };
 
 export default HomeRouter;

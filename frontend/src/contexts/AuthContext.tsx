@@ -1,20 +1,21 @@
-import { createContext, useState, ReactNode, useEffect, useCallback } from 'react';
+import { createContext, useState, ReactNode, useEffect } from 'react';
 
 import { useLoginStateQuery } from '@/queries/authentication';
 import { MemberInfo } from '@/types';
 
 interface AuthContextProps {
   isLogin: boolean;
+  isChecking: boolean;
   memberInfo: MemberInfo;
   handleLoginState: (state: boolean) => void;
   handleMemberInfo: (newMemberInfo: MemberInfo) => void;
-  checkAlreadyLogin: () => Promise<boolean>;
 }
 
 export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLogin, setIsLogin] = useState(false);
+  const [isChecking, setIsChecking] = useState(true);
   const [memberInfo, setMemberInfo] = useState<MemberInfo>({
     memberId: undefined,
     name: undefined,
@@ -32,9 +33,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         memberId: Number(savedMemberId),
       });
     }
+
+    checkAlreadyLogin();
   }, []);
 
-  const checkAlreadyLogin = useCallback(async () => {
+  const checkAlreadyLogin = async () => {
     const { error, isSuccess: refetchSuccess } = await getLoginState();
 
     const savedName = localStorage.getItem('name');
@@ -42,26 +45,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (savedName === undefined || savedMemberId === undefined) {
       setIsLogin(false);
-
-      return false;
     }
 
-    if (refetchSuccess && savedName && savedMemberId) {
+    if (refetchSuccess && savedName && savedName) {
       setIsLogin(true);
-
-      return true;
     }
 
     if ((error && savedName === undefined) || savedMemberId === undefined) {
       localStorage.removeItem('name');
       localStorage.removeItem('memberId');
       setIsLogin(false);
-
-      return false;
     }
 
-    return false;
-  }, [getLoginState]);
+    setIsChecking(false);
+  };
 
   const handleLoginState = (state: boolean) => {
     setIsLogin(state);
@@ -72,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLogin, memberInfo, handleLoginState, handleMemberInfo, checkAlreadyLogin }}>
+    <AuthContext.Provider value={{ isLogin, isChecking, memberInfo, handleLoginState, handleMemberInfo }}>
       {children}
     </AuthContext.Provider>
   );
