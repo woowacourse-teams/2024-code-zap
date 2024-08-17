@@ -142,7 +142,7 @@ const MyTemplatePage = () => {
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
-                <SearchIcon />
+                <SearchIcon aria-label='' />
               </Input.Adornment>
               <Input.TextField
                 placeholder='검색'

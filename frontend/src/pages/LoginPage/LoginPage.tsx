@@ -34,7 +34,6 @@ const LoginPage = () => {
                 autoComplete='current-password'
               />
               <Input.Adornment>
-                {/* <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} /> */}
                 <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>

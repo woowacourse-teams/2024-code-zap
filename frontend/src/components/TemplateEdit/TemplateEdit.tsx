@@ -116,7 +116,7 @@ const TemplateEdit = ({
           </Flex>
         ))}
         <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
-          <PlusIcon width={14} height={14} />
+          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
         </Button>
 
         <TagInput {...tagProps} />

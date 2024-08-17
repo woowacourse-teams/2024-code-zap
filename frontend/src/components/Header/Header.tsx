@@ -22,7 +22,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Flex align='center' gap='2rem'>
           <Link to={'/templates/upload'}>
             <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-              <PlusIcon />새 템플릿
+              <PlusIcon aria-label='' />새 템플릿
             </Button>
           </Link>
           {isLogin ? <LogoutButton /> : <LoginButton />}
