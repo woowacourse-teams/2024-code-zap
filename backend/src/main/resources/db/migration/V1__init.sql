@@ -1,116 +1,101 @@
-create table category
+-- Create tables
+CREATE TABLE category
 (
-    is_default  bit          not null,
-    created_at  datetime(6) not null,
-    id          bigint       not null auto_increment,
-    member_id   bigint       not null,
-    modified_at datetime(6) not null,
-    name        varchar(255) not null,
-    primary key (id)
-);
+    is_default  BIT          NOT NULL,
+    created_at  DATETIME(6) NOT NULL,
+    id          BIGINT       NOT NULL AUTO_INCREMENT,
+    member_id   BIGINT       NOT NULL,
+    modified_at DATETIME(6) NOT NULL,
+    name        VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
-create table member
+CREATE TABLE member
 (
-    created_at  datetime(6) not null,
-    id          bigint       not null auto_increment,
-    modified_at datetime(6) not null,
-    email       varchar(255) not null,
-    password    varchar(255) not null,
-    username    varchar(255) not null,
-    primary key (id)
-);
+    created_at  DATETIME(6) NOT NULL,
+    id          BIGINT       NOT NULL AUTO_INCREMENT,
+    modified_at DATETIME(6) NOT NULL,
+    name        VARCHAR(255) NOT NULL,
+    password    VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
-create table snippet
+CREATE TABLE source_code
 (
-    ordinal     integer      not null,
-    created_at  datetime(6) not null,
-    id          bigint       not null auto_increment,
-    modified_at datetime(6) not null,
-    template_id bigint       not null,
-    content     TEXT         not null,
-    filename    varchar(255) not null,
-    primary key (id)
-);
+    ordinal     INTEGER      NOT NULL,
+    created_at  DATETIME(6) NOT NULL,
+    id          BIGINT       NOT NULL AUTO_INCREMENT,
+    modified_at DATETIME(6) NOT NULL,
+    template_id BIGINT       NOT NULL,
+    content     TEXT         NOT NULL,
+    filename    VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
-create table tag
+CREATE TABLE tag
 (
-    created_at  datetime(6) not null,
-    id          bigint       not null auto_increment,
-    modified_at datetime(6) not null,
-    name        varchar(255) not null,
-    primary key (id)
-);
+    created_at  DATETIME(6) NOT NULL,
+    id          BIGINT       NOT NULL AUTO_INCREMENT,
+    modified_at DATETIME(6) NOT NULL,
+    name        VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
-create table template
+CREATE TABLE template
 (
-    category_id bigint       not null,
-    created_at  datetime(6) not null,
-    id          bigint       not null auto_increment,
-    member_id   bigint       not null,
-    modified_at datetime(6) not null,
+    category_id BIGINT       NOT NULL,
+    created_at  DATETIME(6) NOT NULL,
+    id          BIGINT       NOT NULL AUTO_INCREMENT,
+    member_id   BIGINT       NOT NULL,
+    modified_at DATETIME(6) NOT NULL,
     description TEXT,
-    title       varchar(255) not null,
-    primary key (id)
-);
+    title       VARCHAR(255) NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
-create table template_tag
+CREATE TABLE template_tag
 (
-    created_at  datetime(6) not null,
-    modified_at datetime(6) not null,
-    tag_id      bigint not null,
-    template_id bigint not null,
-    primary key (tag_id, template_id)
-);
+    created_at  DATETIME(6) NOT NULL,
+    modified_at DATETIME(6) NOT NULL,
+    tag_id      BIGINT NOT NULL,
+    template_id BIGINT NOT NULL,
+    PRIMARY KEY (tag_id, template_id)
+) ENGINE=InnoDB;
 
-create table thumbnail_snippet
+CREATE TABLE thumbnail
 (
-    created_at  datetime(6) not null,
-    id          bigint not null auto_increment,
-    modified_at datetime(6) not null,
-    snippet_id  bigint not null,
-    template_id bigint not null,
-    primary key (id)
-);
+    created_at     DATETIME(6) NOT NULL,
+    id             BIGINT NOT NULL AUTO_INCREMENT,
+    modified_at    DATETIME(6) NOT NULL,
+    source_code_id BIGINT NOT NULL,
+    template_id    BIGINT NOT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;
 
-alter table category
-    add constraint name_with_member unique (member_id, name);
-alter table member
-    add constraint UKmbmcqelty0fbrvxp1q58dn57t unique (email);
-alter table member
-    add constraint UKgc3jmn7c2abyo3wf6syln5t2i unique (username);
-alter table thumbnail_snippet
-    add constraint UKg3n4dnryxewrvb8du167uijwn unique (snippet_id);
-alter table thumbnail_snippet
-    add constraint UKpj1ejy0otq23kfkis7o3mioqx unique (template_id);
-alter table category
-    add constraint FKd7qtd46ngp06lnc19g6wtoh8t
-        foreign key (member_id)
-            references member (id);
-alter table snippet
-    add constraint FKlft9j4cliatmtij1yr5xh6xk2
-        foreign key (template_id)
-            references template (id);
-alter table template
-    add constraint FKfke34lch7qf4xixqnyj3h12m7
-        foreign key (category_id)
-            references category (id);
-alter table template
-    add constraint FKodvst19gfi7in0ox3dfocuejx
-        foreign key (member_id)
-            references member (id);
-alter table template_tag
-    add constraint FK460d2kdmrpffumqaahvh414mv
-        foreign key (tag_id)
-            references tag (id);
-alter table template_tag
-    add constraint FKnq3tyggcae26yafql1l0rc91l
-        foreign key (template_id)
-            references template (id);
-alter table thumbnail_snippet
-    add constraint FK5adu2g3fumims6lwiu4w4srcs
-        foreign key (snippet_id)
-            references snippet (id);
-alter table thumbnail_snippet
-    add constraint FKs3gprh3h7k6b9v414ib76ys9q
-        foreign key (template_id)
-            references template (id);
+-- Add constraints
+ALTER TABLE category
+    ADD CONSTRAINT name_with_member UNIQUE (member_id, name);
+ALTER TABLE member
+    ADD CONSTRAINT UK9esvgikrmti1v7ci6v453imdc UNIQUE (name);
+ALTER TABLE thumbnail
+    ADD CONSTRAINT UKi6dbyoqre1oeei7309am7m65p UNIQUE (source_code_id);
+ALTER TABLE thumbnail
+    ADD CONSTRAINT UKqvae6g2xuj6an3wjyc7wau2eb UNIQUE (template_id);
+
+-- Add foreign key constraints
+ALTER TABLE category
+    ADD CONSTRAINT FKd7qtd46ngp06lnc19g6wtoh8t FOREIGN KEY (member_id) REFERENCES member (id);
+ALTER TABLE source_code
+    ADD CONSTRAINT FKjax3t3l28tqs65iqfd3ty5dxw FOREIGN KEY (template_id) REFERENCES template (id);
+ALTER TABLE template
+    ADD CONSTRAINT FKfke34lch7qf4xixqnyj3h12m7 FOREIGN KEY (category_id) REFERENCES category (id);
+ALTER TABLE template
+    ADD CONSTRAINT FKodvst19gfi7in0ox3dfocuejx FOREIGN KEY (member_id) REFERENCES member (id);
+ALTER TABLE template_tag
+    ADD CONSTRAINT FK460d2kdmrpffumqaahvh414mv FOREIGN KEY (tag_id) REFERENCES tag (id);
+ALTER TABLE template_tag
+    ADD CONSTRAINT FKnq3tyggcae26yafql1l0rc91l FOREIGN KEY (template_id) REFERENCES template (id);
+ALTER TABLE thumbnail
+    ADD CONSTRAINT FKssc68bv1tyrlqpi3fet97rbi FOREIGN KEY (source_code_id) REFERENCES source_code (id);
+ALTER TABLE thumbnail
+    ADD CONSTRAINT FKgxg8st4s8hfkmbb3mbm34ww49 FOREIGN KEY (template_id) REFERENCES template (id);
