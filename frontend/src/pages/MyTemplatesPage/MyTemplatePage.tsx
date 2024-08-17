@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { arrowUp, searchIcon } from '@/assets/images';
+import { arrowUp, SearchIcon } from '@/assets/images';
 import {
   CategoryFilterMenu,
   Flex,
@@ -142,7 +142,7 @@ const MyTemplatePage = () => {
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
-                <img src={searchIcon} />
+                <SearchIcon />
               </Input.Adornment>
               <Input.TextField
                 placeholder='검색'

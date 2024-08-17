@@ -1,9 +1,8 @@
 // Icon
 export { default as PencilIcon } from './pencil.svg';
 export { default as PlusIcon } from './plus.svg';
+export { default as SearchIcon } from './search.svg';
 
-export { default as logoIcon } from './logo_24x24.png';
-export { default as searchIcon } from './search.png';
 export { default as trashcanIcon } from './trashcan.png';
 export { default as userMenuIcon } from './userMenu_38x38.png';
 export { default as chevron } from './chevron.png';
