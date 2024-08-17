@@ -9,5 +9,6 @@ export { default as XCircleIcon } from './xCircle.svg';
 export { default as EyeIcon } from './eye.svg';
 export { default as ArrowUpIcon } from './arrowUp.svg';
 
-export { default as codezapLogo } from './codezapLogo.png';
+// Logo
+export { default as CodeZapLogo } from './codezapLogo.svg';
 export { default as tiger } from './tiger.png';
