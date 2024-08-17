@@ -7,7 +7,7 @@ export { default as UserCircleIcon } from './userCircle.svg';
 export { default as ChevronIcon } from './chevron.svg';
 export { default as XCircleIcon } from './xCircle.svg';
 export { default as EyeIcon } from './eye.svg';
+export { default as ArrowUpIcon } from './arrowUp.svg';
 
 export { default as codezapLogo } from './codezapLogo.png';
 export { default as tiger } from './tiger.png';
-export { default as arrowUp } from './arrowUp.png';
