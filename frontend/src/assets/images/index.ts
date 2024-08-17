@@ -5,8 +5,8 @@ export { default as SearchIcon } from './search.svg';
 export { default as TrashcanIcon } from './trashcan.svg';
 export { default as UserCircleIcon } from './userCircle.svg';
 export { default as ChevronIcon } from './chevron.svg';
+export { default as XCircleIcon } from './xCircle.svg';
 
-export { default as xCircle } from './x_circle.png';
 export { default as passwordEyeIcon } from './passwordEye.png';
 export { default as codezapLogo } from './codezapLogo.png';
 export { default as tiger } from './tiger.png';
