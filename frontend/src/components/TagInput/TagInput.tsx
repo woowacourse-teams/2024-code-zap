@@ -1,8 +1,6 @@
-import { XCircleIcon } from '@/assets/images';
-import { Flex, Input, Text } from '@/components';
+import { Flex, Input, TagButton, Text } from '@/components';
 import { theme } from '@/style/theme';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
-import * as S from './TagInput.style';
 
 interface Props {
   value: string;
@@ -21,15 +19,17 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   };
 
   const addTag = () => {
-    if (removeAllWhitespace(value) === '') {
+    const newTag = removeAllWhitespace(value);
+
+    if (newTag === '') {
       return;
     }
 
-    if (tags.includes(value)) {
+    if (tags.includes(newTag)) {
       return;
     }
 
-    setTags((prev) => [...prev, removeAllWhitespace(value)]);
+    setTags((prev) => [...prev, newTag]);
   };
 
   return (
@@ -52,15 +52,14 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
       )}
       <Flex gap='0.25rem' css={{ flexWrap: 'wrap', width: '100%' }}>
         {tags?.map((tag, idx) => (
-          <S.Tag
+          <TagButton
             key={idx}
+            variant='edit'
+            name={tag}
             onClick={() => {
               setTags((prev) => prev.filter((el) => el !== tag));
             }}
-          >
-            {tag}
-            <XCircleIcon width={16} height={16} aria-label='태그 삭제' />
-          </S.Tag>
+          />
         ))}
       </Flex>
       <Input size='large'>

@@ -2,12 +2,16 @@ import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
 
-export const TagButtonWrapper = styled.button<{ isFocused: boolean }>`
+export const TagButton = styled.button<{ isFocused: boolean }>`
   cursor: pointer;
 
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+
   box-sizing: border-box;
-  height: 1.75rem;
-  padding: 0 0.75rem;
+  padding: 0.5rem 0.75rem;
 
   background-color: ${({ isFocused }) => (isFocused ? theme.color.light.primary_400 : theme.color.light.tertiary_50)};
   border: ${({ isFocused }) =>
