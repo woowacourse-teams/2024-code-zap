@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { codezapLogo, newTemplateIcon } from '@/assets/images';
+import { codezapLogo, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
@@ -22,7 +22,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Flex align='center' gap='2rem'>
           <Link to={'/templates/upload'}>
             <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-              <img src={newTemplateIcon} alt='' width={12} height={12} />새 템플릿
+              <PlusIcon />새 템플릿
             </Button>
           </Link>
           {isLogin ? <LogoutButton /> : <LoginButton />}
