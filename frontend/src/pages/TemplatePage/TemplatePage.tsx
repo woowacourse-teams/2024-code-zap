@@ -71,10 +71,10 @@ const TemplatePage = () => {
                         handleEditButtonClick();
                       }}
                     >
-                      <PencilIcon width={28} height={28} />
+                      <PencilIcon width={28} height={28} aria-label='템플릿 편집' />
                     </S.EditButton>
                     <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                      <TrashcanIcon />
+                      <TrashcanIcon aria-label='템플릿 삭제' />
                     </S.DeleteButton>
                   </Flex>
                 </Flex>

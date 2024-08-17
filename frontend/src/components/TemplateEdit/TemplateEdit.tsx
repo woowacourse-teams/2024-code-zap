@@ -111,7 +111,7 @@ const TemplateEdit = ({
                 handleDeleteSourceCode(idx);
               }}
             >
-              <TrashcanIcon width={24} height={24} />
+              <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
             </S.DeleteButton>
           </Flex>
         ))}
