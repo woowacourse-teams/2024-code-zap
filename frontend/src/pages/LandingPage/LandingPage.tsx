@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { chevron, codezapLogo } from '@/assets/images';
+import { ChevronIcon, codezapLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { theme } from '@/style/theme';
 import * as S from '../TemplatePage/TemplatePage.style';
@@ -93,7 +93,7 @@ const ExamCode = () => {
         style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
       >
         <Flex align='center' gap='0.5rem' css={{ cursor: 'pointer' }}>
-          <img src={chevron} width={24} height={24} alt='' />
+          <ChevronIcon aria-label='소스코드 펼침' />
           <Text.Small color='#fff' weight='bold'>
             {sourceCode.filename}
           </Text.Small>
