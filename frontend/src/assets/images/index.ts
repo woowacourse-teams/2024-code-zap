@@ -11,4 +11,4 @@ export { default as ArrowUpIcon } from './arrowUp.svg';
 
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';
-export { default as tiger } from './tiger.png';
+export { default as TigerLogo } from './tiger.svg';
