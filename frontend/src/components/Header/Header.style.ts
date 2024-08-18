@@ -16,6 +16,10 @@ export const HeaderContainer = styled.nav`
 
   background: white;
   border-bottom: 2px solid ${theme.color.light.secondary_200};
+
+  @media (max-width: 768px) {
+    padding: 0 1rem;
+  }
 `;
 
 export const HeaderContentContainer = styled.div`
@@ -41,29 +45,55 @@ export const HeaderMenu = styled.div<{ menuOpen: boolean }>`
     z-index: 100;
     top: var(--header-height);
     right: 0;
+    transform: translateX(100%);
 
-    display: none;
     flex-direction: column;
     flex-wrap: nowrap;
+    gap: 3rem;
     align-items: center;
     justify-content: flex-start;
 
-    width: 75%;
+    width: 70%;
     height: 100%;
+    padding-top: 3rem;
 
+    visibility: hidden;
+    opacity: 0;
     background-color: white;
 
-    transition: transform 0.3s ease-in-out;
+    transition:
+      transform 0.3s ease-in-out,
+      visibility 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
 
     ${({ menuOpen }) =>
-      menuOpen
-        ? css`
-            transform: translateX(0);
-            display: flex;
-          `
-        : css`
-            transform: translateX(100%);
-          `}
+      menuOpen &&
+      css`
+        transform: translateX(0);
+        visibility: visible;
+        opacity: 1;
+      `}
+  }
+`;
+
+export const NavContainer = styled.div`
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 3rem;
+  }
+`;
+
+export const MobileMenuContainer = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
   }
 `;
 

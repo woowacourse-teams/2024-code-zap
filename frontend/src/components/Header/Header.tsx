@@ -22,21 +22,31 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
       <S.HeaderContentContainer>
         <Logo />
         <S.HeaderMenu menuOpen={menuOpen}>
-          <Flex align='center' gap='2rem'>
+          <S.NavContainer>
             {isLogin && <NavOption route='/' name='내 템플릿' />}
             <NavOption route='/aboutus' name='서비스 소개' />
-          </Flex>
+          </S.NavContainer>
 
-          <Flex align='center' gap='2rem'>
+          <S.NavContainer>
             <Link to={'/templates/upload'}>
-              <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-                <PlusIcon aria-label='' />새 템플릿
-              </Button>
+              {!menuOpen && (
+                <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
+                  <PlusIcon aria-label='' />새 템플릿
+                </Button>
+              )}
             </Link>
             {isLogin ? <LogoutButton /> : <LoginButton />}
-          </Flex>
+          </S.NavContainer>
         </S.HeaderMenu>
-        <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
+
+        <S.MobileMenuContainer>
+          <Link to={'/templates/upload'}>
+            <Button variant='outlined' size='small' weight='bold' hoverStyle='none'>
+              <PlusIcon aria-label='' />새 템플릿
+            </Button>
+          </Link>
+          <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
+        </S.MobileMenuContainer>
       </S.HeaderContentContainer>
     </S.HeaderContainer>
   );
