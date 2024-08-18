@@ -1,4 +1,4 @@
-package codezap.template.dto.response;
+package codezap.tag.dto.response;
 
 import java.util.List;
 

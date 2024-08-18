@@ -10,7 +10,7 @@ import codezap.member.dto.MemberDto;
 import codezap.member.service.MemberService;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllTagsResponse;
+import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import lombok.RequiredArgsConstructor;
