@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ToastContext } from '@/contexts';
@@ -12,33 +12,23 @@ type RouteGuardProps = {
 };
 
 const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) => {
-  const { handleLoginState, checkAlreadyLogin } = useAuth();
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLogin, isChecking } = useAuth();
   const { infoAlert } = useCustomContext(ToastContext);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkLogin = async () => {
-      const result = await checkAlreadyLogin();
+    if (isLoginRequired && !isChecking && !isLogin) {
+      infoAlert('로그인을 해주세요.');
+      navigate(redirectTo);
+    }
 
-      handleLoginState(result);
-      setIsLoading(false);
+    if (!isLoginRequired && !isChecking && isLogin) {
+      infoAlert('이미 로그인된 사용자입니다.');
+      navigate(redirectTo);
+    }
+  }, [isLogin, isChecking, infoAlert, isLoginRequired, navigate, redirectTo]);
 
-      if (isLoginRequired && !result) {
-        infoAlert('로그인을 해주세요.');
-        navigate(redirectTo);
-      }
-
-      if (!isLoginRequired && result) {
-        infoAlert('이미 로그인된 사용자입니다.');
-        navigate(redirectTo);
-      }
-    };
-
-    checkLogin();
-  }, [checkAlreadyLogin, handleLoginState, infoAlert, isLoginRequired, navigate, redirectTo]);
-
-  if (isLoading) {
+  if (isChecking) {
     return null;
   }
 
