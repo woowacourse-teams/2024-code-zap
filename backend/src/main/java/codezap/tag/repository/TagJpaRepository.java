@@ -1,4 +1,4 @@
-package codezap.template.repository;
+package codezap.tag.repository;
 
 import java.util.Optional;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
-import codezap.template.domain.Tag;
+import codezap.tag.domain.Tag;
 
 @SuppressWarnings("unused")
 public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long> {

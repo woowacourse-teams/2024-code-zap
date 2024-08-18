@@ -1,4 +1,4 @@
-package codezap.template.repository;
+package codezap.tag.repository;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package codezap.template.repository;
+package codezap.tag.repository;
 
 import java.util.List;
 import java.util.Optional;
 
-import codezap.template.domain.Tag;
+import codezap.tag.domain.Tag;
 
 public interface TagRepository {
 

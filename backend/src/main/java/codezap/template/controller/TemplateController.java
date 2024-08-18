@@ -22,7 +22,6 @@ import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
-import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.ThumbnailService;
@@ -67,15 +66,6 @@ public class TemplateController implements SpringDocTemplateController {
             @PathVariable Long id
     ) {
         return ResponseEntity.ok(memberTemplateApplicationService.findByIdAndMember(memberDto, id));
-    }
-
-    @GetMapping("/tags")
-    public ResponseEntity<FindAllTagsResponse> getTags(
-            @AuthenticationPrinciple MemberDto memberDto,
-            @RequestParam Long memberId
-    ) {
-        FindAllTagsResponse response = memberTemplateApplicationService.findAllTagsByMemberId(memberDto, memberId);
-        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/explore")
