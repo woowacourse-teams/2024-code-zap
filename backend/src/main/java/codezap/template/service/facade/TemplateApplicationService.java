@@ -30,12 +30,6 @@ public class TemplateApplicationService {
         return tagTemplateApplicationService.createTemplate(member, category, createTemplateRequest);
     }
 
-    private void validateCategoryAuthorizeMember(Member member, Category category) {
-        if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
-        }
-    }
-
     public FindAllTemplatesResponse findAllBy(
             long memberId,
             String keyword,
@@ -57,5 +51,11 @@ public class TemplateApplicationService {
         Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(member, category);
         tagTemplateApplicationService.update(member, templateId, updateTemplateRequest, category);
+    }
+
+    private void validateCategoryAuthorizeMember(Member member, Category category) {
+        if (!category.getMember().equals(member)) {
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
+        }
     }
 }
