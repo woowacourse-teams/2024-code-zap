@@ -60,7 +60,6 @@ export const HeaderMenu = styled.div<{ menuOpen: boolean }>`
     visibility: hidden;
     opacity: 0;
     background-color: white;
-    border-radius: 8px 0 0 8px;
 
     transition:
       transform 0.3s ease-in-out,
