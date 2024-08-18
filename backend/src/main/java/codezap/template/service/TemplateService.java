@@ -12,8 +12,6 @@ import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
-import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -22,9 +20,9 @@ import lombok.RequiredArgsConstructor;
 public class TemplateService {
     private final TemplateRepository templateRepository;
 
-    public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
+    public Template createTemplate(Member member, String title, String description, Category category) {
         return templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
+                new Template(member, title, description, category)
         );
     }
 
@@ -61,14 +59,11 @@ public class TemplateService {
     }
 
     public Template updateTemplate(
-            Member member,
-            Long templateId,
-            UpdateTemplateRequest updateTemplateRequest,
-            Category category
-            ) {
+            Member member, Long templateId, String title, String description, Category category
+    ) {
         Template template = templateRepository.fetchById(templateId);
         validateTemplateAuthorizeMember(member, template);
-        template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
+        template.updateTemplate(title, description, category);
 
         return template;
     }
