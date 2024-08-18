@@ -3,10 +3,12 @@ package codezap.template.service.facade;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codezap.category.domain.Category;
 import codezap.member.domain.Member;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -27,10 +29,26 @@ public class TagTemplateApplicationService {
     private final TemplateService templateService;
 
     @Transactional
-    public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
-        Template template = templateService.createTemplate(member, createTemplateRequest);
+    public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
+        Template template = templateService.createTemplate(member, category, createTemplateRequest);
         templateTagService.createTags(createTemplateRequest.tags(), template);
         return template.getId();
+    }
+
+    public FindAllTemplatesResponse findAllBy(
+            long memberId,
+            String keyword,
+            List<Long> tagIds,
+            Pageable pageable
+    ) {
+        if (tagIds == null) {
+            Page<Template> templates = templateService.findAllBy(memberId, keyword, pageable);
+            return makeTemplatesResponseBy(templates);
+        }
+
+        List<Long> templateIds = templateTagService.fetchTemplateIdsContainsTagIds(tagIds);
+        Page<Template> templates = templateService.findAllBy(memberId, keyword, templateIds, pageable);
+        return makeTemplatesResponseBy(templates);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -40,6 +58,8 @@ public class TagTemplateApplicationService {
             List<Long> tagIds,
             Pageable pageable
     ) {
+        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+
         if (tagIds == null) {
             Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponseBy(templates);
@@ -73,8 +93,8 @@ public class TagTemplateApplicationService {
     }
 
     @Transactional
-    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Template template = templateService.update(member, templateId, updateTemplateRequest);
+    public void update(Member member, Category category, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
+        Template template = templateService.update(member, category, templateId, updateTemplateRequest);
         templateTagService.updateTags(updateTemplateRequest.tags(), template);
     }
 

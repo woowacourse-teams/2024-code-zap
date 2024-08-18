@@ -49,8 +49,8 @@ class TemplateServiceSearchTest {
     private final TemplateService templateService = new TemplateService(
             thumbnailRepository,
             templateRepository,
-            sourceCodeRepository,
-            categoryRepository);
+            sourceCodeRepository
+    );
 
     private void saveDefault15Templates(Member member, Category category) {
         saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);
@@ -132,7 +132,7 @@ class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findAllBy(
-                    member.getId(), "keyword", null, PageRequest.of(1, 3)
+                    member.getId(), "keyword", PageRequest.of(0, 3)
             );
 
             //then
@@ -152,7 +152,7 @@ class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findAllBy(
-                    member.getId(), "java", null, PageRequest.of(1, 3)
+                    member.getId(), "java", PageRequest.of(0, 3)
             );
 
             //then
@@ -172,7 +172,7 @@ class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findAllBy(
-                    member.getId(), "Car", null, PageRequest.of(1, 3)
+                    member.getId(), "Car", PageRequest.of(0, 3)
             );
 
             //then
@@ -203,7 +203,7 @@ class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findAllBy(
-                    member.getId(), "Login", null, PageRequest.of(1, 3)
+                    member.getId(), "Login", PageRequest.of(0, 3)
             );
 
             //then
@@ -220,7 +220,7 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
             Page<Template> allBy = templateService.findAllBy(
-                    member.getId(), "", null, PageRequest.of(1, 20)
+                    member.getId(), "", PageRequest.of(0, 20)
             );
 
             assertAll(() -> assertThat(allBy).hasSize(20),
@@ -239,7 +239,7 @@ class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findAllBy(
-                    member.getId(), "keyword", null, PageRequest.of(2, 5)
+                    member.getId(), "keyword", PageRequest.of(1, 5)
             );
 
             //then
@@ -254,7 +254,7 @@ class TemplateServiceSearchTest {
     @DisplayName("조건에 따른 페이지 조회 메서드 동작 확인")
     class FilteringPageTest {
 
-        private static final PageRequest DEFAULT_PAGING_REQUEST = PageRequest.of(1, 20);
+        private static final PageRequest DEFAULT_PAGING_REQUEST = PageRequest.of(0, 20);
 
         @Test
         @DisplayName("전체 탐색 / 1페이지 성공")
@@ -268,11 +268,12 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
 
             Page<Template> allBy = templateService.findAllBy(
-                    member.getId(), "", null, PageRequest.of(1, 20)
+                    member.getId(), "", PageRequest.of(0, 20)
             );
 
             //when & then
-            assertAll(() -> assertThat(allBy).hasSize(20),
+            assertAll(
+                    () -> assertThat(allBy).hasSize(20),
                     () -> assertThat(allBy).allMatch(template -> template.getId() <= 20),
                     () -> assertThat(allBy.getTotalElements()).isEqualTo(30));
         }
@@ -289,7 +290,7 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
 
             Page<Template> allBy = templateService.findAllBy(
-                    member.getId(), "", null, PageRequest.of(2, 20)
+                    member.getId(), "", PageRequest.of(1, 20)
             );
 
             assertAll(() -> assertThat(allBy).hasSize(10),
@@ -308,7 +309,7 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
 
             Page<Template> allBy = templateService.findAllBy(
-                    member.getId(), "", category1.getId(), PageRequest.of(1, 20)
+                    member.getId(), "", category1.getId(), PageRequest.of(0, 20)
             );
 
             assertAll(() -> assertThat(allBy).hasSize(15),
