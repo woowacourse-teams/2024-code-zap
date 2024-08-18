@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
@@ -30,8 +31,6 @@ import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
@@ -61,9 +60,7 @@ class TemplateServiceTest {
             thumbnailRepository,
             templateRepository,
             sourceCodeRepository,
-            categoryRepository,
-            tagRepository,
-            templateTagRepository);
+            categoryRepository);
 
     @Test
     @DisplayName("템플릿 생성 성공")
@@ -73,8 +70,7 @@ class TemplateServiceTest {
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Long id = templateService.createTemplate(member, createTemplateRequest);
-        Template template = templateRepository.fetchById(id);
+        Template template = templateService.createTemplate(member, createTemplateRequest);
 
         // then
         assertAll(
@@ -94,11 +90,11 @@ class TemplateServiceTest {
         saveTemplate(makeTemplateRequest("title2"), new Category("category2", member), member);
 
         // when
-        FindAllTemplatesResponse allTemplates = templateService.findAllBy(
-                member.getId(), "", null, null, PageRequest.of(1, 10));
+        Page<Template> allTemplates = templateService.findAllBy(
+                member.getId(), "", null, PageRequest.of(1, 10));
 
         // then
-        assertThat(allTemplates.templates()).hasSize(2);
+        assertThat(allTemplates).hasSize(2);
     }
 
     @Test
@@ -110,15 +106,12 @@ class TemplateServiceTest {
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(member, template.getId());
+        Template foundTemplate = templateService.findByIdAndMember(member, template.getId());
 
         // then
         assertAll(
-                () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
-                () -> assertThat(foundTemplate.sourceCodes()).hasSize(
-                        sourceCodeRepository.findAllByTemplate(template).size()),
-                () -> assertThat(foundTemplate.category().id()).isEqualTo(template.getCategory().getId()),
-                () -> assertThat(foundTemplate.tags()).hasSize(2)
+                () -> assertThat(foundTemplate.getTitle()).isEqualTo(template.getTitle()),
+                () -> assertThat(foundTemplate.getCategory().getId()).isEqualTo(template.getCategory().getId())
         );
     }
 
@@ -165,8 +158,7 @@ class TemplateServiceTest {
                 () -> assertThat(thumbnail.getSourceCode().getId()).isEqualTo(2L),
                 () -> assertThat(sourceCodes).hasSize(3),
                 () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(1L),
-                () -> assertThat(tags).hasSize(2),
-                () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
+                () -> assertThat(tags).hasSize(2)
         );
     }
 
