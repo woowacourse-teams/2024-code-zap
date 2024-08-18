@@ -54,7 +54,7 @@ export const HeaderMenu = styled.div<{ menuOpen: boolean }>`
     justify-content: flex-start;
 
     width: 70%;
-    height: 100%;
+    height: calc(100% - var(--header-height));
     padding-top: 3rem;
 
     visibility: hidden;
