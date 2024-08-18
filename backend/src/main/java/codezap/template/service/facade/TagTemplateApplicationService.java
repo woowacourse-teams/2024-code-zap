@@ -126,6 +126,6 @@ public class TagTemplateApplicationService {
         templateService.deleteByMemberAndIds(member, ids);
         templateTagService.deleteByIds(ids);
         sourceCodeService.deleteByTemplateIds(ids);
-        thumbnailService.deleteByIds(ids);
+        thumbnailService.deleteByTemplateIds(ids);
     }
 }

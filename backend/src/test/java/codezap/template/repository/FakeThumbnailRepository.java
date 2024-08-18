@@ -22,6 +22,11 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
         this.thumbnails = new ArrayList<>();
     }
 
+    public FakeThumbnailRepository(List<Thumbnail> thumbnails) {
+        this.thumbnails = new ArrayList<>(thumbnails);
+        idCounter.set(1 + thumbnails.size());
+    }
+
     @Override
     public Thumbnail fetchById(Long id) {
         return thumbnails.stream()
