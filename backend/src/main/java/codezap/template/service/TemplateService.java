@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class TemplateService {
     private final TemplateRepository templateRepository;
 
-    public Template createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
+    public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
         return templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
@@ -30,7 +30,7 @@ public class TemplateService {
 
     public Template getByMemberAndId(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
-        validateTemplateAuthorizeMember(template, member);
+        validateTemplateAuthorizeMember(member, template);
         return template;
     }
 
@@ -62,12 +62,12 @@ public class TemplateService {
 
     public Template updateTemplate(
             Member member,
-            Category category,
             Long templateId,
-            UpdateTemplateRequest updateTemplateRequest
-    ) {
+            UpdateTemplateRequest updateTemplateRequest,
+            Category category
+            ) {
         Template template = templateRepository.fetchById(templateId);
-        validateTemplateAuthorizeMember(template, member);
+        validateTemplateAuthorizeMember(member, template);
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
 
         return template;
@@ -84,12 +84,12 @@ public class TemplateService {
 
     private void deleteById(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
-        validateTemplateAuthorizeMember(template, member);
+        validateTemplateAuthorizeMember(member, template);
 
         templateRepository.deleteById(id);
     }
 
-    private void validateTemplateAuthorizeMember(Template template, Member member) {
+    private void validateTemplateAuthorizeMember(Member member, Template template) {
         if (!template.getMember().equals(member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
         }
