@@ -1,7 +1,6 @@
 package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -46,11 +45,6 @@ import codezap.template.repository.ThumbnailRepository;
 
 class TemplateServiceTest {
 
-    private Member firstMember = new Member(1L, "name1", "password1234");
-    private Member secondMember = new Member(2L, "name2", "password1234");
-    private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
-    private Category secondCategory = new Category(2L, secondMember, "카테고리 없음", true);
-
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
@@ -69,18 +63,17 @@ class TemplateServiceTest {
             sourceCodeRepository,
             categoryRepository,
             tagRepository,
-            templateTagRepository,
-            memberRepository);
+            templateTagRepository);
 
     @Test
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Long id = templateService.createTemplate(memberDto, createTemplateRequest);
+        Long id = templateService.createTemplate(member, createTemplateRequest);
         Template template = templateRepository.fetchById(id);
 
         // then
@@ -112,13 +105,12 @@ class TemplateServiceTest {
     @DisplayName("템플릿 단건 조회 성공")
     void findOneTemplateSuccess() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(memberDto, template.getId());
+        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(member, template.getId());
 
         // then
         assertAll(
@@ -134,18 +126,16 @@ class TemplateServiceTest {
     @DisplayName("템플릿 단건 조회 실패: 권한 없음")
     void findOneTemplateFailWithUnauthorized() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+        Member otherMember = MemberFixture.getSecondMember();
 
         // then
         Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.findByIdAndMember(otherMemberDto, templateId));
-        assertThatCode(() -> templateService.findByIdAndMember(otherMemberDto, template.getId()))
+        assertThatThrownBy(() -> templateService.findByIdAndMember(otherMember, templateId))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -154,15 +144,14 @@ class TemplateServiceTest {
     @DisplayName("템플릿 수정 성공")
     void updateTemplateSuccess() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
         categoryRepository.save(new Category("category2", member));
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
-        templateService.update(memberDto, template.getId(), updateTemplateRequest);
+        templateService.update(member, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
         Thumbnail thumbnail = thumbnailRepository.fetchById(template.getId());
@@ -185,19 +174,18 @@ class TemplateServiceTest {
     @DisplayName("템플릿 수정 실패: 권한 없음")
     void updateTemplateFailWithUnauthorized() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
         categoryRepository.save(new Category("category2", member));
 
         // when
-        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+        Member otherMember = MemberFixture.getSecondMember();
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(2L);
 
         // then
         Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.update(otherMemberDto, templateId, updateTemplateRequest))
+        assertThatThrownBy(() -> templateService.update(otherMember, templateId, updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -206,13 +194,12 @@ class TemplateServiceTest {
     @DisplayName("템플릿 삭제 성공: 1개")
     void deleteTemplateSuccess() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        templateService.deleteByIds(memberDto, List.of(1L));
+        templateService.deleteByIds(member, List.of(1L));
 
         // then
         assertAll(
@@ -226,15 +213,14 @@ class TemplateServiceTest {
     @DisplayName("템플릿 삭제 성공: 2개")
     void deleteTemplatesSuccess() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate1 = makeTemplateRequest("title1");
         CreateTemplateRequest createdTemplate2 = makeTemplateRequest("title2");
         saveTemplate(createdTemplate1, new Category("category1", member), member);
         saveTemplate(createdTemplate2, new Category("category1", member), member);
 
         // when
-        templateService.deleteByIds(memberDto, List.of(1L, 2L));
+        templateService.deleteByIds(member, List.of(1L, 2L));
 
         // then
         assertAll(
@@ -248,17 +234,16 @@ class TemplateServiceTest {
     @DisplayName("템플릿 삭제 실패: 권한 없음")
     void deleteTemplateFailWithUnauthorized() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+        Member otherMember = MemberFixture.getSecondMember();
 
         // then
         List<Long> ids = List.of(1L);
-        assertThatThrownBy(() -> templateService.deleteByIds(otherMemberDto, ids))
+        assertThatThrownBy(() -> templateService.deleteByIds(otherMember, ids))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -267,8 +252,7 @@ class TemplateServiceTest {
     @DisplayName("템플릿 삭제 실패: 동일한 ID 2개가 들어왔을 때")
     void deleteTemplatesFailWithSameTemplateId() {
         // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
+        Member member = MemberFixture.getFirstMember();
         CreateTemplateRequest createdTemplate1 = makeTemplateRequest("title1");
         CreateTemplateRequest createdTemplate2 = makeTemplateRequest("title2");
         saveTemplate(createdTemplate1, new Category("category1", member), member);
@@ -276,7 +260,7 @@ class TemplateServiceTest {
 
         // when & then
         List<Long> ids = List.of(1L, 1L);
-        assertThatThrownBy(() -> templateService.deleteByIds(memberDto, ids))
+        assertThatThrownBy(() -> templateService.deleteByIds(member, ids))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
     }
