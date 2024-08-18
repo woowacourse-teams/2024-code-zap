@@ -22,6 +22,11 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
         this.sourceCodes = new ArrayList<>();
     }
 
+    public FakeSourceCodeRepository(List<SourceCode> sourceCodes) {
+        this.sourceCodes = new ArrayList<>(sourceCodes);
+        idCounter.set(1 + sourceCodes.size());
+    }
+
     @Override
     public SourceCode fetchById(Long id) {
         return sourceCodes.stream()

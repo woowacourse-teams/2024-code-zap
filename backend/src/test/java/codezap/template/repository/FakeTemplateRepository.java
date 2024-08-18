@@ -23,6 +23,11 @@ public class FakeTemplateRepository implements TemplateRepository {
         this.templates = new ArrayList<>();
     }
 
+    public FakeTemplateRepository(List<Template> templates) {
+        this.templates = new ArrayList<>(templates);
+        idCounter.set(1 + templates.size());
+    }
+
     @Override
     public Template fetchById(Long id) {
         return templates.stream()
@@ -69,8 +74,8 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds,
-            Pageable pageable
+    public Page<Template> searchBy(
+            Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
     ) {
         List<Template> searchedTemplates = templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), memberId))
