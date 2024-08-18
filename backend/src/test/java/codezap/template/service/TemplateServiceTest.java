@@ -138,7 +138,7 @@ class TemplateServiceTest {
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        Template foundTemplate = templateService.findByIdAndMember(member, template.getId());
+        Template foundTemplate = templateService.getByMemberAndId(member, template.getId());
 
         // then
         assertAll(
@@ -160,7 +160,7 @@ class TemplateServiceTest {
 
         // then
         Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.findByIdAndMember(otherMember, templateId))
+        assertThatThrownBy(() -> templateService.getByMemberAndId(otherMember, templateId))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -196,7 +196,7 @@ class TemplateServiceTest {
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
-        templateService.update(member, category, template.getId(), updateTemplateRequest);
+        templateService.updateTemplate(member, category, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
                 .map(TemplateTag::getTag)
@@ -227,7 +227,7 @@ class TemplateServiceTest {
         // then
         Long templateId = template.getId();
         assertThatThrownBy(
-                () -> templateService.update(otherMember, category, templateId, updateTemplateRequest))
+                () -> templateService.updateTemplate(otherMember, category, templateId, updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -241,7 +241,7 @@ class TemplateServiceTest {
         saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        templateService.deleteByIds(member, List.of(1L));
+        templateService.deleteByMemberAndIds(member, List.of(1L));
 
         // then
         assertThat(templateRepository.findAll()).isEmpty();
@@ -258,7 +258,7 @@ class TemplateServiceTest {
         saveTemplate(createdTemplate2, new Category("category1", member), member);
 
         // when
-        templateService.deleteByIds(member, List.of(1L, 2L));
+        templateService.deleteByMemberAndIds(member, List.of(1L, 2L));
 
         // then
         assertThat(templateRepository.findAll()).isEmpty();
@@ -277,7 +277,7 @@ class TemplateServiceTest {
 
         // then
         List<Long> ids = List.of(1L);
-        assertThatThrownBy(() -> templateService.deleteByIds(otherMember, ids))
+        assertThatThrownBy(() -> templateService.deleteByMemberAndIds(otherMember, ids))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -294,7 +294,7 @@ class TemplateServiceTest {
 
         // when & then
         List<Long> ids = List.of(1L, 1L);
-        assertThatThrownBy(() -> templateService.deleteByIds(member, ids))
+        assertThatThrownBy(() -> templateService.deleteByMemberAndIds(member, ids))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
     }

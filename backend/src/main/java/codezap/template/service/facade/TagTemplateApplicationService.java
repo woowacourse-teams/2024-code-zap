@@ -3,7 +3,6 @@ package codezap.template.service.facade;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,8 +42,21 @@ public class TagTemplateApplicationService {
                 createTemplateRequest.thumbnailOrdinal(),
                 template
         );
-        thumbnailService.save(template, thumbnail);
+        thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
+    }
+
+    public FindTemplateResponse getByMemberAndId(Member member, Long id) {
+        Template template = templateService.getByMemberAndId(member, id);
+        List<Tag> tags = templateTagService.getByTemplate(template);
+
+        List<SourceCode> sourceCodes = sourceCodeService.getSourceCode(template);
+        return FindTemplateResponse.of(template, sourceCodes, tags);
+    }
+
+    public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
+        List<Template> template = templateService.getByMemberId(memberId);
+        return templateTagService.findAllByTemplates(template);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -55,12 +67,12 @@ public class TagTemplateApplicationService {
     ) {
         if (tagIds == null) {
             Page<Template> templates = templateService.findAllBy(memberId, keyword, pageable);
-            return makeTemplatesResponseBy(templates);
+            return makeTemplatesResponse(templates);
         }
 
-        List<Long> templateIds = templateTagService.fetchTemplateIdsContainsTagIds(tagIds);
+        List<Long> templateIds = templateTagService.getTemplateIdContainTagIds(tagIds);
         Page<Template> templates = templateService.findAllBy(memberId, keyword, templateIds, pageable);
-        return makeTemplatesResponseBy(templates);
+        return makeTemplatesResponse(templates);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -70,51 +82,38 @@ public class TagTemplateApplicationService {
             List<Long> tagIds,
             Pageable pageable
     ) {
-        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-
         if (tagIds == null) {
             Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, pageable);
-            return makeTemplatesResponseBy(templates);
+            return makeTemplatesResponse(templates);
         }
 
-        List<Long> templateIds = templateTagService.fetchTemplateIdsContainsTagIds(tagIds);
+        List<Long> templateIds = templateTagService.getTemplateIdContainTagIds(tagIds);
         Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, templateIds, pageable);
-        return makeTemplatesResponseBy(templates);
+        return makeTemplatesResponse(templates);
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
+    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
         List<ItemResponse> itemResponses = page.stream()
                 .map(template -> ItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
-                        thumbnailService.getThumbnail(template))
+                        thumbnailService.getByTemplate(template).getSourceCode())
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
     }
 
-    public FindTemplateResponse findByIdAndMember(Member member, Long id) {
-        Template template = templateService.findByIdAndMember(member, id);
-        List<Tag> tags = templateTagService.getByTemplate(template);
-        return sourceCodeService.findSourceCode(template, tags);
-    }
-
-    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
-        List<Template> template = templateService.getByMemberId(memberId);
-        return templateTagService.findAllTagsByMemberId(template);
-    }
-
     @Transactional
     public void update(Member member, Category category, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Template template = templateService.update(member, category, templateId, updateTemplateRequest);
+        Template template = templateService.updateTemplate(member, category, templateId, updateTemplateRequest);
         templateTagService.updateTags(updateTemplateRequest.tags(), template);
-        Thumbnail thumbnail = thumbnailService.fetchByTemplate(template);
+        Thumbnail thumbnail = thumbnailService.getByTemplate(template);
         sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
     }
 
     @Transactional
-    public void deleteByIds(Member member, List<Long> ids) {
-        templateService.deleteByIds(member, ids);
+    public void deleteByMemberAndIds(Member member, List<Long> ids) {
+        templateService.deleteByMemberAndIds(member, ids);
         templateTagService.deleteByIds(ids);
         sourceCodeService.deleteByIds(ids);
         thumbnailService.deleteByIds(ids);
