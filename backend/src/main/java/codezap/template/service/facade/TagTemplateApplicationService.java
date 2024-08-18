@@ -16,7 +16,7 @@ import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllTagsResponse;
+import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;

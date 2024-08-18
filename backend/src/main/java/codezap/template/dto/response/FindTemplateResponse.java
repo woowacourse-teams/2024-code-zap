@@ -5,6 +5,7 @@ import java.util.List;
 
 import codezap.category.dto.response.FindCategoryResponse;
 import codezap.tag.domain.Tag;
+import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package codezap.template.dto.response;
+package codezap.tag.dto.response;
 
 import codezap.tag.domain.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
