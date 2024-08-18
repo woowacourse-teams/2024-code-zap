@@ -25,7 +25,7 @@ import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.service.TemplateApplicationService;
+import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 
@@ -35,14 +35,14 @@ import lombok.RequiredArgsConstructor;
 public class TemplateController implements SpringDocTemplateController {
 
     private final TemplateService templateService;
-    private final TemplateApplicationService applicationService;
+    private final MemberTemplateApplicationService applicationService;
 
     @PostMapping
     public ResponseEntity<Void> createTemplate(
             @AuthenticationPrinciple MemberDto memberDto,
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        Long createdTemplateId = templateService.createTemplate(memberDto, createTemplateRequest);
+        Long createdTemplateId = applicationService.createTemplate(memberDto, createTemplateRequest);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
@@ -66,7 +66,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(templateService.findByIdAndMember(memberDto, id));
+        return ResponseEntity.ok(applicationService.findByIdAndMember(memberDto, id));
     }
 
     @GetMapping("/tags")
@@ -89,7 +89,7 @@ public class TemplateController implements SpringDocTemplateController {
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
-        templateService.update(memberDto, id, updateTemplateRequest);
+        applicationService.update(memberDto, id, updateTemplateRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -98,7 +98,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable List<Long> ids
     ) {
-        templateService.deleteByIds(memberDto, ids);
+        applicationService.deleteByIds(memberDto, ids);
         return ResponseEntity.noContent().build();
     }
 }
