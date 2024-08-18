@@ -55,9 +55,9 @@ import codezap.template.repository.TemplateRepository;
 import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
+import codezap.template.service.facade.CategoryTemplateApplicationService;
 import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.facade.TemplateApplicationService;
-import codezap.template.service.facade.CategoryTemplateApplicationService;
 
 class TemplateControllerTest {
 
@@ -71,9 +71,7 @@ class TemplateControllerTest {
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
     );
     private final TemplateService templateService = new TemplateService(templateRepository);
-    private final CategoryService categoryService = new CategoryService(
-            categoryRepository, templateRepository, memberRepository
-    );
+    private final CategoryService categoryService = new CategoryService(categoryRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
@@ -775,9 +773,10 @@ class TemplateControllerTest {
         }
 
         private void createTemplateAndTwoCategories() {
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            categoryService.create(memberDto, new CreateCategoryRequest("category1"));
-            categoryService.create(memberDto, new CreateCategoryRequest("category2"));
+            Member member = MemberFixture.getFirstMember();
+            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
+            categoryService.create(member, new CreateCategoryRequest("category1"));
+            categoryService.create(member, new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
         }
@@ -791,8 +790,9 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 성공: 1개")
         void deleteTemplateSuccess() throws Exception {
             // given
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            categoryService.create(memberDto, new CreateCategoryRequest("category"));
+            Member member = MemberFixture.getFirstMember();
+            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
+            categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
@@ -808,8 +808,9 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 성공: 여러개")
         void deleteTemplatesSuccess() throws Exception {
             // given
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            categoryService.create(memberDto, new CreateCategoryRequest("category"));
+            Member member = MemberFixture.getFirstMember();
+            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
+            categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title");
             CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title");
             memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
@@ -827,8 +828,9 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 실패: 템플릿 ID가 중복된 경우")
         void deleteTemplateFailWithDuplication() throws Exception {
             // given
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            categoryService.create(memberDto, new CreateCategoryRequest("category"));
+            Member member = MemberFixture.getFirstMember();
+            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
+            categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
@@ -845,8 +847,9 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 실패: 인증 정보가 없거나 잘못된 경우")
         void deleteTemplateFailWithUnauthorized() throws Exception {
             // given
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            categoryService.create(memberDto, new CreateCategoryRequest("category"));
+            Member member = MemberFixture.getFirstMember();
+            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
+            categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
@@ -862,8 +865,9 @@ class TemplateControllerTest {
         @DisplayName("템플릿 삭제 실패: 자신의 템플릿이 아닐 경우")
         void deleteTemplateFailNotMine() throws Exception {
             // given
-            MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-            categoryService.create(memberDto, new CreateCategoryRequest("category"));
+            Member member = MemberFixture.getFirstMember();
+            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
+            categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
             memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
