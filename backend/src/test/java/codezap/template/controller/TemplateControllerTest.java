@@ -55,6 +55,7 @@ import codezap.template.service.TemplateService;
 import codezap.template.service.TemplateTagService;
 import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.facade.TagTemplateApplicationService;
+import codezap.template.service.facade.TemplateApplicationService;
 
 class TemplateControllerTest {
 
@@ -70,8 +71,8 @@ class TemplateControllerTest {
     private final TemplateService templateService = new TemplateService(
             new FakeThumbnailRepository(),
             templateRepository,
-            new FakeSourceCodeRepository(),
-            categoryRepository);
+            new FakeSourceCodeRepository()
+    );
     private final CategoryService categoryService = new CategoryService(
             categoryRepository, templateRepository, memberRepository
     );
@@ -82,9 +83,16 @@ class TemplateControllerTest {
                     templateService
             );
 
+    private final TemplateApplicationService templateApplicationService =
+            new TemplateApplicationService(
+                    categoryService,
+                    tagTemplateApplicationService
+            );
+
     private final MemberTemplateApplicationService memberTemplateApplicationService =
             new MemberTemplateApplicationService(
                     new MemberService(memberRepository, categoryRepository),
+                    templateApplicationService,
                     tagTemplateApplicationService
             );
 
