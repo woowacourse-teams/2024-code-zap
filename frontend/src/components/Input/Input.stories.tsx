@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
-import { searchIcon } from '@/assets/images';
+import { SearchIcon } from '@/assets/images';
 import Input from './Input';
 
 const meta: Meta<typeof Input> = {
@@ -102,7 +102,7 @@ export const StartAdornment: Story = {
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
           <Input.Adornment>
-            <img src={searchIcon} style={{ height: '100%' }} />
+            <SearchIcon />
           </Input.Adornment>
           <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
         </Input>
@@ -125,7 +125,7 @@ export const EndAdornment: Story = {
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
           <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
           <Input.Adornment>
-            <img src={searchIcon} style={{ height: '100%' }} />
+            <SearchIcon />
           </Input.Adornment>
         </Input>
       </div>
@@ -166,7 +166,7 @@ export const HelperText: Story = {
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
           <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
           <Input.Adornment>
-            <img src={searchIcon} style={{ height: '100%' }} />
+            <SearchIcon />
           </Input.Adornment>
           <Input.HelperText>설명입니다.</Input.HelperText>
         </Input>

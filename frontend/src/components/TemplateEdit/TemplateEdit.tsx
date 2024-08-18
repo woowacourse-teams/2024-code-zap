@@ -1,4 +1,4 @@
-import { newTemplateIcon, trashcanIcon } from '@/assets/images';
+import { PlusIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput } from '@/components';
 import { useCategoryUpload } from '@/queries/category';
 import type { Category, SourceCodes } from '@/types';
@@ -111,12 +111,12 @@ const TemplateEdit = ({
                 handleDeleteSourceCode(idx);
               }}
             >
-              <img src={trashcanIcon} width={20} height={20} alt='Delete sourceCode' />
+              <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
             </S.DeleteButton>
           </Flex>
         ))}
         <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
-          <img src={newTemplateIcon} width={14} height={14} />
+          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
         </Button>
 
         <TagInput {...tagProps} />

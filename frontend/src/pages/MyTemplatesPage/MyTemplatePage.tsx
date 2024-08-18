@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { arrowUp, searchIcon } from '@/assets/images';
+import { ArrowUpIcon, SearchIcon } from '@/assets/images';
 import {
   CategoryFilterMenu,
   Flex,
@@ -142,7 +142,7 @@ const MyTemplatePage = () => {
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
-                <img src={searchIcon} />
+                <SearchIcon aria-label='' />
               </Input.Adornment>
               <Input.TextField
                 placeholder='검색'
@@ -197,7 +197,7 @@ const MyTemplatePage = () => {
           scroll.top('smooth');
         }}
       >
-        <img src={arrowUp} alt='맨 위로' />
+        <ArrowUpIcon aria-label='맨 위로' />
       </S.ScrollTopButton>
     </S.MyTemplatePageContainer>
   );

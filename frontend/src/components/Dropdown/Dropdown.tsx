@@ -1,4 +1,4 @@
-import { chevron } from '@/assets/images';
+import { ChevronIcon } from '@/assets/images';
 import { theme } from '../../style/theme';
 import Text from '../Text/Text';
 import * as S from './Dropdown.style';
@@ -63,15 +63,11 @@ type SelectedButtonProps<T> = Pick<Props<T>, 'toggleDropdown' | 'getOptionLabel'
 const SelectedButton = <T,>({ toggleDropdown, getOptionLabel, currentValue, isOpen }: SelectedButtonProps<T>) => (
   <S.SelectedButton onClick={toggleDropdown}>
     <Text.Small color={theme.color.light.black}>{getOptionLabel(currentValue)}</Text.Small>
-    <img
-      src={chevron}
+    <ChevronIcon
       width={16}
       height={16}
-      alt=''
-      css={{
-        transition: 'transform 0.3s ease',
-        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-      }}
+      aria-label='정렬기준 펼침'
+      css={{ transition: 'transform 0.3s ease', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
     />
   </S.SelectedButton>
 );

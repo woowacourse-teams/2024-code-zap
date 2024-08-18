@@ -1,12 +1,14 @@
-export { default as logoIcon } from './logo_24x24.png';
-export { default as newTemplateIcon } from './newTemplate.png';
-export { default as pencilIcon } from './pencil.png';
-export { default as searchIcon } from './search.png';
-export { default as trashcanIcon } from './trashcan.png';
-export { default as userMenuIcon } from './userMenu_38x38.png';
-export { default as chevron } from './chevron.png';
-export { default as xCircle } from './x_circle.png';
-export { default as passwordEyeIcon } from './passwordEye.png';
-export { default as codezapLogo } from './codezapLogo.png';
-export { default as tigger } from './tigger.png';
-export { default as arrowUp } from './arrowUp.png';
+// Icon
+export { default as PencilIcon } from './pencil.svg';
+export { default as PlusIcon } from './plus.svg';
+export { default as SearchIcon } from './search.svg';
+export { default as TrashcanIcon } from './trashcan.svg';
+export { default as UserCircleIcon } from './userCircle.svg';
+export { default as ChevronIcon } from './chevron.svg';
+export { default as XCircleIcon } from './xCircle.svg';
+export { default as EyeIcon } from './eye.svg';
+export { default as ArrowUpIcon } from './arrowUp.svg';
+
+// Logo
+export { default as CodeZapLogo } from './codezapLogo.svg';
+export { default as TigerLogo } from './tiger.svg';

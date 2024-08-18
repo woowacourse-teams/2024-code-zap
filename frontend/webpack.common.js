@@ -21,13 +21,37 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
-        test: /\.(png|svg|jpe?g|gif|webp)$/i,
+        test: /\.(png|jpe?g|gif|webp)$/i,
         type: 'asset',
         parser: {
           dataUrlCondition: {
             maxSize: 4 * 1024, // 4kb
           },
         },
+      },
+      {
+        test: /\.svg$/i,
+        issuer: /\.[jt]sx?$/,
+        use: [
+          {
+            loader: '@svgr/webpack',
+            options: {
+              svgoConfig: {
+                plugins: [
+                  {
+                    name: 'preset-default',
+                    params: {
+                      overrides: {
+                        removeViewBox: false,
+                      },
+                    },
+                  },
+                  'prefixIds',
+                ],
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,

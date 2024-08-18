@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { passwordEyeIcon } from '@/assets/images';
+import { EyeIcon } from '@/assets/images';
 import { Button, Flex, Heading, Input, Text } from '@/components';
 import { useSignupForm } from '@/hooks/authentication';
 import { useToggle } from '@/hooks/utils';
@@ -53,7 +53,7 @@ const SignupPage = () => {
                 autoComplete='new-password'
               />
               <Input.Adornment>
-                <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
+                <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>
@@ -67,7 +67,11 @@ const SignupPage = () => {
                 autoComplete='new-password'
               />
               <Input.Adornment>
-                <img src={passwordEyeIcon} onClick={handlePasswordConfirmToggle} style={{ cursor: 'pointer' }} />
+                <EyeIcon
+                  onClick={handlePasswordConfirmToggle}
+                  css={{ cursor: 'pointer' }}
+                  aria-label='비밀번호확인 보기'
+                />
               </Input.Adornment>
               <Input.HelperText>{errors.confirmPassword}</Input.HelperText>
             </Input>

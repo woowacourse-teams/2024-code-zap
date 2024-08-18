@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import SyntaxHighlighter from 'react-syntax-highlighter/dist/esm/default-highlight';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { chevron, codezapLogo } from '@/assets/images';
+import { ChevronIcon, CodeZapLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { theme } from '@/style/theme';
 import * as S from '../TemplatePage/TemplatePage.style';
@@ -10,7 +10,7 @@ import * as S from '../TemplatePage/TemplatePage.style';
 const LandingPage = () => (
   <Flex direction='column' justify='center' align='center' height='100vh' gap='2rem' width='70rem'>
     <Flex justify='center' align='center' gap='1rem' width='27.5rem'>
-      <img src={codezapLogo} alt='로고 버튼' width={100} />
+      <CodeZapLogo aria-label='로고 버튼' width={100} height={50} />
       <Heading.XLarge color='#F79037'>코드잽</Heading.XLarge>
     </Flex>
 
@@ -93,7 +93,7 @@ const ExamCode = () => {
         style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
       >
         <Flex align='center' gap='0.5rem' css={{ cursor: 'pointer' }}>
-          <img src={chevron} width={24} height={24} alt='' />
+          <ChevronIcon aria-label='소스코드 펼침' />
           <Text.Small color='#fff' weight='bold'>
             {sourceCode.filename}
           </Text.Small>
