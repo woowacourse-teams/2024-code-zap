@@ -24,7 +24,7 @@ public class TagController implements SpringDocTagController {
             @AuthenticationPrinciple MemberDto memberDto,
             @RequestParam Long memberId
     ) {
-        FindAllTagsResponse response = memberTemplateApplicationService.findAllTagsByMemberId(memberDto, memberId);
+        FindAllTagsResponse response = memberTemplateApplicationService.getAllTagsByMemberId(memberDto, memberId);
         return ResponseEntity.ok(response);
     }
 }

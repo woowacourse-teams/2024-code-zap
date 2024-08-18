@@ -28,10 +28,14 @@ public class TemplateService {
         );
     }
 
-    public Template findByIdAndMember(Member member, Long id) {
+    public Template getByMemberAndId(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
         return template;
+    }
+
+    public List<Template> getByMemberId(Long memberId) {
+        return templateRepository.findByMemberId(memberId);
     }
 
     public Page<Template> findAllBy(long memberId, String keyword, Pageable pageable) {
@@ -56,11 +60,10 @@ public class TemplateService {
         return templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
     }
 
-    public List<Template> getByMemberId(Long memberId) {
-        return templateRepository.findByMemberId(memberId);
-    }
-
-    public Template update(Member member, Category category, Long templateId,
+    public Template updateTemplate(
+            Member member,
+            Category category,
+            Long templateId,
             UpdateTemplateRequest updateTemplateRequest
     ) {
         Template template = templateRepository.fetchById(templateId);
@@ -70,7 +73,7 @@ public class TemplateService {
         return template;
     }
 
-    public void deleteByIds(Member member, List<Long> ids) {
+    public void deleteByMemberAndIds(Member member, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
         }
