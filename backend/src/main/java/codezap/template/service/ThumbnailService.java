@@ -16,8 +16,8 @@ import lombok.RequiredArgsConstructor;
 public class ThumbnailService {
     private final ThumbnailRepository thumbnailRepository;
 
-    public void createThumbnail(Template template, SourceCode thumbnail) {
-        thumbnailRepository.save(new Thumbnail(template, thumbnail));
+    public void createThumbnail(Template template, SourceCode sourceCode) {
+        thumbnailRepository.save(new Thumbnail(template, sourceCode));
     }
 
     public Thumbnail getByTemplate(Template template) {
@@ -28,7 +28,7 @@ public class ThumbnailService {
         return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }
 
-    public void deleteByIds(List<Long> templateIds) {
+    public void deleteByTemplateIds(List<Long> templateIds) {
         for (Long id : templateIds) {
             thumbnailRepository.deleteByTemplateId(id);
         }
