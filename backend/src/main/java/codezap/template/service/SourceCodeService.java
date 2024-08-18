@@ -21,26 +21,16 @@ import lombok.RequiredArgsConstructor;
 public class SourceCodeService {
     private final SourceCodeRepository sourceCodeRepository;
 
-    public SourceCode createSourceCodes(
-            List<CreateSourceCodeRequest> sourceCodes,
-            int thumbnailOrdinal,
-            Template template
-    ) {
+    public void createSourceCodes(Template template, List<CreateSourceCodeRequest> sourceCodes) {
         sourceCodeRepository.saveAll(
                 sourceCodes.stream()
-                        .map(createSourceCodeRequest -> createSourceCode(createSourceCodeRequest, template))
+                        .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
                         .toList()
         );
-        return sourceCodeRepository.fetchByTemplateAndOrdinal(template, thumbnailOrdinal);
     }
 
-    private SourceCode createSourceCode(CreateSourceCodeRequest createSourceCodeRequest, Template template) {
-        return new SourceCode(
-                template,
-                createSourceCodeRequest.filename(),
-                createSourceCodeRequest.content(),
-                createSourceCodeRequest.ordinal()
-        );
+    public SourceCode getByTemplateAndOrdinal(Template template, int ordinal) {
+        return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
     }
 
     public List<SourceCode> getSourceCode(Template template) {
@@ -51,7 +41,7 @@ public class SourceCodeService {
         updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
                 updateTemplateRequest.createSourceCodes().stream()
-                        .map(createSourceCodeRequest -> createSourceCode(createSourceCodeRequest, template))
+                        .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
                         .toList()
         );
 
@@ -59,7 +49,16 @@ public class SourceCodeService {
             updateThumbnail(template, thumbnail);
         }
         updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
-        validateSourceCodesCount(updateTemplateRequest, template);
+        validateSourceCodesCount(template, updateTemplateRequest);
+    }
+
+    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
+        return new SourceCode(
+                template,
+                createSourceCodeRequest.filename(),
+                createSourceCodeRequest.content(),
+                createSourceCodeRequest.ordinal()
+        );
     }
 
     private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
@@ -90,7 +89,7 @@ public class SourceCodeService {
                 .ifPresent(thumbnail::updateThumbnail);
     }
 
-    private void validateSourceCodesCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
+    private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {
         if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
                 != sourceCodeRepository.findAllByTemplate(template).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");

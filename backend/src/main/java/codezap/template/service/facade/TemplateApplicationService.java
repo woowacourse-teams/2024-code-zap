@@ -56,6 +56,6 @@ public class TemplateApplicationService {
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(member, category);
-        tagTemplateApplicationService.update(member, category, templateId, updateTemplateRequest);
+        tagTemplateApplicationService.update(member, templateId, updateTemplateRequest, category);
     }
 }

@@ -21,7 +21,7 @@ public class TemplateTagService {
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
 
-    public void createTags(List<String> tags, Template template) {
+    public void createTags(Template template, List<String> tags) {
         tagRepository.saveAll(
                 tags.stream()
                         .filter(tagName -> !tagRepository.existsByName(tagName))
@@ -70,7 +70,7 @@ public class TemplateTagService {
         );
     }
 
-    public void updateTags(List<String> tags, Template template) {
+    public void updateTags(Template template, List<String> tags) {
         templateTagRepository.deleteAllByTemplateId(template.getId());
         tagRepository.saveAll(
                 tags.stream()
