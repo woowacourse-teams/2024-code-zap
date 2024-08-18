@@ -2,7 +2,9 @@ package codezap.template.repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
@@ -59,6 +61,15 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
 
     @Override
     public List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize) {
-        return List.of();
+        return templateTags.stream()
+                .filter(tt -> tagIds.contains(tt.getTag().getId()))
+                .collect(Collectors.groupingBy(
+                        tt -> tt.getTemplate().getId(),
+                        Collectors.mapping(tt -> tt.getTag().getId(), Collectors.toSet())
+                ))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue().size() == tagSize)
+                .map(Map.Entry::getKey)
+                .toList();
     }
 }
