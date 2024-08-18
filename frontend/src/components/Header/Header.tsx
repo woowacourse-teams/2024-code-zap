@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
@@ -13,9 +14,16 @@ import * as S from './Header.style';
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   const { isLogin } = useAuth();
   const [menuOpen, toggleMenu] = useToggle();
+  const location = useLocation();
 
   useScrollDisable(menuOpen);
   usePressESC(menuOpen, toggleMenu);
+
+  useEffect(() => {
+    if (menuOpen) {
+      toggleMenu();
+    }
+  }, [location.pathname]);
 
   return (
     <S.HeaderContainer ref={headerRef}>
