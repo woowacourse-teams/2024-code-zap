@@ -47,7 +47,6 @@ import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
 
 class TemplateApplicationServiceTest {
-    public static final PageRequest PAGEABLE = PageRequest.of(1, 3);
     private final TemplateRepository templateRepository =
             new FakeTemplateRepository(List.of(TemplateFixture.getFirst()));
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
@@ -149,8 +148,10 @@ class TemplateApplicationServiceTest {
     @Nested
     @DisplayName("템플릿 검색")
     class findAllBy {
+        public static final PageRequest PAGEABLE = PageRequest.of(1, 3);
+
         @Test
-        @DisplayName("템플릿 검색 성공: 카테고리 있음")
+        @DisplayName("템플릿 검색 성공: 카테고리 O")
         void findAllBySuccess() {
             Member member = MemberFixture.getFirstMember();
             Category category1 = CategoryFixture.getFirstCategory();
@@ -169,7 +170,7 @@ class TemplateApplicationServiceTest {
         }
 
         @Test
-        @DisplayName("템플릿 검색 성공: 카테고리 없음")
+        @DisplayName("템플릿 검색 성공: 카테고리 X")
         void findAllBySuccessNoCategory() {
             Member member = MemberFixture.getFirstMember();
             Category category1 = CategoryFixture.getFirstCategory();
