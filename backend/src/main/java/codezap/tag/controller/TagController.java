@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.member.dto.MemberDto;
-import codezap.template.dto.response.FindAllTagsResponse;
+import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.service.facade.MemberTemplateApplicationService;
 import lombok.RequiredArgsConstructor;
 

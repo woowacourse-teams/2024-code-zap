@@ -11,8 +11,8 @@ import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.dto.response.FindAllTagsResponse;
-import codezap.template.dto.response.FindTagResponse;
+import codezap.tag.dto.response.FindAllTagsResponse;
+import codezap.tag.dto.response.FindTagResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service

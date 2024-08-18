@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
 import codezap.member.dto.MemberDto;
-import codezap.template.dto.response.FindAllTagsResponse;
+import codezap.tag.dto.response.FindAllTagsResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
