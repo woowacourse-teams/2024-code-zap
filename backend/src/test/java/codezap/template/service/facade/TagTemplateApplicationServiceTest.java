@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
-import codezap.category.service.CategoryService;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
@@ -32,6 +31,8 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
+import codezap.template.dto.response.FindTemplateResponse;
+import codezap.template.fixture.SourceCodeFixture;
 import codezap.template.fixture.TagFixture;
 import codezap.template.fixture.TemplateFixture;
 import codezap.template.repository.FakeSourceCodeRepository;
@@ -46,18 +47,17 @@ import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
 
-class TemplateApplicationServiceTest {
-    public static final PageRequest PAGEABLE = PageRequest.of(1, 3);
-    private final TemplateRepository templateRepository =
-            new FakeTemplateRepository(List.of(TemplateFixture.getFirst()));
+class TagTemplateApplicationServiceTest {
+    private final TemplateRepository templateRepository = new FakeTemplateRepository(
+            List.of(TemplateFixture.getFirst(), TemplateFixture.getSecond(), TemplateFixture.getThird())
+    );
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
-    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
+    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository(
+            List.of(SourceCodeFixture.getFirst(), SourceCodeFixture.getSecond(), SourceCodeFixture.getThird())
+    );
     public final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
     public final TagRepository tagRepository =
             new FakeTagRepository(List.of(TagFixture.getFirst(), TagFixture.getSecond()));
-    public final CategoryRepository categoryRepository = new FakeCategoryRepository(
-            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
-    );
 
     private final TemplateService templateService = new TemplateService(templateRepository);
 
@@ -67,12 +67,8 @@ class TemplateApplicationServiceTest {
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(sourceCodeRepository);
 
-    private final CategoryService categoryService = new CategoryService(categoryRepository);
-
     private final TagTemplateApplicationService tagTemplateApplicationService =
             new TagTemplateApplicationService(templateTagService, templateService, thumbnailService, sourceCodeService);
-    private final TemplateApplicationService templateApplicationService =
-            new TemplateApplicationService(categoryService, tagTemplateApplicationService);
 
     @Nested
     @DisplayName("템플릿 생성")
@@ -93,7 +89,7 @@ class TemplateApplicationServiceTest {
             );
 
             // when
-            Long id = templateApplicationService.createTemplate(member, createTemplateRequest);
+            Long id = tagTemplateApplicationService.createTemplate(member, category, createTemplateRequest);
             Template template = templateRepository.fetchById(id);
 
             // then
@@ -103,103 +99,139 @@ class TemplateApplicationServiceTest {
                     () -> assertThat(template.getCategory().getName()).isEqualTo(category.getName())
             );
         }
+    }
 
+    @Nested
+    @DisplayName("단건 조회")
+    class getByMemberAndId {
         @Test
-        @DisplayName("템플릿 생성 실패 : 카테고리 없음")
-        void createTemplateFailNotCategory() {
+        @DisplayName("템플릿 단건 조회 성공")
+        void getByMemberAndIdSuccess() {
             // given
             Member member = MemberFixture.getFirstMember();
-            CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(new CreateSourceCodeRequest("filename", "content", 1)),
-                    1,
-                    3L,
-                    List.of("teg1", "tag2")
-            );
+            Template template = TemplateFixture.getFirst();
+            templateTagRepository.save(new TemplateTag(template, TagFixture.getFirst()));
 
-            // when & then
-            assertThatThrownBy(() -> templateApplicationService.createTemplate(member, createTemplateRequest))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 3에 해당하는 카테고리가 존재하지 않습니다.");
+            // when
+            FindTemplateResponse foundTemplate = tagTemplateApplicationService.getByMemberAndId(member,
+                    template.getId());
+
+            // then
+            assertAll(
+                    () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
+                    () -> assertThat(foundTemplate.sourceCodes()).hasSize(
+                            sourceCodeRepository.findAllByTemplate(template).size()),
+                    () -> assertThat(foundTemplate.category().id()).isEqualTo(template.getCategory().getId()),
+                    () -> assertThat(foundTemplate.tags()).hasSize(1)
+            );
         }
+    }
 
+
+    @Nested
+    @DisplayName("태그 목록 조회")
+    class getAllTagsByMemberId {
         @Test
-        @DisplayName("템플릿 생성 실패 : 카테고리 권한 없음")
-        void createTemplateFail() {
+        @DisplayName("태그 목록 조회 성공")
+        void getAllTagsByMemberIdSuccess() {
             // given
-            Member member = MemberFixture.getFirstMember();
-            Category category = CategoryFixture.getSecondCategory();
-            CreateTemplateRequest createTemplateRequest = new CreateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(new CreateSourceCodeRequest("filename", "content", 1)),
-                    1,
-                    category.getId(),
-                    List.of("teg1", "tag2")
-            );
+            Member member1 = MemberFixture.getFirstMember();
+            Member member2 = MemberFixture.getSecondMember();
+            templateTagRepository.save(new TemplateTag(TemplateFixture.getFirst(), TagFixture.getFirst()));
+            templateTagRepository.save(new TemplateTag(TemplateFixture.getFirst(), TagFixture.getSecond()));
+            templateTagRepository.save(new TemplateTag(TemplateFixture.getThird(), TagFixture.getFirst()));
 
             // when & then
-            assertThatThrownBy(() -> templateApplicationService.createTemplate(member, createTemplateRequest))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
+            assertAll(
+                    () -> assertThat(
+                            tagTemplateApplicationService.getAllTagsByMemberId(member1.getId()).tags()).hasSize(2),
+                    () -> assertThat(
+                            tagTemplateApplicationService.getAllTagsByMemberId(member2.getId()).tags()).hasSize(1)
+            );
         }
     }
 
     @Nested
     @DisplayName("템플릿 검색")
     class findAllBy {
+        public static final PageRequest PAGEABLE = PageRequest.of(0, 3);
+
         @Test
-        @DisplayName("템플릿 검색 성공: 카테고리 있음")
-        void findAllBySuccess() {
+        @DisplayName("템플릿 검색 성공: 카테고리 O, 태그 X")
+        void findAllBySuccessNoTagsNoCategory() {
             Member member = MemberFixture.getFirstMember();
             Category category1 = CategoryFixture.getFirstCategory();
             Category category2 = CategoryFixture.getSecondCategory();
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            FindAllTemplatesResponse allBy = templateApplicationService.findAllBy(
+            FindAllTemplatesResponse allBy = tagTemplateApplicationService.findAllBy(
                     member.getId(), "hello keyword", category2.getId(), null, PAGEABLE
             );
 
             assertAll(
                     () -> assertThat(allBy.templates()).hasSize(3),
-                    () -> assertThat(allBy.templates()).extracting("id").containsExactly(17L, 18L, 19L),
+                    () -> assertThat(allBy.templates()).extracting("id").containsExactly(19L, 20L, 21L),
                     () -> assertThat(allBy.totalElements()).isEqualTo(15));
         }
 
         @Test
-        @DisplayName("템플릿 검색 성공: 카테고리 없음")
-        void findAllBySuccessNoCategory() {
+        @DisplayName("템플릿 검색 성공: 카테고리 X, 태그 X")
+        void findAllBySuccessNoCategoryNoTags() {
             Member member = MemberFixture.getFirstMember();
             Category category1 = CategoryFixture.getFirstCategory();
             Category category2 = CategoryFixture.getSecondCategory();
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            FindAllTemplatesResponse allBy = templateApplicationService.findAllBy(
-                    member.getId(), "hello keyword", null, null, PAGEABLE
+            FindAllTemplatesResponse allBy = tagTemplateApplicationService.findAllBy(
+                    member.getId(), "hello keyword", null, PAGEABLE
             );
 
             assertAll(
                     () -> assertThat(allBy.templates()).hasSize(3),
-                    () -> assertThat(allBy.templates()).extracting("id").containsExactly(2L, 3L, 4L),
+                    () -> assertThat(allBy.templates()).extracting("id").containsExactly(4L, 5L, 6L),
                     () -> assertThat(allBy.totalElements()).isEqualTo(30));
         }
 
         @Test
-        @DisplayName("템플릿 검색 실패: 카테고리 없음")
-        void findAllByFailNotCategory() {
+        @DisplayName("템플릿 검색 성공: 카테고리 X, 태그 O")
+        void findAllBySuccess() {
             Member member = MemberFixture.getFirstMember();
-            Category category = CategoryFixture.getFirstCategory();
-            saveDefault15Templates(member, category);
-            Long memberId = member.getId();
+            Template template1 = TemplateFixture.getFirst();
+            Template template2 = TemplateFixture.getSecond();
+            templateTagRepository.save(new TemplateTag(template1, TagFixture.getFirst()));
+            templateTagRepository.save(new TemplateTag(template2, TagFixture.getFirst()));
+            thumbnailRepository.save(new Thumbnail(template1, SourceCodeFixture.getFirst()));
+            thumbnailRepository.save(new Thumbnail(template2, SourceCodeFixture.getThird()));
 
-            assertThatThrownBy(() -> templateApplicationService.findAllBy(
-                    memberId, "", 3L, null, PAGEABLE
-            ))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 3에 해당하는 카테고리가 존재하지 않습니다.");
+            FindAllTemplatesResponse allBy = tagTemplateApplicationService.findAllBy(
+                    member.getId(), "", List.of(TagFixture.getFirst().getId()), PAGEABLE
+            );
+
+            assertAll(
+                    () -> assertThat(allBy.templates()).hasSize(2),
+                    () -> assertThat(allBy.templates()).extracting("id").containsExactly(1L, 2L),
+                    () -> assertThat(allBy.totalElements()).isEqualTo(2));
+        }
+
+        @Test
+        @DisplayName("템플릿 검색 성공: 카테고리 O, 태그 X")
+        void findAllBySuccessNoTags() {
+            Member member = MemberFixture.getFirstMember();
+            Category category1 = CategoryFixture.getFirstCategory();
+            Category category2 = CategoryFixture.getSecondCategory();
+            saveDefault15Templates(member, category1);
+            saveDefault15Templates(member, category2);
+
+            FindAllTemplatesResponse allBy = tagTemplateApplicationService.findAllBy(
+                    member.getId(), "hello keyword", null, PAGEABLE
+            );
+
+            assertAll(
+                    () -> assertThat(allBy.templates()).hasSize(3),
+                    () -> assertThat(allBy.templates()).extracting("id").containsExactly(4L, 5L, 6L),
+                    () -> assertThat(allBy.totalElements()).isEqualTo(30));
         }
 
         private void saveDefault15Templates(Member member, Category category) {
@@ -232,10 +264,24 @@ class TemplateApplicationServiceTest {
             Category category = CategoryFixture.getFirstCategory();
             CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
             Template template = saveTemplate(createdTemplate, member, category);
-            UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(category.getId());
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 3),
+                            new CreateSourceCodeRequest("filename4", "content4", 4)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "filename2", "content2", 1),
+                            new UpdateSourceCodeRequest(3L, "filename2", "content2", 2)
+                    ),
+                    List.of(1L),
+                    category.getId(),
+                    List.of("tag1", "tag3")
+            );
 
             // when
-            templateApplicationService.update(member, template.getId(), updateTemplateRequest);
+            tagTemplateApplicationService.update(member, template.getId(), updateTemplateRequest, category);
             Template updateTemplate = templateRepository.fetchById(template.getId());
             List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
             Thumbnail thumbnail = thumbnailRepository.fetchByTemplateId(template.getId());
@@ -246,8 +292,8 @@ class TemplateApplicationServiceTest {
             // then
             assertAll(
                     () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
-                    () -> assertThat(thumbnail.getSourceCode().getId()).isEqualTo(2L),
-                    () -> assertThat(sourceCodes).hasSize(3),
+                    () -> assertThat(thumbnail.getSourceCode().getId()).isEqualTo(4L),
+                    () -> assertThat(sourceCodes).hasSize(4),
                     () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(1L),
                     () -> assertThat(tags).hasSize(2),
                     () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
@@ -255,53 +301,70 @@ class TemplateApplicationServiceTest {
         }
 
         @Test
-        @DisplayName("템플릿 수정 실패 : 카테고리 없음")
-        void createTemplateFailNotCategory() {
+        @DisplayName("템플릿 수정 실패: 소스 코드 정보가 정확 하지 않음")
+        void updateFailNotMatchSize() {
             // given
             Member member = MemberFixture.getFirstMember();
+            Category category = CategoryFixture.getFirstCategory();
             CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-            Long templateId = saveTemplate(createdTemplate, member, CategoryFixture.getFirstCategory()).getId();
-            UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(3L);
+            Long templateId = saveTemplate(createdTemplate, member, category).getId();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(),
+                    List.of(),
+                    List.of(1L),
+                    category.getId(),
+                    List.of("tag1", "tag3")
+            );
 
-            // when & then
-            assertThatThrownBy(() -> templateApplicationService.update(member, templateId, updateTemplateRequest))
+            // when
+            assertThatThrownBy(() ->
+                    tagTemplateApplicationService.update(member, templateId, updateTemplateRequest, category)
+            )
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 3에 해당하는 카테고리가 존재하지 않습니다.");
+                    .hasMessage("소스 코드의 정보가 정확하지 않습니다.");
+        }
+
+    }
+
+    @Nested
+    @DisplayName("템플릿 삭제")
+    class deleteByMemberAndIds {
+        @Test
+        @DisplayName("템플릿 삭제 성공: 한개")
+        void deleteByMemberAndIdsSuccess() {
+            // given
+            Member member = MemberFixture.getFirstMember();
+            Template template = TemplateFixture.getFirst();
+
+            // when
+            tagTemplateApplicationService.deleteByMemberAndIds(member, List.of(template.getId()));
+
+            // then
+            assertAll(
+                    () -> assertThat(templateRepository.findAll()).hasSize(2),
+                    () -> assertThat(sourceCodeRepository.findAll()).hasSize(1),
+                    () -> assertThat(thumbnailRepository.findAll()).isEmpty()
+            );
         }
 
         @Test
-        @DisplayName("템플릿 수정 실패 : 카테고리 권한 없음")
-        void createTemplateFail() {
+        @DisplayName("템플릿 삭제 성공: 2개")
+        void deleteByMemberAndIdsSuccessMany() {
             // given
             Member member = MemberFixture.getFirstMember();
-            CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-            Long templateId = saveTemplate(createdTemplate, member, CategoryFixture.getFirstCategory()).getId();
-            UpdateTemplateRequest updateTemplateRequest =
-                    makeUpdateTemplateRequest(CategoryFixture.getSecondCategory().getId());
+            Template template1 = TemplateFixture.getFirst();
+            Template template2 = TemplateFixture.getSecond();
 
-            // when & then
-            assertThatThrownBy(() -> templateApplicationService.update(member, templateId, updateTemplateRequest))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
-        }
+            // when
+            tagTemplateApplicationService.deleteByMemberAndIds(member, List.of(template1.getId(), template2.getId()));
 
-        private UpdateTemplateRequest makeUpdateTemplateRequest(Long categoryId) {
-            return new UpdateTemplateRequest(
-                    "updateTitle",
-                    "description",
-                    List.of(
-                            new CreateSourceCodeRequest("filename3", "content3", 2),
-                            new CreateSourceCodeRequest("filename4", "content4", 3)
-                    ),
-                    List.of(
-                            new UpdateSourceCodeRequest(2L, "filename2", "content2", 1)
-                    ),
-                    List.of(1L),
-                    categoryId,
-                    List.of("tag1", "tag3")
-            );
+            // then
+            assertThat(templateRepository.findAll()).hasSize(1);
         }
     }
+
 
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
         Template savedTemplate = templateRepository.save(
