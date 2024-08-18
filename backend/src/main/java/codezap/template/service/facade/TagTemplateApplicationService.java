@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
+import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.tag.service.TemplateTagService;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;
@@ -35,12 +35,12 @@ public class TagTemplateApplicationService {
 
     @Transactional
     public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
-        Template template = templateService.createTemplate(member, category, createTemplateRequest);
-        templateTagService.createTags(createTemplateRequest.tags(), template);
-        SourceCode thumbnail = sourceCodeService.createSourceCodes(
-                createTemplateRequest.sourceCodes(),
-                createTemplateRequest.thumbnailOrdinal(),
-                template
+        Template template = templateService.createTemplate(member, createTemplateRequest, category);
+        templateTagService.createTags(template, createTemplateRequest.tags());
+        sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
+        SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
+                template,
+                createTemplateRequest.thumbnailOrdinal()
         );
         thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
@@ -104,9 +104,9 @@ public class TagTemplateApplicationService {
     }
 
     @Transactional
-    public void update(Member member, Category category, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Template template = templateService.updateTemplate(member, category, templateId, updateTemplateRequest);
-        templateTagService.updateTags(updateTemplateRequest.tags(), template);
+    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest, Category category) {
+        Template template = templateService.updateTemplate(member, templateId, updateTemplateRequest, category);
+        templateTagService.updateTags(template, updateTemplateRequest.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);
         sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
     }
