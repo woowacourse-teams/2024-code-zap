@@ -35,7 +35,9 @@ public class TagTemplateApplicationService {
 
     @Transactional
     public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
-        Template template = templateService.createTemplate(member, createTemplateRequest, category);
+        Template template = templateService.createTemplate(
+                member, createTemplateRequest.title(), createTemplateRequest.description(), category
+        );
         templateTagService.createTags(template, createTemplateRequest.tags());
         sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
         SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
@@ -105,17 +107,25 @@ public class TagTemplateApplicationService {
 
     @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest, Category category) {
-        Template template = templateService.updateTemplate(member, templateId, updateTemplateRequest, category);
+        Template template = templateService.updateTemplate(
+                member, templateId, updateTemplateRequest.title(), updateTemplateRequest.description(), category
+        );
         templateTagService.updateTags(template, updateTemplateRequest.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);
-        sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
+        sourceCodeService.createSourceCodes(template, updateTemplateRequest.createSourceCodes());
+        sourceCodeService.updateSourceCodes(updateTemplateRequest.updateSourceCodes());
+        sourceCodeService.deleteByIds(template, updateTemplateRequest.deleteSourceCodeIds(), thumbnail);
+        sourceCodeService.validateSourceCodesCount(
+                template,
+                updateTemplateRequest.createSourceCodes().size() + updateTemplateRequest.updateSourceCodes().size()
+        );
     }
 
     @Transactional
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         templateService.deleteByMemberAndIds(member, ids);
         templateTagService.deleteByIds(ids);
-        sourceCodeService.deleteByIds(ids);
+        sourceCodeService.deleteByTemplateIds(ids);
         thumbnailService.deleteByIds(ids);
     }
 }

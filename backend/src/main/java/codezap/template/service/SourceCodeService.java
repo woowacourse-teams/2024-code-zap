@@ -12,7 +12,6 @@ import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
-import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -37,19 +36,8 @@ public class SourceCodeService {
         return sourceCodeRepository.findAllByTemplate(template);
     }
 
-    public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
-        sourceCodeRepository.saveAll(
-                updateTemplateRequest.createSourceCodes().stream()
-                        .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
-                        .toList()
-        );
-
-        if (isThumbnailDeleted(updateTemplateRequest, thumbnail)) {
-            updateThumbnail(template, thumbnail);
-        }
-        updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
-        validateSourceCodesCount(template, updateTemplateRequest);
+    public void updateSourceCodes(List<UpdateSourceCodeRequest> updateSourceCodes) {
+        updateSourceCodes.forEach(this::updateSourceCode);
     }
 
     private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
@@ -70,12 +58,27 @@ public class SourceCodeService {
         );
     }
 
+    public void validateSourceCodesCount(Template template, int sourceCodeSize) {
+        if (sourceCodeSize != sourceCodeRepository.findAllByTemplate(template).size()) {
+            throw new CodeZapException(HttpStatus.BAD_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
+        }
+    }
+
+    public void deleteByIds(Template template, List<Long> ids, Thumbnail thumbnail) {
+        if (isThumbnailDeleted(ids, thumbnail)) {
+            updateThumbnail(template, thumbnail);
+        }
+        ids.forEach(sourceCodeRepository::deleteById);
+        for (Long id : ids) {
+            sourceCodeRepository.deleteById(id);
+        }
+    }
+
     private boolean isThumbnailDeleted(
-            UpdateTemplateRequest updateTemplateRequest,
+            List<Long> deleteSourceCodeIds,
             Thumbnail thumbnail
     ) {
-        return updateTemplateRequest.deleteSourceCodeIds()
-                .contains(thumbnail.getId());
+        return deleteSourceCodeIds.contains(thumbnail.getId());
     }
 
     private void updateThumbnail(Template template, Thumbnail thumbnail) {
@@ -89,14 +92,7 @@ public class SourceCodeService {
                 .ifPresent(thumbnail::updateThumbnail);
     }
 
-    private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {
-        if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
-                != sourceCodeRepository.findAllByTemplate(template).size()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
-        }
-    }
-
-    public void deleteByIds(List<Long> templateIds) {
+    public void deleteByTemplateIds(List<Long> templateIds) {
         for (Long id : templateIds) {
             sourceCodeRepository.deleteByTemplateId(id);
         }
