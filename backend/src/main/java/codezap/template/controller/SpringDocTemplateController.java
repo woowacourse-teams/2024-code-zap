@@ -11,7 +11,6 @@ import codezap.global.swagger.error.ErrorCase;
 import codezap.member.dto.MemberDto;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -115,16 +114,6 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
     })
     ResponseEntity<FindTemplateResponse> getTemplateById(MemberDto memberDto, Long id);
-
-    @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "태그 조회", description = "해당 멤버의 템플릿들에 포함된 태그를 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "태그 조회 성공")
-    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
-            instance = "/templates/tags/1", errorCases = {
-            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
-            @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."),
-    })
-    ResponseEntity<FindAllTagsResponse> getTags(MemberDto memberDto, Long memberId);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")

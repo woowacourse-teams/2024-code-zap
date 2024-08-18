@@ -1,6 +1,6 @@
 package codezap.template.dto.response;
 
-import codezap.template.domain.Tag;
+import codezap.tag.domain.Tag;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindTagResponse(

@@ -1,4 +1,4 @@
-package codezap.template.domain;
+package codezap.tag.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

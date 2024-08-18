@@ -20,6 +20,8 @@ import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
+import codezap.tag.repository.TagRepository;
+import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -31,9 +33,7 @@ import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
 import codezap.template.repository.FakeThumbnailRepository;
 import codezap.template.repository.SourceCodeRepository;
-import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailRepository;
 
 public class TemplateServiceSearchTest {

@@ -9,7 +9,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
-import codezap.template.domain.Tag;
+import codezap.tag.domain.Tag;
+import codezap.tag.repository.TagRepository;
 
 public class FakeTagRepository implements TagRepository {
 
