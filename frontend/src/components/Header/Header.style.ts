@@ -136,3 +136,27 @@ export const UserMenuButton = styled.button`
   background-color: white;
   border-radius: 50%;
 `;
+
+export const Dimmed = styled.div<{ menuOpen: boolean }>`
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  visibility: hidden;
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
+
+  ${({ menuOpen }) =>
+    menuOpen &&
+    css`
+      visibility: visible;
+      opacity: 1;
+    `}
+`;

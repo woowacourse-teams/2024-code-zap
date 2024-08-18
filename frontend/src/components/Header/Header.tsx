@@ -48,6 +48,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
           <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
         </S.MobileMenuContainer>
       </S.HeaderContentContainer>
+      {menuOpen && <S.Dimmed menuOpen={menuOpen} onClick={toggleMenu} />}
     </S.HeaderContainer>
   );
 };
