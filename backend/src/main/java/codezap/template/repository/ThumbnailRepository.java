@@ -8,7 +8,7 @@ import codezap.template.domain.Thumbnail;
 
 public interface ThumbnailRepository {
 
-    Thumbnail fetchById(Long id);
+    Thumbnail fetchByTemplateId(Long id);
 
     Thumbnail fetchByTemplate(Template template);
 

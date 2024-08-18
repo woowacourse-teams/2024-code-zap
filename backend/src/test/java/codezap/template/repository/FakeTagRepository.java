@@ -22,6 +22,11 @@ public class FakeTagRepository implements TagRepository {
         this.tags = new ArrayList<>();
     }
 
+    public FakeTagRepository(List<Tag> tags) {
+        this.tags = new ArrayList<>(tags);
+        idCounter.set(1 + tags.size());
+    }
+
     @Override
     public Tag fetchById(Long id) {
         return tags.stream()

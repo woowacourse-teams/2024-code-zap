@@ -28,9 +28,9 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
     }
 
     @Override
-    public Thumbnail fetchById(Long id) {
+    public Thumbnail fetchByTemplateId(Long id) {
         return thumbnails.stream()
-                .filter(thumbnail -> Objects.equals(thumbnail.getId(), id))
+                .filter(thumbnail -> thumbnail.getTemplate().getId().equals(id))
                 .findFirst()
                 .orElseThrow(
                         () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 썸네일 템플릿이 존재하지 않습니다."));
