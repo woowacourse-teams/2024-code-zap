@@ -36,7 +36,7 @@ import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailRepository;
 
-class TemplateServiceSearchTest {
+public class TemplateServiceSearchTest {
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
@@ -46,11 +46,7 @@ class TemplateServiceSearchTest {
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(
             MemberFixture.getFirstMember(), MemberFixture.getSecondMember()
     ));
-    private final TemplateService templateService = new TemplateService(
-            thumbnailRepository,
-            templateRepository,
-            sourceCodeRepository
-    );
+    private final TemplateService templateService = new TemplateService(templateRepository);
 
     private void saveDefault15Templates(Member member, Category category) {
         saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);

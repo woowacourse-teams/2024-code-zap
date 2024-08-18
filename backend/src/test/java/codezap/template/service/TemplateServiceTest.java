@@ -51,34 +51,65 @@ class TemplateServiceTest {
             List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
     );
     private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
+
     private final TagRepository tagRepository = new FakeTagRepository();
 
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
     );
-    private final TemplateService templateService = new TemplateService(
-            thumbnailRepository,
-            templateRepository,
-            sourceCodeRepository
-    );
+    private final TemplateService templateService = new TemplateService(templateRepository);
 
-    @Test
-    @DisplayName("템플릿 생성 성공")
-    void createTemplateSuccess() {
-        // given
-        Member member = MemberFixture.getFirstMember();
-        Category category = CategoryFixture.getFirstCategory();
-        CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
-
-        // when
-        Template template = templateService.createTemplate(member, category, createTemplateRequest);
-
-        // then
-        assertAll(
-                () -> assertThat(templateRepository.findAll()).hasSize(1),
-                () -> assertThat(template.getTitle()).isEqualTo(createTemplateRequest.title()),
-                () -> assertThat(template.getCategory().getName()).isEqualTo("카테고리 없음")
+    private CreateTemplateRequest makeTemplateRequest(String title) {
+        return new CreateTemplateRequest(
+                title,
+                "description",
+                List.of(
+                        new CreateSourceCodeRequest("filename1", "content1", 1),
+                        new CreateSourceCodeRequest("filename2", "content2", 2)
+                ),
+                1,
+                1L,
+                List.of("tag1", "tag2")
         );
+    }
+
+    private UpdateTemplateRequest makeUpdateTemplateRequest(Long categoryId) {
+        return new UpdateTemplateRequest(
+                "updateTitle",
+                "description",
+                List.of(
+                        new CreateSourceCodeRequest("filename3", "content3", 2),
+                        new CreateSourceCodeRequest("filename4", "content4", 3)
+                ),
+                List.of(
+                        new UpdateSourceCodeRequest(2L, "filename2", "content2", 1)
+                ),
+                List.of(1L),
+                categoryId,
+                List.of("tag1", "tag3")
+        );
+    }
+
+    private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Category category, Member member) {
+        Category savedCategory = categoryRepository.save(category);
+        Template savedTemplate = templateRepository.save(
+                new Template(
+                        member,
+                        createTemplateRequest.title(),
+                        createTemplateRequest.description(),
+                        savedCategory
+                )
+        );
+        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
+                new SourceCode(savedTemplate, "filename1", "content1", 1));
+        sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
+        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
+        createTemplateRequest.tags().stream()
+                .map(Tag::new)
+                .map(tagRepository::save)
+                .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
+
+        return savedTemplate;
     }
 
     @Test
@@ -135,21 +166,38 @@ class TemplateServiceTest {
     }
 
     @Test
+    @DisplayName("템플릿 생성 성공")
+    void createTemplateSuccess() {
+        // given
+        Member member = MemberFixture.getFirstMember();
+        Category category = CategoryFixture.getFirstCategory();
+        CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
+
+        // when
+        Template template = templateService.createTemplate(member, category, createTemplateRequest);
+
+        // then
+        assertAll(
+                () -> assertThat(templateRepository.findAll()).hasSize(1),
+                () -> assertThat(template.getTitle()).isEqualTo(createTemplateRequest.title()),
+                () -> assertThat(template.getCategory().getName()).isEqualTo("카테고리 없음")
+        );
+    }
+
+    @Test
     @DisplayName("템플릿 수정 성공")
     void updateTemplateSuccess() {
         // given
         Member member = MemberFixture.getFirstMember();
         Category category = CategoryFixture.getFirstCategory();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
-        categoryRepository.save(new Category("category2", member));
+        Template template = saveTemplate(createdTemplate, category, member);
+        categoryRepository.save(category);
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
         templateService.update(member, category, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
-        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
-        Thumbnail thumbnail = thumbnailRepository.fetchById(template.getId());
         List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
                 .map(TemplateTag::getTag)
                 .toList();
@@ -157,8 +205,6 @@ class TemplateServiceTest {
         // then
         assertAll(
                 () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
-                () -> assertThat(thumbnail.getSourceCode().getId()).isEqualTo(2L),
-                () -> assertThat(sourceCodes).hasSize(3),
                 () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(1L),
                 () -> assertThat(tags).hasSize(2)
         );
@@ -180,7 +226,8 @@ class TemplateServiceTest {
 
         // then
         Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.update(otherMember, category, templateId, updateTemplateRequest))
+        assertThatThrownBy(
+                () -> templateService.update(otherMember, category, templateId, updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
@@ -197,11 +244,7 @@ class TemplateServiceTest {
         templateService.deleteByIds(member, List.of(1L));
 
         // then
-        assertAll(
-                () -> assertThat(templateRepository.findAll()).isEmpty(),
-                () -> assertThat(sourceCodeRepository.findAll()).isEmpty(),
-                () -> assertThat(thumbnailRepository.findAll()).isEmpty()
-        );
+        assertThat(templateRepository.findAll()).isEmpty();
     }
 
     @Test
@@ -218,11 +261,7 @@ class TemplateServiceTest {
         templateService.deleteByIds(member, List.of(1L, 2L));
 
         // then
-        assertAll(
-                () -> assertThat(templateRepository.findAll()).isEmpty(),
-                () -> assertThat(sourceCodeRepository.findAll()).isEmpty(),
-                () -> assertThat(thumbnailRepository.findAll()).isEmpty()
-        );
+        assertThat(templateRepository.findAll()).isEmpty();
     }
 
     @Test
@@ -258,58 +297,5 @@ class TemplateServiceTest {
         assertThatThrownBy(() -> templateService.deleteByIds(member, ids))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
-    }
-
-    private CreateTemplateRequest makeTemplateRequest(String title) {
-        return new CreateTemplateRequest(
-                title,
-                "description",
-                List.of(
-                        new CreateSourceCodeRequest("filename1", "content1", 1),
-                        new CreateSourceCodeRequest("filename2", "content2", 2)
-                ),
-                1,
-                1L,
-                List.of("tag1", "tag2")
-        );
-    }
-
-    private UpdateTemplateRequest makeUpdateTemplateRequest(Long categoryId) {
-        return new UpdateTemplateRequest(
-                "updateTitle",
-                "description",
-                List.of(
-                        new CreateSourceCodeRequest("filename3", "content3", 2),
-                        new CreateSourceCodeRequest("filename4", "content4", 3)
-                ),
-                List.of(
-                        new UpdateSourceCodeRequest(2L, "filename2", "content2", 1)
-                ),
-                List.of(1L),
-                categoryId,
-                List.of("tag1", "tag3")
-        );
-    }
-
-    private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Category category, Member member) {
-        Category savedCategory = categoryRepository.save(category);
-        Template savedTemplate = templateRepository.save(
-                new Template(
-                        member,
-                        createTemplateRequest.title(),
-                        createTemplateRequest.description(),
-                        savedCategory
-                )
-        );
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
-                new SourceCode(savedTemplate, "filename1", "content1", 1));
-        sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
-        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
-        createTemplateRequest.tags().stream()
-                .map(Tag::new)
-                .map(tagRepository::save)
-                .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
-
-        return savedTemplate;
     }
 }
