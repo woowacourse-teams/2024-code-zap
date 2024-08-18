@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import codezap.global.exception.CodeZapException;
+import codezap.tag.domain.Tag;
 import codezap.template.domain.SourceCode;
-import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;

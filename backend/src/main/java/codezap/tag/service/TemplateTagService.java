@@ -1,4 +1,4 @@
-package codezap.template.service;
+package codezap.tag.service;
 
 import java.util.List;
 
@@ -6,13 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import codezap.global.exception.CodeZapException;
-import codezap.template.domain.Tag;
+import codezap.tag.domain.Tag;
+import codezap.tag.repository.TagRepository;
+import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindTagResponse;
-import codezap.template.repository.TagRepository;
-import codezap.template.repository.TemplateTagRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

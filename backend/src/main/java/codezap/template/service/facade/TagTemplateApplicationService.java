@@ -10,8 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.member.domain.Member;
+import codezap.tag.domain.Tag;
+import codezap.tag.service.TemplateTagService;
 import codezap.template.domain.SourceCode;
-import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -22,7 +23,6 @@ import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
-import codezap.template.service.TemplateTagService;
 import codezap.template.service.ThumbnailService;
 import lombok.RequiredArgsConstructor;
 
