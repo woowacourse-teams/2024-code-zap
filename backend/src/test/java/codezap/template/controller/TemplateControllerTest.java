@@ -27,8 +27,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codezap.auth.configuration.AuthArgumentResolver;
 import codezap.auth.manager.CookieCredentialManager;
-import codezap.auth.manager.CredentialManager;
-import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.basic.BasicAuthCredentialProvider;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.repository.CategoryRepository;
@@ -52,11 +50,7 @@ import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
 import codezap.template.repository.FakeThumbnailRepository;
-import codezap.template.repository.SourceCodeRepository;
-import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailRepository;
 import codezap.template.service.TemplateApplicationService;
 import codezap.template.service.TemplateService;
 
@@ -65,44 +59,39 @@ class TemplateControllerTest {
     private static final int MAX_LENGTH = 255;
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
-    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(
             List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
     );
-    private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
-    private final TagRepository tagRepository = new FakeTagRepository();
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
     );
     private final TemplateService templateService = new TemplateService(
-            thumbnailRepository,
+            new FakeThumbnailRepository(),
             templateRepository,
-            sourceCodeRepository,
+            new FakeSourceCodeRepository(),
             categoryRepository,
-            tagRepository,
-            templateTagRepository,
+            new FakeTagRepository(),
+            new FakeTemplateTagRepository(),
             memberRepository);
     private final CategoryService categoryService = new CategoryService(
             categoryRepository, templateRepository, memberRepository
     );
 
-    private final MemberService memberService = new MemberService(memberRepository, categoryRepository);
-
     private final TemplateApplicationService applicationService = new TemplateApplicationService(
-            memberService, templateService
+            new MemberService(memberRepository, categoryRepository)
+            , templateService
     );
 
-    private final TemplateController templateController = new TemplateController(templateService, applicationService);
-
-    private final CredentialManager credentialManager = new CookieCredentialManager();
-    private final CredentialProvider credentialProvider = new BasicAuthCredentialProvider(memberRepository);
-
-    private final MockMvc mvc = MockMvcBuilders.standaloneSetup(templateController)
-            .setControllerAdvice(new GlobalExceptionHandler())
-            .setCustomArgumentResolvers(new AuthArgumentResolver(credentialManager, credentialProvider),
-                    new PageableHandlerMethodArgumentResolver())
-            .build();
+    private final MockMvc mvc =
+            MockMvcBuilders.standaloneSetup(new TemplateController(templateService, applicationService))
+                    .setControllerAdvice(new GlobalExceptionHandler())
+                    .setCustomArgumentResolvers(
+                            new AuthArgumentResolver(
+                                    new CookieCredentialManager(),
+                                    new BasicAuthCredentialProvider(memberRepository)
+                            ),
+                            new PageableHandlerMethodArgumentResolver())
+                    .build();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     Cookie cookie;

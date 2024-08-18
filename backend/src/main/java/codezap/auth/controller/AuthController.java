@@ -27,7 +27,8 @@ public class AuthController implements SpringDocAuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest,
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse httpServletResponse
     ) {
         LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
