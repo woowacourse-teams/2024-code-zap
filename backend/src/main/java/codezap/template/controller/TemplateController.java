@@ -65,7 +65,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(memberTemplateApplicationService.findByIdAndMember(memberDto, id));
+        return ResponseEntity.ok(memberTemplateApplicationService.getByIdAndMember(memberDto, id));
     }
 
     @GetMapping("/explore")

@@ -7,14 +7,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import codezap.global.exception.CodeZapException;
-import codezap.tag.domain.Tag;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -23,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 public class SourceCodeService {
     private final SourceCodeRepository sourceCodeRepository;
 
-    public SourceCode createSourceCodes(List<CreateSourceCodeRequest> sourceCodes, int thumbnailOrdinal,
+    public SourceCode createSourceCodes(
+            List<CreateSourceCodeRequest> sourceCodes,
+            int thumbnailOrdinal,
             Template template
     ) {
         sourceCodeRepository.saveAll(
@@ -32,7 +32,6 @@ public class SourceCodeService {
                         .toList()
         );
         return sourceCodeRepository.fetchByTemplateAndOrdinal(template, thumbnailOrdinal);
-
     }
 
     private SourceCode createSourceCode(CreateSourceCodeRequest createSourceCodeRequest, Template template) {
@@ -44,10 +43,8 @@ public class SourceCodeService {
         );
     }
 
-    public FindTemplateResponse findSourceCode(Template template, List<Tag> tags) {
-        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
-
-        return FindTemplateResponse.of(template, sourceCodes, tags);
+    public List<SourceCode> getSourceCode(Template template) {
+        return sourceCodeRepository.findAllByTemplate(template);
     }
 
     public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
@@ -61,23 +58,25 @@ public class SourceCodeService {
         if (isThumbnailDeleted(updateTemplateRequest, thumbnail)) {
             updateThumbnail(template, thumbnail);
         }
-
         updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
-
         validateSourceCodesCount(updateTemplateRequest, template);
     }
 
     private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
         SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
-        sourceCode.updateSourceCode(updateSourceCodeRequest.filename(), updateSourceCodeRequest.content(),
-                updateSourceCodeRequest.ordinal());
+        sourceCode.updateSourceCode(
+                updateSourceCodeRequest.filename(),
+                updateSourceCodeRequest.content(),
+                updateSourceCodeRequest.ordinal()
+        );
     }
 
     private boolean isThumbnailDeleted(
             UpdateTemplateRequest updateTemplateRequest,
             Thumbnail thumbnail
     ) {
-        return updateTemplateRequest.deleteSourceCodeIds().contains(thumbnail.getId());
+        return updateTemplateRequest.deleteSourceCodeIds()
+                .contains(thumbnail.getId());
     }
 
     private void updateThumbnail(Template template, Thumbnail thumbnail) {

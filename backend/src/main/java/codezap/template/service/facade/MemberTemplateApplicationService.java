@@ -23,8 +23,18 @@ public class MemberTemplateApplicationService {
     private final TagTemplateApplicationService tagTemplateApplicationService;
 
     public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
-        Member member = memberService.fetchByMemberDto(memberDto);
+        Member member = memberService.getByMemberDto(memberDto);
         return templateApplicationService.createTemplate(member, createTemplateRequest);
+    }
+
+    public FindAllTagsResponse getAllTagsByMemberId(MemberDto memberDto, Long memberId) {
+        memberService.validateMemberIdentity(memberDto, memberId);
+        return tagTemplateApplicationService.getAllTagsByMemberId(memberId);
+    }
+
+    public FindTemplateResponse getByIdAndMember(MemberDto memberDto, Long id) {
+        Member member = memberService.getByMemberDto(memberDto);
+        return tagTemplateApplicationService.getByMemberAndId(member, id);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -39,23 +49,13 @@ public class MemberTemplateApplicationService {
         return templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
     }
 
-    public FindAllTagsResponse findAllTagsByMemberId(MemberDto memberDto, Long memberId) {
-        memberService.validateMemberIdentity(memberDto, memberId);
-        return tagTemplateApplicationService.findAllTagsByMemberId(memberId);
-    }
-
-    public FindTemplateResponse findByIdAndMember(MemberDto memberDto, Long id) {
-        Member member = memberService.fetchByMemberDto(memberDto);
-        return tagTemplateApplicationService.findByIdAndMember(member, id);
-    }
-
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Member member = memberService.fetchByMemberDto(memberDto);
+        Member member = memberService.getByMemberDto(memberDto);
         templateApplicationService.update(member, templateId, updateTemplateRequest);
     }
 
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {
-        Member member = memberService.fetchByMemberDto(memberDto);
-        tagTemplateApplicationService.deleteByIds(member, ids);
+        Member member = memberService.getByMemberDto(memberDto);
+        tagTemplateApplicationService.deleteByMemberAndIds(member, ids);
     }
 }

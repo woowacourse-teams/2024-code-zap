@@ -37,7 +37,13 @@ public class TemplateTagService {
         );
     }
 
-    public List<Long> fetchTemplateIdsContainsTagIds(List<Long> tagIds) {
+    public List<Tag> getByTemplate(Template template) {
+        return templateTagRepository.findAllByTemplate(template).stream()
+                .map(TemplateTag::getTag)
+                .toList();
+    }
+
+    public List<Long> getTemplateIdContainTagIds(List<Long> tagIds) {
         if (tagIds.isEmpty()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
         }
@@ -53,10 +59,15 @@ public class TemplateTagService {
         }
     }
 
-    public List<Tag> getByTemplate(Template template) {
-        return templateTagRepository.findAllByTemplate(template).stream()
-                .map(TemplateTag::getTag)
-                .toList();
+    public FindAllTagsResponse findAllByTemplates(List<Template> templates) {
+        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(templates);
+        return new FindAllTagsResponse(
+                templateTags.stream()
+                        .map(TemplateTag::getTag)
+                        .distinct()
+                        .map(FindTagResponse::from)
+                        .toList()
+        );
     }
 
     public void updateTags(List<String> tags, Template template) {
@@ -80,16 +91,5 @@ public class TemplateTagService {
         for (Long id : templateIds) {
             templateTagRepository.deleteAllByTemplateId(id);
         }
-    }
-
-    public FindAllTagsResponse findAllTagsByMemberId(List<Template> templates) {
-        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(templates);
-        return new FindAllTagsResponse(
-                templateTags.stream()
-                        .map(TemplateTag::getTag)
-                        .distinct()
-                        .map(FindTagResponse::from)
-                        .toList()
-        );
     }
 }
