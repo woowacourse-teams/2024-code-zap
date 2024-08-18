@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
@@ -94,7 +92,7 @@ class TagTemplateApplicationServiceTest {
 
             // then
             assertAll(
-                    () -> assertThat(templateRepository.findAll()).hasSize(2),
+                    () -> assertThat(templateRepository.findAll()).hasSize(4),
                     () -> assertThat(template.getTitle()).isEqualTo(createTemplateRequest.title()),
                     () -> assertThat(template.getCategory().getName()).isEqualTo(category.getName())
             );
@@ -113,8 +111,8 @@ class TagTemplateApplicationServiceTest {
             templateTagRepository.save(new TemplateTag(template, TagFixture.getFirst()));
 
             // when
-            FindTemplateResponse foundTemplate = tagTemplateApplicationService.getByMemberAndId(member,
-                    template.getId());
+            FindTemplateResponse foundTemplate =
+                    tagTemplateApplicationService.getByMemberAndId(member, template.getId());
 
             // then
             assertAll(
@@ -332,7 +330,7 @@ class TagTemplateApplicationServiceTest {
     @DisplayName("템플릿 삭제")
     class deleteByMemberAndIds {
         @Test
-        @DisplayName("템플릿 삭제 성공: 한개")
+        @DisplayName("템플릿 삭제 성공: 1개")
         void deleteByMemberAndIdsSuccess() {
             // given
             Member member = MemberFixture.getFirstMember();
@@ -364,7 +362,6 @@ class TagTemplateApplicationServiceTest {
             assertThat(templateRepository.findAll()).hasSize(1);
         }
     }
-
 
     private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Member member, Category category) {
         Template savedTemplate = templateRepository.save(
