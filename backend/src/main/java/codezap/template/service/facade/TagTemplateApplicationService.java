@@ -10,16 +10,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.member.domain.Member;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
+import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;
+import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.TemplateTagService;
+import codezap.template.service.ThumbnailService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -27,11 +31,19 @@ import lombok.RequiredArgsConstructor;
 public class TagTemplateApplicationService {
     private final TemplateTagService templateTagService;
     private final TemplateService templateService;
+    private final ThumbnailService thumbnailService;
+    private final SourceCodeService sourceCodeService;
 
     @Transactional
     public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
         Template template = templateService.createTemplate(member, category, createTemplateRequest);
         templateTagService.createTags(createTemplateRequest.tags(), template);
+        SourceCode thumbnail = sourceCodeService.createSourceCodes(
+                createTemplateRequest.sourceCodes(),
+                createTemplateRequest.thumbnailOrdinal(),
+                template
+        );
+        thumbnailService.save(template, thumbnail);
         return template.getId();
     }
 
@@ -75,7 +87,7 @@ public class TagTemplateApplicationService {
                 .map(template -> ItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
-                        templateService.getThumbnail(template))
+                        thumbnailService.getThumbnail(template))
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
@@ -84,7 +96,7 @@ public class TagTemplateApplicationService {
     public FindTemplateResponse findByIdAndMember(Member member, Long id) {
         Template template = templateService.findByIdAndMember(member, id);
         List<Tag> tags = templateTagService.getByTemplate(template);
-        return templateService.findSourceCode(template, tags);
+        return sourceCodeService.findSourceCode(template, tags);
     }
 
     public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
@@ -96,11 +108,15 @@ public class TagTemplateApplicationService {
     public void update(Member member, Category category, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Template template = templateService.update(member, category, templateId, updateTemplateRequest);
         templateTagService.updateTags(updateTemplateRequest.tags(), template);
+        Thumbnail thumbnail = thumbnailService.fetchByTemplate(template);
+        sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
     }
 
     @Transactional
     public void deleteByIds(Member member, List<Long> ids) {
         templateService.deleteByIds(member, ids);
         templateTagService.deleteByIds(ids);
+        sourceCodeService.deleteByIds(ids);
+        thumbnailService.deleteByIds(ids);
     }
 }
