@@ -14,9 +14,11 @@ export interface BaseProps extends HTMLAttributes<HTMLDivElement> {
   size?: 'small' | 'medium' | 'large' | 'xlarge';
   variant?: 'filled' | 'outlined' | 'text';
   isValid?: boolean;
+  inputColor?: string;
 }
 export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   inputSize?: 'small' | 'medium' | 'large';
+  placeholderColor?: string;
 }
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
@@ -42,7 +44,9 @@ const TextField = ({ ...rests }: TextFieldProps) => <S.TextField {...rests} />;
 const Label = ({ children, ...rests }: PropsWithChildren<LabelProps>) => <S.Label {...rests}>{children}</S.Label>;
 
 const Adornment = ({ children, ...rests }: PropsWithChildren<AdornmentProps>) => (
-  <S.Adornment {...rests}>{children}</S.Adornment>
+  <S.Adornment {...rests} data-adornment>
+    {children}
+  </S.Adornment>
 );
 
 const HelperText = ({ children, ...rests }: PropsWithChildren<HelperTextProps>) => (
@@ -63,10 +67,30 @@ const Base = ({
   const helperText = getChildOfType(children, HelperTextType);
   const label = getChildOfType(children, LabelType);
 
+  const handleFocusInput = (e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    const isAdornmentClicked = target.closest('[data-adornment]');
+    const isInputClicked = target.tagName === 'INPUT';
+
+    if (isAdornmentClicked) {
+      return;
+    }
+
+    const input = e.currentTarget.querySelector('input');
+
+    if (input && !isInputClicked) {
+      input.focus();
+
+      const length = input.value.length;
+
+      input.setSelectionRange(length, length);
+    }
+  };
+
   return (
     <S.Container>
       {label}
-      <S.Base variant={variant} size={size} isValid={isValid} {...rests}>
+      <S.Base variant={variant} size={size} isValid={isValid} {...rests} onClick={handleFocusInput}>
         {inputWithAdornment}
       </S.Base>
       {helperText}
