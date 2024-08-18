@@ -15,8 +15,6 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
@@ -49,11 +47,9 @@ public class TemplateService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
-    public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
-        Member member = memberRepository.fetchById(memberDto.id());
+    public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
@@ -106,8 +102,7 @@ public class TemplateService {
         return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }
 
-    public FindTemplateResponse findByIdAndMember(MemberDto memberDto, Long id) {
-        Member member = memberRepository.fetchById(memberDto.id());
+    public FindTemplateResponse findByIdAndMember(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 
@@ -217,8 +212,7 @@ public class TemplateService {
     }
 
     @Transactional
-    public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Member member = memberRepository.fetchById(memberDto.id());
+    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
@@ -306,17 +300,16 @@ public class TemplateService {
     }
 
     @Transactional
-    public void deleteByIds(MemberDto memberDto, List<Long> ids) {
+    public void deleteByIds(Member member, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
         }
         for (Long id : ids) {
-            deleteById(memberDto, id);
+            deleteById(member, id);
         }
     }
 
-    private void deleteById(MemberDto memberDto, Long id) {
-        Member member = memberRepository.fetchById(memberDto.id());
+    private void deleteById(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
 

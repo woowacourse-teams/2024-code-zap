@@ -55,8 +55,7 @@ public class TagSearchTest {
             sourceCodeRepository,
             categoryRepository,
             tagRepository,
-            templateTagRepository,
-            memberRepository);
+            templateTagRepository);
 
     private void saveDefault15Templates(Member member, Category category) {
         saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);

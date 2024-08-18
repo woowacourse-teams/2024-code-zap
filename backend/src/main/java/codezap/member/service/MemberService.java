@@ -55,4 +55,8 @@ public class MemberService {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "로그인 정보가 잘못되었습니다.");
         }
     }
+
+    public Member fetchByMemberDto(MemberDto memberDto) {
+        return memberRepository.fetchById(memberDto.id());
+    }
 }
