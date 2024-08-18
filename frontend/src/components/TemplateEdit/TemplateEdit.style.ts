@@ -23,11 +23,11 @@ const slideDown = keyframes`
 `;
 
 export const CategoryGuide = styled.div<{ isOpen: boolean }>`
-  position: absolute;
-  top: -3rem;
-
   display: flex;
+  gap: 0.125rem;
 
+  margin-top: 0.5rem;
+  margin-bottom: -0.5rem;
   padding: 0.75rem;
 
   opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
@@ -47,6 +47,10 @@ export const CategoryGuide = styled.div<{ isOpen: boolean }>`
       : css`
           animation: ${slideDown} 0.3s ease-out forwards;
         `}
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const DeleteButton = styled(Button)`

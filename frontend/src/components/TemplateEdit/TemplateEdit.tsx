@@ -54,13 +54,28 @@ const TemplateEdit = ({
 }: Props) => {
   const { mutateAsync: postCategory } = useCategoryUpload();
 
-  const createNewCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.target instanceof HTMLInputElement && e.key === 'Enter') {
-      const newCategory = { name: e.target.value };
+  const getExistingCategory = (value: string) =>
+    categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
 
-      postCategory(newCategory);
-      e.target.value = '';
+  const createNewCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
+      return;
     }
+
+    const inputValue = e.target.value;
+    const existingCategory = getExistingCategory(inputValue);
+
+    if (existingCategory) {
+      categoryProps.handleCurrentValue(existingCategory);
+
+      return;
+    }
+
+    const newCategory = { name: inputValue };
+
+    postCategory(newCategory);
+
+    e.target.value = '';
   };
 
   return (
@@ -70,7 +85,7 @@ const TemplateEdit = ({
       align='flex-start'
       gap='1.5rem'
       margin='1rem 0 0 0'
-      css={{ maxWidth: '53rem', margin: 'auto', marginTop: '4rem', position: 'relative' }}
+      css={{ maxWidth: '53rem', margin: 'auto' }}
     >
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
         <CategoryGuide isOpen={categoryProps.isOpen} />
@@ -146,8 +161,13 @@ interface NewCategoryInputProps {
 }
 
 const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
-  <Input size='medium' variant='outlined'>
-    <Input.TextField autoFocus placeholder='+ 새 카테고리 생성' onKeyUpCapture={createNewCategory} />
+  <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
+    <Input.TextField
+      autoFocus
+      placeholder='+ 새 카테고리 생성'
+      onKeyUpCapture={createNewCategory}
+      placeholderColor={theme.color.light.secondary_600}
+    />
   </Input>
 );
 
@@ -157,8 +177,7 @@ interface CategoryGuideProps {
 
 const CategoryGuide = ({ isOpen }: CategoryGuideProps) => (
   <S.CategoryGuide isOpen={isOpen}>
-    <Text.Small color={theme.color.light.secondary_500}>
-      새 카테고리명을 입력하고 엔터를 눌러 쉽게 카테고리를 등록할 수 있어요!
-    </Text.Small>
+    <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
+    <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
   </S.CategoryGuide>
 );
