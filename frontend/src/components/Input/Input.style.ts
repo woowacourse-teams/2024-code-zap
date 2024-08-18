@@ -83,7 +83,7 @@ export const Base = styled.div<BaseProps>`
   ${({ isValid }) =>
     isValid === false &&
     css`
-      border: 1px solid red;
+      border: 1px solid ${theme.color.light.analogous_primary_400};
     `};
 
   /* for Adornment size */
@@ -139,5 +139,5 @@ export const HelperText = styled.span`
   height: 1rem;
   margin-left: 0.5rem;
   font-size: 1rem;
-  color: red;
+  color: ${theme.color.light.analogous_primary_400};
 `;

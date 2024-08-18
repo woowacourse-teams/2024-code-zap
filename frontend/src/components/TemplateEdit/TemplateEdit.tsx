@@ -148,7 +148,7 @@ const TemplateEdit = ({
           </Flex>
         </Flex>
 
-        {error && <div style={{ color: 'red' }}>Error: {error.message}</div>}
+        {error && <div style={{ color: theme.color.light.analogous_primary_400 }}>Error: {error.message}</div>}
       </Flex>
     </Flex>
   );
