@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
+import Button from '../Button/Button';
 
 export const HeaderContainer = styled.nav`
   position: fixed;
@@ -109,21 +110,7 @@ export const NavOptionButton = styled.button`
   cursor: pointer;
   background: none;
 `;
-export const NewTemplateButton = styled.button`
-  cursor: pointer;
 
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: center;
-
-  width: 7.5rem;
-  height: 2.375rem;
-
-  background-color: white;
-  border: 2px solid ${theme.color.light.primary_500};
-  border-radius: 8px;
-`;
 export const UserMenuButton = styled.button`
   cursor: pointer;
 
@@ -159,4 +146,10 @@ export const Dimmed = styled.div<{ menuOpen: boolean }>`
       visibility: visible;
       opacity: 1;
     `}
+`;
+
+export const MobileHidden_Button = styled(Button)`
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
