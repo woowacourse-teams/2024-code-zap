@@ -51,8 +51,10 @@ import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
 import codezap.template.repository.FakeThumbnailRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.TemplateService;
+import codezap.template.service.TemplateTagService;
+import codezap.template.service.facade.MemberTemplateApplicationService;
+import codezap.template.service.facade.TagTemplateApplicationService;
 
 class TemplateControllerTest {
 
@@ -69,20 +71,25 @@ class TemplateControllerTest {
             new FakeThumbnailRepository(),
             templateRepository,
             new FakeSourceCodeRepository(),
-            categoryRepository,
-            new FakeTagRepository(),
-            new FakeTemplateTagRepository());
+            categoryRepository);
     private final CategoryService categoryService = new CategoryService(
             categoryRepository, templateRepository, memberRepository
     );
 
-    private final MemberTemplateApplicationService applicationService = new MemberTemplateApplicationService(
-            new MemberService(memberRepository, categoryRepository)
-            , templateService
-    );
+    private final TagTemplateApplicationService tagTemplateApplicationService =
+            new TagTemplateApplicationService(
+                    new TemplateTagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
+                    templateService
+            );
+
+    private final MemberTemplateApplicationService memberTemplateApplicationService =
+            new MemberTemplateApplicationService(
+                    new MemberService(memberRepository, categoryRepository),
+                    tagTemplateApplicationService
+            );
 
     private final MockMvc mvc =
-            MockMvcBuilders.standaloneSetup(new TemplateController(templateService, applicationService))
+            MockMvcBuilders.standaloneSetup(new TemplateController(templateService, memberTemplateApplicationService))
                     .setControllerAdvice(new GlobalExceptionHandler())
                     .setCustomArgumentResolvers(
                             new AuthArgumentResolver(
@@ -337,8 +344,8 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
             CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title2");
-            applicationService.createTemplate(memberDto, templateRequest1);
-            applicationService.createTemplate(memberDto, templateRequest2);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest2);
 
             // when & then
             mvc.perform(get("/templates")
@@ -357,7 +364,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
-            applicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
 
             // when & then
             mvc.perform(get("/templates")
@@ -377,7 +384,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
-            applicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
 
             // when & then
             mvc.perform(get("/templates")
@@ -395,7 +402,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
-            applicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
 
             // when & then
             mvc.perform(get("/templates")
@@ -414,7 +421,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
-            applicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
 
             // when & then
             mvc.perform(get("/templates")
@@ -434,7 +441,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
-            applicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
 
             // when & then
             mvc.perform(get("/templates")
@@ -458,7 +465,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
             // when & then
             mvc.perform(get("/templates/1")
@@ -491,7 +498,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
             // then
             mvc.perform(get("/templates/1")
@@ -507,7 +514,7 @@ class TemplateControllerTest {
             // given
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
 
             // when
@@ -760,7 +767,7 @@ class TemplateControllerTest {
             categoryService.create(memberDto, new CreateCategoryRequest("category1"));
             categoryService.create(memberDto, new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
         }
     }
 
@@ -775,7 +782,7 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(memberDto, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -793,8 +800,8 @@ class TemplateControllerTest {
             categoryService.create(memberDto, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title");
             CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest1);
-            applicationService.createTemplate(memberDto, templateRequest2);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest2);
 
             // when & then
             mvc.perform(delete("/templates/1,2")
@@ -811,7 +818,7 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(memberDto, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1,1")
@@ -829,7 +836,7 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(memberDto, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -846,7 +853,7 @@ class TemplateControllerTest {
             MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
             categoryService.create(memberDto, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            applicationService.createTemplate(memberDto, templateRequest);
+            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
 
             // when

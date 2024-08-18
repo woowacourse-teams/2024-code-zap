@@ -18,22 +18,15 @@ import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
-import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.ExploreTemplatesResponse;
-import codezap.template.dto.response.FindAllTagsResponse;
-import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
-import codezap.template.dto.response.FindTagResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.repository.SourceCodeRepository;
-import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -45,49 +38,29 @@ public class TemplateService {
     private final TemplateRepository templateRepository;
     private final SourceCodeRepository sourceCodeRepository;
     private final CategoryRepository categoryRepository;
-    private final TagRepository tagRepository;
-    private final TemplateTagRepository templateTagRepository;
 
     @Transactional
-    public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
+    public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
         Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
-        createTags(createTemplateRequest, template);
         sourceCodeRepository.saveAll(
                 createTemplateRequest.sourceCodes().stream()
                         .map(createSourceCodeRequest -> createSourceCode(createSourceCodeRequest, template))
                         .toList()
         );
-
         SourceCode thumbnail = sourceCodeRepository.fetchByTemplateAndOrdinal(
                 template, createTemplateRequest.thumbnailOrdinal());
         thumbnailRepository.save(new Thumbnail(template, thumbnail));
-        return template.getId();
+        return template;
     }
 
     private void validateCategoryAuthorizeMember(Category category, Member member) {
         if (!category.getMember().equals(member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
         }
-    }
-
-    private void createTags(CreateTemplateRequest createTemplateRequest, Template template) {
-        tagRepository.saveAll(
-                createTemplateRequest.tags().stream()
-                        .filter(tagName -> !tagRepository.existsByName(tagName))
-                        .map(Tag::new)
-                        .toList()
-        );
-
-        templateTagRepository.saveAll(
-                createTemplateRequest.tags().stream()
-                        .map(tagRepository::fetchByName)
-                        .map(tag -> new TemplateTag(template, tag))
-                        .toList()
-        );
     }
 
     private SourceCode createSourceCode(CreateSourceCodeRequest createSourceCodeRequest, Template template) {
@@ -102,14 +75,15 @@ public class TemplateService {
         return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }
 
-    public FindTemplateResponse findByIdAndMember(Member member, Long id) {
+    public Template findByIdAndMember(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
         validateTemplateAuthorizeMember(template, member);
+        return template;
+    }
 
+    public FindTemplateResponse findSourceCode(Template template, List<Tag> tags) {
         List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
-        List<Tag> tags = templateTagRepository.findAllByTemplate(template).stream()
-                .map(TemplateTag::getTag)
-                .toList();
+
         return FindTemplateResponse.of(template, sourceCodes, tags);
     }
 
@@ -119,44 +93,50 @@ public class TemplateService {
         }
     }
 
-    public FindAllTemplatesResponse findAllBy(
+    public Page<Template> findAllBy(
             long memberId,
             String keyword,
             Long categoryId,
-            List<Long> tagIds,
             Pageable pageable
     ) {
         keyword = "%" + keyword + "%";
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
-        if (categoryId != null && tagIds != null) {
-            return getTemplatesResponseByCategoryAndTag(memberId, keyword, categoryId, tagIds, pageable);
-        }
         if (categoryId != null) {
             return getTemplatesResponseCategory(memberId, keyword, categoryId, pageable);
         }
-        if (tagIds != null) {
-            return getTemplatesResponseByTag(memberId, keyword, tagIds, pageable);
-        }
-        return getTemplatesResponse(memberId, keyword, pageable);
+        return templateRepository.searchBy(memberId, keyword, pageable);
     }
 
-    private FindAllTemplatesResponse getTemplatesResponseByCategoryAndTag(
-            long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
+    public Page<Template> findAllBy(
+            long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> templateIds,
+            Pageable pageable
     ) {
-        List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
-        validateCategoryId(categoryId);
-        Page<Template> templatePage =
-                templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
-        return makeTemplatesResponseBy(templatePage);
+        keyword = "%" + keyword + "%";
+        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+
+        if (categoryId != null) {
+            return getTemplatesResponseByCategoryAndTag(memberId, keyword, categoryId, templateIds, pageable);
+        }
+        return templateRepository.searchBy(memberId, keyword, templateIds, pageable);
+
     }
 
-    private FindAllTemplatesResponse getTemplatesResponseCategory(
+    private Page<Template> getTemplatesResponseByCategoryAndTag(
+            long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
+    ) {
+        validateCategoryId(categoryId);
+        return templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
+    }
+
+    private Page<Template> getTemplatesResponseCategory(
             long memberId, String keyword, Long categoryId, Pageable pageable
     ) {
         validateCategoryId(categoryId);
-        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, categoryId, pageable);
-        return makeTemplatesResponseBy(templatePage);
+        return templateRepository.searchBy(memberId, keyword, categoryId, pageable);
     }
 
     private void validateCategoryId(Long categoryId) {
@@ -165,54 +145,12 @@ public class TemplateService {
         }
     }
 
-    private FindAllTemplatesResponse getTemplatesResponseByTag(
-            long memberId, String keyword, List<Long> tagIds, Pageable pageable
-    ) {
-        List<Long> templateIds = fetchTemplateIdContainsTagIds(tagIds);
-        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, templateIds, pageable);
-        return makeTemplatesResponseBy(templatePage);
-    }
-
-    private List<Long> fetchTemplateIdContainsTagIds(List<Long> tagIds) {
-        if (tagIds.isEmpty()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
-        }
-        for (Long id : tagIds) {
-            validateTagId(id);
-        }
-        return templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
-    }
-
-    private void validateTagId(Long tagId) {
-        if (!tagRepository.existsById(tagId)) {
-            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + tagId + "에 해당하는 태그가 존재하지 않습니다.");
-        }
-    }
-
-    private FindAllTemplatesResponse getTemplatesResponse(long memberId, String keyword, Pageable pageable) {
-        Page<Template> templatePage = templateRepository.searchBy(memberId, keyword, pageable);
-        return makeTemplatesResponseBy(templatePage);
-    }
-
-    private FindAllTemplatesResponse makeTemplatesResponseBy(Page<Template> page) {
-        List<ItemResponse> itemResponses = page.stream()
-                .map(template -> ItemResponse.of(template, getTemplateTags(template), getThumbnail(template)))
-                .toList();
-        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
-    }
-
-    private List<Tag> getTemplateTags(Template template) {
-        return templateTagRepository.findAllByTemplate(template).stream()
-                .map(templateTag -> tagRepository.fetchById(templateTag.getTag().getId()))
-                .toList();
-    }
-
-    private SourceCode getThumbnail(Template template) {
+    public SourceCode getThumbnail(Template template) {
         return thumbnailRepository.fetchByTemplate(template).getSourceCode();
     }
 
     @Transactional
-    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
+    public Template update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
         validateCategoryAuthorizeMember(category, member);
         Template template = templateRepository.fetchById(templateId);
@@ -220,8 +158,9 @@ public class TemplateService {
 
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
         updateSourceCodes(updateTemplateRequest, template);
-        updateTags(updateTemplateRequest, template);
         validateSourceCodesCount(updateTemplateRequest, template);
+
+        return template;
     }
 
     private void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template) {
@@ -263,23 +202,6 @@ public class TemplateService {
                 .ifPresent(thumbnail::updateThumbnail);
     }
 
-    private void updateTags(UpdateTemplateRequest updateTemplateRequest, Template template) {
-        templateTagRepository.deleteAllByTemplateId(template.getId());
-        tagRepository.saveAll(
-                updateTemplateRequest.tags().stream()
-                        .filter(tagName -> !tagRepository.existsByName(tagName))
-                        .map(Tag::new)
-                        .toList()
-        );
-
-        templateTagRepository.saveAll(
-                updateTemplateRequest.tags().stream()
-                        .map(tagRepository::fetchByName)
-                        .map(tag -> new TemplateTag(template, tag))
-                        .toList()
-        );
-    }
-
     private void validateSourceCodesCount(UpdateTemplateRequest updateTemplateRequest, Template template) {
         if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
                 != sourceCodeRepository.findAllByTemplate(template).size()) {
@@ -287,19 +209,10 @@ public class TemplateService {
         }
     }
 
-    public FindAllTagsResponse findAllTagsByMemberId(Long memberId) {
-        List<Template> templates = templateRepository.findByMemberId(memberId);
-        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(templates);
-        return new FindAllTagsResponse(
-                templateTags.stream()
-                        .map(TemplateTag::getTag)
-                        .distinct()
-                        .map(FindTagResponse::from)
-                        .toList()
-        );
+    public List<Template> getByMemberId(Long memberId) {
+        return templateRepository.findByMemberId(memberId);
     }
 
-    @Transactional
     public void deleteByIds(Member member, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
@@ -315,7 +228,6 @@ public class TemplateService {
 
         thumbnailRepository.deleteByTemplateId(id);
         sourceCodeRepository.deleteByTemplateId(id);
-        templateTagRepository.deleteAllByTemplateId(id);
         templateRepository.deleteById(id);
     }
 }
