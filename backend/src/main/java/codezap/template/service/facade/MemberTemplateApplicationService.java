@@ -19,11 +19,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberTemplateApplicationService {
     private final MemberService memberService;
+    private final TemplateApplicationService templateApplicationService;
     private final TagTemplateApplicationService tagTemplateApplicationService;
 
     public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
         Member member = memberService.fetchByMemberDto(memberDto);
-        return tagTemplateApplicationService.createTemplate(member, createTemplateRequest);
+        return templateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -35,7 +36,7 @@ public class MemberTemplateApplicationService {
             Pageable pageable
     ) {
         memberService.validateMemberIdentity(memberDto, memberId);
-        return tagTemplateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        return templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
     }
 
     public FindAllTagsResponse findAllTagsByMemberId(MemberDto memberDto, Long memberId) {
@@ -50,7 +51,7 @@ public class MemberTemplateApplicationService {
 
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Member member = memberService.fetchByMemberDto(memberDto);
-        tagTemplateApplicationService.update(member, templateId, updateTemplateRequest);
+        templateApplicationService.update(member, templateId, updateTemplateRequest);
     }
 
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {

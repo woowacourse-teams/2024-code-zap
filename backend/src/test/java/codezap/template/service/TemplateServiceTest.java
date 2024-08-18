@@ -59,18 +59,19 @@ class TemplateServiceTest {
     private final TemplateService templateService = new TemplateService(
             thumbnailRepository,
             templateRepository,
-            sourceCodeRepository,
-            categoryRepository);
+            sourceCodeRepository
+    );
 
     @Test
     @DisplayName("템플릿 생성 성공")
     void createTemplateSuccess() {
         // given
         Member member = MemberFixture.getFirstMember();
+        Category category = CategoryFixture.getFirstCategory();
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Template template = templateService.createTemplate(member, createTemplateRequest);
+        Template template = templateService.createTemplate(member, category, createTemplateRequest);
 
         // then
         assertAll(
@@ -91,7 +92,7 @@ class TemplateServiceTest {
 
         // when
         Page<Template> allTemplates = templateService.findAllBy(
-                member.getId(), "", null, PageRequest.of(1, 10));
+                member.getId(), "", PageRequest.of(0, 10));
 
         // then
         assertThat(allTemplates).hasSize(2);
@@ -138,13 +139,14 @@ class TemplateServiceTest {
     void updateTemplateSuccess() {
         // given
         Member member = MemberFixture.getFirstMember();
+        Category category = CategoryFixture.getFirstCategory();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
         categoryRepository.save(new Category("category2", member));
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
-        templateService.update(member, template.getId(), updateTemplateRequest);
+        templateService.update(member, category, template.getId(), updateTemplateRequest);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
         Thumbnail thumbnail = thumbnailRepository.fetchById(template.getId());
@@ -167,6 +169,7 @@ class TemplateServiceTest {
     void updateTemplateFailWithUnauthorized() {
         // given
         Member member = MemberFixture.getFirstMember();
+        Category category = CategoryFixture.getFirstCategory();
         CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
         categoryRepository.save(new Category("category2", member));
@@ -177,7 +180,7 @@ class TemplateServiceTest {
 
         // then
         Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.update(otherMember, templateId, updateTemplateRequest))
+        assertThatThrownBy(() -> templateService.update(otherMember, category, templateId, updateTemplateRequest))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }

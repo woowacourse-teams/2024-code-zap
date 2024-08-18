@@ -42,6 +42,16 @@ public class CategoryService {
         return FindAllCategoriesResponse.from(categoryRepository.findAll());
     }
 
+    public Category fetchById(Long id) {
+        return categoryRepository.fetchById(id);
+    }
+
+    public void validateExistsById(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
     @Transactional
     public void update(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest) {
         Member member = memberRepository.fetchById(memberDto.id());

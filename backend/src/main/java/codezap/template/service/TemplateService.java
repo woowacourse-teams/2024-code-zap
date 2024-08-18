@@ -5,14 +5,11 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
@@ -33,16 +30,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TemplateService {
-
     private final ThumbnailRepository thumbnailRepository;
     private final TemplateRepository templateRepository;
     private final SourceCodeRepository sourceCodeRepository;
-    private final CategoryRepository categoryRepository;
 
-    @Transactional
-    public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
-        Category category = categoryRepository.fetchById(createTemplateRequest.categoryId());
-        validateCategoryAuthorizeMember(category, member);
+    public Template createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
         Template template = templateRepository.save(
                 new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
         );
@@ -55,12 +47,6 @@ public class TemplateService {
                 template, createTemplateRequest.thumbnailOrdinal());
         thumbnailRepository.save(new Thumbnail(template, thumbnail));
         return template;
-    }
-
-    private void validateCategoryAuthorizeMember(Category category, Member member) {
-        if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
-        }
     }
 
     private SourceCode createSourceCode(CreateSourceCodeRequest createSourceCodeRequest, Template template) {
@@ -93,66 +79,39 @@ public class TemplateService {
         }
     }
 
-    public Page<Template> findAllBy(
-            long memberId,
-            String keyword,
-            Long categoryId,
-            Pageable pageable
-    ) {
+    public Page<Template> findAllBy(long memberId, String keyword, Pageable pageable) {
         keyword = "%" + keyword + "%";
-        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-
-        if (categoryId != null) {
-            return getTemplatesResponseCategory(memberId, keyword, categoryId, pageable);
-        }
         return templateRepository.searchBy(memberId, keyword, pageable);
     }
 
-    public Page<Template> findAllBy(
-            long memberId,
-            String keyword,
-            Long categoryId,
-            List<Long> templateIds,
-            Pageable pageable
-    ) {
+    public Page<Template> findAllBy(long memberId, String keyword, Long categoryId, Pageable pageable) {
         keyword = "%" + keyword + "%";
-        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-
-        if (categoryId != null) {
-            return getTemplatesResponseByCategoryAndTag(memberId, keyword, categoryId, templateIds, pageable);
-        }
-        return templateRepository.searchBy(memberId, keyword, templateIds, pageable);
-
-    }
-
-    private Page<Template> getTemplatesResponseByCategoryAndTag(
-            long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
-    ) {
-        validateCategoryId(categoryId);
-        return templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
-    }
-
-    private Page<Template> getTemplatesResponseCategory(
-            long memberId, String keyword, Long categoryId, Pageable pageable
-    ) {
-        validateCategoryId(categoryId);
         return templateRepository.searchBy(memberId, keyword, categoryId, pageable);
     }
 
-    private void validateCategoryId(Long categoryId) {
-        if (!categoryRepository.existsById(categoryId)) {
-            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + categoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
-        }
+    public Page<Template> findAllBy(long memberId, String keyword, List<Long> templateIds, Pageable pageable) {
+        keyword = "%" + keyword + "%";
+        return templateRepository.searchBy(memberId, keyword, templateIds, pageable);
+    }
+
+    public Page<Template> findAllBy(
+            long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
+    ) {
+        keyword = "%" + keyword + "%";
+        return templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
+    }
+
+    public List<Template> getByMemberId(Long memberId) {
+        return templateRepository.findByMemberId(memberId);
     }
 
     public SourceCode getThumbnail(Template template) {
         return thumbnailRepository.fetchByTemplate(template).getSourceCode();
     }
 
-    @Transactional
-    public Template update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Category category = categoryRepository.fetchById(updateTemplateRequest.categoryId());
-        validateCategoryAuthorizeMember(category, member);
+    public Template update(Member member, Category category, Long templateId,
+            UpdateTemplateRequest updateTemplateRequest
+    ) {
         Template template = templateRepository.fetchById(templateId);
         validateTemplateAuthorizeMember(template, member);
 
@@ -207,10 +166,6 @@ public class TemplateService {
                 != sourceCodeRepository.findAllByTemplate(template).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
-    }
-
-    public List<Template> getByMemberId(Long memberId) {
-        return templateRepository.findByMemberId(memberId);
     }
 
     public void deleteByIds(Member member, List<Long> ids) {
