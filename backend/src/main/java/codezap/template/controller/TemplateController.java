@@ -25,8 +25,8 @@ import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
+import codezap.template.service.ThumbnailService;
 import codezap.template.service.facade.MemberTemplateApplicationService;
-import codezap.template.service.TemplateService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,15 +34,15 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/templates")
 public class TemplateController implements SpringDocTemplateController {
 
-    private final TemplateService templateService;
-    private final MemberTemplateApplicationService applicationService;
+    private final MemberTemplateApplicationService memberTemplateApplicationService;
+    private final ThumbnailService thumbnailService;
 
     @PostMapping
     public ResponseEntity<Void> createTemplate(
             @AuthenticationPrinciple MemberDto memberDto,
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        Long createdTemplateId = applicationService.createTemplate(memberDto, createTemplateRequest);
+        Long createdTemplateId = memberTemplateApplicationService.createTemplate(memberDto, createTemplateRequest);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
                 .build();
     }
@@ -57,7 +57,7 @@ public class TemplateController implements SpringDocTemplateController {
             @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
         FindAllTemplatesResponse response =
-                applicationService.findAllBy(memberDto, memberId, keyword, categoryId, tagIds, pageable);
+                memberTemplateApplicationService.findAllBy(memberDto, memberId, keyword, categoryId, tagIds, pageable);
         return ResponseEntity.ok(response);
     }
 
@@ -66,7 +66,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(applicationService.findByIdAndMember(memberDto, id));
+        return ResponseEntity.ok(memberTemplateApplicationService.findByIdAndMember(memberDto, id));
     }
 
     @GetMapping("/tags")
@@ -74,13 +74,13 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple MemberDto memberDto,
             @RequestParam Long memberId
     ) {
-        FindAllTagsResponse response = applicationService.findAllTagsByMemberId(memberDto, memberId);
+        FindAllTagsResponse response = memberTemplateApplicationService.findAllTagsByMemberId(memberDto, memberId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/explore")
     public ResponseEntity<ExploreTemplatesResponse> explore() {
-        return ResponseEntity.ok(templateService.findAll());
+        return ResponseEntity.ok(thumbnailService.findAll());
     }
 
     @PostMapping("/{id}")
@@ -89,7 +89,7 @@ public class TemplateController implements SpringDocTemplateController {
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
-        applicationService.update(memberDto, id, updateTemplateRequest);
+        memberTemplateApplicationService.update(memberDto, id, updateTemplateRequest);
         return ResponseEntity.ok().build();
     }
 
@@ -98,7 +98,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable List<Long> ids
     ) {
-        applicationService.deleteByIds(memberDto, ids);
+        memberTemplateApplicationService.deleteByIds(memberDto, ids);
         return ResponseEntity.noContent().build();
     }
 }

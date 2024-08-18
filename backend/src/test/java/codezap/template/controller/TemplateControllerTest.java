@@ -51,8 +51,10 @@ import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
 import codezap.template.repository.FakeThumbnailRepository;
 import codezap.template.repository.TemplateRepository;
+import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.TemplateTagService;
+import codezap.template.service.ThumbnailService;
 import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.facade.TagTemplateApplicationService;
 import codezap.template.service.facade.TemplateApplicationService;
@@ -68,19 +70,20 @@ class TemplateControllerTest {
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
     );
-    private final TemplateService templateService = new TemplateService(
-            new FakeThumbnailRepository(),
-            templateRepository,
-            new FakeSourceCodeRepository()
-    );
+    private final TemplateService templateService = new TemplateService(templateRepository);
     private final CategoryService categoryService = new CategoryService(
             categoryRepository, templateRepository, memberRepository
     );
 
+    private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
+    private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
+
     private final TagTemplateApplicationService tagTemplateApplicationService =
             new TagTemplateApplicationService(
                     new TemplateTagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
-                    templateService
+                    templateService,
+                    thumbnailService,
+                    sourceCodeService
             );
 
     private final TemplateApplicationService templateApplicationService =
@@ -97,7 +100,8 @@ class TemplateControllerTest {
             );
 
     private final MockMvc mvc =
-            MockMvcBuilders.standaloneSetup(new TemplateController(templateService, memberTemplateApplicationService))
+            MockMvcBuilders.standaloneSetup(
+                            new TemplateController(memberTemplateApplicationService, thumbnailService))
                     .setControllerAdvice(new GlobalExceptionHandler())
                     .setCustomArgumentResolvers(
                             new AuthArgumentResolver(
