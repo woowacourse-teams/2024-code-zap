@@ -4,6 +4,7 @@ import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useToggle } from '@/hooks/utils';
+import { usePressESC } from '@/hooks/utils/usePressESC';
 import { useScrollDisable } from '@/hooks/utils/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { theme } from '../../style/theme';
@@ -14,6 +15,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   const [menuOpen, toggleMenu] = useToggle();
 
   useScrollDisable(menuOpen);
+  usePressESC(menuOpen, toggleMenu);
 
   return (
     <S.HeaderContainer ref={headerRef}>
