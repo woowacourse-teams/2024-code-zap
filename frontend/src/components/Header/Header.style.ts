@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
@@ -21,12 +22,57 @@ export const HeaderContentContainer = styled.div`
   display: flex;
   gap: 3.75rem;
   align-items: center;
+  justify-content: space-between;
 
   width: 80rem;
   max-width: 80rem;
   height: 4rem;
 
   white-space: nowrap;
+`;
+
+export const HeaderMenu = styled.div<{ menuOpen: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  @media (max-width: 768px) {
+    position: fixed;
+    z-index: 100;
+    top: var(--header-height);
+    right: 0;
+
+    display: none;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: flex-start;
+
+    width: 75%;
+    height: 100%;
+
+    background-color: white;
+
+    transition: transform 0.3s ease-in-out;
+
+    ${({ menuOpen }) =>
+      menuOpen
+        ? css`
+            transform: translateX(0);
+            display: flex;
+          `
+        : css`
+            transform: translateX(100%);
+          `}
+  }
+`;
+
+export const HamburgerIconWrapper = styled.div`
+  display: none;
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
 `;
 
 export const NavOptionButton = styled.button`

@@ -1,32 +1,37 @@
 import { Link } from 'react-router-dom';
 
-import { CodeZapLogo, PlusIcon } from '@/assets/images';
+import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { useAuth } from '@/hooks/authentication/useAuth';
+import { useToggle } from '@/hooks/utils';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   const { isLogin } = useAuth();
+  const [menuOpen, toggleMenu] = useToggle();
 
   return (
     <S.HeaderContainer ref={headerRef}>
       <S.HeaderContentContainer>
         <Logo />
-        <Flex align='center' gap='2rem' flex='1'>
-          {isLogin && <NavOption route='/' name='내 템플릿' />}
-          <NavOption route='/aboutus' name='서비스 소개' />
-        </Flex>
+        <S.HeaderMenu menuOpen={menuOpen}>
+          <Flex align='center' gap='2rem'>
+            {isLogin && <NavOption route='/' name='내 템플릿' />}
+            <NavOption route='/aboutus' name='서비스 소개' />
+          </Flex>
 
-        <Flex align='center' gap='2rem'>
-          <Link to={'/templates/upload'}>
-            <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-              <PlusIcon aria-label='' />새 템플릿
-            </Button>
-          </Link>
-          {isLogin ? <LogoutButton /> : <LoginButton />}
-        </Flex>
+          <Flex align='center' gap='2rem'>
+            <Link to={'/templates/upload'}>
+              <Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
+                <PlusIcon aria-label='' />새 템플릿
+              </Button>
+            </Link>
+            {isLogin ? <LogoutButton /> : <LoginButton />}
+          </Flex>
+        </S.HeaderMenu>
+        <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
       </S.HeaderContentContainer>
     </S.HeaderContainer>
   );
@@ -71,6 +76,12 @@ const LoginButton = () => (
       로그인
     </Button>
   </Link>
+);
+
+const HeaderMenuButton = ({ menuOpen, toggleMenu }: { menuOpen: boolean; toggleMenu: () => void }) => (
+  <S.HamburgerIconWrapper>
+    <HamburgerIcon menuOpen={menuOpen} onClick={toggleMenu} />
+  </S.HamburgerIconWrapper>
 );
 
 export default Header;
