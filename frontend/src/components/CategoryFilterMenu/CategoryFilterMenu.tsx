@@ -36,9 +36,9 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
 
   return (
     <S.CategoryContainer>
-      <S.SettingButton onClick={toggleEditModal}>
+      <S.IconButtonWrapper onClick={toggleEditModal}>
         <SettingIcon width={18} height={18} aria-label='카테고리 편집' />
-      </S.SettingButton>
+      </S.IconButtonWrapper>
       <S.CategoryListContainer>
         <S.CategoryButtonContainer>
           <CategoryButton name='전체보기' disabled={selectedId === 0} onClick={() => handleCategorySelect(0)} />
@@ -170,8 +170,8 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
                   </Flex>
                   <S.IconButtonWrapper>
                     <PencilIcon
-                      width={18}
-                      height={18}
+                      width={20}
+                      height={20}
                       aria-label='카테고리 이름 변경'
                       style={{ visibility: 'hidden' }}
                     />
@@ -206,7 +206,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
                   </Flex>
                   <S.IconButtonContainer>
                     <S.IconButtonWrapper onClick={() => handleEditClick(id)}>
-                      <PencilIcon width={18} height={18} aria-label='카테고리 이름 변경' />
+                      <PencilIcon width={20} height={20} aria-label='카테고리 이름 변경' />
                     </S.IconButtonWrapper>
                     <S.IconButtonWrapper onClick={() => handleDeleteClick(id)}>
                       <TrashcanIcon width={20} height={20} aria-label='카테고리 삭제' />

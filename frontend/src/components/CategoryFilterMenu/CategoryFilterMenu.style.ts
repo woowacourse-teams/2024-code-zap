@@ -5,14 +5,7 @@ import { theme } from '@/style/theme';
 export const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-`;
-
-export const SettingButton = styled.button`
-  cursor: pointer;
-  align-self: flex-end;
-  background: none;
-  border: none;
+  gap: 0.6rem;
 `;
 
 export const CategoryListContainer = styled.div`
@@ -56,6 +49,8 @@ export const IconButtonContainer = styled.div`
 
 export const IconButtonWrapper = styled.button`
   cursor: pointer;
+
+  align-self: flex-end;
 
   padding: 0;
 
