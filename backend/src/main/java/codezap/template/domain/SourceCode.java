@@ -1,6 +1,7 @@
 package codezap.template.domain;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import jakarta.persistence.Column;
@@ -14,7 +15,6 @@ import jakarta.persistence.ManyToOne;
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode(callSuper = true, of = {"id"})
 public class SourceCode extends BaseTimeEntity {
 
     private static final String LINE_BREAK = "\n";
@@ -61,5 +60,22 @@ public class SourceCode extends BaseTimeEntity {
         this.filename = filename;
         this.content = content;
         this.ordinal = ordinal;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SourceCode that = (SourceCode) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId());
     }
 }

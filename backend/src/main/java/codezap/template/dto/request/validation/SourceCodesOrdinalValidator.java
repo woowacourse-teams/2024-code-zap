@@ -6,7 +6,8 @@ import java.util.stream.IntStream;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class SourceCodesOrdinalValidator implements ConstraintValidator<SourceCodesOrdinal, ValidatedSourceCodesOrdinalRequest> {
+public class SourceCodesOrdinalValidator implements
+        ConstraintValidator<SourceCodesOrdinal, ValidatedSourceCodesOrdinalRequest> {
 
     @Override
     public boolean isValid(ValidatedSourceCodesOrdinalRequest validatedSourceCodesOrdinalRequest,

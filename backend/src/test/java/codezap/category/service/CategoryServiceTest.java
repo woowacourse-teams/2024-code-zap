@@ -25,12 +25,13 @@ import codezap.template.repository.TemplateRepository;
 
 class CategoryServiceTest {
 
-    private CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private TemplateRepository templateRepository = new FakeTemplateRepository();
-    private MemberRepository memberRepository = new FakeMemberRepository();
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
+    private final TemplateRepository templateRepository = new FakeTemplateRepository();
+    private final MemberRepository memberRepository = new FakeMemberRepository();
 
-    private CategoryService categoryService = new CategoryService(categoryRepository, templateRepository,
-            memberRepository);
+    private final CategoryService categoryService = new CategoryService(
+            categoryRepository, templateRepository, memberRepository
+    );
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
@@ -57,8 +58,9 @@ class CategoryServiceTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
 
             assertThatThrownBy(
-                    () -> categoryService.create(MemberDto.from(member), createCategoryRequest)).isInstanceOf(
-                    CodeZapException.class).hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
+                    () -> categoryService.create(MemberDto.from(member), createCategoryRequest))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
         }
 
         @Test

@@ -49,7 +49,7 @@ class BasicAuthDecoderTest {
     @DisplayName("BasicAuth 인증 정보 디코딩 실패: 구분자 누락")
     void throwExceptionForMissingSeparator() {
         String invalidCredential = Base64.getEncoder()
-                .encodeToString("userexample.com" .getBytes(StandardCharsets.UTF_8));
+                .encodeToString("userexample.com".getBytes(StandardCharsets.UTF_8));
 
         assertThatCode(() -> BasicAuthDecoder.decodeBasicAuth(invalidCredential))
                 .isInstanceOf(CodeZapException.class)

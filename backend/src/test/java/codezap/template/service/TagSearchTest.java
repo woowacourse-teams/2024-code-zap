@@ -38,10 +38,6 @@ import codezap.template.repository.ThumbnailRepository;
 
 public class TagSearchTest {
 
-    private Member firstMember = new Member(1L, "name1", "password1234");
-    private Member secondMember = new Member(2L, "name2", "password1234");
-    private Category firstCategory = new Category(1L, firstMember, "카테고리 없음", true);
-
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();

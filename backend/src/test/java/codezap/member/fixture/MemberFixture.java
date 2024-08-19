@@ -14,7 +14,7 @@ public class MemberFixture {
 
     public static Member createFixture(String name) {
         return new Member(
-                "몰리",
+                name,
                 "password1234"
         );
     }
