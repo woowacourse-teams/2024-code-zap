@@ -148,7 +148,7 @@ export const Dimmed = styled.div<{ menuOpen: boolean }>`
     `}
 `;
 
-export const MobileHidden_Button = styled(Button)`
+export const MobileHiddenButton = styled(Button)`
   @media (max-width: 768px) {
     display: none;
   }

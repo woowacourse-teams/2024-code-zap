@@ -37,9 +37,9 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
 
           <S.NavContainer>
             <Link to={'/templates/upload'}>
-              <S.MobileHidden_Button variant='outlined' size='medium' weight='bold' hoverStyle='none'>
+              <S.MobileHiddenButton variant='outlined' size='medium' weight='bold' hoverStyle='none'>
                 <PlusIcon aria-label='' />새 템플릿
-              </S.MobileHidden_Button>
+              </S.MobileHiddenButton>
             </Link>
             {isLogin ? <LogoutButton /> : <LoginButton />}
           </S.NavContainer>
