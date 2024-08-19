@@ -12,7 +12,7 @@ import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
-  const { isLogin } = useAuth();
+  const { isLogin, isChecking } = useAuth();
   const [menuOpen, toggleMenu] = useToggle();
   const location = useLocation();
 
@@ -24,6 +24,11 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
       toggleMenu();
     }
   }, [location.pathname]);
+    
+  if (isChecking) {
+    return null;
+  }
+
 
   return (
     <S.HeaderContainer ref={headerRef}>
@@ -31,7 +36,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Logo />
         <S.HeaderMenu menuOpen={menuOpen}>
           <S.NavContainer>
-            {isLogin && <NavOption route='/' name='내 템플릿' />}
+            {!isChecking && isLogin && <NavOption route='/' name='내 템플릿' />}
             <NavOption route='/aboutus' name='서비스 소개' />
           </S.NavContainer>
 
@@ -41,10 +46,9 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
                 <PlusIcon aria-label='' />새 템플릿
               </S.MobileHiddenButton>
             </Link>
-            {isLogin ? <LogoutButton /> : <LoginButton />}
+            {!isChecking && isLogin ? <LogoutButton /> : <LoginButton />}
           </S.NavContainer>
         </S.HeaderMenu>
-
         <S.MobileMenuContainer>
           <Link to={'/templates/upload'}>
             <Button variant='outlined' size='small' weight='bold' hoverStyle='none'>

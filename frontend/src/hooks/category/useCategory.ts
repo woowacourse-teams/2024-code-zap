@@ -7,7 +7,7 @@ export const useCategory = (initCategory?: Category) => {
   const options = data?.categories || [];
 
   if (!initCategory) {
-    initCategory = { id: options[0].id, name: '카테고리 선택' };
+    initCategory = { id: options[0]?.id, name: '카테고리' };
   }
 
   const { isOpen, toggleDropdown, currentValue, handleCurrentValue, dropdownRef } = useDropdown<Category>(initCategory);
