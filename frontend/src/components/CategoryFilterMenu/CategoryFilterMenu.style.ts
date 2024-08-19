@@ -42,11 +42,6 @@ export const CategoryButtonWrapper = styled.button`
   box-shadow: 1px 2px 8px #00000020;
 `;
 
-export const IconButtonContainer = styled.div`
-  display: flex;
-  gap: 0.5rem;
-`;
-
 export const IconButtonWrapper = styled.button`
   cursor: pointer;
 
@@ -61,28 +56,6 @@ export const IconButtonWrapper = styled.button`
   &:hover {
     transform: scale(1.15);
     opacity: 1;
-  }
-`;
-
-export const EditCategoryItemList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  width: 100%;
-`;
-
-export const EditCategoryItem = styled.div`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-
-  padding: 0.25rem 1rem;
-
-  border-radius: 8px;
-
-  &:hover {
-    outline: 1px solid ${theme.color.light.secondary_500};
-    outline-offset: -2px;
   }
 `;
 
