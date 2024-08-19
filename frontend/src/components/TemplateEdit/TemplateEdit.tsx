@@ -52,7 +52,7 @@ const TemplateEdit = ({
   handleSaveButtonClick,
   error,
 }: Props) => {
-  const { mutateAsync: postCategory } = useCategoryUpload();
+  const { mutateAsync: postCategory, isPending } = useCategoryUpload(categoryProps.handleCurrentValue);
 
   const getExistingCategory = (value: string) =>
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
@@ -64,6 +64,12 @@ const TemplateEdit = ({
 
     const inputValue = e.target.value;
     const existingCategory = getExistingCategory(inputValue);
+
+    if (inputValue.trim() === '') {
+      e.target.value = '';
+
+      return;
+    }
 
     if (existingCategory) {
       categoryProps.handleCurrentValue(existingCategory);
@@ -88,7 +94,7 @@ const TemplateEdit = ({
       css={{ maxWidth: '53rem', margin: 'auto' }}
     >
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
-        <CategoryGuide isOpen={categoryProps.isOpen} />
+        <CategoryGuide isOpen={categoryProps.isOpen} isPending={isPending} />
         <Dropdown
           {...categoryProps}
           replaceChildrenWhenIsOpen={<NewCategoryInput createNewCategory={createNewCategory} />}
@@ -173,11 +179,21 @@ const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
 
 interface CategoryGuideProps {
   isOpen: boolean;
+  isPending: boolean;
 }
 
-const CategoryGuide = ({ isOpen }: CategoryGuideProps) => (
+const CategoryGuide = ({ isOpen, isPending }: CategoryGuideProps) => (
   <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
-    <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
-    <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
+    {isPending ? (
+      <>
+        <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
+        <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
+      </>
+    ) : (
+      <>
+        <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
+        <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
+      </>
+    )}
   </Guide>
 );
