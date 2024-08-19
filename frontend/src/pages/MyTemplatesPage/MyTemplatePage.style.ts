@@ -41,6 +41,23 @@ export const SearchInput = styled(Input)`
   box-shadow: inset 1px 2px 8px #00000030;
 `;
 
+export const NewTemplateButton = styled.button`
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 19.75rem;
+  padding: 1.5rem;
+
+  background-color: ${theme.color.light.primary_50};
+  border-radius: 8px;
+`;
+
 export const ScrollTopButton = styled.button`
   cursor: pointer;
 
