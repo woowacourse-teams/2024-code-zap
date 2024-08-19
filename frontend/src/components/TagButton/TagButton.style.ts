@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
 
-export const TagButton = styled.button<{ isFocused: boolean }>`
+export const TagButtonWrapper = styled.button<{ isFocused: boolean }>`
   cursor: pointer;
 
   display: flex;
