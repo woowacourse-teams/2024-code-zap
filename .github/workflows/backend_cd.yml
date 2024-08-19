@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: Develop
+    runs-on: [self-hosted, develop, spring]
     steps:
       - name: 브랜치명을 통해 개발 환경 알아내기
         run: |
