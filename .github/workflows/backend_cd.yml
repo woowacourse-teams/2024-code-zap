@@ -3,12 +3,11 @@ name: Backend CD
 on:
   push:
     branches:
-      - main
       - dev/be
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: Develop
     steps:
       - name: 브랜치명을 통해 개발 환경 알아내기
         run: |
@@ -33,7 +32,7 @@ jobs:
         
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on: Develop
     steps:
       - name: 브랜치명을 통해 개발 환경 알아내기
         run: |
@@ -54,4 +53,3 @@ jobs:
         run: |
           cd ${{ secrets.SCRIPT_DIRECTORY }}
           bash verify-deploy.sh
-          
