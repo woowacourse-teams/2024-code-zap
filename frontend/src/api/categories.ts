@@ -48,7 +48,7 @@ export const deleteCategory = async ({ id }: CategoryDeleteRequest) => {
     url: `${CATEGORY_API_URL}/${id}`,
   });
 
-  if (response.status >= 400) {
+  if (typeof response === 'object' && response !== null && 'status' in response) {
     throw response as CustomError;
   }
 
