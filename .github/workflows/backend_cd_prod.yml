@@ -27,7 +27,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: Production
+    runs-on: [self-hosted, develop, spring]
     steps:
       - name: 배포 스크립트 실행
         run: |
