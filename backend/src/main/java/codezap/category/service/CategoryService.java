@@ -30,8 +30,7 @@ public class CategoryService {
         String categoryName = createCategoryRequest.name();
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
-        Category category = new Category(categoryName, member);
-        category = categoryRepository.save(category);
+        Category category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
     }
 
