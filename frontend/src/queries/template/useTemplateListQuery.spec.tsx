@@ -56,8 +56,8 @@ describe('useTemplateListQuery', () => {
         expect(
           template.title.includes('console.log') ||
             template.description.includes('console.log') ||
-            template.thumbnailSnippet.filename.includes('console.log') ||
-            template.thumbnailSnippet.thumbnailContent.includes('console.log'),
+            template.thumbnail.filename.includes('console.log') ||
+            template.thumbnail.content.includes('console.log'),
         ).toBe(true);
       });
     });

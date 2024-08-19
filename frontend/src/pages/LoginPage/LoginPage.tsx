@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { passwordEyeIcon } from '@/assets/images';
+import { EyeIcon } from '@/assets/images';
 import { Button, Flex, Heading, Input, Text } from '@/components';
 import { useLoginForm } from '@/hooks/authentication/useLoginForm';
 import { useToggle } from '@/hooks/utils';
@@ -34,7 +34,7 @@ const LoginPage = () => {
                 autoComplete='current-password'
               />
               <Input.Adornment>
-                <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
+                <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>

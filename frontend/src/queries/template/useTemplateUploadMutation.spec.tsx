@@ -19,7 +19,8 @@ describe('useTemplateUploadMutation', () => {
       description: '',
       categoryId: 1,
       tags: [],
-      snippets: [
+      thumbnailOrdinal: 1,
+      sourceCodes: [
         {
           filename: 'filename1.txt',
           content: 'content1',

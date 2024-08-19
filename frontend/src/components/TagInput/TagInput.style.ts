@@ -1,11 +1,13 @@
 import styled from '@emotion/styled';
 
 export const Tag = styled.span`
-  display: inline-block;
+  display: flex;
+  gap: 0.25rem;
   align-items: center;
+  justify-content: center;
 
   max-width: 100%;
-  padding: 0.25rem 0.75rem;
+  padding: 0.3rem 0.75rem;
 
   word-break: break-word;
 

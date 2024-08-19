@@ -1,4 +1,4 @@
-import { xCircle } from '@/assets/images';
+import { XCircleIcon } from '@/assets/images';
 import { Flex, Input } from '@/components';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
 import * as S from './TagInput.style';
@@ -46,7 +46,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
             }}
           >
             {tag}
-            <img src={xCircle} width={12} height={12} alt='' />
+            <XCircleIcon width={16} height={16} aria-label='태그 삭제' />
           </S.Tag>
         ))}
       </Flex>

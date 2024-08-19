@@ -17,8 +17,8 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
   const [title, handleTitleChange] = useInput(template.title);
   const [description, handleDescriptionChange] = useInput(template.description);
 
-  const [snippets, setSnippets] = useState([...template.snippets]);
-  const [deleteSnippetIds, setDeleteSnippetIds] = useState<number[]>([]);
+  const [sourceCodes, setSourceCodes] = useState([...template.sourceCodes]);
+  const [deleteSourceCodeIds, setDeleteSourceCodeIds] = useState<number[]>([]);
 
   const categoryProps = useCategory(template.category);
 
@@ -29,12 +29,12 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
   const { mutateAsync, error } = useTemplateEditMutation(template.id);
 
   const handleAddButtonClick = () => {
-    setSnippets((prevSnippets) => [
-      ...prevSnippets,
+    setSourceCodes((prevSourceCode) => [
+      ...prevSourceCode,
       {
         filename: '',
         content: '',
-        ordinal: prevSnippets.length + 1,
+        ordinal: prevSourceCode.length + 1,
       },
     ]);
   };
@@ -44,29 +44,33 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
   };
 
   const handleCodeChange = useCallback((newContent: string, idx: number) => {
-    setSnippets((prevSnippets) =>
-      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, content: newContent } : snippet)),
+    setSourceCodes((prevSourceCodes) =>
+      prevSourceCodes.map((sourceCodes, index) =>
+        index === idx ? { ...sourceCodes, content: newContent } : sourceCodes,
+      ),
     );
   }, []);
 
   const handleFileNameChange = useCallback((newFileName: string, idx: number) => {
-    setSnippets((prevSnippets) =>
-      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, filename: newFileName } : snippet)),
+    setSourceCodes((prevSourceCodes) =>
+      prevSourceCodes.map((sourceCodes, index) =>
+        index === idx ? { ...sourceCodes, filename: newFileName } : sourceCodes,
+      ),
     );
   }, []);
 
-  const handleDeleteSnippet = (index: number) => {
-    const deletedSnippetId = snippets[index].id;
+  const handleDeleteSourceCode = (index: number) => {
+    const deletedSourceCodeId = sourceCodes[index].id;
 
-    if (!snippets[index]) {
+    if (!sourceCodes[index]) {
       console.error('존재하지 않는 스니펫 인덱스입니다.');
     }
 
-    if (deletedSnippetId) {
-      setDeleteSnippetIds((prevSnippetsId) => [...prevSnippetsId, deletedSnippetId]);
+    if (deletedSourceCodeId) {
+      setDeleteSourceCodeIds((prevSourceCodeId) => [...prevSourceCodeId, deletedSourceCodeId]);
     }
 
-    setSnippets((prevSnippets) => prevSnippets.filter((_, idx) => index !== idx));
+    setSourceCodes((prevSourceCodes) => prevSourceCodes.filter((_, idx) => index !== idx));
   };
 
   const validateTemplate = () => {
@@ -74,11 +78,11 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
       return '제목을 입력해주세요';
     }
 
-    if (snippets.filter((snippet) => !snippet.filename).length) {
+    if (sourceCodes.filter((sourceCode) => !sourceCode.filename).length) {
       return '파일 명을 입력해주세요';
     }
 
-    if (snippets.filter((snippet) => !snippet.content).length) {
+    if (sourceCodes.filter((sourceCode) => !sourceCode.content).length) {
       return '스니펫 내용을 입력해주세요';
     }
 
@@ -92,19 +96,19 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
       return;
     }
 
-    const orderedSnippets = snippets.map((snippet, index) => ({
-      ...snippet,
+    const orderedSourceCodes = sourceCodes.map((sourceCode, index) => ({
+      ...sourceCode,
       ordinal: index + 1,
     }));
-    const createSnippets = orderedSnippets.filter((snippet) => !snippet.id);
-    const updateSnippets = orderedSnippets.filter((snippet) => snippet.id);
+    const createSourceCodes = orderedSourceCodes.filter((sourceCode) => !sourceCode.id);
+    const updateSourceCodes = orderedSourceCodes.filter((sourceCode) => sourceCode.id);
 
     const templateUpdate: TemplateEditRequest = {
       title,
       description,
-      createSnippets,
-      updateSnippets,
-      deleteSnippetIds,
+      createSourceCodes,
+      updateSourceCodes,
+      deleteSourceCodeIds,
       categoryId: categoryProps.currentValue.id,
       tags,
     };
@@ -120,7 +124,7 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
   return {
     title,
     description,
-    snippets,
+    sourceCodes,
     categoryProps,
     tagProps: {
       tags,
@@ -135,7 +139,7 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
     handleCancelButton,
     handleCodeChange,
     handleFileNameChange,
-    handleDeleteSnippet,
+    handleDeleteSourceCode,
     handleSaveButtonClick,
     error,
   };

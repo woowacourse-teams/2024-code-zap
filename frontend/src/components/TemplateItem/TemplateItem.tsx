@@ -10,7 +10,7 @@
 // }
 
 // const TemplateItem = ({ item }: Props) => {
-//   const { title, modifiedAt, thumbnailSnippet } = item;
+//   const { title, modifiedAt, thumbnail } = item;
 
 //   return (
 //     <Flex direction='column' gap='1.6rem' width='100%'>
@@ -25,11 +25,11 @@
 //           style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
 //         >
 //           <Text.Small color='#fff' weight='bold'>
-//             {thumbnailSnippet.filename}
+//             {thumbnail.filename}
 //           </Text.Small>
 //         </Flex>
 //         <SyntaxHighlighter
-//           language={getLanguageByFilename(thumbnailSnippet.filename)}
+//           language={getLanguageByFilename(thumbnail.filename)}
 //           style={vscDarkPlus}
 //           showLineNumbers={true}
 //           customStyle={{ margin: 0, borderRadius: '0 0 8px 8px', width: '100%', tabSize: 2 }}
@@ -39,7 +39,7 @@
 //             },
 //           }}
 //         >
-//           {thumbnailSnippet.thumbnailContent}
+//           {thumbnail.content}
 //         </SyntaxHighlighter>
 //       </Flex>
 

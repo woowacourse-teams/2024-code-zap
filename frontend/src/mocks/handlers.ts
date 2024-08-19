@@ -32,7 +32,7 @@ export const templateHandlers = [
         (template) =>
           template.title.includes(keyword) ||
           template.description.includes(keyword) ||
-          template.snippets.some((snippet) => snippet.content.includes(keyword)),
+          template.sourceCodes.some((sourceCode) => sourceCode.content.includes(keyword)),
       );
     }
 

@@ -12,7 +12,7 @@ interface Props {
   onChangeFileName: (newFileName: string) => void;
 }
 
-const SnippetEditor = ({ fileName, content, onChangeContent, onChangeFileName }: Props) => {
+const SourceCodeEditor = ({ fileName, content, onChangeContent, onChangeFileName }: Props) => {
   const handleFileNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChangeFileName(event.target.value);
   };
@@ -22,8 +22,8 @@ const SnippetEditor = ({ fileName, content, onChangeContent, onChangeFileName }:
   };
 
   return (
-    <S.SnippetEditorContainer>
-      <S.SnippetFileNameInput value={fileName} onChange={handleFileNameChange} placeholder={'파일명.js'} />
+    <S.SourceCodeEditorContainer>
+      <S.SourceCodeFileNameInput value={fileName} onChange={handleFileNameChange} placeholder={'파일명.js'} />
       <ReactCodeMirror
         placeholder={'// 코드를 입력해주세요'}
         value={content}
@@ -36,8 +36,8 @@ const SnippetEditor = ({ fileName, content, onChangeContent, onChangeFileName }:
         onChange={handleContentChange}
         basicSetup={{ highlightActiveLine: false }}
       />
-    </S.SnippetEditorContainer>
+    </S.SourceCodeEditorContainer>
   );
 };
 
-export default SnippetEditor;
+export default SourceCodeEditor;

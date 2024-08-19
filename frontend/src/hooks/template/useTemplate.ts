@@ -9,19 +9,19 @@ export const useTemplate = (id: number) => {
   const scrollTo = useScrollToTargetElement();
 
   const { data: template } = useTemplateQuery(Number(id));
-  const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation(Number(id));
+  const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
 
   const [currentFile, setCurrentFile] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);
 
-  const snippetRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sourceCodeRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const [isOpenList, setIsOpenList] = useState<boolean[]>(template?.snippets.map(() => true) || []);
+  const [isOpenList, setIsOpenList] = useState<boolean[]>(template?.sourceCodes.map(() => true) || []);
 
   useEffect(() => {
-    if (template && template.snippets.length > 0) {
-      setCurrentFile(template.snippets[0].id as number);
-      setIsOpenList(template?.snippets.map(() => true));
+    if (template && template?.sourceCodes.length > 0) {
+      setCurrentFile(template?.sourceCodes[0].id as number);
+      setIsOpenList(template?.sourceCodes.map(() => true));
     }
   }, [template]);
 
@@ -36,14 +36,14 @@ export const useTemplate = (id: number) => {
   const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
 
-    const targetElement = snippetRefs.current[index];
+    const targetElement = sourceCodeRefs.current[index];
 
     scrollTo(targetElement);
 
-    const id = template?.snippets[index].id;
+    const id = template?.sourceCodes[index].id;
 
     if (!id) {
-      console.error('snippet id가 존재하지 않습니다.');
+      console.error('sourceCode id가 존재하지 않습니다.');
 
       return;
     }
@@ -64,7 +64,7 @@ export const useTemplate = (id: number) => {
     currentFile,
     template,
     isEdit,
-    snippetRefs,
+    sourceCodeRefs,
     toggleEditButton,
     handleEditButtonClick,
     handleSelectOption,

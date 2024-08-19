@@ -1,13 +1,13 @@
-import { newTemplateIcon, trashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SnippetEditor, TagInput } from '@/components';
-import { useCategoryUploadQuery } from '@/queries/category';
-import type { Category, Snippet } from '@/types';
+import { PlusIcon, TrashcanIcon } from '@/assets/images';
+import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput } from '@/components';
+import { useCategoryUploadMutation } from '@/queries/category';
+import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
 
 interface Props {
   title: string;
   description: string;
-  snippets: Snippet[];
+  sourceCodes: SourceCodes[];
   categoryProps: {
     options: Category[];
     isOpen: boolean;
@@ -30,7 +30,7 @@ interface Props {
   handleCancelButton: () => void;
   handleCodeChange: (newContent: string, idx: number) => void;
   handleFileNameChange: (newFileName: string, idx: number) => void;
-  handleDeleteSnippet: (index: number) => void;
+  handleDeleteSourceCode: (index: number) => void;
   handleSaveButtonClick: () => Promise<void>;
   error: Error | null;
 }
@@ -38,7 +38,7 @@ interface Props {
 const TemplateEdit = ({
   title,
   description,
-  snippets,
+  sourceCodes,
   tagProps,
   categoryProps,
   handleTitleChange,
@@ -47,11 +47,11 @@ const TemplateEdit = ({
   handleCancelButton,
   handleCodeChange,
   handleFileNameChange,
-  handleDeleteSnippet,
+  handleDeleteSourceCode: handleDeleteSourceCode,
   handleSaveButtonClick,
   error,
 }: Props) => {
-  const { mutateAsync: postCategory } = useCategoryUploadQuery();
+  const { mutateAsync: postCategory } = useCategoryUploadMutation();
 
   return (
     <Flex
@@ -66,7 +66,7 @@ const TemplateEdit = ({
         <Dropdown
           {...categoryProps}
           replaceChildrenWhenIsOpen={
-            <Input size='medium'>
+            <Input size='medium' variant='outlined'>
               <Input.TextField
                 autoFocus
                 placeholder='+ 새 카테고리 생성'
@@ -95,12 +95,12 @@ const TemplateEdit = ({
           </Input>
         </div>
 
-        {snippets.map((snippet, idx) => (
+        {sourceCodes.map((sourceCode, idx) => (
           <Flex key={idx} style={{ position: 'relative' }} width='100%'>
-            <SnippetEditor
+            <SourceCodeEditor
               key={idx}
-              fileName={snippet.filename}
-              content={snippet.content}
+              fileName={sourceCode.filename}
+              content={sourceCode.content}
               onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
               onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
             />
@@ -108,15 +108,15 @@ const TemplateEdit = ({
               size='small'
               variant='text'
               onClick={() => {
-                handleDeleteSnippet(idx);
+                handleDeleteSourceCode(idx);
               }}
             >
-              <img src={trashcanIcon} width={20} height={20} alt='Delete snippet' />
+              <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
             </S.DeleteButton>
           </Flex>
         ))}
         <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
-          <img src={newTemplateIcon} width={14} height={14} />
+          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
         </Button>
 
         <TagInput {...tagProps} />
@@ -126,7 +126,12 @@ const TemplateEdit = ({
             <Button size='medium' variant='outlined' onClick={handleCancelButton}>
               취소
             </Button>
-            <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={snippets.length === 0}>
+            <Button
+              size='medium'
+              variant='contained'
+              onClick={handleSaveButtonClick}
+              disabled={sourceCodes.length === 0}
+            >
               저장
             </Button>
           </Flex>

@@ -2,7 +2,7 @@
   "id": 1,
   "title": "title1",
   "description": "description1",
-  "snippets": [
+  "sourceCodes": [
     {
       "id": 101,
       "filename": "MyComponent.tsx",

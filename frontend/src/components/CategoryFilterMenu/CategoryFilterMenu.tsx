@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 
-import { settingIcon, trashcanIcon, spinArrowIcon, pencilIcon } from '@/assets/images';
+import { SettingIcon, TrashcanIcon, SpinArrowIcon, PencilIcon } from '@/assets/images';
 import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
-import { useModal } from '@/hooks/utils/useModal';
+import { useToggle } from '@/hooks/utils';
 import { useCategoryDeleteQuery, useCategoryEditQuery } from '@/queries/category';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
@@ -15,7 +15,7 @@ interface CategoryMenuProps {
 
 const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
-  const { isOpen, toggleModal } = useModal();
+  const [isEditModalOpen, toggleEditModal] = useToggle();
 
   const handleCategorySelect = (id: number) => {
     setSelectedId(id);
@@ -36,8 +36,8 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
 
   return (
     <S.CategoryContainer>
-      <S.SettingButton onClick={toggleModal}>
-        <img src={settingIcon} alt='카테고리 설정' width={18} height={18} />
+      <S.SettingButton onClick={toggleEditModal}>
+        <SettingIcon width={18} height={18} aria-label='카테고리 편집' />
       </S.SettingButton>
       <S.CategoryListContainer>
         <S.CategoryButtonContainer>
@@ -66,8 +66,8 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
       </S.CategoryListContainer>
 
       <CategoryEditModal
-        isOpen={isOpen}
-        toggleModal={toggleModal}
+        isOpen={isEditModalOpen}
+        toggleModal={toggleEditModal}
         categories={userCategories}
         defaultCategory={defaultCategory}
       />
@@ -162,10 +162,15 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories }: CategoryEditModa
                     </Text.Medium>
                   </Flex>
                   <S.IconButtonWrapper>
-                    <img src={pencilIcon} alt='편집' width={16} height={16} style={{ visibility: 'hidden' }} />
+                    <PencilIcon
+                      width={18}
+                      height={18}
+                      aria-label='카테고리 이름 변경'
+                      style={{ visibility: 'hidden' }}
+                    />
                   </S.IconButtonWrapper>
                   <S.IconButtonWrapper onClick={() => handleRestoreClick(id)}>
-                    <img src={spinArrowIcon} alt='복구' width={16} height={16} />
+                    <SpinArrowIcon width={16} height={16} aria-label='카테고리 복구' />
                   </S.IconButtonWrapper>
                 </>
               ) : (
@@ -194,10 +199,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories }: CategoryEditModa
                   </Flex>
                   <S.IconButtonContainer>
                     <S.IconButtonWrapper onClick={() => handleEditClick(id)}>
-                      <img src={pencilIcon} alt='편집' width={18} height={18} />
+                      <PencilIcon width={18} height={18} aria-label='카테고리 이름 변경' />
                     </S.IconButtonWrapper>
                     <S.IconButtonWrapper onClick={() => handleDeleteClick(id)}>
-                      <img src={trashcanIcon} alt='삭제' width={20} height={20} />
+                      <TrashcanIcon width={20} height={20} aria-label='카테고리 삭제' />
                     </S.IconButtonWrapper>
                   </S.IconButtonContainer>
                 </>
