@@ -5,7 +5,7 @@ import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
 import { useToggle } from '@/hooks/utils';
 import { useCategoryDeleteQuery, useCategoryEditQuery } from '@/queries/category';
 import { theme } from '@/style/theme';
-import type { Category } from '@/types';
+import type { Category, CustomError } from '@/types';
 import * as S from './CategoryFilterMenu.style';
 
 interface CategoryMenuProps {
@@ -70,6 +70,7 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
         toggleModal={toggleEditModal}
         categories={userCategories}
         defaultCategory={defaultCategory}
+        handleCancelEdit={toggleEditModal}
       />
     </S.CategoryContainer>
   );
@@ -94,15 +95,16 @@ interface CategoryEditModalProps {
   toggleModal: () => void;
   categories: Category[];
   defaultCategory: Category;
+  handleCancelEdit: () => void;
 }
 
-const CategoryEditModal = ({ isOpen, toggleModal, categories }: CategoryEditModalProps) => {
+const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }: CategoryEditModalProps) => {
   const [editedCategories, setEditedCategories] = useState<Record<number, string>>({});
   const [categoriesToDelete, setCategoriesToDelete] = useState<number[]>([]);
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
 
   const { mutateAsync: editCategory } = useCategoryEditQuery();
-  const { mutateAsync: deleteCategory } = useCategoryDeleteQuery();
+  const { mutateAsync: deleteCategory } = useCategoryDeleteQuery(categories);
 
   const handleNameInputChange = (id: number, name: string) => {
     setEditedCategories((prev) => ({ ...prev, [id]: name }));
@@ -134,19 +136,24 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories }: CategoryEditModa
         }
       }),
     );
-    await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
-    toggleModal();
+
+    try {
+      await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+      toggleModal();
+    } catch (error) {
+      console.error((error as CustomError).detail);
+    }
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEditWithReset = () => {
     setEditedCategories({});
     setCategoriesToDelete([]);
     setEditingCategoryId(null);
-    toggleModal();
+    handleCancelEdit();
   };
 
   return (
-    <Modal isOpen={isOpen} toggleModal={toggleModal} size='small'>
+    <Modal isOpen={isOpen} toggleModal={handleCancelEditWithReset} size='small'>
       <Modal.Header>
         <Heading.XSmall color={theme.color.light.secondary_900}>카테고리 편집</Heading.XSmall>
       </Modal.Header>
@@ -212,7 +219,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories }: CategoryEditModa
         </S.EditCategoryItemList>
       </Modal.Body>
       <Flex justify='flex-end' gap='1rem'>
-        <Button variant='outlined' onClick={handleCancelEdit}>
+        <Button variant='outlined' onClick={handleCancelEditWithReset}>
           취소
         </Button>
         <Button onClick={handleSaveChanges}>저장</Button>

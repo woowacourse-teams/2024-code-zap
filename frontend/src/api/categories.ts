@@ -1,4 +1,12 @@
-import type { CategoryListResponse, CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
+import { HttpResponse } from 'msw';
+
+import type {
+  CategoryListResponse,
+  CategoryUploadRequest,
+  CategoryEditRequest,
+  CategoryDeleteRequest,
+  CustomError,
+} from '@/types';
 import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
@@ -34,8 +42,15 @@ export const editCategory = async ({ id, name }: CategoryEditRequest) =>
     body: JSON.stringify({ name }),
   });
 
-export const deleteCategory = async ({ id }: CategoryDeleteRequest) =>
-  await customFetch({
+export const deleteCategory = async ({ id }: CategoryDeleteRequest) => {
+  const response = await customFetch<HttpResponse>({
     method: 'DELETE',
     url: `${CATEGORY_API_URL}/${id}`,
   });
+
+  if (response.status >= 400) {
+    throw response as CustomError;
+  }
+
+  return response;
+};
