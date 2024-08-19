@@ -32,7 +32,7 @@ export const TagListContainer = styled.div<{ maxHeight?: string }>`
   flex-wrap: nowrap;
   gap: 0.5rem;
 
-  max-height: ${(props) => props.maxHeight || '2rem'};
+  max-height: ${(props) => props.maxHeight || '2.15rem'};
 `;
 
 export const AllTagListModal = styled.div`

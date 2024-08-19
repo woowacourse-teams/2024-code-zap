@@ -1,6 +1,7 @@
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput } from '@/components';
+import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text } from '@/components';
 import { useCategoryUpload } from '@/queries/category';
+import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
 
@@ -54,14 +55,7 @@ const TemplateEdit = ({
   const { mutateAsync: postCategory } = useCategoryUpload();
 
   return (
-    <Flex
-      direction='column'
-      justify='center'
-      align='flex-start'
-      gap='1.5rem'
-      margin='1rem 0 0 0'
-      css={{ maxWidth: '53rem', margin: 'auto', marginTop: '3rem' }}
-    >
+    <S.TemplateEditContainer>
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
         <Dropdown
           {...categoryProps}
@@ -83,17 +77,15 @@ const TemplateEdit = ({
           }
         />
 
-        <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
+        <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
             <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
           </Input>
-        </div>
+        </S.UnderlineInputWrapper>
 
-        <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
-          <Input size='medium' variant='text'>
-            <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
-          </Input>
-        </div>
+        <Input size='large' variant='text'>
+          <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
+        </Input>
 
         {sourceCodes.map((sourceCode, idx) => (
           <Flex key={idx} style={{ position: 'relative' }} width='100%'>
@@ -137,9 +129,9 @@ const TemplateEdit = ({
           </Flex>
         </Flex>
 
-        {error && <div style={{ color: 'red' }}>Error: {error.message}</div>}
+        {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
       </Flex>
-    </Flex>
+    </S.TemplateEditContainer>
   );
 };
 
