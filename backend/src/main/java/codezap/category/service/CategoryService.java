@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
@@ -25,12 +26,12 @@ public class CategoryService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public Long create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
+    public CreateCategoryResponse create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
-        Category category = new Category(categoryName, member);
-        return categoryRepository.save(category).getId();
+        Category category = categoryRepository.save(new Category(categoryName, member));
+        return CreateCategoryResponse.from(category);
     }
 
     public FindAllCategoriesResponse findAllByMember(Long memberId) {

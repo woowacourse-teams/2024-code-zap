@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
@@ -43,9 +44,9 @@ class CategoryServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category1");
 
-            Long categoryId = categoryService.create(MemberDto.from(member), createCategoryRequest);
+            CreateCategoryResponse response = categoryService.create(MemberDto.from(member), createCategoryRequest);
 
-            assertThat(categoryId).isEqualTo(1L);
+            assertThat(response.id()).isEqualTo(1L);
         }
 
         @Test
@@ -72,7 +73,9 @@ class CategoryServiceTest {
 
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            assertThat(categoryService.create(MemberDto.from(otherMember), createCategoryRequest)).isEqualTo(2L);
+            CreateCategoryResponse response = categoryService.create(MemberDto.from(otherMember),
+                    createCategoryRequest);
+            assertThat(response.id()).isEqualTo(2L);
         }
     }
 
