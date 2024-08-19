@@ -1,4 +1,3 @@
-// CategoryEditModal.tsx
 import { useState } from 'react';
 
 import { TrashcanIcon, SpinArrowIcon, PencilIcon } from '@/assets/images';
@@ -24,6 +23,12 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   const { mutateAsync: editCategory } = useCategoryEditMutation();
   const { mutateAsync: deleteCategory } = useCategoryDeleteMutation(categories);
 
+  const resetState = () => {
+    setEditedCategories({});
+    setCategoriesToDelete([]);
+    setEditingCategoryId(null);
+  };
+
   const handleNameInputChange = (id: number, name: string) => {
     setEditedCategories((prev) => ({ ...prev, [id]: name }));
   };
@@ -45,18 +50,20 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   };
 
   const handleSaveChanges = async () => {
-    await Promise.all(
-      Object.entries(editedCategories).map(async ([id, name]) => {
-        const originalCategory = categories.find((category) => category.id === Number(id));
-
-        if (originalCategory && originalCategory.name !== name) {
-          await editCategory({ id: Number(id), name });
-        }
-      }),
-    );
-
     try {
+      await Promise.all(
+        Object.entries(editedCategories).map(async ([id, name]) => {
+          const originalCategory = categories.find((category) => category.id === Number(id));
+
+          if (originalCategory && originalCategory.name !== name) {
+            await editCategory({ id: Number(id), name });
+          }
+        }),
+      );
+
       await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+
+      resetState();
       toggleModal();
     } catch (error) {
       console.error((error as CustomError).detail);
@@ -64,9 +71,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   };
 
   const handleCancelEditWithReset = () => {
-    setEditedCategories({});
-    setCategoriesToDelete([]);
-    setEditingCategoryId(null);
+    resetState();
     handleCancelEdit();
   };
 
