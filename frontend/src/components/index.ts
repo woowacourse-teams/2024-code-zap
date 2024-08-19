@@ -18,3 +18,4 @@ export { default as TemplateEdit } from './TemplateEdit/TemplateEdit';
 export { default as TemplateGrid } from './TemplateGrid/TemplateGrid';
 export { default as Text } from './Text/Text';
 export { default as Toast } from './Toast/Toast';
+export { default as Guide } from './Guide/Guide';

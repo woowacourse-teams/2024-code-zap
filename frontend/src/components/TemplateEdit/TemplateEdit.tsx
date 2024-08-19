@@ -1,5 +1,5 @@
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text } from '@/components';
+import { Button, Dropdown, Flex, Guide, Input, SourceCodeEditor, TagInput, Text } from '@/components';
 import { useCategoryUpload } from '@/queries/category';
 import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
@@ -148,7 +148,7 @@ const TemplateEdit = ({
           </Flex>
         </Flex>
 
-        {error && <div style={{ color: theme.color.light.analogous_primary_400 }}>Error: {error.message}</div>}
+        {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
       </Flex>
     </Flex>
   );
@@ -176,8 +176,8 @@ interface CategoryGuideProps {
 }
 
 const CategoryGuide = ({ isOpen }: CategoryGuideProps) => (
-  <S.CategoryGuide isOpen={isOpen}>
+  <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
     <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
     <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
-  </S.CategoryGuide>
+  </Guide>
 );
