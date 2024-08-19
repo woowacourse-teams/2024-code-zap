@@ -199,13 +199,13 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
         </S.EditCategoryItemList>
         <S.EditCategoryItem>
           <Button fullWidth variant='text' onClick={handleAddCategory}>
-            + 카테고리 추가
+            {'+ 카테고리 추가'}
           </Button>
         </S.EditCategoryItem>
       </Modal.Body>
       <Flex justify='flex-end' gap='1rem'>
         <Button variant='outlined' onClick={handleCancelEditWithReset}>
-          취소
+          {'취소'}
         </Button>
         <Button onClick={handleSaveChanges}>저장</Button>
       </Flex>
