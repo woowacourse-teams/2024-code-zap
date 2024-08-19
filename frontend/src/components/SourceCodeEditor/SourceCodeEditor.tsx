@@ -1,8 +1,9 @@
-import { javascript } from '@codemirror/lang-javascript';
+import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 import ReactCodeMirror from '@uiw/react-codemirror';
 import { ChangeEvent } from 'react';
 
+import { getLanguageByFilename } from '@/utils';
 import * as S from './style';
 
 interface Props {
@@ -32,9 +33,8 @@ const SourceCodeEditor = ({ fileName, content, onChangeContent, onChangeFileName
         maxHeight='40rem'
         style={{ width: '100%' }}
         theme={vscodeDark}
-        extensions={[javascript({ jsx: true })]}
         onChange={handleContentChange}
-        basicSetup={{ highlightActiveLine: false }}
+        extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || []]}
       />
     </S.SourceCodeEditorContainer>
   );
