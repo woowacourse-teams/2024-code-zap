@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: Production
+    runs-on: [self-hosted, production, spring]
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
