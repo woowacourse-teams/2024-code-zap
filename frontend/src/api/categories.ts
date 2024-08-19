@@ -37,7 +37,7 @@ export const postCategory = async (newCategory: CategoryUploadRequest) =>
 
 export const editCategory = async ({ id, name }: CategoryEditRequest) =>
   await customFetch({
-    method: 'POST',
+    method: 'PUT',
     url: `${CATEGORY_API_URL}/${id}`,
     body: JSON.stringify({ name }),
   });
