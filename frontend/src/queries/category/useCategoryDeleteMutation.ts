@@ -6,7 +6,7 @@ import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
 import { Category, CustomError } from '@/types';
 
-export const useCategoryDeleteQuery = (categories: Category[]) => {
+export const useCategoryDeleteMutation = (categories: Category[]) => {
   const queryClient = useQueryClient();
   const { failAlert } = useCustomContext(ToastContext);
 

@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { SettingIcon, TrashcanIcon, SpinArrowIcon, PencilIcon } from '@/assets/images';
 import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
 import { useToggle } from '@/hooks/utils';
-import { useCategoryDeleteQuery, useCategoryEditQuery } from '@/queries/category';
+import { useCategoryDeleteMutation, useCategoryEditQuery } from '@/queries/category';
 import { theme } from '@/style/theme';
 import type { Category, CustomError } from '@/types';
 import * as S from './CategoryFilterMenu.style';
@@ -104,7 +104,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
 
   const { mutateAsync: editCategory } = useCategoryEditQuery();
-  const { mutateAsync: deleteCategory } = useCategoryDeleteQuery(categories);
+  const { mutateAsync: deleteCategory } = useCategoryDeleteMutation(categories);
 
   const handleNameInputChange = (id: number, name: string) => {
     setEditedCategories((prev) => ({ ...prev, [id]: name }));
