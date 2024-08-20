@@ -3,6 +3,9 @@ import { materialLight } from '@uiw/codemirror-theme-material';
 import ReactCodeMirror from '@uiw/react-codemirror';
 import { ChangeEvent } from 'react';
 
+import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks/utils';
+import { validateFileName } from '@/service/validates';
 import { getLanguageByFilename } from '@/utils';
 import * as S from './style';
 
@@ -15,6 +18,8 @@ interface Props {
 }
 
 const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeFileName }: Props) => {
+  const { failAlert } = useCustomContext(ToastContext);
+
   const handleFileNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChangeFileName(event.target.value);
   };
@@ -23,11 +28,18 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
     onChangeContent(value);
   };
 
+  const handleValidateFileName = (event: React.FocusEvent<HTMLInputElement, Element>) => {
+    if (validateFileName(event.target.value)) {
+      failAlert(validateFileName(event.target.value));
+    }
+  };
+
   return (
     <S.SourceCodeEditorContainer>
       <S.SourceCodeFileNameInput
         value={fileName}
         onChange={handleFileNameChange}
+        onBlur={handleValidateFileName}
         placeholder={'파일명.js'}
         autoFocus={index !== 0 ? true : false}
       />
