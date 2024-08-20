@@ -29,8 +29,6 @@ public class ThumbnailService {
     }
 
     public void deleteByTemplateIds(List<Long> templateIds) {
-        for (Long id : templateIds) {
-            thumbnailRepository.deleteByTemplateId(id);
-        }
+        templateIds.forEach(thumbnailRepository::deleteByTemplateId);
     }
 }

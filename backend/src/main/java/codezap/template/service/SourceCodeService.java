@@ -97,8 +97,6 @@ public class SourceCodeService {
     }
 
     public void deleteByIds(List<Long> templateIds) {
-        for (Long id : templateIds) {
-            sourceCodeRepository.deleteByTemplateId(id);
-        }
+        templateIds.forEach(sourceCodeRepository::deleteByTemplateId);
     }
 }

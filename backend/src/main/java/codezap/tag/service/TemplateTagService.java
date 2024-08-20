@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 
 import codezap.global.exception.CodeZapException;
 import codezap.tag.domain.Tag;
+import codezap.tag.dto.response.FindAllTagsResponse;
+import codezap.tag.dto.response.FindTagResponse;
 import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.tag.dto.response.FindAllTagsResponse;
-import codezap.tag.dto.response.FindTagResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -47,9 +47,7 @@ public class TemplateTagService {
         if (tagIds.isEmpty()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요.");
         }
-        for (Long id : tagIds) {
-            validateTagId(id);
-        }
+        tagIds.forEach(this::validateTagId);
         return templateTagRepository.findAllTemplateIdInTagIds(tagIds, tagIds.size());
     }
 
@@ -88,8 +86,6 @@ public class TemplateTagService {
     }
 
     public void deleteByIds(List<Long> templateIds) {
-        for (Long id : templateIds) {
-            templateTagRepository.deleteAllByTemplateId(id);
-        }
+        templateIds.forEach(templateTagRepository::deleteAllByTemplateId);
     }
 }
