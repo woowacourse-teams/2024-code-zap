@@ -29,5 +29,7 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
 
     List<SourceCode> findAllByTemplateAndOrdinal(Template template, int ordinal);
 
+    int countByTemplate(Template template);
+
     void deleteByTemplateId(Long id);
 }

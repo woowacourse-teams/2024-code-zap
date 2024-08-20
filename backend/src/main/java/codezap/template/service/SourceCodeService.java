@@ -91,7 +91,7 @@ public class SourceCodeService {
 
     private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {
         if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
-                != sourceCodeRepository.findAllByTemplate(template).size()) {
+                != sourceCodeRepository.countByTemplate(template)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
     }
