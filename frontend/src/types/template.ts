@@ -39,4 +39,5 @@ export interface TemplateListItem {
   tags: Tag[];
   createdAt: string;
   modifiedAt: string;
+  name?: string;
 }

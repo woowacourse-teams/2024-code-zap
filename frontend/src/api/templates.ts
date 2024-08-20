@@ -6,6 +6,7 @@ import type {
   TemplateListRequest,
 } from '@/types';
 import { SortingOption } from '@/types';
+import { TemplateExploreRequest } from '@/types/api';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -51,6 +52,30 @@ export const getTemplateList = async ({
   if (tagIds?.length !== 0 && tagIds !== undefined) {
     queryParams.append('tagIds', tagIds.toString());
   }
+
+  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
+
+  const response = await customFetch<TemplateListResponse>({
+    url,
+  });
+
+  if ('templates' in response) {
+    return response;
+  }
+
+  throw new Error(response.detail);
+};
+
+export const getTemplateExplore = async ({
+  sort = DEFAULT_SORTING_OPTION.key,
+  page = 1,
+  pageSize = PAGE_SIZE,
+}: TemplateExploreRequest) => {
+  const queryParams = new URLSearchParams({
+    sort,
+    pageNumber: page.toString(),
+    pageSize: pageSize.toString(),
+  });
 
   const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 

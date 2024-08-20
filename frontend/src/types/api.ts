@@ -57,6 +57,16 @@ export interface TemplateListRequest {
   memberId: number | undefined;
 }
 
+export interface TemplateExploreRequest {
+  keyword?: string;
+  categoryId?: number;
+  tagIds?: number[];
+  sort?: SortingKey;
+  page?: number;
+  pageSize?: number;
+  memberId?: number | undefined;
+}
+
 export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc';
 
 export type SortingOption = { key: SortingKey; value: string };
