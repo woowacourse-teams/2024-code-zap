@@ -9,13 +9,14 @@ export const EditCategoryItemList = styled.div`
   width: 100%;
 `;
 
-export const EditCategoryItem = styled.div`
+export const EditCategoryItem = styled.div<{ hasError?: boolean }>`
   display: flex;
   gap: 1rem;
   align-items: center;
 
   padding: 0.25rem 1rem;
 
+  border: ${({ hasError }) => (hasError ? '1px solid red' : 'none')};
   border-radius: 8px;
 
   &:hover {

@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import { TrashcanIcon, SpinArrowIcon, PencilIcon } from '@/assets/images';
 import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
+import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
 import type { Category, CustomError } from '@/types';
 import { theme } from '../../style/theme';
@@ -24,6 +25,8 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   const { mutateAsync: editCategory } = useCategoryEditMutation();
   const { mutateAsync: deleteCategory } = useCategoryDeleteMutation(categories);
   const { mutateAsync: postCategory } = useCategoryUploadMutation();
+
+  const { invalidIds, isValid } = useCategoryNameValidation(categories, newCategories, editedCategories);
 
   const resetState = () => {
     setEditedCategories({});
@@ -58,7 +61,15 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
     setEditingCategoryId(id);
   };
 
-  const handleNameInputBlur = () => {
+  const handleNameInputBlur = (id: number) => {
+    const trimmedName = isCategoryNew(id)
+      ? newCategories.find((category) => category.id === id)?.name.trim()
+      : editedCategories[id]?.trim();
+
+    if (trimmedName !== undefined) {
+      handleNameInputChange(id, trimmedName);
+    }
+
     setEditingCategoryId(null);
   };
 
@@ -71,6 +82,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   };
 
   const handleSaveChanges = async () => {
+    if (!isValid) {
+      return;
+    }
+
     try {
       await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
 
@@ -107,7 +122,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
       <Modal.Body>
         <S.EditCategoryItemList>
           {categories.map(({ id, name }) => (
-            <S.EditCategoryItem key={id}>
+            <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
               {categoriesToDelete.includes(id) ? (
                 <>
                   <Flex align='center' width='100%' height='2.5rem'>
@@ -136,10 +151,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
                           type='text'
                           value={editedCategories[id] ?? name}
                           onChange={(e) => handleNameInputChange(id, e.target.value)}
-                          onBlur={handleNameInputBlur}
+                          onBlur={() => handleNameInputBlur(id)}
                           onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                              handleNameInputBlur();
+                              handleNameInputBlur(id);
                             }
                           }}
                           autoFocus
@@ -165,7 +180,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
           ))}
 
           {newCategories.map(({ id, name }) => (
-            <S.EditCategoryItem key={id}>
+            <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
               <Flex align='center' width='100%' height='2.5rem'>
                 {editingCategoryId === id ? (
                   <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
@@ -173,10 +188,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
                       type='text'
                       value={name}
                       onChange={(e) => handleNameInputChange(id, e.target.value)}
-                      onBlur={handleNameInputBlur}
+                      onBlur={() => handleNameInputBlur(id)}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          handleNameInputBlur();
+                          handleNameInputBlur(id);
                         }
                       }}
                       autoFocus
@@ -198,17 +213,28 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
           ))}
         </S.EditCategoryItemList>
         <S.EditCategoryItem>
-          <Button fullWidth variant='text' onClick={handleAddCategory}>
+          <Button fullWidth variant='text' onClick={handleAddCategory} disabled={!isValid}>
             {'+ 카테고리 추가'}
           </Button>
         </S.EditCategoryItem>
       </Modal.Body>
-      <Flex justify='flex-end' gap='1rem'>
-        <Button variant='outlined' onClick={handleCancelEditWithReset}>
-          {'취소'}
-        </Button>
-        <Button onClick={handleSaveChanges}>저장</Button>
-      </Flex>
+      <Modal.Footer>
+        <Flex direction='column' gap='0.75rem' width='100%' style={{ alignSelf: 'flex-end' }}>
+          <Flex height='1em'>
+            {invalidIds.length > 0 && (
+              <Text.Small color={'red'}>{'유효하지 않은 카테고리 이름이 있습니다.'}</Text.Small>
+            )}
+          </Flex>
+          <Flex justify='flex-end' gap='1rem'>
+            <Button variant='outlined' onClick={handleCancelEditWithReset}>
+              {'취소'}
+            </Button>
+            <Button onClick={handleSaveChanges} disabled={!isValid}>
+              {'저장'}
+            </Button>
+          </Flex>
+        </Flex>
+      </Modal.Footer>
     </Modal>
   );
 };
