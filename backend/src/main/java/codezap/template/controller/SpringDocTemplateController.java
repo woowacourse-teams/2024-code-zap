@@ -44,7 +44,6 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "소스 코드가 0개 입력된 경우", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
             @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
@@ -82,7 +81,6 @@ public interface SpringDocTemplateController {
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
             instance = "/templates?memberId=1&keyword=\"java\"", errorCases = {
-            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
             @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND,
@@ -107,7 +105,6 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
             @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
@@ -129,7 +126,6 @@ public interface SpringDocTemplateController {
                     exampleMessage = "소스 코드의 정보가 정확하지 않습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
             @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
             @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
     })
@@ -148,7 +144,6 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "템플릿 ID가 중복된 경우", exampleMessage = "삭제하고자 하는 템플릿 ID가 중복되었습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
             @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
