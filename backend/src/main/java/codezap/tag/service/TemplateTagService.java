@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.global.exception.CodeZapException;
 import codezap.tag.domain.Tag;
@@ -21,6 +22,7 @@ public class TemplateTagService {
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
 
+    @Transactional
     public void createTags(Template template, List<String> tags) {
         tagRepository.saveAll(
                 tags.stream()
@@ -68,6 +70,7 @@ public class TemplateTagService {
         );
     }
 
+    @Transactional
     public void updateTags(Template template, List<String> tags) {
         templateTagRepository.deleteAllByTemplateId(template.getId());
         tagRepository.saveAll(

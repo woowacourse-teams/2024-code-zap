@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;
@@ -23,9 +24,9 @@ public class TemplateService {
     private final TemplateRepository templateRepository;
 
     public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
-        return templateRepository.save(
-                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category)
-        );
+        Template template =
+                new Template(member, createTemplateRequest.title(), createTemplateRequest.description(), category);
+        return templateRepository.save(template);
     }
 
     public Template getByMemberAndId(Member member, Long id) {
@@ -73,10 +74,10 @@ public class TemplateService {
         Template template = templateRepository.fetchById(templateId);
         template.validateAuthorization(member);
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
-
         return template;
     }
 
+    @Transactional
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");

@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.global.exception.CodeZapException;
 import codezap.template.domain.SourceCode;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class SourceCodeService {
     private final SourceCodeRepository sourceCodeRepository;
 
+    @Transactional
     public void createSourceCodes(Template template, List<CreateSourceCodeRequest> sourceCodes) {
         sourceCodeRepository.saveAll(
                 sourceCodes.stream()
@@ -37,6 +39,7 @@ public class SourceCodeService {
         return sourceCodeRepository.findAllByTemplate(template);
     }
 
+    @Transactional
     public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
         updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
@@ -96,6 +99,7 @@ public class SourceCodeService {
         }
     }
 
+    @Transactional
     public void deleteByIds(List<Long> templateIds) {
         templateIds.forEach(sourceCodeRepository::deleteByTemplateId);
     }

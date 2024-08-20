@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
@@ -21,7 +20,6 @@ public class TemplateApplicationService {
     private final CategoryService categoryService;
     private final TagTemplateApplicationService tagTemplateApplicationService;
 
-    @Transactional
     public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
         Category category = categoryService.fetchById(createTemplateRequest.categoryId());
         category.validateAuthorization(member);
@@ -46,7 +44,6 @@ public class TemplateApplicationService {
                 pageable);
     }
 
-    @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
         category.validateAuthorization(member);

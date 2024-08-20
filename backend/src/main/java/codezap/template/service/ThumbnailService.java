@@ -3,6 +3,7 @@ package codezap.template.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
@@ -28,6 +29,7 @@ public class ThumbnailService {
         return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }
 
+    @Transactional
     public void deleteByTemplateIds(List<Long> templateIds) {
         templateIds.forEach(thumbnailRepository::deleteByTemplateId);
     }
