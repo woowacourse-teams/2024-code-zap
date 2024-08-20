@@ -19,22 +19,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MemberTemplateApplicationService {
     private final MemberService memberService;
+    private final CategoryTemplateApplicationService categoryTemplateApplicationService;
     private final TemplateApplicationService templateApplicationService;
-    private final TagTemplateApplicationService tagTemplateApplicationService;
 
     public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
         Member member = memberService.getById(memberDto.id());
-        return templateApplicationService.createTemplate(member, createTemplateRequest);
+        return categoryTemplateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(MemberDto memberDto, Long memberId) {
         memberService.validateMemberIdentity(memberDto, memberId);
-        return tagTemplateApplicationService.getAllTagsByMemberId(memberId);
+        return templateApplicationService.getAllTagsByMemberId(memberId);
     }
 
     public FindTemplateResponse getByIdAndMember(MemberDto memberDto, Long id) {
         Member member = memberService.getById(memberDto.id());
-        return tagTemplateApplicationService.getByMemberAndId(member, id);
+        return templateApplicationService.getByMemberAndId(member, id);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -46,16 +46,16 @@ public class MemberTemplateApplicationService {
             Pageable pageable
     ) {
         memberService.validateMemberIdentity(memberDto, memberId);
-        return templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        return categoryTemplateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
     }
 
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Member member = memberService.getById(memberDto.id());
-        templateApplicationService.update(member, templateId, updateTemplateRequest);
+        categoryTemplateApplicationService.update(member, templateId, updateTemplateRequest);
     }
 
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {
         Member member = memberService.getById(memberDto.id());
-        tagTemplateApplicationService.deleteByMemberAndIds(member, ids);
+        templateApplicationService.deleteByMemberAndIds(member, ids);
     }
 }

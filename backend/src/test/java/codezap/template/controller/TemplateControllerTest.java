@@ -56,8 +56,8 @@ import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
 import codezap.template.service.facade.MemberTemplateApplicationService;
-import codezap.template.service.facade.TagTemplateApplicationService;
 import codezap.template.service.facade.TemplateApplicationService;
+import codezap.template.service.facade.CategoryTemplateApplicationService;
 
 class TemplateControllerTest {
 
@@ -78,25 +78,25 @@ class TemplateControllerTest {
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
 
-    private final TagTemplateApplicationService tagTemplateApplicationService =
-            new TagTemplateApplicationService(
+    private final TemplateApplicationService templateApplicationService =
+            new TemplateApplicationService(
                     new TemplateTagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
                     templateService,
                     thumbnailService,
                     sourceCodeService
             );
 
-    private final TemplateApplicationService templateApplicationService =
-            new TemplateApplicationService(
+    private final CategoryTemplateApplicationService categoryTemplateApplicationService =
+            new CategoryTemplateApplicationService(
                     categoryService,
-                    tagTemplateApplicationService
+                    templateApplicationService
             );
 
     private final MemberTemplateApplicationService memberTemplateApplicationService =
             new MemberTemplateApplicationService(
                     new MemberService(memberRepository, categoryRepository),
-                    templateApplicationService,
-                    tagTemplateApplicationService
+                    categoryTemplateApplicationService,
+                    templateApplicationService
             );
 
     private final MockMvc mvc =
