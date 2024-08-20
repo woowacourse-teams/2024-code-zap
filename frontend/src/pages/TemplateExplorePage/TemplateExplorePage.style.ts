@@ -6,7 +6,7 @@ export const TemplateExplorePageContainer = styled.div<{ cols: number }>`
   grid-template-columns: repeat(${({ cols }) => cols}, minmax(0, 1fr));
 
   width: 100%;
-  max-width: 63.125rem;
+  max-width: 80rem;
 `;
 
 export const MainContainer = styled.main`
