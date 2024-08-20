@@ -82,18 +82,32 @@ const TemplatePage = () => {
                 <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                   {template.title}
                 </Heading.Medium>
-                <Text.Medium color={theme.color.dark.secondary_500}>{template.description}</Text.Medium>
-                <Text.Small
-                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                  weight='bold'
-                >
-                  {formatRelativeTime(template.modifiedAt)}
-                </Text.Small>
+                <Flex gap='0.5rem'>
+                  <Text.Small
+                    color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                  >
+                    {formatRelativeTime(template.modifiedAt)}
+                  </Text.Small>
+                  <Text.Small
+                    color={theme.mode === 'dark' ? theme.color.dark.secondary_300 : theme.color.light.secondary_400}
+                  >
+                    ({formatRelativeTime(template.createdAt)})
+                  </Text.Small>
+                </Flex>
+
                 <Flex gap='0.25rem' wrap='wrap'>
                   {template.tags.map((tag) => (
                     <TagButton key={tag.id} name={tag.name}></TagButton>
                   ))}
                 </Flex>
+                <div
+                  css={{
+                    width: '100%',
+                    borderTop: `1px solid ${theme.color.light.secondary_100}`,
+                    margin: '0.5rem 0rem',
+                  }}
+                ></div>
+                <Text.Medium color={theme.color.dark.secondary_600}>{template.description}</Text.Medium>
               </Flex>
             </Flex>
 

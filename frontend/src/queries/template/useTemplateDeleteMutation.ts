@@ -9,6 +9,7 @@ export const useTemplateDeleteMutation = (idList: number[]) => {
     mutationFn: () => deleteTemplate(idList),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.TEMPLATE_LIST] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY.TAG_LIST] });
     },
   });
 };

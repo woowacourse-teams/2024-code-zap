@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, SearchIcon } from '@/assets/images';
+import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
 import {
   CategoryFilterMenu,
   Flex,
@@ -101,14 +102,7 @@ const MyTemplatePage = () => {
 
   return (
     <S.MyTemplatePageContainer>
-      <S.TopBannerContainer>
-        <S.TopBannerTextWrapper>
-          <Heading.Medium color={theme.color.light.black}>{name || '코드잽'}</Heading.Medium>
-          <Heading.XSmall color={theme.color.light.black} weight='regular'>
-            {'님의 템플릿 입니다 :)'}
-          </Heading.XSmall>
-        </S.TopBannerTextWrapper>
-      </S.TopBannerContainer>
+      <TopBanner name={name ?? '나'} />
       <S.MainContainer>
         <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
           <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
@@ -160,13 +154,18 @@ const MyTemplatePage = () => {
               getOptionLabel={(option) => option.value}
             />
           </Flex>
-          <TemplateGrid
-            templates={templates}
-            cols={getGridCols(windowWidth)}
-            isEditMode={isEditMode}
-            selectedList={selectedList}
-            setSelectedList={setSelectedList}
-          />
+          {templates.length ? (
+            <TemplateGrid
+              templates={templates}
+              cols={getGridCols(windowWidth)}
+              isEditMode={isEditMode}
+              selectedList={selectedList}
+              setSelectedList={setSelectedList}
+            />
+          ) : (
+            <NewTemplateButton />
+          )}
+
           <Flex justify='center' gap='0.5rem' margin='1rem 0'>
             {[...Array(totalPages)].map((_, index) => (
               <PagingButton key={index + 1} page={index + 1} isActive={page === index + 1} onClick={handlePageChange} />
@@ -206,3 +205,31 @@ const MyTemplatePage = () => {
 };
 
 export default MyTemplatePage;
+
+interface TopBannerProps {
+  name: string;
+}
+
+const TopBanner = ({ name }: TopBannerProps) => (
+  <S.TopBannerContainer>
+    <S.TopBannerTextWrapper>
+      <Heading.Medium color={theme.color.light.black}>{name}</Heading.Medium>
+      <Heading.XSmall color={theme.color.light.black} weight='regular'>
+        {`${name ? '님' : ''}의 템플릿 입니다 :)`}
+      </Heading.XSmall>
+    </S.TopBannerTextWrapper>
+  </S.TopBannerContainer>
+);
+
+const NewTemplateButton = () => {
+  const navigate = useNavigate();
+
+  return (
+    <S.NewTemplateButton onClick={() => navigate('/templates/upload')}>
+      <PlusIcon width={24} height={24} aria-label='새 템플릿' />
+      <Text.Large color={theme.color.light.primary_500} weight='bold'>
+        이곳을 눌러 새 템플릿을 추가해보세요 :)
+      </Text.Large>
+    </S.NewTemplateButton>
+  );
+};

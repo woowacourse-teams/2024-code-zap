@@ -26,13 +26,13 @@ export const TemplateCardContainer = styled.div`
   }
 `;
 
-export const TagListContainer = styled.div<{ maxHeight?: string }>`
+export const TagListContainer = styled.div`
   overflow: hidden;
   display: flex;
   flex-wrap: nowrap;
   gap: 0.5rem;
 
-  max-height: ${(props) => props.maxHeight || '2.15rem'};
+  height: 2.15rem;
 `;
 
 export const AllTagListModal = styled.div`
@@ -81,4 +81,8 @@ export const EllipsisTextWrapper = styled.span`
 
 export const NoWrapTextWrapper = styled.div`
   white-space: nowrap;
+`;
+
+export const BlankDescription = styled.div`
+  height: 1rem;
 `;

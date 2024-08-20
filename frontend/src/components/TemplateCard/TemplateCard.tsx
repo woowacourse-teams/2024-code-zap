@@ -46,7 +46,11 @@ const TemplateCard = ({ template }: Props) => {
         </Flex>
 
         <S.EllipsisTextWrapper>
-          <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
+          {description ? (
+            <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
+          ) : (
+            <S.BlankDescription />
+          )}
         </S.EllipsisTextWrapper>
       </Flex>
 
