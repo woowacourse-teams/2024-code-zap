@@ -11,7 +11,7 @@ export const TagButtonWrapper = styled.button<{ isFocused: boolean }>`
   justify-content: center;
 
   box-sizing: border-box;
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem 0.75rem;
 
   background-color: ${({ isFocused }) => (isFocused ? theme.color.light.primary_400 : theme.color.light.tertiary_50)};
   border: ${({ isFocused }) =>
