@@ -1,35 +1,36 @@
-package codezap.template.domain;
+package codezap.representative_snippet.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 import codezap.global.domain.BaseTimeEntity;
-import codezap.member.domain.Member;
+import codezap.snippet.domain.Snippet;
+import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "template")
+@Table(name = "representative_snippet")
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
-public class Template extends BaseTimeEntity {
+@AllArgsConstructor
+public class RepresentativeSnippet extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+    @OneToOne
+    @JoinColumn(name = "template_id")
+    private Template template;
 
-    @Column(nullable = false)
-    private String title;
+    @OneToOne
+    @JoinColumn(name = "snippet_id", nullable = false)
+    private Snippet snippet;
 }

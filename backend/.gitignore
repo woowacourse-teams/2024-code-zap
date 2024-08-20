@@ -18,6 +18,3 @@ out/
 
 ### macOS ###
 .DS_Store
-
-### YAML ###
-application-db.yml

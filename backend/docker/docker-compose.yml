@@ -1,0 +1,9 @@
+services:
+  mysql:
+    image: mysql:lts
+    container_name: code-zap-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: woowacourse
+      MYSQL_DATABASE: code_zap
+    ports:
+      - "23306:3306"
