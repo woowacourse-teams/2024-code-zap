@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import { TrashcanIcon, SpinArrowIcon, PencilIcon } from '@/assets/images';
 import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
 import type { Category, CustomError } from '@/types';
+import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '../../assets/images/index';
 import { theme } from '../../style/theme';
 import * as S from './CategoryEditModal.style';
 
@@ -121,96 +121,19 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
       </Modal.Header>
       <Modal.Body>
         <S.EditCategoryItemList>
-          {categories.map(({ id, name }) => (
-            <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
-              {categoriesToDelete.includes(id) ? (
-                <>
-                  <Flex align='center' width='100%' height='2.5rem'>
-                    <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
-                      {name}
-                    </Text.Medium>
-                  </Flex>
-                  <S.IconButtonWrapper>
-                    <PencilIcon
-                      width={20}
-                      height={20}
-                      aria-label='카테고리 이름 변경'
-                      style={{ visibility: 'hidden' }}
-                    />
-                  </S.IconButtonWrapper>
-                  <S.IconButtonWrapper onClick={() => handleRestoreClick(id)}>
-                    <SpinArrowIcon width={16} height={16} aria-label='카테고리 복구' />
-                  </S.IconButtonWrapper>
-                </>
-              ) : (
-                <>
-                  <Flex align='center' width='100%' height='2.5rem'>
-                    {editingCategoryId === id ? (
-                      <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
-                        <Input.TextField
-                          type='text'
-                          value={editedCategories[id] ?? name}
-                          onChange={(e) => handleNameInputChange(id, e.target.value)}
-                          onBlur={() => handleNameInputBlur(id)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                              handleNameInputBlur(id);
-                            }
-                          }}
-                          autoFocus
-                        />
-                      </Input>
-                    ) : (
-                      <Text.Medium color={theme.color.light.secondary_700}>
-                        {editedCategories[id] !== undefined ? editedCategories[id] : name}
-                      </Text.Medium>
-                    )}
-                  </Flex>
-                  <S.IconButtonContainer>
-                    <S.IconButtonWrapper onClick={() => handleEditClick(id)}>
-                      <PencilIcon width={20} height={20} aria-label='카테고리 이름 변경' />
-                    </S.IconButtonWrapper>
-                    <S.IconButtonWrapper onClick={() => handleDeleteClick(id)}>
-                      <TrashcanIcon width={20} height={20} aria-label='카테고리 삭제' />
-                    </S.IconButtonWrapper>
-                  </S.IconButtonContainer>
-                </>
-              )}
-            </S.EditCategoryItem>
-          ))}
-
-          {newCategories.map(({ id, name }) => (
-            <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
-              <Flex align='center' width='100%' height='2.5rem'>
-                {editingCategoryId === id ? (
-                  <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
-                    <Input.TextField
-                      type='text'
-                      value={name}
-                      onChange={(e) => handleNameInputChange(id, e.target.value)}
-                      onBlur={() => handleNameInputBlur(id)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          handleNameInputBlur(id);
-                        }
-                      }}
-                      autoFocus
-                    />
-                  </Input>
-                ) : (
-                  <Text.Medium color={theme.color.light.secondary_700}>{name}</Text.Medium>
-                )}
-              </Flex>
-              <S.IconButtonContainer>
-                <S.IconButtonWrapper onClick={() => handleEditClick(id)}>
-                  <PencilIcon width={20} height={20} aria-label='카테고리 이름 변경' />
-                </S.IconButtonWrapper>
-                <S.IconButtonWrapper onClick={() => handleDeleteClick(id)}>
-                  <TrashcanIcon width={20} height={20} aria-label='카테고리 삭제' />
-                </S.IconButtonWrapper>
-              </S.IconButtonContainer>
-            </S.EditCategoryItem>
-          ))}
+          <CategoryItems
+            categories={categories}
+            newCategories={newCategories}
+            editedCategories={editedCategories}
+            categoriesToDelete={categoriesToDelete}
+            editingCategoryId={editingCategoryId}
+            invalidIds={invalidIds}
+            onEditClick={handleEditClick}
+            onDeleteClick={handleDeleteClick}
+            onRestoreClick={handleRestoreClick}
+            onNameInputChange={handleNameInputChange}
+            onNameInputBlur={handleNameInputBlur}
+          />
         </S.EditCategoryItemList>
         <S.EditCategoryItem>
           <Button fullWidth variant='text' onClick={handleAddCategory} disabled={!isValid}>
@@ -238,5 +161,131 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
     </Modal>
   );
 };
+
+interface CategoryItemsProps {
+  categories: Category[];
+  newCategories: { id: number; name: string }[];
+  editedCategories: Record<number, string>;
+  categoriesToDelete: number[];
+  editingCategoryId: number | null;
+  invalidIds: number[];
+  onEditClick: (id: number) => void;
+  onDeleteClick: (id: number) => void;
+  onRestoreClick: (id: number) => void;
+  onNameInputChange: (id: number, name: string) => void;
+  onNameInputBlur: (id: number) => void;
+}
+
+const CategoryItems = ({
+  categories,
+  newCategories,
+  editedCategories,
+  categoriesToDelete,
+  editingCategoryId,
+  invalidIds,
+  onEditClick,
+  onDeleteClick,
+  onRestoreClick,
+  onNameInputChange,
+  onNameInputBlur,
+}: CategoryItemsProps) => (
+  <>
+    {categories.map(({ id, name }) => (
+      <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
+        {categoriesToDelete.includes(id) ? (
+          <>
+            <Flex align='center' width='100%' height='2.5rem'>
+              <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
+                {name}
+              </Text.Medium>
+            </Flex>
+            <IconButtons restore onRestoreClick={() => onRestoreClick(id)} />
+          </>
+        ) : (
+          <>
+            <Flex align='center' width='100%' height='2.5rem'>
+              {editingCategoryId === id ? (
+                <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
+                  <Input.TextField
+                    type='text'
+                    value={editedCategories[id] ?? name}
+                    onChange={(e) => onNameInputChange(id, e.target.value)}
+                    onBlur={() => onNameInputBlur(id)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        onNameInputBlur(id);
+                      }
+                    }}
+                    autoFocus
+                  />
+                </Input>
+              ) : (
+                <Text.Medium color={theme.color.light.secondary_700}>
+                  {editedCategories[id] !== undefined ? editedCategories[id] : name}
+                </Text.Medium>
+              )}
+            </Flex>
+            <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
+          </>
+        )}
+      </S.EditCategoryItem>
+    ))}
+
+    {newCategories.map(({ id, name }) => (
+      <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
+        <Flex align='center' width='100%' height='2.5rem'>
+          {editingCategoryId === id ? (
+            <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
+              <Input.TextField
+                type='text'
+                value={name}
+                onChange={(e) => onNameInputChange(id, e.target.value)}
+                onBlur={() => onNameInputBlur(id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onNameInputBlur(id);
+                  }
+                }}
+                autoFocus
+              />
+            </Input>
+          ) : (
+            <Text.Medium color={theme.color.light.secondary_700}>{name}</Text.Medium>
+          )}
+        </Flex>
+        <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
+      </S.EditCategoryItem>
+    ))}
+  </>
+);
+
+interface IconButtonsProps {
+  onRestoreClick?: () => void;
+  onEditClick?: () => void;
+  onDeleteClick?: () => void;
+  restore?: boolean;
+  edit?: boolean;
+  delete?: boolean;
+}
+
+const IconButtons = ({ onRestoreClick, onEditClick, onDeleteClick, restore, edit, delete: del }: IconButtonsProps) => (
+  <S.IconButtonContainer>
+    {restore && (
+      <S.IconButtonWrapper onClick={onRestoreClick}>
+        <SpinArrowIcon aria-label='카테고리 복구' />
+      </S.IconButtonWrapper>
+    )}
+    {edit && (
+      <S.IconButtonWrapper onClick={onEditClick}>
+        <PencilIcon width={20} height={20} aria-label='카테고리 이름 변경' />
+      </S.IconButtonWrapper>
+    )}
+    {del && (
+      <S.IconButtonWrapper onClick={onDeleteClick}>
+        <TrashcanIcon width={20} height={20} aria-label='카테고리 삭제' />
+      </S.IconButtonWrapper>
+    )}
+  </S.IconButtonContainer>
+);
 
 export default CategoryEditModal;
