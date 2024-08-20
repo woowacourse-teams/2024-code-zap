@@ -10,7 +10,9 @@ export const useCategoryUploadMutation = (handleCurrentCategory: (newValue: Cate
     mutationFn: postCategory,
     onSuccess: (res) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.CATEGORY_LIST] });
-      handleCurrentCategory(res as Category);
+      if ('name' in res) {
+        handleCurrentCategory(res);
+      }
     },
   });
 };

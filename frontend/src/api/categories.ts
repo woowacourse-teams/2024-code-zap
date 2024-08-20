@@ -1,4 +1,4 @@
-import type { CategoryListResponse, CategoryRequest } from '@/types';
+import type { Category, CategoryListResponse, CategoryRequest, CustomError } from '@/types';
 import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
@@ -20,7 +20,7 @@ export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>
   throw new Error(response.detail);
 };
 
-export const postCategory = async (newCategory: CategoryRequest) =>
+export const postCategory = async (newCategory: CategoryRequest): Promise<Category | CustomError> =>
   await customFetch({
     method: 'POST',
     url: `${CATEGORY_API_URL}`,
