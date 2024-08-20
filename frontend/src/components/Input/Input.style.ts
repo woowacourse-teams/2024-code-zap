@@ -51,23 +51,26 @@ const sizes = {
   `,
 };
 
-const variants = {
+const variants = (color: string | undefined) => ({
   filled: css`
-    background-color: #ffffff;
+    background-color: ${color ?? '#ffffff'};
   `,
   outlined: css`
     background: none;
-    border: 1px solid ${theme.color.light.tertiary_400};
+    border: 1px solid ${color ?? theme.color.light.tertiary_400};
   `,
   text: css`
     background: none;
   `,
-};
+});
 
 export const Container = styled.div`
+  cursor: text;
+
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
   width: 100%;
 `;
 
@@ -75,12 +78,12 @@ export const Base = styled.div<BaseProps>`
   display: flex;
   align-items: center;
 
-  ${({ variant }) => variant && variants[variant]};
+  ${({ variant, inputColor }) => variant && variants(inputColor)[variant]};
   ${({ size }) => size && sizes[size]};
   ${({ isValid }) =>
     isValid === false &&
     css`
-      border: 1px solid red;
+      border: 1px solid ${theme.color.light.analogous_primary_400};
     `};
 
   /* for Adornment size */
@@ -108,7 +111,7 @@ export const TextField = styled.input<TextFieldProps>`
   background: none;
 
   &::placeholder {
-    color: ${theme.color.light.tertiary_400};
+    color: ${({ placeholderColor }) => (placeholderColor ? placeholderColor : theme.color.light.tertiary_400)};
   }
 
   &:focus {
@@ -136,5 +139,5 @@ export const HelperText = styled.span`
   height: 1rem;
   margin-left: 0.5rem;
   font-size: 1rem;
-  color: red;
+  color: ${theme.color.light.analogous_primary_400};
 `;

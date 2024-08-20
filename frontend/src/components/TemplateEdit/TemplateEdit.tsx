@@ -1,5 +1,5 @@
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text } from '@/components';
+import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
 import { useCategoryUploadMutation } from '@/queries/category';
 import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
@@ -52,29 +52,45 @@ const TemplateEdit = ({
   handleSaveButtonClick,
   error,
 }: Props) => {
-  const { mutateAsync: postCategory } = useCategoryUploadMutation();
+  const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(categoryProps.handleCurrentValue);
+
+  const getExistingCategory = (value: string) =>
+    categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
+
+  const createNewCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
+      return;
+    }
+
+    const inputValue = e.target.value;
+    const existingCategory = getExistingCategory(inputValue);
+
+    if (inputValue.trim() === '') {
+      e.target.value = '';
+
+      return;
+    }
+
+    if (existingCategory) {
+      categoryProps.handleCurrentValue(existingCategory);
+
+      return;
+    }
+
+    const newCategory = { name: inputValue };
+
+    postCategory(newCategory);
+
+    e.target.value = '';
+  };
 
   return (
     <S.TemplateEditContainer>
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
+        <CategoryGuide isOpen={categoryProps.isOpen} isPending={isPending} />
         <Dropdown
           {...categoryProps}
-          replaceChildrenWhenIsOpen={
-            <Input size='medium' variant='outlined'>
-              <Input.TextField
-                autoFocus
-                placeholder='+ 새 카테고리 생성'
-                onKeyUpCapture={(e) => {
-                  if (e.target instanceof HTMLInputElement && e.key === 'Enter') {
-                    const newCategory = { name: e.target.value };
-
-                    postCategory(newCategory);
-                    e.target.value = '';
-                  }
-                }}
-              />
-            </Input>
-          }
+          replaceChildrenWhenIsOpen={<NewCategoryInput createNewCategory={createNewCategory} />}
         />
 
         <S.UnderlineInputWrapper>
@@ -136,3 +152,39 @@ const TemplateEdit = ({
 };
 
 export default TemplateEdit;
+
+interface NewCategoryInputProps {
+  createNewCategory: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
+const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
+  <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
+    <Input.TextField
+      autoFocus
+      placeholder='+ 새 카테고리 생성'
+      onKeyUpCapture={createNewCategory}
+      placeholderColor={theme.color.light.secondary_600}
+    />
+  </Input>
+);
+
+interface CategoryGuideProps {
+  isOpen: boolean;
+  isPending: boolean;
+}
+
+const CategoryGuide = ({ isOpen, isPending }: CategoryGuideProps) => (
+  <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
+    {isPending ? (
+      <>
+        <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
+        <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
+      </>
+    ) : (
+      <>
+        <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
+        <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
+      </>
+    )}
+  </Guide>
+);

@@ -6,6 +6,7 @@ import type {
   CategoryEditRequest,
   CategoryDeleteRequest,
   CustomError,
+  Category,
 } from '@/types';
 import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
@@ -28,7 +29,7 @@ export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>
   throw new Error(response.detail);
 };
 
-export const postCategory = async (newCategory: CategoryUploadRequest) =>
+export const postCategory = async (newCategory: CategoryUploadRequest): Promise<Category | CustomError> =>
   await customFetch({
     method: 'POST',
     url: `${CATEGORY_API_URL}`,

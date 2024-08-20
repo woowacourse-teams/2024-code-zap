@@ -22,7 +22,7 @@ export const SelectedButton = styled.button`
   padding: 0.625rem;
 
   object-fit: contain;
-  border: 1px solid ${theme.color.light.tertiary_400};
+  border: 1px solid ${theme.color.light.tertiary_100};
   border-radius: 10px;
 `;
 
@@ -34,7 +34,7 @@ export const OptionList = styled.ul`
   margin: 2px 0 0 0;
 
   background-color: white;
-  border: 1px solid ${theme.color.light.tertiary_400};
+  border: 1px solid ${theme.color.light.tertiary_100};
   border-radius: 10px;
 `;
 
@@ -44,6 +44,6 @@ export const Option = styled.li`
   border-radius: 9px;
   &:hover {
     color: ${theme.color.light.white};
-    background-color: ${theme.color.light.primary_500};
+    background-color: ${theme.color.light.primary_200};
   }
 `;
