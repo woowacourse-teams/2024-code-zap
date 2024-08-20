@@ -1,0 +1,67 @@
+name: Frontend CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev/fe
+
+jobs:
+  build:
+    runs-on: self-hosted
+    env:
+      frontend-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: .env.production 파일 생성
+        run: |
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+          echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
+
+      - name: 파일 접근 권한 변경
+        run: |
+          chmod 644 ${{ env.frontend-directory }}/.env.production
+          chmod 644 ${{ env.frontend-directory }}/.env.sentry-build-plugin
+
+      - name: 의존성 설치
+        run: npm install
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: 빌드 실행
+        run: npm run build
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: Artifact 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-zap-front
+          path: ${{ env.frontend-directory }}/dist/**
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Artifact 폴더 삭제 및 생성
+        run: |
+          rm -rf ${{ secrets.FRONT_DIRECTORY }}
+          mkdir ${{ secrets.FRONT_DIRECTORY }}
+          
+      - name: Artifact 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: code-zap-front
+          path: ${{ secrets.FRONT_DIRECTORY }}
+          
+      - name: 파일 S3로 이동
+        run: |
+          aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
+        

@@ -1,0 +1,25 @@
+{
+  "id": 1,
+  "title": "title1",
+  "description": "description1",
+  "snippets": [
+    {
+      "id": 101,
+      "filename": "MyComponent.tsx",
+      "content": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};\n\nexport default MyComponent;",
+      "ordinal": 1
+    },
+    {
+      "id": 102,
+      "filename": "App.tsx",
+      "content": "import React from 'react';\nimport MyComponent from './MyComponent';\n\nconst App: React.FC = () => {\n  return (\n    <div>\n      <MyComponent name=\"John Doe\" age={30} />\n    </div>\n  );\n};\n\nexport default App;",
+      "ordinal": 2
+    }
+  ],
+  "category": { "id": 2, "name": "CategoryID2" },
+  "tags": [
+    { "id": 3, "name": "JavaScript" },
+    { "id": 5, "name": "Backend" }
+  ],
+  "modifiedAt": "2024-07-01 12:34"
+}

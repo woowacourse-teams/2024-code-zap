@@ -1,0 +1,32 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev/fe
+
+jobs:
+  build-with-test:
+    runs-on: ubuntu-latest
+    env:
+      frontend-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 의존성 설치
+        run: npm install
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: 타입 체크 실행
+        run: npm run tsc
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: 테스트 실행
+        run: npm run test
+        working-directory: ${{ env.frontend-directory }}
