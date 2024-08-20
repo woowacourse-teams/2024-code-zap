@@ -73,7 +73,9 @@ const TemplateCard = ({ template }: Props) => {
           ))}
         </S.TagListContainer>
         <Button variant='text' size='small' css={{ whiteSpace: 'nowrap' }} onMouseEnter={handleAllTagList}>
-          <Text.XSmall color={theme.color.light.secondary_500}>모든 태그</Text.XSmall>
+          <Text.XSmall color={tags.length !== 0 ? theme.color.light.secondary_500 : 'transparent'}>
+            모든 태그
+          </Text.XSmall>
         </Button>
       </Flex>
 
