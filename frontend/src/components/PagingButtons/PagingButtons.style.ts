@@ -29,7 +29,7 @@ export const PagingButton = styled.button<{ isActive?: boolean }>`
 
   &:disabled {
     cursor: default;
-    opacity: 0.7;
+    opacity: ${({ isActive }) => (isActive ? 1 : 0.7)};
   }
 
   &:not(:disabled):hover span {

@@ -60,7 +60,7 @@ interface PagingButtonProps {
 }
 
 const PagingButton = ({ page, isActive, disabled, onClick, label }: PagingButtonProps) => (
-  <S.PagingButton isActive={isActive} disabled={disabled} onClick={() => onClick(page ?? 1)}>
+  <S.PagingButton isActive={isActive} disabled={disabled || isActive} onClick={() => onClick(page ?? 1)}>
     <Text.Small color={isActive ? theme.color.light.white : theme.color.light.secondary_500}>{label}</Text.Small>
   </S.PagingButton>
 );
