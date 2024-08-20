@@ -38,22 +38,22 @@ public class TemplateService {
         return templateRepository.findByMemberId(memberId);
     }
 
-    public Page<Template> findAllBy(long memberId, String keyword, Pageable pageable) {
+    public Page<Template> findByMemberAndKeyword(long memberId, String keyword, Pageable pageable) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, pageable);
     }
 
-    public Page<Template> findAllBy(long memberId, String keyword, Long categoryId, Pageable pageable) {
+    public Page<Template> findByMemberKeywordAndCategory(long memberId, String keyword, Long categoryId, Pageable pageable) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, categoryId, pageable);
     }
 
-    public Page<Template> findAllBy(long memberId, String keyword, List<Long> templateIds, Pageable pageable) {
+    public Page<Template> findByMemberKeywordAndIds(long memberId, String keyword, List<Long> templateIds, Pageable pageable) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, templateIds, pageable);
     }
 
-    public Page<Template> findAllBy(
+    public Page<Template> findByMemberKeywordCategoryAndIds(
             long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
     ) {
         keyword = "%" + keyword + "%";
@@ -65,7 +65,7 @@ public class TemplateService {
             Long templateId,
             UpdateTemplateRequest updateTemplateRequest,
             Category category
-            ) {
+    ) {
         Template template = templateRepository.fetchById(templateId);
         validateTemplateAuthorizeMember(member, template);
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);

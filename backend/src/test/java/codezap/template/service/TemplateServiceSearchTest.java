@@ -127,7 +127,7 @@ public class TemplateServiceSearchTest {
             saveTemplate(makeTemplateRequest("hello keyword !"), member, category);
 
             //when
-            Page<Template> templates = templateService.findAllBy(
+            Page<Template> templates = templateService.findByMemberAndKeyword(
                     member.getId(), "keyword", PageRequest.of(0, 3)
             );
 
@@ -147,7 +147,7 @@ public class TemplateServiceSearchTest {
             saveTemplateByFilename("tempate3", "login.js", "signup.java", member, category);
 
             //when
-            Page<Template> templates = templateService.findAllBy(
+            Page<Template> templates = templateService.findByMemberAndKeyword(
                     member.getId(), "java", PageRequest.of(0, 3)
             );
 
@@ -167,7 +167,7 @@ public class TemplateServiceSearchTest {
             saveTemplateBySourceCode("tempate3", "console.log", "a+b=3", member, category);
 
             //when
-            Page<Template> templates = templateService.findAllBy(
+            Page<Template> templates = templateService.findByMemberAndKeyword(
                     member.getId(), "Car", PageRequest.of(0, 3)
             );
 
@@ -198,7 +198,7 @@ public class TemplateServiceSearchTest {
             saveTemplate(request2, member, category);
 
             //when
-            Page<Template> templates = templateService.findAllBy(
+            Page<Template> templates = templateService.findByMemberAndKeyword(
                     member.getId(), "Login", PageRequest.of(0, 3)
             );
 
@@ -215,7 +215,7 @@ public class TemplateServiceSearchTest {
             Category category2 = categoryRepository.save(new Category("category2", member));
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
-            Page<Template> allBy = templateService.findAllBy(
+            Page<Template> allBy = templateService.findByMemberAndKeyword(
                     member.getId(), "", PageRequest.of(0, 20)
             );
 
@@ -234,7 +234,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category);
 
             //when
-            Page<Template> templates = templateService.findAllBy(
+            Page<Template> templates = templateService.findByMemberAndKeyword(
                     member.getId(), "keyword", PageRequest.of(1, 5)
             );
 
@@ -263,7 +263,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            Page<Template> allBy = templateService.findAllBy(
+            Page<Template> allBy = templateService.findByMemberAndKeyword(
                     member.getId(), "", PageRequest.of(0, 20)
             );
 
@@ -285,7 +285,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            Page<Template> allBy = templateService.findAllBy(
+            Page<Template> allBy = templateService.findByMemberAndKeyword(
                     member.getId(), "", PageRequest.of(1, 20)
             );
 
@@ -304,7 +304,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            Page<Template> allBy = templateService.findAllBy(
+            Page<Template> allBy = templateService.findByMemberKeywordAndCategory(
                     member.getId(), "", category1.getId(), PageRequest.of(0, 20)
             );
 

@@ -50,7 +50,7 @@ public class TagTemplateApplicationService {
         Template template = templateService.getByMemberAndId(member, id);
         List<Tag> tags = templateTagService.getByTemplate(template);
 
-        List<SourceCode> sourceCodes = sourceCodeService.getSourceCode(template);
+        List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
         return FindTemplateResponse.of(template, sourceCodes, tags);
     }
 
@@ -59,23 +59,23 @@ public class TagTemplateApplicationService {
         return templateTagService.findAllByTemplates(template);
     }
 
-    public FindAllTemplatesResponse findAllBy(
+    public FindAllTemplatesResponse findByMemberKeywordAndCategoryOrTagIds(
             long memberId,
             String keyword,
             List<Long> tagIds,
             Pageable pageable
     ) {
         if (tagIds == null) {
-            Page<Template> templates = templateService.findAllBy(memberId, keyword, pageable);
+            Page<Template> templates = templateService.findByMemberAndKeyword(memberId, keyword, pageable);
             return makeTemplatesResponse(templates);
         }
 
         List<Long> templateIds = templateTagService.getTemplateIdContainTagIds(tagIds);
-        Page<Template> templates = templateService.findAllBy(memberId, keyword, templateIds, pageable);
+        Page<Template> templates = templateService.findByMemberKeywordAndIds(memberId, keyword, templateIds, pageable);
         return makeTemplatesResponse(templates);
     }
 
-    public FindAllTemplatesResponse findAllBy(
+    public FindAllTemplatesResponse findByMemberKeywordOrTagIds(
             long memberId,
             String keyword,
             Long categoryId,
@@ -83,12 +83,12 @@ public class TagTemplateApplicationService {
             Pageable pageable
     ) {
         if (tagIds == null) {
-            Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, pageable);
+            Page<Template> templates = templateService.findByMemberKeywordAndCategory(memberId, keyword, categoryId, pageable);
             return makeTemplatesResponse(templates);
         }
 
         List<Long> templateIds = templateTagService.getTemplateIdContainTagIds(tagIds);
-        Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, templateIds, pageable);
+        Page<Template> templates = templateService.findByMemberKeywordCategoryAndIds(memberId, keyword, categoryId, templateIds, pageable);
         return makeTemplatesResponse(templates);
     }
 
@@ -116,6 +116,6 @@ public class TagTemplateApplicationService {
         templateService.deleteByMemberAndIds(member, ids);
         templateTagService.deleteByIds(ids);
         sourceCodeService.deleteByIds(ids);
-        thumbnailService.deleteByIds(ids);
+        thumbnailService.deleteByTemplateIds(ids);
     }
 }

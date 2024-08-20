@@ -122,7 +122,7 @@ class TemplateServiceTest {
         saveTemplate(makeTemplateRequest("title2"), new Category("category2", member), member);
 
         // when
-        Page<Template> allTemplates = templateService.findAllBy(
+        Page<Template> allTemplates = templateService.findByMemberAndKeyword(
                 member.getId(), "", PageRequest.of(0, 10));
 
         // then
@@ -174,7 +174,7 @@ class TemplateServiceTest {
         CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
 
         // when
-        Template template = templateService.createTemplate(member, category, createTemplateRequest);
+        Template template = templateService.createTemplate(member, createTemplateRequest, category);
 
         // then
         assertAll(
@@ -196,7 +196,7 @@ class TemplateServiceTest {
 
         // when
         UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
-        templateService.updateTemplate(member, category, template.getId(), updateTemplateRequest);
+        templateService.updateTemplate(member, template.getId(), updateTemplateRequest, category);
         Template updateTemplate = templateRepository.fetchById(template.getId());
         List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
                 .map(TemplateTag::getTag)
@@ -227,7 +227,7 @@ class TemplateServiceTest {
         // then
         Long templateId = template.getId();
         assertThatThrownBy(
-                () -> templateService.updateTemplate(otherMember, category, templateId, updateTemplateRequest))
+                () -> templateService.updateTemplate(otherMember, templateId, updateTemplateRequest, category))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
