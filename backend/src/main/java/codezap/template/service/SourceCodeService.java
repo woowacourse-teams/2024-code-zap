@@ -87,7 +87,7 @@ public class SourceCodeService {
                 thumbnail.getSourceCode().getOrdinal()
         );
         sourceCodes.stream()
-                .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode().getId(), sourceCode.getId()))
+                .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode(), sourceCode))
                 .findFirst()
                 .ifPresent(thumbnail::updateThumbnail);
     }
