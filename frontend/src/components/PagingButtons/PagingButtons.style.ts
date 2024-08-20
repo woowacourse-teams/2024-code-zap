@@ -2,7 +2,12 @@ import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
 
-export const StyledPagingButton = styled.button`
+export const PagingContainer = styled.div`
+  display: flex;
+  gap: 0.5rem;
+`;
+
+export const PagingButton = styled.button<{ isActive?: boolean }>`
   cursor: pointer;
 
   width: 2rem;
@@ -14,15 +19,20 @@ export const StyledPagingButton = styled.button`
   border: none;
   border-radius: 8px;
 
-  :disabled {
+  ${({ isActive }) =>
+    isActive &&
+    `
     background-color: ${theme.color.light.primary_500};
+    color: ${theme.color.light.white};
+    cursor: default;
+  `}
 
-    span {
-      color: ${theme.color.light.white};
-    }
+  &:disabled {
+    cursor: default;
+    opacity: 0.7;
   }
 
-  :not(:disabled):hover span {
+  &:not(:disabled):hover span {
     color: ${theme.color.light.secondary_700};
   }
 `;
