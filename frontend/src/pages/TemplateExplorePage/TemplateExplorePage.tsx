@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
+import { ArrowUpIcon } from '@/assets/images';
 import { Dropdown, Flex, Heading, PagingButton, TemplateCard } from '@/components';
 import { useDropdown, useWindowWidth } from '@/hooks/utils';
 import { useTemplateExploreQuery } from '@/queries/template';
@@ -50,6 +51,14 @@ const TemplateExplorePage = () => {
           <PagingButton key={index + 1} page={index + 1} isActive={page === index + 1} onClick={handlePageChange} />
         ))}
       </Flex>
+
+      <S.ScrollTopButton
+        onClick={() => {
+          scroll.top('smooth');
+        }}
+      >
+        <ArrowUpIcon aria-label='맨 위로' />
+      </S.ScrollTopButton>
     </Flex>
   );
 };

@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 
+import { theme } from '@/style/theme';
+
 export const TemplateExplorePageContainer = styled.div<{ cols: number }>`
   display: grid;
   grid-gap: 1rem;
@@ -19,4 +21,22 @@ export const MainContainer = styled.main`
   @media (max-width: 768px) {
     gap: 0;
   }
+`;
+
+export const ScrollTopButton = styled.button`
+  cursor: pointer;
+
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.75rem;
+
+  background-color: ${theme.color.light.primary_500};
+  border: none;
+  border-radius: 100%;
 `;
