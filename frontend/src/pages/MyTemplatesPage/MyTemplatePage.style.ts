@@ -54,8 +54,11 @@ export const NewTemplateButton = styled.button`
   height: 19.75rem;
   padding: 1.5rem;
 
-  background-color: ${theme.color.light.primary_50};
+  border: 3px dashed ${theme.color.light.primary_500};
   border-radius: 8px;
+  &:hover {
+    background-color: ${theme.color.light.primary_50};
+  }
 `;
 
 export const ScrollTopButton = styled.button`
