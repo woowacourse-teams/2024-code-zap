@@ -60,12 +60,10 @@ public class TemplateTagService {
     }
 
     public FindAllTagsResponse findAllByTemplates(List<Template> templates) {
-        List<TemplateTag> templateTags = templateTagRepository.findByTemplateIn(templates);
+        List<TemplateTag> templateTags = templateTagRepository.findDistinctByTemplateIn(templates);
         return new FindAllTagsResponse(
                 templateTags.stream()
-                        .map(TemplateTag::getTag)
-                        .distinct()
-                        .map(FindTagResponse::from)
+                        .map(templateTag -> FindTagResponse.from(templateTag.getTag()))
                         .toList()
         );
     }

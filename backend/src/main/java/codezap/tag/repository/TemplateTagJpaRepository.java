@@ -13,7 +13,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
 
     List<TemplateTag> findAllByTemplate(Template template);
 
-    List<TemplateTag> findByTemplateIn(List<Template> templates);
+    List<TemplateTag> findDistinctByTemplateIn(List<Template> templates);
 
     @Query("""
             SELECT DISTINCT tt.id.templateId
