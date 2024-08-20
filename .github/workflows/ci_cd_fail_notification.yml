@@ -13,8 +13,8 @@ jobs:
     steps:
     - name: 변수 추출
       run: |
-        SLACK_WEBHOOK_URL=$(cat ../slack_noti/SLACK_CICD_FAIL_WEBHOOK_URL)
-        SLACK_IDS=$(cat ../slack_noti/SLACK_IDS)
+        SLACK_WEBHOOK_URL=${{ secrets.SLACK_CICD_FAIL_WEBHOOK_URL }}
+        SLACK_IDS=${{ secrets.SLACK_IDS }}
         echo "SLACK_WEBHOOK_URL=$SLACK_WEBHOOK_URL" >> $GITHUB_ENV
         echo "SLACK_IDS=$SLACK_IDS" >> $GITHUB_ENV
 
