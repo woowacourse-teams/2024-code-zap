@@ -56,7 +56,7 @@ export const useTemplateUpload = () => {
 
   const handleDeleteSourceCode = (index: number) => {
     if (!sourceCodes[index]) {
-      console.error('존재하지 않는 스니펫 인덱스입니다.');
+      console.error('존재하지 않는 소스코드 인덱스입니다.');
     }
 
     setSourceCodes((prevSourceCodes) => prevSourceCodes.filter((_, idx) => index !== idx));
@@ -72,11 +72,11 @@ export const useTemplateUpload = () => {
     }
 
     if (sourceCodes.filter((sourceCode) => !sourceCode.filename).length) {
-      return '파일 명을 입력해주세요';
+      return '파일명을 입력해주세요';
     }
 
     if (sourceCodes.filter((sourceCode) => !sourceCode.content).length) {
-      return '스니펫 내용을 입력해주세요';
+      return '소스코드 내용을 입력해주세요';
     }
 
     return '';
