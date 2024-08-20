@@ -33,7 +33,3 @@ jobs:
         run: ./gradlew test
         working-directory: ./backend
 
-      - name: 클린업
-        if: always()
-        run: rm -rf ../2024-code-zap/*
-
