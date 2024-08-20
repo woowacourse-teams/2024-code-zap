@@ -19,28 +19,32 @@ const Base = ({
   children,
   ...rests
 }: PropsWithChildren<BaseProps>) => {
-  {
-    if (!isOpen) {
-      return null;
-    }
-
-    return createPortal(
-      <S.Container>
-        <S.Backdrop onClick={toggleModal} />
-        <S.Base size={size} {...rests}>
-          {children}
-        </S.Base>
-      </S.Container>,
-      document.body,
-    );
+  if (!isOpen) {
+    return null;
   }
+
+  return createPortal(
+    <S.Container>
+      <S.Backdrop onClick={toggleModal} />
+      <S.Base size={size} {...rests}>
+        {children}
+      </S.Base>
+    </S.Container>,
+    document.body,
+  );
 };
 
-const Header = () => {};
+const Header = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
+  <S.Header {...props}>{children}</S.Header>
+);
 
-const Body = () => {};
+const Body = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
+  <S.Body {...props}>{children}</S.Body>
+);
 
-const Footer = () => {};
+const Footer = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
+  <S.Footer {...props}>{children}</S.Footer>
+);
 
 const Modal = Object.assign(Base, {
   Header,
