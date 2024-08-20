@@ -40,8 +40,8 @@ export const getTemplateList = async ({
     keyword,
     memberId: String(memberId),
     sort,
-    pageNumber: page.toString(),
-    pageSize: pageSize.toString(),
+    page: page.toString(),
+    size: pageSize.toString(),
   });
 
   if (categoryId) {
