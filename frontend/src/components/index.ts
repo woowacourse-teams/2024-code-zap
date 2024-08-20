@@ -1,4 +1,5 @@
 export { default as Button } from './Button/Button';
+export { default as CategoryEditModal } from './CategoryEditModal/CategoryEditModal';
 export { default as CategoryFilterMenu } from './CategoryFilterMenu/CategoryFilterMenu';
 export { default as Dropdown } from './Dropdown/Dropdown';
 export { default as Flex } from './Flex/Flex';

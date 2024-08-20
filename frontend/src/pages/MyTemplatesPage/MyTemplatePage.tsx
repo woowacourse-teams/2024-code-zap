@@ -110,7 +110,7 @@ const MyTemplatePage = () => {
         </S.TopBannerTextWrapper>
       </S.TopBannerContainer>
       <S.MainContainer>
-        <Flex direction='column' gap='2.5rem' style={{ marginTop: '6.375rem' }}>
+        <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
           <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
           {tags.length !== 0 && (
             <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEY, postCategory } from '@/api';
 import { Category } from '@/types';
 
-export const useCategoryUploadMutation = (handleCurrentCategory: (newValue: Category) => void) => {
+export const useCategoryUploadMutation = (handleCurrentCategory: (newValue: Category) => void = () => {}) => {
   const queryClient = useQueryClient();
 
   return useMutation({
