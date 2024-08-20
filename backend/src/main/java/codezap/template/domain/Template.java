@@ -13,8 +13,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import org.springframework.http.HttpStatus;
+
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
+import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -61,6 +64,12 @@ public class Template extends BaseTimeEntity {
 
     public void updateSourceCodes(List<SourceCode> sourceCode) {
         sourceCodes.addAll(sourceCode);
+    }
+
+    public void validateAuthorization(Member member) {
+        if (!member.equals(this.member)) {
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
+        }
     }
 
     @Override

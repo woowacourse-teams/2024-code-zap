@@ -30,7 +30,7 @@ public class TemplateService {
 
     public Template getByMemberAndId(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
-        validateTemplateAuthorizeMember(member, template);
+        template.validateAuthorization(member);
         return template;
     }
 
@@ -71,7 +71,7 @@ public class TemplateService {
             Category category
     ) {
         Template template = templateRepository.fetchById(templateId);
-        validateTemplateAuthorizeMember(member, template);
+        template.validateAuthorization(member);
         template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
 
         return template;
@@ -86,15 +86,7 @@ public class TemplateService {
 
     private void deleteById(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
-        validateTemplateAuthorizeMember(member, template);
-
+        template.validateAuthorization(member);
         templateRepository.deleteById(id);
-    }
-
-    private void validateTemplateAuthorizeMember(Member member, Template template) {
-        Member owner = template.getMember();
-        if (!owner.equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
-        }
     }
 }
