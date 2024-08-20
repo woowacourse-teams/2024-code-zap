@@ -18,7 +18,7 @@ public interface SpringDocTagController {
     @Operation(summary = "태그 조회", description = "해당 멤버의 템플릿들에 포함된 태그를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "태그 조회 성공")
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED,
-            instance = "/templates/tags/1", errorCases = {
+            instance = "/tags/1", errorCases = {
             @ErrorCase(description = "인증 정보가 없거나 잘못된 경우", exampleMessage = "인증에 실패했습니다."),
             @ErrorCase(description = "인증 정보와 멤버 ID가 다른 경우", exampleMessage = "인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."),
     })
