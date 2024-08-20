@@ -56,7 +56,7 @@ public class MemberService {
         }
     }
 
-    public Member getByMemberDto(MemberDto memberDto) {
-        return memberRepository.fetchById(memberDto.id());
+    public Member getById(Long id) {
+        return memberRepository.fetchById(id);
     }
 }

@@ -23,7 +23,7 @@ public class MemberTemplateApplicationService {
     private final TagTemplateApplicationService tagTemplateApplicationService;
 
     public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
-        Member member = memberService.getByMemberDto(memberDto);
+        Member member = memberService.getById(memberDto.id());
         return templateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
@@ -33,7 +33,7 @@ public class MemberTemplateApplicationService {
     }
 
     public FindTemplateResponse getByIdAndMember(MemberDto memberDto, Long id) {
-        Member member = memberService.getByMemberDto(memberDto);
+        Member member = memberService.getById(memberDto.id());
         return tagTemplateApplicationService.getByMemberAndId(member, id);
     }
 
@@ -50,12 +50,12 @@ public class MemberTemplateApplicationService {
     }
 
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Member member = memberService.getByMemberDto(memberDto);
+        Member member = memberService.getById(memberDto.id());
         templateApplicationService.update(member, templateId, updateTemplateRequest);
     }
 
     public void deleteByIds(MemberDto memberDto, List<Long> ids) {
-        Member member = memberService.getByMemberDto(memberDto);
+        Member member = memberService.getById(memberDto.id());
         tagTemplateApplicationService.deleteByMemberAndIds(member, ids);
     }
 }
