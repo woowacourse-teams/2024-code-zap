@@ -90,7 +90,8 @@ public class TemplateService {
     }
 
     private void validateTemplateAuthorizeMember(Member member, Template template) {
-        if (!template.getMember().equals(member)) {
+        Member owner = template.getMember();
+        if (!owner.equals(member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
         }
     }

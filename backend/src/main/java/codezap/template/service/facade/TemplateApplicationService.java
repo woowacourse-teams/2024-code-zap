@@ -31,7 +31,8 @@ public class TemplateApplicationService {
     }
 
     private void validateCategoryAuthorizeMember(Member member, Category category) {
-        if (!category.getMember().equals(member)) {
+        Member owner = category.getMember();
+        if (!owner.equals(member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
         }
     }
