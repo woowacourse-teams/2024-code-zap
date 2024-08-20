@@ -107,6 +107,7 @@ const TemplateEdit = ({
           <Flex key={idx} style={{ position: 'relative' }} width='100%'>
             <SourceCodeEditor
               key={idx}
+              index={idx}
               fileName={sourceCode.filename}
               content={sourceCode.content}
               onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
