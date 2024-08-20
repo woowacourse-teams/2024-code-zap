@@ -39,27 +39,27 @@ public class TemplateService {
         return templateRepository.findByMemberId(memberId);
     }
 
-    public Page<Template> findByMemberAndKeyword(long memberId, String keyword, Pageable pageable) {
+    public Page<Template> findByMemberAndKeyword(Long memberId, String keyword, Pageable pageable) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, pageable);
     }
 
     public Page<Template> findByMemberKeywordAndCategory(
-            long memberId, String keyword, Long categoryId, Pageable pageable
+            Long memberId, String keyword, Long categoryId, Pageable pageable
     ) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, categoryId, pageable);
     }
 
     public Page<Template> findByMemberKeywordAndIds(
-            long memberId, String keyword, List<Long> templateIds, Pageable pageable
+            Long memberId, String keyword, List<Long> templateIds, Pageable pageable
     ) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, templateIds, pageable);
     }
 
     public Page<Template> findByMemberKeywordCategoryAndIds(
-            long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
+            Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
     ) {
         keyword = "%" + keyword + "%";
         return templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);

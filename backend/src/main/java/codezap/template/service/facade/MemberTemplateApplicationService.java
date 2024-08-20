@@ -39,7 +39,7 @@ public class MemberTemplateApplicationService {
 
     public FindAllTemplatesResponse findAllBy(
             MemberDto memberDto,
-            long memberId,
+            Long memberId,
             String keyword,
             Long categoryId,
             List<Long> tagIds,

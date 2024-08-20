@@ -27,7 +27,7 @@ public class CategoryTemplateApplicationService {
     }
 
     public FindAllTemplatesResponse findAllBy(
-            long memberId,
+            Long memberId,
             String keyword,
             Long categoryId,
             List<Long> tagIds,

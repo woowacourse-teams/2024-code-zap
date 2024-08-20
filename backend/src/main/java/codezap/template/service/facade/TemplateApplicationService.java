@@ -60,7 +60,7 @@ public class TemplateApplicationService {
     }
 
     public FindAllTemplatesResponse findByMemberKeywordAndCategoryOrTagIds(
-            long memberId,
+            Long memberId,
             String keyword,
             List<Long> tagIds,
             Pageable pageable
@@ -76,19 +76,21 @@ public class TemplateApplicationService {
     }
 
     public FindAllTemplatesResponse findByMemberKeywordOrTagIds(
-            long memberId,
+            Long memberId,
             String keyword,
             Long categoryId,
             List<Long> tagIds,
             Pageable pageable
     ) {
         if (tagIds == null) {
-            Page<Template> templates = templateService.findByMemberKeywordAndCategory(memberId, keyword, categoryId, pageable);
+            Page<Template> templates = templateService.findByMemberKeywordAndCategory(memberId, keyword, categoryId,
+                    pageable);
             return makeTemplatesResponse(templates);
         }
 
         List<Long> templateIds = templateTagService.getTemplateIdContainTagIds(tagIds);
-        Page<Template> templates = templateService.findByMemberKeywordCategoryAndIds(memberId, keyword, categoryId, templateIds, pageable);
+        Page<Template> templates = templateService.findByMemberKeywordCategoryAndIds(memberId, keyword, categoryId,
+                templateIds, pageable);
         return makeTemplatesResponse(templates);
     }
 
