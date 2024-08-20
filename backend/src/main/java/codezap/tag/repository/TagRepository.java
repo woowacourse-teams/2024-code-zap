@@ -13,6 +13,8 @@ public interface TagRepository {
 
     Optional<Tag> findByName(String name);
 
+    List<String> findNameByNamesIn(List<String> names);
+
     boolean existsById(Long id);
 
     boolean existsByName(String name);

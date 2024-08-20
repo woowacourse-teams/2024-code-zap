@@ -23,17 +23,17 @@ public class TemplateTagService {
     private final TemplateTagRepository templateTagRepository;
 
     @Transactional
-    public void createTags(Template template, List<String> tags) {
-        tagRepository.saveAll(
-                tags.stream()
-                        .filter(tagName -> !tagRepository.existsByName(tagName))
+    public void createTags(Template template, List<String> tagNames) {
+        List<String> existingTags = tagRepository.findNameByNamesIn(tagNames);
+        List<Tag> newTags = tagRepository.saveAll(
+                tagNames.stream()
+                        .filter(tagName -> !existingTags.contains(tagName))
                         .map(Tag::new)
                         .toList()
         );
 
         templateTagRepository.saveAll(
-                tags.stream()
-                        .map(tagRepository::fetchByName)
+                newTags.stream()
                         .map(tag -> new TemplateTag(template, tag))
                         .toList()
         );
@@ -73,19 +73,7 @@ public class TemplateTagService {
     @Transactional
     public void updateTags(Template template, List<String> tags) {
         templateTagRepository.deleteAllByTemplateId(template.getId());
-        tagRepository.saveAll(
-                tags.stream()
-                        .filter(tagName -> !tagRepository.existsByName(tagName))
-                        .map(Tag::new)
-                        .toList()
-        );
-
-        templateTagRepository.saveAll(
-                tags.stream()
-                        .map(tagRepository::fetchByName)
-                        .map(tag -> new TemplateTag(template, tag))
-                        .toList()
-        );
+        createTags(template, tags);
     }
 
     public void deleteByIds(List<Long> templateIds) {

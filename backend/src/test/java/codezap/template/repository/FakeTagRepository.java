@@ -31,6 +31,13 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
+    public List<String> findNameByNamesIn(List<String> names) {
+        return names.stream()
+                .filter(this::existsByName)
+                .toList();
+    }
+
+    @Override
     public boolean existsByName(String name) {
         return tags.stream().anyMatch(tag -> Objects.equals(tag.getName(), name));
     }
