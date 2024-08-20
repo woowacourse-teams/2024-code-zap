@@ -57,7 +57,7 @@ public class CategoryService {
         Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
         Category category = categoryRepository.fetchById(id);
-        validateAuthorizeMember(category, member);
+        category.validateAuthorization(member);
         category.updateName(updateCategoryRequest.name());
     }
 
@@ -70,7 +70,7 @@ public class CategoryService {
     public void deleteById(MemberDto memberDto, Long id) {
         Category category = categoryRepository.fetchById(id);
         Member member = memberRepository.fetchById(memberDto.id());
-        validateAuthorizeMember(category, member);
+        category.validateAuthorization(member);
 
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
@@ -79,11 +79,5 @@ public class CategoryService {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
-    }
-
-    private void validateAuthorizeMember(Category category, Member member) {
-        if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.FORBIDDEN, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
-        }
     }
 }
