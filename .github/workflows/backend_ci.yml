@@ -24,7 +24,7 @@ jobs:
           mysql root password: ${{ secrets.MYSQL_PASSWORD }}
 
       - name: DB 설정 파일 가져오기
-        working-directory: /backend/src/main/resources
+        working-directory: ./backend/src/main/resources
         run: echo "${{ secrets.APPLICATION_DB_YAML }}" > application-db.yml
     
       - name: JDK 17 설정
