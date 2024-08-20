@@ -82,7 +82,7 @@ interface CategoryButtonProps {
 }
 
 const CategoryButton = ({ name, disabled, onClick }: CategoryButtonProps) => (
-  <S.CategoryButtonWrapper disabled={disabled} onClick={onClick}>
+  <S.CategoryButtonWrapper data-testid='category-button' disabled={disabled} onClick={onClick}>
     <Text.Medium color={theme.color.light.secondary_700} weight='bold'>
       {name}
     </Text.Medium>

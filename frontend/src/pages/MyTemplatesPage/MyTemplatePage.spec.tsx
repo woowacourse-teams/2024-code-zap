@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '@testing-library/jest-dom';
-import { render, fireEvent, waitFor, within } from '@testing-library/react';
+import { render, fireEvent, waitFor, within, act } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { AuthProvider } from '@/contexts';
+import { AuthProvider, ToastProvider } from '@/contexts';
 import MyTemplatePage from './MyTemplatePage';
 
 beforeAll(() => {
@@ -19,7 +19,9 @@ const renderWithProviders = (ui: React.ReactNode) => {
   return render(
     <Router>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>{ui}</AuthProvider>
+        <AuthProvider>
+          <ToastProvider>{ui}</ToastProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </Router>,
   );
@@ -120,12 +122,19 @@ describe('MyTemplatePage', () => {
   test('태그 (싱글필터링): "JavaScript" 태그 버튼을 클릭하면 모든 템플릿이 "JavaScript" 태그를 갖고 있는지 확인', async () => {
     const { getByTestId, getAllByTestId } = renderWithProviders(<MyTemplatePage />);
 
+    let tagButton: HTMLElement;
+
     await waitFor(() => {
       const tagFilterMenu = getByTestId('tag-filter-menu');
-      const tagButton = within(tagFilterMenu).getByText('JavaScript');
 
+      tagButton = within(tagFilterMenu).getByText('JavaScript');
+    });
+
+    act(() => {
       fireEvent.click(tagButton);
+    });
 
+    await waitFor(() => {
       const templates = getAllByTestId('template-card');
 
       templates.forEach((template) => {
@@ -137,14 +146,25 @@ describe('MyTemplatePage', () => {
   test('태그 (멀티필터링): "JavaScript"와 "React" 태그 버튼을 클릭하면 모든 템플릿이 두 태그를 갖고 있는지 확인', async () => {
     const { getByTestId, getAllByTestId } = renderWithProviders(<MyTemplatePage />);
 
+    let javascriptTagButton: HTMLElement;
+    let reactTagButton: HTMLElement;
+
     await waitFor(() => {
       const tagFilterMenu = getByTestId('tag-filter-menu');
-      const javascriptTagButton = within(tagFilterMenu).getByText('JavaScript');
-      const reactTagButton = within(tagFilterMenu).getByText('React');
 
+      javascriptTagButton = within(tagFilterMenu).getByText('JavaScript');
+      reactTagButton = within(tagFilterMenu).getByText('React');
+    });
+
+    act(() => {
       fireEvent.click(javascriptTagButton);
-      fireEvent.click(reactTagButton);
+    });
 
+    act(() => {
+      fireEvent.click(reactTagButton);
+    });
+
+    await waitFor(() => {
       const templates = getAllByTestId('template-card');
 
       templates.forEach((template) => {
