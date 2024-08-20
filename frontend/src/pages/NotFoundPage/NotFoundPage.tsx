@@ -1,15 +1,19 @@
 import { useNavigate } from 'react-router-dom';
 
-import { tigger } from '@/assets/images';
+import { TigerLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { theme } from '@/style/theme';
 
-const NotFoundPage = () => {
+interface props {
+  resetError?: () => void;
+}
+
+const NotFoundPage = ({ resetError }: props) => {
   const navigate = useNavigate();
 
   return (
     <Flex direction='column' gap='3rem' margin='2rem 0 0 0' justify='center' align='center'>
-      <img src={tigger} alt='' height={340} />
+      <TigerLogo aria-label='호랑이 로고' />
       <Heading.XLarge color={theme.color.light.primary_500}>404 ERROR</Heading.XLarge>
       <Flex direction='column' gap='2rem' align='center'>
         <Text.XLarge color={theme.color.light.primary_500} weight='bold'>
@@ -27,6 +31,7 @@ const NotFoundPage = () => {
       <Button
         weight='bold'
         onClick={() => {
+          resetError && resetError();
           navigate('/');
         }}
       >

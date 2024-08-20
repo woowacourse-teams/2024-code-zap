@@ -26,14 +26,13 @@ jobs:
       - name: DB 설정 파일 가져오기
         working-directory: ./backend/src/main/resources
         run: echo "${{ secrets.APPLICATION_DB_YAML }}" > application-db.yml
-    
+
       - name: JDK 17 설정
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: temurin
-          
+
       - name: 테스트 코드 실행
         run: ./gradlew test
         working-directory: ./backend
-

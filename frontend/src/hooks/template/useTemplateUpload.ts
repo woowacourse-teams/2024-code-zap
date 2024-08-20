@@ -1,12 +1,11 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ToastContext } from '@/context/ToastContext';
-import type { Snippet, TemplateUploadRequest } from '@/types';
-import { useCategory } from '../category/useCategory';
-import useCustomContext from '../utils/useCustomContext';
-import { useInput } from '../utils/useInput';
-import { useTemplateUploadQuery } from './useTemplateUploadQuery';
+import { ToastContext } from '@/contexts';
+import { useTemplateUploadMutation } from '@/queries/template';
+import type { SourceCodes, TemplateUploadRequest } from '@/types';
+import { useCategory } from '../category';
+import { useCustomContext, useInput } from '../utils';
 
 export const useTemplateUpload = () => {
   const navigate = useNavigate();
@@ -17,7 +16,7 @@ export const useTemplateUpload = () => {
   const [title, handleTitleChange] = useInput('');
   const [description, handleDescriptionChange] = useInput('');
 
-  const [snippets, setSnippets] = useState<Snippet[]>([
+  const [sourceCodes, setSourceCodes] = useState<SourceCodes[]>([
     {
       filename: '',
       content: '',
@@ -28,37 +27,39 @@ export const useTemplateUpload = () => {
   const [value, handleValue, resetValue] = useInput('');
   const [tags, setTags] = useState<string[]>([]);
 
-  const { mutateAsync: uploadTemplate, error } = useTemplateUploadQuery();
+  const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
 
   const handleCodeChange = useCallback((newContent: string, idx: number) => {
-    setSnippets((prevSnippets) =>
-      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, content: newContent } : snippet)),
+    setSourceCodes((prevSourceCodes) =>
+      prevSourceCodes.map((sourceCode, index) => (index === idx ? { ...sourceCode, content: newContent } : sourceCode)),
     );
   }, []);
 
   const handleFileNameChange = useCallback((newFileName: string, idx: number) => {
-    setSnippets((prevSnippets) =>
-      prevSnippets.map((snippet, index) => (index === idx ? { ...snippet, filename: newFileName } : snippet)),
+    setSourceCodes((prevSourceCodes) =>
+      prevSourceCodes.map((sourceCode, index) =>
+        index === idx ? { ...sourceCode, filename: newFileName } : sourceCode,
+      ),
     );
   }, []);
 
   const handleAddButtonClick = () => {
-    setSnippets((prevSnippets) => [
-      ...prevSnippets,
+    setSourceCodes((prevSourceCodes) => [
+      ...prevSourceCodes,
       {
         filename: '',
         content: '',
-        ordinal: prevSnippets.length + 1,
+        ordinal: prevSourceCodes.length + 1,
       },
     ]);
   };
 
-  const handleDeleteSnippet = (index: number) => {
-    if (!snippets[index]) {
-      console.error('존재하지 않는 스니펫 인덱스입니다.');
+  const handleDeleteSourceCode = (index: number) => {
+    if (!sourceCodes[index]) {
+      console.error('존재하지 않는 소스코드 인덱스입니다.');
     }
 
-    setSnippets((prevSnippets) => prevSnippets.filter((_, idx) => index !== idx));
+    setSourceCodes((prevSourceCodes) => prevSourceCodes.filter((_, idx) => index !== idx));
   };
 
   const handleCancelButton = () => {
@@ -70,12 +71,12 @@ export const useTemplateUpload = () => {
       return '제목을 입력해주세요';
     }
 
-    if (snippets.filter((snippet) => !snippet.filename).length) {
-      return '파일 명을 입력해주세요';
+    if (sourceCodes.filter((sourceCode) => !sourceCode.filename).length) {
+      return '파일명을 입력해주세요';
     }
 
-    if (snippets.filter((snippet) => !snippet.content).length) {
-      return '스니펫 내용을 입력해주세요';
+    if (sourceCodes.filter((sourceCode) => !sourceCode.content).length) {
+      return '소스코드 내용을 입력해주세요';
     }
 
     return '';
@@ -91,7 +92,8 @@ export const useTemplateUpload = () => {
     const newTemplate: TemplateUploadRequest = {
       title,
       description,
-      snippets,
+      sourceCodes,
+      thumbnailOrdinal: 1,
       categoryId: categoryProps.currentValue.id,
       tags,
     };
@@ -106,14 +108,14 @@ export const useTemplateUpload = () => {
   return {
     title,
     description,
-    snippets,
+    sourceCodes,
     error,
     handleDescriptionChange,
     handleTitleChange,
     handleCodeChange,
     handleFileNameChange,
     handleAddButtonClick,
-    handleDeleteSnippet,
+    handleDeleteSourceCode,
     handleCancelButton,
     handleSaveButtonClick,
 

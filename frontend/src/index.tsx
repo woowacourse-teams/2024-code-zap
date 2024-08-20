@@ -5,9 +5,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 
-import { HeaderProvider } from './context/HeaderContext';
-import { ToastProvider } from './context/ToastContext';
-import { AuthProvider } from './contexts/authContext';
+import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
 import router from './routes/router';
 import GlobalStyles from './style/GlobalStyles';
 import { theme } from './style/theme';

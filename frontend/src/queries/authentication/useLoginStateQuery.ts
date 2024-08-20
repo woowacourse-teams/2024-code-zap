@@ -9,4 +9,5 @@ export const useLoginStateQuery = (): UseQueryResult =>
     queryFn: () => getLoginState(),
     retry: false,
     refetchOnWindowFocus: false,
+    enabled: false,
   });

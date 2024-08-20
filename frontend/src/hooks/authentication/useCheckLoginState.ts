@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ToastContext } from '@/context/ToastContext';
-import { useLoginStateQuery } from '@/queries/authentication/useLoginStateQuery';
-import useCustomContext from '../utils/useCustomContext';
+import { ToastContext } from '@/contexts';
+import { useLoginStateQuery } from '@/queries/authentication';
+import { useCustomContext } from '../utils';
 import { useAuth } from './useAuth';
 
 export const useCheckLoginState = () => {

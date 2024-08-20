@@ -1,7 +1,6 @@
 export const QUERY_KEY = {
   CATEGORY_LIST: 'categoryList',
-  CHECK_EMAIL: 'checkEmail',
-  CHECK_USERNAME: 'userName',
+  CHECK_NAME: 'checkName',
   LOGIN_STATE: 'loginState',
   TAG_LIST: 'tagList',
   TEMPLATE: 'template',

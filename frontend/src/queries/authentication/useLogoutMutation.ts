@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 
 import { postLogout } from '@/api/authentication';
-import { useAuth } from '@/hooks/authentication/useAuth';
+import { useAuth } from '@/hooks/authentication';
 
 export const useLogoutMutation = () => {
   const { handleLoginState } = useAuth();
@@ -9,9 +9,9 @@ export const useLogoutMutation = () => {
   return useMutation({
     mutationFn: () => postLogout(),
     onSuccess: () => {
-      handleLoginState(false);
-      localStorage.removeItem('username');
+      localStorage.removeItem('name');
       localStorage.removeItem('memberId');
+      handleLoginState(false);
     },
     onError: () => {
       console.log('mutation');

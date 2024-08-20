@@ -1,4 +1,4 @@
-export type { Snippet, Tag, Category, Template } from './template';
+export type { SourceCodes, Tag, Category, Template, TemplateListItem } from './template';
 export type {
   SortingKey,
   SortingOption,
@@ -6,10 +6,12 @@ export type {
   TemplateListResponse,
   TemplateUploadRequest,
   TemplateListRequest,
-  CategoryRequest,
+  CategoryUploadRequest,
+  CategoryEditRequest,
+  CategoryDeleteRequest,
   CategoryListResponse,
   TagListResponse,
 } from './api';
-export type { LoginRequest, SignupRequest, CheckUsernameResponse } from './authentication';
+export type { LoginRequest, SignupRequest, MemberInfo } from './authentication';
 
 export type { CustomError } from './fetch';

@@ -1,13 +1,14 @@
-import { trashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SnippetEditor, TagInput } from '@/components';
-import { useCategoryUpload } from '@/queries/category';
-import type { Category, Snippet } from '@/types';
+import { PlusIcon, TrashcanIcon } from '@/assets/images';
+import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
+import { useCategoryUploadMutation } from '@/queries/category';
+import { theme } from '@/style/theme';
+import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
 
 interface Props {
   title: string;
   description: string;
-  snippets: Snippet[];
+  sourceCodes: SourceCodes[];
   categoryProps: {
     options: Category[];
     isOpen: boolean;
@@ -30,7 +31,7 @@ interface Props {
   handleCancelButton: () => void;
   handleCodeChange: (newContent: string, idx: number) => void;
   handleFileNameChange: (newFileName: string, idx: number) => void;
-  handleDeleteSnippet: (index: number) => void;
+  handleDeleteSourceCode: (index: number) => void;
   handleSaveButtonClick: () => Promise<void>;
   error: Error | null;
 }
@@ -38,7 +39,7 @@ interface Props {
 const TemplateEdit = ({
   title,
   description,
-  snippets,
+  sourceCodes,
   tagProps,
   categoryProps,
   handleTitleChange,
@@ -47,60 +48,68 @@ const TemplateEdit = ({
   handleCancelButton,
   handleCodeChange,
   handleFileNameChange,
-  handleDeleteSnippet,
+  handleDeleteSourceCode: handleDeleteSourceCode,
   handleSaveButtonClick,
   error,
 }: Props) => {
-  const { mutateAsync: postCategory } = useCategoryUpload();
+  const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(categoryProps.handleCurrentValue);
+
+  const getExistingCategory = (value: string) =>
+    categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
+
+  const createNewCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
+      return;
+    }
+
+    const inputValue = e.target.value;
+    const existingCategory = getExistingCategory(inputValue);
+
+    if (inputValue.trim() === '') {
+      e.target.value = '';
+
+      return;
+    }
+
+    if (existingCategory) {
+      categoryProps.handleCurrentValue(existingCategory);
+
+      return;
+    }
+
+    const newCategory = { name: inputValue };
+
+    postCategory(newCategory);
+
+    e.target.value = '';
+  };
 
   return (
-    <Flex
-      direction='column'
-      justify='center'
-      align='flex-start'
-      gap='1.5rem'
-      margin='1rem 0 0 0'
-      css={{ maxWidth: '53rem', margin: 'auto', marginTop: '3rem' }}
-    >
+    <S.TemplateEditContainer>
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
+        <CategoryGuide isOpen={categoryProps.isOpen} isPending={isPending} />
         <Dropdown
           {...categoryProps}
-          replaceChildrenWhenIsOpen={
-            <Input size='medium'>
-              <Input.TextField
-                autoFocus
-                placeholder='+ 새 카테고리 생성'
-                onKeyUpCapture={(e) => {
-                  if (e.target instanceof HTMLInputElement && e.key === 'Enter') {
-                    const newCategory = { name: e.target.value };
-
-                    postCategory(newCategory);
-                    e.target.value = '';
-                  }
-                }}
-              />
-            </Input>
-          }
+          replaceChildrenWhenIsOpen={<NewCategoryInput createNewCategory={createNewCategory} />}
         />
 
-        <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
+        <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
             <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
           </Input>
-        </div>
+        </S.UnderlineInputWrapper>
 
-        <div css={{ borderBottom: '1px solid #788496', width: '100%' }}>
-          <Input size='medium' variant='text'>
-            <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
-          </Input>
-        </div>
+        <Input size='large' variant='text'>
+          <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
+        </Input>
 
-        {snippets.map((snippet, idx) => (
+        {sourceCodes.map((sourceCode, idx) => (
           <Flex key={idx} style={{ position: 'relative' }} width='100%'>
-            <SnippetEditor
+            <SourceCodeEditor
               key={idx}
-              fileName={snippet.filename}
-              content={snippet.content}
+              index={idx}
+              fileName={sourceCode.filename}
+              content={sourceCode.content}
               onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
               onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
             />
@@ -108,15 +117,15 @@ const TemplateEdit = ({
               size='small'
               variant='text'
               onClick={() => {
-                handleDeleteSnippet(idx);
+                handleDeleteSourceCode(idx);
               }}
             >
-              <img src={trashcanIcon} width={20} height={20} alt='Delete snippet' />
+              <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
             </S.DeleteButton>
           </Flex>
         ))}
         <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
-          + Add Snippet
+          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
         </Button>
 
         <TagInput {...tagProps} />
@@ -124,18 +133,59 @@ const TemplateEdit = ({
         <Flex justify='flex-end' padding='0.5rem 0 0 0' width='100%'>
           <Flex gap='0.5rem'>
             <Button size='medium' variant='outlined' onClick={handleCancelButton}>
-              cancel
+              취소
             </Button>
-            <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={snippets.length === 0}>
-              Save
+            <Button
+              size='medium'
+              variant='contained'
+              onClick={handleSaveButtonClick}
+              disabled={sourceCodes.length === 0}
+            >
+              저장
             </Button>
           </Flex>
         </Flex>
 
-        {error && <div style={{ color: 'red' }}>Error: {error.message}</div>}
+        {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
       </Flex>
-    </Flex>
+    </S.TemplateEditContainer>
   );
 };
 
 export default TemplateEdit;
+
+interface NewCategoryInputProps {
+  createNewCategory: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}
+
+const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
+  <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
+    <Input.TextField
+      autoFocus
+      placeholder='+ 새 카테고리 생성'
+      onKeyUpCapture={createNewCategory}
+      placeholderColor={theme.color.light.secondary_600}
+    />
+  </Input>
+);
+
+interface CategoryGuideProps {
+  isOpen: boolean;
+  isPending: boolean;
+}
+
+const CategoryGuide = ({ isOpen, isPending }: CategoryGuideProps) => (
+  <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
+    {isPending ? (
+      <>
+        <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
+        <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
+      </>
+    ) : (
+      <>
+        <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
+        <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
+      </>
+    )}
+  </Guide>
+);
