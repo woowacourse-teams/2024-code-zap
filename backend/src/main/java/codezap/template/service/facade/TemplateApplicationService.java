@@ -36,12 +36,12 @@ public class TemplateApplicationService {
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         if (categoryId == null) {
-            return tagTemplateApplicationService.findByMemberKeywordAndCategoryOrTagIds(memberId, keyword, tagIds,
-                    pageable);
+            return tagTemplateApplicationService
+                    .findByMemberKeywordAndCategoryOrTagIds(memberId, keyword, tagIds, pageable);
         }
         categoryService.validateExistsById(categoryId);
-        return tagTemplateApplicationService.findByMemberKeywordOrTagIds(memberId, keyword, categoryId, tagIds,
-                pageable);
+        return tagTemplateApplicationService
+                .findByMemberKeywordOrTagIds(memberId, keyword, categoryId, tagIds, pageable);
     }
 
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
