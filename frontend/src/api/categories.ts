@@ -1,4 +1,12 @@
-import type { CategoryListResponse, CategoryRequest } from '@/types';
+import { HttpResponse } from 'msw';
+
+import type {
+  CategoryListResponse,
+  CategoryUploadRequest,
+  CategoryEditRequest,
+  CategoryDeleteRequest,
+  CustomError,
+} from '@/types';
 import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
@@ -20,9 +28,29 @@ export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>
   throw new Error(response.detail);
 };
 
-export const postCategory = async (newCategory: CategoryRequest) =>
+export const postCategory = async (newCategory: CategoryUploadRequest) =>
   await customFetch({
     method: 'POST',
     url: `${CATEGORY_API_URL}`,
     body: JSON.stringify(newCategory),
   });
+
+export const editCategory = async ({ id, name }: CategoryEditRequest) =>
+  await customFetch({
+    method: 'PUT',
+    url: `${CATEGORY_API_URL}/${id}`,
+    body: JSON.stringify({ name }),
+  });
+
+export const deleteCategory = async ({ id }: CategoryDeleteRequest) => {
+  const response = await customFetch<HttpResponse>({
+    method: 'DELETE',
+    url: `${CATEGORY_API_URL}/${id}`,
+  });
+
+  if (typeof response === 'object' && response !== null && 'status' in response) {
+    throw response as CustomError;
+  }
+
+  return response;
+};

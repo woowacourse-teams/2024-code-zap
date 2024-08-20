@@ -5,7 +5,7 @@ import { ModalSize } from './Modal';
 
 export const Container = styled.div`
   position: fixed;
-  z-index: 10;
+  z-index: 200;
   top: 0;
   left: 0;
 
@@ -23,6 +23,7 @@ export const Container = styled.div`
 
 export const Backdrop = styled.div`
   position: absolute;
+  z-index: 201;
   top: 0;
   left: 0;
 
@@ -32,21 +33,34 @@ export const Backdrop = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
-export const Header = styled.div``;
+export const Header = styled.div`
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+`;
 
-export const Body = styled.div``;
+export const Body = styled.div`
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+`;
 
-export const Footer = styled.div``;
+export const Footer = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+`;
 
 export const Base = styled.div<{ size: ModalSize }>`
   position: relative;
+  z-index: 202;
+
   padding: 1.5rem;
+
   background-color: white;
   border-radius: 24px;
 
   @media (min-width: 48rem) {
     position: fixed;
-    z-index: 1;
     padding: 1.5rem;
     background-color: white;
 
@@ -65,6 +79,7 @@ export const Base = styled.div<{ size: ModalSize }>`
     border-radius: 1.5rem 1.5rem 0 0;
   }
 `;
+
 const sizes = {
   xsmall: css`
     width: 90%;

@@ -8,6 +8,8 @@ export { default as ChevronIcon } from './chevron.svg';
 export { default as XCircleIcon } from './xCircle.svg';
 export { default as EyeIcon } from './eye.svg';
 export { default as ArrowUpIcon } from './arrowUp.svg';
+export { default as SettingIcon } from './setting.svg';
+export { default as SpinArrowIcon } from './spinArrow.svg';
 export { default as HamburgerIcon } from './Hamburger';
 
 // Logo

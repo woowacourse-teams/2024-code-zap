@@ -1,4 +1,4 @@
-export { CATEGORY_API_URL, getCategoryList, postCategory } from './categories';
+export { CATEGORY_API_URL, getCategoryList, postCategory, deleteCategory } from './categories';
 export { getTagList } from './tags';
 export { customFetch } from './customFetch';
 export { QUERY_KEY } from './queryKeys';
