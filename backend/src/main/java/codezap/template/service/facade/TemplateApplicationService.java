@@ -4,13 +4,11 @@ import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
-import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
@@ -26,15 +24,8 @@ public class TemplateApplicationService {
     @Transactional
     public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
         Category category = categoryService.fetchById(createTemplateRequest.categoryId());
-        validateCategoryAuthorizeMember(member, category);
+        category.validateAuthorization(member);
         return tagTemplateApplicationService.createTemplate(member, category, createTemplateRequest);
-    }
-
-    private void validateCategoryAuthorizeMember(Member member, Category category) {
-        Member owner = category.getMember();
-        if (!owner.equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
-        }
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -47,16 +38,18 @@ public class TemplateApplicationService {
         pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
 
         if (categoryId == null) {
-            return tagTemplateApplicationService.findByMemberKeywordAndCategoryOrTagIds(memberId, keyword, tagIds, pageable);
+            return tagTemplateApplicationService.findByMemberKeywordAndCategoryOrTagIds(memberId, keyword, tagIds,
+                    pageable);
         }
         categoryService.validateExistsById(categoryId);
-        return tagTemplateApplicationService.findByMemberKeywordOrTagIds(memberId, keyword, categoryId, tagIds, pageable);
+        return tagTemplateApplicationService.findByMemberKeywordOrTagIds(memberId, keyword, categoryId, tagIds,
+                pageable);
     }
 
     @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
-        validateCategoryAuthorizeMember(member, category);
+        category.validateAuthorization(member);
         tagTemplateApplicationService.update(member, templateId, updateTemplateRequest, category);
     }
 }
