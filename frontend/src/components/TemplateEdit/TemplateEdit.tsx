@@ -1,6 +1,6 @@
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
-import { useCategoryUpload } from '@/queries/category';
+import { useCategoryUploadMutation } from '@/queries/category';
 import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
@@ -52,7 +52,7 @@ const TemplateEdit = ({
   handleSaveButtonClick,
   error,
 }: Props) => {
-  const { mutateAsync: postCategory, isPending } = useCategoryUpload(categoryProps.handleCurrentValue);
+  const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(categoryProps.handleCurrentValue);
 
   const getExistingCategory = (value: string) =>
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
