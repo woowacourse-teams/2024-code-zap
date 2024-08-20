@@ -2,7 +2,7 @@ import { CustomError } from '@/types';
 
 interface Props {
   url: string;
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT';
   headers?: RequestInit['headers'];
   body?: RequestInit['body'];
   errorMessage?: string;
