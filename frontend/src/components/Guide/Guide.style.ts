@@ -21,7 +21,7 @@ const slideDown = keyframes`
   }
 `;
 
-export const Guide = styled.div<{ isOpen: boolean }>`
+export const GuideContainer = styled.div<{ isOpen: boolean }>`
   display: flex;
   gap: 0.125rem;
 

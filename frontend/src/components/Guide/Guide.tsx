@@ -7,9 +7,9 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Guide = ({ isOpen, children, ...rest }: PropsWithChildren<Props>) => (
-  <S.Guide isOpen={isOpen} {...rest}>
+  <S.GuideContainer isOpen={isOpen} {...rest}>
     {children}
-  </S.Guide>
+  </S.GuideContainer>
 );
 
 export default Guide;
