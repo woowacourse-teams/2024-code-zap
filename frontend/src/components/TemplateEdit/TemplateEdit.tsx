@@ -185,22 +185,26 @@ const NewCategoryInput = ({
   createNewCategory,
   handleChange,
   isPending,
-}: NewCategoryInputProps) => (
-  <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
-    {isPending ? (
-      <LoadingBall />
-    ) : (
-      <Input.TextField
-        autoFocus
-        placeholder='+ 새 카테고리 생성'
-        value={categoryInputValue}
-        onChange={handleChange}
-        onKeyUpCapture={createNewCategory}
-        placeholderColor={theme.color.light.secondary_600}
-      />
-    )}
-  </Input>
-);
+}: NewCategoryInputProps) => {
+  const showLoader = useLoaderDelay(isPending, 700);
+
+  return (
+    <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
+      {showLoader ? (
+        <LoadingBall />
+      ) : (
+        <Input.TextField
+          autoFocus
+          placeholder='+ 새 카테고리 생성'
+          value={categoryInputValue}
+          onChange={handleChange}
+          onKeyUpCapture={createNewCategory}
+          placeholderColor={theme.color.light.secondary_600}
+        />
+      )}
+    </Input>
+  );
+};
 
 interface CategoryGuideProps {
   isOpen: boolean;
