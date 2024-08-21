@@ -21,10 +21,9 @@ public class TagController implements SpringDocTagController {
 
     @GetMapping
     public ResponseEntity<FindAllTagsResponse> getTags(
-            @AuthenticationPrinciple MemberDto memberDto,
             @RequestParam Long memberId
     ) {
-        FindAllTagsResponse response = memberTemplateApplicationService.getAllTagsByMemberId(memberDto, memberId);
+        FindAllTagsResponse response = memberTemplateApplicationService.getAllTagsByMemberId(memberId);
         return ResponseEntity.ok(response);
     }
 }

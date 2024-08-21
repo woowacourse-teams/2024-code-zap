@@ -2,7 +2,6 @@ package codezap.template.service.facade;
 
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import codezap.member.domain.Member;
@@ -11,7 +10,6 @@ import codezap.member.service.MemberService;
 import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import lombok.RequiredArgsConstructor;
 
@@ -27,8 +25,7 @@ public class MemberTemplateApplicationService {
         return categoryTemplateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
-    public FindAllTagsResponse getAllTagsByMemberId(MemberDto memberDto, Long memberId) {
-        memberService.validateMemberIdentity(memberDto, memberId);
+    public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
         return templateApplicationService.getAllTagsByMemberId(memberId);
     }
 
