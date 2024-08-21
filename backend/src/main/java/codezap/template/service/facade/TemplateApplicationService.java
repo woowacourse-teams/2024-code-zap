@@ -17,8 +17,8 @@ import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
@@ -95,14 +95,14 @@ public class TemplateApplicationService {
     }
 
     private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
-        List<ItemResponse> itemResponses = page.stream()
-                .map(template -> ItemResponse.of(
+        List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
+                .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode())
                 )
                 .toList();
-        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), itemResponses);
+        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
     }
 
     @Transactional
