@@ -15,6 +15,7 @@ import {
   Button,
   Modal,
   Text,
+  LoadingBall,
 } from '@/components';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useWindowWidth, useDebounce, useToggle } from '@/hooks/utils';
@@ -47,7 +48,7 @@ const MyTemplatePage = () => {
 
   const [page, setPage] = useState<number>(1);
 
-  const { data: templateData } = useTemplateListQuery({
+  const { data: templateData, isPending } = useTemplateListQuery({
     keyword: debouncedKeyword,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
@@ -101,6 +102,10 @@ const MyTemplatePage = () => {
   };
 
   const renderTemplateContent = () => {
+    if (isPending) {
+      return <LoadingBall />;
+    }
+
     if (templates.length === 0) {
       if (debouncedKeyword !== '') {
         return <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>;
