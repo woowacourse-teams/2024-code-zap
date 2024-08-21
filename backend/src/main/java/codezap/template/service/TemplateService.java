@@ -16,6 +16,7 @@ import codezap.template.domain.Template;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
+import codezap.template.repository.TemplateSpecification;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,30 +40,12 @@ public class TemplateService {
         return templateRepository.findByMemberId(memberId);
     }
 
-    public Page<Template> findByMemberAndKeyword(Long memberId, String keyword, Pageable pageable) {
-        keyword = "%" + keyword + "%";
-        return templateRepository.searchBy(memberId, keyword, pageable);
-    }
-
-    public Page<Template> findByMemberKeywordAndCategory(
-            Long memberId, String keyword, Long categoryId, Pageable pageable
+    public Page<Template> findAll(
+            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
     ) {
-        keyword = "%" + keyword + "%";
-        return templateRepository.searchBy(memberId, keyword, categoryId, pageable);
-    }
-
-    public Page<Template> findByMemberKeywordAndIds(
-            Long memberId, String keyword, List<Long> templateIds, Pageable pageable
-    ) {
-        keyword = "%" + keyword + "%";
-        return templateRepository.searchBy(memberId, keyword, templateIds, pageable);
-    }
-
-    public Page<Template> findByMemberKeywordCategoryAndIds(
-            Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable
-    ) {
-        keyword = "%" + keyword + "%";
-        return templateRepository.searchBy(memberId, keyword, categoryId, templateIds, pageable);
+        return templateRepository.findAll(
+                TemplateSpecification.withDynamicQuery(memberId, keyword, categoryId, tagIds), pageable
+        );
     }
 
     public Template updateTemplate(

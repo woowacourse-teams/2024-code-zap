@@ -37,18 +37,6 @@ public class MemberTemplateApplicationService {
         return templateApplicationService.getByMemberAndId(member, id);
     }
 
-    public FindAllTemplatesResponse findAllBy(
-            MemberDto memberDto,
-            Long memberId,
-            String keyword,
-            Long categoryId,
-            List<Long> tagIds,
-            Pageable pageable
-    ) {
-        memberService.validateMemberIdentity(memberDto, memberId);
-        return categoryTemplateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
-    }
-
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Member member = memberService.getById(memberDto.id());
         categoryTemplateApplicationService.update(member, templateId, updateTemplateRequest);
