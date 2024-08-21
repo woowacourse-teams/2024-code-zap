@@ -204,8 +204,7 @@ const CategoryGuide = ({ isOpen, isPending, categoryErrorMessage }: CategoryGuid
     <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
       {isPending ? (
         <>
-          <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
-          <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
+          <Text.Medium color={theme.color.light.secondary_400}>카테고리를 생성 중이에요!</Text.Medium>
         </>
       ) : isError ? (
         <>
@@ -213,8 +212,7 @@ const CategoryGuide = ({ isOpen, isPending, categoryErrorMessage }: CategoryGuid
         </>
       ) : (
         <>
-          <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
-          <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
+          <Text.Small color={theme.color.light.secondary_400}>엔터로 카테고리를 등록해요</Text.Small>
         </>
       )}
     </Guide>
