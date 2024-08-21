@@ -1,7 +1,7 @@
 export const validateName = (name: string) => {
   const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
-  return regex.test(name) && name.length > 0 ? '' : '1자 이상의 아이디를 입력해주세요.';
+  return regex.test(name) && name.length > 0 ? '' : '올바른 아이디를 입력해주세요.';
 };
 
 export const validatePassword = (password: string) => {
