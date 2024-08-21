@@ -12,32 +12,46 @@ export const useCategoryNameValidation = (
   const [invalidIds, setInvalidIds] = useState<number[]>([]);
 
   useEffect(() => {
-    const allNames = new Set<string>();
+    const allNames = new Map<string, number[]>();
     const invalidNames = new Set<number>();
 
+    const addNameToMap = (id: number, name: string) => {
+      if (!allNames.has(name)) {
+        allNames.set(name, []);
+      }
+
+      allNames.get(name)!.push(id);
+    };
+
     categories.forEach(({ id, name }) => {
-      if (INVALID_NAMES.includes(name) || allNames.has(name)) {
+      if (INVALID_NAMES.includes(name)) {
         invalidNames.add(id);
       } else {
-        allNames.add(name);
+        addNameToMap(id, name);
       }
     });
 
     newCategories.forEach(({ id, name }) => {
-      if (INVALID_NAMES.includes(name) || allNames.has(name)) {
+      if (INVALID_NAMES.includes(name)) {
         invalidNames.add(id);
       } else {
-        allNames.add(name);
+        addNameToMap(id, name);
       }
     });
 
     Object.entries(editedCategories).forEach(([id, name]) => {
       const originalName = categories.find((category) => category.id === Number(id))?.name;
 
-      if (INVALID_NAMES.includes(name) || (name !== originalName && allNames.has(name))) {
+      if (INVALID_NAMES.includes(name)) {
         invalidNames.add(Number(id));
       } else if (name !== originalName) {
-        allNames.add(name);
+        addNameToMap(Number(id), name);
+      }
+    });
+
+    allNames.forEach((ids) => {
+      if (ids.length > 1) {
+        ids.forEach((id) => invalidNames.add(id));
       }
     });
 
