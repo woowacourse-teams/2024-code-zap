@@ -116,7 +116,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
 
   return (
     <Modal isOpen={isOpen} toggleModal={handleCancelEditWithReset} size='small'>
-      <Modal.Title>{'카테고리 편집'}</Modal.Title>
+      <Modal.Header>{'카테고리 편집'}</Modal.Header>
       <Modal.Body>
         <S.EditCategoryItemList>
           <CategoryItems
