@@ -1,7 +1,7 @@
 import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { materialLight } from '@uiw/codemirror-theme-material';
-import ReactCodeMirror from '@uiw/react-codemirror';
-import { ChangeEvent } from 'react';
+import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import { ChangeEvent, useRef } from 'react';
 
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
@@ -18,7 +18,18 @@ interface Props {
 }
 
 const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeFileName }: Props) => {
+  const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
   const { failAlert } = useCustomContext(ToastContext);
+
+  const focusCodeMirror = () => {
+    if (!codeMirrorRef.current) {
+      return;
+    }
+
+    if (codeMirrorRef.current?.view) {
+      codeMirrorRef.current.view.focus();
+    }
+  };
 
   const handleFileNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChangeFileName(event.target.value);
@@ -43,7 +54,8 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
         placeholder={'파일명.js'}
         autoFocus={index !== 0 ? true : false}
       />
-      <ReactCodeMirror
+      <CodeMirror
+        ref={codeMirrorRef}
         placeholder={'// 코드를 입력해주세요'}
         value={content}
         height='100%'
@@ -53,6 +65,7 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
         theme={materialLight}
         onChange={handleContentChange}
         extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || []]}
+        onClick={focusCodeMirror}
       />
     </S.SourceCodeEditorContainer>
   );
