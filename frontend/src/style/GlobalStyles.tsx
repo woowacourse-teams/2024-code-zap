@@ -35,6 +35,20 @@ const globalStyles = css`
     border-radius: 0;
     box-shadow: none;
   }
+
+  ::-webkit-scrollbar-track {
+    background-color: ${theme.color.light.secondary_100};
+    -webkit-box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.3);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: ${theme.color.light.secondary_400};
+  }
 `;
 
 const GlobalStyles = () => <Global styles={globalStyles} />;
