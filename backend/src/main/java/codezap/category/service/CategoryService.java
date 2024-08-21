@@ -1,6 +1,5 @@
 package codezap.category.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,7 @@ public class CategoryService {
         validateDuplicatedCategory(categoryName, member);
         Category category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
-}
+    }
 
     public FindAllCategoriesResponse findAllByMember(Member member) {
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberOrderById(member));

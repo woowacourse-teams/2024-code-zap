@@ -1,7 +1,5 @@
 package codezap.global.exception;
 
-import org.springframework.http.HttpStatusCode;
-
 import lombok.Getter;
 
 @Getter

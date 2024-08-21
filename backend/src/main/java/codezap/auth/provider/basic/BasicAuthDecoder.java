@@ -3,8 +3,6 @@ package codezap.auth.provider.basic;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import org.springframework.http.HttpStatus;
-
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import lombok.AccessLevel;

@@ -1,6 +1,5 @@
 package codezap.auth.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import codezap.auth.dto.LoginAndCredentialDto;

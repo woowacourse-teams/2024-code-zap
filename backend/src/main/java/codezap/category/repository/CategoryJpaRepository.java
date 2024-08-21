@@ -3,7 +3,6 @@ package codezap.category.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
 
 import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;

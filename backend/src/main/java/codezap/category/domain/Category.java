@@ -12,8 +12,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-import org.springframework.http.HttpStatus;
-
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;

@@ -13,8 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
-import org.springframework.http.HttpStatus;
-
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.global.exception.CodeZapException;
