@@ -1,4 +1,4 @@
-package codezap.template.repository;
+package codezap.tag.repository;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ public interface TemplateTagRepository {
 
     List<TemplateTag> findAllByTemplate(Template template);
 
-    List<TemplateTag> findByTemplateIn(List<Template> templates);
+    List<TemplateTag> findDistinctByTemplateIn(List<Template> templates);
 
     List<TemplateTag> findAll();
 

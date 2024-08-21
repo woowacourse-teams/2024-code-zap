@@ -8,6 +8,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
@@ -19,25 +20,23 @@ import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
+import codezap.tag.repository.TagRepository;
+import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindAllTemplatesResponse.ItemResponse;
 import codezap.template.repository.FakeSourceCodeRepository;
 import codezap.template.repository.FakeTagRepository;
 import codezap.template.repository.FakeTemplateRepository;
 import codezap.template.repository.FakeTemplateTagRepository;
 import codezap.template.repository.FakeThumbnailRepository;
 import codezap.template.repository.SourceCodeRepository;
-import codezap.template.repository.TagRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateTagRepository;
 import codezap.template.repository.ThumbnailRepository;
 
-class TemplateServiceSearchTest {
+public class TemplateServiceSearchTest {
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
     private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
@@ -47,14 +46,7 @@ class TemplateServiceSearchTest {
     private final MemberRepository memberRepository = new FakeMemberRepository(List.of(
             MemberFixture.getFirstMember(), MemberFixture.getSecondMember()
     ));
-    private final TemplateService templateService = new TemplateService(
-            thumbnailRepository,
-            templateRepository,
-            sourceCodeRepository,
-            categoryRepository,
-            tagRepository,
-            templateTagRepository,
-            memberRepository);
+    private final TemplateService templateService = new TemplateService(templateRepository);
 
     private void saveDefault15Templates(Member member, Category category) {
         saveTemplate(makeTemplateRequest("hello keyword 1"), member, category);
@@ -135,12 +127,12 @@ class TemplateServiceSearchTest {
             saveTemplate(makeTemplateRequest("hello keyword !"), member, category);
 
             //when
-            FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "keyword", null, null, PageRequest.of(1, 3)
+            Page<Template> templates = templateService.findByMemberAndKeyword(
+                    member.getId(), "keyword", PageRequest.of(1, 3)
             );
 
             //then
-            assertThat(templates.templates()).hasSize(3);
+            assertThat(templates).hasSize(3);
         }
 
         @Test
@@ -155,12 +147,12 @@ class TemplateServiceSearchTest {
             saveTemplateByFilename("tempate3", "login.js", "signup.java", member, category);
 
             //when
-            FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "java", null, null, PageRequest.of(1, 3)
+            Page<Template> templates = templateService.findByMemberAndKeyword(
+                    member.getId(), "java", PageRequest.of(1, 3)
             );
 
             //then
-            assertThat(templates.templates()).hasSize(2);
+            assertThat(templates).hasSize(2);
         }
 
         @Test
@@ -175,12 +167,12 @@ class TemplateServiceSearchTest {
             saveTemplateBySourceCode("tempate3", "console.log", "a+b=3", member, category);
 
             //when
-            FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "Car", null, null, PageRequest.of(1, 3)
+            Page<Template> templates = templateService.findByMemberAndKeyword(
+                    member.getId(), "Car", PageRequest.of(1, 3)
             );
 
             //then
-            assertThat(templates.templates()).hasSize(2);
+            assertThat(templates).hasSize(2);
         }
 
         @Test
@@ -206,12 +198,12 @@ class TemplateServiceSearchTest {
             saveTemplate(request2, member, category);
 
             //when
-            FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "Login", null, null, PageRequest.of(1, 3)
+            Page<Template> templates = templateService.findByMemberAndKeyword(
+                    member.getId(), "Login", PageRequest.of(1, 3)
             );
 
             //then
-            assertThat(templates.templates()).hasSize(1);
+            assertThat(templates).hasSize(1);
         }
 
         @Test
@@ -223,13 +215,13 @@ class TemplateServiceSearchTest {
             Category category2 = categoryRepository.save(new Category("category2", member));
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, null, PageRequest.of(1, 20)
+            Page<Template> allBy = templateService.findByMemberAndKeyword(
+                    member.getId(), "", PageRequest.of(1, 20)
             );
 
-            assertAll(() -> assertThat(allBy.templates()).hasSize(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30));
+            assertAll(() -> assertThat(allBy).hasSize(20),
+                    () -> assertThat(allBy).allMatch(template -> template.getId() <= 20),
+                    () -> assertThat(allBy.getTotalElements()).isEqualTo(30));
         }
 
         @Test
@@ -242,12 +234,12 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category);
 
             //when
-            FindAllTemplatesResponse templates = templateService.findAllBy(
-                    member.getId(), "keyword", null, null, PageRequest.of(2, 5)
+            Page<Template> templates = templateService.findByMemberAndKeyword(
+                    member.getId(), "keyword", PageRequest.of(2, 5)
             );
 
             //then
-            List<String> titles = templates.templates().stream().map(ItemResponse::title).toList();
+            List<String> titles = templates.stream().map(Template::getTitle).toList();
             assertThat(titles).containsExactly("hello keyword 6", "hello keyword 7", "hello keyword 8",
                     "hello keyword 9",
                     "hello keyword 10");
@@ -271,14 +263,15 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, null, PageRequest.of(1, 20)
+            Page<Template> allBy = templateService.findByMemberAndKeyword(
+                    member.getId(), "", PageRequest.of(1, 20)
             );
 
             //when & then
-            assertAll(() -> assertThat(allBy.templates()).hasSize(20),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30));
+            assertAll(
+                    () -> assertThat(allBy).hasSize(20),
+                    () -> assertThat(allBy).allMatch(template -> template.getId() <= 20),
+                    () -> assertThat(allBy.getTotalElements()).isEqualTo(30));
         }
 
         @Test
@@ -292,13 +285,13 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", null, null, PageRequest.of(2, 20)
+            Page<Template> allBy = templateService.findByMemberAndKeyword(
+                    member.getId(), "", PageRequest.of(2, 20)
             );
 
-            assertAll(() -> assertThat(allBy.templates()).hasSize(10),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() > 20),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(30));
+            assertAll(() -> assertThat(allBy).hasSize(10),
+                    () -> assertThat(allBy).allMatch(template -> template.getId() > 20),
+                    () -> assertThat(allBy.getTotalElements()).isEqualTo(30));
         }
 
         @Test
@@ -311,13 +304,13 @@ class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
 
-            FindAllTemplatesResponse allBy = templateService.findAllBy(
-                    member.getId(), "", category1.getId(), null, PageRequest.of(1, 20)
+            Page<Template> allBy = templateService.findByMemberKeywordAndCategory(
+                    member.getId(), "", category1.getId(), PageRequest.of(1, 20)
             );
 
-            assertAll(() -> assertThat(allBy.templates()).hasSize(15),
-                    () -> assertThat(allBy.templates()).allMatch(template -> template.id() <= 15),
-                    () -> assertThat(allBy.totalElements()).isEqualTo(15));
+            assertAll(() -> assertThat(allBy).hasSize(15),
+                    () -> assertThat(allBy).allMatch(template -> template.getId() <= 15),
+                    () -> assertThat(allBy.getTotalElements()).isEqualTo(15));
         }
 
         //        @Test

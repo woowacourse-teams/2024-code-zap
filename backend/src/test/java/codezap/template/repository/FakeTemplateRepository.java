@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
@@ -83,6 +84,8 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     private static PageImpl<Template> pageTemplates(Pageable pageable, List<Template> templates) {
+        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
+
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), templates.size());
         List<Template> pagedTemplates = templates.subList(start, end);

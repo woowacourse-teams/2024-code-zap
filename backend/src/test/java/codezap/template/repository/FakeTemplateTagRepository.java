@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 
@@ -50,9 +51,10 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
-    public List<TemplateTag> findByTemplateIn(List<Template> templates) {
+    public List<TemplateTag> findDistinctByTemplateIn(List<Template> templates) {
         return templateTags.stream()
                 .filter(templateTag -> templates.contains(templateTag.getTemplate()))
+                .distinct()
                 .toList();
     }
 

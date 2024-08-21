@@ -69,6 +69,13 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
     }
 
     @Override
+    public int countByTemplate(Template template) {
+        return (int) sourceCodes.stream()
+                .filter(sourceCode -> Objects.equals(sourceCode.getTemplate(), template))
+                .count();
+    }
+
+    @Override
     public SourceCode save(SourceCode entity) {
         var saved = new SourceCode(
                 getOrGenerateId(entity),

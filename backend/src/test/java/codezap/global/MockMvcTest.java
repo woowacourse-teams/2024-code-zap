@@ -17,7 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
-import codezap.category.service.CategoryService;
+import codezap.category.service.facade.MemberCategoryApplicationService;
+import codezap.category.service.facade.MemberCategoryTemplateApplicationService;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
 import codezap.template.service.TemplateService;
@@ -32,13 +33,19 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected CredentialProvider credentialProvider;
+
     @MockBean
     protected CredentialManager credentialManager;
 
     @MockBean
     protected TemplateService templateService;
+
     @MockBean
-    protected CategoryService categoryService;
+    protected MemberCategoryApplicationService memberCategoryApplicationService;
+
+    @MockBean
+    protected MemberCategoryTemplateApplicationService memberCategoryTemplateApplicationService;
+
     @MockBean
     protected MemberService memberService;
 
