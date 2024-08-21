@@ -10,24 +10,10 @@ interface Props {
 
 const PagingButtons = ({ currentPage, totalPages, onPageChange }: Props) => {
   const getPageNumbers = () => {
-    let startPage = Math.max(1, currentPage - 2);
-    let endPage = Math.min(totalPages, currentPage + 2);
+    const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+    const endPage = Math.min(totalPages, startPage + 4);
 
-    if (currentPage <= 3) {
-      startPage = 1;
-      endPage = Math.min(totalPages, 5);
-    } else if (currentPage >= totalPages - 2) {
-      startPage = Math.max(1, totalPages - 4);
-      endPage = totalPages;
-    }
-
-    const pages = [];
-
-    for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
-    }
-
-    return pages;
+    return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   };
 
   return (
