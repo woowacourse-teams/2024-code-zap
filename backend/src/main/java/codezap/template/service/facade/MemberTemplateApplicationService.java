@@ -29,9 +29,8 @@ public class MemberTemplateApplicationService {
         return templateApplicationService.getAllTagsByMemberId(memberId);
     }
 
-    public FindTemplateResponse getByIdAndMember(MemberDto memberDto, Long id) {
-        Member member = memberService.getById(memberDto.id());
-        return templateApplicationService.getByMemberAndId(member, id);
+    public FindTemplateResponse getTemplateById(Long id) {
+        return templateApplicationService.getById(id);
     }
 
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
