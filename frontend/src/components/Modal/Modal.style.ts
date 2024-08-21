@@ -71,7 +71,7 @@ export const ModalContainer = styled.div<{ size: ModalSize }>`
 
   @media (min-width: 48rem) {
     position: fixed;
-
+    width: 90%;
     ${({ size }) => size && sizes[size]};
   }
 
@@ -89,22 +89,18 @@ export const ModalContainer = styled.div<{ size: ModalSize }>`
 
 const sizes = {
   xsmall: css`
-    width: 90%;
     max-width: 17.5rem;
     min-height: 11.25rem;
   `,
   small: css`
-    width: 90%;
     max-width: 25rem;
     min-height: 18.75rem;
   `,
   medium: css`
-    width: 90%;
     max-width: 37.5rem;
     min-height: 28.125rem;
   `,
   large: css`
-    width: 90%;
     max-width: 50rem;
     min-height: 37.5rem;
   `,

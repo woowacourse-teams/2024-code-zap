@@ -1,4 +1,4 @@
-import { HTMLAttributes, PropsWithChildren } from 'react';
+import { HTMLAttributes, PropsWithChildren, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
 import { theme } from '../../style/theme';
@@ -29,9 +29,13 @@ const Base = ({ isOpen, toggleModal, size = 'small', children, ...props }: Props
   );
 };
 
-const Title = ({ children }: { children: string }) => (
+const Title = ({ children }: { children: ReactNode }) => (
   <S.TitleWrapper>
-    <Heading.XSmall color={theme.color.light.secondary_900}>{children}</Heading.XSmall>
+    {typeof children === 'string' ? (
+      <Heading.XSmall color={theme.color.light.secondary_900}>{children}</Heading.XSmall>
+    ) : (
+      children
+    )}
   </S.TitleWrapper>
 );
 
