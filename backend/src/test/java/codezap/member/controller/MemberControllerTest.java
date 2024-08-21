@@ -41,13 +41,13 @@ class MemberControllerTest extends MockMvcTest {
     void checkUniquenameSuccess() throws Exception {
         String name = "name";
 
-        doNothing().when(memberService).assertUniquename(any(String.class));
+        doNothing().when(memberService).assertUniqueName(any(String.class));
 
         mvc.perform(get("/check-name")
                         .param("name", name))
                 .andDo(print())
                 .andExpect(status().isOk());
-        verify(memberService, times(1)).assertUniquename(name);
+        verify(memberService, times(1)).assertUniqueName(name);
     }
 
 

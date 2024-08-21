@@ -296,7 +296,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("해당 카테고리에 대한 권한이 없습니다."));
         }
 
@@ -317,7 +317,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
-                    .andExpect(status().isNotFound())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("식별자 3에 해당하는 카테고리가 존재하지 않습니다."));
         }
 
@@ -421,7 +421,7 @@ class TemplateControllerTest {
                             .param("keyword", "")
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다."));
         }
 
@@ -441,7 +441,7 @@ class TemplateControllerTest {
                             .param("categoryId", "100")
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("식별자 100에 해당하는 카테고리가 존재하지 않습니다."));
         }
 
@@ -539,7 +539,7 @@ class TemplateControllerTest {
                             .cookie(cookie)
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
     }
@@ -611,7 +611,7 @@ class TemplateControllerTest {
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 
@@ -884,7 +884,7 @@ class TemplateControllerTest {
                             .cookie(cookie)
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isUnauthorized())
+                    .andExpect(status().isForbidden())
                     .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 

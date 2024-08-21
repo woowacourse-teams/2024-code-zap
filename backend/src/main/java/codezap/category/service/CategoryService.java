@@ -11,6 +11,7 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
@@ -41,7 +42,7 @@ public class CategoryService {
 
     public void validateExistsById(Long id) {
         if (!categoryRepository.existsById(id)) {
-            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
     }
 
@@ -55,7 +56,7 @@ public class CategoryService {
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
         if (categoryRepository.existsByNameAndMember(categoryName, member)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
+            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
         }
     }
 }

@@ -8,6 +8,7 @@ import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class AuthService {
 
     private void validateCorrectPassword(Member member, String password) {
         if (!member.matchPassword(password)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인해주세요.");
+            throw new CodeZapException(ErrorCode.UNAUTHORIZED_PASSWORD, "로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }
     }
 

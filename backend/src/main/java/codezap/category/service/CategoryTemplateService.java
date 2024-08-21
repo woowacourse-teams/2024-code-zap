@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +25,17 @@ public class CategoryTemplateService {
         validateAuthorizeMember(category, member);
 
         if (templateRepository.existsByCategoryId(id)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
+            throw new CodeZapException(ErrorCode.CATEGORY_HAS_TEMPLATES, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
         if (category.getIsDefault()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
+            throw new CodeZapException(ErrorCode.INVALID_CATEGORY_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
     }
 
     private void validateAuthorizeMember(Category category, Member member) {
         if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.FORBIDDEN, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
     }
 }

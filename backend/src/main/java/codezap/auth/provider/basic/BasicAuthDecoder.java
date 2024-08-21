@@ -6,6 +6,7 @@ import java.util.Base64;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -26,13 +27,13 @@ public class BasicAuthDecoder {
             byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
             return new String(credDecoded, StandardCharsets.UTF_8);
         } catch (IllegalArgumentException e) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "잘못된 Base64 인코딩입니다.");
+            throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "잘못된 Base64 인코딩입니다.");
         }
     }
 
     private static void validateBasicAuth(String[] values) {
         if (values.length != BASIC_AUTH_LENGTH || values[0].isEmpty() || values[1].isEmpty()) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "인증 정보가 올바르지 않습니다. 다시 로그인 해주세요.");
+            throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 올바르지 않습니다. 다시 로그인 해주세요.");
         }
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,7 +68,7 @@ public class Category extends BaseTimeEntity {
 
     public void validateAuthorization(Member member) {
         if (!member.equals(this.member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리에 대한 권한이 없습니다.");
         }
     }
 

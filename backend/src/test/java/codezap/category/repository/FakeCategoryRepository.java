@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 
 import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 
 public class FakeCategoryRepository implements CategoryRepository {
@@ -32,7 +33,7 @@ public class FakeCategoryRepository implements CategoryRepository {
         return categories.stream()
                 .filter(category -> Objects.equals(category.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."));
+                .orElseThrow(() -> new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."));
     }
 
     @Override

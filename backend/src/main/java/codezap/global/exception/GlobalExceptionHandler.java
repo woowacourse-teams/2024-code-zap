@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
+    public ResponseEntity<ErrorDetail> handleCodeZapException(CodeZapException codeZapException) {
         log.info("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
-        return ResponseEntity.status(codeZapException.getHttpStatusCode())
-                .body(ProblemDetail.forStatusAndDetail(
-                        codeZapException.getHttpStatusCode(),
+        return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
+                .body(ErrorDetail.of(
+                        codeZapException.getErrorCode(),
                         codeZapException.getMessage())
                 );
     }
