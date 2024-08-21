@@ -64,7 +64,6 @@ const MyTemplatePage = () => {
   const { mutateAsync: deleteTemplates } = useTemplateDeleteMutation(selectedList);
 
   const handleCategoryMenuClick = useCallback((selectedCategoryId: number) => {
-    scroll.top();
     setSelectedCategoryId(selectedCategoryId);
     setPage(1);
   }, []);
