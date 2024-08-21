@@ -27,10 +27,16 @@ export const TagButtonsContainer = styled.div<{ height: string }>`
   transition: height 0.3s ease-in-out;
 `;
 
-export const ShowMoreButton = styled.button<{ isExpanded: boolean }>`
+export const ShowMoreButton = styled.button<{ size: number; isExpanded: boolean }>`
   cursor: pointer;
-  width: 1.875rem;
-  height: 1.875rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: ${({ size }) => `${size}rem`};
+  height: ${({ size }) => `${size}rem`};
+
   transition: transform 0.3s ease-in-out;
 
   ${({ isExpanded }) =>

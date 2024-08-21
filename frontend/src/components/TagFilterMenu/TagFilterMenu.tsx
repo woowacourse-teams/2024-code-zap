@@ -4,7 +4,10 @@ import { ChevronIcon } from '@/assets/images';
 import { TagButton } from '@/components';
 import { useToggle } from '@/hooks/utils';
 import type { Tag } from '@/types';
+import { remToPx } from '@/utils';
 import * as S from './TagFilterMenu.style';
+
+const LINE_HEIGHT_REM = 1.875;
 
 interface Props {
   tags: Tag[];
@@ -23,9 +26,9 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
     if (containerRef.current) {
       const containerHeight = containerRef.current.scrollHeight;
 
-      setHeight(isTagBoxOpen ? `${containerHeight}px` : '1.875rem');
+      setHeight(isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`);
 
-      if (containerHeight > 1.875 * 16) {
+      if (containerHeight > remToPx(LINE_HEIGHT_REM)) {
         setShowMoreButton(true);
       } else {
         setShowMoreButton(false);
@@ -67,7 +70,7 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
         ))}
       </S.TagButtonsContainer>
       {showMoreButton && (
-        <S.ShowMoreButton onClick={toggleTagBox} isExpanded={isTagBoxOpen}>
+        <S.ShowMoreButton size={LINE_HEIGHT_REM} onClick={toggleTagBox} isExpanded={isTagBoxOpen}>
           <ChevronIcon width={16} height={16} aria-label='태그 더보기' />
         </S.ShowMoreButton>
       )}
