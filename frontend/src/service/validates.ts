@@ -43,7 +43,7 @@ export const validateFileName = (fileName: string) => {
 export const validateCategoryName = (categoryName: string) => {
   const maxLength = 15;
 
-  if (categoryName.length > maxLength) {
+  if (categoryName.trim().length > maxLength) {
     return `카테고리 이름은 ${maxLength}자 이내로 입력해주세요.`;
   }
 
