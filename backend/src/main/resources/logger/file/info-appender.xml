@@ -3,7 +3,7 @@
 <included>
     <appender name="info-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>${LOG_FILE_PATH}/${DATE_FORMAT}/info/info.log</file>
+        <file>${LOG_FILE_PATH}/${DATE_FORMAT}/info.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
