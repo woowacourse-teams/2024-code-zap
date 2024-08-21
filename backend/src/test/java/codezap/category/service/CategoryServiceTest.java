@@ -38,7 +38,7 @@ class CategoryServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category1");
 
-            Long categoryId = categoryService.create(member, createCategoryRequest);
+            CreateCategoryResponse response = categoryService.create(member, createCategoryRequest);
 
             assertThat(response.id()).isEqualTo(1L);
         }
@@ -67,48 +67,49 @@ class CategoryServiceTest {
 
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            assertThat(categoryService.create(otherMember, createCategoryRequest)).isEqualTo(2L);
+            assertThat(categoryService.create(otherMember, createCategoryRequest).id())
+                    .isEqualTo(2L);
+        }
+
+        @Test
+        @DisplayName("카테고리 전체 조회 테스트")
+        void findAllCategoriesSuccess() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            categoryRepository.save(new Category("category1", member));
+            categoryRepository.save(new Category("category2", member));
+
+            FindAllCategoriesResponse findAllCategoriesResponse = categoryService.findAll();
+
+            assertThat(findAllCategoriesResponse.categories()).hasSize(2);
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 성공")
+        void updateCategorySuccess() {
+            String updateCategoryName = "updateName";
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category savedCategory = categoryRepository.save(new Category("category1", member));
+
+            categoryService.update(member, savedCategory.getId(),
+                    new UpdateCategoryRequest(updateCategoryName));
+
+            assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo(updateCategoryName);
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 권한 없음")
+        void updateCategoryFailWithUnauthorized() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category savedCategory = categoryRepository.save(new Category("category1", member));
+
+            Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
+
+            UpdateCategoryRequest request = new UpdateCategoryRequest("updateName");
+            assertThatCode(
+                    () -> categoryService.update(otherMember, savedCategory.getId(), request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
+        }
     }
-
-    @Test
-    @DisplayName("카테고리 전체 조회 테스트")
-    void findAllCategoriesSuccess() {
-        Member member = memberRepository.save(MemberFixture.memberFixture());
-
-        categoryRepository.save(new Category("category1", member));
-        categoryRepository.save(new Category("category2", member));
-
-        FindAllCategoriesResponse findAllCategoriesResponse = categoryService.findAll();
-
-        assertThat(findAllCategoriesResponse.categories()).hasSize(2);
-    }
-
-    @Test
-    @DisplayName("카테고리 수정 성공")
-    void updateCategorySuccess() {
-        String updateCategoryName = "updateName";
-        Member member = memberRepository.save(MemberFixture.memberFixture());
-        Category savedCategory = categoryRepository.save(new Category("category1", member));
-
-        categoryService.update(member, savedCategory.getId(),
-                new UpdateCategoryRequest(updateCategoryName));
-
-        assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo(updateCategoryName);
-    }
-
-    @Test
-    @DisplayName("카테고리 수정 실패: 권한 없음")
-    void updateCategoryFailWithUnauthorized() {
-        Member member = memberRepository.save(MemberFixture.memberFixture());
-        Category savedCategory = categoryRepository.save(new Category("category1", member));
-
-        Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
-
-        UpdateCategoryRequest request = new UpdateCategoryRequest("updateName");
-        assertThatCode(
-                () -> categoryService.update(otherMember, savedCategory.getId(), request))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
-    }
-
 }

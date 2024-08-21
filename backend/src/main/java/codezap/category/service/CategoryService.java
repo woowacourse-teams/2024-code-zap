@@ -20,12 +20,12 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    public Long create(Member member, CreateCategoryRequest createCategoryRequest) {
+    public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
         validateDuplicatedCategory(categoryName, member);
         Category category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
-    }
+}
 
     public FindAllCategoriesResponse findAllByMember(Member member) {
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberOrderById(member));

@@ -21,7 +21,7 @@ public class MemberCategoryApplicationService {
     @Transactional
     public Long create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
         Member member = memberService.getById(memberDto.id());
-        return categoryService.create(member, createCategoryRequest);
+        return categoryService.create(member, createCategoryRequest).id();
     }
 
     public FindAllCategoriesResponse findAllByMember(MemberDto memberDto, Long memberId) {
