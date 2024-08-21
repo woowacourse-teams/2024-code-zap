@@ -25,7 +25,7 @@ const router = createBrowserRouter([
       {
         path: 'templates',
         element: (
-          <RouteGuard isLoginRequired redirectTo='/login'>
+          <RouteGuard isLoginRequired={false} redirectTo='/'>
             <TemplateExplorePage />
           </RouteGuard>
         ),
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       {
         path: 'templates/:id',
         element: (
-          <RouteGuard isLoginRequired redirectTo='/login'>
+          <RouteGuard isLoginRequired={false} redirectTo='/login'>
             <TemplatePage />
           </RouteGuard>
         ),
