@@ -33,12 +33,14 @@ export const useTemplate = (id: number) => {
     toggleEditButton();
   };
 
-  const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
+  const handleSelectOption = (index: number) => (event?: React.MouseEvent<HTMLAnchorElement>) => {
+    event?.preventDefault();
 
     const targetElement = sourceCodeRefs.current[index];
 
-    scrollTo(targetElement);
+    if (event) {
+      scrollTo(targetElement);
+    }
 
     const id = template?.sourceCodes[index].id;
 

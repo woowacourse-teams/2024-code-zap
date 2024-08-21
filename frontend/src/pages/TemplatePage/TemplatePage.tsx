@@ -1,4 +1,7 @@
+/* eslint-disable consistent-return */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useTheme } from '@emotion/react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -37,6 +40,54 @@ const TemplatePage = () => {
     isOpenList,
     handleIsOpenList,
   } = useTemplate(Number(id));
+
+  useEffect(() => {
+    if (!template || !sourceCodeRefs.current) {
+      return;
+    }
+
+    const options: IntersectionObserverInit = {
+      root: null,
+      threshold: 0.5,
+    };
+
+    const callback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const index = sourceCodeRefs.current.findIndex((el) => el === entry.target);
+
+          if (index !== -1) {
+            handleSelectOption(index)();
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(callback, options);
+
+    sourceCodeRefs.current.forEach((el) => {
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    const handleScroll = () => {
+      if (window.scrollY < 200) {
+        handleSelectOption(0)();
+      }
+    };
+
+    if (window.scrollY < 200) {
+      handleSelectOption(0)();
+    }
+
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
+  }, [template]);
 
   if (!template) {
     return <div>템플릿을 불러오는 중...</div>;
@@ -131,7 +182,7 @@ const TemplatePage = () => {
             )}
 
             {template.sourceCodes.map((sourceCode, index) => (
-              <div id={sourceCode.filename} key={sourceCode.id} ref={(el) => (sourceCodeRefs.current[index] = el)}>
+              <div id={sourceCode.filename} key={sourceCode.id}>
                 <Flex
                   justify='space-between'
                   align='center'
@@ -149,9 +200,11 @@ const TemplatePage = () => {
                         transform: isOpenList[index] ? 'rotate(180deg)' : 'rotate(0deg)',
                       }}
                     />
-                    <Text.Small color='#fff' weight='bold'>
-                      {sourceCode.filename}
-                    </Text.Small>
+                    <div ref={(el) => (sourceCodeRefs.current[index] = el)}>
+                      <Text.Small color='#fff' weight='bold'>
+                        {sourceCode.filename}
+                      </Text.Small>
+                    </div>
                   </Flex>
                   <Button size='small' variant='text' onClick={copyCode(sourceCode)}>
                     <Text.Small color={theme.color.light.primary_500} weight='bold'>
