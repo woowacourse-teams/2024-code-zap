@@ -33,7 +33,7 @@ export const Backdrop = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
-export const TitleWrapper = styled.div`
+export const HeaderWrapper = styled.div`
   display: flex;
   flex-shrink: 0;
   align-items: center;

@@ -29,14 +29,14 @@ const Base = ({ isOpen, toggleModal, size = 'small', children, ...props }: Props
   );
 };
 
-const Title = ({ children }: { children: ReactNode }) => (
-  <S.TitleWrapper>
+const Header = ({ children }: { children: ReactNode }) => (
+  <S.HeaderWrapper>
     {typeof children === 'string' ? (
       <Heading.XSmall color={theme.color.light.secondary_900}>{children}</Heading.XSmall>
     ) : (
       children
     )}
-  </S.TitleWrapper>
+  </S.HeaderWrapper>
 );
 
 const Body = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
@@ -48,7 +48,7 @@ const Footer = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDiv
 );
 
 const Modal = Object.assign(Base, {
-  Title,
+  Header,
   Body,
   Footer,
 });
