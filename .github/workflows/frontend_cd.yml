@@ -31,7 +31,7 @@ jobs:
 
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
-          echo "SENTRY_DSN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: 환경 파일 권한 설정
         run: chmod 644 ${{ env.frontend-directory }}/.env.*
@@ -58,7 +58,9 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: 아티팩트 디렉토리 생성
-        run: mkdir ${{ secrets.FRONT_DIRECTORY }}
+        run: |
+          rm -rf ${{ secrets.FRONT_DIRECTORY }}
+          mkdir ${{ secrets.FRONT_DIRECTORY }}
       - name: 아티팩트 다운로드
         uses: actions/download-artifact@v4
         with:
@@ -71,4 +73,3 @@ jobs:
           else
             aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap-staging
           fi
-          rm -rf ${{ secrets.FRONT_DIRECTORY }}
