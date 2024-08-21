@@ -1,5 +1,6 @@
 package codezap.global.exception;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -22,13 +23,17 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
-    public ResponseEntity<ErrorDetail> handleCodeZapException(CodeZapException codeZapException) {
+    public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
         log.info("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
+
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                codeZapException.getErrorCode().getHttpStatus(),
+                codeZapException.getMessage());
+        problemDetail.setProperty("type", codeZapException.getErrorCode().getCode());
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
-                .body(ErrorDetail.of(
-                        codeZapException.getErrorCode(),
-                        codeZapException.getMessage())
-                );
+                .body(problemDetail);
     }
 
     @Override
