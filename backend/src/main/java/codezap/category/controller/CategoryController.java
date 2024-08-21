@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.facade.MemberCategoryApplicationService;
 import codezap.category.service.facade.MemberCategoryTemplateApplicationService;
@@ -33,7 +34,7 @@ public class CategoryController implements SpringDocCategoryController {
     private final MemberCategoryTemplateApplicationService memberCategoryTemplateApplicationService;
 
     @PostMapping
-    public ResponseEntity<Void> createCategory(
+    public ResponseEntity<CreateCategoryResponse> createCategory(
             @AuthenticationPrinciple MemberDto memberDto,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {

@@ -26,6 +26,7 @@ import org.springframework.http.MediaType;
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.MockMvcTest;
 import codezap.global.exception.CodeZapException;
@@ -51,7 +52,7 @@ class CategoryControllerTest extends MockMvcTest {
 
             when(memberCategoryApplicationService.create(
                     MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest))
-                    .thenReturn(categoryId);
+                    .thenReturn(new CreateCategoryResponse(1L, "category"));
 
             mvc.perform(post("/categories")
                             .contentType(MediaType.APPLICATION_JSON)
