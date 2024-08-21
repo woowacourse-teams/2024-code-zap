@@ -106,9 +106,6 @@ const MyTemplatePage = () => {
       <S.MainContainer>
         <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
           <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
-          {tags.length !== 0 && (
-            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
-          )}
         </Flex>
 
         <Flex direction='column' width='100%' gap='1rem'>
@@ -153,6 +150,11 @@ const MyTemplatePage = () => {
               currentValue={sortingOption}
               getOptionLabel={(option) => option.value}
             />
+          </Flex>
+          <Flex>
+            {tags.length !== 0 && (
+              <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
+            )}
           </Flex>
           {templates.length ? (
             <TemplateGrid
