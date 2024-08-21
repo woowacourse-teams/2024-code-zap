@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, Dispatch, KeyboardEvent, MutableRefObject, SetStateAction } from 'react';
 
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
@@ -20,17 +20,17 @@ interface Props {
     currentValue: Category;
     handleCurrentValue: (newValue: Category) => void;
     getOptionLabel: (category: Category) => string;
-    dropdownRef: React.MutableRefObject<HTMLDivElement | null>;
+    dropdownRef: MutableRefObject<HTMLDivElement | null>;
   };
   tagProps: {
     tags: string[];
-    setTags: React.Dispatch<React.SetStateAction<string[]>>;
+    setTags: Dispatch<SetStateAction<string[]>>;
     value: string;
-    handleValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleValue: (e: ChangeEvent<HTMLInputElement>) => void;
     resetValue: () => void;
   };
-  handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDescriptionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTitleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleDescriptionChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleAddButtonClick: () => void;
   handleCancelButton: () => void;
   handleCodeChange: (newContent: string, idx: number) => void;
@@ -67,7 +67,7 @@ const TemplateEdit = ({
   const getExistingCategory = (value: string) =>
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
 
-  const createNewCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const createNewCategory = (e: KeyboardEvent<HTMLInputElement>) => {
     if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
       return;
     }
@@ -174,7 +174,7 @@ export default TemplateEdit;
 
 interface NewCategoryInputProps {
   categoryInputValue: string;
-  createNewCategory: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  createNewCategory: (e: KeyboardEvent<HTMLInputElement>) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>, compareValue?: string) => void;
 }
 
