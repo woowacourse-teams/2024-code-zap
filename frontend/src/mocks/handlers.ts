@@ -161,7 +161,7 @@ const categoryHandlers = [
 
     return HttpResponse.json({ status: 400, message: 'Invalid category data' });
   }),
-  http.post(`${CATEGORY_API_URL}/:id`, async (req) => {
+  http.put(`${CATEGORY_API_URL}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
@@ -181,7 +181,9 @@ const categoryHandlers = [
     if (categoryIndex !== -1) {
       mockCategoryList.categories.splice(categoryIndex, 1);
 
-      return HttpResponse.json({ status: 204 });
+      return new HttpResponse(null, {
+        status: 204,
+      });
     } else {
       return HttpResponse.json({ status: 404, message: 'Category not found' });
     }
