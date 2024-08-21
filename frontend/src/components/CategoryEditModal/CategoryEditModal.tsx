@@ -74,10 +74,9 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   };
 
   const handleAddCategory = () => {
-    const newCategoryId = categories.length + newCategories.length;
-    const newCategoryName = `카테고리 ${newCategoryId + 1}`;
+    const newCategoryId = categories[categories.length - 1].id + newCategories.length + 1;
 
-    setNewCategories((prev) => [...prev, { id: newCategoryId, name: newCategoryName }]);
+    setNewCategories((prev) => [...prev, { id: newCategoryId, name: '' }]);
     setEditingCategoryId(newCategoryId);
   };
 
