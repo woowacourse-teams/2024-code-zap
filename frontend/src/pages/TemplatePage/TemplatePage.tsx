@@ -97,7 +97,7 @@ const TemplatePage = () => {
 
                 <Flex gap='0.25rem' wrap='wrap'>
                   {template.tags.map((tag) => (
-                    <TagButton key={tag.id} name={tag.name}></TagButton>
+                    <TagButton key={tag.id} name={tag.name} disabled></TagButton>
                   ))}
                 </Flex>
                 <div
