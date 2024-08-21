@@ -46,3 +46,13 @@ export const validateCategoryName = (categoryName: string) => {
 
   return '';
 };
+
+export const validateTagLength = (tag: string) => {
+  const MAX_LENGTH = 30;
+
+  if (tag.length > MAX_LENGTH) {
+    return `태그는 최대 ${MAX_LENGTH}자 까지만 입력 가능해요!`;
+  }
+
+  return '';
+};
