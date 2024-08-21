@@ -24,11 +24,14 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
       toggleMenu();
     }
   }, [location.pathname]);
-    
-  if (isChecking) {
-    return null;
-  }
 
+  if (isChecking) {
+    return (
+      <S.HeaderContainer ref={headerRef}>
+        <S.HeaderContentContainer></S.HeaderContentContainer>
+      </S.HeaderContainer>
+    );
+  }
 
   return (
     <S.HeaderContainer ref={headerRef}>
