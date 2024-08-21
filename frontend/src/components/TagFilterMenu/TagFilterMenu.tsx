@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import { ChevronIcon } from '@/assets/images';
 import { TagButton } from '@/components';
-import { useToggle } from '@/hooks/utils';
+import { useToggle, useWindowWidth } from '@/hooks/utils';
 import type { Tag } from '@/types';
 import { remToPx } from '@/utils';
 import * as S from './TagFilterMenu.style';
@@ -21,8 +21,9 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
   const [height, setHeight] = useState('auto');
   const containerRef = useRef<HTMLDivElement>(null);
   const [showMoreButton, setShowMoreButton] = useState(false);
+  const windowWidth = useWindowWidth();
 
-  useEffect(() => {
+  const updateTagContainerState = () => {
     if (containerRef.current) {
       const containerHeight = containerRef.current.scrollHeight;
 
@@ -34,7 +35,11 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
         setShowMoreButton(false);
       }
     }
-  }, [tags, selectedTagIds, isTagBoxOpen]);
+  };
+
+  useEffect(() => {
+    updateTagContainerState();
+  }, [tags, selectedTagIds, isTagBoxOpen, windowWidth]);
 
   const handleButtonClick = (tagId: number) => {
     if (selectedTagIds.includes(tagId)) {
