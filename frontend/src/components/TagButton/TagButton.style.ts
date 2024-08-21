@@ -18,6 +18,10 @@ export const TagButtonWrapper = styled.button<{ isFocused: boolean }>`
   border: 1px solid ${({ isFocused }) => (isFocused ? theme.color.light.primary_600 : theme.color.light.tertiary_200)};
   border-radius: 2.5rem;
 
+  &:disabled {
+    cursor: text;
+  }
+
   &:not(:disabled):hover {
     box-shadow: 0 1px 4px #00000030;
   }
