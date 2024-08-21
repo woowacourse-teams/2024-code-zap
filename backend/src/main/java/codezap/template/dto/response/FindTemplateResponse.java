@@ -14,6 +14,9 @@ public record FindTemplateResponse(
         @Schema(description = "템플릿 식별자", example = "0")
         Long id,
 
+        @Schema(description = "회원 설명")
+        FindMemberResponse member,
+
         @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
         String title,
 
@@ -31,12 +34,14 @@ public record FindTemplateResponse(
 
         @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
         LocalDateTime createdAt,
+
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
     public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags) {
         return new FindTemplateResponse(
                 template.getId(),
+                null,
                 template.getTitle(),
                 template.getDescription(),
                 mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
