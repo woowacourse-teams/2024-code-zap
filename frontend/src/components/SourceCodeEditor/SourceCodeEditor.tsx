@@ -1,5 +1,5 @@
 import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
-import { materialLight } from '@uiw/codemirror-theme-material';
+import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { ChangeEvent, useRef } from 'react';
 
@@ -7,7 +7,7 @@ import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
 import { validateFileName } from '@/service/validates';
 import { getLanguageByFilename } from '@/utils';
-import * as S from './style';
+import * as S from './SourceCodeEditor.style';
 
 interface Props {
   index: number;
@@ -61,11 +61,12 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
         height='100%'
         minHeight='10rem'
         maxHeight='40rem'
-        style={{ width: '100%' }}
-        theme={materialLight}
+        style={{ fontSize: '1rem' }}
+        theme={quietlight}
         onChange={handleContentChange}
-        extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || []]}
+        extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || [], S.CustomTheme]}
         onClick={focusCodeMirror}
+        basicSetup={{ foldGutter: true, foldKeymap: true }}
       />
     </S.SourceCodeEditorContainer>
   );
