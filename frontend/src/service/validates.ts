@@ -39,3 +39,17 @@ export const validateFileName = (fileName: string) => {
 
   return '';
 };
+
+export const validateCategoryName = (categoryName: string) => {
+  const maxLength = 15;
+
+  if (categoryName.trim().length > maxLength) {
+    return `카테고리 이름은 ${maxLength}자 이내로 입력해주세요.`;
+  }
+
+  if (categoryName.trim().length === 0) {
+    return '카테고리 이름을 입력해주세요.';
+  }
+
+  return '';
+};
