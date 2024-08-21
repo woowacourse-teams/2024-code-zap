@@ -151,11 +151,9 @@ const MyTemplatePage = () => {
               getOptionLabel={(option) => option.value}
             />
           </Flex>
-          <Flex>
-            {tags.length !== 0 && (
-              <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
-            )}
-          </Flex>
+          {tags.length && (
+            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
+          )}
           {templates.length ? (
             <TemplateGrid
               templates={templates}
