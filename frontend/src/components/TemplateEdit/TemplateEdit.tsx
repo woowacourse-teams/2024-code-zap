@@ -95,11 +95,7 @@ const TemplateEdit = ({
   return (
     <S.TemplateEditContainer>
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
-        <CategoryGuide
-          isOpen={categoryProps.isOpen}
-          isPending={isPending}
-          categoryErrorMessage={categoryErrorMessage}
-        />
+        <CategoryGuide isOpen={categoryProps.isOpen} categoryErrorMessage={categoryErrorMessage} />
         <Dropdown
           {...categoryProps}
           replaceChildrenWhenIsOpen={
@@ -208,27 +204,18 @@ const NewCategoryInput = ({
 
 interface CategoryGuideProps {
   isOpen: boolean;
-  isPending: boolean;
   categoryErrorMessage: string;
 }
 
-const CategoryGuide = ({ isOpen, isPending, categoryErrorMessage }: CategoryGuideProps) => {
+const CategoryGuide = ({ isOpen, categoryErrorMessage }: CategoryGuideProps) => {
   const isError = categoryErrorMessage !== '';
 
   return (
     <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
-      {isPending ? (
-        <>
-          <Text.Small color={theme.color.light.secondary_400}>카테고리를 생성 중이에요!</Text.Small>
-        </>
-      ) : isError ? (
-        <>
-          <Text.Small color={theme.color.light.analogous_primary_300}>{categoryErrorMessage}</Text.Small>
-        </>
+      {isError ? (
+        <Text.Small color={theme.color.light.analogous_primary_300}>{categoryErrorMessage}</Text.Small>
       ) : (
-        <>
-          <Text.Small color={theme.color.light.secondary_400}>엔터로 카테고리를 등록해요</Text.Small>
-        </>
+        <Text.Small color={theme.color.light.secondary_400}>엔터로 카테고리를 등록해요</Text.Small>
       )}
     </Guide>
   );
