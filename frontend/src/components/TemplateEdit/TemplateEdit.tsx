@@ -1,8 +1,8 @@
 import { ChangeEvent, Dispatch, KeyboardEvent, MutableRefObject, SetStateAction } from 'react';
 
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
-import { useInputWithValidate } from '@/hooks/utils';
+import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide, LoadingBall } from '@/components';
+import { useInputWithValidate, useLoaderDelay } from '@/hooks/utils';
 import { useCategoryUploadMutation } from '@/queries/category';
 import { validateCategoryName } from '@/service/validates';
 import { theme } from '@/style/theme';
@@ -107,6 +107,7 @@ const TemplateEdit = ({
               categoryInputValue={categoryInputValue}
               createNewCategory={createNewCategory}
               handleChange={handleCategoryChange}
+              isPending={isPending}
             />
           }
         />
@@ -176,18 +177,28 @@ interface NewCategoryInputProps {
   categoryInputValue: string;
   createNewCategory: (e: KeyboardEvent<HTMLInputElement>) => void;
   handleChange: (e: ChangeEvent<HTMLInputElement>, compareValue?: string) => void;
+  isPending: boolean;
 }
 
-const NewCategoryInput = ({ categoryInputValue, createNewCategory, handleChange }: NewCategoryInputProps) => (
+const NewCategoryInput = ({
+  categoryInputValue,
+  createNewCategory,
+  handleChange,
+  isPending,
+}: NewCategoryInputProps) => (
   <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
-    <Input.TextField
-      autoFocus
-      placeholder='+ 새 카테고리 생성'
-      value={categoryInputValue}
-      onChange={handleChange}
-      onKeyUpCapture={createNewCategory}
-      placeholderColor={theme.color.light.secondary_600}
-    />
+    {isPending ? (
+      <LoadingBall />
+    ) : (
+      <Input.TextField
+        autoFocus
+        placeholder='+ 새 카테고리 생성'
+        value={categoryInputValue}
+        onChange={handleChange}
+        onKeyUpCapture={createNewCategory}
+        placeholderColor={theme.color.light.secondary_600}
+      />
+    )}
   </Input>
 );
 
@@ -204,7 +215,7 @@ const CategoryGuide = ({ isOpen, isPending, categoryErrorMessage }: CategoryGuid
     <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
       {isPending ? (
         <>
-          <Text.Medium color={theme.color.light.secondary_400}>카테고리를 생성 중이에요!</Text.Medium>
+          <Text.Small color={theme.color.light.secondary_400}>카테고리를 생성 중이에요!</Text.Small>
         </>
       ) : isError ? (
         <>
