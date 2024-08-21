@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -37,7 +38,6 @@ public class FakeTemplateRepository implements TemplateRepository {
         return templates.stream().anyMatch(template -> Objects.equals(template.getCategory().getId(), categoryId));
     }
 
-    @Override
     public Page<Template> searchBy(Long memberId, String keyword, Pageable pageable) {
         List<Template> searchedTemplates = templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), memberId))
@@ -47,7 +47,6 @@ public class FakeTemplateRepository implements TemplateRepository {
         return pageTemplates(pageable, searchedTemplates);
     }
 
-    @Override
     public Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable) {
         List<Template> searchedTemplates = templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), memberId))
@@ -58,7 +57,6 @@ public class FakeTemplateRepository implements TemplateRepository {
         return pageTemplates(pageable, searchedTemplates);
     }
 
-    @Override
     public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable) {
         List<Template> searchedTemplates = templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), memberId))
@@ -69,7 +67,6 @@ public class FakeTemplateRepository implements TemplateRepository {
         return pageTemplates(pageable, searchedTemplates);
     }
 
-    @Override
     public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds,
             Pageable pageable
     ) {
@@ -111,6 +108,11 @@ public class FakeTemplateRepository implements TemplateRepository {
         return templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), id))
                 .toList();
+    }
+
+    @Override
+    public Page<Template> findAll(Specification<Template> specification, Pageable pageable) {
+        return null;
     }
 
     @Override
