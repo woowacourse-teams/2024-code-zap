@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '../../style/theme';
 
 export const EditCategoryItemList = styled.div`
   display: flex;
@@ -9,19 +9,39 @@ export const EditCategoryItemList = styled.div`
   width: 100%;
 `;
 
-export const EditCategoryItem = styled.div<{ hasError?: boolean }>`
+export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean }>`
   display: flex;
   gap: 1rem;
   align-items: center;
 
-  padding: 0.25rem 1rem;
+  height: 3rem;
+  padding: ${({ isButton }) => (isButton ? '0' : '0 1rem')};
 
-  border: ${({ hasError }) => (hasError ? '1px solid red' : 'none')};
+  border: ${({ hasError }) => (hasError ? `1px solid red` : 'none')};
   border-radius: 8px;
+  box-shadow: 1px 1px 4px #00000030;
 
-  &:hover {
-    outline: 1px solid ${theme.color.light.secondary_500};
-    outline-offset: -2px;
+  transition: all 0.1s ease-out;
+
+  &:hover,
+  &:focus-within {
+    transform: scale(1.015);
+    box-shadow: 1px 1px 2px 1px #00000040;
+  }
+
+  &:hover span {
+    color: ${theme.color.light.secondary_700};
+  }
+
+  &:hover button,
+  &:focus-within button {
+    visibility: visible;
+  }
+
+  &:focus-within div {
+    padding: 0;
+    font-weight: bold;
+    color: ${theme.color.light.secondary_700};
   }
 `;
 
@@ -37,6 +57,7 @@ export const IconButtonWrapper = styled.button`
 
   padding: 0;
 
+  visibility: hidden;
   opacity: 0.7;
   background: none;
   border: none;
