@@ -4,7 +4,6 @@ export interface TemplateListResponse {
   templates: TemplateListItem[];
   totalPages: number;
   totalElements: number;
-  numberOfElements: number;
 }
 
 export interface TemplateUploadRequest {
@@ -63,7 +62,7 @@ export interface TemplateExploreRequest {
   tagIds?: number[];
   sort?: SortingKey;
   page?: number;
-  pageSize?: number;
+  size?: number;
   memberId?: number | undefined;
 }
 

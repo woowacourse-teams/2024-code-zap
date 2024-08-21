@@ -7,13 +7,13 @@ import type { TemplateListResponse, SortingKey } from '@/types';
 interface Props {
   sort?: SortingKey;
   page?: number;
-  pageSize?: number;
+  size?: number;
 }
 
-export const useTemplateExploreQuery = ({ sort = DEFAULT_SORTING_OPTION.key, page = 1, pageSize = PAGE_SIZE }: Props) =>
+export const useTemplateExploreQuery = ({ sort = DEFAULT_SORTING_OPTION.key, page = 1, size = PAGE_SIZE }: Props) =>
   useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, pageSize],
-    queryFn: () => getTemplateExplore({ sort, page, pageSize }),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, size],
+    queryFn: () => getTemplateExplore({ sort, page, size }),
     throwOnError: true,
     placeholderData: keepPreviousData,
   });
