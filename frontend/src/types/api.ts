@@ -4,7 +4,6 @@ export interface TemplateListResponse {
   templates: TemplateListItem[];
   totalPages: number;
   totalElements: number;
-  numberOfElements: number;
 }
 
 export interface TemplateUploadRequest {

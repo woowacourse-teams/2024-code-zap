@@ -23,7 +23,7 @@ export const templateHandlers = [
     const tagIds = url.searchParams.get('tagIds');
     const sort = url.searchParams.get('sort');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
+    const pageSize = parseInt(url.searchParams.get('size') || '20', 10);
 
     let filteredTemplates = mockTemplateList.templates;
 
