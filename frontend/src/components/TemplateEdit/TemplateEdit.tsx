@@ -1,6 +1,10 @@
+import { ChangeEvent } from 'react';
+
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
+import { useInputWithValidate } from '@/hooks/utils';
 import { useCategoryUploadMutation } from '@/queries/category';
+import { validateCategoryName } from '@/service/validates';
 import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
@@ -54,6 +58,12 @@ const TemplateEdit = ({
 }: Props) => {
   const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(categoryProps.handleCurrentValue);
 
+  const {
+    value: categoryInputValue,
+    errorMessage: categoryErrorMessage,
+    handleChange: handleCategoryChange,
+  } = useInputWithValidate('', validateCategoryName);
+
   const getExistingCategory = (value: string) =>
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
 
@@ -65,15 +75,13 @@ const TemplateEdit = ({
     const inputValue = e.target.value;
     const existingCategory = getExistingCategory(inputValue);
 
-    if (inputValue.trim() === '') {
-      e.target.value = '';
+    if (existingCategory) {
+      categoryProps.handleCurrentValue(existingCategory);
 
       return;
     }
 
-    if (existingCategory) {
-      categoryProps.handleCurrentValue(existingCategory);
-
+    if (categoryErrorMessage !== '') {
       return;
     }
 
@@ -87,10 +95,20 @@ const TemplateEdit = ({
   return (
     <S.TemplateEditContainer>
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
-        <CategoryGuide isOpen={categoryProps.isOpen} isPending={isPending} />
+        <CategoryGuide
+          isOpen={categoryProps.isOpen}
+          isPending={isPending}
+          categoryErrorMessage={categoryErrorMessage}
+        />
         <Dropdown
           {...categoryProps}
-          replaceChildrenWhenIsOpen={<NewCategoryInput createNewCategory={createNewCategory} />}
+          replaceChildrenWhenIsOpen={
+            <NewCategoryInput
+              categoryInputValue={categoryInputValue}
+              createNewCategory={createNewCategory}
+              handleChange={handleCategoryChange}
+            />
+          }
         />
 
         <S.UnderlineInputWrapper>
@@ -155,14 +173,18 @@ const TemplateEdit = ({
 export default TemplateEdit;
 
 interface NewCategoryInputProps {
+  categoryInputValue: string;
   createNewCategory: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  handleChange: (e: ChangeEvent<HTMLInputElement>, compareValue?: string) => void;
 }
 
-const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
+const NewCategoryInput = ({ categoryInputValue, createNewCategory, handleChange }: NewCategoryInputProps) => (
   <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
     <Input.TextField
       autoFocus
       placeholder='+ 새 카테고리 생성'
+      value={categoryInputValue}
+      onChange={handleChange}
       onKeyUpCapture={createNewCategory}
       placeholderColor={theme.color.light.secondary_600}
     />
@@ -172,20 +194,29 @@ const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
 interface CategoryGuideProps {
   isOpen: boolean;
   isPending: boolean;
+  categoryErrorMessage: string;
 }
 
-const CategoryGuide = ({ isOpen, isPending }: CategoryGuideProps) => (
-  <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
-    {isPending ? (
-      <>
-        <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
-        <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
-      </>
-    ) : (
-      <>
-        <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
-        <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
-      </>
-    )}
-  </Guide>
-);
+const CategoryGuide = ({ isOpen, isPending, categoryErrorMessage }: CategoryGuideProps) => {
+  const isError = categoryErrorMessage !== '';
+
+  return (
+    <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
+      {isPending ? (
+        <>
+          <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
+          <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
+        </>
+      ) : isError ? (
+        <>
+          <Text.Small color={theme.color.light.analogous_primary_300}>{categoryErrorMessage}</Text.Small>
+        </>
+      ) : (
+        <>
+          <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
+          <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
+        </>
+      )}
+    </Guide>
+  );
+};
