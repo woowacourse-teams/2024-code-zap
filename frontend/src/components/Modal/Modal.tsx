@@ -11,25 +11,18 @@ export interface BaseProps extends HTMLAttributes<HTMLDivElement> {
   size?: ModalSize;
 }
 
-const Base = ({
-  isOpen,
-  toggleModal,
-  size = 'small',
-
-  children,
-  ...rests
-}: PropsWithChildren<BaseProps>) => {
+const Base = ({ isOpen, toggleModal, size = 'small', children, ...rests }: PropsWithChildren<BaseProps>) => {
   if (!isOpen) {
     return null;
   }
 
   return createPortal(
-    <S.Container>
+    <S.Base>
       <S.Backdrop onClick={toggleModal} />
-      <S.Base size={size} {...rests}>
+      <S.ModalContainer size={size} {...rests}>
         {children}
-      </S.Base>
-    </S.Container>,
+      </S.ModalContainer>
+    </S.Base>,
     document.body,
   );
 };

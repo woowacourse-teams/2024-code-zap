@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import { ModalSize } from './Modal';
 
-export const Container = styled.div`
+export const Base = styled.div`
   position: fixed;
   z-index: 200;
   top: 0;
@@ -40,7 +40,8 @@ export const Header = styled.div`
 `;
 
 export const Body = styled.div`
-  margin-bottom: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
   font-size: 1rem;
 `;
 
@@ -50,9 +51,13 @@ export const Footer = styled.div`
   justify-content: space-between;
 `;
 
-export const Base = styled.div<{ size: ModalSize }>`
+export const ModalContainer = styled.div<{ size: ModalSize }>`
   position: relative;
   z-index: 202;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 
   padding: 1.5rem;
 
