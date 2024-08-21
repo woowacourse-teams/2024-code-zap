@@ -20,7 +20,7 @@ export const SourceCodeFileNameInput = styled.input`
   font-weight: 700;
   color: ${theme.color.dark.white};
 
-  background-color: ${theme.color.light.tertiary_400};
+  background-color: ${theme.color.light.tertiary_600};
   border: none;
 
   &::placeholder {
