@@ -19,11 +19,11 @@ export const validateConfirmPassword = (password: string, confirmPassword: strin
   password === confirmPassword ? '' : '비밀번호가 일치하지 않습니다.';
 
 export const validateFileName = (fileName: string) => {
+  const MAX_LENGTH = 255;
   const invalidChars = /[<>:"/\\|?*]/;
-  const maxLength = 255;
 
-  if (fileName.length > maxLength) {
-    return '파일명의 길이는 255자 이내로 입력해주세요!';
+  if (fileName.length > MAX_LENGTH) {
+    return `파일명의 길이는 ${MAX_LENGTH}자 이내로 입력해주세요!`;
   }
 
   if (invalidChars.test(fileName)) {

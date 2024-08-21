@@ -5,7 +5,7 @@ import { ChangeEvent, useRef } from 'react';
 
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
-import { validateFileName } from '@/service/validates';
+import { validateFileName } from '@/service';
 import { getLanguageByFilename } from '@/utils';
 import * as S from './SourceCodeEditor.style';
 
