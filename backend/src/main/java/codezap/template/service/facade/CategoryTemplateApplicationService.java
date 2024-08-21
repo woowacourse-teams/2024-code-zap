@@ -2,7 +2,6 @@ package codezap.template.service.facade;
 
 import java.util.List;
 
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -33,8 +32,6 @@ public class CategoryTemplateApplicationService {
             List<Long> tagIds,
             Pageable pageable
     ) {
-        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize(), pageable.getSort());
-
         if (categoryId == null) {
             return templateApplicationService
                     .findByMemberKeywordAndCategoryOrTagIds(memberId, keyword, tagIds, pageable);
