@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 
 import { ChevronIcon } from '@/assets/images';
 import { TagButton } from '@/components';
+import { useToggle } from '@/hooks/utils';
 import type { Tag } from '@/types';
 import * as S from './TagFilterMenu.style';
 
@@ -13,7 +14,7 @@ interface Props {
 
 const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
   const [deselectedTags, setDeselectedTags] = useState<Tag[]>([]);
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isTagBoxOpen, toggleTagBox] = useToggle(false);
   const [height, setHeight] = useState('auto');
   const containerRef = useRef<HTMLDivElement>(null);
   const [showMoreButton, setShowMoreButton] = useState(false);
@@ -22,7 +23,7 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
     if (containerRef.current) {
       const containerHeight = containerRef.current.scrollHeight;
 
-      setHeight(isExpanded ? `${containerHeight}px` : '1.875rem');
+      setHeight(isTagBoxOpen ? `${containerHeight}px` : '1.875rem');
 
       if (containerHeight > 1.875 * 16) {
         setShowMoreButton(true);
@@ -30,7 +31,7 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
         setShowMoreButton(false);
       }
     }
-  }, [tags, selectedTagIds, isExpanded]);
+  }, [tags, selectedTagIds, isTagBoxOpen]);
 
   const handleButtonClick = (tagId: number) => {
     if (selectedTagIds.includes(tagId)) {
@@ -45,10 +46,6 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
       setDeselectedTags((prev) => prev.filter((tag) => tag.id !== tagId));
       onSelectTags([...selectedTagIds, tagId]);
     }
-  };
-
-  const handleShowMore = () => {
-    setIsExpanded(!isExpanded);
   };
 
   const selectedTags = selectedTagIds.map((id) => tags.find((tag) => tag.id === id)!).filter(Boolean);
@@ -70,7 +67,7 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
         ))}
       </S.TagButtonsContainer>
       {showMoreButton && (
-        <S.ShowMoreButton onClick={handleShowMore} isExpanded={isExpanded}>
+        <S.ShowMoreButton onClick={toggleTagBox} isExpanded={isTagBoxOpen}>
           <ChevronIcon width={16} height={16} aria-label='태그 더보기' />
         </S.ShowMoreButton>
       )}
