@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
+import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
 import type { Category, CustomError } from '@/types';
@@ -116,9 +116,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
 
   return (
     <Modal isOpen={isOpen} toggleModal={handleCancelEditWithReset} size='small'>
-      <Modal.Header>
-        <Heading.XSmall color={theme.color.light.secondary_900}>카테고리 편집</Heading.XSmall>
-      </Modal.Header>
+      <Modal.Header>{'카테고리 편집'}</Modal.Header>
       <Modal.Body>
         <S.EditCategoryItemList>
           <CategoryItems
