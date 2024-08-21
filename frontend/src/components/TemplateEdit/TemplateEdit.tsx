@@ -139,7 +139,13 @@ const TemplateEdit = ({
             </S.DeleteButton>
           </Flex>
         ))}
-        <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
+        <Button
+          size='medium'
+          variant='contained'
+          buttonColor={theme.color.light.primary_50}
+          fullWidth
+          onClick={handleAddButtonClick}
+        >
           <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
         </Button>
 

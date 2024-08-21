@@ -62,7 +62,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
           />
         ))}
       </Flex>
-      <Input size='large'>
+      <Input size='large' variant='outlined'>
         <Input.TextField
           placeholder='enter 또는 space bar로 태그를 등록해보세요'
           value={value}
