@@ -12,12 +12,10 @@ export const TagButtonWrapper = styled.button<{ isFocused: boolean }>`
 
   box-sizing: border-box;
   height: 1.75rem;
-  margin: ${({ isFocused }) => (isFocused ? '0' : '.0625rem')};
   padding: 0 0.75rem;
 
   background-color: ${({ isFocused }) => (isFocused ? theme.color.light.primary_400 : theme.color.light.tertiary_50)};
-  border: ${({ isFocused }) =>
-    isFocused ? `2px solid ${theme.color.light.primary_600}` : `1px solid ${theme.color.light.tertiary_200}`};
+  border: 1px solid ${({ isFocused }) => (isFocused ? theme.color.light.primary_600 : theme.color.light.tertiary_200)};
   border-radius: 2.5rem;
 
   &:not(:disabled):hover {
