@@ -48,11 +48,27 @@ public class SourceCodeService {
                         .toList()
         );
 
-        if (isThumbnailDeleted(updateTemplateRequest, thumbnail)) {
-            updateThumbnail(template, thumbnail);
-        }
+        updateThumbnail(updateTemplateRequest, template, thumbnail);
         updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
         validateSourceCodesCount(template, updateTemplateRequest);
+    }
+
+    private void updateThumbnail(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
+        boolean isThumbnailDeleted = updateTemplateRequest.deleteSourceCodeIds().contains(thumbnail.getId());
+        if (isThumbnailDeleted) {
+            refreshThumbnail(template, thumbnail);
+        }
+    }
+
+    private void refreshThumbnail(Template template, Thumbnail thumbnail) {
+        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplateAndOrdinal(
+                template,
+                thumbnail.getSourceCode().getOrdinal()
+        );
+        sourceCodes.stream()
+                .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode(), sourceCode))
+                .findFirst()
+                .ifPresent(thumbnail::updateThumbnail);
     }
 
     private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
@@ -71,25 +87,6 @@ public class SourceCodeService {
                 updateSourceCodeRequest.content(),
                 updateSourceCodeRequest.ordinal()
         );
-    }
-
-    private boolean isThumbnailDeleted(
-            UpdateTemplateRequest updateTemplateRequest,
-            Thumbnail thumbnail
-    ) {
-        return updateTemplateRequest.deleteSourceCodeIds()
-                .contains(thumbnail.getId());
-    }
-
-    private void updateThumbnail(Template template, Thumbnail thumbnail) {
-        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplateAndOrdinal(
-                template,
-                thumbnail.getSourceCode().getOrdinal()
-        );
-        sourceCodes.stream()
-                .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode(), sourceCode))
-                .findFirst()
-                .ifPresent(thumbnail::updateThumbnail);
     }
 
     private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {
