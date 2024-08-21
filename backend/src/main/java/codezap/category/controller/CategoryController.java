@@ -45,10 +45,9 @@ public class CategoryController implements SpringDocCategoryController {
 
     @GetMapping
     public ResponseEntity<FindAllCategoriesResponse> getCategories(
-            @AuthenticationPrinciple MemberDto memberDto,
             @RequestParam Long memberId
     ) {
-        return ResponseEntity.ok(memberCategoryApplicationService.findAllByMember(memberDto, memberId));
+        return ResponseEntity.ok(memberCategoryApplicationService.findAllByMember(memberId));
     }
 
     @PutMapping("/{id}")

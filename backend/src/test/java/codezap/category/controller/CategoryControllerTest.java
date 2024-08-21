@@ -97,7 +97,7 @@ class CategoryControllerTest extends MockMvcTest {
         List<Category> categories = List.of(new Category("category1", member), new Category("category1", member));
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
-        when(memberCategoryApplicationService.findAllByMember(any(), any())).thenReturn(findAllCategoriesResponse);
+        when(memberCategoryApplicationService.findAllByMember(any())).thenReturn(findAllCategoriesResponse);
 
         mvc.perform(get("/categories")
                         .param("memberId", "1")
