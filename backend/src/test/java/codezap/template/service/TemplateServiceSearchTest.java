@@ -128,7 +128,7 @@ public class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findByMemberAndKeyword(
-                    member.getId(), "keyword", PageRequest.of(0, 3)
+                    member.getId(), "keyword", PageRequest.of(1, 3)
             );
 
             //then
@@ -148,7 +148,7 @@ public class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findByMemberAndKeyword(
-                    member.getId(), "java", PageRequest.of(0, 3)
+                    member.getId(), "java", PageRequest.of(1, 3)
             );
 
             //then
@@ -168,7 +168,7 @@ public class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findByMemberAndKeyword(
-                    member.getId(), "Car", PageRequest.of(0, 3)
+                    member.getId(), "Car", PageRequest.of(1, 3)
             );
 
             //then
@@ -199,7 +199,7 @@ public class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findByMemberAndKeyword(
-                    member.getId(), "Login", PageRequest.of(0, 3)
+                    member.getId(), "Login", PageRequest.of(1, 3)
             );
 
             //then
@@ -216,7 +216,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category1);
             saveDefault15Templates(member, category2);
             Page<Template> allBy = templateService.findByMemberAndKeyword(
-                    member.getId(), "", PageRequest.of(0, 20)
+                    member.getId(), "", PageRequest.of(1, 20)
             );
 
             assertAll(() -> assertThat(allBy).hasSize(20),
@@ -235,7 +235,7 @@ public class TemplateServiceSearchTest {
 
             //when
             Page<Template> templates = templateService.findByMemberAndKeyword(
-                    member.getId(), "keyword", PageRequest.of(1, 5)
+                    member.getId(), "keyword", PageRequest.of(2, 5)
             );
 
             //then
@@ -250,7 +250,7 @@ public class TemplateServiceSearchTest {
     @DisplayName("조건에 따른 페이지 조회 메서드 동작 확인")
     class FilteringPageTest {
 
-        private static final PageRequest DEFAULT_PAGING_REQUEST = PageRequest.of(0, 20);
+        private static final PageRequest DEFAULT_PAGING_REQUEST = PageRequest.of(1, 20);
 
         @Test
         @DisplayName("전체 탐색 / 1페이지 성공")
@@ -264,7 +264,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
 
             Page<Template> allBy = templateService.findByMemberAndKeyword(
-                    member.getId(), "", PageRequest.of(0, 20)
+                    member.getId(), "", PageRequest.of(1, 20)
             );
 
             //when & then
@@ -286,7 +286,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
 
             Page<Template> allBy = templateService.findByMemberAndKeyword(
-                    member.getId(), "", PageRequest.of(1, 20)
+                    member.getId(), "", PageRequest.of(2, 20)
             );
 
             assertAll(() -> assertThat(allBy).hasSize(10),
@@ -305,7 +305,7 @@ public class TemplateServiceSearchTest {
             saveDefault15Templates(member, category2);
 
             Page<Template> allBy = templateService.findByMemberKeywordAndCategory(
-                    member.getId(), "", category1.getId(), PageRequest.of(0, 20)
+                    member.getId(), "", category1.getId(), PageRequest.of(1, 20)
             );
 
             assertAll(() -> assertThat(allBy).hasSize(15),

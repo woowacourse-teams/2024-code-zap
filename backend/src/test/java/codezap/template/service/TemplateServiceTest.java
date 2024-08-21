@@ -123,7 +123,7 @@ class TemplateServiceTest {
 
         // when
         Page<Template> allTemplates = templateService.findByMemberAndKeyword(
-                member.getId(), "", PageRequest.of(0, 10));
+                member.getId(), "", PageRequest.of(1, 10));
 
         // then
         assertThat(allTemplates).hasSize(2);
