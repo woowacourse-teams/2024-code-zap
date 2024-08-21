@@ -67,7 +67,7 @@ const TemplateEdit = ({
   const getExistingCategory = (value: string) =>
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
 
-  const createNewCategory = (e: KeyboardEvent<HTMLInputElement>) => {
+  const createNewCategory = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
       return;
     }
@@ -87,7 +87,7 @@ const TemplateEdit = ({
 
     const newCategory = { name: inputValue };
 
-    postCategory(newCategory);
+    await postCategory(newCategory);
 
     e.target.value = '';
   };
