@@ -6,7 +6,6 @@ import type {
   TemplateListRequest,
 } from '@/types';
 import { SortingOption } from '@/types';
-import { TemplateExploreRequest } from '@/types/api';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -70,7 +69,7 @@ export const getTemplateExplore = async ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
   size = PAGE_SIZE,
-}: TemplateExploreRequest) => {
+}: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
     sort,
     page: page.toString(),
