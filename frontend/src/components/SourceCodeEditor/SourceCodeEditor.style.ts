@@ -33,7 +33,7 @@ export const SourceCodeFileNameInput = styled.input`
   }
 `;
 
-export const CustomTheme = EditorView.theme({
+export const CustomCodeMirrorTheme = EditorView.theme({
   '.cm-activeLine': { backgroundColor: `rgba(0, 0, 0, 0.1) !important` },
   '.cm-activeLineGutter': { backgroundColor: `rgba(0, 0, 0, 0.1) !important` },
 });

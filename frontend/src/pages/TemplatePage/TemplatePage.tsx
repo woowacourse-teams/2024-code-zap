@@ -1,10 +1,12 @@
 import { useTheme } from '@emotion/react';
+import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
+import { quietlight } from '@uiw/codemirror-theme-quietlight';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
+import { CustomCodeMirrorTheme } from '@/components/TemplateCard/TemplateCard.style';
 import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
 import { useCustomContext, useToggle } from '@/hooks/utils';
@@ -200,24 +202,28 @@ const TemplatePage = () => {
                 </Flex>
                 <S.SyntaxHighlighterWrapper isOpen={isOpenList[index]}>
                   {isOpenList[index] && (
-                    <SyntaxHighlighter
-                      language={getLanguageByFilename(sourceCode.filename)}
-                      style={oneLight}
-                      showLineNumbers={true}
-                      customStyle={{
-                        borderRadius: '0 0 8px 8px',
-                        width: '100%',
-                        tabSize: 2,
-                        margin: 0,
-                      }}
-                      codeTagProps={{
-                        style: {
-                          fontSize: '1rem',
+                    <CodeMirror
+                      value={sourceCode.content}
+                      height='100%'
+                      style={{ width: '100%', fontSize: '1rem' }}
+                      theme={quietlight}
+                      extensions={[
+                        loadLanguage(getLanguageByFilename(sourceCode?.filename) as LanguageName) || [],
+                        CustomCodeMirrorTheme,
+                        EditorView.editable.of(false),
+                      ]}
+                      css={{
+                        '.cm-editor': {
+                          borderRadius: '0 0 8px 8px',
+                          overflow: 'hidden',
+                        },
+                        '.cm-scroller': {
+                          padding: '1rem 0',
+                          overflowY: 'auto',
+                          height: '100%',
                         },
                       }}
-                    >
-                      {sourceCode.content}
-                    </SyntaxHighlighter>
+                    />
                   )}
                 </S.SyntaxHighlighterWrapper>
               </div>

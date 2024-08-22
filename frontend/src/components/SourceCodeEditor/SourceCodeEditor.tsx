@@ -65,7 +65,7 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
         style={{ fontSize: '1rem' }}
         theme={quietlight}
         onChange={handleContentChange}
-        extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || [], S.CustomTheme]}
+        extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || [], S.CustomCodeMirrorTheme]}
         onClick={focusCodeMirror}
         basicSetup={{ foldGutter: true, foldKeymap: true }}
       />
