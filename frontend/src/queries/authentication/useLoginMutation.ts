@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
+import { ERROR_CODE } from '@/api';
 import { postLogin } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication/useAuth';
@@ -19,9 +20,9 @@ export const useLoginMutation = () => {
         handleLoginState(false);
         handleMemberInfo(res);
 
-        if (res.errorCode === 1302) {
+        if (res.errorCode === ERROR_CODE.invalidName) {
           failAlert('존재하지 않는 아이디에요. 다시 로그인 해주세요.');
-        } else if (res.errorCode === 1303) {
+        } else if (res.errorCode === ERROR_CODE.invalidPassword) {
           failAlert('잘못된 비밀번호에요. 다시 로그인 해주세요.');
         } else {
           failAlert('로그인에 실패했어요. 잠시 후 다시 시도해주세요.');
