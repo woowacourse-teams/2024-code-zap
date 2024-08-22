@@ -66,10 +66,11 @@ public class TemplateTagService {
     }
 
     public FindAllTagsResponse findAllByTemplates(List<Template> templates) {
-        List<TemplateTag> templateTags = templateTagRepository.findDistinctByTemplateIn(templates);
+        List<Long> templateIds = templates.stream().map(Template::getId).toList();
+        List<Long> templateTagIds = templateTagRepository.findDistinctByTemplateIn(templateIds);
         return new FindAllTagsResponse(
-                templateTags.stream()
-                        .map(templateTag -> FindTagResponse.from(templateTag.getTag()))
+                templateTagIds.stream()
+                        .map(id -> FindTagResponse.from(tagRepository.fetchById(id)))
                         .toList()
         );
     }
