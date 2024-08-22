@@ -131,7 +131,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
             onNameInputChange={handleNameInputChange}
             onNameInputBlur={handleNameInputBlur}
           />
-          <S.EditCategoryItem isButton={true}>
+          <S.EditCategoryItem isButton={true} disabled={!isValid}>
             <Button fullWidth variant='text' hoverStyle='none' onClick={handleAddCategory} disabled={!isValid}>
               {'+ 카테고리 추가'}
             </Button>

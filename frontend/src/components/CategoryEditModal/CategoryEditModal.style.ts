@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { theme } from '../../style/theme';
@@ -9,7 +10,7 @@ export const EditCategoryItemList = styled.div`
   width: 100%;
 `;
 
-export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean }>`
+export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean; disabled?: boolean }>`
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -23,11 +24,24 @@ export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: bool
 
   transition: all 0.1s ease-out;
 
-  &:hover,
-  &:focus-within {
-    transform: scale(1.015);
-    box-shadow: 1px 1px 2px 1px #00000040;
-  }
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      &:hover,
+      &:focus-within {
+        transform: scale(1.015);
+        box-shadow: 1px 1px 2px 1px #00000040;
+      }
+    `}
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      button {
+        cursor: default;
+        opacity: 0.7;
+      }
+    `}
 
   &:hover span {
     color: ${theme.color.light.secondary_700};
