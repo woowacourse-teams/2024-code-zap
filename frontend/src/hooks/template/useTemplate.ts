@@ -1,20 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/template';
-import { useScrollToTargetElement } from '../utils';
+import { useSelectList } from '../utils/useSelectList';
 
 export const useTemplate = (id: number) => {
   const navigate = useNavigate();
-  const scrollTo = useScrollToTargetElement();
 
   const { data: template } = useTemplateQuery(Number(id));
   const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
+  const { currentFile, setCurrentFile, sourceCodeRefs, handleSelectOption } = useSelectList(
+    template?.sourceCodes || [],
+  );
 
-  const [currentFile, setCurrentFile] = useState<number | null>(null);
   const [isEdit, setIsEdit] = useState(false);
-
-  const sourceCodeRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [isOpenList, setIsOpenList] = useState<boolean[]>(template?.sourceCodes.map(() => true) || []);
 
@@ -23,7 +22,7 @@ export const useTemplate = (id: number) => {
       setCurrentFile(template?.sourceCodes[0].id as number);
       setIsOpenList(template?.sourceCodes.map(() => true));
     }
-  }, [template]);
+  }, [template, setCurrentFile]);
 
   const toggleEditButton = () => {
     setIsEdit((prev) => !prev);
@@ -31,24 +30,6 @@ export const useTemplate = (id: number) => {
 
   const handleEditButtonClick = () => {
     toggleEditButton();
-  };
-
-  const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-
-    const targetElement = sourceCodeRefs.current[index];
-
-    scrollTo(targetElement);
-
-    const id = template?.sourceCodes[index].id;
-
-    if (!id) {
-      console.error('sourceCode id가 존재하지 않습니다.');
-
-      return;
-    }
-
-    setCurrentFile(() => id);
   };
 
   const handleDelete = () => {
