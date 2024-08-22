@@ -1,5 +1,5 @@
 export interface CustomError {
-  type: string;
+  type: number;
   title: string;
   status: number;
   detail: string;
