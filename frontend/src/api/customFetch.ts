@@ -1,4 +1,5 @@
 import { CustomError } from '@/types';
+import { ERROR_CODE } from './errorCode';
 
 interface Props {
   url: string;
@@ -34,7 +35,7 @@ export const customFetch = async <T>({ url, headers, method = 'GET', body }: Pro
 
     if (!response.ok) {
       const error: CustomError = {
-        type: responseBody.type || 'UnknownError',
+        type: responseBody.type || ERROR_CODE.serverError,
         title: responseBody.title || 'Error',
         status: response.status,
         detail: responseBody.detail || 'An error occurred',
@@ -50,7 +51,7 @@ export const customFetch = async <T>({ url, headers, method = 'GET', body }: Pro
       throw error as CustomError;
     } else {
       const networkError: CustomError = {
-        type: 'NetworkError',
+        type: ERROR_CODE.serverError,
         title: 'Network Error',
         status: 0,
         detail: error instanceof Error ? error.message : 'An unknown network error occurred',
