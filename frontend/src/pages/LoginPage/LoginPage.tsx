@@ -4,6 +4,7 @@ import { EyeIcon } from '@/assets/images';
 import { Button, Flex, Heading, Input, Text } from '@/components';
 import { useLoginForm } from '@/hooks/authentication/useLoginForm';
 import { useToggle } from '@/hooks/utils';
+import { END_POINTS } from '@/routes';
 
 const LoginPage = () => {
   const [showPassword, handlePasswordToggle] = useToggle();
@@ -45,7 +46,7 @@ const LoginPage = () => {
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
               <Text.XSmall color='#6B7079'>계정이 없으신가요?</Text.XSmall>
 
-              <Link to={'/signup'}>
+              <Link to={END_POINTS.signup}>
                 <Button variant='text' size='small'>
                   회원가입
                 </Button>
