@@ -24,19 +24,11 @@ const router = createBrowserRouter([
       },
       {
         path: 'templates',
-        element: (
-          <RouteGuard isLoginRequired={false} redirectTo='/'>
-            <TemplateExplorePage />
-          </RouteGuard>
-        ),
+        element: <TemplateExplorePage />,
       },
       {
         path: 'templates/:id',
-        element: (
-          <RouteGuard isLoginRequired={false} redirectTo='/login'>
-            <TemplatePage />
-          </RouteGuard>
-        ),
+        element: <TemplatePage />,
       },
       {
         path: 'templates/upload',
