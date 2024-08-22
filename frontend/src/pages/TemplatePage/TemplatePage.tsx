@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { ChevronIcon, PencilIcon, TrashcanIcon } from '@/assets/images';
+import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
@@ -82,17 +82,28 @@ const TemplatePage = () => {
                 <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                   {template.title}
                 </Heading.Medium>
-                <Flex gap='0.5rem'>
-                  <Text.Small
-                    color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                  >
-                    {formatRelativeTime(template.modifiedAt)}
-                  </Text.Small>
-                  <Text.Small
-                    color={theme.mode === 'dark' ? theme.color.dark.secondary_300 : theme.color.light.secondary_400}
-                  >
-                    ({formatRelativeTime(template.createdAt)})
-                  </Text.Small>
+                <Flex gap='0.5rem' align='center'>
+                  <Flex align='center' gap='0.125rem'>
+                    <PersonIcon width={14} />
+                    <Text.Small
+                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                    >
+                      {template?.member?.name || ''}
+                    </Text.Small>
+                  </Flex>
+                  <Flex align='center' gap='0.125rem'>
+                    <ClockIcon width={16} />
+                    <Text.Small
+                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                    >
+                      {formatRelativeTime(template.modifiedAt)}
+                    </Text.Small>
+                    <Text.Small
+                      color={theme.mode === 'dark' ? theme.color.dark.secondary_300 : theme.color.light.secondary_400}
+                    >
+                      ({formatRelativeTime(template.createdAt)})
+                    </Text.Small>
+                  </Flex>
                 </Flex>
 
                 <Flex gap='0.25rem' wrap='wrap'>
