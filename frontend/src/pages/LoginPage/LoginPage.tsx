@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { EyeIcon } from '@/assets/images';
+import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
 import { useLoginForm } from '@/hooks/authentication/useLoginForm';
 import { useToggle } from '@/hooks/utils';
@@ -16,6 +16,7 @@ const LoginPage = () => {
       <S.ResponsiveFlex direction='column' justify='center' align='center' height='100vh'>
         <S.LoginPageContainer direction='column' justify='center' align='center' gap='3.5rem' width='27.5rem'>
           <Flex direction='column' justify='center' align='center' gap='1rem'>
+            <ZapzapLogo width={100} height={100} />
             <S.ResponsiveHeading color='#F79037'>환영하잽</S.ResponsiveHeading>
           </Flex>
 
