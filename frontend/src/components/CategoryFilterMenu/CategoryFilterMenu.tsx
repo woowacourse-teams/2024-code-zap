@@ -68,7 +68,6 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
         isOpen={isEditModalOpen}
         toggleModal={toggleEditModal}
         categories={userCategories}
-        defaultCategory={defaultCategory}
         handleCancelEdit={toggleEditModal}
       />
     </S.CategoryContainer>
