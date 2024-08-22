@@ -22,11 +22,17 @@ export const useLoginMutation = () => {
 
         if (res.errorCode === ERROR_CODE.invalidName) {
           failAlert('존재하지 않는 아이디에요. 다시 로그인 해주세요.');
-        } else if (res.errorCode === ERROR_CODE.invalidPassword) {
-          failAlert('잘못된 비밀번호에요. 다시 로그인 해주세요.');
-        } else {
-          failAlert('로그인에 실패했어요. 잠시 후 다시 시도해주세요.');
+
+          return;
         }
+
+        if (res.errorCode === ERROR_CODE.invalidPassword) {
+          failAlert('잘못된 비밀번호에요. 다시 로그인 해주세요.');
+
+          return;
+        }
+
+        failAlert('로그인에 실패했어요. 잠시 후 다시 시도해주세요.');
       } else {
         localStorage.setItem('name', String(res.name));
         localStorage.setItem('memberId', String(res.memberId));
