@@ -1,5 +1,6 @@
 import { HttpResponse } from 'msw';
 
+import { END_POINTS } from '@/routes';
 import type {
   CategoryListResponse,
   CategoryUploadRequest,
@@ -13,7 +14,7 @@ import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const CATEGORY_API_URL = `${API_URL}/categories`;
+export const CATEGORY_API_URL = `${API_URL}${END_POINTS.CATEGORIES}`;
 
 export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>) => {
   const url = `${CATEGORY_API_URL}?memberId=${memberId}`;

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { postSignup } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
+import { END_POINTS } from '@/routes';
 import { SignupRequest } from '@/types';
 
 export const useSignupMutation = () => {
@@ -13,7 +14,7 @@ export const useSignupMutation = () => {
   return useMutation({
     mutationFn: (signupInfo: SignupRequest) => postSignup(signupInfo),
     onSuccess: () => {
-      navigate('/login');
+      navigate(END_POINTS.LOGIN);
       successAlert('회원가입 성공!');
     },
     onError: (error) => {
