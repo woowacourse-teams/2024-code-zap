@@ -176,7 +176,7 @@ const MyTemplatePage = () => {
               getOptionLabel={(option) => option.value}
             />
           </Flex>
-          {tags.length && (
+          {tags.length !== 0 && (
             <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
           )}
           {renderTemplateContent()}
