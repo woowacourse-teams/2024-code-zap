@@ -11,6 +11,8 @@ export { default as ArrowUpIcon } from './arrowUp.svg';
 export { default as SettingIcon } from './setting.svg';
 export { default as SpinArrowIcon } from './spinArrow.svg';
 export { default as HamburgerIcon } from './Hamburger';
+export { default as PersonIcon } from './person.svg';
+export { default as ClockIcon } from './clock.svg';
 
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';

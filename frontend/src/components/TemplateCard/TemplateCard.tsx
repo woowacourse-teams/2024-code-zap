@@ -1,5 +1,6 @@
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
+import { quietlight } from '@uiw/codemirror-theme-quietlight';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 
 import { Button, Flex, TagButton, Text } from '@/components';
 import { useToggle } from '@/hooks/utils';
@@ -54,20 +55,28 @@ const TemplateCard = ({ template }: Props) => {
         </S.EllipsisTextWrapper>
       </Flex>
 
-      <SyntaxHighlighter
-        language={getLanguageByFilename(thumbnail?.filename ?? '')}
-        style={oneLight}
-        showLineNumbers={true}
-        customStyle={{ margin: '1rem 0', borderRadius: '8px', width: '100%', height: '9.5rem', tabSize: 2 }}
-        codeTagProps={{
-          style: {
-            fontSize: '0.875rem',
+      <CodeMirror
+        value={thumbnail?.content}
+        height='10rem'
+        style={{ width: '100%', fontSize: '1rem', margin: '1rem 0' }}
+        theme={quietlight}
+        extensions={[
+          loadLanguage(getLanguageByFilename(thumbnail?.filename) as LanguageName) || [],
+          S.CustomCodeMirrorTheme,
+          EditorView.editable.of(false),
+        ]}
+        css={{
+          '.cm-editor': {
+            borderRadius: '8px',
+            overflow: 'hidden',
+          },
+          '.cm-scroller': {
+            padding: '1rem 0',
+            overflowY: 'auto',
+            height: '100%',
           },
         }}
-      >
-        {thumbnail?.content}
-      </SyntaxHighlighter>
-
+      />
       <Flex justify='space-between' onClick={blockMovingToDetailPage}>
         <S.TagListContainer>
           {tags.map((tag: Tag) => (

@@ -1,10 +1,12 @@
 import { useTheme } from '@emotion/react';
+import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
+import { quietlight } from '@uiw/codemirror-theme-quietlight';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
-import { ChevronIcon, PencilIcon, TrashcanIcon } from '@/assets/images';
+import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
+import { CustomCodeMirrorTheme } from '@/components/TemplateCard/TemplateCard.style';
 import { ToastContext } from '@/contexts';
 import { useTemplate } from '@/hooks/template';
 import { useCustomContext, useToggle } from '@/hooks/utils';
@@ -82,17 +84,28 @@ const TemplatePage = () => {
                 <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                   {template.title}
                 </Heading.Medium>
-                <Flex gap='0.5rem'>
-                  <Text.Small
-                    color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                  >
-                    {formatRelativeTime(template.modifiedAt)}
-                  </Text.Small>
-                  <Text.Small
-                    color={theme.mode === 'dark' ? theme.color.dark.secondary_300 : theme.color.light.secondary_400}
-                  >
-                    ({formatRelativeTime(template.createdAt)})
-                  </Text.Small>
+                <Flex gap='0.5rem' align='center'>
+                  <Flex align='center' gap='0.125rem'>
+                    <PersonIcon width={14} />
+                    <Text.Small
+                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                    >
+                      {template?.member?.name || ''}
+                    </Text.Small>
+                  </Flex>
+                  <Flex align='center' gap='0.125rem'>
+                    <ClockIcon width={16} />
+                    <Text.Small
+                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                    >
+                      {formatRelativeTime(template.modifiedAt)}
+                    </Text.Small>
+                    <Text.Small
+                      color={theme.mode === 'dark' ? theme.color.dark.secondary_300 : theme.color.light.secondary_400}
+                    >
+                      ({formatRelativeTime(template.createdAt)})
+                    </Text.Small>
+                  </Flex>
                 </Flex>
 
                 <Flex gap='0.25rem' wrap='wrap'>
@@ -131,15 +144,31 @@ const TemplatePage = () => {
             )}
 
             {template.sourceCodes.map((sourceCode, index) => (
-              <div id={sourceCode.filename} key={sourceCode.id} ref={(el) => (sourceCodeRefs.current[index] = el)}>
+              <div
+                id={sourceCode.filename}
+                key={sourceCode.id}
+                ref={(el) => (sourceCodeRefs.current[index] = el)}
+                css={{ width: '100%' }}
+              >
                 <Flex
                   justify='space-between'
                   align='center'
                   height='3rem'
                   padding='1rem 1.5rem'
+                  width='100%'
                   style={{ background: `${theme.color.light.tertiary_600}`, borderRadius: '8px 8px 0 0' }}
                 >
-                  <Flex align='center' gap='0.5rem' onClick={handleIsOpenList(index)} css={{ cursor: 'pointer' }}>
+                  <Flex
+                    justify='space-between'
+                    align='center'
+                    gap='0.5rem'
+                    onClick={handleIsOpenList(index)}
+                    css={{
+                      cursor: 'pointer',
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                  >
                     <ChevronIcon
                       width={16}
                       height={16}
@@ -149,11 +178,23 @@ const TemplatePage = () => {
                         transform: isOpenList[index] ? 'rotate(180deg)' : 'rotate(0deg)',
                       }}
                     />
-                    <Text.Small color='#fff' weight='bold'>
-                      {sourceCode.filename}
-                    </Text.Small>
+                    <S.NoScrollbarContainer>
+                      <Text.Small color='#fff' weight='bold'>
+                        {sourceCode.filename}
+                      </Text.Small>
+                    </S.NoScrollbarContainer>
                   </Flex>
-                  <Button size='small' variant='text' onClick={copyCode(sourceCode)}>
+                  <Button
+                    size='small'
+                    variant='text'
+                    onClick={copyCode(sourceCode)}
+                    css={{
+                      width: 'auto',
+                      padding: '0.25rem 0.5rem',
+                      whiteSpace: 'nowrap',
+                      minWidth: 'fit-content',
+                    }}
+                  >
                     <Text.Small color={theme.color.light.primary_500} weight='bold'>
                       {'복사'}
                     </Text.Small>
@@ -161,24 +202,28 @@ const TemplatePage = () => {
                 </Flex>
                 <S.SyntaxHighlighterWrapper isOpen={isOpenList[index]}>
                   {isOpenList[index] && (
-                    <SyntaxHighlighter
-                      language={getLanguageByFilename(sourceCode.filename)}
-                      style={oneLight}
-                      showLineNumbers={true}
-                      customStyle={{
-                        borderRadius: '0 0 8px 8px',
-                        width: '100%',
-                        tabSize: 2,
-                        margin: 0,
-                      }}
-                      codeTagProps={{
-                        style: {
-                          fontSize: '1rem',
+                    <CodeMirror
+                      value={sourceCode.content}
+                      height='100%'
+                      style={{ width: '100%', fontSize: '1rem' }}
+                      theme={quietlight}
+                      extensions={[
+                        loadLanguage(getLanguageByFilename(sourceCode?.filename) as LanguageName) || [],
+                        CustomCodeMirrorTheme,
+                        EditorView.editable.of(false),
+                      ]}
+                      css={{
+                        '.cm-editor': {
+                          borderRadius: '0 0 8px 8px',
+                          overflow: 'hidden',
+                        },
+                        '.cm-scroller': {
+                          padding: '1rem 0',
+                          overflowY: 'auto',
+                          height: '100%',
                         },
                       }}
-                    >
-                      {sourceCode.content}
-                    </SyntaxHighlighter>
+                    />
                   )}
                 </S.SyntaxHighlighterWrapper>
               </div>

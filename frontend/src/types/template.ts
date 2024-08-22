@@ -29,6 +29,10 @@ export interface Template {
   tags: Tag[];
   createdAt: string;
   modifiedAt: string;
+  member: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface TemplateListItem {
