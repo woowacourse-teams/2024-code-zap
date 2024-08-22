@@ -52,7 +52,7 @@ class CategoryControllerTest extends MockMvcTest {
 
             when(memberCategoryApplicationService.create(
                     MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest))
-                    .thenReturn(new CreateCategoryResponse(1L, "category").id());
+                    .thenReturn(new CreateCategoryResponse(1L, "category"));
 
             mvc.perform(post("/categories")
                             .contentType(MediaType.APPLICATION_JSON)
