@@ -77,10 +77,4 @@ export const ScrollTopButton = styled.button`
   background-color: ${theme.color.light.primary_500};
   border: none;
   border-radius: 100%;
-
-  img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-  }
 `;

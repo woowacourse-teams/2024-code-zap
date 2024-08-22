@@ -33,7 +33,7 @@ export const getTemplateList = async ({
   tagIds,
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
-  pageSize = PAGE_SIZE,
+  size = PAGE_SIZE,
   memberId,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
@@ -41,7 +41,7 @@ export const getTemplateList = async ({
     memberId: String(memberId),
     sort,
     page: page.toString(),
-    size: pageSize.toString(),
+    size: size.toString(),
   });
 
   if (categoryId) {
@@ -51,6 +51,30 @@ export const getTemplateList = async ({
   if (tagIds?.length !== 0 && tagIds !== undefined) {
     queryParams.append('tagIds', tagIds.toString());
   }
+
+  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
+
+  const response = await customFetch<TemplateListResponse>({
+    url,
+  });
+
+  if ('templates' in response) {
+    return response;
+  }
+
+  throw new Error(response.detail);
+};
+
+export const getTemplateExplore = async ({
+  sort = DEFAULT_SORTING_OPTION.key,
+  page = 1,
+  size = PAGE_SIZE,
+}: TemplateListRequest) => {
+  const queryParams = new URLSearchParams({
+    sort,
+    page: page.toString(),
+    size: size.toString(),
+  });
 
   const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 

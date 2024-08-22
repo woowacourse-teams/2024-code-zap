@@ -4,24 +4,24 @@ import styled from '@emotion/styled';
 import { theme } from '@/style/theme';
 import type { Props } from './Button';
 
-const variants = {
+const variants = (color: string | undefined) => ({
   contained: css`
     color: ${theme.mode === 'light' ? theme.color.light.white : theme.color.dark.secondary_800};
-    background: ${theme.mode === 'light' ? theme.color.light.primary_500 : theme.color.light.primary_300};
+    background: ${color ?? (theme.mode === 'light' ? theme.color.light.primary_500 : theme.color.light.primary_300)};
     border: none;
   `,
   outlined: css`
     color: ${theme.mode === 'light' ? theme.color.light.primary_500 : theme.color.light.primary_300};
     background: none;
     border: solid;
-    border-color: ${theme.mode === 'light' ? theme.color.light.primary_500 : theme.color.light.primary_300};
+    border-color: ${color ?? (theme.mode === 'light' ? theme.color.light.primary_500 : theme.color.light.primary_300)};
   `,
   text: css`
     color: ${theme.mode === 'light' ? theme.color.light.primary_500 : theme.color.light.primary_300};
     background: none;
     border: none;
   `,
-};
+});
 
 const sizes = {
   small: css`
@@ -83,7 +83,7 @@ export const Button = styled.button<Props>`
   border-radius: 8px;
 
   ${({ size }) => size && sizes[size]};
-  ${({ variant }) => variant && variants[variant]};
+  ${({ variant, buttonColor }) => variant && variants(buttonColor)[variant]};
   ${({ weight }) => weight && weights[weight]};
   ${({ fullWidth }) =>
     fullWidth &&

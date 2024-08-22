@@ -24,11 +24,14 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
       toggleMenu();
     }
   }, [location.pathname]);
-    
-  if (isChecking) {
-    return null;
-  }
 
+  if (isChecking) {
+    return (
+      <S.HeaderContainer ref={headerRef}>
+        <S.HeaderContentContainer></S.HeaderContentContainer>
+      </S.HeaderContainer>
+    );
+  }
 
   return (
     <S.HeaderContainer ref={headerRef}>
@@ -37,7 +40,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <S.HeaderMenu menuOpen={menuOpen}>
           <S.NavContainer>
             {!isChecking && isLogin && <NavOption route='/' name='내 템플릿' />}
-            <NavOption route='/aboutus' name='서비스 소개' />
+            <NavOption route='/templates' name='구경가기' />
           </S.NavContainer>
 
           <S.NavContainer>

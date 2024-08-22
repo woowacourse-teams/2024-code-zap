@@ -23,7 +23,7 @@ export const templateHandlers = [
     const tagIds = url.searchParams.get('tagIds');
     const sort = url.searchParams.get('sort');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const pageSize = parseInt(url.searchParams.get('size') || '20', 10);
+    const size = parseInt(url.searchParams.get('size') || '20', 10);
 
     let filteredTemplates = mockTemplateList.templates;
 
@@ -60,9 +60,9 @@ export const templateHandlers = [
     }
 
     const totalElements = filteredTemplates.length;
-    const totalPages = Math.ceil(totalElements / pageSize);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+    const totalPages = Math.ceil(totalElements / size);
+    const startIndex = (page - 1) * size;
+    const endIndex = startIndex + size;
     const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
     const numberOfElements = paginatedTemplates.length;
 
