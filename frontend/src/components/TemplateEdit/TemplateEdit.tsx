@@ -1,8 +1,20 @@
-import { ChangeEvent, Dispatch, KeyboardEvent, MutableRefObject, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, KeyboardEvent, MouseEvent, MutableRefObject, SetStateAction, useEffect } from 'react';
 
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide, LoadingBall } from '@/components';
+import {
+  Button,
+  Dropdown,
+  Flex,
+  Input,
+  SourceCodeEditor,
+  TagInput,
+  Text,
+  Guide,
+  LoadingBall,
+  SelectList,
+} from '@/components';
 import { useInputWithValidate, useLoaderDelay } from '@/hooks/utils';
+import { useSelectList } from '@/hooks/utils/useSelectList';
 import { useCategoryUploadMutation } from '@/queries/category';
 import { validateCategoryName } from '@/service/validates';
 import { theme } from '@/style/theme';
@@ -57,6 +69,7 @@ const TemplateEdit = ({
   error,
 }: Props) => {
   const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(categoryProps.handleCurrentValue);
+  const { currentFile, setCurrentFile, sourceCodeRefs, handleSelectOption } = useSelectList(sourceCodes);
 
   const {
     value: categoryInputValue,
@@ -92,78 +105,110 @@ const TemplateEdit = ({
     e.target.value = '';
   };
 
+  const handleSelectList = (index: number) => (e: MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    handleSelectOption(index)(e);
+    setCurrentFile(index);
+  };
+
+  useEffect(() => {
+    if (sourceCodes.length === 1) {
+      setCurrentFile(0);
+    }
+  }, [sourceCodes, setCurrentFile]);
+
   return (
-    <S.TemplateEditContainer>
-      <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
-        <CategoryGuide isOpen={categoryProps.isOpen} categoryErrorMessage={categoryErrorMessage} />
-        <Dropdown
-          {...categoryProps}
-          replaceChildrenWhenIsOpen={
-            <NewCategoryInput
-              categoryInputValue={categoryInputValue}
-              createNewCategory={createNewCategory}
-              handleChange={handleCategoryChange}
-              isPending={isPending}
-            />
-          }
-        />
+    <Flex justify='space-between' align='center' width='100%'>
+      <S.TemplateEditContainer>
+        <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
+          <CategoryGuide isOpen={categoryProps.isOpen} categoryErrorMessage={categoryErrorMessage} />
+          <Dropdown
+            {...categoryProps}
+            replaceChildrenWhenIsOpen={
+              <NewCategoryInput
+                categoryInputValue={categoryInputValue}
+                createNewCategory={createNewCategory}
+                handleChange={handleCategoryChange}
+                isPending={isPending}
+              />
+            }
+          />
 
-        <S.UnderlineInputWrapper>
-          <Input size='xlarge' variant='text'>
-            <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
+          <S.UnderlineInputWrapper>
+            <Input size='xlarge' variant='text'>
+              <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
+            </Input>
+          </S.UnderlineInputWrapper>
+
+          <Input size='large' variant='text'>
+            <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
           </Input>
-        </S.UnderlineInputWrapper>
 
-        <Input size='large' variant='text'>
-          <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
-        </Input>
+          {sourceCodes.map((sourceCode, index) => (
+            <Flex key={index} style={{ position: 'relative' }} width='100%'>
+              <div ref={(el) => (sourceCodeRefs.current[index] = el)} css={{ width: '100%' }}>
+                <SourceCodeEditor
+                  key={index}
+                  index={index}
+                  fileName={sourceCode.filename}
+                  content={sourceCode.content}
+                  onChangeContent={(newContent) => handleCodeChange(newContent, index)}
+                  onChangeFileName={(newFileName) => handleFileNameChange(newFileName, index)}
+                />
+                <S.DeleteButton
+                  size='small'
+                  variant='text'
+                  onClick={() => {
+                    handleDeleteSourceCode(index);
+                  }}
+                >
+                  <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
+                </S.DeleteButton>
+              </div>
+            </Flex>
+          ))}
+          <Button
+            size='medium'
+            variant='contained'
+            buttonColor={theme.color.light.primary_50}
+            fullWidth
+            onClick={handleAddButtonClick}
+          >
+            <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
+          </Button>
 
-        {sourceCodes.map((sourceCode, idx) => (
-          <Flex key={idx} style={{ position: 'relative' }} width='100%'>
-            <SourceCodeEditor
-              key={idx}
-              index={idx}
-              fileName={sourceCode.filename}
-              content={sourceCode.content}
-              onChangeContent={(newContent) => handleCodeChange(newContent, idx)}
-              onChangeFileName={(newFileName) => handleFileNameChange(newFileName, idx)}
-            />
-            <S.DeleteButton
-              size='small'
-              variant='text'
-              onClick={() => {
-                handleDeleteSourceCode(idx);
-              }}
-            >
-              <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
-            </S.DeleteButton>
+          <TagInput {...tagProps} />
+
+          <Flex justify='flex-end' padding='0.5rem 0 0 0' width='100%'>
+            <Flex gap='0.5rem'>
+              <Button size='medium' variant='outlined' onClick={handleCancelButton}>
+                취소
+              </Button>
+              <Button
+                size='medium'
+                variant='contained'
+                onClick={handleSaveButtonClick}
+                disabled={sourceCodes.length === 0}
+              >
+                저장
+              </Button>
+            </Flex>
           </Flex>
-        ))}
-        <Button size='medium' variant='outlined' fullWidth onClick={handleAddButtonClick}>
-          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
-        </Button>
 
-        <TagInput {...tagProps} />
-
-        <Flex justify='flex-end' padding='0.5rem 0 0 0' width='100%'>
-          <Flex gap='0.5rem'>
-            <Button size='medium' variant='outlined' onClick={handleCancelButton}>
-              취소
-            </Button>
-            <Button
-              size='medium'
-              variant='contained'
-              onClick={handleSaveButtonClick}
-              disabled={sourceCodes.length === 0}
-            >
-              저장
-            </Button>
-          </Flex>
+          {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
         </Flex>
-
-        {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
-      </Flex>
-    </S.TemplateEditContainer>
+      </S.TemplateEditContainer>
+      <S.SidebarContainer>
+        <SelectList>
+          {sourceCodes.map((sourceCode, index) => (
+            <SelectList.Option key={index} onClick={handleSelectList(index)} isSelected={currentFile === index}>
+              {sourceCode.filename}
+            </SelectList.Option>
+          ))}
+        </SelectList>
+      </S.SidebarContainer>
+    </Flex>
   );
 };
 

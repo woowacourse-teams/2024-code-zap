@@ -37,12 +37,13 @@ export const HeaderWrapper = styled.div`
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  padding-bottom: 1rem;
+  padding: 1rem;
 `;
 
 export const BodyContainer = styled.div`
   overflow-y: auto;
   flex-grow: 1;
+  padding: 1rem;
   font-size: 1rem;
 `;
 
@@ -52,7 +53,7 @@ export const FooterContainer = styled.div`
   gap: 1rem;
   justify-content: space-between;
 
-  padding-top: 1rem;
+  padding: 1rem;
 `;
 
 export const ModalContainer = styled.div<{ size: ModalSize }>`
@@ -64,7 +65,7 @@ export const ModalContainer = styled.div<{ size: ModalSize }>`
   gap: 1rem;
 
   max-height: 90vh;
-  padding: 1.5rem;
+  padding: 1rem;
 
   background-color: white;
   border-radius: 24px;

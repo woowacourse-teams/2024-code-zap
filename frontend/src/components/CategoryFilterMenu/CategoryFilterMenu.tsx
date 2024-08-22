@@ -3,8 +3,8 @@ import { useMemo, useState } from 'react';
 import { SettingIcon } from '@/assets/images';
 import { Text, CategoryEditModal } from '@/components';
 import { useToggle } from '@/hooks/utils';
+import { theme } from '@/style/theme';
 import type { Category } from '@/types';
-import { theme } from '../../style/theme';
 import * as S from './CategoryFilterMenu.style';
 
 interface CategoryMenuProps {

@@ -27,7 +27,11 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   }, [location.pathname]);
 
   if (isChecking) {
-    return null;
+    return (
+      <S.HeaderContainer ref={headerRef}>
+        <S.HeaderContentContainer></S.HeaderContentContainer>
+      </S.HeaderContainer>
+    );
   }
 
   return (

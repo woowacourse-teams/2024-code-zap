@@ -1,4 +1,4 @@
-import React, { createContext, useState, ReactNode, useRef } from 'react';
+import { createContext, useState, useRef, PropsWithChildren } from 'react';
 
 import { Toast } from '@/components';
 
@@ -10,7 +10,7 @@ type ToastContextType = {
 
 export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const ToastProvider = ({ children }: PropsWithChildren) => {
   const [toastList, setToastList] = useState<{ id: number; type: 'success' | 'fail' | 'info'; message: string }[]>([]);
   const nextId = useRef(0);
 
@@ -18,7 +18,15 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     setToastList((prev) => prev.filter((toast) => toast.id !== id));
   };
 
+  const findDuplicateToast = (message: string) => toastList.find((toast) => toast.message === message);
+
   const failAlert = (message: string) => {
+    const duplicateToast = findDuplicateToast(message);
+
+    if (duplicateToast) {
+      return;
+    }
+
     const id = nextId.current;
 
     nextId.current += 1;
@@ -28,6 +36,12 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const successAlert = (message: string) => {
+    const duplicateToast = findDuplicateToast(message);
+
+    if (duplicateToast) {
+      return;
+    }
+
     const id = nextId.current;
 
     nextId.current += 1;
@@ -37,6 +51,12 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   };
 
   const infoAlert = (message: string) => {
+    const duplicateToast = findDuplicateToast(message);
+
+    if (duplicateToast) {
+      return;
+    }
+
     const id = nextId.current;
 
     nextId.current += 1;
