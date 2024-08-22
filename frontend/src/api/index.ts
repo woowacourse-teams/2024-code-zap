@@ -25,3 +25,5 @@ export {
   getLoginState,
   checkName,
 } from './authentication';
+
+export { ERROR_CODE } from './errorCode';
