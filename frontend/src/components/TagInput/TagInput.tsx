@@ -17,8 +17,10 @@ interface Props {
 
 const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
+
   const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
       addTag();
       resetValue();
     }
@@ -39,10 +41,6 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   };
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.trim() === '') {
-      return;
-    }
-
     const errorMessage = validateTagLength(e.target.value);
 
     if (errorMessage) {
@@ -89,8 +87,9 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
           placeholder='enter 또는 space bar로 태그를 등록해보세요'
           value={value}
           onChange={handleTagInput}
-          onKeyUpCapture={handleSpaceBarAndEnterKeydown}
+          onKeyUp={handleSpaceBarAndEnterKeydown}
           onBlur={() => {
+            addTag();
             resetValue();
           }}
         />
