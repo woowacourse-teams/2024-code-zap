@@ -81,11 +81,16 @@ const TemplateEdit = ({
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
 
   const createNewCategory = async (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
+    if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter' || e.nativeEvent.isComposing === true) {
       return;
     }
 
     const inputValue = e.target.value;
+
+    if (inputValue === '') {
+      return;
+    }
+
     const existingCategory = getExistingCategory(inputValue);
 
     if (existingCategory) {
@@ -239,7 +244,7 @@ const NewCategoryInput = ({
           placeholder='+ 새 카테고리 생성'
           value={categoryInputValue}
           onChange={handleChange}
-          onKeyUpCapture={createNewCategory}
+          onKeyDown={createNewCategory}
           placeholderColor={theme.color.light.secondary_600}
         />
       )}
