@@ -44,7 +44,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "소스 코드 순서가 잘못되었습니다."),
             @ErrorCase(description = "소스 코드가 0개 입력된 경우", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
     })
-    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
@@ -100,9 +100,6 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
