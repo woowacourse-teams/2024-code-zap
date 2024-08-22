@@ -2,6 +2,7 @@ import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-lang
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 
+import { PersonIcon } from '@/assets/images';
 import { Button, Flex, TagButton, Text } from '@/components';
 import { useToggle } from '@/hooks/utils';
 import { theme } from '@/style/theme';
@@ -15,7 +16,7 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const { title, description, thumbnail, tags, modifiedAt } = template;
+  const { title, description, thumbnail, tags, modifiedAt, member } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
 
   const blockMovingToDetailPage = (
@@ -36,15 +37,23 @@ const TemplateCard = ({ template }: Props) => {
     <S.TemplateCardContainer data-testid='template-card'>
       <Flex direction='column' gap='1rem'>
         <Flex justify='space-between' gap='3rem'>
-          <S.EllipsisTextWrapper>
-            <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
-              {title}
-            </Text.XLarge>
-          </S.EllipsisTextWrapper>
+          <Flex align='center' gap='0.125rem'>
+            <PersonIcon width={14} />
+            <Text.Small color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}>
+              {member?.name || ''}
+            </Text.Small>
+          </Flex>
+
           <S.NoWrapTextWrapper>
             <Text.XSmall color={theme.color.light.secondary_500}>{formatRelativeTime(modifiedAt)}</Text.XSmall>
           </S.NoWrapTextWrapper>
         </Flex>
+
+        <S.EllipsisTextWrapper>
+          <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
+            {title}
+          </Text.XLarge>
+        </S.EllipsisTextWrapper>
 
         <S.EllipsisTextWrapper>
           {description ? (
