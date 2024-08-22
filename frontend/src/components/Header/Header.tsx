@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
+import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import { useToggle } from '@/hooks/utils';
+import { useCustomContext, useToggle } from '@/hooks/utils';
 import { usePressESC } from '@/hooks/utils/usePressESC';
 import { useScrollDisable } from '@/hooks/utils/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
@@ -15,7 +16,9 @@ import * as S from './Header.style';
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   const { isLogin, isChecking } = useAuth();
   const [menuOpen, toggleMenu] = useToggle();
+  const { failAlert } = useCustomContext(ToastContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useScrollDisable(menuOpen);
   usePressESC(menuOpen, toggleMenu);
@@ -34,6 +37,16 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
     );
   }
 
+  const handleTemplateUploadButton = () => {
+    if (!isLogin) {
+      failAlert('로그인을 해주세요.');
+
+      return;
+    }
+
+    navigate(END_POINTS.TEMPLATES_UPLOAD);
+  };
+
   return (
     <S.HeaderContainer ref={headerRef}>
       <S.HeaderContentContainer>
@@ -43,22 +56,24 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
             {!isChecking && isLogin && <NavOption route={END_POINTS.MY_TEMPLATES} name='내 템플릿' />}
             <NavOption route={END_POINTS.TEMPLATES_EXPLORE} name='구경가기' />
           </S.NavContainer>
-
           <S.NavContainer>
-            <Link to={END_POINTS.TEMPLATES_UPLOAD}>
-              <S.MobileHiddenButton variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-                <PlusIcon aria-label='' />새 템플릿
-              </S.MobileHiddenButton>
-            </Link>
+            <S.MobileHiddenButton
+              variant='outlined'
+              size='medium'
+              weight='bold'
+              hoverStyle='none'
+              onClick={handleTemplateUploadButton}
+            >
+              <PlusIcon aria-label='' />새 템플릿
+            </S.MobileHiddenButton>
+
             {!isChecking && isLogin ? <LogoutButton /> : <LoginButton />}
           </S.NavContainer>
         </S.HeaderMenu>
         <S.MobileMenuContainer>
-          <Link to={END_POINTS.TEMPLATES_UPLOAD}>
-            <Button variant='outlined' size='small' weight='bold' hoverStyle='none'>
-              <PlusIcon aria-label='' />새 템플릿
-            </Button>
-          </Link>
+          <Button variant='outlined' size='small' weight='bold' hoverStyle='none' onClick={handleTemplateUploadButton}>
+            <PlusIcon aria-label='' />새 템플릿
+          </Button>
           <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
         </S.MobileMenuContainer>
       </S.HeaderContentContainer>
