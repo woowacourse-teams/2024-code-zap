@@ -56,6 +56,7 @@ export const NewTemplateButton = styled.button`
 
   border: 3px dashed ${theme.color.light.primary_500};
   border-radius: 8px;
+
   &:hover {
     background-color: ${theme.color.light.primary_50};
   }
