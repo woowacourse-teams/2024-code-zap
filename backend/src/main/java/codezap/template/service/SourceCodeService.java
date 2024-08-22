@@ -54,7 +54,8 @@ public class SourceCodeService {
     }
 
     private void updateThumbnail(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        boolean isThumbnailDeleted = updateTemplateRequest.deleteSourceCodeIds().contains(thumbnail.getId());
+        boolean isThumbnailDeleted = updateTemplateRequest.deleteSourceCodeIds()
+                .contains(thumbnail.getSourceCode().getId());
         if (isThumbnailDeleted) {
             refreshThumbnail(template, thumbnail);
         }
