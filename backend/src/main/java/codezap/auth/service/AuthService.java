@@ -26,7 +26,7 @@ public class AuthService {
     }
 
     private Member getVerifiedMember(String name, String password) {
-        Member member = memberRepository.fetchByname(name);
+        Member member = memberRepository.fetchByName(name);
         validateCorrectPassword(member, password);
         return member;
     }

@@ -8,18 +8,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
 import codezap.fixture.CategoryFixture;
-import codezap.fixture.MemberDtoFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
@@ -137,31 +133,13 @@ class TemplateServiceTest {
         Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
 
         // when
-        Template foundTemplate = templateService.getByMemberAndId(member, template.getId());
+        Template foundTemplate = templateService.getById(template.getId());
 
         // then
         assertAll(
                 () -> assertThat(foundTemplate.getTitle()).isEqualTo(template.getTitle()),
                 () -> assertThat(foundTemplate.getCategory().getId()).isEqualTo(template.getCategory().getId())
         );
-    }
-
-    @Test
-    @DisplayName("템플릿 단건 조회 실패: 권한 없음")
-    void findOneTemplateFailWithUnauthorized() {
-        // given
-        Member member = MemberFixture.getFirstMember();
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
-
-        // when
-        Member otherMember = MemberFixture.getSecondMember();
-
-        // then
-        Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.getByMemberAndId(otherMember, templateId))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
     }
 
     @Test

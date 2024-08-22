@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import codezap.category.dto.response.FindCategoryResponse;
+import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
@@ -49,6 +50,20 @@ public record FindTemplateResponse(
                 mapToFindTagByTemplateResponse(tags),
                 template.getCreatedAt(),
                 template.getModifiedAt()
+        );
+    }
+
+    public FindTemplateResponse updateMember(Member member) {
+        return new FindTemplateResponse(
+                id,
+                new FindMemberResponse(member.getId(), member.getName()),
+                title,
+                description,
+                sourceCodes,
+                category,
+                tags,
+                createdAt,
+                modifiedAt
         );
     }
 

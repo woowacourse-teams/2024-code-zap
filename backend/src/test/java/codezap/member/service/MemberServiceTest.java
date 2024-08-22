@@ -60,7 +60,7 @@ public class MemberServiceTest {
         void assertUniquename() {
             String name = "code";
 
-            assertThatCode(() -> memberService.assertUniquename(name))
+            assertThatCode(() -> memberService.assertUniqueName(name))
                     .doesNotThrowAnyException();
         }
 
@@ -69,7 +69,7 @@ public class MemberServiceTest {
         void assertUniquename_fail_duplicate() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            assertThatThrownBy(() -> memberService.assertUniquename(member.getName()))
+            assertThatThrownBy(() -> memberService.assertUniqueName(member.getName()))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("아이디가 이미 존재합니다.");
         }

@@ -3,6 +3,7 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record FindAllTemplateItemResponse(
         @Schema(description = "템플릿 ID", example = "0")
         Long id,
+        @Schema(description = "회원 설명")
+        FindMemberResponse member,
         @Schema(description = "템플릿명", example = "스프링 로그인 구현")
         String title,
         @Schema(description = "템플릿 설명", example = "Jwt 토큰을 이용하여 로그인 기능을 구현합니다.")
@@ -30,6 +33,7 @@ public record FindAllTemplateItemResponse(
     ) {
         return new FindAllTemplateItemResponse(
                 template.getId(),
+                null,
                 template.getTitle(),
                 template.getDescription(),
                 templateTags.stream()
@@ -38,6 +42,19 @@ public record FindAllTemplateItemResponse(
                 FindThumbnailResponse.from(thumbnailSourceCode),
                 template.getCreatedAt(),
                 template.getModifiedAt()
+        );
+    }
+
+    public FindAllTemplateItemResponse updateMember(Member member) {
+        return new FindAllTemplateItemResponse(
+                id,
+                new FindMemberResponse(member.getId(), member.getName()),
+                title,
+                description,
+                tags,
+                thumbnail,
+                createdAt,
+                modifiedAt
         );
     }
 }

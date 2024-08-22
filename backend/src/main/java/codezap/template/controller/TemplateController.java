@@ -53,17 +53,16 @@ public class TemplateController implements SpringDocTemplateController {
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
-        FindAllTemplatesResponse response = templateApplicationService.findAllBy(
+        FindAllTemplatesResponse response = memberTemplateApplicationService.getAllTemplatesBy(
                 memberId, keyword, categoryId, tagIds, pageable);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateResponse> getTemplateById(
-            @AuthenticationPrinciple MemberDto memberDto,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(memberTemplateApplicationService.getByIdAndMember(memberDto, id));
+        return ResponseEntity.ok(memberTemplateApplicationService.getTemplateById(id));
     }
 
     @PostMapping("/{id}")

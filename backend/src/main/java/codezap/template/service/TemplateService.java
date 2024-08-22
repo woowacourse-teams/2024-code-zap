@@ -30,10 +30,8 @@ public class TemplateService {
         return templateRepository.save(template);
     }
 
-    public Template getByMemberAndId(Member member, Long id) {
-        Template template = templateRepository.fetchById(id);
-        template.validateAuthorization(member);
-        return template;
+    public Template getById(Long id) {
+        return templateRepository.fetchById(id);
     }
 
     public List<Template> getByMemberId(Long memberId) {

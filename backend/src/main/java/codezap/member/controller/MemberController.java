@@ -35,7 +35,7 @@ public class MemberController implements SpringDocMemberController {
     @GetMapping("/check-name")
     @ResponseStatus(HttpStatus.OK)
     public void checkUniquename(@RequestParam String name) {
-        memberService.assertUniquename(name);
+        memberService.assertUniqueName(name);
     }
 
     @GetMapping("/members/{id}")

@@ -11,6 +11,7 @@ import codezap.member.service.MemberService;
 import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,14 +28,21 @@ public class MemberTemplateApplicationService {
         return categoryTemplateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
-    public FindAllTagsResponse getAllTagsByMemberId(MemberDto memberDto, Long memberId) {
-        memberService.validateMemberIdentity(memberDto, memberId);
+    public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
         return templateApplicationService.getAllTagsByMemberId(memberId);
     }
 
-    public FindTemplateResponse getByIdAndMember(MemberDto memberDto, Long id) {
-        Member member = memberService.getById(memberDto.id());
-        return templateApplicationService.getByMemberAndId(member, id);
+    public FindAllTemplatesResponse getAllTemplatesBy(Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable) {
+        FindAllTemplatesResponse findAllTemplatesResponse = templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates().stream()
+                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(memberService.getByTemplateId(findAllTemplateItemResponse.id())))
+                .toList();
+        return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
+    }
+
+    public FindTemplateResponse getTemplateById(Long id) {
+        FindTemplateResponse findTemplateResponse = templateApplicationService.getById(id);
+        return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
     }
 
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {

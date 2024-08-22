@@ -24,9 +24,8 @@ public class MemberCategoryApplicationService {
         return categoryService.create(member, createCategoryRequest).id();
     }
 
-    public FindAllCategoriesResponse findAllByMember(MemberDto memberDto, Long memberId) {
-        memberService.validateMemberIdentity(memberDto, memberId);
-        Member member = memberService.getById(memberDto.id());
+    public FindAllCategoriesResponse findAllByMember(Long memberId) {
+        Member member = memberService.getById(memberId);
         return categoryService.findAllByMember(member);
     }
 

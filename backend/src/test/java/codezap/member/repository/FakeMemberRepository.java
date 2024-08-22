@@ -34,7 +34,7 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member fetchByname(String name) {
+    public Member fetchByName(String name) {
         return members.stream()
                 .filter(member -> Objects.equals(member.getName(), name))
                 .findFirst()
@@ -42,7 +42,12 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public boolean existsByname(String name) {
+    public Member fetchByTemplateId(Long templateId) {
+        return null;
+    }
+
+    @Override
+    public boolean existsByName(String name) {
         return members.stream().anyMatch(member -> Objects.equals(member.getName(), name));
     }
 

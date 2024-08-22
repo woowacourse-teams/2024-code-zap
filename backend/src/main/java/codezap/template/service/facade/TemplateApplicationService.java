@@ -46,8 +46,8 @@ public class TemplateApplicationService {
         return template.getId();
     }
 
-    public FindTemplateResponse getByMemberAndId(Member member, Long id) {
-        Template template = templateService.getByMemberAndId(member, id);
+    public FindTemplateResponse getById(Long id) {
+        Template template = templateService.getById(id);
         List<Tag> tags = templateTagService.getByTemplate(template);
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
