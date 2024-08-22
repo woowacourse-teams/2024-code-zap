@@ -1,6 +1,10 @@
+import { ChangeEvent, Dispatch, KeyboardEvent, MutableRefObject, SetStateAction } from 'react';
+
 import { PlusIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide } from '@/components';
+import { Button, Dropdown, Flex, Input, SourceCodeEditor, TagInput, Text, Guide, LoadingBall } from '@/components';
+import { useInputWithValidate, useLoaderDelay } from '@/hooks/utils';
 import { useCategoryUploadMutation } from '@/queries/category';
+import { validateCategoryName } from '@/service/validates';
 import { theme } from '@/style/theme';
 import type { Category, SourceCodes } from '@/types';
 import * as S from './TemplateEdit.style';
@@ -16,17 +20,17 @@ interface Props {
     currentValue: Category;
     handleCurrentValue: (newValue: Category) => void;
     getOptionLabel: (category: Category) => string;
-    dropdownRef: React.MutableRefObject<HTMLDivElement | null>;
+    dropdownRef: MutableRefObject<HTMLDivElement | null>;
   };
   tagProps: {
     tags: string[];
-    setTags: React.Dispatch<React.SetStateAction<string[]>>;
+    setTags: Dispatch<SetStateAction<string[]>>;
     value: string;
-    handleValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleValue: (e: ChangeEvent<HTMLInputElement>) => void;
     resetValue: () => void;
   };
-  handleTitleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleDescriptionChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleTitleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleDescriptionChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleAddButtonClick: () => void;
   handleCancelButton: () => void;
   handleCodeChange: (newContent: string, idx: number) => void;
@@ -54,10 +58,16 @@ const TemplateEdit = ({
 }: Props) => {
   const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(categoryProps.handleCurrentValue);
 
+  const {
+    value: categoryInputValue,
+    errorMessage: categoryErrorMessage,
+    handleChange: handleCategoryChange,
+  } = useInputWithValidate('', validateCategoryName);
+
   const getExistingCategory = (value: string) =>
     categoryProps.options.find((category) => categoryProps.getOptionLabel(category) === value);
 
-  const createNewCategory = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const createNewCategory = async (e: KeyboardEvent<HTMLInputElement>) => {
     if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter') {
       return;
     }
@@ -65,21 +75,19 @@ const TemplateEdit = ({
     const inputValue = e.target.value;
     const existingCategory = getExistingCategory(inputValue);
 
-    if (inputValue.trim() === '') {
-      e.target.value = '';
-
-      return;
-    }
-
     if (existingCategory) {
       categoryProps.handleCurrentValue(existingCategory);
 
       return;
     }
 
+    if (categoryErrorMessage !== '') {
+      return;
+    }
+
     const newCategory = { name: inputValue };
 
-    postCategory(newCategory);
+    await postCategory(newCategory);
 
     e.target.value = '';
   };
@@ -87,10 +95,17 @@ const TemplateEdit = ({
   return (
     <S.TemplateEditContainer>
       <Flex direction='column' justify='center' align='flex-start' gap='1rem' width='100%'>
-        <CategoryGuide isOpen={categoryProps.isOpen} isPending={isPending} />
+        <CategoryGuide isOpen={categoryProps.isOpen} categoryErrorMessage={categoryErrorMessage} />
         <Dropdown
           {...categoryProps}
-          replaceChildrenWhenIsOpen={<NewCategoryInput createNewCategory={createNewCategory} />}
+          replaceChildrenWhenIsOpen={
+            <NewCategoryInput
+              categoryInputValue={categoryInputValue}
+              createNewCategory={createNewCategory}
+              handleChange={handleCategoryChange}
+              isPending={isPending}
+            />
+          }
         />
 
         <S.UnderlineInputWrapper>
@@ -155,37 +170,53 @@ const TemplateEdit = ({
 export default TemplateEdit;
 
 interface NewCategoryInputProps {
-  createNewCategory: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-}
-
-const NewCategoryInput = ({ createNewCategory }: NewCategoryInputProps) => (
-  <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
-    <Input.TextField
-      autoFocus
-      placeholder='+ 새 카테고리 생성'
-      onKeyUpCapture={createNewCategory}
-      placeholderColor={theme.color.light.secondary_600}
-    />
-  </Input>
-);
-
-interface CategoryGuideProps {
-  isOpen: boolean;
+  categoryInputValue: string;
+  createNewCategory: (e: KeyboardEvent<HTMLInputElement>) => void;
+  handleChange: (e: ChangeEvent<HTMLInputElement>, compareValue?: string) => void;
   isPending: boolean;
 }
 
-const CategoryGuide = ({ isOpen, isPending }: CategoryGuideProps) => (
-  <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
-    {isPending ? (
-      <>
-        <Text.Medium color={theme.color.light.secondary_400}>카테고리 생성중!!</Text.Medium>
-        <Text.Medium color={theme.color.light.secondary_400}>생성 후 자동 선택됩니다</Text.Medium>
-      </>
-    ) : (
-      <>
-        <Text.Small color={theme.color.light.secondary_400}>새 카테고리명을 입력하고 엔터를 눌러</Text.Small>
-        <Text.Small color={theme.color.light.secondary_400}>쉽게 카테고리를 등록할 수 있어요!!</Text.Small>
-      </>
-    )}
-  </Guide>
-);
+const NewCategoryInput = ({
+  categoryInputValue,
+  createNewCategory,
+  handleChange,
+  isPending,
+}: NewCategoryInputProps) => {
+  const showLoader = useLoaderDelay(isPending, 700);
+
+  return (
+    <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
+      {showLoader ? (
+        <LoadingBall />
+      ) : (
+        <Input.TextField
+          autoFocus
+          placeholder='+ 새 카테고리 생성'
+          value={categoryInputValue}
+          onChange={handleChange}
+          onKeyUpCapture={createNewCategory}
+          placeholderColor={theme.color.light.secondary_600}
+        />
+      )}
+    </Input>
+  );
+};
+
+interface CategoryGuideProps {
+  isOpen: boolean;
+  categoryErrorMessage: string;
+}
+
+const CategoryGuide = ({ isOpen, categoryErrorMessage }: CategoryGuideProps) => {
+  const isError = categoryErrorMessage !== '';
+
+  return (
+    <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }}>
+      {isError ? (
+        <Text.Small color={theme.color.light.analogous_primary_300}>{categoryErrorMessage}</Text.Small>
+      ) : (
+        <Text.Small color={theme.color.light.secondary_400}>엔터로 카테고리를 등록해요</Text.Small>
+      )}
+    </Guide>
+  );
+};

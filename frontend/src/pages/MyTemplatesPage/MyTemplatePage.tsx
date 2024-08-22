@@ -9,7 +9,7 @@ import {
   Heading,
   Input,
   TemplateGrid,
-  PagingButton,
+  PagingButtons,
   Dropdown,
   TagFilterMenu,
   Button,
@@ -106,9 +106,6 @@ const MyTemplatePage = () => {
       <S.MainContainer>
         <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
           <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
-          {tags.length !== 0 && (
-            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
-          )}
         </Flex>
 
         <Flex direction='column' width='100%' gap='1rem'>
@@ -154,6 +151,9 @@ const MyTemplatePage = () => {
               getOptionLabel={(option) => option.value}
             />
           </Flex>
+          {tags.length && (
+            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
+          )}
           {templates.length ? (
             <TemplateGrid
               templates={templates}
@@ -167,9 +167,7 @@ const MyTemplatePage = () => {
           )}
 
           <Flex justify='center' gap='0.5rem' margin='1rem 0'>
-            {[...Array(totalPages)].map((_, index) => (
-              <PagingButton key={index + 1} page={index + 1} isActive={page === index + 1} onClick={handlePageChange} />
-            ))}
+            <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
           </Flex>
         </Flex>
 
@@ -204,8 +202,6 @@ const MyTemplatePage = () => {
   );
 };
 
-export default MyTemplatePage;
-
 interface TopBannerProps {
   name: string;
 }
@@ -233,3 +229,5 @@ const NewTemplateButton = () => {
     </S.NewTemplateButton>
   );
 };
+
+export default MyTemplatePage;
