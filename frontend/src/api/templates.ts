@@ -34,15 +34,15 @@ export const getTemplateList = async ({
   tagIds,
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
-  pageSize = PAGE_SIZE,
+  size = PAGE_SIZE,
   memberId,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
     keyword,
     memberId: String(memberId),
     sort,
-    pageNumber: page.toString(),
-    pageSize: pageSize.toString(),
+    page: page.toString(),
+    size: size.toString(),
   });
 
   if (categoryId) {
