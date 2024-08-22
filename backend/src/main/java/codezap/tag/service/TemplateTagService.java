@@ -25,13 +25,19 @@ public class TemplateTagService {
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
         List<String> existingTags = tagRepository.findNameByNamesIn(tagNames);
+        templateTagRepository.saveAll(
+                existingTags.stream()
+                        .map(Tag::new)
+                        .map(tag -> new TemplateTag(template, tag))
+                        .toList()
+        );
+
         List<Tag> newTags = tagRepository.saveAll(
                 tagNames.stream()
                         .filter(tagName -> !existingTags.contains(tagName))
                         .map(Tag::new)
                         .toList()
         );
-
         templateTagRepository.saveAll(
                 newTags.stream()
                         .map(tag -> new TemplateTag(template, tag))
