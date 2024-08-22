@@ -98,7 +98,7 @@ class TemplateControllerTest {
 
     private final MockMvc mvc =
             MockMvcBuilders.standaloneSetup(
-                            new TemplateController(memberTemplateApplicationService))
+                            new TemplateController(memberTemplateApplicationService, templateApplicationService))
                     .setControllerAdvice(new GlobalExceptionHandler())
                     .setCustomArgumentResolvers(
                             new AuthArgumentResolver(
