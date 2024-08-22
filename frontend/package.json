@@ -16,7 +16,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@codemirror/lang-javascript": "^6.2.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@sentry/react": "^8.22.0",
@@ -27,8 +26,7 @@
     "@uiw/react-codemirror": "^4.23.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^6.24.1",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-router-dom": "^6.24.1"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",
