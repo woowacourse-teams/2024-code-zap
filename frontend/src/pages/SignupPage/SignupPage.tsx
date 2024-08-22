@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 
 import { EyeIcon } from '@/assets/images';
-import { Button, Flex, Heading, Input, Text } from '@/components';
+import { Button, Flex, Input, Text } from '@/components';
 import { useSignupForm } from '@/hooks/authentication';
 import { useToggle } from '@/hooks/utils';
+import * as S from './SignupPage.style';
 
 const SignupPage = () => {
   const [showPassword, handlePasswordToggle] = useToggle();
@@ -24,11 +25,13 @@ const SignupPage = () => {
 
   return (
     <>
-      <Flex direction='column' justify='center' align='center' height='100vh'>
-        <Flex direction='column' justify='center' align='center' width='27.5rem' gap='3.5rem'>
-          <Heading.XLarge color='#F79037'>Hello Codezap</Heading.XLarge>
+      <S.ResponsiveFlex direction='column' justify='center' align='center' height='100vh'>
+        <S.SignupPageContainer direction='column' justify='center' align='center' width='27.5rem' gap='3.5rem'>
+          <Flex direction='column' justify='center' align='center' gap='1rem'>
+            <S.ResponsiveHeading color='#F79037'>환영하잽</S.ResponsiveHeading>
+          </Flex>
 
-          <form
+          <S.SignupForm
             onSubmit={handleSubmit}
             style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
           >
@@ -88,9 +91,9 @@ const SignupPage = () => {
                 </Button>
               </Link>
             </Flex>
-          </form>
-        </Flex>
-      </Flex>
+          </S.SignupForm>
+        </S.SignupPageContainer>
+      </S.ResponsiveFlex>
     </>
   );
 };
