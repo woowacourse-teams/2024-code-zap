@@ -44,7 +44,7 @@ public class TemplateService {
             Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
     ) {
         return templateRepository.findAll(
-                TemplateSpecification.withDynamicQuery(memberId, keyword, categoryId, tagIds), pageable
+                new TemplateSpecification(memberId, keyword, categoryId, tagIds), pageable
         );
     }
 
