@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { useState } from 'react';
 
 import { Text, Modal, Input, Flex, Button } from '@/components';
@@ -208,6 +209,7 @@ const CategoryItems = ({
                   <Input.TextField
                     type='text'
                     value={editedCategories[id] ?? name}
+                    placeholder='카테고리 입력'
                     onChange={(e) => onNameInputChange(id, e.target.value)}
                     onBlur={() => onNameInputBlur(id)}
                     onKeyDown={(e) => {
@@ -216,6 +218,13 @@ const CategoryItems = ({
                       }
                     }}
                     autoFocus
+                    css={css`
+                      font-weight: bold;
+                      &::placeholder {
+                        font-weight: normal;
+                        color: ${theme.color.light.secondary_400};
+                      }
+                    `}
                   />
                 </Input>
               ) : (
@@ -240,6 +249,7 @@ const CategoryItems = ({
               <Input.TextField
                 type='text'
                 value={name}
+                placeholder='카테고리 입력'
                 onChange={(e) => onNameInputChange(id, e.target.value)}
                 onBlur={() => onNameInputBlur(id)}
                 onKeyDown={(e) => {
@@ -248,12 +258,20 @@ const CategoryItems = ({
                   }
                 }}
                 autoFocus
-                style={{ fontWeight: 'bolder' }}
+                css={css`
+                  font-weight: bold;
+                  &::placeholder {
+                    font-weight: normal;
+                    color: ${theme.color.light.secondary_400};
+                  }
+                `}
               />
             </Input>
           ) : (
             // 생성 : 기본 상태
-            <Text.Medium color={theme.color.light.secondary_500}>{name}</Text.Medium>
+            <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
+              {name}
+            </Text.Medium>
           )}
         </Flex>
         <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />

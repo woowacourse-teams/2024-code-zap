@@ -18,8 +18,8 @@ export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: bool
   height: 3rem;
   padding: ${({ isButton }) => (isButton ? '0' : '0 1rem')};
 
-  border: ${({ hasError }) => (hasError ? `1px solid red` : 'none')};
   border-radius: 8px;
+  outline: ${({ hasError }) => (hasError ? `1px solid red` : 'none')};
   box-shadow: 1px 1px 4px #00000030;
 
   transition: all 0.1s ease-out;
@@ -33,6 +33,10 @@ export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: bool
         box-shadow: 1px 1px 2px 1px #00000040;
       }
     `}
+
+  &:focus-within {
+    outline: ${({ hasError }) => !hasError && `1px solid ${theme.color.light.secondary_900}`};
+  }
 
   ${({ disabled }) =>
     disabled &&
@@ -54,8 +58,6 @@ export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: bool
 
   &:focus-within div {
     padding: 0;
-    font-weight: bold;
-    color: ${theme.color.light.secondary_700};
   }
 `;
 
