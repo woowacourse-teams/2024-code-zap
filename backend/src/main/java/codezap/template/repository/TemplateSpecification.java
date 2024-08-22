@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Subquery;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 
@@ -27,12 +28,6 @@ public class TemplateSpecification implements Specification<Template> {
         this.tagIds = tagIds;
     }
 
-//    public static Specification<Template> withDynamicQuery(
-//            Long memberId, String keyword, Long categoryId, List<Long> tagIds
-//    ) {
-//        return new TemplateSpecification(memberId, keyword, categoryId, tagIds);
-//    }
-
     @Override
     public Predicate toPredicate(Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
         List<Predicate> predicates = new ArrayList<>();
@@ -40,7 +35,7 @@ public class TemplateSpecification implements Specification<Template> {
         addMemberPredicate(predicates, criteriaBuilder, root);
         addCategoryPredicate(predicates, criteriaBuilder, root);
         addTagPredicate(predicates, criteriaBuilder, root, query);
-        addKeywordPredicate(predicates, criteriaBuilder, root);
+        addKeywordPredicate(predicates, criteriaBuilder, root, query);
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
@@ -51,11 +46,22 @@ public class TemplateSpecification implements Specification<Template> {
         }
     }
 
-    private void addKeywordPredicate(List<Predicate> predicates, CriteriaBuilder criteriaBuilder, Root<Template> root) {
+    private void addKeywordPredicate(List<Predicate> predicates, CriteriaBuilder criteriaBuilder, Root<Template> root,
+            CriteriaQuery<?> query
+    ) {
         if (keyword != null && !keyword.trim().isEmpty()) {
             String likeKeyword = "%" + keyword.trim() + "%";
-            predicates.add(criteriaBuilder.or(criteriaBuilder.like(root.get("title"), likeKeyword),
-                    criteriaBuilder.like(root.get("description"), likeKeyword)));
+            Predicate titlePredicate = criteriaBuilder.like(root.get("title"), likeKeyword);
+            Predicate descriptionPredicate = criteriaBuilder.like(root.get("description"), likeKeyword);
+
+            Subquery<Long> sourceCodeSubquery = query.subquery(Long.class);
+            Root<SourceCode> sourceCodeRoot = sourceCodeSubquery.from(SourceCode.class);
+            sourceCodeSubquery.select(sourceCodeRoot.get("template").get("id"));
+            sourceCodeSubquery.where(
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(sourceCodeRoot.get("content"), likeKeyword),
+                            criteriaBuilder.like(sourceCodeRoot.get("filename"), likeKeyword)));
+            predicates.add(criteriaBuilder.or(titlePredicate, descriptionPredicate, root.get("id").in(sourceCodeSubquery)));
         }
     }
 
