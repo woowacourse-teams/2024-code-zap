@@ -27,7 +27,7 @@ public class TemplateTagService {
         List<String> existingTags = tagRepository.findNameByNamesIn(tagNames);
         templateTagRepository.saveAll(
                 existingTags.stream()
-                        .map(Tag::new)
+                        .map(tagRepository::fetchByName)
                         .map(tag -> new TemplateTag(template, tag))
                         .toList()
         );
