@@ -56,9 +56,9 @@ public interface SpringDocTemplateController {
     ResponseEntity<Void> createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "템플릿 검색", description = """
-            필터링 조건에 맞는 모든 템플릿을 조회합니다. \n
-            - 필터링 조건 \n
+    @Operation(summary = "템플릿 조회", description = """
+            조건에 맞는 모든 템플릿을 조회합니다. \n
+            - 조건 \n
               - 멤버 ID
               - 검색 키워드 (템플릿명, 템플릿 설명, 파일명, 소스 코드)
               - 카테고리 ID
@@ -87,7 +87,6 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
     })
     ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            MemberDto memberDto,
             Long memberId,
             String keyword,
             Long categoryId,

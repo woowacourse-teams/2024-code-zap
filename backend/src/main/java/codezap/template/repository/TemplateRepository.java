@@ -18,14 +18,6 @@ public interface TemplateRepository {
 
     Page<Template> findAll(Specification<Template> specification, Pageable pageable);
 
-    Page<Template> searchBy(Long memberId, String keyword, Pageable pageable);
-
-    Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable);
-
-    Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable);
-
-    Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable);
-
     boolean existsByCategoryId(Long categoryId);
 
     Template save(Template template);
