@@ -52,6 +52,17 @@ export const SyntaxHighlighterWrapper = styled.div<{ isOpen: boolean }>`
   animation: ${({ isOpen }) => (!isOpen ? collapse : expand)} 0.7s ease-in-out forwards;
 `;
 
+export const NoScrollbarContainer = styled.div`
+  scrollbar-width: none;
+  overflow: auto;
+  width: 100%;
+
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
 export const EditButton = styled(Button)``;
 
 export const DeleteButton = styled(Button)``;

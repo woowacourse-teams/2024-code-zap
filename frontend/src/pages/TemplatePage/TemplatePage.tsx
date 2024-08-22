@@ -142,15 +142,31 @@ const TemplatePage = () => {
             )}
 
             {template.sourceCodes.map((sourceCode, index) => (
-              <div id={sourceCode.filename} key={sourceCode.id} ref={(el) => (sourceCodeRefs.current[index] = el)}>
+              <div
+                id={sourceCode.filename}
+                key={sourceCode.id}
+                ref={(el) => (sourceCodeRefs.current[index] = el)}
+                css={{ width: '100%' }}
+              >
                 <Flex
                   justify='space-between'
                   align='center'
                   height='3rem'
                   padding='1rem 1.5rem'
+                  width='100%'
                   style={{ background: `${theme.color.light.tertiary_600}`, borderRadius: '8px 8px 0 0' }}
                 >
-                  <Flex align='center' gap='0.5rem' onClick={handleIsOpenList(index)} css={{ cursor: 'pointer' }}>
+                  <Flex
+                    justify='space-between'
+                    align='center'
+                    gap='0.5rem'
+                    onClick={handleIsOpenList(index)}
+                    css={{
+                      cursor: 'pointer',
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                  >
                     <ChevronIcon
                       width={16}
                       height={16}
@@ -160,11 +176,23 @@ const TemplatePage = () => {
                         transform: isOpenList[index] ? 'rotate(180deg)' : 'rotate(0deg)',
                       }}
                     />
-                    <Text.Small color='#fff' weight='bold'>
-                      {sourceCode.filename}
-                    </Text.Small>
+                    <S.NoScrollbarContainer>
+                      <Text.Small color='#fff' weight='bold'>
+                        {sourceCode.filename}
+                      </Text.Small>
+                    </S.NoScrollbarContainer>
                   </Flex>
-                  <Button size='small' variant='text' onClick={copyCode(sourceCode)}>
+                  <Button
+                    size='small'
+                    variant='text'
+                    onClick={copyCode(sourceCode)}
+                    css={{
+                      width: 'auto',
+                      padding: '0.25rem 0.5rem',
+                      whiteSpace: 'nowrap',
+                      minWidth: 'fit-content',
+                    }}
+                  >
                     <Text.Small color={theme.color.light.primary_500} weight='bold'>
                       {'복사'}
                     </Text.Small>
