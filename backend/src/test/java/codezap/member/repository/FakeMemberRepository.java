@@ -42,7 +42,12 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public boolean existsByname(String name) {
+    public Member fetchByTemplateId(Long templateId) {
+        return null;
+    }
+
+    @Override
+    public boolean existsByName(String name) {
         return members.stream().anyMatch(member -> Objects.equals(member.getName(), name));
     }
 

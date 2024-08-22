@@ -40,19 +40,13 @@ public class MemberService {
         return FindMemberResponse.from(memberRepository.fetchById(id));
     }
 
+    public Member getByTemplateId(Long templateId) {
+        return memberRepository.fetchByTemplateId(templateId);
+    }
+
     private void checkSameMember(MemberDto memberDto, Long id) {
         if (!Objects.equals(memberDto.id(), id)) {
             throw new CodeZapException(HttpStatus.FORBIDDEN, "본인의 정보만 조회할 수 있습니다.");
-        }
-    }
-
-    public void validateMemberIdentity(MemberDto memberDto, Long id) {
-        if (!id.equals(memberDto.id())) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "인증 정보에 포함된 멤버 ID와 파라미터로 받은 멤버 ID가 다릅니다.");
-        }
-
-        if (!memberRepository.existsById(id)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "로그인 정보가 잘못되었습니다.");
         }
     }
 
