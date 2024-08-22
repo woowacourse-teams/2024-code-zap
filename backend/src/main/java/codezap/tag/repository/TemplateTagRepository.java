@@ -9,7 +9,7 @@ public interface TemplateTagRepository {
 
     List<TemplateTag> findAllByTemplate(Template template);
 
-    List<TemplateTag> findDistinctByTemplateIn(List<Template> templates);
+    List<Long> findDistinctByTemplateIn(List<Long> templateIds);
 
     List<TemplateTag> findAll();
 
