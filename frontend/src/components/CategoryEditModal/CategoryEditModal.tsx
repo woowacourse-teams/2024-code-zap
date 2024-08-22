@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
 
+import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '@/assets/images';
 import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
+import { theme } from '@/style/theme';
 import type { Category, CustomError } from '@/types';
-import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '../../assets/images/index';
-import { theme } from '../../style/theme';
 import * as S from './CategoryEditModal.style';
 
 interface CategoryEditModalProps {
