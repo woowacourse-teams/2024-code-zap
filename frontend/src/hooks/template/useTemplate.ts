@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/template';
+import { END_POINTS } from '@/routes';
 import { useSelectList } from '../utils/useSelectList';
 
 export const useTemplate = (id: number) => {
@@ -34,7 +35,7 @@ export const useTemplate = (id: number) => {
 
   const handleDelete = () => {
     deleteTemplate();
-    navigate('/');
+    navigate(END_POINTS.MY_TEMPLATES);
   };
 
   const handleIsOpenList = (index: number) => () => {

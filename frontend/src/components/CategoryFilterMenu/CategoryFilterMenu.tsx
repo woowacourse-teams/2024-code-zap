@@ -22,7 +22,7 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
     setSelectedId(id);
     onSelectCategory(id);
     if (windowWidth <= 768) {
-      toggleMenu(); // 모바일에서는 선택 후 메뉴를 닫음
+      toggleMenu();
     }
   };
 

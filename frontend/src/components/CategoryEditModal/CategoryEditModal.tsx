@@ -13,7 +13,6 @@ interface CategoryEditModalProps {
   isOpen: boolean;
   toggleModal: () => void;
   categories: Category[];
-  defaultCategory: Category;
   handleCancelEdit: () => void;
 }
 
@@ -75,7 +74,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   };
 
   const handleAddCategory = () => {
-    const newCategoryId = categories[categories.length - 1].id + newCategories.length + 1;
+    const newCategoryId =
+      categories.length > 0
+        ? categories[categories.length - 1].id + newCategories.length + 1
+        : newCategories.length + 1;
 
     setNewCategories((prev) => [...prev, { id: newCategoryId, name: '' }]);
     setEditingCategoryId(newCategoryId);
