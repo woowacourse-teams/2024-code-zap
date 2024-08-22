@@ -35,7 +35,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Logo />
         <S.HeaderMenu menuOpen={menuOpen}>
           <S.NavContainer>
-            {!isChecking && isLogin && <NavOption route='/' name='내 템플릿' />}
+            {!isChecking && isLogin && <NavOption route='/my-templates' name='내 템플릿' />}
             <NavOption route='/templates' name='구경가기' />
           </S.NavContainer>
 
