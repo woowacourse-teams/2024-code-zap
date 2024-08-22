@@ -222,7 +222,7 @@ const NewTemplateButton = () => {
   const navigate = useNavigate();
 
   return (
-    <S.NewTemplateButton onClick={() => navigate(END_POINTS.templatesUpload)}>
+    <S.NewTemplateButton onClick={() => navigate(END_POINTS.TEMPLATES_UPLOAD)}>
       <PlusIcon width={24} height={24} aria-label='새 템플릿' />
       <Text.Large color={theme.color.light.primary_500} weight='bold'>
         이곳을 눌러 새 템플릿을 추가해보세요 :)

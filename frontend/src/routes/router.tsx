@@ -20,45 +20,45 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       {
-        path: END_POINTS.home,
+        path: END_POINTS.HOME,
         element: <LandingPage />,
       },
       {
-        path: END_POINTS.myTemplates,
+        path: END_POINTS.MY_TEMPLATES,
         element: (
-          <RouteGuard isLoginRequired redirectTo={END_POINTS.login}>
+          <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
             <MyTemplatePage />
           </RouteGuard>
         ),
       },
       {
-        path: END_POINTS.templatesExplore,
+        path: END_POINTS.TEMPLATES_EXPLORE,
         element: <TemplateExplorePage />,
       },
       {
-        path: END_POINTS.template,
+        path: END_POINTS.TEMPLATE,
         element: <TemplatePage />,
       },
       {
-        path: END_POINTS.templatesUpload,
+        path: END_POINTS.TEMPLATES_UPLOAD,
         element: (
-          <RouteGuard isLoginRequired redirectTo={END_POINTS.login}>
+          <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
             <TemplateUploadPage />
           </RouteGuard>
         ),
       },
       {
-        path: END_POINTS.signup,
+        path: END_POINTS.SIGNUP,
         element: (
-          <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.home}>
+          <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.HOME}>
             <SignupPage />
           </RouteGuard>
         ),
       },
       {
-        path: END_POINTS.login,
+        path: END_POINTS.LOGIN,
         element: (
-          <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.home}>
+          <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.HOME}>
             <LoginPage />
           </RouteGuard>
         ),

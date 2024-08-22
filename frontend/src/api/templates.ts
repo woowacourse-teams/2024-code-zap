@@ -11,7 +11,7 @@ import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const TEMPLATE_API_URL = `${API_URL}${END_POINTS.templatesExplore}`;
+export const TEMPLATE_API_URL = `${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`;
 
 export const PAGE_SIZE = 20;
 

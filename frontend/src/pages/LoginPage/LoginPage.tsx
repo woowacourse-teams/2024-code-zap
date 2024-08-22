@@ -46,7 +46,7 @@ const LoginPage = () => {
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
               <Text.XSmall color='#6B7079'>계정이 없으신가요?</Text.XSmall>
 
-              <Link to={END_POINTS.signup}>
+              <Link to={END_POINTS.SIGNUP}>
                 <Button variant='text' size='small'>
                   회원가입
                 </Button>

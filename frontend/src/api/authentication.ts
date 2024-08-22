@@ -5,11 +5,11 @@ import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const SIGNUP_API_URL = `${API_URL}${END_POINTS.signup}`;
-export const LOGIN_API_URL = `${API_URL}${END_POINTS.login}`;
-export const LOGOUT_API_URL = `${API_URL}${END_POINTS.logout}`;
-export const LOGIN_STATE_API_URL = `${API_URL}${END_POINTS.loginCheck}`;
-export const CHECK_NAME_API_URL = `${API_URL}${END_POINTS.checkName}`;
+export const SIGNUP_API_URL = `${API_URL}${END_POINTS.SIGNUP}`;
+export const LOGIN_API_URL = `${API_URL}${END_POINTS.LOGIN}`;
+export const LOGOUT_API_URL = `${API_URL}${END_POINTS.LOGOUT}`;
+export const LOGIN_STATE_API_URL = `${API_URL}${END_POINTS.LOGIN_CHECK}`;
+export const CHECK_NAME_API_URL = `${API_URL}${END_POINTS.CHECK_NAME}`;
 
 export const postSignup = async (signupInfo: SignupRequest) =>
   await customFetch({

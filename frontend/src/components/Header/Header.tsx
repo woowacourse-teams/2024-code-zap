@@ -36,12 +36,12 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Logo />
         <S.HeaderMenu menuOpen={menuOpen}>
           <S.NavContainer>
-            {!isChecking && isLogin && <NavOption route={END_POINTS.myTemplates} name='내 템플릿' />}
-            <NavOption route={END_POINTS.templatesExplore} name='구경가기' />
+            {!isChecking && isLogin && <NavOption route={END_POINTS.MY_TEMPLATES} name='내 템플릿' />}
+            <NavOption route={END_POINTS.TEMPLATES_EXPLORE} name='구경가기' />
           </S.NavContainer>
 
           <S.NavContainer>
-            <Link to={END_POINTS.templatesUpload}>
+            <Link to={END_POINTS.TEMPLATES_UPLOAD}>
               <S.MobileHiddenButton variant='outlined' size='medium' weight='bold' hoverStyle='none'>
                 <PlusIcon aria-label='' />새 템플릿
               </S.MobileHiddenButton>
@@ -50,7 +50,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
           </S.NavContainer>
         </S.HeaderMenu>
         <S.MobileMenuContainer>
-          <Link to={END_POINTS.templatesUpload}>
+          <Link to={END_POINTS.TEMPLATES_UPLOAD}>
             <Button variant='outlined' size='small' weight='bold' hoverStyle='none'>
               <PlusIcon aria-label='' />새 템플릿
             </Button>
@@ -64,7 +64,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
 };
 
 const Logo = () => (
-  <Link to={END_POINTS.home}>
+  <Link to={END_POINTS.HOME}>
     <Flex align='center' gap='0.5rem'>
       <CodeZapLogo aria-label='로고 버튼' />
       <Heading.XSmall color={theme.color.light.primary_500}>코드잽</Heading.XSmall>
@@ -97,7 +97,7 @@ const LogoutButton = () => {
 };
 
 const LoginButton = () => (
-  <Link to={END_POINTS.login}>
+  <Link to={END_POINTS.LOGIN}>
     <Button variant='text' size='medium' weight='bold' hoverStyle='none'>
       로그인
     </Button>
