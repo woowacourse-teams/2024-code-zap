@@ -10,6 +10,8 @@ export const END_POINTS = {
   // categories
   CATEGORIES: '/categories',
 
+  // tags
+
   // authentication
   SIGNUP: '/signup',
   LOGIN: '/login',
