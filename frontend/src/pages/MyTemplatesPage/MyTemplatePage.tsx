@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
+import { ArrowUpIcon, PlusIcon, SearchIcon, ZapzapCuriousLogo } from '@/assets/images';
 import {
   CategoryFilterMenu,
   Flex,
@@ -108,7 +108,12 @@ const MyTemplatePage = () => {
 
     if (templates.length === 0) {
       if (debouncedKeyword !== '') {
-        return <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>;
+        return (
+          <Flex justify='center' align='center' padding='2rem'>
+            <ZapzapCuriousLogo width={48} height={48} />
+            <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>
+          </Flex>
+        );
       } else {
         return <NewTemplateButton />;
       }
