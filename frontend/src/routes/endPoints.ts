@@ -11,6 +11,7 @@ export const END_POINTS = {
   CATEGORIES: '/categories',
 
   // tags
+  TAGS: '/tags',
 
   // authentication
   SIGNUP: '/signup',

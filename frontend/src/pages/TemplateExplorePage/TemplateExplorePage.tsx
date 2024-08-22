@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon } from '@/assets/images';
+import { ArrowUpIcon, ZapzapLogo } from '@/assets/images';
 import { Dropdown, Flex, Heading, PagingButtons, TemplateCard } from '@/components';
 import { useDropdown, useWindowWidth } from '@/hooks/utils';
 import { useTemplateExploreQuery } from '@/queries/template';
@@ -27,7 +27,10 @@ const TemplateExplorePage = () => {
 
   return (
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
-      <Heading.Large color='black'>구경가기 페이지입니다.</Heading.Large>
+      <Flex justify='flex-start' align='center' gap='1rem'>
+        <ZapzapLogo width={50} height={50} />
+        <Heading.Medium color='black'>여러 템플릿을 구경해보세요.:)</Heading.Medium>
+      </Flex>
       <Flex width='100%' justify='flex-end'>
         {' '}
         <Dropdown

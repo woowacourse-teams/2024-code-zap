@@ -10,6 +10,7 @@ interface Props {
 export const TextElement = styled.span<Props>`
   font-size: ${({ size }) => size};
   font-weight: ${({ weight }) => weight};
+  line-height: ${({ size }) => (size === '2.5rem' || size === '3rem' ? '120%' : 'normal')};
   color: ${({ color }) => color};
   text-decoration: ${({ textDecoration }) => textDecoration || 'none'};
 `;

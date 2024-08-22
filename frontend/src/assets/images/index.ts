@@ -17,3 +17,4 @@ export { default as ClockIcon } from './clock.svg';
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';
 export { default as TigerLogo } from './tiger.svg';
+export { default as ZapzapLogo } from './zapzap.svg';

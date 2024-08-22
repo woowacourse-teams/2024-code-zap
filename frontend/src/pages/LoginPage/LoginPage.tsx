@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
 
-import { EyeIcon } from '@/assets/images';
-import { Button, Flex, Heading, Input, Text } from '@/components';
+import { EyeIcon, ZapzapLogo } from '@/assets/images';
+import { Button, Flex, Input, Text } from '@/components';
 import { useLoginForm } from '@/hooks/authentication/useLoginForm';
 import { useToggle } from '@/hooks/utils';
 import { END_POINTS } from '@/routes';
+import * as S from './LoginPage.style';
 
 const LoginPage = () => {
   const [showPassword, handlePasswordToggle] = useToggle();
@@ -12,11 +13,14 @@ const LoginPage = () => {
 
   return (
     <>
-      <Flex direction='column' justify='center' align='center' height='100vh'>
-        <Flex direction='column' justify='center' align='center' gap='3.5rem' width='27.5rem'>
-          <Heading.XLarge color='#F79037'>Hello Codezap</Heading.XLarge>
+      <S.ResponsiveFlex direction='column' justify='center' align='center' height='100vh'>
+        <S.LoginPageContainer direction='column' justify='center' align='center' gap='3.5rem' width='27.5rem'>
+          <Flex direction='column' justify='center' align='center' gap='1rem'>
+            <ZapzapLogo width={100} height={100} />
+            <S.ResponsiveHeading color='#F79037'>환영하잽</S.ResponsiveHeading>
+          </Flex>
 
-          <form
+          <S.LoginForm
             onSubmit={handleSubmit}
             style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
           >
@@ -52,9 +56,9 @@ const LoginPage = () => {
                 </Button>
               </Link>
             </Flex>
-          </form>
-        </Flex>
-      </Flex>
+          </S.LoginForm>
+        </S.LoginPageContainer>
+      </S.ResponsiveFlex>
     </>
   );
 };
