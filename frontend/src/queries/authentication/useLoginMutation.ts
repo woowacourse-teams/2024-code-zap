@@ -18,19 +18,26 @@ export const useLoginMutation = () => {
       if (res.memberId === undefined) {
         handleLoginState(false);
         handleMemberInfo(res);
-        failAlert('로그인에 실패하였습니다.');
+
+        if (res.errorCode === 1302) {
+          failAlert('존재하지 않는 아이디에요. 다시 로그인 해주세요.');
+        } else if (res.errorCode === 1303) {
+          failAlert('잘못된 비밀번호에요. 다시 로그인 해주세요.');
+        } else {
+          failAlert('로그인에 실패했어요. 잠시 후 다시 시도해주세요.');
+        }
       } else {
         localStorage.setItem('name', String(res.name));
         localStorage.setItem('memberId', String(res.memberId));
         handleMemberInfo(res);
         handleLoginState(true);
         navigate('/');
-        successAlert('로그인 성공!');
+        successAlert('로그인에 성공했어요!');
       }
     },
     onError: (error) => {
       console.error(error);
-      failAlert('로그인에 실패하였습니다.');
+      failAlert('로그인에 실패했어요. 잠시 후 다시 시도해주세요.');
     },
   });
 };

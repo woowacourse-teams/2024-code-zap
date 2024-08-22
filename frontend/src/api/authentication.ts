@@ -17,7 +17,7 @@ export const postSignup = async (signupInfo: SignupRequest) =>
     body: JSON.stringify(signupInfo),
   });
 
-export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> => {
+export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo & { errorCode?: number }> => {
   const response = await customFetch<MemberInfo>({
     method: 'POST',
     url: `${LOGIN_API_URL}`,
@@ -29,7 +29,7 @@ export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> =>
   }
 
   if (response.status >= 400) {
-    return { memberId: undefined, name: undefined };
+    return { memberId: undefined, name: undefined, errorCode: response.type };
   }
 
   throw new Error(response.detail);
