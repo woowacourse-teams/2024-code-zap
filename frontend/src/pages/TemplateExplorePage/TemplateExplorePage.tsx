@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon } from '@/assets/images';
-import { Dropdown, Flex, Heading, PagingButton, TemplateCard } from '@/components';
+import { Dropdown, Flex, Heading, PagingButtons, TemplateCard } from '@/components';
 import { useDropdown, useWindowWidth } from '@/hooks/utils';
 import { useTemplateExploreQuery } from '@/queries/template';
 import { scroll } from '@/utils';
@@ -47,9 +47,7 @@ const TemplateExplorePage = () => {
       </S.TemplateExplorePageContainer>
 
       <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-        {[...Array(totalPages)].map((_, index) => (
-          <PagingButton key={index + 1} page={index + 1} isActive={page === index + 1} onClick={handlePageChange} />
-        ))}
+        <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
       </Flex>
 
       <S.ScrollTopButton
