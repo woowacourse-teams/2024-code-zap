@@ -11,6 +11,7 @@ export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   weight?: ButtonWeight;
+  buttonColor?: string;
   hoverStyle?: ButtonHoverStyle;
   fullWidth?: boolean;
 }
@@ -18,13 +19,22 @@ export interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = ({
   children,
   variant = 'contained',
+  buttonColor,
   size = 'medium',
   weight = 'bold',
   hoverStyle = 'base',
   fullWidth = false,
   ...rest
 }: Props) => (
-  <S.Button variant={variant} size={size} weight={weight} hoverStyle={hoverStyle} fullWidth={fullWidth} {...rest}>
+  <S.Button
+    variant={variant}
+    size={size}
+    weight={weight}
+    hoverStyle={hoverStyle}
+    fullWidth={fullWidth}
+    buttonColor={buttonColor}
+    {...rest}
+  >
     {children}
   </S.Button>
 );
