@@ -76,7 +76,7 @@ class TemplateRepositoryFindAllTest {
     @Test
     @DisplayName("회원 ID로 템플릿 조회")
     void testFindByMemberId() {
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(member1.getId(), null, null, null);
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertThat(result.getContent()).hasSize(2);
@@ -86,7 +86,7 @@ class TemplateRepositoryFindAllTest {
     @Test
     @DisplayName("키워드로 템플릿 조회")
     void testFindByKeyword() {
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(null, "Template", null, null);
+        Specification<Template> spec = new TemplateSpecification(null, "Template", null, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertThat(result.getContent()).hasSize(3);
@@ -97,7 +97,7 @@ class TemplateRepositoryFindAllTest {
     @Test
     @DisplayName("카테고리 ID로 템플릿 조회")
     void testFindByCategoryId() {
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(null, null, category1.getId(),
+        Specification<Template> spec = new TemplateSpecification(null, null, category1.getId(),
                 null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -110,7 +110,7 @@ class TemplateRepositoryFindAllTest {
     void testFindByTagIds() {
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
 
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(null, null, null, tagIds);
+        Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertThat(result.getContent()).hasSize(2);
@@ -123,7 +123,7 @@ class TemplateRepositoryFindAllTest {
     void testFindBySingleTagId() {
         List<Long> tagIds = Arrays.asList(tag2.getId());
 
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(null, null, null, tagIds);
+        Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertThat(result.getContent()).hasSize(3);
@@ -134,7 +134,7 @@ class TemplateRepositoryFindAllTest {
     @Test
     @DisplayName("회원 ID와 키워드로 템플릿 조회")
     void testFindByMemberIdAndKeyword() {
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(member1.getId(), "Template", null,
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), "Template", null,
                 null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -148,7 +148,7 @@ class TemplateRepositoryFindAllTest {
     @Test
     @DisplayName("회원 ID와 카테고리 ID로 템플릿 조회")
     void testFindByMemberIdAndCategoryId() {
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(member1.getId(), null, category1.getId(),
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, category1.getId(),
                 null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -161,7 +161,7 @@ class TemplateRepositoryFindAllTest {
     @DisplayName("회원 ID와 태그 ID 목록으로 템플릿 조회")
     void testFindByMemberIdAndTagIds() {
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(member1.getId(), null, null,
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null,
                 tagIds);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -174,7 +174,7 @@ class TemplateRepositoryFindAllTest {
     @DisplayName("모든 검색 기준으로 템플릿 조회")
     void testFindWithAllCriteria() {
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(member1.getId(), "Template",
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), "Template",
                 category1.getId(), tagIds);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -185,7 +185,7 @@ class TemplateRepositoryFindAllTest {
     @Test
     @DisplayName("검색 결과가 없는 경우 테스트")
     void testFindWithNoResults() {
-        Specification<Template> spec = TemplateSpecification.withDynamicQuery(member1.getId(), "NonexistentKeyword",
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), "NonexistentKeyword",
                 null, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 

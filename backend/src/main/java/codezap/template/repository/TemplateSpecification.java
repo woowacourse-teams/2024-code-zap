@@ -20,18 +20,18 @@ public class TemplateSpecification implements Specification<Template> {
     private final Long categoryId;
     private final List<Long> tagIds;
 
-    private TemplateSpecification(Long memberId, String keyword, Long categoryId, List<Long> tagIds) {
+    public TemplateSpecification(Long memberId, String keyword, Long categoryId, List<Long> tagIds) {
         this.memberId = memberId;
         this.keyword = keyword;
         this.categoryId = categoryId;
         this.tagIds = tagIds;
     }
 
-    public static Specification<Template> withDynamicQuery(
-            Long memberId, String keyword, Long categoryId, List<Long> tagIds
-    ) {
-        return new TemplateSpecification(memberId, keyword, categoryId, tagIds);
-    }
+//    public static Specification<Template> withDynamicQuery(
+//            Long memberId, String keyword, Long categoryId, List<Long> tagIds
+//    ) {
+//        return new TemplateSpecification(memberId, keyword, categoryId, tagIds);
+//    }
 
     @Override
     public Predicate toPredicate(Root<Template> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
