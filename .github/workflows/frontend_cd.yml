@@ -8,7 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
+      - spring
+      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
     env:
       frontend-directory: ./frontend
     steps:
@@ -48,7 +51,10 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
+      - spring
+      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
     steps:
       - name: Artifact 폴더 삭제 및 생성
         run: |
