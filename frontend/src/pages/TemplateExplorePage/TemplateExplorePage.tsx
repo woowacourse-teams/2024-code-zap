@@ -29,7 +29,7 @@ const TemplateExplorePage = () => {
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex justify='flex-start' align='center' gap='1rem'>
         <ZapzapLogo width={50} height={50} />
-        <Heading.Medium color='black'>여러 템플릿을 구경해보세요.:)</Heading.Medium>
+        <Heading.Medium color='black'>여러 템플릿을 구경해보세요:)</Heading.Medium>
       </Flex>
       <Flex width='100%' justify='flex-end'>
         {' '}

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ToastContext } from '@/contexts';
 import { useTemplateUploadMutation } from '@/queries/template';
+import { END_POINTS } from '@/routes';
 import type { SourceCodes, TemplateUploadRequest } from '@/types';
 import { useCategory } from '../category';
 import { useCustomContext, useInput } from '../utils';
@@ -100,7 +101,7 @@ export const useTemplateUpload = () => {
 
     await uploadTemplate(newTemplate, {
       onSuccess: () => {
-        navigate('/');
+        navigate(END_POINTS.MY_TEMPLATES);
       },
     });
   };
