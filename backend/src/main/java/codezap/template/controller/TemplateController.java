@@ -53,8 +53,8 @@ public class TemplateController implements SpringDocTemplateController {
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
-        FindAllTemplatesResponse response = templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds,
-                pageable);
+        FindAllTemplatesResponse response = templateApplicationService.findAllBy(
+                memberId, keyword, categoryId, tagIds, pageable);
         return ResponseEntity.ok(response);
     }
 
