@@ -5,6 +5,7 @@ import { postLogin } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useCustomContext } from '@/hooks/utils';
+import { END_POINTS } from '@/routes';
 import { LoginRequest } from '@/types';
 
 export const useLoginMutation = () => {
@@ -24,7 +25,7 @@ export const useLoginMutation = () => {
         localStorage.setItem('memberId', String(res.memberId));
         handleMemberInfo(res);
         handleLoginState(true);
-        navigate('/my-templates');
+        navigate(END_POINTS.MY_TEMPLATES);
         successAlert('로그인 성공!');
       }
     },
