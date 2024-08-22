@@ -17,8 +17,8 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 멤버가 존재하지 않습니다."));
     }
 
-    default Member fetchByname(String name) {
-        return findByname(name)
+    default Member fetchByName(String name) {
+        return findByName(name)
                 .orElseThrow(() -> new CodeZapException(HttpStatus.UNAUTHORIZED, "존재하지 않는 아이디 " + name + " 입니다."));
     }
 
@@ -27,10 +27,10 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
                 .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "템플릿에 대한 멤버가 존재하지 않습니다."));
     }
 
-    Optional<Member> findByname(String name);
-
     @Query("SELECT t.member FROM Template t WHERE t.id = :templateId")
     Optional<Member> findByTemplateId(Long templateId);
 
-    boolean existsByname(String name);
+    Optional<Member> findByName(String name);
+
+    boolean existsByName(String name);
 }

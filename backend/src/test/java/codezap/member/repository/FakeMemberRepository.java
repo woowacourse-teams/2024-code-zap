@@ -34,7 +34,7 @@ public class FakeMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member fetchByname(String name) {
+    public Member fetchByName(String name) {
         return members.stream()
                 .filter(member -> Objects.equals(member.getName(), name))
                 .findFirst()
