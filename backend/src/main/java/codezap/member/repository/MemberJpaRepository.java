@@ -27,6 +27,8 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
                 .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "템플릿에 대한 멤버가 존재하지 않습니다."));
     }
 
+    Optional<Member> findByname(String name);
+
     @Query("SELECT t.member FROM Template t WHERE t.id = :templateId")
     Optional<Member> findByTemplateId(Long templateId);
 
