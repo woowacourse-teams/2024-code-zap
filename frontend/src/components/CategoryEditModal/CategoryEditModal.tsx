@@ -205,7 +205,7 @@ const CategoryItems = ({
             <Flex align='center' width='100%' height='2.5rem'>
               {editingCategoryId === id ? (
                 // 기존 : 수정 상태
-                <Input size='large' variant='text' style={{ width: '100%', height: '38px' }}>
+                <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
                   <Input.TextField
                     type='text'
                     value={editedCategories[id] ?? name}
@@ -245,7 +245,7 @@ const CategoryItems = ({
         <Flex align='center' width='100%' height='2.5rem'>
           {editingCategoryId === id ? (
             // 생성 : 수정 상태
-            <Input size='large' variant='text' style={{ width: '100%', height: '38px' }}>
+            <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
               <Input.TextField
                 type='text'
                 value={name}
