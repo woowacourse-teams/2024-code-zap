@@ -30,7 +30,7 @@ export const TemplateCardContainer = styled.div`
 export const TagListContainer = styled.div`
   overflow: hidden;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.5rem;
 
   height: 2.15rem;
