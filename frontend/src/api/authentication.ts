@@ -1,14 +1,15 @@
+import { END_POINTS } from '@/routes';
 import type { LoginRequest, SignupRequest } from '@/types';
 import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
-export const SIGNUP_API_URL = `${API_URL}/signup`;
-export const LOGIN_API_URL = `${API_URL}/login`;
-export const LOGOUT_API_URL = `${API_URL}/logout`;
-export const LOGIN_STATE_API_URL = `${API_URL}/login/check`;
-export const CHECK_NAME_API_URL = `${API_URL}/check-name`;
+export const SIGNUP_API_URL = `${API_URL}${END_POINTS.signup}`;
+export const LOGIN_API_URL = `${API_URL}${END_POINTS.login}`;
+export const LOGOUT_API_URL = `${API_URL}${END_POINTS.logout}`;
+export const LOGIN_STATE_API_URL = `${API_URL}${END_POINTS.loginCheck}`;
+export const CHECK_NAME_API_URL = `${API_URL}${END_POINTS.checkName}`;
 
 export const postSignup = async (signupInfo: SignupRequest) =>
   await customFetch({

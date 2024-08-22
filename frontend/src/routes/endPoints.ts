@@ -6,4 +6,7 @@ export const END_POINTS = {
   templatesUpload: '/templates/upload',
   signup: '/signup',
   login: '/login',
+  logout: '/logout',
+  loginCheck: '/login/check',
+  checkName: '/check-name',
 } as const;
