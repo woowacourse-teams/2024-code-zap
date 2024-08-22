@@ -15,6 +15,7 @@ import {
   Button,
   Modal,
   Text,
+  LoadingBall,
 } from '@/components';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useWindowWidth, useDebounce, useToggle } from '@/hooks/utils';
@@ -47,7 +48,7 @@ const MyTemplatePage = () => {
 
   const [page, setPage] = useState<number>(1);
 
-  const { data: templateData } = useTemplateListQuery({
+  const { data: templateData, isPending } = useTemplateListQuery({
     keyword: debouncedKeyword,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
@@ -98,6 +99,30 @@ const MyTemplatePage = () => {
     deleteTemplates();
     toggleIsEditMode();
     toggleDeleteModal();
+  };
+
+  const renderTemplateContent = () => {
+    if (isPending) {
+      return <LoadingBall />;
+    }
+
+    if (templates.length === 0) {
+      if (debouncedKeyword !== '') {
+        return <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>;
+      } else {
+        return <NewTemplateButton />;
+      }
+    }
+
+    return (
+      <TemplateGrid
+        templates={templates}
+        cols={getGridCols(windowWidth)}
+        isEditMode={isEditMode}
+        selectedList={selectedList}
+        setSelectedList={setSelectedList}
+      />
+    );
   };
 
   return (
@@ -154,21 +179,13 @@ const MyTemplatePage = () => {
           {tags.length && (
             <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
           )}
-          {templates.length ? (
-            <TemplateGrid
-              templates={templates}
-              cols={getGridCols(windowWidth)}
-              isEditMode={isEditMode}
-              selectedList={selectedList}
-              setSelectedList={setSelectedList}
-            />
-          ) : (
-            <NewTemplateButton />
-          )}
+          {renderTemplateContent()}
 
-          <Flex justify='center' gap='0.5rem' margin='1rem 0'>
-            <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
-          </Flex>
+          {templates.length !== 0 && (
+            <Flex justify='center' gap='0.5rem' margin='1rem 0'>
+              <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+            </Flex>
+          )}
         </Flex>
 
         {isDeleteModalOpen && (
