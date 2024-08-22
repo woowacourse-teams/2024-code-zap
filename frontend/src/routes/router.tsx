@@ -9,8 +9,8 @@ import {
   LandingPage,
   NotFoundPage,
   TemplateExplorePage,
+  MyTemplatePage,
 } from '@/pages';
-import HomeRouter from './HomeRouter';
 import RouteGuard from './RouteGuard';
 
 const router = createBrowserRouter([
@@ -20,7 +20,15 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <HomeRouter />,
+        element: <LandingPage />,
+      },
+      {
+        path: 'my-templates',
+        element: (
+          <RouteGuard isLoginRequired redirectTo='/login'>
+            <MyTemplatePage />
+          </RouteGuard>
+        ),
       },
       {
         path: 'templates',
