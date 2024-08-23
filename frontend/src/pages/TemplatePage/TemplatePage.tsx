@@ -8,6 +8,7 @@ import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
 import { CustomCodeMirrorTheme } from '@/components/TemplateCard/TemplateCard.style';
 import { ToastContext } from '@/contexts';
+import { useAuth } from '@/hooks/authentication';
 import { useTemplate } from '@/hooks/template';
 import { useCustomContext, useToggle } from '@/hooks/utils';
 import { TemplateEditPage } from '@/pages';
@@ -18,6 +19,9 @@ import * as S from './TemplatePage.style';
 const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
+  const {
+    memberInfo: { name },
+  } = useAuth();
 
   const { infoAlert } = useCustomContext(ToastContext);
   const [isOpen, toggleModal] = useToggle();
@@ -65,20 +69,22 @@ const TemplatePage = () => {
               <Flex direction='column' gap='0.75rem' width='100%'>
                 <Flex justify='space-between'>
                   <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
-                  <Flex justify='flex-end'>
-                    <S.EditButton
-                      size='small'
-                      variant='text'
-                      onClick={() => {
-                        handleEditButtonClick();
-                      }}
-                    >
-                      <PencilIcon width={28} height={28} aria-label='템플릿 편집' />
-                    </S.EditButton>
-                    <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                      <TrashcanIcon aria-label='템플릿 삭제' />
-                    </S.DeleteButton>
-                  </Flex>
+                  {template.member.name === name && (
+                    <Flex justify='flex-end'>
+                      <S.EditButton
+                        size='small'
+                        variant='text'
+                        onClick={() => {
+                          handleEditButtonClick();
+                        }}
+                      >
+                        <PencilIcon width={28} height={28} aria-label='템플릿 편집' />
+                      </S.EditButton>
+                      <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
+                        <TrashcanIcon aria-label='템플릿 삭제' />
+                      </S.DeleteButton>
+                    </Flex>
+                  )}
                 </Flex>
 
                 <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>

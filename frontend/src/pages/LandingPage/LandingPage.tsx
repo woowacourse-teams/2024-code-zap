@@ -1,78 +1,106 @@
-import styled from '@emotion/styled';
 import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
+import { Link } from 'react-router-dom';
 
-import { ChevronIcon, CodeZapLogo } from '@/assets/images';
+import { CheckCircleIcon, ChevronIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { CustomCodeMirrorTheme } from '@/components/TemplateCard/TemplateCard.style';
+import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks/utils';
 import { theme } from '@/style/theme';
+import { SourceCodes } from '@/types';
 import { getLanguageByFilename } from '@/utils';
-import * as S from '../TemplatePage/TemplatePage.style';
+import * as S from './LandingPage.style';
 
 const LandingPage = () => (
-  <Flex direction='column' justify='center' align='center' height='100vh' gap='2rem' width='70rem'>
-    <Flex justify='center' align='center' gap='1rem' width='27.5rem'>
-      <CodeZapLogo aria-label='로고 버튼' width={100} height={50} />
-      <Heading.XLarge color='#F79037'>코드잽</Heading.XLarge>
-    </Flex>
-
-    <Flex direction='column' justify='center' align='center' gap='2rem'>
-      <Heading.XSmall color='black'>자주 쓰는 코드를 나만의 템플릿으로 저장해보세요.</Heading.XSmall>
-      <Heading.XSmall color='black'> 코드잽에서 나의 코드를 빠르게 찾고, 효율적으로 관리할 수 있습니다.</Heading.XSmall>
-    </Flex>
-
-    <Flex justify='center' align='center' gap='1rem'>
-      <Card>
-        <Heading.XSmall color='white'>💾 간편한 저장</Heading.XSmall>
-        <Text.Medium color='white' weight='bold'>
-          자주 쓰는 나의 코드를 ZAP하게 저장하세요.
-        </Text.Medium>
-      </Card>
-
-      <Card>
-        <Heading.XSmall color='white'>🔍 빠른 검색</Heading.XSmall>
-        <Text.Medium color='white' weight='bold'>
-          필요한 나의 코드를 ZAP하게 찾아 사용하세요.
-        </Text.Medium>
-      </Card>
-
-      <Card>
-        <Heading.XSmall color='white'>📊 체계적인 관리</Heading.XSmall>
-        <Text.Medium color='white' weight='bold'>
-          직관적인 분류 시스템으로 ZAP하게 정리하세요.
-        </Text.Medium>
-      </Card>
-    </Flex>
-
-    <Flex justify='center' align='center' gap='3rem'>
-      <ExamCode />
-      <Flex direction='column' gap='5rem'>
-        <Flex direction='column' gap='1.5rem'>
-          <Heading.XSmall color='black' weight='bold'>
-            ⚡️ 템플릿이란?
-          </Heading.XSmall>
-          <Text.XLarge color='black' weight='bold'>
-            템플릿은 반복적으로 작성하게 되는 코드 블럭 모음
-          </Text.XLarge>
+  <S.Container>
+    <S.ContentSection>
+      <S.TextContent>
+        <Text.Medium color='black'>이런 경험 한 번쯤 있으시죠?</Text.Medium>
+        <Heading.XSmall color={theme.color.light.secondary_800}>{'"아, 그때 그 코드 어디에 썼더라..."'}</Heading.XSmall>
+        <Flex direction='column' gap='1rem'>
+          <Text.Medium color='black'></Text.Medium>
+          더이상 코드를 찾느데 헤매지 마세요!
+          <Text.Medium color='black'>코드잽에 자주 쓰는 코드를 템플릿으로 저장하고 빠르게 찾아요.</Text.Medium>
         </Flex>
-        <Flex direction='column' gap='1.5rem'>
+      </S.TextContent>
+      <S.ImageWrapper>
+        <ZapzapLogo width={250} />
+      </S.ImageWrapper>
+    </S.ContentSection>
+
+    <S.CardSection>
+      <S.Card>
+        <Flex align='center' gap='0.25rem'>
+          <CheckCircleIcon width={24} />
+          <Text.Large color='black'>ZAP하게 저장</Text.Large>
+        </Flex>
+        <Text.Medium color={theme.color.light.secondary_600}>자주 쓰는 나의 코드를 간편하게 저장하세요</Text.Medium>
+      </S.Card>
+      <S.Card>
+        <Flex align='center' gap='0.25rem'>
+          <CheckCircleIcon width={24} />
+          <Text.Large color='black'>ZAP하게 관리</Text.Large>
+        </Flex>
+        <Text.Medium color={theme.color.light.secondary_600}>
+          직관적인 분류 시스템으로 체계적으로 관리하세요
+        </Text.Medium>
+      </S.Card>
+      <S.Card>
+        <Flex align='center' gap='0.25rem'>
+          <CheckCircleIcon width={24} />
+          <Text.Large color='black'>ZAP하게 검색</Text.Large>
+        </Flex>
+        <Text.Medium color={theme.color.light.secondary_600}>필요한 나의 코드를 빠르게 찾아 사용하세요</Text.Medium>
+      </S.Card>
+    </S.CardSection>
+
+    <S.TemplateSection>
+      <ExamCode />
+      <Flex direction='column' justify='center' gap='3rem' margin='auto' padding='3rem 0'>
+        <Flex direction='column' justify='center' gap='1rem'>
           <Heading.XSmall color='black' weight='bold'>
-            🙌 코드잽은 이런 분들에게 딱이에요
+            템플릿이란?
           </Heading.XSmall>
-          <Text.XLarge color='black' weight='bold'>
-            • 자주 쓰는 코드 템플릿을 간편하게 저장하고 싶은 분
-          </Text.XLarge>
-          <Text.XLarge color='black' weight='bold'>
-            • 프로젝트 파일을 뒤적거리는 대신 필요한 코드를 빠르게 찾고 싶은 분
-          </Text.XLarge>
-          <Text.XLarge color='black' weight='bold'>
-            • 체계적으로 코드를 정리하고 싶지만 방법을 모르셨던 분
-          </Text.XLarge>
+          <Text.Medium color={theme.color.light.secondary_500}>
+            코드잽에서 템플릿이란 반복적으로 작성하게 되는 소스 코드의 모음을 뜻해요.
+          </Text.Medium>
+          <Text.Medium color={theme.color.light.secondary_500}>
+            하나의 템플릿에 여러개의 소스코드를 넣을 수 있어요!
+          </Text.Medium>
+        </Flex>
+        <Flex direction='column' justify='center' gap='1rem'>
+          <Heading.XSmall color='black' weight='bold'>
+            소스코드란?
+          </Heading.XSmall>
+          <Text.Medium color={theme.color.light.secondary_500}>
+            코드잽에서 소스코드란 파일명 + 소스코드 내용으로 이루어진 코드 단위를 뜻해요.
+          </Text.Medium>
+          <Text.Medium color={theme.color.light.secondary_500}>
+            파일명.[확장자]를 입력하면 하이라이트가 되고 복사 버튼으로 편하게 복사할 수 있어요!
+          </Text.Medium>
         </Flex>
       </Flex>
-    </Flex>
-  </Flex>
+    </S.TemplateSection>
+
+    <S.TemplateSection>
+      <S.TextContent>
+        <Heading.XSmall color='black'>코드잽은 이런 분들에게 딱이에요 !</Heading.XSmall>
+        <Text.Medium color='black'>자주 쓰는 코드 템플릿을 간편하게 저장하고 싶은 분</Text.Medium>
+        <Text.Medium color='black'>프로젝트 파일을 뒤적거리는 대신 필요한 코드를 빠르게 찾고 싶은 분</Text.Medium>
+        <Text.Medium color='black'>체계적으로 코드를 정리하고 싶지만 방법을 모르셨던 분</Text.Medium>
+      </S.TextContent>
+      <Flex direction='column' gap='1rem' width='10rem' margin='2rem 0'>
+        <Link to='/login'>
+          <Button fullWidth>로그인 하러가기</Button>
+        </Link>
+        <Link to='/signup'>
+          <Button fullWidth>회원가입 하러가기</Button>
+        </Link>
+      </Flex>
+    </S.TemplateSection>
+  </S.Container>
 );
 
 export default LandingPage;
@@ -82,12 +110,18 @@ const ExamCode = () => {
     id: 102,
     filename: 'App.tsx',
     content:
-      "import React from 'react';\nimport MyComponent from './MyComponent';\n\nconst App: React.FC = () => {\n  return (\n    <div>\n      <MyComponent name=\"John Doe\" age={30} />\n    </div>\n  );\n};\n\nexport default App;",
+      "import React from 'react';\nimport MyComponent from './MyComponent';\n\nconst Template = () => {\n  return (\n    <div>\n      <MyComponent name=\"code zap\" />\n    </div>\n  );\n};\n\nexport default Template;",
     ordinal: 2,
   };
 
+  const { infoAlert } = useCustomContext(ToastContext);
+  const copyCode = (sourceCode: SourceCodes) => () => {
+    navigator.clipboard.writeText(sourceCode.content);
+    infoAlert('코드가 복사되었습니다!');
+  };
+
   return (
-    <div>
+    <S.CodeSection>
       <Flex
         justify='space-between'
         align='center'
@@ -101,7 +135,7 @@ const ExamCode = () => {
             {sourceCode.filename}
           </Text.Small>
         </Flex>
-        <Button size='small' variant='text'>
+        <Button size='small' variant='text' onClick={copyCode(sourceCode)}>
           <Text.Small color={theme.color.light.primary_500} weight='bold'>
             {'복사'}
           </Text.Small>
@@ -131,26 +165,6 @@ const ExamCode = () => {
           }}
         />
       </S.SyntaxHighlighterWrapper>
-    </div>
+    </S.CodeSection>
   );
 };
-
-const Card = styled.div`
-  cursor: pointer;
-
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-
-  padding: 2rem;
-
-  background-color: ${theme.color.light.primary_500};
-  border-radius: 24px;
-
-  transition: 0.1s ease;
-  &:hover {
-    bottom: 0.5rem;
-    transform: scale(1.025);
-    box-shadow: 1px 2px 8px 1px #00000030;
-  }
-`;
