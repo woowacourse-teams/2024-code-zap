@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import codezap.template.domain.Template;
 
@@ -15,13 +16,7 @@ public interface TemplateRepository {
 
     List<Template> findByMemberId(Long id);
 
-    Page<Template> searchBy(Long memberId, String keyword, Pageable pageable);
-
-    Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable);
-
-    Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable);
-
-    Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds, Pageable pageable);
+    Page<Template> findAll(Specification<Template> specification, Pageable pageable);
 
     boolean existsByCategoryId(Long categoryId);
 

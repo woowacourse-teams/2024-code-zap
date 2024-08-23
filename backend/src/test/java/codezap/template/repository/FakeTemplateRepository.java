@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -37,65 +38,16 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public Page<Template> searchBy(Long memberId, String keyword, Pageable pageable) {
-        List<Template> searchedTemplates = templates.stream()
-                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
-                .filter(template -> containTopic(keyword, template))
+    public Page<Template> findAll(Specification<Template> specification, Pageable pageable) {
+        List<Template> filteredTemplates = templates.stream()
+                .filter(template -> specification.toPredicate(null, null, null) == null)
                 .toList();
 
-        return pageTemplates(pageable, searchedTemplates);
-    }
-
-    @Override
-    public Page<Template> searchBy(Long memberId, String keyword, List<Long> templateIds, Pageable pageable) {
-        List<Template> searchedTemplates = templates.stream()
-                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
-                .filter(template -> templateIds.contains(template.getId()))
-                .filter(template -> containTopic(keyword, template))
-                .toList();
-
-        return pageTemplates(pageable, searchedTemplates);
-    }
-
-    @Override
-    public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, Pageable pageable) {
-        List<Template> searchedTemplates = templates.stream()
-                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
-                .filter(template -> Objects.equals(template.getCategory().getId(), categoryId))
-                .filter(template -> containTopic(keyword, template))
-                .toList();
-
-        return pageTemplates(pageable, searchedTemplates);
-    }
-
-    @Override
-    public Page<Template> searchBy(Long memberId, String keyword, Long categoryId, List<Long> templateIds,
-            Pageable pageable
-    ) {
-        List<Template> searchedTemplates = templates.stream()
-                .filter(template -> Objects.equals(template.getMember().getId(), memberId))
-                .filter(template -> Objects.equals(template.getCategory().getId(), categoryId))
-                .filter(template -> templateIds.contains(template.getId()))
-                .filter(template -> containTopic(keyword, template))
-                .toList();
-
-        return pageTemplates(pageable, searchedTemplates);
-    }
-
-    private static PageImpl<Template> pageTemplates(Pageable pageable, List<Template> templates) {
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), templates.size());
-        List<Template> pagedTemplates = templates.subList(start, end);
+        int end = Math.min((start + pageable.getPageSize()), filteredTemplates.size());
+        List<Template> pageContent = filteredTemplates.subList(start, end);
 
-        return new PageImpl<>(pagedTemplates, pageable, templates.size());
-    }
-
-    private static boolean containTopic(String topic, Template template) {
-        String keyword = topic.substring(1, topic.length() - 1);
-        return template.getTitle().contains(keyword) ||
-                template.getSourceCodes().stream().anyMatch(sourceCode -> sourceCode.getFilename().contains(keyword)) ||
-                template.getSourceCodes().stream().anyMatch(sourceCode -> sourceCode.getContent().contains(keyword)) ||
-                template.getDescription().contains(keyword);
+        return new PageImpl<>(pageContent, pageable, filteredTemplates.size());
     }
 
     @Override

@@ -12,9 +12,6 @@ import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
-import codezap.member.repository.MemberRepository;
-import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,20 +19,15 @@ import lombok.RequiredArgsConstructor;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-    private final TemplateRepository templateRepository;
-    private final MemberRepository memberRepository;
 
-    @Transactional
-    public CreateCategoryResponse create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
+    public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
-        Member member = memberRepository.fetchById(memberDto.id());
         validateDuplicatedCategory(categoryName, member);
         Category category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
-    }
+}
 
-    public FindAllCategoriesResponse findAllByMember(Long memberId) {
-        Member member = memberRepository.fetchById(memberId);
+    public FindAllCategoriesResponse findAllByMember(Member member) {
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberOrderById(member));
     }
 
@@ -43,38 +35,27 @@ public class CategoryService {
         return FindAllCategoriesResponse.from(categoryRepository.findAll());
     }
 
+    public Category fetchById(Long id) {
+        return categoryRepository.fetchById(id);
+    }
+
+    public void validateExistsById(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
     @Transactional
-    public void update(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest) {
-        Member member = memberRepository.fetchById(memberDto.id());
+    public void update(Member member, Long id, UpdateCategoryRequest updateCategoryRequest) {
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
         Category category = categoryRepository.fetchById(id);
-        validateAuthorizeMember(category, member);
+        category.validateAuthorization(member);
         category.updateName(updateCategoryRequest.name());
     }
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
         if (categoryRepository.existsByNameAndMember(categoryName, member)) {
             throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
-        }
-    }
-
-    public void deleteById(MemberDto memberDto, Long id) {
-        Category category = categoryRepository.fetchById(id);
-        Member member = memberRepository.fetchById(memberDto.id());
-        validateAuthorizeMember(category, member);
-
-        if (templateRepository.existsByCategoryId(id)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
-        }
-        if (category.getIsDefault()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
-        }
-        categoryRepository.deleteById(id);
-    }
-
-    private void validateAuthorizeMember(Category category, Member member) {
-        if (!category.getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.FORBIDDEN, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
     }
 }

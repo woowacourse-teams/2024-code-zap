@@ -1,4 +1,4 @@
-package codezap.template.repository;
+package codezap.tag.repository;
 
 import java.util.List;
 
@@ -13,7 +13,12 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
 
     List<TemplateTag> findAllByTemplate(Template template);
 
-    List<TemplateTag> findByTemplateIn(List<Template> templates);
+    @Query("""
+            SELECT DISTINCT tt.id.tagId
+            FROM TemplateTag tt
+            WHERE tt.id.templateId IN :templateIds
+            """)
+    List<Long> findDistinctByTemplateIn(List<Long> templateIds);
 
     @Query("""
             SELECT DISTINCT tt.id.templateId

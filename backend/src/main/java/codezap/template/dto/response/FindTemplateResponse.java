@@ -4,14 +4,19 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import codezap.category.dto.response.FindCategoryResponse;
+import codezap.member.domain.Member;
+import codezap.tag.domain.Tag;
+import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
-import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindTemplateResponse(
         @Schema(description = "템플릿 식별자", example = "0")
         Long id,
+
+        @Schema(description = "회원 설명")
+        FindMemberResponse member,
 
         @Schema(description = "템플릿 이름", example = "스프링 로그인 구현")
         String title,
@@ -30,12 +35,14 @@ public record FindTemplateResponse(
 
         @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
         LocalDateTime createdAt,
+
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
     public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags) {
         return new FindTemplateResponse(
                 template.getId(),
+                null,
                 template.getTitle(),
                 template.getDescription(),
                 mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
@@ -43,6 +50,20 @@ public record FindTemplateResponse(
                 mapToFindTagByTemplateResponse(tags),
                 template.getCreatedAt(),
                 template.getModifiedAt()
+        );
+    }
+
+    public FindTemplateResponse updateMember(Member member) {
+        return new FindTemplateResponse(
+                id,
+                new FindMemberResponse(member.getId(), member.getName()),
+                title,
+                description,
+                sourceCodes,
+                category,
+                tags,
+                createdAt,
+                modifiedAt
         );
     }
 

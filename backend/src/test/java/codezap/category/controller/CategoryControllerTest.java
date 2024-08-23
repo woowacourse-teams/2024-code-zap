@@ -50,7 +50,7 @@ class CategoryControllerTest extends MockMvcTest {
             Long categoryId = 1L;
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            when(categoryService.create(
+            when(memberCategoryApplicationService.create(
                     MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest))
                     .thenReturn(new CreateCategoryResponse(1L, "category"));
 
@@ -97,7 +97,7 @@ class CategoryControllerTest extends MockMvcTest {
         List<Category> categories = List.of(new Category("category1", member), new Category("category1", member));
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
-        when(categoryService.findAllByMember(any())).thenReturn(findAllCategoriesResponse);
+        when(memberCategoryApplicationService.findAllByMember(any())).thenReturn(findAllCategoriesResponse);
 
         mvc.perform(get("/categories")
                         .param("memberId", "1")
@@ -163,7 +163,7 @@ class CategoryControllerTest extends MockMvcTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicatedName);
 
             doThrow(new CodeZapException(HttpStatus.CONFLICT, "이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
-                    .when(categoryService).update(any(), any(), any());
+                    .when(memberCategoryApplicationService).update(any(), any(), any());
 
             mvc.perform(put("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)
@@ -189,7 +189,8 @@ class CategoryControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
 
-            verify(categoryService, times(1)).deleteById(MemberDto.from(MemberFixture.memberFixture()), categoryId);
+            verify(memberCategoryTemplateApplicationService, times(1))
+                    .deleteById(MemberDto.from(MemberFixture.memberFixture()), categoryId);
         }
 
         @Test
@@ -211,7 +212,7 @@ class CategoryControllerTest extends MockMvcTest {
             Long id = 2L;
 
             doThrow(new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
-                    .when(categoryService).deleteById(any(), any());
+                    .when(memberCategoryTemplateApplicationService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + id)
                             .accept(MediaType.APPLICATION_JSON)
@@ -225,7 +226,7 @@ class CategoryControllerTest extends MockMvcTest {
         void updateCategoryFailWithLongName() throws Exception {
             Long categoryId = 1L;
             doThrow(new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
-                    .when(categoryService).deleteById(any(), any());
+                    .when(memberCategoryTemplateApplicationService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)

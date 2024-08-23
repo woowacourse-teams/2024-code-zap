@@ -3,17 +3,16 @@ name: Backend CD
 on:
   push:
     branches:
+      - main
       - dev/be
 
 jobs:
   build:
-    runs-on: [self-hosted, develop, spring]
+    runs-on:
+      - self-hosted
+      - spring
+      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
     steps:
-      - name: 브랜치명을 통해 개발 환경 알아내기
-        run: |
-          cd ${{ secrets.SCRIPT_DIRECTORY }}
-          bash find-env-by-branch.sh
-
       - name: 체크아웃
         uses: actions/checkout@v4
 
@@ -23,7 +22,7 @@ jobs:
       - name: bootJar로 jar 파일 생성
         run: |
           ./gradlew bootJar
-          mv build/libs/*.jar ${{ secrets.WORK_DIRECTORY }}/${{ env.ENVIRONMENT }}
+          mv build/libs/*.jar ${{ secrets.JAR_DIRECTORY }}
         working-directory: ./backend
 
       - name: 클린업
@@ -32,24 +31,12 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: [self-hosted, develop, spring]
+    runs-on:
+      - self-hosted
+      - spring
+      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
     steps:
-      - name: 브랜치명을 통해 개발 환경 알아내기
-        run: |
-          cd ${{ secrets.SCRIPT_DIRECTORY }}
-          bash find-env-by-branch.sh
-
-      - name: 실행 프로세스 확인
-        run: |
-          cd ${{ secrets.SCRIPT_DIRECTORY }}
-          bash check-old-pids.sh
-
       - name: 배포 스크립트 실행
         run: |
-          cd ${{ secrets.SCRIPT_DIRECTORY }}
-          RUNNER_TRACKING_ID="" && bash start.sh ${{ env.ENVIRONMENT }}
-
-      - name: 실행 프로세스 확인으로 배포 검증
-        run: |
-          cd ${{ secrets.SCRIPT_DIRECTORY }}
-          bash verify-deploy.sh
+          cd ${{ secrets.ZAP_DIRECTORY }}
+          docker compose restart

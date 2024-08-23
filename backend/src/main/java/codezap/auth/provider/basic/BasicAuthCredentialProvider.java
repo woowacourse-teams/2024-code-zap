@@ -26,7 +26,7 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
     @Override
     public Member extractMember(String credential) {
         String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
-        Member member = memberRepository.fetchByname(nameAndPassword[0]);
+        Member member = memberRepository.fetchByName(nameAndPassword[0]);
         checkMatchPassword(member, nameAndPassword[1]);
         return member;
     }

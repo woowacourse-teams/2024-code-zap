@@ -19,6 +19,8 @@ public interface SourceCodeRepository {
 
     List<SourceCode> findAll();
 
+    int countByTemplate(Template template);
+
     SourceCode save(SourceCode sourceCode);
 
     <S extends SourceCode> List<S> saveAll(Iterable<S> entities);
