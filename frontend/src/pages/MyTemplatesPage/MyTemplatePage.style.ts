@@ -34,6 +34,7 @@ export const TopBannerContainer = styled.div`
 export const TopBannerTextWrapper = styled.div`
   display: flex;
   gap: 0.5rem;
+  align-items: center;
   margin-left: calc(12.5rem + clamp(1rem, calc(0.0888 * 100vw - 3.2618rem), 4.375rem));
 `;
 
@@ -56,7 +57,6 @@ export const NewTemplateButton = styled.button`
 
   border: 3px dashed ${theme.color.light.primary_500};
   border-radius: 8px;
-
   &:hover {
     background-color: ${theme.color.light.primary_50};
   }
