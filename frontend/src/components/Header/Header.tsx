@@ -1,20 +1,24 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
+import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import { useToggle } from '@/hooks/utils';
+import { useCustomContext, useToggle } from '@/hooks/utils';
 import { usePressESC } from '@/hooks/utils/usePressESC';
 import { useScrollDisable } from '@/hooks/utils/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
+import { END_POINTS } from '@/routes';
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
   const { isLogin, isChecking } = useAuth();
   const [menuOpen, toggleMenu] = useToggle();
+  const { failAlert } = useCustomContext(ToastContext);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useScrollDisable(menuOpen);
   usePressESC(menuOpen, toggleMenu);
@@ -24,11 +28,24 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
       toggleMenu();
     }
   }, [location.pathname]);
-    
+
   if (isChecking) {
-    return null;
+    return (
+      <S.HeaderContainer ref={headerRef}>
+        <S.HeaderContentContainer></S.HeaderContentContainer>
+      </S.HeaderContainer>
+    );
   }
 
+  const handleTemplateUploadButton = () => {
+    if (!isLogin) {
+      failAlert('로그인을 해주세요.');
+
+      return;
+    }
+
+    navigate(END_POINTS.TEMPLATES_UPLOAD);
+  };
 
   return (
     <S.HeaderContainer ref={headerRef}>
@@ -36,25 +53,27 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <Logo />
         <S.HeaderMenu menuOpen={menuOpen}>
           <S.NavContainer>
-            {!isChecking && isLogin && <NavOption route='/' name='내 템플릿' />}
-            <NavOption route='/aboutus' name='서비스 소개' />
+            {!isChecking && isLogin && <NavOption route={END_POINTS.MY_TEMPLATES} name='내 템플릿' />}
+            <NavOption route={END_POINTS.TEMPLATES_EXPLORE} name='구경가기' />
           </S.NavContainer>
-
           <S.NavContainer>
-            <Link to={'/templates/upload'}>
-              <S.MobileHiddenButton variant='outlined' size='medium' weight='bold' hoverStyle='none'>
-                <PlusIcon aria-label='' />새 템플릿
-              </S.MobileHiddenButton>
-            </Link>
+            <S.MobileHiddenButton
+              variant='outlined'
+              size='medium'
+              weight='bold'
+              hoverStyle='none'
+              onClick={handleTemplateUploadButton}
+            >
+              <PlusIcon aria-label='' />새 템플릿
+            </S.MobileHiddenButton>
+
             {!isChecking && isLogin ? <LogoutButton /> : <LoginButton />}
           </S.NavContainer>
         </S.HeaderMenu>
         <S.MobileMenuContainer>
-          <Link to={'/templates/upload'}>
-            <Button variant='outlined' size='small' weight='bold' hoverStyle='none'>
-              <PlusIcon aria-label='' />새 템플릿
-            </Button>
-          </Link>
+          <Button variant='outlined' size='small' weight='bold' hoverStyle='none' onClick={handleTemplateUploadButton}>
+            <PlusIcon aria-label='' />새 템플릿
+          </Button>
           <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
         </S.MobileMenuContainer>
       </S.HeaderContentContainer>
@@ -64,7 +83,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
 };
 
 const Logo = () => (
-  <Link to={'/'}>
+  <Link to={END_POINTS.HOME}>
     <Flex align='center' gap='0.5rem'>
       <CodeZapLogo aria-label='로고 버튼' />
       <Heading.XSmall color={theme.color.light.primary_500}>코드잽</Heading.XSmall>
@@ -97,7 +116,7 @@ const LogoutButton = () => {
 };
 
 const LoginButton = () => (
-  <Link to='/login'>
+  <Link to={END_POINTS.LOGIN}>
     <Button variant='text' size='medium' weight='bold' hoverStyle='none'>
       로그인
     </Button>

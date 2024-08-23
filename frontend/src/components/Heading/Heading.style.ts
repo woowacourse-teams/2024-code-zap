@@ -10,6 +10,7 @@ interface Props {
 export const HeadingElement = styled.span<Props>`
   font-size: ${({ size }) => size};
   font-weight: ${({ weight }) => weight};
+  line-height: 100%;
   color: ${({ color }) => color};
   text-decoration: ${({ textDecoration }) => textDecoration || 'none'};
 `;

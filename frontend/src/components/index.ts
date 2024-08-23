@@ -8,7 +8,7 @@ export { default as Heading } from './Heading/Heading';
 export { default as Input } from './Input/Input';
 export { default as Layout } from './Layout/Layout';
 export { default as Modal } from './Modal/Modal';
-export { default as PagingButton } from './PagingButton/PagingButton';
+export { default as PagingButtons } from './PagingButtons/PagingButtons';
 export { default as SelectList } from './SelectList/SelectList';
 export { default as SourceCodeEditor } from './SourceCodeEditor/SourceCodeEditor';
 export { default as TagButton } from './TagButton/TagButton';
@@ -20,3 +20,6 @@ export { default as TemplateGrid } from './TemplateGrid/TemplateGrid';
 export { default as Text } from './Text/Text';
 export { default as Toast } from './Toast/Toast';
 export { default as Guide } from './Guide/Guide';
+
+// Skeleton UI
+export { default as LoadingBall } from './LoadingBall/LoadingBall';

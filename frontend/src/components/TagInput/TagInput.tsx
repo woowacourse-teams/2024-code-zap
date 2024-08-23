@@ -1,18 +1,26 @@
+import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction } from 'react';
+
 import { Flex, Input, TagButton, Text } from '@/components';
+import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks/utils';
+import { validateTagLength } from '@/service/validates';
 import { theme } from '@/style/theme';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
 
 interface Props {
   value: string;
-  handleValue: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleValue: (e: ChangeEvent<HTMLInputElement>) => void;
   resetValue: () => void;
   tags: string[];
-  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  setTags: Dispatch<SetStateAction<string[]>>;
 }
 
 const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
-  const handleSpaceBarAndEnterKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const { failAlert } = useCustomContext(ToastContext);
+
+  const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
       addTag();
       resetValue();
     }
@@ -30,6 +38,18 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
     }
 
     setTags((prev) => [...prev, newTag]);
+  };
+
+  const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
+    const errorMessage = validateTagLength(e.target.value);
+
+    if (errorMessage) {
+      failAlert(errorMessage);
+
+      return;
+    }
+
+    handleValue(e);
   };
 
   return (
@@ -62,13 +82,14 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
           />
         ))}
       </Flex>
-      <Input size='large'>
+      <Input size='large' variant='outlined'>
         <Input.TextField
           placeholder='enter 또는 space bar로 태그를 등록해보세요'
           value={value}
-          onChange={handleValue}
-          onKeyUpCapture={handleSpaceBarAndEnterKeydown}
+          onChange={handleTagInput}
+          onKeyUp={handleSpaceBarAndEnterKeydown}
           onBlur={() => {
+            addTag();
             resetValue();
           }}
         />

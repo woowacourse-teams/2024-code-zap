@@ -10,7 +10,7 @@ interface Props {
   tagIds?: number[];
   sort?: SortingKey;
   page?: number;
-  pageSize?: number;
+  size?: number;
 }
 
 export const useTemplateListQuery = ({
@@ -19,15 +19,15 @@ export const useTemplateListQuery = ({
   tagIds,
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
-  pageSize = PAGE_SIZE,
+  size = PAGE_SIZE,
 }: Props) => {
   const {
     memberInfo: { memberId },
   } = useAuth();
 
   return useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, keyword, categoryId, tagIds, sort, page, pageSize, memberId],
-    queryFn: () => getTemplateList({ keyword, categoryId, tagIds, sort, page, pageSize, memberId }),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, keyword, categoryId, tagIds, sort, page, size, memberId],
+    queryFn: () => getTemplateList({ keyword, categoryId, tagIds, sort, page, size, memberId }),
     throwOnError: true,
     placeholderData: keepPreviousData,
   });

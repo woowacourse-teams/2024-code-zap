@@ -1,18 +1,18 @@
+import { css } from '@emotion/react';
 import { useState } from 'react';
 
-import { Heading, Text, Modal, Input, Flex, Button } from '@/components';
+import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '@/assets/images';
+import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
+import { theme } from '@/style/theme';
 import type { Category, CustomError } from '@/types';
-import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '../../assets/images/index';
-import { theme } from '../../style/theme';
 import * as S from './CategoryEditModal.style';
 
 interface CategoryEditModalProps {
   isOpen: boolean;
   toggleModal: () => void;
   categories: Category[];
-  defaultCategory: Category;
   handleCancelEdit: () => void;
 }
 
@@ -74,10 +74,12 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   };
 
   const handleAddCategory = () => {
-    const newCategoryId = categories.length + newCategories.length;
-    const newCategoryName = `카테고리 ${newCategoryId + 1}`;
+    const newCategoryId =
+      categories.length > 0
+        ? categories[categories.length - 1].id + newCategories.length + 1
+        : newCategories.length + 1;
 
-    setNewCategories((prev) => [...prev, { id: newCategoryId, name: newCategoryName }]);
+    setNewCategories((prev) => [...prev, { id: newCategoryId, name: '' }]);
     setEditingCategoryId(newCategoryId);
   };
 
@@ -116,9 +118,7 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
 
   return (
     <Modal isOpen={isOpen} toggleModal={handleCancelEditWithReset} size='small'>
-      <Modal.Header>
-        <Heading.XSmall color={theme.color.light.secondary_900}>카테고리 편집</Heading.XSmall>
-      </Modal.Header>
+      <Modal.Header>{'카테고리 편집'}</Modal.Header>
       <Modal.Body>
         <S.EditCategoryItemList>
           <CategoryItems
@@ -134,12 +134,12 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
             onNameInputChange={handleNameInputChange}
             onNameInputBlur={handleNameInputBlur}
           />
+          <S.EditCategoryItem isButton={true} disabled={!isValid}>
+            <Button fullWidth variant='text' hoverStyle='none' onClick={handleAddCategory} disabled={!isValid}>
+              {'+ 카테고리 추가'}
+            </Button>
+          </S.EditCategoryItem>
         </S.EditCategoryItemList>
-        <S.EditCategoryItem>
-          <Button fullWidth variant='text' onClick={handleAddCategory} disabled={!isValid}>
-            {'+ 카테고리 추가'}
-          </Button>
-        </S.EditCategoryItem>
       </Modal.Body>
       <Modal.Footer>
         <Flex direction='column' gap='0.75rem' width='100%' style={{ alignSelf: 'flex-end' }}>
@@ -193,6 +193,7 @@ const CategoryItems = ({
     {categories.map(({ id, name }) => (
       <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
         {categoriesToDelete.includes(id) ? (
+          // 기존 : 삭제 상태
           <>
             <Flex align='center' width='100%' height='2.5rem'>
               <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
@@ -205,10 +206,12 @@ const CategoryItems = ({
           <>
             <Flex align='center' width='100%' height='2.5rem'>
               {editingCategoryId === id ? (
-                <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
+                // 기존 : 수정 상태
+                <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
                   <Input.TextField
                     type='text'
                     value={editedCategories[id] ?? name}
+                    placeholder='카테고리 입력'
                     onChange={(e) => onNameInputChange(id, e.target.value)}
                     onBlur={() => onNameInputBlur(id)}
                     onKeyDown={(e) => {
@@ -217,10 +220,18 @@ const CategoryItems = ({
                       }
                     }}
                     autoFocus
+                    css={css`
+                      font-weight: bold;
+                      &::placeholder {
+                        font-weight: normal;
+                        color: ${theme.color.light.secondary_400};
+                      }
+                    `}
                   />
                 </Input>
               ) : (
-                <Text.Medium color={theme.color.light.secondary_700}>
+                // 기존 : 기본 상태
+                <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
                   {editedCategories[id] !== undefined ? editedCategories[id] : name}
                 </Text.Medium>
               )}
@@ -235,10 +246,12 @@ const CategoryItems = ({
       <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
         <Flex align='center' width='100%' height='2.5rem'>
           {editingCategoryId === id ? (
-            <Input size='large' variant='outlined' style={{ width: '100%', height: '38px' }}>
+            // 생성 : 수정 상태
+            <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
               <Input.TextField
                 type='text'
                 value={name}
+                placeholder='카테고리 입력'
                 onChange={(e) => onNameInputChange(id, e.target.value)}
                 onBlur={() => onNameInputBlur(id)}
                 onKeyDown={(e) => {
@@ -247,10 +260,20 @@ const CategoryItems = ({
                   }
                 }}
                 autoFocus
+                css={css`
+                  font-weight: bold;
+                  &::placeholder {
+                    font-weight: normal;
+                    color: ${theme.color.light.secondary_400};
+                  }
+                `}
               />
             </Input>
           ) : (
-            <Text.Medium color={theme.color.light.secondary_700}>{name}</Text.Medium>
+            // 생성 : 기본 상태
+            <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
+              {name}
+            </Text.Medium>
           )}
         </Flex>
         <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />

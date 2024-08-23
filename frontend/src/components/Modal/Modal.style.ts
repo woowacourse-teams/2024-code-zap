@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 
 import { ModalSize } from './Modal';
 
-export const Container = styled.div`
+export const Base = styled.div`
   position: fixed;
   z-index: 200;
   top: 0;
@@ -33,37 +33,46 @@ export const Backdrop = styled.div`
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
-export const Header = styled.div`
-  margin-bottom: 1rem;
-  font-size: 1.25rem;
-  font-weight: bold;
+export const HeaderWrapper = styled.div`
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 1rem;
 `;
 
-export const Body = styled.div`
-  margin-bottom: 1.5rem;
+export const BodyContainer = styled.div`
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 1rem;
   font-size: 1rem;
 `;
 
-export const Footer = styled.div`
+export const FooterContainer = styled.div`
   display: flex;
+  flex-shrink: 0;
   gap: 1rem;
   justify-content: space-between;
+
+  padding: 1rem;
 `;
 
-export const Base = styled.div<{ size: ModalSize }>`
+export const ModalContainer = styled.div<{ size: ModalSize }>`
   position: relative;
   z-index: 202;
 
-  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  max-height: 90vh;
+  padding: 1rem;
 
   background-color: white;
   border-radius: 24px;
 
   @media (min-width: 48rem) {
     position: fixed;
-    padding: 1.5rem;
-    background-color: white;
-
+    width: 90%;
     ${({ size }) => size && sizes[size]};
   }
 
@@ -74,7 +83,6 @@ export const Base = styled.div<{ size: ModalSize }>`
     overflow-y: auto;
 
     width: 100%;
-    max-height: 90vh;
 
     border-radius: 1.5rem 1.5rem 0 0;
   }
@@ -82,22 +90,18 @@ export const Base = styled.div<{ size: ModalSize }>`
 
 const sizes = {
   xsmall: css`
-    width: 90%;
     max-width: 17.5rem;
     min-height: 11.25rem;
   `,
   small: css`
-    width: 90%;
     max-width: 25rem;
     min-height: 18.75rem;
   `,
   medium: css`
-    width: 90%;
     max-width: 37.5rem;
     min-height: 28.125rem;
   `,
   large: css`
-    width: 90%;
     max-width: 50rem;
     min-height: 37.5rem;
   `,

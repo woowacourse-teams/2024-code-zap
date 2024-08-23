@@ -23,7 +23,7 @@ export const templateHandlers = [
     const tagIds = url.searchParams.get('tagIds');
     const sort = url.searchParams.get('sort');
     const page = parseInt(url.searchParams.get('page') || '1', 10);
-    const pageSize = parseInt(url.searchParams.get('pageSize') || '20', 10);
+    const size = parseInt(url.searchParams.get('size') || '20', 10);
 
     let filteredTemplates = mockTemplateList.templates;
 
@@ -60,9 +60,9 @@ export const templateHandlers = [
     }
 
     const totalElements = filteredTemplates.length;
-    const totalPages = Math.ceil(totalElements / pageSize);
-    const startIndex = (page - 1) * pageSize;
-    const endIndex = startIndex + pageSize;
+    const totalPages = Math.ceil(totalElements / size);
+    const startIndex = (page - 1) * size;
+    const endIndex = startIndex + size;
     const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
     const numberOfElements = paginatedTemplates.length;
 
@@ -161,7 +161,7 @@ const categoryHandlers = [
 
     return HttpResponse.json({ status: 400, message: 'Invalid category data' });
   }),
-  http.post(`${CATEGORY_API_URL}/:id`, async (req) => {
+  http.put(`${CATEGORY_API_URL}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
@@ -181,7 +181,9 @@ const categoryHandlers = [
     if (categoryIndex !== -1) {
       mockCategoryList.categories.splice(categoryIndex, 1);
 
-      return HttpResponse.json({ status: 204 });
+      return new HttpResponse(null, {
+        status: 204,
+      });
     } else {
       return HttpResponse.json({ status: 404, message: 'Category not found' });
     }

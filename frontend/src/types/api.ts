@@ -4,7 +4,6 @@ export interface TemplateListResponse {
   templates: TemplateListItem[];
   totalPages: number;
   totalElements: number;
-  numberOfElements: number;
 }
 
 export interface TemplateUploadRequest {
@@ -53,8 +52,8 @@ export interface TemplateListRequest {
   tagIds?: number[];
   sort?: SortingKey;
   page?: number;
-  pageSize?: number;
-  memberId: number | undefined;
+  size?: number;
+  memberId?: number | undefined;
 }
 
 export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc';

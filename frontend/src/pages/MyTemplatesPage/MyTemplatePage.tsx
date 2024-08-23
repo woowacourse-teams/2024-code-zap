@@ -9,12 +9,13 @@ import {
   Heading,
   Input,
   TemplateGrid,
-  PagingButton,
+  PagingButtons,
   Dropdown,
   TagFilterMenu,
   Button,
   Modal,
   Text,
+  LoadingBall,
 } from '@/components';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { useWindowWidth, useDebounce, useToggle } from '@/hooks/utils';
@@ -23,6 +24,7 @@ import { useInput } from '@/hooks/utils/useInput';
 import { useCategoryListQuery } from '@/queries/category';
 import { useTagListQuery } from '@/queries/tag';
 import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/template';
+import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 import { scroll } from '@/utils';
 import * as S from './MyTemplatePage.style';
@@ -47,7 +49,7 @@ const MyTemplatePage = () => {
 
   const [page, setPage] = useState<number>(1);
 
-  const { data: templateData } = useTemplateListQuery({
+  const { data: templateData, isPending } = useTemplateListQuery({
     keyword: debouncedKeyword,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
@@ -64,7 +66,6 @@ const MyTemplatePage = () => {
   const { mutateAsync: deleteTemplates } = useTemplateDeleteMutation(selectedList);
 
   const handleCategoryMenuClick = useCallback((selectedCategoryId: number) => {
-    scroll.top();
     setSelectedCategoryId(selectedCategoryId);
     setPage(1);
   }, []);
@@ -100,15 +101,36 @@ const MyTemplatePage = () => {
     toggleDeleteModal();
   };
 
+  const renderTemplateContent = () => {
+    if (isPending) {
+      return <LoadingBall />;
+    }
+
+    if (templates.length === 0) {
+      if (debouncedKeyword !== '') {
+        return <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>;
+      } else {
+        return <NewTemplateButton />;
+      }
+    }
+
+    return (
+      <TemplateGrid
+        templates={templates}
+        cols={getGridCols(windowWidth)}
+        isEditMode={isEditMode}
+        selectedList={selectedList}
+        setSelectedList={setSelectedList}
+      />
+    );
+  };
+
   return (
     <S.MyTemplatePageContainer>
       <TopBanner name={name ?? '나'} />
       <S.MainContainer>
         <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
           <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
-          {tags.length !== 0 && (
-            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
-          )}
         </Flex>
 
         <Flex direction='column' width='100%' gap='1rem'>
@@ -154,23 +176,16 @@ const MyTemplatePage = () => {
               getOptionLabel={(option) => option.value}
             />
           </Flex>
-          {templates.length ? (
-            <TemplateGrid
-              templates={templates}
-              cols={getGridCols(windowWidth)}
-              isEditMode={isEditMode}
-              selectedList={selectedList}
-              setSelectedList={setSelectedList}
-            />
-          ) : (
-            <NewTemplateButton />
+          {tags.length !== 0 && (
+            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
           )}
+          {renderTemplateContent()}
 
-          <Flex justify='center' gap='0.5rem' margin='1rem 0'>
-            {[...Array(totalPages)].map((_, index) => (
-              <PagingButton key={index + 1} page={index + 1} isActive={page === index + 1} onClick={handlePageChange} />
-            ))}
-          </Flex>
+          {templates.length !== 0 && (
+            <Flex justify='center' gap='0.5rem' margin='1rem 0'>
+              <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+            </Flex>
+          )}
         </Flex>
 
         {isDeleteModalOpen && (
@@ -204,8 +219,6 @@ const MyTemplatePage = () => {
   );
 };
 
-export default MyTemplatePage;
-
 interface TopBannerProps {
   name: string;
 }
@@ -225,7 +238,7 @@ const NewTemplateButton = () => {
   const navigate = useNavigate();
 
   return (
-    <S.NewTemplateButton onClick={() => navigate('/templates/upload')}>
+    <S.NewTemplateButton onClick={() => navigate(END_POINTS.TEMPLATES_UPLOAD)}>
       <PlusIcon width={24} height={24} aria-label='새 템플릿' />
       <Text.Large color={theme.color.light.primary_500} weight='bold'>
         이곳을 눌러 새 템플릿을 추가해보세요 :)
@@ -233,3 +246,5 @@ const NewTemplateButton = () => {
     </S.NewTemplateButton>
   );
 };
+
+export default MyTemplatePage;

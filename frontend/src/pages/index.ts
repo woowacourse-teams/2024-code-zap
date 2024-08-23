@@ -6,3 +6,4 @@ export { default as SignupPage } from './SignupPage/SignupPage';
 export { default as TemplateEditPage } from './TemplateEditPage/TemplateEditPage';
 export { default as TemplatePage } from './TemplatePage/TemplatePage';
 export { default as TemplateUploadPage } from './TemplateUploadPage/TemplateUploadPage';
+export { default as TemplateExplorePage } from './TemplateExplorePage/TemplateExplorePage';

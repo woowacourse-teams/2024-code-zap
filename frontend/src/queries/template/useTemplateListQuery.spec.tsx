@@ -24,7 +24,7 @@ describe('useTemplateListQuery', () => {
           tagIds: [],
           sort: DEFAULT_SORTING_OPTION.key,
           page: 1,
-          pageSize: PAGE_SIZE,
+          size: PAGE_SIZE,
         }),
       { wrapper: queryWrapper },
     );
@@ -44,7 +44,7 @@ describe('useTemplateListQuery', () => {
           tagIds: [],
           sort: 'modifiedAt,desc',
           page: 1,
-          pageSize: 20,
+          size: 20,
         }),
       { wrapper: queryWrapper },
     );
@@ -71,7 +71,7 @@ describe('useTemplateListQuery', () => {
           tagIds: [],
           sort: 'modifiedAt,desc',
           page: 1,
-          pageSize: 20,
+          size: 20,
         }),
       { wrapper: queryWrapper },
     );
@@ -90,7 +90,7 @@ describe('useTemplateListQuery', () => {
           tagIds: [3, 5],
           sort: 'modifiedAt,desc',
           page: 1,
-          pageSize: 20,
+          size: 20,
         }),
       { wrapper: queryWrapper },
     );
@@ -115,7 +115,7 @@ describe('useTemplateListQuery', () => {
           tagIds: [],
           sort: 'modifiedAt,desc',
           page: 2,
-          pageSize: 20,
+          size: 20,
         }),
       { wrapper: queryWrapper },
     );

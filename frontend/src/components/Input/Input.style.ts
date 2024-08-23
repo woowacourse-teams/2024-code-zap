@@ -85,23 +85,6 @@ export const Base = styled.div<BaseProps>`
     css`
       border: 1px solid ${theme.color.light.analogous_primary_400};
     `};
-
-  /* for Adornment size */
-  & > div {
-    ${({ size }) =>
-      size === 'small' &&
-      css`
-        width: 0.75rem;
-        height: 0.75rem;
-      `}
-
-    ${({ size }) =>
-      size === 'medium' &&
-      css`
-        width: 1rem;
-        height: 1rem;
-      `}
-  }
 `;
 
 export const TextField = styled.input<TextFieldProps>`
@@ -131,8 +114,36 @@ export const Label = styled.label`
   line-height: 100%;
 `;
 
-export const Adornment = styled.div`
+export const Adornment = styled.div<BaseProps>`
   display: flex;
+
+  ${({ size }) =>
+    size === 'small' &&
+    css`
+      width: 0.75rem;
+      height: 0.75rem;
+    `}
+
+  ${({ size }) =>
+    size === 'medium' &&
+    css`
+      width: 1rem;
+      height: 1rem;
+    `}
+    
+  ${({ size }) =>
+    size === 'large' &&
+    css`
+      width: 1.25rem;
+      height: 1.25rem;
+    `}
+    
+  ${({ size }) =>
+    size === 'xlarge' &&
+    css`
+      width: 1.5rem;
+      height: 1.5rem;
+    `}
 `;
 
 export const HelperText = styled.span`

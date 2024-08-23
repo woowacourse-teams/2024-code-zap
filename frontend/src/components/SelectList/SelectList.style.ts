@@ -12,6 +12,8 @@ export const SelectListContainer = styled.div`
   flex-direction: column;
   gap: 0.5rem;
 
+  max-height: 20rem;
+
   border-radius: 8px;
 
   transition: all 0.2s ease-in-out;

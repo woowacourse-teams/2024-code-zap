@@ -8,7 +8,10 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
+      - spring
+      - develop
     env:
       frontend-directory: ./frontend
     steps:
@@ -27,10 +30,8 @@ jobs:
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
-      - name: 파일 접근 권한 변경
-        run: |
-          chmod 644 ${{ env.frontend-directory }}/.env.production
-          chmod 644 ${{ env.frontend-directory }}/.env.sentry-build-plugin
+      - name: 환경 파일 권한 설정
+        run: chmod 644 ${{ env.frontend-directory }}/.env.*
 
       - name: 의존성 설치
         run: npm install
@@ -48,14 +49,16 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
+      - spring
+      - develop
     steps:
-      - name: Artifact 폴더 삭제 및 생성
+      - name: 아티팩트 디렉토리 생성
         run: |
           rm -rf ${{ secrets.FRONT_DIRECTORY }}
           mkdir ${{ secrets.FRONT_DIRECTORY }}
-
-      - name: Artifact 다운로드
+      - name: 아티팩트 다운로드
         uses: actions/download-artifact@v4
         with:
           name: code-zap-front
@@ -63,4 +66,8 @@ jobs:
 
       - name: 파일 S3로 이동
         run: |
-          aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
+          else
+            aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap-staging
+          fi

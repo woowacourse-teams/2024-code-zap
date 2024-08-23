@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { EditorView } from '@uiw/react-codemirror';
 
 import { theme } from '@/style/theme';
 
@@ -29,7 +30,7 @@ export const TemplateCardContainer = styled.div`
 export const TagListContainer = styled.div`
   overflow: hidden;
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 0.5rem;
 
   height: 2.15rem;
@@ -86,3 +87,8 @@ export const NoWrapTextWrapper = styled.div`
 export const BlankDescription = styled.div`
   height: 1rem;
 `;
+
+export const CustomCodeMirrorTheme = EditorView.theme({
+  '.cm-activeLine': { backgroundColor: `transparent !important` },
+  '.cm-activeLineGutter': { backgroundColor: `transparent !important` },
+});

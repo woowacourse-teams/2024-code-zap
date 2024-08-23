@@ -3,9 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 import { ToastContext } from '@/contexts';
 import { useTemplateUploadMutation } from '@/queries/template';
+import { END_POINTS } from '@/routes';
 import type { SourceCodes, TemplateUploadRequest } from '@/types';
 import { useCategory } from '../category';
-import { useCustomContext, useInput } from '../utils';
+import { useCustomContext, useInput, useInputWithValidate } from '../utils';
 
 export const useTemplateUpload = () => {
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ export const useTemplateUpload = () => {
     },
   ]);
 
-  const [value, handleValue, resetValue] = useInput('');
+  const { value, handleChange: handleValue, resetValue } = useInputWithValidate('');
+
   const [tags, setTags] = useState<string[]>([]);
 
   const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
@@ -100,7 +102,7 @@ export const useTemplateUpload = () => {
 
     await uploadTemplate(newTemplate, {
       onSuccess: () => {
-        navigate('/');
+        navigate(END_POINTS.MY_TEMPLATES);
       },
     });
   };
