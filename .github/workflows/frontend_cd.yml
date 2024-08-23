@@ -11,7 +11,7 @@ jobs:
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
+      - develop
     env:
       frontend-directory: ./frontend
     steps:
@@ -61,7 +61,7 @@ jobs:
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
+      - develop
     steps:
       - name: 아티팩트 디렉토리 생성
         run: |
