@@ -18,7 +18,7 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
   };
 
   return (
-    <S.TagFilterMenuContainer>
+    <S.TagFilterMenuContainer data-testid='tag-filter-menu'>
       {tags.map((tag) => (
         <TagButton
           key={tag.id}

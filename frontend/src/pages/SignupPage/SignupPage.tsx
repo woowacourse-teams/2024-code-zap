@@ -1,27 +1,25 @@
 import { Link } from 'react-router-dom';
 
-import { passwordEyeIcon } from '@/assets/images';
+import { EyeIcon } from '@/assets/images';
 import { Button, Flex, Heading, Input, Text } from '@/components';
-import { useShowPassword, useSignupForm } from '@/hooks/authentication';
+import { useSignupForm } from '@/hooks/authentication';
+import { useToggle } from '@/hooks/utils';
 
 const SignupPage = () => {
-  const { showPassword, handlePasswordToggle } = useShowPassword();
-  const { showPassword: showPasswordConfirm, handlePasswordToggle: handlePasswordConfirmToggle } = useShowPassword();
+  const [showPassword, handlePasswordToggle] = useToggle();
+  const [showPasswordConfirm, handlePasswordConfirmToggle] = useToggle();
 
   const {
-    email,
-    username,
+    name,
     password,
     confirmPassword,
     errors,
-    handleEmailChange,
-    handleUsernameChange,
+    handleNameChange,
     handlePasswordChange,
     handleConfirmPasswordChange,
+    handleNameCheck,
     isFormValid,
     handleSubmit,
-    handleEmailCheck,
-    handleUsernameCheck,
   } = useSignupForm();
 
   return (
@@ -34,28 +32,16 @@ const SignupPage = () => {
             onSubmit={handleSubmit}
             style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
           >
-            <Input variant='outlined' size='medium' isValid={!errors.email}>
-              <Input.Label>이메일</Input.Label>
-              <Input.TextField
-                type='email'
-                value={email}
-                onChange={handleEmailChange}
-                onBlur={() => handleEmailCheck()}
-                autoComplete='email'
-              />
-              <Input.HelperText>{errors.email}</Input.HelperText>
-            </Input>
-
-            <Input variant='outlined' size='medium' isValid={!errors.username}>
-              <Input.Label>닉네임</Input.Label>
+            <Input variant='outlined' size='medium' isValid={!errors.name}>
+              <Input.Label>아이디</Input.Label>
               <Input.TextField
                 type='text'
-                value={username}
-                onChange={handleUsernameChange}
-                onBlur={() => handleUsernameCheck()}
+                value={name}
+                onChange={handleNameChange}
+                onBlur={() => handleNameCheck()}
                 autoComplete='username'
               />
-              <Input.HelperText>{errors.username}</Input.HelperText>
+              <Input.HelperText>{errors.name}</Input.HelperText>
             </Input>
 
             <Input variant='outlined' size='medium' isValid={!errors.password}>
@@ -67,7 +53,7 @@ const SignupPage = () => {
                 autoComplete='new-password'
               />
               <Input.Adornment>
-                <img src={passwordEyeIcon} onClick={handlePasswordToggle} style={{ cursor: 'pointer' }} />
+                <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>
@@ -81,7 +67,11 @@ const SignupPage = () => {
                 autoComplete='new-password'
               />
               <Input.Adornment>
-                <img src={passwordEyeIcon} onClick={handlePasswordConfirmToggle} style={{ cursor: 'pointer' }} />
+                <EyeIcon
+                  onClick={handlePasswordConfirmToggle}
+                  css={{ cursor: 'pointer' }}
+                  aria-label='비밀번호확인 보기'
+                />
               </Input.Adornment>
               <Input.HelperText>{errors.confirmPassword}</Input.HelperText>
             </Input>

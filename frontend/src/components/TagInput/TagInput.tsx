@@ -1,7 +1,6 @@
-import { xCircle } from '@/assets/images';
-import { Flex, Input } from '@/components';
+import { Flex, Input, TagButton, Text } from '@/components';
+import { theme } from '@/style/theme';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
-import * as S from './TagInput.style';
 
 interface Props {
   value: string;
@@ -20,43 +19,58 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   };
 
   const addTag = () => {
-    if (removeAllWhitespace(value) === '') {
+    const newTag = removeAllWhitespace(value);
+
+    if (newTag === '') {
       return;
     }
 
-    setTags((prev) => [...prev, removeAllWhitespace(value)]);
+    if (tags.includes(newTag)) {
+      return;
+    }
+
+    setTags((prev) => [...prev, newTag]);
   };
 
   return (
     <Flex
       justify='center'
       align='center'
+      gap='0.5rem'
       css={{
         width: '100%',
         flexWrap: 'wrap',
         marginTop: '1rem',
       }}
     >
-      <Flex gap='0.125rem' css={{ flexWrap: 'wrap', width: '100%' }}>
+      {tags.length !== 0 && (
+        <Flex justify='flex-end' width='100%'>
+          <Text.XSmall color={theme.color.light.tertiary_400}>
+            등록된 태그를 누르면 태그 등록을 쉽게 취소할 수 있어요!
+          </Text.XSmall>
+        </Flex>
+      )}
+      <Flex gap='0.25rem' css={{ flexWrap: 'wrap', width: '100%' }}>
         {tags?.map((tag, idx) => (
-          <S.Tag
+          <TagButton
             key={idx}
+            variant='edit'
+            name={tag}
             onClick={() => {
               setTags((prev) => prev.filter((el) => el !== tag));
             }}
-          >
-            {tag}
-            <img src={xCircle} width={12} height={12} alt='' />
-          </S.Tag>
+          />
         ))}
       </Flex>
-      <Input>
+      <Input size='large'>
         <Input.TextField
           placeholder='enter 또는 space bar로 태그를 등록해보세요'
           value={value}
           onChange={handleValue}
           onKeyUpCapture={handleSpaceBarAndEnterKeydown}
-          onBlur={() => resetValue()}
+          onBlur={() => {
+            resetValue();
+          }}
         />
       </Input>
     </Flex>

@@ -54,14 +54,13 @@ jobs:
         run: |
           rm -rf ${{ secrets.FRONT_DIRECTORY }}
           mkdir ${{ secrets.FRONT_DIRECTORY }}
-          
+
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
           name: code-zap-front
           path: ${{ secrets.FRONT_DIRECTORY }}
-          
+
       - name: 파일 S3로 이동
         run: |
           aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
-        

@@ -1,5 +1,5 @@
 import type { LoginRequest, SignupRequest } from '@/types';
-import { MemberInfo } from '@/types/authentication';
+import { MemberInfo } from '@/types';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -8,8 +8,7 @@ export const SIGNUP_API_URL = `${API_URL}/signup`;
 export const LOGIN_API_URL = `${API_URL}/login`;
 export const LOGOUT_API_URL = `${API_URL}/logout`;
 export const LOGIN_STATE_API_URL = `${API_URL}/login/check`;
-export const CHECK_USERNAME_API_URL = `${API_URL}/check-username`;
-export const CHECK_EMAIL_API_URL = `${API_URL}/check-email`;
+export const CHECK_NAME_API_URL = `${API_URL}/check-name`;
 
 export const postSignup = async (signupInfo: SignupRequest) =>
   await customFetch({
@@ -30,7 +29,7 @@ export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> =>
   }
 
   if (response.status >= 400) {
-    return { memberId: undefined, username: undefined };
+    return { memberId: undefined, name: undefined };
   }
 
   throw new Error(response.detail);
@@ -66,9 +65,9 @@ export const getLoginState = async () => {
   return {};
 };
 
-export const checkEmail = async (email: string) => {
-  const params = new URLSearchParams({ email });
-  const url = `${CHECK_EMAIL_API_URL}?${params}`;
+export const checkName = async (name: string) => {
+  const params = new URLSearchParams({ name });
+  const url = `${CHECK_NAME_API_URL}?${params}`;
 
   const response = await fetch(url, {
     headers: {
@@ -78,29 +77,7 @@ export const checkEmail = async (email: string) => {
   });
 
   if (response.status === 409) {
-    throw new Error('중복된 이메일입니다.');
-  }
-
-  if (!response.ok) {
-    throw new Error('서버 에러가 발생했습니다.');
-  }
-
-  return {};
-};
-
-export const checkUsername = async (username: string) => {
-  const params = new URLSearchParams({ username });
-  const url = `${CHECK_USERNAME_API_URL}?${params}`;
-
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
-
-  if (response.status === 409) {
-    throw new Error('중복된 닉네임입니다.');
+    throw new Error('중복된 아이디입니다.');
   }
 
   if (!response.ok) {

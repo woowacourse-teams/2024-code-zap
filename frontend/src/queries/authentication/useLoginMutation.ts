@@ -2,9 +2,9 @@ import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
-import { ToastContext } from '@/context/ToastContext';
+import { ToastContext } from '@/contexts';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import useCustomContext from '@/hooks/utils/useCustomContext';
+import { useCustomContext } from '@/hooks/utils';
 import { LoginRequest } from '@/types';
 
 export const useLoginMutation = () => {
@@ -20,10 +20,10 @@ export const useLoginMutation = () => {
         handleMemberInfo(res);
         failAlert('로그인에 실패하였습니다.');
       } else {
-        localStorage.setItem('username', String(res.username));
+        localStorage.setItem('name', String(res.name));
         localStorage.setItem('memberId', String(res.memberId));
-        handleLoginState(true);
         handleMemberInfo(res);
+        handleLoginState(true);
         navigate('/');
         successAlert('로그인 성공!');
       }

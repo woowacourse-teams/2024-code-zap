@@ -5,14 +5,14 @@ import { theme } from '@/style/theme';
 export const StyledPagingButton = styled.button`
   cursor: pointer;
 
-  width: 1.5rem;
-  height: 1.5rem;
-  margin: 0 0.25rem;
+  width: 2rem;
+  height: 2rem;
 
   color: ${theme.color.light.secondary_500};
 
   background: none;
   border: none;
+  border-radius: 8px;
 
   :disabled {
     background-color: ${theme.color.light.primary_500};

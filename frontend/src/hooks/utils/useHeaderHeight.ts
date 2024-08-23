@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 
-import { HeaderContext } from '@/context/HeaderContext';
+import { HeaderContext } from '@/contexts';
 
 export const useHeaderHeight = () => {
   const context = useContext(HeaderContext);
