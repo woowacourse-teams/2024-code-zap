@@ -15,6 +15,7 @@ export { default as HamburgerIcon } from './Hamburger';
 export { default as PersonIcon } from './person.svg';
 export { default as ClockIcon } from './clock.svg';
 export { default as BooksIcon } from './books.svg';
+export { default as CheckCircleIcon } from './checkCircle.svg';
 
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';
