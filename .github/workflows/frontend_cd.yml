@@ -11,7 +11,7 @@ jobs:
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
+      - develop
     env:
       frontend-directory: ./frontend
     steps:
@@ -22,25 +22,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: 환경 파일 생성
+      - name: .env.production 파일 생성
         run: |
-          if [ "${{ github.ref_name }}" == "main" ]; then
-            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
-            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
-          else
-            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_BETA_API_URL }}" > ${{ env.frontend-directory }}/.env.development
-            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BETA_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.development
-          fi
-
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+          echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: 환경 파일 권한 설정
         run: chmod 644 ${{ env.frontend-directory }}/.env.*
-
-      - name: Sentry 환경 파일 권한 설정
-        run: chmod 644 ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: 의존성 설치
         run: npm install
@@ -50,7 +41,7 @@ jobs:
         run: npm run build
         working-directory: ${{ env.frontend-directory }}
 
-      - name: 아티팩트 업로드
+      - name: Artifact 업로드
         uses: actions/upload-artifact@v4
         with:
           name: code-zap-front
@@ -61,7 +52,7 @@ jobs:
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
+      - develop
     steps:
       - name: 아티팩트 디렉토리 생성
         run: |
@@ -72,7 +63,8 @@ jobs:
         with:
           name: code-zap-front
           path: ${{ secrets.FRONT_DIRECTORY }}
-      - name: S3로 이동
+
+      - name: 파일 S3로 이동
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
             aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap

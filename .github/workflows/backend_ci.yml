@@ -8,26 +8,31 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
 
-      - name: H2 스프링 설정 생성
-        run: |
-          echo "spring:
-            h2:
-              console:
-                enabled: true
-                path: /h2-console
-            datasource:
-              url: jdbc:h2:mem:database" > backend/src/main/resources/application.yml
-          
+      - name: MySQL 시작
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          host port: ${{ secrets.MYSQL_HOST_PORT }}
+          container port: ${{ secrets.MYSQL_CONTAINER_PORT }}
+          mysql version: ${{ secrets.MYSQL_VERSION }}
+          mysql database: ${{ secrets.MYSQL_DATABASE }}
+          mysql root password: ${{ secrets.MYSQL_PASSWORD }}
+
+      - name: DB 설정 파일 가져오기
+        working-directory: ./backend/src/main/resources
+        run: echo "${{ secrets.APPLICATION_DB_YAML }}" > application-db.yml
+
+      - name: JDK 17 설정
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
       - name: 테스트 코드 실행
         run: ./gradlew test
         working-directory: ./backend
-
-      - name: 클린업
-        if: always()
-        run: rm -rf ../2024-code-zap/*
