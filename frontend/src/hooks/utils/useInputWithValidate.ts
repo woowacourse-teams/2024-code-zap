@@ -22,10 +22,15 @@ export const useInputWithValidate = (
     [validate],
   );
 
+  const resetValue = () => {
+    setValue('');
+  };
+
   return {
     value,
     errorMessage,
     handleChange,
+    resetValue,
     handleErrorMessage: setErrorMessage,
   };
 };
