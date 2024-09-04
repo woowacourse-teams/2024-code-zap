@@ -1,0 +1,1 @@
+ALTER TABLE member ADD COLUMN salt VARCHAR(255);
