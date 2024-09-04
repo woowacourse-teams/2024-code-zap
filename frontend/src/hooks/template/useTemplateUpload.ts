@@ -85,8 +85,10 @@ export const useTemplateUpload = () => {
   };
 
   const handleSaveButtonClick = async () => {
-    if (validateTemplate()) {
-      failAlert(validateTemplate());
+    const errorMessage = validateTemplate();
+
+    if (errorMessage) {
+      failAlert(errorMessage);
 
       return;
     }
