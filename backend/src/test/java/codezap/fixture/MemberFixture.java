@@ -7,7 +7,8 @@ public class MemberFixture {
         return new Member(
                 1L,
                 "몰리",
-                "password1234"
+                "password1234",
+                "salt1"
         );
     }
 
@@ -15,7 +16,8 @@ public class MemberFixture {
         return new Member(
                 2L,
                 "몰리2",
-                "password1234"
+                "password1234",
+                "salt2"
         );
     }
 }

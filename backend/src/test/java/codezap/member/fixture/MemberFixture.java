@@ -8,14 +8,16 @@ public class MemberFixture {
         return new Member(
                 1L,
                 "몰리",
-                "password1234"
+                "password1234",
+                "salt"
         );
     }
 
     public static Member createFixture(String name) {
         return new Member(
                 name,
-                "password1234"
+                "password1234",
+                "salt"
         );
     }
 }

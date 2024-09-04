@@ -13,6 +13,7 @@ import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.repository.MemberRepository;
+import codezap.secure.SaltGenerator;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -21,10 +22,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
+    private final SaltGenerator saltGenerator;
 
     public Long signup(SignupRequest request) {
         assertUniqueName(request.name());
-        Member member = memberRepository.save(new Member(request.name(), request.password()));
+        Member member = memberRepository.save(new Member(request.name(), request.password(), saltGenerator.getSalt()));
         categoryRepository.save(Category.createDefaultCategory(member));
         return member.getId();
     }
