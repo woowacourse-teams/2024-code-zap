@@ -1,4 +1,18 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
 springdoc:
   swagger-ui:
     supportedSubmitMethods: get, post, delete
     display-request-duration: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+springdoc:
+  swagger-ui:
+    supportedSubmitMethods: get
+    display-request-duration: false
