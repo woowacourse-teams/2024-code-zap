@@ -40,6 +40,8 @@ import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.member.service.MemberService;
+import codezap.secure.RandomSaltGenerator;
+import codezap.secure.SaltGenerator;
 import codezap.tag.service.TemplateTagService;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -69,6 +71,8 @@ class TemplateControllerTest {
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
     );
+
+    private final SaltGenerator saltGenerator = new RandomSaltGenerator();
     private final TemplateService templateService = new TemplateService(templateRepository);
     private final CategoryService categoryService = new CategoryService(categoryRepository);
 
@@ -91,7 +95,7 @@ class TemplateControllerTest {
 
     private final MemberTemplateApplicationService memberTemplateApplicationService =
             new MemberTemplateApplicationService(
-                    new MemberService(memberRepository, categoryRepository),
+                    new MemberService(memberRepository, categoryRepository, saltGenerator),
                     categoryTemplateApplicationService,
                     templateApplicationService
             );
