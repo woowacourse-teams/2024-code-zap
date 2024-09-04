@@ -1,0 +1,4 @@
+springdoc:
+  swagger-ui:
+    supportedSubmitMethods: get, post, delete
+    display-request-duration: true
