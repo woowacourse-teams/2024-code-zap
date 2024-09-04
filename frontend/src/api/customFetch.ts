@@ -34,10 +34,10 @@ export const customFetch = async <T>({ url, headers, method = 'GET', body }: Pro
 
     if (!response.ok) {
       const error: CustomError = {
-        type: responseBody.type || 'UnknownError',
-        title: responseBody.title || 'Error',
+        type: responseBody?.type || 'UnknownError',
+        title: responseBody?.title || 'Error',
         status: response.status,
-        detail: responseBody.detail || 'An error occurred',
+        detail: responseBody?.detail || 'An error occurred',
         instance: url,
       };
 

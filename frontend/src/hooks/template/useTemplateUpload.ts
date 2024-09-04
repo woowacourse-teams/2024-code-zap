@@ -101,7 +101,13 @@ export const useTemplateUpload = () => {
     };
 
     await uploadTemplate(newTemplate, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        if (res?.status === 400 || res?.status === 404) {
+          failAlert('템플릿 생성에 실패했습니다. 다시 한 번 시도해주세요');
+
+          return;
+        }
+
         navigate(END_POINTS.MY_TEMPLATES);
       },
     });

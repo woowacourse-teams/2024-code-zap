@@ -5,6 +5,7 @@ import type {
   TemplateListResponse,
   TemplateUploadRequest,
   TemplateListRequest,
+  CustomError,
 } from '@/types';
 import { SortingOption } from '@/types';
 import { customFetch } from './customFetch';
@@ -102,15 +103,12 @@ export const getTemplate = async (id: number) => {
   throw new Error(response.detail);
 };
 
-export const postTemplate = async (newTemplate: TemplateUploadRequest) => {
-  const response = await customFetch({
+export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void | CustomError> =>
+  await customFetch({
     method: 'POST',
     url: `${TEMPLATE_API_URL}`,
     body: JSON.stringify(newTemplate),
   });
-
-  return response;
-};
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({
