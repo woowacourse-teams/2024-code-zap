@@ -38,8 +38,8 @@ class TemplateTagJpaRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member1 = memberRepository.save(new Member("user1@test.com", "pp"));
-        member2 = memberRepository.save(new Member("user2@test.com", "pp"));
+        member1 = memberRepository.save(new Member("user1@test.com", "pp", "salt1"));
+        member2 = memberRepository.save(new Member("user2@test.com", "pp", "salt2"));
 
         category1 = categoryRepository.save(new Category("Category 1", member1));
         category2 = categoryRepository.save(new Category("Category 2", member1));
