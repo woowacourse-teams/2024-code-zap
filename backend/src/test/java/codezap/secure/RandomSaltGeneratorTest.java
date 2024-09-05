@@ -19,7 +19,7 @@ class RandomSaltGeneratorTest {
     void randomGeneratorCollisionTest() {
         Set<String> salts = new HashSet<>();
         for (int i = 0; i < 1_000_000; i++) {
-            salts.add(saltGenerator.getSalt());
+            salts.add(saltGenerator.generate());
         }
 
         assertThat(salts).hasSize(1_000_000);

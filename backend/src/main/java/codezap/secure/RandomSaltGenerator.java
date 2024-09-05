@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class RandomSaltGenerator implements SaltGenerator {
 
     @Override
-    public String getSalt() {
+    public String generate() {
         SecureRandom byteGenerator = new SecureRandom();
         byte[] saltByte = new byte[32];
         byteGenerator.nextBytes(saltByte);
