@@ -26,6 +26,13 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
     }
   };
 
+  const handleCategoryDelete = (deletedIds: number[]) => {
+    if (deletedIds.includes(selectedId)) {
+      setSelectedId(0);
+      onSelectCategory(0);
+    }
+  };
+
   const [defaultCategory, ...userCategories] = categories.length ? categories : [{ id: 0, name: '' }];
 
   const indexById: Record<number, number> = useMemo(() => {
@@ -82,6 +89,7 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
           toggleModal={toggleEditModal}
           categories={userCategories}
           handleCancelEdit={toggleEditModal}
+          onDeleteCategory={handleCategoryDelete}
         />
       </S.CategoryContainer>
       {isMenuOpen && <S.Backdrop onClick={toggleMenu} />}
