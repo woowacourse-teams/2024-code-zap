@@ -3,18 +3,20 @@ import { getByteSize } from '../utils/getByteSize';
 export const validateName = (name: string) => {
   const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
-  return regex.test(name) && name.length > 0 ? '' : '1자 이상의 아이디를 입력해주세요.';
+  return regex.test(name) && name.length >= 1 && name.length <= 255
+    ? ''
+    : '1자 이상의 올바른 문자를 입력해주세요. (ex. 코드잽)';
 };
 
 export const validatePassword = (password: string) => {
   const hasLetters = /[a-zA-Z]/.test(password);
   const hasNumbers = /[0-9]/.test(password);
   const hasNoSpaces = !/\s/.test(password);
-  const isValidLength = password.length >= 8;
+  const isValidLength = password.length >= 8 && password.length <= 16;
 
   return hasLetters && hasNumbers && isValidLength && hasNoSpaces
     ? ''
-    : '영문자, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요.';
+    : '영문자, 숫자를 포함한 8 ~ 16자의 비밀번호를 입력해주세요.';
 };
 
 export const validateConfirmPassword = (password: string, confirmPassword: string) =>
