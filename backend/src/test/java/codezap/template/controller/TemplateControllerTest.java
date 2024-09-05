@@ -40,7 +40,9 @@ import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.member.service.MemberService;
+import codezap.secure.PasswordEncryptor;
 import codezap.secure.RandomSaltGenerator;
+import codezap.secure.SHA2PasswordEncryptor;
 import codezap.secure.SaltGenerator;
 import codezap.tag.service.TemplateTagService;
 import codezap.template.dto.request.CreateSourceCodeRequest;
@@ -73,6 +75,7 @@ class TemplateControllerTest {
     );
 
     private final SaltGenerator saltGenerator = new RandomSaltGenerator();
+    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
     private final TemplateService templateService = new TemplateService(templateRepository);
     private final CategoryService categoryService = new CategoryService(categoryRepository);
 
@@ -95,7 +98,7 @@ class TemplateControllerTest {
 
     private final MemberTemplateApplicationService memberTemplateApplicationService =
             new MemberTemplateApplicationService(
-                    new MemberService(memberRepository, categoryRepository, saltGenerator),
+                    new MemberService(memberRepository, categoryRepository, saltGenerator, passwordEncryptor),
                     categoryTemplateApplicationService,
                     templateApplicationService
             );

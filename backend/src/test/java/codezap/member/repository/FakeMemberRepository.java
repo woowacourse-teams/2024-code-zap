@@ -55,8 +55,8 @@ public class FakeMemberRepository implements MemberRepository {
     public Member save(Member entity) {
         var saved = new Member(
                 getOrGenerateId(entity),
-                entity.getPassword(),
                 entity.getName(),
+                entity.getPassword(),
                 entity.getSalt()
         );
         members.removeIf(member -> Objects.equals(member.getId(), entity.getId()));

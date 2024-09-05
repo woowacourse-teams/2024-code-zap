@@ -19,7 +19,9 @@ import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
+import codezap.secure.PasswordEncryptor;
 import codezap.secure.RandomSaltGenerator;
+import codezap.secure.SHA2PasswordEncryptor;
 import codezap.secure.SaltGenerator;
 
 public class MemberServiceTest {
@@ -27,7 +29,8 @@ public class MemberServiceTest {
     private final MemberRepository memberRepository = new FakeMemberRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository();
     private final SaltGenerator saltGenerator = new RandomSaltGenerator();
-    private final MemberService memberService = new MemberService(memberRepository, categoryRepository, saltGenerator);
+    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
+    private final MemberService memberService = new MemberService(memberRepository, categoryRepository, saltGenerator, passwordEncryptor);
 
     @Nested
     @DisplayName("회원가입 테스트")
