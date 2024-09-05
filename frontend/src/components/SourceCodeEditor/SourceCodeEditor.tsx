@@ -10,7 +10,6 @@ import { validateFileName } from '@/service';
 import { getByteSize, getLanguageByFilename } from '@/utils';
 import * as S from './SourceCodeEditor.style';
 
-const MAX_FILENAME_LENGTH = 255;
 const MAX_CONTENT_SIZE = 65535;
 
 interface Props {
@@ -38,12 +37,6 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
 
   const handleFileNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     const newFileName = event.target.value;
-
-    if (newFileName.length > MAX_FILENAME_LENGTH) {
-      failAlert(`파일명은 최대 ${MAX_FILENAME_LENGTH}자까지 가능합니다.`);
-
-      return;
-    }
 
     const errorMessage = validateFileName(newFileName);
 
