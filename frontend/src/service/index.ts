@@ -1,1 +1,7 @@
-export { validateName, validatePassword, validateConfirmPassword, validateFileName } from './validates';
+export {
+  validateName,
+  validatePassword,
+  validateConfirmPassword,
+  validateFileName,
+  validateSourceCode,
+} from './validates';

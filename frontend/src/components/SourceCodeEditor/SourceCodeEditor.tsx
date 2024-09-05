@@ -6,11 +6,9 @@ import { ChangeEvent, useRef } from 'react';
 
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
-import { validateFileName } from '@/service';
-import { getByteSize, getLanguageByFilename } from '@/utils';
+import { validateFileName, validateSourceCode } from '@/service';
+import { getLanguageByFilename } from '@/utils';
 import * as S from './SourceCodeEditor.style';
-
-const MAX_CONTENT_SIZE = 65535;
 
 interface Props {
   index: number;
@@ -50,10 +48,10 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
   };
 
   const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
-    const currentByteSize = getByteSize(value);
+    const errorMessage = validateSourceCode(value);
 
-    if (currentByteSize > MAX_CONTENT_SIZE) {
-      failAlert(`소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트를 초과할 수 없습니다.`);
+    if (errorMessage) {
+      failAlert(errorMessage);
 
       const previousContent = previousContentRef.current;
       const transaction = viewUpdate.state.update({
