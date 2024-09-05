@@ -7,7 +7,7 @@ export const validateName = (name: string) => {
 
   return regex.test(name) && name.length >= MIN_LENGTH && name.length <= MAX_LENGTH
     ? ''
-    : `${MIN_LENGTH}자 이상의 올바른 문자를 입력해주세요. (ex. 코드잽)`;
+    : `${MIN_LENGTH} ~ ${MAX_LENGTH}자의 올바른 문자를 입력해주세요. (ex. 코드잽)`;
 };
 
 export const validatePassword = (password: string) => {
