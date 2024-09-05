@@ -16,7 +16,7 @@ class RandomSaltGeneratorTest {
     @Test
     @DisplayName("1,000,000번의 난수 생성에서 난수 충돌이 발생하지 않는다.")
     @Disabled
-    void test() {
+    void randomGeneratorCollisionTest() {
         Set<String> salts = new HashSet<>();
         for (int i = 0; i < 1_000_000; i++) {
             salts.add(saltGenerator.getSalt());
