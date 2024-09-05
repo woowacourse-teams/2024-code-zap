@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: gradle 캐싱
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: bootJar로 jar 파일 생성
         run: |
