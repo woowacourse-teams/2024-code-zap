@@ -39,8 +39,6 @@ export const validateSourceCode = (sourceCode: string) => {
   const MAX_CONTENT_SIZE = 65535;
   const currentByteSize = getByteSize(sourceCode);
 
-  console.log(currentByteSize);
-
   if (currentByteSize > MAX_CONTENT_SIZE) {
     return `소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트까지 입력할 수 있습니다!.`;
   }
