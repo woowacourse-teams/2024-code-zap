@@ -59,12 +59,9 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
   const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
     const currentByteSize = getByteSize(value);
 
-    console.log(currentByteSize);
-
     if (currentByteSize > MAX_CONTENT_SIZE) {
       failAlert(`소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트를 초과할 수 없습니다.`);
 
-      // 이전 상태로 롤백
       const previousContent = previousContentRef.current;
       const transaction = viewUpdate.state.update({
         changes: { from: 0, to: value.length, insert: previousContent },
