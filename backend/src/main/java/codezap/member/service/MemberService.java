@@ -5,6 +5,8 @@ import java.util.Objects;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.SaltGenerator;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
@@ -13,8 +15,6 @@ import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.repository.MemberRepository;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.SaltGenerator;
 import lombok.RequiredArgsConstructor;
 
 @Service
