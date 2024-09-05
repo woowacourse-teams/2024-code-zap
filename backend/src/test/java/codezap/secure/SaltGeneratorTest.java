@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class SaltGeneratorTest {
+class RandomSaltGeneratorTest {
 
     SaltGenerator saltGenerator = new RandomSaltGenerator();
 
