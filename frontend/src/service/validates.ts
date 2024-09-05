@@ -1,3 +1,5 @@
+import { getByteSize } from '../utils/getByteSize';
+
 export const validateName = (name: string) => {
   const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
@@ -28,6 +30,17 @@ export const validateFileName = (fileName: string) => {
 
   if (invalidChars.test(fileName)) {
     return '특수 문자 (<, >, :, ", /, , |, ?, *)는 사용할 수 없습니다!';
+  }
+
+  return '';
+};
+
+export const validateSourceCode = (sourceCode: string) => {
+  const MAX_CONTENT_SIZE = 65535;
+  const currentByteSize = getByteSize(sourceCode);
+
+  if (currentByteSize > MAX_CONTENT_SIZE) {
+    return `소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트까지 입력할 수 있습니다!.`;
   }
 
   return '';

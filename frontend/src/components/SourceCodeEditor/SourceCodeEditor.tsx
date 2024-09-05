@@ -1,3 +1,4 @@
+import { ViewUpdate } from '@codemirror/view';
 import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
@@ -5,7 +6,7 @@ import { ChangeEvent, useRef } from 'react';
 
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
-import { validateFileName } from '@/service';
+import { validateFileName, validateSourceCode } from '@/service';
 import { getLanguageByFilename } from '@/utils';
 import * as S from './SourceCodeEditor.style';
 
@@ -19,6 +20,7 @@ interface Props {
 
 const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeFileName }: Props) => {
   const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
+  const previousContentRef = useRef<string>(content);
   const { failAlert } = useCustomContext(ToastContext);
 
   const focusCodeMirror = () => {
@@ -32,7 +34,9 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
   };
 
   const handleFileNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const errorMessage = validateFileName(event.target.value);
+    const newFileName = event.target.value;
+
+    const errorMessage = validateFileName(newFileName);
 
     if (errorMessage) {
       failAlert(errorMessage);
@@ -40,11 +44,25 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
       return;
     }
 
-    onChangeFileName(event.target.value);
+    onChangeFileName(newFileName);
   };
 
-  const handleContentChange = (value: string) => {
-    onChangeContent(value);
+  const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
+    const errorMessage = validateSourceCode(value);
+
+    if (errorMessage) {
+      failAlert(errorMessage);
+
+      const previousContent = previousContentRef.current;
+      const transaction = viewUpdate.state.update({
+        changes: { from: 0, to: value.length, insert: previousContent },
+      });
+
+      viewUpdate.view.dispatch(transaction);
+    } else {
+      onChangeContent(value);
+      previousContentRef.current = value;
+    }
   };
 
   return (
@@ -53,7 +71,7 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
         value={fileName}
         onChange={handleFileNameChange}
         placeholder={'파일명.js'}
-        autoFocus={index !== 0 ? true : false}
+        autoFocus={index !== 0}
       />
       <CodeMirror
         ref={codeMirrorRef}
