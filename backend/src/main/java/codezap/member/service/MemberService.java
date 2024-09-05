@@ -13,8 +13,8 @@ import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.repository.MemberRepository;
-import codezap.secure.PasswordEncryptor;
-import codezap.secure.SaltGenerator;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.SaltGenerator;
 import lombok.RequiredArgsConstructor;
 
 @Service

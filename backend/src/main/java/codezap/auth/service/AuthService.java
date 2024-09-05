@@ -10,7 +10,7 @@ import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
-import codezap.secure.PasswordEncryptor;
+import codezap.auth.encryption.PasswordEncryptor;
 import lombok.RequiredArgsConstructor;
 
 @Service

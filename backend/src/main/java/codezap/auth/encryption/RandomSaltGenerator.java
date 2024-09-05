@@ -1,4 +1,4 @@
-package codezap.secure;
+package codezap.auth.encryption;
 
 import java.security.SecureRandom;
 import java.util.Base64;

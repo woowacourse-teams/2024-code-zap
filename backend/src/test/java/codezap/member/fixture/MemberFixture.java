@@ -1,8 +1,8 @@
 package codezap.member.fixture;
 
 import codezap.member.domain.Member;
-import codezap.secure.PasswordEncryptor;
-import codezap.secure.SHA2PasswordEncryptor;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.SHA2PasswordEncryptor;
 
 public class MemberFixture {
 

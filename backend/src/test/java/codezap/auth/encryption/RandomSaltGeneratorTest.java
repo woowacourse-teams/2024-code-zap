@@ -1,4 +1,4 @@
-package codezap.secure;
+package codezap.auth.encryption;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

@@ -19,10 +19,10 @@ import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.secure.PasswordEncryptor;
-import codezap.secure.RandomSaltGenerator;
-import codezap.secure.SHA2PasswordEncryptor;
-import codezap.secure.SaltGenerator;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.RandomSaltGenerator;
+import codezap.auth.encryption.SHA2PasswordEncryptor;
+import codezap.auth.encryption.SaltGenerator;
 
 public class MemberServiceTest {
 

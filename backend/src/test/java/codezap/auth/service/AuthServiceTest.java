@@ -22,8 +22,8 @@ import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.secure.PasswordEncryptor;
-import codezap.secure.SHA2PasswordEncryptor;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.SHA2PasswordEncryptor;
 
 public class AuthServiceTest {
     private final MemberRepository memberRepository = new FakeMemberRepository();

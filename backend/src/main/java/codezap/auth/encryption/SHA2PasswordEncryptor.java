@@ -1,11 +1,10 @@
-package codezap.secure;
+package codezap.auth.encryption;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 
 import codezap.global.exception.CodeZapException;
