@@ -1,3 +1,4 @@
+import { ViewUpdate } from '@codemirror/view';
 import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
@@ -6,10 +7,11 @@ import { ChangeEvent, useRef } from 'react';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks/utils';
 import { validateFileName } from '@/service';
-import { getLanguageByFilename } from '@/utils';
+import { getByteSize, getLanguageByFilename } from '@/utils';
 import * as S from './SourceCodeEditor.style';
 
 const MAX_FILENAME_LENGTH = 255;
+const MAX_CONTENT_SIZE = 65535;
 
 interface Props {
   index: number;
@@ -53,8 +55,33 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
     onChangeFileName(newFileName);
   };
 
-  const handleContentChange = (value: string) => {
-    onChangeContent(value);
+  const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
+    const currentByteSize = getByteSize(value);
+
+    if (currentByteSize > MAX_CONTENT_SIZE) {
+      const truncatedContent = truncateContent(value, MAX_CONTENT_SIZE);
+
+      failAlert(`소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트를 초과할 수 없습니다.`);
+
+      const transaction = viewUpdate.state.update({
+        changes: { from: 0, to: value.length, insert: truncatedContent },
+      });
+
+      viewUpdate.view.dispatch(transaction);
+      onChangeContent(truncatedContent);
+    } else {
+      onChangeContent(value);
+    }
+  };
+
+  const truncateContent = (content: string, maxSize: number): string => {
+    let truncatedContent = content;
+
+    while (getByteSize(truncatedContent) > maxSize) {
+      truncatedContent = truncatedContent.slice(0, -1);
+    }
+
+    return truncatedContent;
   };
 
   return (
