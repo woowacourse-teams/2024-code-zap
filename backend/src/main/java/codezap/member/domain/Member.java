@@ -30,8 +30,11 @@ public class Member extends BaseTimeEntity {
     @Column(nullable = false)
     private String password;
 
-    public Member(String name, String password) {
-        this(null, name, password);
+    @Column(nullable = false)
+    private String salt;
+
+    public Member(String name, String password, String salt) {
+        this(null, name, password, salt);
     }
 
     public boolean matchPassword(String password) {

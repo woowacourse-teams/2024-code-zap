@@ -22,11 +22,14 @@ import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.SHA2PasswordEncryptor;
 
 public class AuthServiceTest {
     private final MemberRepository memberRepository = new FakeMemberRepository();
+    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
     private final CredentialProvider credentialProvider = new BasicAuthCredentialProvider(memberRepository);
-    private final AuthService authService = new AuthService(credentialProvider, memberRepository);
+    private final AuthService authService = new AuthService(credentialProvider, memberRepository, passwordEncryptor);
 
     @Nested
     @DisplayName("로그인 테스트")
@@ -36,7 +39,7 @@ public class AuthServiceTest {
         @DisplayName("로그인 성공")
         void login() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            LoginRequest loginRequest = new LoginRequest(member.getName(), member.getPassword());
+            LoginRequest loginRequest = new LoginRequest(member.getName(), MemberFixture.getFixturePlainPassword());
 
             LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
 
