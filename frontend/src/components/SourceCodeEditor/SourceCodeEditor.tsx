@@ -23,6 +23,7 @@ interface Props {
 
 const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeFileName }: Props) => {
   const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
+  const previousContentRef = useRef<string>(content);
   const { failAlert } = useCustomContext(ToastContext);
 
   const focusCodeMirror = () => {
@@ -58,30 +59,22 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
   const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
     const currentByteSize = getByteSize(value);
 
-    if (currentByteSize > MAX_CONTENT_SIZE) {
-      const truncatedContent = truncateContent(value, MAX_CONTENT_SIZE);
+    console.log(currentByteSize);
 
+    if (currentByteSize > MAX_CONTENT_SIZE) {
       failAlert(`소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트를 초과할 수 없습니다.`);
 
+      // 이전 상태로 롤백
+      const previousContent = previousContentRef.current;
       const transaction = viewUpdate.state.update({
-        changes: { from: 0, to: value.length, insert: truncatedContent },
+        changes: { from: 0, to: value.length, insert: previousContent },
       });
 
       viewUpdate.view.dispatch(transaction);
-      onChangeContent(truncatedContent);
     } else {
       onChangeContent(value);
+      previousContentRef.current = value;
     }
-  };
-
-  const truncateContent = (content: string, maxSize: number): string => {
-    let truncatedContent = content;
-
-    while (getByteSize(truncatedContent) > maxSize) {
-      truncatedContent = truncatedContent.slice(0, -1);
-    }
-
-    return truncatedContent;
   };
 
   return (
@@ -90,7 +83,7 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
         value={fileName}
         onChange={handleFileNameChange}
         placeholder={'파일명.js'}
-        autoFocus={index !== 0 ? true : false}
+        autoFocus={index !== 0}
       />
       <CodeMirror
         ref={codeMirrorRef}
