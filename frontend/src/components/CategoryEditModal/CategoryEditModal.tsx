@@ -5,6 +5,7 @@ import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '@/assets/images';
 import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
+import { validateCategoryName } from '@/service/validates';
 import { theme } from '@/style/theme';
 import type { Category, CustomError } from '@/types';
 import * as S from './CategoryEditModal.style';
@@ -38,6 +39,12 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   const isCategoryNew = (id: number) => newCategories.some((category) => category.id === id);
 
   const handleNameInputChange = (id: number, name: string) => {
+    const errorMessage = validateCategoryName(name);
+
+    if (errorMessage && name.length > 0) {
+      return;
+    }
+
     if (isCategoryNew(id)) {
       setNewCategories((prev) => prev.map((category) => (category.id === id ? { ...category, name } : category)));
     } else {
