@@ -12,6 +12,7 @@ public class WebCorsConfiguration implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowCredentials(true)
                 .allowedOriginPatterns("https://*.code-zap.com")
+                .allowedOrigins("https://code-zap.com")
                 .allowedMethods("*")
                 .exposedHeaders("*");
     }
