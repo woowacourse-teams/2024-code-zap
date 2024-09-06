@@ -13,6 +13,7 @@ public class WebCorsConfiguration implements WebMvcConfigurer {
                 .allowCredentials(true)
                 .allowedOriginPatterns("https://*.code-zap.com")
                 .allowedOrigins("https://code-zap.com")
+                .allowedOrigins("chrome-extension://bmlonhfgleihfabinjbhgefojkfpmlaf")
                 .allowedMethods("*")
                 .exposedHeaders("*");
     }
