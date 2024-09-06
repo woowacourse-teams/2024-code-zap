@@ -27,7 +27,7 @@ const CategoryEditModal = ({
 }: CategoryEditModalProps) => {
   const [editedCategories, setEditedCategories] = useState<Record<number, string>>({});
   const [categoriesToDelete, setCategoriesToDelete] = useState<number[]>([]);
-  const [newCategories, setNewCategories] = useState<{ id: number; name: string }[]>([]);
+  const [newCategories, setNewCategories] = useState<Category[]>([]);
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
 
   const { mutateAsync: editCategory } = useCategoryEditMutation();
@@ -46,39 +46,28 @@ const CategoryEditModal = ({
   const isCategoryNew = (id: number) => newCategories.some((category) => category.id === id);
 
   const handleNameInputChange = (id: number, name: string) => {
-    const errorMessage = validateCategoryName(name);
-
-    if (errorMessage && name.length > 0) {
+    if (validateCategoryName(name) && name.length > 0) {
       return;
     }
 
-    if (isCategoryNew(id)) {
-      setNewCategories((prev) => prev.map((category) => (category.id === id ? { ...category, name } : category)));
-    } else {
-      setEditedCategories((prev) => ({ ...prev, [id]: name }));
-    }
+    isCategoryNew(id)
+      ? setNewCategories((prev) => prev.map((category) => (category.id === id ? { ...category, name } : category)))
+      : setEditedCategories((prev) => ({ ...prev, [id]: name }));
   };
 
   const handleDeleteClick = (id: number) => {
-    if (isCategoryNew(id)) {
-      setNewCategories((prev) => prev.filter((category) => category.id !== id));
-    } else {
-      setCategoriesToDelete((prev) => [...prev, id]);
-    }
+    isCategoryNew(id)
+      ? setNewCategories((prev) => prev.filter((category) => category.id !== id))
+      : setCategoriesToDelete((prev) => [...prev, id]);
   };
 
-  const handleRestoreClick = (id: number) => {
+  const handleRestoreClick = (id: number) =>
     setCategoriesToDelete((prev) => prev.filter((categoryId) => categoryId !== id));
-  };
-
-  const handleEditClick = (id: number) => {
-    setEditingCategoryId(id);
-  };
 
   const handleNameInputBlur = (id: number) => {
-    const trimmedName = isCategoryNew(id)
-      ? newCategories.find((category) => category.id === id)?.name.trim()
-      : editedCategories[id]?.trim();
+    const trimmedName = (
+      isCategoryNew(id) ? newCategories.find((category) => category.id === id)?.name : editedCategories[id]
+    )?.trim();
 
     if (trimmedName !== undefined) {
       handleNameInputChange(id, trimmedName);
@@ -88,10 +77,7 @@ const CategoryEditModal = ({
   };
 
   const handleAddCategory = () => {
-    const newCategoryId =
-      categories.length > 0
-        ? categories[categories.length - 1].id + newCategories.length + 1
-        : newCategories.length + 1;
+    const newCategoryId = (categories[categories.length - 1].id ?? 0) + newCategories.length + 1;
 
     setNewCategories((prev) => [...prev, { id: newCategoryId, name: '' }]);
     setEditingCategoryId(newCategoryId);
@@ -103,19 +89,13 @@ const CategoryEditModal = ({
     }
 
     try {
-      if (categoriesToDelete.length > 0) {
+      if (categoriesToDelete.length) {
         await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
         onDeleteCategory(categoriesToDelete);
       }
 
       await Promise.all(
-        Object.entries(editedCategories).map(async ([id, name]) => {
-          const originalCategory = categories.find((category) => category.id === Number(id));
-
-          if (originalCategory && originalCategory.name !== name) {
-            await editCategory({ id: Number(id), name });
-          }
-        }),
+        Object.entries(editedCategories).map(async ([id, name]) => await editCategory({ id: Number(id), name })),
       );
 
       await Promise.all(newCategories.map((category) => postCategory({ name: category.name })));
@@ -135,16 +115,16 @@ const CategoryEditModal = ({
   return (
     <Modal isOpen={isOpen} toggleModal={handleCancelEditWithReset} size='small'>
       <Modal.Header>{'카테고리 편집'}</Modal.Header>
+
       <Modal.Body>
         <S.EditCategoryItemList>
           <CategoryItems
-            categories={categories}
-            newCategories={newCategories}
+            categories={[...categories, ...newCategories]}
             editedCategories={editedCategories}
             categoriesToDelete={categoriesToDelete}
             editingCategoryId={editingCategoryId}
             invalidIds={invalidIds}
-            onEditClick={handleEditClick}
+            onEditClick={setEditingCategoryId}
             onDeleteClick={handleDeleteClick}
             onRestoreClick={handleRestoreClick}
             onNameInputChange={handleNameInputChange}
@@ -156,22 +136,19 @@ const CategoryEditModal = ({
             </Button>
           </S.EditCategoryItem>
         </S.EditCategoryItemList>
+        <Flex height='1rem' margin='1rem 0 0 0'>
+          {invalidIds.length > 0 && <Text.Small color='red'>{'유효하지 않은 카테고리 이름이 있습니다.'}</Text.Small>}
+        </Flex>
       </Modal.Body>
+
       <Modal.Footer>
-        <Flex direction='column' gap='0.75rem' width='100%' style={{ alignSelf: 'flex-end' }}>
-          <Flex height='1em'>
-            {invalidIds.length > 0 && (
-              <Text.Small color={'red'}>{'유효하지 않은 카테고리 이름이 있습니다.'}</Text.Small>
-            )}
-          </Flex>
-          <Flex justify='flex-end' gap='1rem'>
-            <Button variant='outlined' onClick={handleCancelEditWithReset}>
-              {'취소'}
-            </Button>
-            <Button onClick={handleSaveChanges} disabled={!isValid}>
-              {'저장'}
-            </Button>
-          </Flex>
+        <Flex justify='flex-end' gap='1rem' width='100%'>
+          <Button variant='outlined' onClick={handleCancelEditWithReset}>
+            {'취소'}
+          </Button>
+          <Button onClick={handleSaveChanges} disabled={!isValid}>
+            {'저장'}
+          </Button>
         </Flex>
       </Modal.Footer>
     </Modal>
@@ -180,7 +157,6 @@ const CategoryEditModal = ({
 
 interface CategoryItemsProps {
   categories: Category[];
-  newCategories: { id: number; name: string }[];
   editedCategories: Record<number, string>;
   categoriesToDelete: number[];
   editingCategoryId: number | null;
@@ -194,7 +170,6 @@ interface CategoryItemsProps {
 
 const CategoryItems = ({
   categories,
-  newCategories,
   editedCategories,
   categoriesToDelete,
   editingCategoryId,
@@ -208,11 +183,11 @@ const CategoryItems = ({
   <>
     {categories.map(({ id, name }) => {
       const isDeleted = categoriesToDelete.includes(id);
+      const isEdited = editingCategoryId === id;
 
       return (
         <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)} isDeleted={isDeleted}>
           {isDeleted ? (
-            // 기존 : 삭제 상태
             <>
               <Flex align='center' width='100%' height='2.5rem'>
                 <Text.Medium
@@ -228,8 +203,7 @@ const CategoryItems = ({
           ) : (
             <>
               <Flex align='center' width='100%' height='2.5rem'>
-                {editingCategoryId === id ? (
-                  // 기존 : 수정 상태
+                {isEdited ? (
                   <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
                     <Input.TextField
                       type='text'
@@ -253,9 +227,8 @@ const CategoryItems = ({
                     />
                   </Input>
                 ) : (
-                  // 기존 : 기본 상태
                   <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
-                    {editedCategories[id] !== undefined ? editedCategories[id] : name}
+                    {editedCategories[id] || name}
                   </Text.Medium>
                 )}
               </Flex>
@@ -265,44 +238,6 @@ const CategoryItems = ({
         </S.EditCategoryItem>
       );
     })}
-
-    {newCategories.map(({ id, name }) => (
-      <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
-        <Flex align='center' width='100%' height='2.5rem'>
-          {editingCategoryId === id ? (
-            // 생성 : 수정 상태
-            <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
-              <Input.TextField
-                type='text'
-                value={name}
-                placeholder='카테고리 입력'
-                onChange={(e) => onNameInputChange(id, e.target.value)}
-                onBlur={() => onNameInputBlur(id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    onNameInputBlur(id);
-                  }
-                }}
-                autoFocus
-                css={css`
-                  font-weight: bold;
-                  &::placeholder {
-                    font-weight: normal;
-                    color: ${theme.color.light.secondary_400};
-                  }
-                `}
-              />
-            </Input>
-          ) : (
-            // 생성 : 기본 상태
-            <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
-              {name}
-            </Text.Medium>
-          )}
-        </Flex>
-        <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
-      </S.EditCategoryItem>
-    ))}
   </>
 );
 
