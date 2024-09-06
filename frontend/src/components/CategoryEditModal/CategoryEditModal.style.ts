@@ -10,7 +10,12 @@ export const EditCategoryItemList = styled.div`
   width: 100%;
 `;
 
-export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean; disabled?: boolean }>`
+export const EditCategoryItem = styled.div<{
+  hasError?: boolean;
+  isDeleted?: boolean;
+  isButton?: boolean;
+  disabled?: boolean;
+}>`
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -48,7 +53,7 @@ export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: bool
     `}
 
   &:hover span {
-    color: ${theme.color.light.secondary_700};
+    color: ${({ isDeleted }) => !isDeleted && `${theme.color.light.secondary_700}`};
   }
 
   &:hover button,

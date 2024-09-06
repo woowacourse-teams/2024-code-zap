@@ -206,57 +206,65 @@ const CategoryItems = ({
   onNameInputBlur,
 }: CategoryItemsProps) => (
   <>
-    {categories.map(({ id, name }) => (
-      <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
-        {categoriesToDelete.includes(id) ? (
-          // 기존 : 삭제 상태
-          <>
-            <Flex align='center' width='100%' height='2.5rem'>
-              <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
-                {name}
-              </Text.Medium>
-            </Flex>
-            <IconButtons restore onRestoreClick={() => onRestoreClick(id)} />
-          </>
-        ) : (
-          <>
-            <Flex align='center' width='100%' height='2.5rem'>
-              {editingCategoryId === id ? (
-                // 기존 : 수정 상태
-                <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
-                  <Input.TextField
-                    type='text'
-                    value={editedCategories[id] ?? name}
-                    placeholder='카테고리 입력'
-                    onChange={(e) => onNameInputChange(id, e.target.value)}
-                    onBlur={() => onNameInputBlur(id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        onNameInputBlur(id);
-                      }
-                    }}
-                    autoFocus
-                    css={css`
-                      font-weight: bold;
-                      &::placeholder {
-                        font-weight: normal;
-                        color: ${theme.color.light.secondary_400};
-                      }
-                    `}
-                  />
-                </Input>
-              ) : (
-                // 기존 : 기본 상태
-                <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
-                  {editedCategories[id] !== undefined ? editedCategories[id] : name}
+    {categories.map(({ id, name }) => {
+      const isDeleted = categoriesToDelete.includes(id);
+
+      return (
+        <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)} isDeleted={isDeleted}>
+          {isDeleted ? (
+            // 기존 : 삭제 상태
+            <>
+              <Flex align='center' width='100%' height='2.5rem'>
+                <Text.Medium
+                  color={theme.color.light.analogous_primary_400}
+                  weight='bold'
+                  textDecoration='line-through'
+                >
+                  {name}
                 </Text.Medium>
-              )}
-            </Flex>
-            <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
-          </>
-        )}
-      </S.EditCategoryItem>
-    ))}
+              </Flex>
+              <IconButtons restore onRestoreClick={() => onRestoreClick(id)} />
+            </>
+          ) : (
+            <>
+              <Flex align='center' width='100%' height='2.5rem'>
+                {editingCategoryId === id ? (
+                  // 기존 : 수정 상태
+                  <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
+                    <Input.TextField
+                      type='text'
+                      value={editedCategories[id] ?? name}
+                      placeholder='카테고리 입력'
+                      onChange={(e) => onNameInputChange(id, e.target.value)}
+                      onBlur={() => onNameInputBlur(id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          onNameInputBlur(id);
+                        }
+                      }}
+                      autoFocus
+                      css={css`
+                        font-weight: bold;
+                        &::placeholder {
+                          font-weight: normal;
+                          color: ${theme.color.light.secondary_400};
+                        }
+                      `}
+                    />
+                  </Input>
+                ) : (
+                  // 기존 : 기본 상태
+                  <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
+                    {editedCategories[id] !== undefined ? editedCategories[id] : name}
+                  </Text.Medium>
+                )}
+              </Flex>
+              <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
+            </>
+          )}
+        </S.EditCategoryItem>
+      );
+    })}
 
     {newCategories.map(({ id, name }) => (
       <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
