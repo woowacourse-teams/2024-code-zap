@@ -1,18 +1,26 @@
+import { getByteSize } from '../utils/getByteSize';
+
 export const validateName = (name: string) => {
+  const MAX_LENGTH = 255;
+  const MIN_LENGTH = 1;
   const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
-  return regex.test(name) && name.length > 0 ? '' : '1자 이상의 아이디를 입력해주세요.';
+  return regex.test(name) && name.length >= MIN_LENGTH && name.length <= MAX_LENGTH
+    ? ''
+    : `${MIN_LENGTH} ~ ${MAX_LENGTH}자의 올바른 문자를 입력해주세요. (ex. 코드잽)`;
 };
 
 export const validatePassword = (password: string) => {
+  const MAX_LENGTH = 16;
+  const MIN_LENGTH = 8;
   const hasLetters = /[a-zA-Z]/.test(password);
   const hasNumbers = /[0-9]/.test(password);
   const hasNoSpaces = !/\s/.test(password);
-  const isValidLength = password.length >= 8;
+  const isValidLength = password.length >= MIN_LENGTH && password.length <= MAX_LENGTH;
 
   return hasLetters && hasNumbers && isValidLength && hasNoSpaces
     ? ''
-    : '영문자, 숫자를 포함한 8자 이상의 비밀번호를 입력해주세요.';
+    : `영문자, 숫자를 포함한 ${MIN_LENGTH} ~ ${MAX_LENGTH}자의 비밀번호를 입력해주세요.`;
 };
 
 export const validateConfirmPassword = (password: string, confirmPassword: string) =>
@@ -28,6 +36,17 @@ export const validateFileName = (fileName: string) => {
 
   if (invalidChars.test(fileName)) {
     return '특수 문자 (<, >, :, ", /, , |, ?, *)는 사용할 수 없습니다!';
+  }
+
+  return '';
+};
+
+export const validateSourceCode = (sourceCode: string) => {
+  const MAX_CONTENT_SIZE = 65535;
+  const currentByteSize = getByteSize(sourceCode);
+
+  if (currentByteSize > MAX_CONTENT_SIZE) {
+    return `소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트까지 입력할 수 있습니다!.`;
   }
 
   return '';

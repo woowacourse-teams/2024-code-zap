@@ -5,6 +5,7 @@ import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '@/assets/images';
 import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/category';
+import { validateCategoryName } from '@/service/validates';
 import { theme } from '@/style/theme';
 import type { Category, CustomError } from '@/types';
 import * as S from './CategoryEditModal.style';
@@ -14,9 +15,16 @@ interface CategoryEditModalProps {
   toggleModal: () => void;
   categories: Category[];
   handleCancelEdit: () => void;
+  onDeleteCategory: (deletedIds: number[]) => void;
 }
 
-const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }: CategoryEditModalProps) => {
+const CategoryEditModal = ({
+  isOpen,
+  toggleModal,
+  categories,
+  handleCancelEdit,
+  onDeleteCategory,
+}: CategoryEditModalProps) => {
   const [editedCategories, setEditedCategories] = useState<Record<number, string>>({});
   const [categoriesToDelete, setCategoriesToDelete] = useState<number[]>([]);
   const [newCategories, setNewCategories] = useState<{ id: number; name: string }[]>([]);
@@ -38,6 +46,12 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
   const isCategoryNew = (id: number) => newCategories.some((category) => category.id === id);
 
   const handleNameInputChange = (id: number, name: string) => {
+    const errorMessage = validateCategoryName(name);
+
+    if (errorMessage && name.length > 0) {
+      return;
+    }
+
     if (isCategoryNew(id)) {
       setNewCategories((prev) => prev.map((category) => (category.id === id ? { ...category, name } : category)));
     } else {
@@ -89,7 +103,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
     }
 
     try {
-      await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+      if (categoriesToDelete.length > 0) {
+        await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+        onDeleteCategory(categoriesToDelete);
+      }
 
       await Promise.all(
         Object.entries(editedCategories).map(async ([id, name]) => {
@@ -104,7 +121,6 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
       await Promise.all(newCategories.map((category) => postCategory({ name: category.name })));
 
       resetState();
-
       toggleModal();
     } catch (error) {
       console.error((error as CustomError).detail);

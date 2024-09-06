@@ -37,7 +37,7 @@ const SignupPage = () => {
             style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
-              <Input.Label>아이디</Input.Label>
+              <Input.Label>아이디 (닉네임)</Input.Label>
               <Input.TextField
                 type='text'
                 value={name}

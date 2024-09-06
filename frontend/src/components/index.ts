@@ -20,6 +20,7 @@ export { default as TemplateGrid } from './TemplateGrid/TemplateGrid';
 export { default as Text } from './Text/Text';
 export { default as Toast } from './Toast/Toast';
 export { default as Guide } from './Guide/Guide';
+export { default as Footer } from './Footer/Footer';
 
 // Skeleton UI
 export { default as LoadingBall } from './LoadingBall/LoadingBall';

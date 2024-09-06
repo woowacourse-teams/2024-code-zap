@@ -147,7 +147,11 @@ const TemplateEdit = ({
           </S.UnderlineInputWrapper>
 
           <Input size='large' variant='text'>
-            <Input.TextField placeholder='설명을 입력해주세요' value={description} onChange={handleDescriptionChange} />
+            <Input.TextField
+              placeholder='이 템플릿을 언제 다시 쓸 것 같나요?'
+              value={description}
+              onChange={handleDescriptionChange}
+            />
           </Input>
 
           {sourceCodes.map((sourceCode, index) => (

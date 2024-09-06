@@ -22,10 +22,16 @@ jobs:
         with:
           node-version: 20
 
-      - name: .env.production 파일 생성
+      - name: 환경 파일 생성
         run: |
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
-          echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
+          else
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_BETA_API_URL }}" > ${{ env.frontend-directory }}/.env.development
+            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BETA_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.development
+          fi
+
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
@@ -41,7 +47,7 @@ jobs:
         run: npm run build
         working-directory: ${{ env.frontend-directory }}
 
-      - name: Artifact 업로드
+      - name: 아티팩트 업로드
         uses: actions/upload-artifact@v4
         with:
           name: code-zap-front
@@ -63,8 +69,7 @@ jobs:
         with:
           name: code-zap-front
           path: ${{ secrets.FRONT_DIRECTORY }}
-
-      - name: 파일 S3로 이동
+      - name: S3로 이동
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
             aws s3 cp --recursive ${{ secrets.FRONT_DIRECTORY }} s3://techcourse-project-2024/code-zap
