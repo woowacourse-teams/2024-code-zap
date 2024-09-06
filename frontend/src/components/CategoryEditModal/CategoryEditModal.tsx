@@ -15,9 +15,16 @@ interface CategoryEditModalProps {
   toggleModal: () => void;
   categories: Category[];
   handleCancelEdit: () => void;
+  onDeleteCategory: (deletedIds: number[]) => void;
 }
 
-const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }: CategoryEditModalProps) => {
+const CategoryEditModal = ({
+  isOpen,
+  toggleModal,
+  categories,
+  handleCancelEdit,
+  onDeleteCategory,
+}: CategoryEditModalProps) => {
   const [editedCategories, setEditedCategories] = useState<Record<number, string>>({});
   const [categoriesToDelete, setCategoriesToDelete] = useState<number[]>([]);
   const [newCategories, setNewCategories] = useState<{ id: number; name: string }[]>([]);
@@ -96,7 +103,10 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
     }
 
     try {
-      await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+      if (categoriesToDelete.length > 0) {
+        await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
+        onDeleteCategory(categoriesToDelete);
+      }
 
       await Promise.all(
         Object.entries(editedCategories).map(async ([id, name]) => {
@@ -111,7 +121,6 @@ const CategoryEditModal = ({ isOpen, toggleModal, categories, handleCancelEdit }
       await Promise.all(newCategories.map((category) => postCategory({ name: category.name })));
 
       resetState();
-
       toggleModal();
     } catch (error) {
       console.error((error as CustomError).detail);
