@@ -24,10 +24,12 @@ export const useCategoryNameValidation = (
     };
 
     categories.forEach(({ id, name }) => {
-      if (INVALID_NAMES.includes(name)) {
+      const updatedName = editedCategories[id] ?? name;
+
+      if (INVALID_NAMES.includes(updatedName)) {
         invalidNames.add(id);
       } else {
-        addNameToMap(id, name);
+        addNameToMap(id, updatedName);
       }
     });
 
@@ -36,16 +38,6 @@ export const useCategoryNameValidation = (
         invalidNames.add(id);
       } else {
         addNameToMap(id, name);
-      }
-    });
-
-    Object.entries(editedCategories).forEach(([id, name]) => {
-      const originalName = categories.find((category) => category.id === Number(id))?.name;
-
-      if (INVALID_NAMES.includes(name)) {
-        invalidNames.add(Number(id));
-      } else if (name !== originalName) {
-        addNameToMap(Number(id), name);
       }
     });
 
