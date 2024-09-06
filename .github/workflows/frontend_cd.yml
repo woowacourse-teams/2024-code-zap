@@ -39,9 +39,6 @@ jobs:
       - name: 환경 파일 권한 설정
         run: chmod 644 ${{ env.frontend-directory }}/.env.*
 
-      - name: Sentry 환경 파일 권한 설정
-        run: chmod 644 ${{ env.frontend-directory }}/.env.sentry-build-plugin
-
       - name: 의존성 설치
         run: npm install
         working-directory: ${{ env.frontend-directory }}
