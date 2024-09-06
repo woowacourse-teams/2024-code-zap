@@ -13,41 +13,30 @@ export const useCategoryNameValidation = (
 
   useEffect(() => {
     const allNames = new Map<string, number[]>();
-    const invalidNames = new Set<number>();
+    const invalidIdsSet = new Set<number>();
 
-    const addNameToMap = (id: number, name: string) => {
-      if (!allNames.has(name)) {
-        allNames.set(name, []);
+    const checkAndAddName = (id: number, name: string) => {
+      if (INVALID_NAMES.includes(name)) {
+        invalidIdsSet.add(id);
+      } else {
+        if (!allNames.has(name)) {
+          allNames.set(name, []);
+        }
+
+        allNames.get(name)!.push(id);
       }
-
-      allNames.get(name)!.push(id);
     };
 
-    categories.forEach(({ id, name }) => {
-      const updatedName = editedCategories[id] ?? name;
-
-      if (INVALID_NAMES.includes(updatedName)) {
-        invalidNames.add(id);
-      } else {
-        addNameToMap(id, updatedName);
-      }
-    });
-
-    newCategories.forEach(({ id, name }) => {
-      if (INVALID_NAMES.includes(name)) {
-        invalidNames.add(id);
-      } else {
-        addNameToMap(id, name);
-      }
-    });
+    categories.forEach(({ id, name }) => checkAndAddName(id, editedCategories[id] ?? name));
+    newCategories.forEach(({ id, name }) => checkAndAddName(id, name));
 
     allNames.forEach((ids) => {
       if (ids.length > 1) {
-        ids.forEach((id) => invalidNames.add(id));
+        ids.forEach((id) => invalidIdsSet.add(id));
       }
     });
 
-    setInvalidIds(Array.from(invalidNames));
+    setInvalidIds(Array.from(invalidIdsSet));
   }, [categories, newCategories, editedCategories]);
 
   return {
