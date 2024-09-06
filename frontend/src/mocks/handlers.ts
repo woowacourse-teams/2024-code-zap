@@ -148,11 +148,15 @@ const authenticationHandler = [
 const categoryHandlers = [
   http.get(`${CATEGORY_API_URL}`, () => HttpResponse.json(mockCategoryList)),
   http.post(`${CATEGORY_API_URL}`, async (req) => {
-    const newCategory = await req.request.json();
+    const newCategory = (await req.request.json()) as Category;
+    const isNameDuplicate = mockCategoryList.categories.some((cat) => cat.name === newCategory.name);
+
+    if (isNameDuplicate) {
+      return HttpResponse.json({ status: 400, message: 'Category name already exists' });
+    }
 
     if (typeof newCategory === 'object' && newCategory !== null) {
-      const newId = mockCategoryList.categories.length + 1;
-      const category = { id: newId, ...newCategory } as Category;
+      const category = { ...newCategory };
 
       mockCategoryList.categories.push(category);
 
@@ -164,10 +168,19 @@ const categoryHandlers = [
   http.put(`${CATEGORY_API_URL}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
+    const { name: newCategoryName } = updatedCategory as Category;
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
 
+    const isNameDuplicate = mockCategoryList.categories.some(
+      (cat) => cat.name === newCategoryName && cat.id.toString() !== id,
+    );
+
+    if (isNameDuplicate) {
+      return HttpResponse.json({ status: 400, message: 'Category name already exists' });
+    }
+
     if (categoryIndex !== -1 && typeof updatedCategory === 'object' && updatedCategory !== null) {
-      mockCategoryList.categories[categoryIndex] = { id: parseInt(id as string), ...updatedCategory } as Category;
+      mockCategoryList.categories[categoryIndex] = { id: parseInt(id as string), name: newCategoryName };
 
       return HttpResponse.json({ status: 200, category: mockCategoryList.categories[categoryIndex] });
     } else {
