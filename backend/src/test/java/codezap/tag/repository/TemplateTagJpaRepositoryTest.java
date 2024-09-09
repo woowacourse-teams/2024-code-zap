@@ -89,16 +89,31 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
+    @DisplayName("findDistinctByTemplateIn 조회 테스트")
     void testFindDistinctByTemplateIn() {
         // given
-        List<Long> templateIds = List.of(1L, 2L, 3L);
+        Template template1 = templateRepository.save(
+                new Template(member1, "testTemplate1", "testTemplate1", category1));
+        Template template2 = templateRepository.save(
+                new Template(member1, "testTemplate2", "testTemplate2", category1));
+        Template template3 = templateRepository.save(
+                new Template(member1, "testTemplate3", "testTemplate3", category1));
+
+        Tag tag1 = tagRepository.save(new Tag("tag1"));
+        Tag tag2 = tagRepository.save(new Tag("tag2"));
+        Tag tag3 = tagRepository.save(new Tag("tag3"));
+
+        templateTagRepository.save(new TemplateTag(template1, tag1));
+        templateTagRepository.save(new TemplateTag(template3, tag1));
+        templateTagRepository.save(new TemplateTag(template3, tag3));
 
         // when
-        List<Long> result = templateTagRepository.findDistinctByTemplateIn(templateIds);
+        List<Long> result = templateTagRepository.findDistinctByTemplateIn(
+                List.of(template1.getId(), template3.getId())
+        );
 
         // then
-        assertThat(result).isNotEmpty();
-        assertThat(result.stream().distinct().count())
-                .isEqualTo(result.size());
+        assertThat(result).containsExactly(tag1.getId(), tag3.getId())
+                .hasSize(2);
     }
 }
