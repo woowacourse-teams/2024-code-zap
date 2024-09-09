@@ -116,4 +116,36 @@ class TemplateTagJpaRepositoryTest {
         assertThat(result).containsExactly(tag1.getId(), tag3.getId())
                 .hasSize(2);
     }
+
+    @Test
+    @DisplayName("findAllTemplateIdInTagIds 조회 테스트")
+    void findAllTemplateIdInTagIds() {
+        //given
+        Template template1 = templateRepository.save(new Template(member1, "title1", "description1", category1));
+        Template template2 = templateRepository.save(new Template(member1, "title2", "description2", category1));
+        Template template3 = templateRepository.save(new Template(member1, "title3", "description3", category1));
+
+        Tag tag1 = tagRepository.save(new Tag("tag1"));
+        Tag tag2 = tagRepository.save(new Tag("tag2"));
+        Tag tag3 = tagRepository.save(new Tag("tag3"));
+
+        templateTagRepository.save(new TemplateTag(template1, tag1));
+        templateTagRepository.save(new TemplateTag(template1, tag2));
+        templateTagRepository.save(new TemplateTag(template1, tag3));
+
+        templateTagRepository.save(new TemplateTag(template2, tag2));
+        templateTagRepository.save(new TemplateTag(template2, tag3));
+
+        templateTagRepository.save(new TemplateTag(template3, tag1));
+        templateTagRepository.save(new TemplateTag(template2, tag3));
+
+        //when
+        List<Long> allTemplateIdInTagIds = templateTagRepository.findAllTemplateIdInTagIds(
+                List.of(tag2.getId(), tag3.getId()), 2);
+
+        //then
+        assertThat(allTemplateIdInTagIds).containsExactly(template1.getId(), template2.getId())
+                .hasSize(2);
+
+    }
 }
