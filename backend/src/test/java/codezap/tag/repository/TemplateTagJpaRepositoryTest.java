@@ -33,46 +33,21 @@ class TemplateTagJpaRepositoryTest {
     @Autowired
     private TemplateTagRepository templateTagRepository;
 
-    private Member member1, member2;
-    private Category category1, category2;
-    private Tag tag1, tag2;
+    private Member member;
+    private Category category;
 
     @BeforeEach
     void setUp() {
-        member1 = memberRepository.save(new Member("user1@test.com", "pp", "salt1"));
-        member2 = memberRepository.save(new Member("user2@test.com", "pp", "salt2"));
+        member = memberRepository.save(new Member("user1@test.com", "pp", "salt1"));
 
-        category1 = categoryRepository.save(new Category("Category 1", member1));
-        category2 = categoryRepository.save(new Category("Category 2", member1));
-
-        tag1 = tagRepository.save(new Tag("Tag 1"));
-        tag2 = tagRepository.save(new Tag("Tag 2"));
-
-        Template template1 = new Template(member1, "Template 1", "Description 1", category1);
-        TemplateTag templateTag11 = new TemplateTag(template1, tag1);
-        TemplateTag templateTag12 = new TemplateTag(template1, tag2);
-        templateRepository.save(template1);
-        templateTagRepository.save(templateTag11);
-        templateTagRepository.save(templateTag12);
-
-        Template template2 = new Template(member1, "Template 2", "Description 2", category2);
-        TemplateTag templateTag21 = new TemplateTag(template2, tag1);
-        TemplateTag templateTag22 = new TemplateTag(template2, tag2);
-        templateRepository.save(template2);
-        templateTagRepository.save(templateTag21);
-        templateTagRepository.save(templateTag22);
-
-        Template template3 = new Template(member2, "Another Template", "Another Description", category1);
-        TemplateTag templateTag31 = new TemplateTag(template3, tag2);
-        templateRepository.save(template3);
-        templateTagRepository.save(templateTag31);
+        category = categoryRepository.save(new Category("Category 1", member));
     }
 
     @Test
     @DisplayName("findAllByTemplateTest 조회 성공")
     void findAllByTemplateTest() {
         //given
-        Template template = templateRepository.save(new Template(member1, "testTemplate", "testTemplate", category1));
+        Template template = templateRepository.save(new Template(member, "testTemplate", "testTemplate", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -93,11 +68,11 @@ class TemplateTagJpaRepositoryTest {
     void testFindDistinctByTemplateIn() {
         // given
         Template template1 = templateRepository.save(
-                new Template(member1, "testTemplate1", "testTemplate1", category1));
+                new Template(member, "testTemplate1", "testTemplate1", category));
         Template template2 = templateRepository.save(
-                new Template(member1, "testTemplate2", "testTemplate2", category1));
+                new Template(member, "testTemplate2", "testTemplate2", category));
         Template template3 = templateRepository.save(
-                new Template(member1, "testTemplate3", "testTemplate3", category1));
+                new Template(member, "testTemplate3", "testTemplate3", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -121,9 +96,9 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("findAllTemplateIdInTagIds 조회 테스트")
     void findAllTemplateIdInTagIds() {
         //given
-        Template template1 = templateRepository.save(new Template(member1, "title1", "description1", category1));
-        Template template2 = templateRepository.save(new Template(member1, "title2", "description2", category1));
-        Template template3 = templateRepository.save(new Template(member1, "title3", "description3", category1));
+        Template template1 = templateRepository.save(new Template(member, "title1", "description1", category));
+        Template template2 = templateRepository.save(new Template(member, "title2", "description2", category));
+        Template template3 = templateRepository.save(new Template(member, "title3", "description3", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
