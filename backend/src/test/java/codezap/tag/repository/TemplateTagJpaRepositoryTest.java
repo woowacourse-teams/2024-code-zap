@@ -122,4 +122,25 @@ class TemplateTagJpaRepositoryTest {
         assertThat(allTemplateIdInTagIds).containsExactly(template1.getId(), template2.getId())
                 .hasSize(2);
     }
+
+    @Test
+    @DisplayName("deleteAllByTemplateId 조회 테스트")
+    void deleteAllByTemplateId() {
+        //given
+        Template template = templateRepository.save(new Template(member, "title1", "description1", category));
+
+        Tag tag1 = tagRepository.save(new Tag("tag1"));
+        Tag tag2 = tagRepository.save(new Tag("tag2"));
+
+        templateTagRepository.save(new TemplateTag(template, tag1));
+        templateTagRepository.save(new TemplateTag(template, tag2));
+
+
+        //when
+        templateTagRepository.deleteAllByTemplateId(template.getId());
+        List<TemplateTag> templateTags = templateTagRepository.findAllByTemplate(template);
+
+        //then
+        assertThat(templateTags).isEmpty();
+    }
 }
