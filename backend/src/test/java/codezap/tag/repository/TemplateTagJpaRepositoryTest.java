@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -65,6 +66,26 @@ class TemplateTagJpaRepositoryTest {
         TemplateTag templateTag31 = new TemplateTag(template3, tag2);
         templateRepository.save(template3);
         templateTagRepository.save(templateTag31);
+    }
+
+    @Test
+    @DisplayName("findAllByTemplateTest 조회 성공")
+    void findAllByTemplateTest() {
+        //given
+        Template template = templateRepository.save(new Template(member1, "testTemplate", "testTemplate", category1));
+
+        Tag tag1 = tagRepository.save(new Tag("tag1"));
+        Tag tag2 = tagRepository.save(new Tag("tag2"));
+        tagRepository.save(new Tag("tag3"));
+
+        TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
+        TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
+
+        //when
+        List<TemplateTag> templateTags = templateTagRepository.findAllByTemplate(template);
+
+        //then
+        assertThat(templateTags).containsExactly(templateTag1, templateTag2);
     }
 
     @Test
