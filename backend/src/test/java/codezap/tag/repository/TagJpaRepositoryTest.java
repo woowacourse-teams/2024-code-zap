@@ -20,11 +20,11 @@ import codezap.tag.domain.Tag;
 @JpaRepositoryTest
 class TagJpaRepositoryTest {
 
-    private final TagJpaRepository tagJpaRepository;
+    private final TagRepository tagRepository;
 
     @Autowired
-    TagJpaRepositoryTest(TagJpaRepository tagJpaRepository) {
-        this.tagJpaRepository = tagJpaRepository;
+    TagJpaRepositoryTest(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     @Nested
@@ -33,9 +33,9 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("성공 : id로 태그를 알아낼 수 있다.")
         void fetchByIdSuccess() {
-            Tag tag = ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("tag"));
+            Tag tag = tagRepository.save(new Tag("tag"));
 
-            Tag actual = tagJpaRepository.fetchById(tag.getId());
+            Tag actual = tagRepository.fetchById(tag.getId());
 
             assertThat(actual).isEqualTo(tag);
         }
@@ -45,7 +45,7 @@ class TagJpaRepositoryTest {
         void fetchByIdFailByNotExistsId() {
             long id = 100;
 
-            assertThatThrownBy(() -> tagJpaRepository.fetchById(id))
+            assertThatThrownBy(() -> tagRepository.fetchById(id))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + id + "에 해당하는 태그가 존재하지 않습니다.");
         }
@@ -57,9 +57,9 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("성공 : 태그명으로 태그를 알아낼 수 있다.")
         void fetchByNameSuccess() {
-            Tag tag = ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("tag"));
+            Tag tag = tagRepository.save(new Tag("tag"));
 
-            Tag actual = tagJpaRepository.fetchByName(tag.getName());
+            Tag actual = tagRepository.fetchByName(tag.getName());
 
             assertThat(actual).isEqualTo(tag);
         }
@@ -69,7 +69,7 @@ class TagJpaRepositoryTest {
         void fetchByNameFailByNotExistsId() {
             String name = "태그";
 
-            assertThatThrownBy(() -> tagJpaRepository.fetchByName(name))
+            assertThatThrownBy(() -> tagRepository.fetchByName(name))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + name + "인 태그는 존재하지 않습니다.");
         }
@@ -81,9 +81,9 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("성공 : 태그명으로 태그를 알아낼 수 있다.")
         void findByNameSuccess() {
-            Tag tag = ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("태그"));
+            Tag tag = tagRepository.save(new Tag("태그"));
 
-            Optional<Tag> actual = tagJpaRepository.findByName(tag.getName());
+            Optional<Tag> actual = tagRepository.findByName(tag.getName());
 
             assertThat(actual).isEqualTo(Optional.of(tag));
         }
@@ -91,7 +91,7 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("실패 : 존재하지 않는 태그명인 경우 optional 값이 반환된다.")
         void findByNameFailByNotExistsId() {
-            Optional<Tag> actual = tagJpaRepository.findByName("태그");
+            Optional<Tag> actual = tagRepository.findByName("태그");
 
             assertThat(actual).isEmpty();
         }
@@ -100,11 +100,11 @@ class TagJpaRepositoryTest {
     @Test
     @DisplayName("성공 : 이름 목록에 포함된 모든 태그를 반환한다.")
     void findNameByNamesIn() {
-        ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("태그1"));
-        ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("태그2"));
-        ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("태그3"));
+        tagRepository.save(new Tag("태그1"));
+        tagRepository.save(new Tag("태그2"));
+        tagRepository.save(new Tag("태그3"));
 
-        List<String> actual = tagJpaRepository.findNameByNamesIn(List.of("태그1", "태그3", "태그4"));
+        List<String> actual = tagRepository.findNameByNamesIn(List.of("태그1", "태그3", "태그4"));
 
         assertAll(
                 () -> assertThat(actual).hasSize(2),
@@ -119,9 +119,9 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("성공 : 해당 아이디가 존재하면 true를 반환한다.")
         void existsByNameReturnTrue() {
-            Tag tag = ((JpaRepository<Tag, Long>) tagJpaRepository).save(new Tag("태그"));
+            Tag tag = tagRepository.save(new Tag("태그"));
 
-            boolean actual = tagJpaRepository.existsByName(tag.getName());
+            boolean actual = tagRepository.existsByName(tag.getName());
 
             assertThat(actual).isTrue();
         }
@@ -129,7 +129,7 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("성공 : 해당 아이디가 존재하지 않으면 false를 반환한다.")
         void existsByNameReturnFalse() {
-            boolean actual = tagJpaRepository.existsByName("태그");
+            boolean actual = tagRepository.existsByName("태그");
 
             assertThat(actual).isFalse();
         }
