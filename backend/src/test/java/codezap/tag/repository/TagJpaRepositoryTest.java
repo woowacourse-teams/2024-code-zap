@@ -2,7 +2,6 @@ package codezap.tag.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
@@ -106,10 +104,8 @@ class TagJpaRepositoryTest {
 
         List<String> actual = tagRepository.findNameByNamesIn(List.of("태그1", "태그3", "태그4"));
 
-        assertAll(
-                () -> assertThat(actual).hasSize(2),
-                () -> assertThat(actual).containsExactly("태그1", "태그3")
-        );
+        assertThat(actual).hasSize(2)
+                .containsExactly("태그1", "태그3");
     }
 
     @Nested
