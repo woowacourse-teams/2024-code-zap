@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
+import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
@@ -44,7 +45,7 @@ public class CategoryRepositoryTest {
         void fetchByIdFail() {
             var id = 100L;
             assertThatThrownBy(() -> sut.fetchById(id))
-                    .isInstanceOf(IllegalArgumentException.class)
+                    .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
     }
