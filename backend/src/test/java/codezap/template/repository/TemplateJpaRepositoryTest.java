@@ -54,7 +54,7 @@ class TemplateJpaRepositoryTest {
 
         @Test
         @DisplayName("템플릿 id로 템플릿 조회 성공")
-        void fetchById_W() {
+        void fetchById() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
             Template savedTemplate = templateRepository.save(TemplateFixture.get(member, category));
@@ -64,11 +64,7 @@ class TemplateJpaRepositoryTest {
 
         @Test
         @DisplayName("템플릿 id로 템플릿 조회 실패: 존재하지 않는 id")
-        void fetchById_WhenNotExistId() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template notSavedTemplate = TemplateFixture.get(member, category);
-
+        void fetchById_WhenNotExistsId() {
             Long notSavedId = 1L;
             assertThatThrownBy(() -> templateRepository.fetchById(notSavedId))
                     .isInstanceOf(CodeZapException.class)
@@ -76,5 +72,25 @@ class TemplateJpaRepositoryTest {
         }
     }
 
+    @Nested
+    @DisplayName("회원 id로 템플릿 조회")
+    class findByMemberId {
 
+        @Test
+        @DisplayName("회원 id로 템플릿 조회 성공")
+        void findByMemberId() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template savedTemplate = templateRepository.save(TemplateFixture.get(member, category));
+
+            assertThat(templateRepository.findByMemberId(member.getId())).containsExactly(savedTemplate);
+        }
+
+        @Test
+        @DisplayName("회원 id로 템플릿 조회 실패: 존재하지 않는 회원")
+        void findByMemberIdWhenNotExistsMember() {
+            Long notSavedId = 1L;
+            assertThat(templateRepository.findByMemberId(notSavedId)).isEmpty();
+        }
+    }
 }
