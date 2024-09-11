@@ -79,7 +79,7 @@ class TagJpaRepositoryTest {
 
             Optional<Tag> actual = tagRepository.findByName(tag.getName());
 
-            assertThat(actual).isEqualTo(Optional.of(tag));
+            assertThat(actual).hasValue(tag);
         }
 
         @Test
