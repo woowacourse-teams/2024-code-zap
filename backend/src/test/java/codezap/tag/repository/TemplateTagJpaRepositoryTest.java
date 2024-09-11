@@ -1,6 +1,7 @@
 package codezap.tag.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllByTemplateTest 조회 성공")
+    @DisplayName("Template 을 이용한 TemplateTag 목록 조회")
     void findAllByTemplateTest() {
         //given
         Template template = templateRepository.save(
@@ -68,7 +69,7 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("findDistinctByTemplateIn 조회 테스트")
+    @DisplayName("템플릿 id 목록이 사용하는 모든 태그 목록을 조회")
     void testFindDistinctByTemplateIn() {
         // given
         Template template1 = templateRepository.save(
@@ -97,7 +98,7 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("findAllTemplateIdInTagIds 조회 테스트")
+    @DisplayName("선택된 태그들을 모두 사용하는 템플릿 목록 조회")
     void findAllTemplateIdInTagIds() {
         //given
         Template template1 = templateRepository.save(
@@ -133,7 +134,7 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("deleteAllByTemplateId 조회 테스트")
+    @DisplayName("템플릿에 해당하는 모든 태그 삭제")
     void deleteAllByTemplateId() {
         //given
         Template template1 = templateRepository.save(
