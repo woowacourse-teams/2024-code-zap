@@ -64,10 +64,10 @@ class MemberJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("아이디로 Member 조회")
+    @DisplayName("닉네임(아이디)로 Member 조회")
     class fetchByName {
         @Test
-        @DisplayName("성공 : 아이디로 Member를 알아낼 수 있다.")
+        @DisplayName("성공 : 닉네임으로 Member를 알아낼 수 있다.")
         void fetchByNameSuccess() {
             Member member = MemberFixture.getFirstMember();
             member = memberRepository.save(member);
@@ -78,7 +78,7 @@ class MemberJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 아이디인 경우 에러가 발생한다.")
+        @DisplayName("실패 : 존재하지 않는 닉네임인 경우 에러가 발생한다.")
         void fetchByNameFailByNotExistsId() {
             String name = "켬미";
 
@@ -116,10 +116,10 @@ class MemberJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("아이디가 존재 여부")
+    @DisplayName("닉네임(아이디) 존재 여부")
     class existsByName {
         @Test
-        @DisplayName("성공 : 해당 아이디가 존재하면 true를 반환한다.")
+        @DisplayName("성공 : 해당 닉네임이 존재하면 true를 반환한다.")
         void existsByNameReturnTrue() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
 
@@ -129,7 +129,7 @@ class MemberJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("성공 : 해당 아이디가 존재하면 false를 반환한다.")
+        @DisplayName("성공 : 해당 닉네임이 존재하지 않으면 false를 반환한다.")
         void existsByNameReturnFalse() {
             boolean actual = memberRepository.existsByName("kkk");
 
