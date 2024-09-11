@@ -44,8 +44,7 @@ class MemberJpaRepositoryTest {
         @Test
         @DisplayName("성공 : id로 Member를 알아낼 수 있다.")
         void fetchByIdSuccess() {
-            Member member = MemberFixture.getFirstMember();
-            member = memberRepository.save(member);
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
 
             Member actual = memberRepository.fetchById(member.getId());
 
@@ -55,11 +54,11 @@ class MemberJpaRepositoryTest {
         @Test
         @DisplayName("실패 : 존재하지 않는 id인 경우 에러가 발생한다.")
         void fetchByIdFailByNotExistsId() {
-            long id = 100;
+            long notExistId = 100;
 
-            assertThatThrownBy(() -> memberRepository.fetchById(id))
+            assertThatThrownBy(() -> memberRepository.fetchById(notExistId))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + id + "에 해당하는 멤버가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + notExistId + "에 해당하는 멤버가 존재하지 않습니다.");
         }
     }
 
@@ -69,8 +68,7 @@ class MemberJpaRepositoryTest {
         @Test
         @DisplayName("성공 : 닉네임으로 Member를 알아낼 수 있다.")
         void fetchByNameSuccess() {
-            Member member = MemberFixture.getFirstMember();
-            member = memberRepository.save(member);
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
 
             Member actual = memberRepository.fetchByName(member.getName());
 
@@ -80,11 +78,11 @@ class MemberJpaRepositoryTest {
         @Test
         @DisplayName("실패 : 존재하지 않는 닉네임인 경우 에러가 발생한다.")
         void fetchByNameFailByNotExistsId() {
-            String name = "켬미";
+            String notExistName = "켬미";
 
-            assertThatThrownBy(() -> memberRepository.fetchByName(name))
+            assertThatThrownBy(() -> memberRepository.fetchByName(notExistName))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("존재하지 않는 아이디 " + name + " 입니다.");
+                    .hasMessage("존재하지 않는 아이디 " + notExistName + " 입니다.");
         }
     }
 
@@ -131,7 +129,7 @@ class MemberJpaRepositoryTest {
         @Test
         @DisplayName("성공 : 해당 닉네임이 존재하지 않으면 false를 반환한다.")
         void existsByNameReturnFalse() {
-            boolean actual = memberRepository.existsByName("kkk");
+            boolean actual = memberRepository.existsByName("notExist");
 
             assertThat(actual).isFalse();
         }
