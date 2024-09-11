@@ -53,7 +53,7 @@ class TemplateTagJpaRepositoryTest {
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
-        tagRepository.save(new Tag("tag3"));
+        Tag tag3 = tagRepository.save(new Tag("tag3"));
 
         TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
         TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
@@ -62,7 +62,8 @@ class TemplateTagJpaRepositoryTest {
         List<TemplateTag> templateTags = templateTagRepository.findAllByTemplate(template);
 
         //then
-        assertThat(templateTags).containsExactly(templateTag1, templateTag2);
+        assertThat(templateTags).containsExactly(templateTag1, templateTag2)
+                .doesNotContain(new TemplateTag(template, tag3));
     }
 
     @Test
