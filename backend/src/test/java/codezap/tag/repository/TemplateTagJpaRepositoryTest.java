@@ -169,7 +169,8 @@ class TemplateTagJpaRepositoryTest {
                     () -> assertThatThrownBy(() -> tagRepository.fetchById(notExistId))
                             .isInstanceOf(CodeZapException.class)
                             .hasMessageContaining("존재하지 않습니다."),
-                    () -> assertThatCode(() -> templateTagRepository.findAllTemplateIdInTagIds(List.of(notExistId), 1))
+                    () -> assertThatCode(() ->
+                            templateTagRepository.findAllTemplateIdInTagIds(List.of(notExistId), 1))
                             .doesNotThrowAnyException(),
                     () -> assertThat(templateTagRepository.findAllTemplateIdInTagIds(List.of(notExistId), 1))
                             .isEmpty()
