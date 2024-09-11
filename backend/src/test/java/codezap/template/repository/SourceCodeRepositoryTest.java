@@ -8,13 +8,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
-import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
@@ -40,10 +38,8 @@ public class SourceCodeRepositoryTest {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            var sourceCode2 = new SourceCode(template1, "SourceCode 2", "Content 2", 1);
-            sut.save(sourceCode1);
-            sut.save(sourceCode2);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 1));
 
             var result = sut.fetchById(1L);
 
@@ -52,7 +48,7 @@ public class SourceCodeRepositoryTest {
 
         @Test
         @DisplayName("실패: 존재하지 않는 ID로 조회할 경우 예외 발생")
-        void fetchByIdFailWithWrongId   () {
+        void fetchByIdFailWithWrongId() {
             var id = 100L;
             assertThatThrownBy(() -> sut.fetchById(id))
                     .isInstanceOf(CodeZapException.class)
@@ -70,12 +66,9 @@ public class SourceCodeRepositoryTest {
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            var sourceCode2 = new SourceCode(template1, "SourceCode 2", "Content 2", 2);
-            var sourceCode3 = new SourceCode(template2, "SourceCode 3", "Content 3", 1);
-            sut.save(sourceCode1);
-            sut.save(sourceCode2);
-            sut.save(sourceCode3);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
+            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
 
             var result = sut.findAllByTemplate(template1);
 
@@ -106,12 +99,9 @@ public class SourceCodeRepositoryTest {
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            var sourceCode2 = new SourceCode(template1, "SourceCode 2", "Content 2", 2);
-            var sourceCode3 = new SourceCode(template2, "SourceCode 3", "Content 3", 1);
-            sut.save(sourceCode1);
-            sut.save(sourceCode2);
-            sut.save(sourceCode3);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
+            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
 
             var result = sut.fetchByTemplateAndOrdinal(template1, 1);
 
@@ -124,8 +114,7 @@ public class SourceCodeRepositoryTest {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            sut.save(sourceCode1);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
 
             var ordinal = 100;
             assertThatThrownBy(() -> sut.fetchByTemplateAndOrdinal(template1, ordinal))
@@ -144,14 +133,10 @@ public class SourceCodeRepositoryTest {
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            var sourceCode2 = new SourceCode(template1, "SourceCode 2", "Content 2", 1);
-            var sourceCode3 = new SourceCode(template1, "SourceCode 3", "Content 3", 2);
-            var sourceCode4 = new SourceCode(template2, "SourceCode 4", "Content 4", 1);
-            sut.save(sourceCode1);
-            sut.save(sourceCode2);
-            sut.save(sourceCode3);
-            sut.save(sourceCode4);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 1));
+            var sourceCode3 = sut.save(new SourceCode(template1, "SourceCode 3", "Content 3", 2));
+            var sourceCode4 = sut.save(new SourceCode(template2, "SourceCode 4", "Content 4", 1));
 
             var result = sut.findAllByTemplateAndOrdinal(template1, 1);
 
@@ -170,12 +155,9 @@ public class SourceCodeRepositoryTest {
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            var sourceCode2 = new SourceCode(template1, "SourceCode 2", "Content 2", 2);
-            var sourceCode3 = new SourceCode(template2, "SourceCode 3", "Content 3", 1);
-            sut.save(sourceCode1);
-            sut.save(sourceCode2);
-            sut.save(sourceCode3);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
+            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
 
             var result = sut.countByTemplate(template1);
 
@@ -193,12 +175,9 @@ public class SourceCodeRepositoryTest {
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = new SourceCode(template1, "SourceCode 1", "Content 1", 1);
-            var sourceCode2 = new SourceCode(template1, "SourceCode 2", "Content 2", 2);
-            var sourceCode3 = new SourceCode(template2, "SourceCode 3", "Content 3", 1);
-            sut.save(sourceCode1);
-            sut.save(sourceCode2);
-            sut.save(sourceCode3);
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
+            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
 
             sut.deleteByTemplateId(1L);
             var result = sut.findAllByTemplate(template1);
