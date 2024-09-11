@@ -84,6 +84,7 @@ class TemplateTagJpaRepositoryTest {
         Tag tag3 = tagRepository.save(new Tag("tag3"));
 
         templateTagRepository.save(new TemplateTag(template1, tag1));
+        templateTagRepository.save(new TemplateTag(template2, tag2));
         templateTagRepository.save(new TemplateTag(template3, tag1));
         templateTagRepository.save(new TemplateTag(template3, tag3));
 
@@ -94,7 +95,8 @@ class TemplateTagJpaRepositoryTest {
 
         // then
         assertThat(result).hasSize(2)
-                .containsExactly(tag1.getId(), tag3.getId());
+                .containsExactly(tag1.getId(), tag3.getId())
+                .doesNotContain(tag2.getId());
     }
 
     @Test
