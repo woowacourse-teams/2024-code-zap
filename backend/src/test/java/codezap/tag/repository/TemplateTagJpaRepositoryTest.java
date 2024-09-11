@@ -49,7 +49,8 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("findAllByTemplateTest 조회 성공")
     void findAllByTemplateTest() {
         //given
-        Template template = templateRepository.save(new Template(member, "testTemplate", "testTemplate", category));
+        Template template = templateRepository.save(
+                new Template(member, "testTemplate", "testTemplate", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -99,9 +100,12 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("findAllTemplateIdInTagIds 조회 테스트")
     void findAllTemplateIdInTagIds() {
         //given
-        Template template1 = templateRepository.save(new Template(member, "title1", "description1", category));
-        Template template2 = templateRepository.save(new Template(member, "title2", "description2", category));
-        Template template3 = templateRepository.save(new Template(member, "title3", "description3", category));
+        Template template1 = templateRepository.save(
+                new Template(member, "title1", "description1", category));
+        Template template2 = templateRepository.save(
+                new Template(member, "title2", "description2", category));
+        Template template3 = templateRepository.save(
+                new Template(member, "title3", "description3", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -130,7 +134,8 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("deleteAllByTemplateId 조회 테스트")
     void deleteAllByTemplateId() {
         //given
-        Template template = templateRepository.save(new Template(member, "title1", "description1", category));
+        Template template = templateRepository.save(
+                new Template(member, "title1", "description1", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
