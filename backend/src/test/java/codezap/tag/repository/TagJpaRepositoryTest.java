@@ -37,11 +37,11 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("실패 : 존재하지 않는 id인 경우 에러가 발생한다.")
         void fetchByIdFailByNotExistsId() {
-            long id = 100;
+            long notExistId = 100;
 
-            assertThatThrownBy(() -> tagRepository.fetchById(id))
+            assertThatThrownBy(() -> tagRepository.fetchById(notExistId))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + id + "에 해당하는 태그가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + notExistId + "에 해당하는 태그가 존재하지 않습니다.");
         }
     }
 
@@ -49,7 +49,7 @@ class TagJpaRepositoryTest {
     @DisplayName("태그명으로 태그 조회")
     class fetchByName {
         @Test
-        @DisplayName("성공 : 태그명으로 태그를 알아낼 수 있다.")
+        @DisplayName("성공 : 태그명으로 태그를 조회할 수 있다.")
         void fetchByNameSuccess() {
             Tag tag = tagRepository.save(new Tag("tag"));
 
@@ -61,11 +61,11 @@ class TagJpaRepositoryTest {
         @Test
         @DisplayName("실패 : 존재하지 않는 태그명인 경우 에러가 발생한다.")
         void fetchByNameFailByNotExistsId() {
-            String name = "태그";
+            String notExistTagName = "태그";
 
-            assertThatThrownBy(() -> tagRepository.fetchByName(name))
+            assertThatThrownBy(() -> tagRepository.fetchByName(notExistTagName))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + name + "인 태그는 존재하지 않습니다.");
+                    .hasMessage("이름이 " + notExistTagName + "인 태그는 존재하지 않습니다.");
         }
     }
 
