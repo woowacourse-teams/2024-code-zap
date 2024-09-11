@@ -50,8 +50,7 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("Template 을 이용한 TemplateTag 목록 조회")
     void findAllByTemplateTest() {
         //given
-        Template template = templateRepository.save(
-                new Template(member, "testTemplate", "testTemplate", category));
+        Template template = templateRepository.save(createNthTemplate(member, category, 1));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -72,12 +71,9 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("템플릿 id 목록이 사용하는 모든 태그 목록을 조회")
     void testFindDistinctByTemplateIn() {
         // given
-        Template template1 = templateRepository.save(
-                new Template(member, "testTemplate1", "testTemplate1", category));
-        Template template2 = templateRepository.save(
-                new Template(member, "testTemplate2", "testTemplate2", category));
-        Template template3 = templateRepository.save(
-                new Template(member, "testTemplate3", "testTemplate3", category));
+        Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
+        Template template3 = templateRepository.save(createNthTemplate(member, category, 3));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -103,12 +99,9 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("선택된 태그들을 모두 사용하는 템플릿 목록 조회")
     void findAllTemplateIdInTagIds() {
         //given
-        Template template1 = templateRepository.save(
-                new Template(member, "title1", "description1", category));
-        Template template2 = templateRepository.save(
-                new Template(member, "title2", "description2", category));
-        Template template3 = templateRepository.save(
-                new Template(member, "title3", "description3", category));
+        Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
+        Template template3 = templateRepository.save(createNthTemplate(member, category, 3));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -139,10 +132,8 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("템플릿에 해당하는 모든 태그 삭제")
     void deleteAllByTemplateId() {
         //given
-        Template template1 = templateRepository.save(
-                new Template(member, "title1", "description1", category));
-        Template template2 = templateRepository.save(
-                new Template(member, "title2", "description2", category));
+        Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -161,5 +152,9 @@ class TemplateTagJpaRepositoryTest {
                 () -> assertThat(templateTagRepository.findAllByTemplate(template2)).hasSize(2)
                         .containsExactly(template2Tag1, template2Tag2)
         );
+    }
+
+    private Template createNthTemplate(Member member, Category category, int n) {
+        return new Template(member, "mockTitle" + n, "mockDescription" + n, category);
     }
 }
