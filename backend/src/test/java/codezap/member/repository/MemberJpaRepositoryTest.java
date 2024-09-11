@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryJpaRepository;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
@@ -17,26 +16,19 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
-import codezap.template.repository.TemplateJpaRepository;
 import codezap.template.repository.TemplateRepository;
 
 @JpaRepositoryTest
 class MemberJpaRepositoryTest {
 
-    private final MemberRepository memberRepository;
-    private final TemplateRepository templateRepository;
-    private final CategoryRepository categoryRepository;
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Autowired
-    MemberJpaRepositoryTest(
-            MemberJpaRepository memberRepository,
-            TemplateJpaRepository templateRepository,
-            CategoryJpaRepository categoryRepository
-    ) {
-        this.memberRepository = memberRepository;
-        this.templateRepository = templateRepository;
-        this.categoryRepository = categoryRepository;
-    }
+    private TemplateRepository templateRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Nested
     @DisplayName("id로 Member 조회")
