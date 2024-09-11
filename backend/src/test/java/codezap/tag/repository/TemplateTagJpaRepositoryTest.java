@@ -126,8 +126,10 @@ class TemplateTagJpaRepositoryTest {
                 List.of(tag2.getId(), tag3.getId()), 2);
 
         //then
-        assertThat(allTemplateIdInTagIds).containsExactly(template1.getId(), template2.getId())
-                .hasSize(2);
+        assertThat(allTemplateIdInTagIds)
+                .hasSize(2)
+                .containsExactly(template1.getId(), template2.getId())
+                .doesNotContain(template3.getId());
     }
 
     @Test
