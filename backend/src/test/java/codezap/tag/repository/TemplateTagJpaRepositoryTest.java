@@ -112,14 +112,14 @@ class TemplateTagJpaRepositoryTest {
         Tag tag3 = tagRepository.save(new Tag("tag3"));
 
         templateTagRepository.save(new TemplateTag(template1, tag1));
-        templateTagRepository.save(new TemplateTag(template1, tag2));
-        templateTagRepository.save(new TemplateTag(template1, tag3));
-
-        templateTagRepository.save(new TemplateTag(template2, tag2));
-        templateTagRepository.save(new TemplateTag(template2, tag3));
-
         templateTagRepository.save(new TemplateTag(template3, tag1));
+
+        templateTagRepository.save(new TemplateTag(template1, tag2));
+        templateTagRepository.save(new TemplateTag(template2, tag2));
+
+        templateTagRepository.save(new TemplateTag(template1, tag3));
         templateTagRepository.save(new TemplateTag(template2, tag3));
+        templateTagRepository.save(new TemplateTag(template3, tag3));
 
         //when
         List<Long> allTemplateIdInTagIds = templateTagRepository.findAllTemplateIdInTagIds(
