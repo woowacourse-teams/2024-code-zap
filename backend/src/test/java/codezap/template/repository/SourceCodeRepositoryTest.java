@@ -92,7 +92,7 @@ public class SourceCodeRepositoryTest {
 
             var result = sut.findAllByTemplate(template1);
 
-            assertThat(result).hasSize(0);
+            assertThat(result).isEmpty();
         }
     }
 
@@ -203,7 +203,7 @@ public class SourceCodeRepositoryTest {
             sut.deleteByTemplateId(1L);
             var result = sut.findAllByTemplate(template1);
 
-            assertThat(result).hasSize(0);
+            assertThat(result).isEmpty();
         }
     }
 }
