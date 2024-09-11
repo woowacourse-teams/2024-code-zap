@@ -51,7 +51,7 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("성공 : Template 을 이용한 TemplateTag 목록 조회")
+    @DisplayName("Template 을 이용한 TemplateTag 목록 조회 성공")
     void findAllByTemplateTest() {
         //given
         Template template = templateRepository.save(createNthTemplate(member, category, 1));
@@ -76,7 +76,7 @@ class TemplateTagJpaRepositoryTest {
     class FindDistinctByTemplateIn {
 
         @Test
-        @DisplayName("성공 : 정상적으로 태그 목록 조회")
+        @DisplayName("태그 목록 조회 성공 : 정상적으로 태그 목록 조회")
         void testFindDistinctByTemplateIn() {
             // given
             Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
@@ -104,7 +104,7 @@ class TemplateTagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 템플릿 id를 사용하면 예외가 터지지 않고 해당 id 값이 무시된다.")
+        @DisplayName("태그 목록 조회 성공 : 존재하지 않는 템플릿 id를 사용하면 예외가 터지지 않고 해당 id 값이 무시된다.")
         void notExistTemplateIdTest() {
             long notExistTemplateId = 100L;
 
@@ -126,7 +126,7 @@ class TemplateTagJpaRepositoryTest {
     class findAllTemplateIdInTagIds {
 
         @Test
-        @DisplayName("성공 : 템플릿 목록을 정상적으로 조회한다.")
+        @DisplayName("템플릿 목록 조회 성공 : 템플릿 목록을 정상적으로 조회한다.")
         void successTest() {
             //given
             Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
@@ -159,7 +159,7 @@ class TemplateTagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 태그를 검색 조건으로 사용하면 예외가 터지지 않고 해당 조건이 무시된다.")
+        @DisplayName("템플릿 목록 조회 성공 : 존재하지 않는 태그를 검색 조건으로 사용하면 예외가 터지지 않고 해당 조건이 무시된다.")
         void notExistTagTest() {
             //given
             long notExistId = 100L;
@@ -183,7 +183,7 @@ class TemplateTagJpaRepositoryTest {
     class deleteAllByTemplateId {
 
         @Test
-        @DisplayName("성공 : 주어진 id 의 템플릿에선 태그가 삭제되고, 나머지 템플릿의 태그에는 영향을 주지 않는다.")
+        @DisplayName("태그 삭제 성공 : 주어진 id 의 템플릿에선 태그가 삭제되고, 나머지 템플릿의 태그에는 영향을 주지 않는다.")
         void successTest() {
             //given
             Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
@@ -209,7 +209,7 @@ class TemplateTagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 id 를 사용해도 예외가 발생하지 않고 아무 영향이 없다.")
+        @DisplayName("태그 삭제 성공 : 존재하지 않는 id 를 사용해도 예외가 발생하지 않고 아무 영향이 없다.")
         void notExistIdTest() {
             //given
             Template template = templateRepository.save(createNthTemplate(member, category, 1));
