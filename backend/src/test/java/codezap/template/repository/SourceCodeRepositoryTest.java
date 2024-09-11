@@ -110,7 +110,7 @@ public class SourceCodeRepositoryTest {
 
         @Test
         @DisplayName("실패: 잘못된 순서로 조회하는 경우 예외가 발생")
-        void fetchByTemplateAndOrdinalFaitWithWrongOrdinal() {
+        void fetchByTemplateAndOrdinalFailWithWrongOrdinal() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
@@ -129,16 +129,17 @@ public class SourceCodeRepositoryTest {
         @Test
         @DisplayName("성공: 템플릿과 순서에 해당하는 전체 소스코드 조회")
         void findAllByTemplateAndOrdinalSuccess() {
+            var ordinal = 1;
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 1));
+            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", ordinal));
+            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", ordinal));
             var sourceCode3 = sut.save(new SourceCode(template1, "SourceCode 3", "Content 3", 2));
-            var sourceCode4 = sut.save(new SourceCode(template2, "SourceCode 4", "Content 4", 1));
+            var sourceCode4 = sut.save(new SourceCode(template2, "SourceCode 4", "Content 4", ordinal));
 
-            var result = sut.findAllByTemplateAndOrdinal(template1, 1);
+            var result = sut.findAllByTemplateAndOrdinal(template1, ordinal);
 
             assertThat(result).hasSize(2)
                     .containsExactly(sourceCode1, sourceCode2);
