@@ -136,21 +136,27 @@ class TemplateTagJpaRepositoryTest {
     @DisplayName("deleteAllByTemplateId 조회 테스트")
     void deleteAllByTemplateId() {
         //given
-        Template template = templateRepository.save(
+        Template template1 = templateRepository.save(
                 new Template(member, "title1", "description1", category));
+        Template template2 = templateRepository.save(
+                new Template(member, "title2", "description2", category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
 
-        templateTagRepository.save(new TemplateTag(template, tag1));
-        templateTagRepository.save(new TemplateTag(template, tag2));
-
+        templateTagRepository.save(new TemplateTag(template1, tag1));
+        templateTagRepository.save(new TemplateTag(template1, tag2));
+        TemplateTag template2Tag1 = templateTagRepository.save(new TemplateTag(template2, tag1));
+        TemplateTag template2Tag2 = templateTagRepository.save(new TemplateTag(template2, tag2));
 
         //when
-        templateTagRepository.deleteAllByTemplateId(template.getId());
-        List<TemplateTag> templateTags = templateTagRepository.findAllByTemplate(template);
+        templateTagRepository.deleteAllByTemplateId(template1.getId());
 
         //then
-        assertThat(templateTags).isEmpty();
+        assertAll(
+                () -> assertThat(templateTagRepository.findAllByTemplate(template1)).isEmpty(),
+                () -> assertThat(templateTagRepository.findAllByTemplate(template2)).hasSize(2)
+                        .containsExactly(template2Tag1, template2Tag2)
+        );
     }
 }
