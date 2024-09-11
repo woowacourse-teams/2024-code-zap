@@ -25,7 +25,7 @@ class TagJpaRepositoryTest {
     @DisplayName("id로 태그 조회")
     class fetchById {
         @Test
-        @DisplayName("성공 : id로 태그를 알아낼 수 있다.")
+        @DisplayName("id로 태그 조회 성공 : id로 태그를 알아낼 수 있다.")
         void fetchByIdSuccess() {
             Tag tag = tagRepository.save(new Tag("tag"));
 
@@ -35,7 +35,7 @@ class TagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 id인 경우 에러가 발생한다.")
+        @DisplayName("id로 태그 조회 실패 : 존재하지 않는 id인 경우 에러가 발생한다.")
         void fetchByIdFailByNotExistsId() {
             long notExistId = 100;
 
@@ -46,10 +46,10 @@ class TagJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("태그명으로 태그 조회")
+    @DisplayName("태그명으로 태그 조회(fetch)")
     class fetchByName {
         @Test
-        @DisplayName("성공 : 태그명으로 태그를 조회할 수 있다.")
+        @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 조회할 수 있다.")
         void fetchByNameSuccess() {
             Tag tag = tagRepository.save(new Tag("tag"));
 
@@ -59,7 +59,7 @@ class TagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 태그명인 경우 에러가 발생한다.")
+        @DisplayName("태그명으로 태그 조회 실패 : 존재하지 않는 태그명인 경우 에러가 발생한다.")
         void fetchByNameFailByNotExistsId() {
             String notExistTagName = "태그";
 
@@ -70,10 +70,10 @@ class TagJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("태그명으로 태그 조회")
+    @DisplayName("태그명으로 태그 조회(find)")
     class findByName {
         @Test
-        @DisplayName("성공 : 태그명으로 태그를 알아낼 수 있다.")
+        @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 알아낼 수 있다.")
         void findByNameSuccess() {
             Tag tag = tagRepository.save(new Tag("태그"));
 
@@ -83,7 +83,7 @@ class TagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패 : 존재하지 않는 태그명인 경우 optional 값이 반환된다.")
+        @DisplayName("태그명으로 태그 조회 실패 : 존재하지 않는 태그명인 경우 optional 값이 반환된다.")
         void findByNameFailByNotExistsId() {
             Optional<Tag> actual = tagRepository.findByName("태그");
 
@@ -92,7 +92,7 @@ class TagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("성공 : 이름 목록에 포함된 모든 태그를 반환한다.")
+    @DisplayName("이름 목록 조회 성공 : 이름 목록에 포함된 모든 태그를 반환한다.")
     void findNameByNamesIn() {
         tagRepository.save(new Tag("태그1"));
         tagRepository.save(new Tag("태그2"));
@@ -109,7 +109,7 @@ class TagJpaRepositoryTest {
     class existsByName {
 
         @Test
-        @DisplayName("성공 : 해당 아이디가 존재하면 true를 반환한다.")
+        @DisplayName("태그명 존재 여부 성공 : 해당 아이디가 존재하면 true를 반환한다.")
         void existsByNameReturnTrue() {
             Tag tag = tagRepository.save(new Tag("태그"));
 
@@ -119,7 +119,7 @@ class TagJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("성공 : 해당 아이디가 존재하지 않으면 false를 반환한다.")
+        @DisplayName("태그명 존재 여부 성공 : 해당 아이디가 존재하지 않으면 false를 반환한다.")
         void existsByNameReturnFalse() {
             boolean actual = tagRepository.existsByName("태그");
 
