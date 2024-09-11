@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.CategoryFixture;
+import codezap.fixture.MemberFixture;
 import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
@@ -38,9 +40,9 @@ class TemplateTagJpaRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        member = memberRepository.save(new Member("user1@test.com", "pp", "salt1"));
+        member = memberRepository.save(MemberFixture.getFirstMember());
 
-        category = categoryRepository.save(new Category("Category 1", member));
+        category = categoryRepository.save(CategoryFixture.getFirstCategory());
     }
 
     @Test
