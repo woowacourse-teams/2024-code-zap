@@ -18,12 +18,8 @@ import codezap.tag.domain.Tag;
 @JpaRepositoryTest
 class TagJpaRepositoryTest {
 
-    private final TagRepository tagRepository;
-
     @Autowired
-    TagJpaRepositoryTest(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
+    private TagRepository tagRepository;
 
     @Nested
     @DisplayName("id로 태그 조회")
