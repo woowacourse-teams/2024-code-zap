@@ -43,10 +43,10 @@ public class CategoryRepositoryTest {
         @Test
         @DisplayName("실패: 존재하지 않는 id로 조회할 경우 예외 발생")
         void fetchByIdFail() {
-            var id = 100L;
-            assertThatThrownBy(() -> sut.fetchById(id))
+            var notExistId = 100L;
+            assertThatThrownBy(() -> sut.fetchById(notExistId))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + notExistId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
     }
 
@@ -57,18 +57,16 @@ public class CategoryRepositoryTest {
         @Test
         @DisplayName("성공: 회원의 모든 카테고리를 id 오름차순으로 조회할 수 있다.")
         void findAllByMemberOrderByIdSuccess() {
-            var member = new Member("Zappy", "password", "salt");
-            memberRepository.save(member);
-            var category1 = new Category("category1", member);
-            sut.save(category1);
-            var category2 = new Category("category2", member);
-            sut.save(category2);
-            var category3 = new Category("category3", member);
-            sut.save(category3);
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category1 = sut.save(new Category("category1", member));
+            var category2 = sut.save(new Category("category2", member));
+            var category3 = sut.save(new Category("category3", member));
+            var category4 = sut.save(new Category("category4", member));
+            var category5 = sut.save(new Category("category5", member));
 
             var actual = sut.findAllByMemberOrderById(member);
 
-            assertThat(actual).containsExactly(category1, category2, category3);
+            assertThat(actual).containsExactly(category1, category2, category3, category4, category5);
         }
     }
 
