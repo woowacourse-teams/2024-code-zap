@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
+import codezap.fixture.CategoryFixture;
+import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
@@ -30,10 +32,8 @@ public class CategoryRepositoryTest {
         @Test
         @DisplayName("성공: id로 카테고리를 조회할 수 있다.")
         void fetchByIdSuccess() {
-            var member = new Member("Zappy", "password", "salt");
-            memberRepository.save(member);
-            var category = new Category("category1", member);
-            sut.save(category);
+            memberRepository.save(MemberFixture.getFirstMember());
+            var category = sut.save(CategoryFixture.getFirstCategory());
 
             var actual = sut.fetchById(category.getId());
 
