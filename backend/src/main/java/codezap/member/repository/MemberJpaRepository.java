@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -28,7 +29,7 @@ public interface MemberJpaRepository extends MemberRepository, JpaRepository<Mem
     }
 
     @Query("SELECT t.member FROM Template t WHERE t.id = :templateId")
-    Optional<Member> findByTemplateId(Long templateId);
+    Optional<Member> findByTemplateId(@Param("templateId") Long templateId);
 
     Optional<Member> findByName(String name);
 
