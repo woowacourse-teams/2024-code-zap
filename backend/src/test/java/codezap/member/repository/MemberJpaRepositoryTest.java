@@ -34,7 +34,7 @@ class MemberJpaRepositoryTest {
     @DisplayName("id로 Member 조회")
     class fetchById {
         @Test
-        @DisplayName("id로 Member 조회 성공 : id로 Member를 알아낼 수 있다.")
+        @DisplayName("성공 : id로 Member 조회 가능")
         void fetchByIdSuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
 
@@ -44,7 +44,7 @@ class MemberJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("id로 Member 조회 실패 : 존재하지 않는 id인 경우 에러가 발생한다.")
+        @DisplayName("실패 : 존재하지 않는 id인 경우 예외 발생")
         void fetchByIdFailByNotExistsId() {
             long notExistId = 100;
 
@@ -58,7 +58,7 @@ class MemberJpaRepositoryTest {
     @DisplayName("닉네임(아이디)로 Member 조회")
     class fetchByName {
         @Test
-        @DisplayName("닉네임으로 Member 조회 성공 : 닉네임으로 Member를 알아낼 수 있다.")
+        @DisplayName("성공 : 닉네임으로 Member 조회 가능")
         void fetchByNameSuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
 
@@ -68,7 +68,7 @@ class MemberJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("닉네임으로 Member 조회 실패 : 존재하지 않는 닉네임인 경우 에러가 발생한다.")
+        @DisplayName("실패 : 존재하지 않는 닉네임인 경우 예외 발생")
         void fetchByNameFailByNotExistsId() {
             String notExistName = "켬미";
 
@@ -82,7 +82,7 @@ class MemberJpaRepositoryTest {
     @DisplayName("템플릿 id로 Member 조회")
     class fetchByTemplateId {
         @Test
-        @DisplayName("템플릿 id로 Member 조회 성공 : 템플릿 id로 Member를 알아낼 수 있다.")
+        @DisplayName("성공 : 템플릿 id로 Member 조회 가능")
         void fetchByTemplateIdSuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
@@ -94,7 +94,7 @@ class MemberJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("템플릿 id로 Member 조회 실패 : 존재하지 않는 템플릿 id인 경우 에러가 발생한다.")
+        @DisplayName("실패 : 존재하지 않는 템플릿 id인 경우 예외 발생")
         void fetchByTemplateIdFailByNotExistsId() {
             long notExistId = 100;
 
@@ -108,7 +108,7 @@ class MemberJpaRepositoryTest {
     @DisplayName("닉네임(아이디) 존재 여부")
     class existsByName {
         @Test
-        @DisplayName("닉네임 존재 여부 성공 : 해당 닉네임이 존재하면 true를 반환한다.")
+        @DisplayName("성공 : 해당 닉네임이 존재하면 true를 반환")
         void existsByNameReturnTrue() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
 
@@ -118,7 +118,7 @@ class MemberJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("닉네임 존재 여부 성공 : 해당 닉네임이 존재하지 않으면 false를 반환한다.")
+        @DisplayName("성공 : 해당 닉네임이 존재하지 않으면 false를 반환")
         void existsByNameReturnFalse() {
             boolean actual = memberRepository.existsByName("notExist");
 
