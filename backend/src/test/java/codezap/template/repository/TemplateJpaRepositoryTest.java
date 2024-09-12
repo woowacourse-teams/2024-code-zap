@@ -118,26 +118,11 @@ class TemplateJpaRepositoryTest {
 
         @BeforeEach
         void setUp() {
-            member1 = memberRepository.save(MemberFixture.getFirstMember());
-            member2 = memberRepository.save(MemberFixture.getSecondMember());
-
-            category1 = categoryRepository.save(new Category("Category 1", member1));
-            category2 = categoryRepository.save(new Category("Category 2", member1));
-
-            tag1 = tagRepository.save(new Tag("Tag 1"));
-            tag2 = tagRepository.save(new Tag("Tag 2"));
-
-            template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-            template2 = templateRepository.save(TemplateFixture.get(member1, category2));
-            template3 = templateRepository.save(TemplateFixture.get(member2, category1));
-
-            templateTagRepository.save(new TemplateTag(template1, tag1));
-            templateTagRepository.save(new TemplateTag(template1, tag2));
-
-            templateTagRepository.save(new TemplateTag(template2, tag1));
-            templateTagRepository.save(new TemplateTag(template2, tag2));
-
-            templateTagRepository.save(new TemplateTag(template3, tag2));
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
         }
 
         @Test
@@ -284,6 +269,37 @@ class TemplateJpaRepositoryTest {
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
             assertThat(result.getContent()).isEmpty();
+        }
+
+        void saveTwoMembers() {
+            member1 = memberRepository.save(MemberFixture.getFirstMember());
+            member2 = memberRepository.save(MemberFixture.getSecondMember());
+        }
+
+        void saveTwoCategory() {
+            category1 = categoryRepository.save(new Category("Category 1", member1));
+            category2 = categoryRepository.save(new Category("Category 2", member1));
+        }
+
+        void saveTwoTags() {
+            tag1 = tagRepository.save(new Tag("Tag 1"));
+            tag2 = tagRepository.save(new Tag("Tag 2"));
+        }
+
+        void saveThreeTemplates() {
+            template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            template2 = templateRepository.save(TemplateFixture.get(member1, category2));
+            template3 = templateRepository.save(TemplateFixture.get(member2, category1));
+        }
+
+        void saveTemplateTags() {
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            templateTagRepository.save(new TemplateTag(template1, tag2));
+
+            templateTagRepository.save(new TemplateTag(template2, tag1));
+            templateTagRepository.save(new TemplateTag(template2, tag2));
+
+            templateTagRepository.save(new TemplateTag(template3, tag2));
         }
     }
 }
