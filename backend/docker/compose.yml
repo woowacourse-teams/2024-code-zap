@@ -1,0 +1,33 @@
+name: code-zap
+
+services:
+  mysql:
+    image: mysql:8.4.2
+    expose:
+      - ${MYSQL_PORT}
+    ports:
+      - ${HOST_PORT}:${MYSQL_PORT}
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      TZ: Asia/Seoul
+    volumes:
+      - code-zap:/var/lib/mysql
+
+  spring:
+    image: amazoncorretto:17
+    ports:
+      - "8080:8080"
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - ./app:/app
+    entrypoint: [
+      "java", "-jar",
+      "-Dspring.config.location=/app/application.yml",
+      "-Dspring.profiles.active=local",
+      "/app/zap.jar"
+    ]
+
+volumes:
+  code-zap:
