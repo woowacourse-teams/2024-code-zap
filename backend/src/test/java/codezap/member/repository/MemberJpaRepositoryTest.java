@@ -96,9 +96,9 @@ class MemberJpaRepositoryTest {
         @Test
         @DisplayName("템플릿 id로 Member 조회 실패 : 존재하지 않는 템플릿 id인 경우 에러가 발생한다.")
         void fetchByTemplateIdFailByNotExistsId() {
-            long id = 100;
+            long notExistId = 100;
 
-            assertThatThrownBy(() -> memberRepository.fetchByTemplateId(id))
+            assertThatThrownBy(() -> memberRepository.fetchByTemplateId(notExistId))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("템플릿에 대한 멤버가 존재하지 않습니다.");
         }
