@@ -1,6 +1,7 @@
 package codezap.template.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
-import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
@@ -44,16 +45,11 @@ public class ThumbnailRepositoryTest {
         @DisplayName("성공: id로 썸네일 조회")
         void fetchByIdSuccess() {
             // given
-            var member = new Member("Zappy", "password", "salt");
-            memberRepository.save(member);
-            var category = Category.createDefaultCategory(member);
-            categoryRepository.save(category);
-            var template = new Template(member, "Template Title", "Description", category);
-            templateRepository.save(template);
-            var sourceCode = new SourceCode(template, "filename", "content", 1);
-            sourceCodeRepository.save(sourceCode);
-            var thumbnail = new Thumbnail(template, sourceCode);
-            sut.save(thumbnail);
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(new Template(member, "Template Title", "Description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            var thumbnail = sut.save(new Thumbnail(template, sourceCode));
 
             // when
             var actual = sut.fetchById(thumbnail.getId());
@@ -65,11 +61,11 @@ public class ThumbnailRepositoryTest {
         @Test
         @DisplayName("실패: 존재하지 않는 id로 썸네일 조회")
         void fetchByIdFail() {
-            var id = 100L;
+            var notExistId = 100L;
 
-            assertThatThrownBy(() -> sut.fetchById(id))
+            assertThatThrownBy(() -> sut.fetchById(notExistId))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + id + "에 해당하는 썸네일이 존재하지 않습니다.");
+                    .hasMessage("식별자 " + notExistId + "에 해당하는 썸네일이 존재하지 않습니다.");
         }
     }
 
@@ -81,21 +77,16 @@ public class ThumbnailRepositoryTest {
         @DisplayName("성공: 템플릿으로 썸네일 조회")
         void fetchByTemplateSuccess() {
             // given
-            var member = new Member("Zappy", "password", "salt");
-            memberRepository.save(member);
-            var category = Category.createDefaultCategory(member);
-            categoryRepository.save(category);
-            var template = new Template(member, "Template Title", "Description", category);
-            templateRepository.save(template);
-            var sourceCode = new SourceCode(template, "filename", "content", 1);
-            sourceCodeRepository.save(sourceCode);
-            var thumbnail = new Thumbnail(template, sourceCode);
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(new Template(member, "Template Title", "Description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            var thumbnail = sut.save(new Thumbnail(template, sourceCode));
 
             // when
-            sut.save(thumbnail);
+            var actual = sut.fetchByTemplate(template);
 
             // then
-            var actual = sut.fetchByTemplate(template);
             assertThat(actual).isEqualTo(thumbnail);
         }
     }
@@ -108,16 +99,11 @@ public class ThumbnailRepositoryTest {
         @DisplayName("성공: 템플릿 id로 썸네일 삭제")
         void deleteByTemplateIdSuccess() {
             // given
-            var member = new Member("Zappy", "password", "salt");
-            memberRepository.save(member);
-            var category = Category.createDefaultCategory(member);
-            categoryRepository.save(category);
-            var template = new Template(member, "Template Title", "Description", category);
-            templateRepository.save(template);
-            var sourceCode = new SourceCode(template, "filename", "content", 1);
-            sourceCodeRepository.save(sourceCode);
-            var thumbnail = new Thumbnail(template, sourceCode);
-            sut.save(thumbnail);
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(new Template(member, "Template Title", "Description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            sut.save(new Thumbnail(template, sourceCode));
 
             // when
             sut.deleteByTemplateId(template.getId());
@@ -126,6 +112,13 @@ public class ThumbnailRepositoryTest {
             assertThatThrownBy(() -> sut.fetchById(template.getId()))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + 1 + "에 해당하는 썸네일이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("성공: 존재하지 않는 템플릿의 id로 삭제해도 예외로 처리하지 않는다.")
+        void deleteByNotExistTemplateId() {
+            assertThatCode(() -> sut.deleteByTemplateId(100L))
+                    .doesNotThrowAnyException();
         }
     }
 }
