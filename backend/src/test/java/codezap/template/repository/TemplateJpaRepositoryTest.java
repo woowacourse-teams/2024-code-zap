@@ -117,7 +117,7 @@ class TemplateJpaRepositoryTest {
         private Template template1, template2, template3;
 
         @Test
-        @DisplayName("회원 ID로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 회원 ID로 템플릿 조회 성공")
         void testFindByMemberId() {
             saveTwoMembers();
             saveTwoCategory();
@@ -136,7 +136,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("키워드로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 키워드로 템플릿 조회 성공")
         void testFindByKeyword() {
             saveTwoMembers();
             saveTwoCategory();
@@ -158,7 +158,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("카테고리 ID로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 카테고리 ID로 템플릿 조회 성공")
         void testFindByCategoryId() {
             saveTwoMembers();
             saveTwoCategory();
@@ -178,7 +178,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("태그 ID 목록으로 템플릿 조회: 모든 태그를 가진 템플릿만 조회 성공")
+        @DisplayName("검색 테스트: 태그 ID 목록으로 템플릿 조회, 모든 태그를 가진 템플릿만 조회 성공")
         void testFindByTagIds() {
             saveTwoMembers();
             saveTwoCategory();
@@ -200,7 +200,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("단일 태그 ID로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 단일 태그 ID로 템플릿 조회 성공")
         void testFindBySingleTagId() {
             saveTwoMembers();
             saveTwoCategory();
@@ -222,7 +222,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("회원 ID와 키워드로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 회원 ID와 키워드로 템플릿 조회 성공")
         void testFindByMemberIdAndKeyword() {
             saveTwoMembers();
             saveTwoCategory();
@@ -246,7 +246,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("회원 ID와 카테고리 ID로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 회원 ID와 카테고리 ID로 템플릿 조회 성공")
         void testFindByMemberIdAndCategoryId() {
             saveTwoMembers();
             saveTwoCategory();
@@ -266,7 +266,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("회원 ID와 태그 ID 목록으로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 회원 ID와 태그 ID 목록으로 템플릿 조회 성공")
         void testFindByMemberIdAndTagIds() {
             saveTwoMembers();
             saveTwoCategory();
@@ -287,7 +287,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("모든 검색 기준으로 템플릿 조회 성공")
+        @DisplayName("검색 테스트: 모든 검색 기준으로 템플릿 조회 성공")
         void testFindWithAllCriteria() {
             saveTwoMembers();
             saveTwoCategory();
@@ -308,7 +308,7 @@ class TemplateJpaRepositoryTest {
         }
 
         @Test
-        @DisplayName("검색 결과가 없는 경우 빈 리스트 반환 성공")
+        @DisplayName("검색 테스트: 검색 결과가 없는 경우 빈 리스트 반환 성공")
         void testFindWithNoResults() {
             saveTwoMembers();
             saveTwoCategory();
