@@ -23,5 +23,5 @@ out/
 application-db.yml
 
 ### compose ###
-docker/app
+docker/app/*.jar
 docker/.env
