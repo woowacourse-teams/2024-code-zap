@@ -4,11 +4,12 @@ import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 
 import { PersonIcon } from '@/assets/images';
 import { Button, Flex, TagButton, Text } from '@/components';
-import { useToggle } from '@/hooks/utils';
+import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { getLanguageByFilename } from '@/utils';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+
 import * as S from './TemplateCard.style';
 
 interface Props {

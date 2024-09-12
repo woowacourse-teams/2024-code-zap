@@ -1,4 +1,5 @@
 import { Text } from '@/components';
+
 import * as S from './Footer.style';
 
 const Footer = () => (

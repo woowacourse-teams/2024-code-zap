@@ -3,30 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, PlusIcon, SearchIcon, ZapzapCuriousLogo } from '@/assets/images';
-import {
-  CategoryFilterMenu,
-  Flex,
-  Heading,
-  Input,
-  TemplateGrid,
-  PagingButtons,
-  Dropdown,
-  TagFilterMenu,
-  Button,
-  Modal,
-  Text,
-  LoadingBall,
-} from '@/components';
-import { useAuth } from '@/hooks/authentication/useAuth';
-import { useWindowWidth, useDebounce, useToggle } from '@/hooks/utils';
-import { useDropdown } from '@/hooks/utils/useDropdown';
-import { useInput } from '@/hooks/utils/useInput';
-import { useCategoryListQuery } from '@/queries/category';
-import { useTagListQuery } from '@/queries/tag';
-import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/template';
+import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text, LoadingBall } from '@/components';
+import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
+import { useCategoryListQuery } from '@/queries/categories';
+import { useTagListQuery } from '@/queries/tags';
+import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 import { scroll } from '@/utils';
+
+import { CategoryFilterMenu, TemplateGrid, TagFilterMenu } from './components';
 import * as S from './MyTemplatePage.style';
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);

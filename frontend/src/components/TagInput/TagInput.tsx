@@ -2,7 +2,7 @@ import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction } from 'react';
 
 import { Flex, Input, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks/utils';
+import { useCustomContext } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
 import { theme } from '@/style/theme';
 import { removeAllWhitespace } from '@/utils/removeAllWhitespace';

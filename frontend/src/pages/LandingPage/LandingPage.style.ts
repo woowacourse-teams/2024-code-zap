@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { EditorView } from '@uiw/react-codemirror';
 
 export const Container = styled.div`
   max-width: 1200px;
@@ -101,3 +102,8 @@ export const SyntaxHighlighterWrapper = styled.div<{ isOpen: boolean }>`
   max-height: ${({ isOpen }) => (isOpen ? '1000rem' : '0')};
   animation: ${({ isOpen }) => (!isOpen ? 'collapse' : 'expand')} 0.7s ease-in-out forwards;
 `;
+
+export const CustomCodeMirrorTheme = EditorView.theme({
+  '.cm-activeLine': { backgroundColor: `transparent !important` },
+  '.cm-activeLineGutter': { backgroundColor: `transparent !important` },
+});

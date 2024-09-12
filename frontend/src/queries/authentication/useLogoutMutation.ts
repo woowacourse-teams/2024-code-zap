@@ -2,8 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 
 import { postLogout } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useCustomContext } from '@/hooks/utils';
 
 export const useLogoutMutation = () => {
   const { handleLoginState } = useAuth();

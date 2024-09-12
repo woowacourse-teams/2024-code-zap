@@ -6,14 +6,14 @@ import { useParams } from 'react-router-dom';
 
 import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
 import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
-import { CustomCodeMirrorTheme } from '@/components/TemplateCard/TemplateCard.style';
 import { ToastContext } from '@/contexts';
+import { useCustomContext, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useTemplate } from '@/hooks/template';
-import { useCustomContext, useToggle } from '@/hooks/utils';
 import { TemplateEditPage } from '@/pages';
 import type { SourceCodes } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
+
+import { useTemplate } from './hooks';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
@@ -215,7 +215,7 @@ const TemplatePage = () => {
                       theme={quietlight}
                       extensions={[
                         loadLanguage(getLanguageByFilename(sourceCode?.filename) as LanguageName) || [],
-                        CustomCodeMirrorTheme,
+                        S.CustomCodeMirrorTheme,
                         EditorView.editable.of(false),
                       ]}
                       css={{

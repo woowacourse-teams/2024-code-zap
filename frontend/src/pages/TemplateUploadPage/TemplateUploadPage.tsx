@@ -1,5 +1,5 @@
-import { TemplateEdit } from '@/components';
-import { useTemplateUpload } from '@/hooks/template';
+import { TemplateEdit } from './components';
+import { useTemplateUpload } from './hooks';
 
 const TemplateUploadPage = () => {
   const props = useTemplateUpload();

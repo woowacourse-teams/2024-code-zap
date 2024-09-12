@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 import { CheckCircleIcon, ChevronIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
-import { CustomCodeMirrorTheme } from '@/components/TemplateCard/TemplateCard.style';
 import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useCustomContext } from '@/hooks/utils';
 import { theme } from '@/style/theme';
 import { SourceCodes } from '@/types';
 import { getLanguageByFilename } from '@/utils';
+
 import * as S from './LandingPage.style';
 
 const LandingPage = () => {
@@ -158,7 +158,7 @@ const ExamCode = () => {
           theme={quietlight}
           extensions={[
             loadLanguage(getLanguageByFilename(sourceCode?.filename) as LanguageName) || [],
-            CustomCodeMirrorTheme,
+            S.CustomCodeMirrorTheme,
             EditorView.editable.of(false),
           ]}
           css={{

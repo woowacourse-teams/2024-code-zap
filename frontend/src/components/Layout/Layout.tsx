@@ -4,8 +4,9 @@ import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { Footer, Header } from '@/components';
-import { useHeaderHeight } from '@/hooks/utils/useHeaderHeight';
+import { useHeaderHeight } from '@/hooks/useHeaderHeight';
 import { NotFoundPage } from '@/pages';
+
 import * as S from './Layout.style';
 
 const Layout = () => {
