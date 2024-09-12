@@ -46,7 +46,7 @@ class TemplateJpaRepositoryTest {
     private TemplateTagRepository templateTagRepository;
 
     @Test
-    @DisplayName("카테고리 id로 템플릿 존재 여부 확인 성공")
+    @DisplayName("카테고리 id로 템플릿 존재 여부 확인 ")
     void existsByCategoryId() {
         // given
         Member member = memberRepository.save(MemberFixture.getFirstMember());
@@ -116,18 +116,15 @@ class TemplateJpaRepositoryTest {
         private Tag tag1, tag2;
         private Template template1, template2, template3;
 
-        @BeforeEach
-        void setUp() {
+        @Test
+        @DisplayName("회원 ID로 템플릿 조회 성공")
+        void testFindByMemberId() {
             saveTwoMembers();
             saveTwoCategory();
             saveTwoTags();
             saveThreeTemplates();
             saveTemplateTags();
-        }
 
-        @Test
-        @DisplayName("회원 ID로 템플릿 조회 성공")
-        void testFindByMemberId() {
             Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null, null);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -141,6 +138,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("키워드로 템플릿 조회 성공")
         void testFindByKeyword() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             String keyword = "Template";
             Specification<Template> spec = new TemplateSpecification(null, keyword, null, null);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -157,6 +160,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("카테고리 ID로 템플릿 조회 성공")
         void testFindByCategoryId() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             Specification<Template> spec = new TemplateSpecification(null, null, category1.getId(),
                     null);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -171,6 +180,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("태그 ID 목록으로 템플릿 조회: 모든 태그를 가진 템플릿만 조회 성공")
         void testFindByTagIds() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
             Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -187,6 +202,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("단일 태그 ID로 템플릿 조회 성공")
         void testFindBySingleTagId() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             List<Long> tagIds = Arrays.asList(tag2.getId());
             Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -203,6 +224,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("회원 ID와 키워드로 템플릿 조회 성공")
         void testFindByMemberIdAndKeyword() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             String keyword = "Template";
             Specification<Template> spec = new TemplateSpecification(member1.getId(), keyword, null,
                     null);
@@ -221,6 +248,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("회원 ID와 카테고리 ID로 템플릿 조회 성공")
         void testFindByMemberIdAndCategoryId() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             Specification<Template> spec = new TemplateSpecification(member1.getId(), null, category1.getId(),
                     null);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -235,6 +268,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("회원 ID와 태그 ID 목록으로 템플릿 조회 성공")
         void testFindByMemberIdAndTagIds() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
             Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null,
                     tagIds);
@@ -250,6 +289,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("모든 검색 기준으로 템플릿 조회 성공")
         void testFindWithAllCriteria() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             String keyword = "Template";
             List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
             Specification<Template> spec = new TemplateSpecification(member1.getId(), keyword, category1.getId(),
@@ -265,6 +310,12 @@ class TemplateJpaRepositoryTest {
         @Test
         @DisplayName("검색 결과가 없는 경우 빈 리스트 반환 성공")
         void testFindWithNoResults() {
+            saveTwoMembers();
+            saveTwoCategory();
+            saveTwoTags();
+            saveThreeTemplates();
+            saveTemplateTags();
+
             Specification<Template> spec = new TemplateSpecification(null, "NonexistentKeyword", null, null);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
