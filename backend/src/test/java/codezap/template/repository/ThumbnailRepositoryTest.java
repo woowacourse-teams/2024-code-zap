@@ -38,11 +38,11 @@ public class ThumbnailRepositoryTest {
     private ThumbnailRepository sut;
 
     @Nested
-    @DisplayName("id로 썸네일 조회")
+    @DisplayName("썸네일 id로 썸네일 조회")
     class FetchById {
 
         @Test
-        @DisplayName("성공: id로 썸네일 조회")
+        @DisplayName("썸네일 id로 썸네일 조회 성공")
         void fetchByIdSuccess() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -59,7 +59,7 @@ public class ThumbnailRepositoryTest {
         }
 
         @Test
-        @DisplayName("실패: 존재하지 않는 id로 썸네일 조회")
+        @DisplayName("썸네일 id로 썸네일 조회 실패: 존재하지 않는 id")
         void fetchByIdFail() {
             var notExistId = 100L;
 
@@ -74,7 +74,7 @@ public class ThumbnailRepositoryTest {
     class FetchByTemplate {
 
         @Test
-        @DisplayName("성공: 템플릿으로 썸네일 조회")
+        @DisplayName("템플릿으로 썸네일 조회 성공")
         void fetchByTemplateSuccess() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -96,7 +96,7 @@ public class ThumbnailRepositoryTest {
     class DeleteByTemplateId {
 
         @Test
-        @DisplayName("성공: 템플릿 id로 썸네일 삭제")
+        @DisplayName("템플릿 id로 썸네일 삭제 성공")
         void deleteByTemplateIdSuccess() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -115,7 +115,7 @@ public class ThumbnailRepositoryTest {
         }
 
         @Test
-        @DisplayName("성공: 존재하지 않는 템플릿의 id로 삭제해도 예외로 처리하지 않는다.")
+        @DisplayName("템플릿 id로 썸네일 삭제 성공: 존재하지 않는 템플릿의 id로 삭제해도 예외로 처리하지 않는다.")
         void deleteByNotExistTemplateId() {
             assertThatCode(() -> sut.deleteByTemplateId(100L))
                     .doesNotThrowAnyException();
