@@ -19,7 +19,8 @@ const config: Config = {
     '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$': '<rootDir>/src/mocks/fileMock.js',
     'react-syntax-highlighter/dist/esm': 'react-syntax-highlighter/dist/cjs',
   },
-  transformIgnorePatterns: ['/node_modules/(?!react-syntax-highlighter)', '/e2eTests/'],
+  transformIgnorePatterns: ['/node_modules/(?!react-syntax-highlighter)'],
+  testPathIgnorePatterns: ['/node_modules/', '/e2eTests/', '/tests-examples/'],
 };
 
 export default config;
