@@ -9,3 +9,4 @@ export { useWindowWidth } from './useWindowWidth';
 export { useToggle } from './useToggle';
 export { useLoaderDelay } from './useLoaderDelay';
 export { useSelectList } from './useSelectList';
+export { useNoSpaceInput } from './useNoSpaceInput';
