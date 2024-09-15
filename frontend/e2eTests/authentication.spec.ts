@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import test from '@playwright/test';
 
 test('코드잽 서비스에 들어가서 로그인 할 수 있다.', async ({ page }) => {
   await page.goto('/');
