@@ -1,12 +1,12 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useCustomContext } from '@/hooks/utils';
 
 type RouteGuardProps = {
-  children: ReactNode;
+  children: ReactElement;
   isLoginRequired: boolean;
   redirectTo: string;
 };

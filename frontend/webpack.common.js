@@ -70,7 +70,7 @@ module.exports = {
     }),
     sentryWebpackPlugin({
       authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: 'codezap',
+      org: 'code-zap',
       project: 'javascript-react',
     }),
   ],

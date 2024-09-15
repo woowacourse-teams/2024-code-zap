@@ -51,10 +51,7 @@
     "import/order": [
       "error",
       {
-        "groups": [
-          ["builtin", "external"],
-          ["internal", "parent", "sibling", "index", "type"]
-        ],
+        "groups": [["builtin", "external"], ["internal"], ["parent", "sibling", "index", "type"]],
         "warnOnUnassignedImports": true,
         "alphabetize": { "order": "asc" },
         "newlines-between": "always",
@@ -71,7 +68,22 @@
             "position": "before"
           },
           {
-            "pattern": "./**",
+            "pattern": "../",
+            "group": "parent",
+            "position": "before"
+          },
+          {
+            "pattern": "./components",
+            "group": "sibling",
+            "position": "before"
+          },
+          {
+            "pattern": "./hooks",
+            "group": "sibling",
+            "position": "before"
+          },
+          {
+            "pattern": "./*.style",
             "group": "sibling",
             "position": "after"
           }

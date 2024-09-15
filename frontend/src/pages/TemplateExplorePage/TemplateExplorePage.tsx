@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, ZapzapLogo } from '@/assets/images';
 import { Dropdown, Flex, Heading, PagingButtons, TemplateCard } from '@/components';
-import { useDropdown, useWindowWidth } from '@/hooks/utils';
-import { useTemplateExploreQuery } from '@/queries/template';
+import { useDropdown, useWindowWidth } from '@/hooks';
+import { useTemplateExploreQuery } from '@/queries/templates';
 import { scroll } from '@/utils';
+
 import * as S from './TemplateExplorePage.style';
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);

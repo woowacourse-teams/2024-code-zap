@@ -1,12 +1,12 @@
 {
   "name": "code-zap",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
-    "tsc": "npx tsc --noEmit",
+    "tsc": "tsc --noEmit",
     "build": "webpack --mode production --config webpack.prod.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
