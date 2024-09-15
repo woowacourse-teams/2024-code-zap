@@ -10,9 +10,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
@@ -32,6 +35,7 @@ import io.restassured.RestAssured;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @DatabaseIsolation
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MemberServiceTest {
 
     @Autowired
@@ -184,7 +188,7 @@ class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("아이디로 멤버 조회 실패 : ")
+        @DisplayName("아이디로 멤버 조회 실패 : 존재하지 않는 아이디")
         void getById_Fail() {
             Long notExitsId = 100L;
 
