@@ -75,11 +75,11 @@ class MemberServiceTest {
 
     @Nested
     @DisplayName("아이디 중복 검사 테스트")
-    class AssertUniquename {
+    class AssertUniqueName {
 
         @Test
         @DisplayName("아이디 중복 검사 통과: 사용가능한 아이디")
-        void assertUniquename() {
+        void assertUniqueName() {
             String name = "code";
 
             assertThatCode(() -> memberService.assertUniqueName(name))
@@ -88,7 +88,7 @@ class MemberServiceTest {
 
         @Test
         @DisplayName("아이디 중복 검사 실패: 중복된 아이디")
-        void assertUniquename_fail_duplicate() {
+        void assertUniqueName_fail_duplicate() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String memberName = member.getName();
 
@@ -100,7 +100,7 @@ class MemberServiceTest {
 
     @Nested
     @DisplayName("회원 조회 테스트")
-    class findMember {
+    class FindMember {
 
         @Test
         @DisplayName("회원 정보 조회 성공")
@@ -139,7 +139,7 @@ class MemberServiceTest {
 
     @Nested
     @DisplayName("템플릿을 소유한 멤버 조회")
-    class getByTemplateId {
+    class GetByTemplateId {
         @Test
         @DisplayName("템플릿을 소유한 멤버 조회 성공")
         void getByTemplateId() {
@@ -163,7 +163,7 @@ class MemberServiceTest {
 
     @Nested
     @DisplayName("아이디로 멤버 조회")
-    class getById {
+    class GetById {
         @Test
         @DisplayName("아이디로 멤버 조회 성공")
         void getById() {
