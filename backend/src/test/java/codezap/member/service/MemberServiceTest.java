@@ -156,7 +156,9 @@ class MemberServiceTest {
         @Test
         @DisplayName("템플릿을 소유한 멤버 조회 실패 : DB에 없는 템플릿인 경우")
         void getByTemplateId_Fail() {
-            assertThatCode(() -> memberService.getByTemplateId(100L))
+            Long notExistsId = 100L;
+
+            assertThatCode(() -> memberService.getByTemplateId(notExistsId))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("템플릿에 대한 멤버가 존재하지 않습니다.");
         }
