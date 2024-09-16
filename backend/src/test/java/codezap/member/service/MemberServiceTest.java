@@ -5,17 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
@@ -31,11 +25,9 @@ import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 import codezap.template.repository.TemplateRepository;
-import io.restassured.RestAssured;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @DatabaseIsolation
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MemberServiceTest {
 
     @Autowired
@@ -50,14 +42,6 @@ class MemberServiceTest {
     @Autowired
     private MemberService memberService;
 
-    @LocalServerPort
-    int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
     @Nested
     @DisplayName("회원가입 테스트")
     class SignupTest {
@@ -68,9 +52,12 @@ class MemberServiceTest {
             Member member = MemberFixture.memberFixture();
             SignupRequest signupRequest = new SignupRequest(member.getName(), member.getPassword());
 
+            Long savedId = memberService.signup(signupRequest);
+
+            boolean isDefaultCategory = categoryRepository.existsByNameAndMember("카테고리 없음", member);
             assertAll(
-                    () -> assertThat(memberService.signup(signupRequest)).isEqualTo(member.getId()),
-                    () -> assertThat(categoryRepository.existsByNameAndMember("카테고리 없음", member)).isTrue()
+                    () -> assertThat(savedId).isEqualTo(member.getId()),
+                    () -> assertThat(isDefaultCategory).isTrue()
             );
         }
 
