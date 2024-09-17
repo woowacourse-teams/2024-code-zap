@@ -5,25 +5,29 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.template.repository.FakeTemplateRepository;
-import codezap.template.repository.TemplateRepository;
 
+@SpringBootTest
+@DatabaseIsolation
 class CategoryTemplateServiceTest {
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository();
 
-    private final CategoryTemplateService categoryService =
-            new CategoryTemplateService(categoryRepository, templateRepository);
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private CategoryTemplateService categoryService;
 
     @Test
     @DisplayName("카테고리 삭제 성공")
