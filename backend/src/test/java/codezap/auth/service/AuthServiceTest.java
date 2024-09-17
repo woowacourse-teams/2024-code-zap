@@ -10,26 +10,31 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
 import codezap.auth.dto.LoginAndCredentialDto;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.provider.CredentialProvider;
-import codezap.auth.provider.basic.BasicAuthCredentialProvider;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.SHA2PasswordEncryptor;
 
+@SpringBootTest
+@DatabaseIsolation
 public class AuthServiceTest {
-    private final MemberRepository memberRepository = new FakeMemberRepository();
-    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
-    private final CredentialProvider credentialProvider = new BasicAuthCredentialProvider(memberRepository);
-    private final AuthService authService = new AuthService(credentialProvider, memberRepository, passwordEncryptor);
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private CredentialProvider credentialProvider;
+
+    @Autowired
+    private AuthService authService;
 
     @Nested
     @DisplayName("로그인 테스트")
