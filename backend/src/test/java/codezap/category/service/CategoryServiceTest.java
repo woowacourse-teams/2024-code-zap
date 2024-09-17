@@ -130,6 +130,32 @@ class CategoryServiceTest {
     }
 
     @Nested
+    @DisplayName("카테고리 단건 조회 테스트")
+    class FetchByIdTest {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category savedCategory = categoryRepository.save(new Category("categoryName", member));
+
+            Category actual = categoryService.fetchById(savedCategory.getId());
+
+            assertThat(actual).isEqualTo(savedCategory);
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 id 값으로 카테고리 조회")
+        void failWithNotSavedId() {
+            long notSavedCategoryId = 100L;
+
+            assertThatThrownBy(() -> categoryService.fetchById(notSavedCategoryId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
     @DisplayName("카테고리 수정 테스트")
     class UpdateCategoryTest {
 
