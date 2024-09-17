@@ -1,7 +1,6 @@
 package codezap.category.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -106,12 +106,12 @@ class CategoryServiceTest {
         }
 
         @Test
-        @DisplayName("성공 : 존재하지 않는 멤버로 조회를 해도 예외가 발생하지 않는다.")
+        @DisplayName("성공 : 존재하지 않는 멤버로 조회를 하면 DB 에러가 발생한다.")
         void failWithNotExistMember() {
             Member notExistMember = MemberFixture.createFixture("notExist");
 
-            assertThatCode(() -> categoryService.findAllByMember(notExistMember))
-                    .doesNotThrowAnyException();
+            assertThatThrownBy(() -> categoryService.findAllByMember(notExistMember))
+                    .isInstanceOf(InvalidDataAccessApiUsageException.class);
         }
     }
 
