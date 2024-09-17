@@ -39,6 +39,7 @@ public class CategoryService {
         return categoryRepository.fetchById(id);
     }
 
+    //사용되지 않는 메서드
     public void validateExistsById(Long id) {
         if (!categoryRepository.existsById(id)) {
             throw new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다.");
