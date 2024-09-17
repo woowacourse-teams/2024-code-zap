@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -17,18 +19,25 @@ import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.dto.response.FindCategoryResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.category.repository.FakeCategoryRepository;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
+@SpringBootTest
+@DatabaseIsolation
 class CategoryServiceTest {
 
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository();
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-    private final CategoryService categoryService = new CategoryService(categoryRepository);
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
