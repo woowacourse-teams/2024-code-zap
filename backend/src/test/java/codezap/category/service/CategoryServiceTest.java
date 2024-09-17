@@ -31,7 +31,7 @@ class CategoryServiceTest {
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
-    class createCategoryTest {
+    class CreateCategoryTest {
 
         @Test
         @DisplayName("카테고리 생성 성공")
@@ -75,6 +75,11 @@ class CategoryServiceTest {
             assertThat(categoryService.create(otherMember, createCategoryRequest).id())
                     .isEqualTo(2L);
         }
+    }
+
+    @Nested
+    @DisplayName("카테고리 전체 조회 테스트")
+    class FindAllCategoryTest {
 
         @Test
         @DisplayName("카테고리 전체 조회 테스트")
@@ -88,6 +93,11 @@ class CategoryServiceTest {
 
             assertThat(findAllCategoriesResponse.categories()).hasSize(2);
         }
+    }
+
+    @Nested
+    @DisplayName("카테고리 수정 테스트")
+    class UpdateCategoryTest {
 
         @Test
         @DisplayName("카테고리 수정 성공")
