@@ -55,7 +55,7 @@ class CategoryTemplateServiceTest {
 
     @Test
     @DisplayName("카테고리 삭제 실패: 이미 없는 카테고리")
-    void deleteCategoryFailWithNotExistCateory() {
+    void deleteCategoryFailWithNotExistCategory() {
         Member member = memberRepository.save(MemberFixture.memberFixture());
         Category category = categoryRepository.save(new Category("category1", member));
 
