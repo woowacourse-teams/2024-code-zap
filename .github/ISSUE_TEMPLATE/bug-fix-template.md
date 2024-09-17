@@ -1,5 +1,5 @@
 ---
-name: "\bBug Fix Template"
+name: "Bug Fix Template"
 about: 버그 이슈 템플릿
 title: "[BUG] "
 labels: bug
