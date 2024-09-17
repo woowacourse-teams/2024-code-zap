@@ -18,12 +18,10 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.dto.response.FindCategoryResponse;
 import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
 import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
 @SpringBootTest
