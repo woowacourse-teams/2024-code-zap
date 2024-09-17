@@ -100,9 +100,6 @@ class CategoryServiceTest {
 
         @Test
         @DisplayName("성공 : 존재하지 않는 멤버로 조회를 해도 예외가 발생하지 않는다.")
-        // 확인해야 하는 엣지 케이스에 해당하는 것 같으나, 별다른 예외처리가 존재하지 않아요.
-        // 사용하는 곳에서는 이미 존재하는 Member 만을 파라미터로 전달해 주고 있기도 합니다.
-        // 지금의 테스트 코드가 필요할까요? & 프로덕션 코드에서 예외 처리가 존재하지 않아도 괜찮을까요?
         void failWithNotExistMember() {
             Member notExistMember = MemberFixture.createFixture("notExist");
 
