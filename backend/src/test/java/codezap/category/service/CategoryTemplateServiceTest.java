@@ -33,7 +33,6 @@ class CategoryTemplateServiceTest {
     @DisplayName("카테고리 삭제 성공")
     void deleteCategorySuccess() {
         Member member = memberRepository.save(MemberFixture.memberFixture());
-        categoryRepository.save(new Category("category1", member));
         Category savedCategory = categoryRepository.save(new Category("category1", member));
         int beforeDeleteSize = categoryRepository.findAllByMemberOrderById(member).size();
 
