@@ -1,6 +1,6 @@
 import { ChangeEvent, Dispatch, KeyboardEvent, MouseEvent, MutableRefObject, SetStateAction, useEffect } from 'react';
 
-import { PlusIcon, TrashcanIcon } from '@/assets/images';
+import { PlusIcon } from '@/assets/images';
 import {
   Button,
   Dropdown,
@@ -47,7 +47,7 @@ interface Props {
   handleAddButtonClick: () => void;
   handleCancelButton: () => void;
   handleCodeChange: (newContent: string, idx: number) => void;
-  handleFileNameChange: (newFileName: string, idx: number) => void;
+  handleFilenameChange: (newFileName: string, idx: number) => void;
   handleDeleteSourceCode: (index: number) => void;
   handleSaveButtonClick: () => Promise<void>;
   error: Error | null;
@@ -64,8 +64,8 @@ const TemplateEdit = ({
   handleAddButtonClick,
   handleCancelButton,
   handleCodeChange,
-  handleFileNameChange,
-  handleDeleteSourceCode: handleDeleteSourceCode,
+  handleFilenameChange,
+  handleDeleteSourceCode,
   handleSaveButtonClick,
   error,
 }: Props) => {
@@ -156,28 +156,17 @@ const TemplateEdit = ({
           </Input>
 
           {sourceCodes.map((sourceCode, index) => (
-            <Flex key={index} style={{ position: 'relative' }} width='100%'>
-              <div ref={(el) => (sourceCodeRefs.current[index] = el)} css={{ width: '100%' }}>
-                <SourceCodeEditor
-                  key={index}
-                  index={index}
-                  fileName={sourceCode.filename}
-                  content={sourceCode.content}
-                  onChangeContent={(newContent) => handleCodeChange(newContent, index)}
-                  onChangeFileName={(newFileName) => handleFileNameChange(newFileName, index)}
-                />
-                <S.DeleteButton
-                  size='small'
-                  variant='text'
-                  onClick={() => {
-                    handleDeleteSourceCode(index);
-                  }}
-                >
-                  <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
-                </S.DeleteButton>
-              </div>
-            </Flex>
+            <SourceCodeEditor
+              key={index}
+              sourceCodeRef={(el) => (sourceCodeRefs.current[index] = el)}
+              filename={sourceCode.filename}
+              content={sourceCode.content}
+              onChangeContent={(newContent) => handleCodeChange(newContent, index)}
+              onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
+              handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
+            />
           ))}
+
           <Button
             size='medium'
             variant='contained'
