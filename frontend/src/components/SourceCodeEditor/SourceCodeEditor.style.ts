@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import { EditorView } from '@uiw/react-codemirror';
 
+import { Button } from '@/components';
 import { theme } from '@/style/theme';
 
 export const SourceCodeEditorContainer = styled.div`
@@ -10,7 +10,7 @@ export const SourceCodeEditorContainer = styled.div`
   border-radius: 8px;
 `;
 
-export const SourceCodeFileNameInput = styled.input`
+export const FilenameInput = styled.input`
   width: 100%;
   height: 3rem;
   padding: 1rem 1.5rem;
@@ -33,7 +33,9 @@ export const SourceCodeFileNameInput = styled.input`
   }
 `;
 
-export const CustomCodeMirrorTheme = EditorView.theme({
-  '.cm-activeLine': { backgroundColor: `rgba(0, 0, 0, 0.1) !important` },
-  '.cm-activeLineGutter': { backgroundColor: `rgba(0, 0, 0, 0.1) !important` },
-});
+export const DeleteButton = styled(Button)`
+  position: absolute;
+  top: 0.3rem;
+  right: 0.4rem;
+  height: 2.4rem;
+`;

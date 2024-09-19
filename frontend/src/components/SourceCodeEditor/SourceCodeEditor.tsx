@@ -1,43 +1,41 @@
 import { ViewUpdate } from '@codemirror/view';
-import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
-import { quietlight } from '@uiw/codemirror-theme-quietlight';
-import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { ChangeEvent, useRef } from 'react';
 
-import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks';
-import { validateFileName, validateSourceCode } from '@/service';
+import { TrashcanIcon } from '@/assets/images';
+import { SourceCode } from '@/components';
+import { useToast } from '@/hooks/useToast';
+import { validateFilename, validateSourceCode } from '@/service';
 import { getLanguageByFilename } from '@/utils';
 
 import * as S from './SourceCodeEditor.style';
 
 interface Props {
-  index: number;
-  fileName: string;
+  filename: string;
+  filenameAutoFocus?: boolean;
   content: string;
+  onChangeFilename: (newFileName: string) => void;
   onChangeContent: (newContent: string) => void;
-  onChangeFileName: (newFileName: string) => void;
+  handleDeleteSourceCode: () => void;
+  sourceCodeRef?: React.Ref<HTMLInputElement> | null;
 }
 
-const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeFileName }: Props) => {
-  const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
+const SourceCodeEditor = ({
+  filename,
+  filenameAutoFocus = false,
+  content,
+  onChangeFilename,
+  onChangeContent,
+  handleDeleteSourceCode,
+  sourceCodeRef = null,
+}: Props) => {
   const previousContentRef = useRef<string>(content);
-  const { failAlert } = useCustomContext(ToastContext);
+  const { failAlert } = useToast();
+  //TODO: 파일명과 소스코드 검증을 이 컴포넌트에서 하고 있는데 괜찮은가? 이 컴포넌트의 책임이 맞는가?
 
-  const focusCodeMirror = () => {
-    if (!codeMirrorRef.current) {
-      return;
-    }
+  const handleFilenameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const newFilename = event.target.value;
 
-    if (codeMirrorRef.current?.view) {
-      codeMirrorRef.current.view.focus();
-    }
-  };
-
-  const handleFileNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFileName = event.target.value;
-
-    const errorMessage = validateFileName(newFileName);
+    const errorMessage = validateFilename(newFilename);
 
     if (errorMessage) {
       failAlert(errorMessage);
@@ -45,7 +43,7 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
       return;
     }
 
-    onChangeFileName(newFileName);
+    onChangeFilename(newFilename);
   };
 
   const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
@@ -67,27 +65,22 @@ const SourceCodeEditor = ({ index, fileName, content, onChangeContent, onChangeF
   };
 
   return (
-    <S.SourceCodeEditorContainer>
-      <S.SourceCodeFileNameInput
-        value={fileName}
-        onChange={handleFileNameChange}
-        placeholder={'파일명.js'}
-        autoFocus={index !== 0}
+    <S.SourceCodeEditorContainer ref={sourceCodeRef}>
+      <S.FilenameInput
+        value={filename}
+        onChange={handleFilenameChange}
+        placeholder={'파일명.[확장자]'}
+        autoFocus={filenameAutoFocus}
       />
-      <CodeMirror
-        ref={codeMirrorRef}
-        placeholder={'// 코드를 입력해주세요'}
-        value={content}
-        height='100%'
-        minHeight='10rem'
-        maxHeight='40rem'
-        style={{ fontSize: '1rem' }}
-        theme={quietlight}
-        onChange={handleContentChange}
-        extensions={[loadLanguage(getLanguageByFilename(fileName) as LanguageName) || [], S.CustomCodeMirrorTheme]}
-        onClick={focusCodeMirror}
-        basicSetup={{ foldGutter: true, foldKeymap: true }}
+      <SourceCode
+        mode='edit'
+        language={getLanguageByFilename(filename)}
+        content={content}
+        handleContentChange={handleContentChange}
       />
+      <S.DeleteButton size='small' variant='text' onClick={handleDeleteSourceCode}>
+        <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
+      </S.DeleteButton>
     </S.SourceCodeEditorContainer>
   );
 };
