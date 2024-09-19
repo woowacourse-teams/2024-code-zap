@@ -18,6 +18,8 @@ export const loginToCodezap = async ({ page, username, password }: LoginToCodeza
   await page.locator('input[type="text"]').press('Tab');
   await page.locator('input[type="password"]').fill(password);
   await page.locator('form').getByRole('button', { name: '로그인' }).click();
+
+  await waitForSuccess({ page, url: '/login' });
 };
 
 interface WaitForSuccessProps {
@@ -26,5 +28,7 @@ interface WaitForSuccessProps {
 }
 
 export const waitForSuccess = async ({ page, url }: WaitForSuccessProps) => {
-  await page.waitForResponse((response) => response.url().includes(url) && response.status() === 200);
+  await page.waitForResponse(
+    (response) => response.url().includes(url) && (response.status() === 200 || response.status() === 201),
+  );
 };
