@@ -87,12 +87,14 @@ class CategoryTemplateApplicationServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("Members", member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
+
             SourceCode sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
-            UpdateSourceCodeRequest updateSourceCodeRequest = new UpdateSourceCodeRequest(
-                    sourceCode.getId(), "Updated filename", "Updated content", 1);
-            UpdateTemplateRequest request = new UpdateTemplateRequest("Updated Template", "Updated Description", Collections.emptyList(),
-                    List.of(updateSourceCodeRequest), Collections.emptyList(), category.getId(), Collections.emptyList());
+            UpdateSourceCodeRequest updateSourceCodeRequest = getUpdateSourceCodeRequest(sourceCode);
+            UpdateTemplateRequest request = new UpdateTemplateRequest("Updated Template", "Updated Description",
+                    Collections.emptyList(),
+                    List.of(updateSourceCodeRequest), Collections.emptyList(), category.getId(),
+                    Collections.emptyList());
 
             // when
             categoryTemplateApplicationService.update(member, template.getId(), request);
@@ -115,17 +117,28 @@ class CategoryTemplateApplicationServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getSecondMember());
             Category category = categoryRepository.save(new Category("Members", member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
+
             SourceCode sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
-            UpdateSourceCodeRequest updateSourceCodeRequest = new UpdateSourceCodeRequest(
-                    sourceCode.getId(), "Updated filename", "Updated content", 1);
-            UpdateTemplateRequest request = new UpdateTemplateRequest("Updated Template", "Updated Description", Collections.emptyList(),
-                    List.of(updateSourceCodeRequest), Collections.emptyList(), othersCategory.getId(), Collections.emptyList());
+            UpdateSourceCodeRequest updateSourceCodeRequest = getUpdateSourceCodeRequest(sourceCode);
+
+            UpdateTemplateRequest request = new UpdateTemplateRequest(
+                    "Updated Template",
+                    "Updated Description",
+                    Collections.emptyList(),
+                    List.of(updateSourceCodeRequest),
+                    Collections.emptyList(),
+                    othersCategory.getId(),
+                    Collections.emptyList());
 
             // when & then
             assertThatThrownBy(() -> categoryTemplateApplicationService.update(otherMember, template.getId(), request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
+        }
+
+        private UpdateSourceCodeRequest getUpdateSourceCodeRequest(SourceCode sourceCode) {
+            return new UpdateSourceCodeRequest(sourceCode.getId(), "Updated filename", "Updated content", 1);
         }
     }
 }
