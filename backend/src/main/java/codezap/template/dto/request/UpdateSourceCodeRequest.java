@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateSourceCodeRequest(
         @Schema(description = "소스 코드 ID", example = "0")
-        @NotNull(message = "소스 코드 ID가 null 입니다.")
+        @NotNull(message = "소스 코드 ID가 null 입니다.", groups = NotNullGroup.class)
         Long id,
 
         @Schema(description = "파일명", example = "Main.java")
@@ -25,7 +25,7 @@ public record UpdateSourceCodeRequest(
         String content,
 
         @Schema(description = "소스 코드 순서", example = "1")
-        @NotNull(message = "소스 코드 순서가 null 입니다.")
+        @NotNull(message = "소스 코드 순서가 null 입니다.", groups = NotNullGroup.class)
         int ordinal
 ) {
 }

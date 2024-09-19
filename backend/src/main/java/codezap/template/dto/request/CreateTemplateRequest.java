@@ -31,15 +31,15 @@ public record CreateTemplateRequest(
         List<CreateSourceCodeRequest> sourceCodes,
 
         @Schema(description = "썸네일 순서", example = "1")
-        @NotNull(message = "썸네일 순서가 null 입니다.")
+        @NotNull(message = "썸네일 순서가 null 입니다.", groups = NotNullGroup.class)
         int thumbnailOrdinal,
 
         @Schema(description = "카테고리 ID", example = "1")
-        @NotNull(message = "카테고리 ID가 null 입니다.")
+        @NotNull(message = "카테고리 ID가 null 입니다.", groups = NotNullGroup.class)
         Long categoryId,
 
         @Schema(description = "태그 목록")
-        @NotNull(message = "태그 목록이 null 입니다.")
+        @NotNull(message = "태그 목록이 null 입니다.", groups = NotNullGroup.class)
         List<String> tags
 ) implements ValidatedSourceCodesOrdinalRequest {
     @Override
