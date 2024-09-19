@@ -44,11 +44,10 @@ class MemberCategoryApplicationServiceTest {
         @DisplayName("카테고리 생성 성공")
         void createSuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             String categoryName = "카테고리 1";
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
 
-            CreateCategoryResponse response = sut.create(memberDto, createCategoryRequest);
+            CreateCategoryResponse response = sut.create(MemberDto.from(member), createCategoryRequest);
 
             Category category = categoryRepository.fetchById(response.id());
             assertAll(
@@ -121,30 +120,28 @@ class MemberCategoryApplicationServiceTest {
         @DisplayName("카테고리 수정 성공")
         void updateSuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             Category category = categoryRepository.save(new Category("카테고리 1", member));
-            String renameCategoryName = "카테고리 수정";
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(renameCategoryName);
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("카테고리 수정");
 
-            sut.update(memberDto, category.getId(), updateCategoryRequest);
+            sut.update(MemberDto.from(member), category.getId(), updateCategoryRequest);
 
             Category actual = categoryRepository.fetchById(category.getId());
             assertAll(
                     () -> assertThat(actual).isEqualTo(category),
-                    () -> assertThat(actual.getName()).isEqualTo(renameCategoryName)
+                    () -> assertThat(actual.getName()).isEqualTo(updateCategoryRequest.name())
             );
         }
 
         @Test
         @DisplayName("카테고리 수정 실패 : 멤버 존재하지 않음")
         void updateFailNotExistsMember() {
-            MemberDto memberDto = MemberDto.from(MemberFixture.memberFixture());
-            String renameCategoryName = "카테고리 수정";
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(renameCategoryName);
+            MemberDto nonExistentMemberDto = MemberDto.from(MemberFixture.memberFixture());
+            String updatedCategoryName = "카테고리 수정";
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
 
-            assertThatThrownBy(() -> sut.update(memberDto, 1L, updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(nonExistentMemberDto, 1L, updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + memberDto.id() + "에 해당하는 멤버가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + nonExistentMemberDto.id() + "에 해당하는 멤버가 존재하지 않습니다.");
         }
 
         @Test
@@ -153,14 +150,13 @@ class MemberCategoryApplicationServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             MemberDto memberDto = MemberDto.from(member);
             Category category = categoryRepository.save(new Category("카테고리 1", member));
-            categoryRepository.save(new Category("카테고리 2", member));
-            String renameCategoryName = "카테고리 2";
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(renameCategoryName);
-            Long notExistsId = category.getId() + 1;
+            String duplicateCategory = "카테고리 2";
+            categoryRepository.save(new Category(duplicateCategory, member));
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicateCategory);
 
-            assertThatThrownBy(() -> sut.update(memberDto, notExistsId, updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(memberDto, category.getId(), updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + renameCategoryName + "인 카테고리가 이미 존재합니다.");
+                    .hasMessage("이름이 " + duplicateCategory + "인 카테고리가 이미 존재합니다.");
         }
 
         @Test
@@ -168,8 +164,8 @@ class MemberCategoryApplicationServiceTest {
         void updateFailNotExistsCategory() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             MemberDto memberDto = MemberDto.from(member);
-            String renameCategoryName = "카테고리 수정";
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(renameCategoryName);
+            String updatedCategoryName = "카테고리 수정";
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
             Long notExistsId = 100L;
 
             assertThatThrownBy(() -> sut.update(memberDto, notExistsId, updateCategoryRequest))
