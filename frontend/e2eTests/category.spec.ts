@@ -1,48 +1,68 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 
-import { loginToCodezap, waitForSuccess } from './testUtils';
+import { createCategory, deleteCategory, getCategoryButton } from './category.actions';
+import { loginToCodezap, waitForSuccess } from './utils';
 
 test.beforeEach(async ({ page }) => {
-  await loginToCodezap({ page, username: 'll', password: 'llll1111' });
+  await loginToCodezap({
+    page,
+    id: process.env.PLAYWRIGHT_TEST_ID || '',
+    password: process.env.PLAYWRIGHT_TEST_PASSWORD || '',
+  });
 });
 
 test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 수 있다.', async ({ page, browserName }) => {
   const newCategoryName = `생성테스트-${browserName}`;
 
-  await createCategory({ page, newCategoryName });
+  await createCategory({ page, categoryName: newCategoryName });
 
   await waitForSuccess({ page, apiUrl: '/categories' });
-  await expect(page.getByRole('button', { name: newCategoryName })).toBeVisible();
 
-  await deleteCategory({ page, newCategoryName });
+  const newCategoryButton = getCategoryButton({ page, categoryName: newCategoryName });
+
+  await expect(newCategoryButton).toBeVisible();
+
+  // 다음 테스트를 위해 테스트용 카테고리 삭제
+  await deleteCategory({ page, categoryName: newCategoryName });
 
   await waitForSuccess({ page, apiUrl: '/categories' });
-  await expect(page.getByRole('button', { name: newCategoryName })).not.toBeVisible();
+
+  await expect(newCategoryButton).not.toBeVisible();
 });
 
 test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 수 있다.', async ({ page, browserName }) => {
   const newCategoryName = `수정테스트-${browserName}`;
   const editedCategoryName = `수정완료-${browserName}`;
 
-  await createCategory({ page, newCategoryName });
+  // 수정할 카테고리 생성
+  await createCategory({ page, categoryName: newCategoryName });
 
   await waitForSuccess({ page, apiUrl: '/categories' });
-  await expect(page.getByRole('button', { name: newCategoryName })).toBeVisible();
 
+  const newCategoryButton = getCategoryButton({ page, categoryName: newCategoryName });
+
+  await expect(newCategoryButton).toBeVisible();
+
+  // 카테고리 수정
   await page.getByRole('button', { name: '카테고리 편집' }).click();
 
-  await page.getByText(newCategoryName).nth(1).hover();
+  const newCategoryInEditModal = page.getByText(newCategoryName).nth(1);
+
+  await newCategoryInEditModal.hover();
   await page.getByRole('button', { name: '카테고리 이름 변경' }).click();
   await page.getByPlaceholder('카테고리 입력').click();
   await page.getByPlaceholder('카테고리 입력').fill(editedCategoryName);
   await page.getByRole('button', { name: '저장' }).click();
 
-  await expect(page.getByRole('button', { name: editedCategoryName })).toBeVisible();
+  const editedCategoryButton = getCategoryButton({ page, categoryName: editedCategoryName });
 
-  await deleteCategory({ page, newCategoryName: editedCategoryName });
+  await expect(editedCategoryButton).toBeVisible();
+
+  // 다음 테스트를 위해 테스트용 카테고리 삭제
+  await deleteCategory({ page, categoryName: editedCategoryName });
 
   await waitForSuccess({ page, apiUrl: '/categories' });
-  await expect(page.getByRole('button', { name: editedCategoryName })).not.toBeVisible();
+  await expect(editedCategoryButton).not.toBeVisible();
 });
 
 test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ page, browserName }) => {
@@ -50,7 +70,6 @@ test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ 
   const expectedCategoryName = rawCategoryName.slice(0, 15);
 
   await page.getByRole('button', { name: '카테고리 편집' }).click();
-
   await page.getByRole('button', { name: '+ 카테고리 추가' }).click();
   const categoryInput = page.getByPlaceholder('카테고리 입력');
 
@@ -63,34 +82,14 @@ test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ 
   await page.getByRole('button', { name: '저장' }).click();
 
   await waitForSuccess({ page, apiUrl: '/categories' });
-  await expect(page.getByRole('button', { name: expectedCategoryName })).toBeVisible();
 
-  await deleteCategory({ page, newCategoryName: expectedCategoryName });
+  const newCategoryButton = getCategoryButton({ page, categoryName: expectedCategoryName });
+
+  await expect(newCategoryButton).toBeVisible();
+
+  // 다음 테스트를 위해 테스트용 카테고리 삭제
+  await deleteCategory({ page, categoryName: expectedCategoryName });
 
   await waitForSuccess({ page, apiUrl: '/categories' });
-  await expect(page.getByRole('button', { name: expectedCategoryName })).not.toBeVisible();
+  await expect(newCategoryButton).not.toBeVisible();
 });
-
-interface Props {
-  page: Page;
-  newCategoryName: string;
-}
-
-const createCategory = async ({ page, newCategoryName }: Props) => {
-  await page.getByRole('button', { name: '카테고리 편집' }).click();
-
-  await page.getByRole('button', { name: '+ 카테고리 추가' }).click();
-  await page.getByPlaceholder('카테고리 입력').fill(newCategoryName);
-  await page.getByPlaceholder('카테고리 입력').press('Enter');
-
-  await page.getByRole('button', { name: '저장' }).click();
-};
-
-const deleteCategory = async ({ page, newCategoryName }: Props) => {
-  await page.getByRole('button', { name: '카테고리 편집' }).click();
-
-  await page.getByText(newCategoryName).nth(1).hover();
-  await page.getByRole('button', { name: '카테고리 삭제' }).click();
-
-  await page.getByRole('button', { name: '저장' }).click();
-};
