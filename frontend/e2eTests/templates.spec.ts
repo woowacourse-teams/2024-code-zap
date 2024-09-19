@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 import { loginToCodezap, uploadTemplateToCodezap } from './templateActions';
+import { waitForSuccess } from './utils';
 
 // 로그인 동작을 모든 테스트 전에 실행
 test.beforeEach(async ({ page }) => {
@@ -24,6 +25,7 @@ test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을
 test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 저장버튼을 눌러 템플릿을 생성한다. 목록 페이지에서 새로 생성된 제목의 템플릿 카드를 확인할 수 있다.', async ({
   page,
 }) => {
+  await waitForSuccess({ page, url: '/categories' });
   await uploadTemplateToCodezap({
     page,
     title: 'test',
@@ -33,30 +35,38 @@ test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 
     tag: 'test',
   });
 
-  // page redirect
-  await page.waitForTimeout(3000);
+  await waitForSuccess({ page, url: '/templates' });
   await expect(page.getByRole('link', { name: 'll 방금 전 test test test test' }).first()).toBeVisible();
 });
 
 test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성날짜, 변경날짜, 카테고리, 코드 스니펫 목록을 확인할 수 있다.', async ({
   page,
 }) => {
-  // page redirect
-  await page.waitForTimeout(3000);
+  await waitForSuccess({ page, url: '/templates' });
 
-  await page.getByRole('link', { name: 'll 2024년 9월 12일 테스트2' }).click();
-  await expect(page.getByRole('button', { name: 'test' })).toBeVisible();
-  await expect(page.getByText('테스트2').first()).toBeVisible();
-  await expect(page.getByText('ll', { exact: true })).toBeVisible();
-  await expect(page.getByText('2024년 9월 12일')).toBeVisible();
-  await expect(page.getByText('(2024년 9월 11일)')).toBeVisible();
-  await expect(
-    page
-      .locator('div')
-      .filter({ hasText: /^asdfasf$/ })
-      .nth(1),
-  ).toBeVisible();
-  await expect(page.getByRole('textbox').getByText('// 함수')).toBeVisible();
+  const templateCard = page.getByRole('link', { name: 'll 2024년 9월 12일 테스트2' });
+
+  await expect(templateCard).toBeVisible();
+  await templateCard.click();
+
+  const title = page.getByText('테스트2').first();
+  const name = page.getByText('ll', { exact: true });
+  const editedDate = page.getByText('2024년 9월 12일');
+  const createdDate = page.getByText('(2024년 9월 11일)');
+  const tag = page.getByRole('button', { name: 'test' });
+  const filename = page
+    .locator('div')
+    .filter({ hasText: /^test2.ts$/ })
+    .nth(1);
+  const sourceCodes = page.getByRole('textbox').getByText('// 함수');
+
+  await expect(title).toBeVisible();
+  await expect(name).toBeVisible();
+  await expect(editedDate).toBeVisible();
+  await expect(createdDate).toBeVisible();
+  await expect(tag).toBeVisible();
+  await expect(filename).toBeVisible();
+  await expect(sourceCodes).toBeVisible();
 });
 
 test('템플릿 수정 테스트를 위한 test1 템플릿 생성', async ({ page }) => {
