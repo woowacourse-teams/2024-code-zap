@@ -1,4 +1,6 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
+
+import { waitForSuccess } from './utils';
 
 /**
  * 
@@ -56,4 +58,8 @@ export const uploadTemplateToCodezap = async ({
 
   // 저장 버튼 클릭
   await page.getByRole('button', { name: '저장' }).click();
+
+  await waitForSuccess({ page, url: '/templates' });
+
+  await expect(page).toHaveURL('/my-templates');
 };
