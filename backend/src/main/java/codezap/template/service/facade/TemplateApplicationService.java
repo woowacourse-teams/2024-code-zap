@@ -51,7 +51,8 @@ public class TemplateApplicationService {
         List<Tag> tags = templateTagService.getByTemplate(template);
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-        return FindTemplateResponse.of(template, sourceCodes, tags);
+        //todo 좋아요 값 삽입 필요
+        return FindTemplateResponse.of(template, sourceCodes, tags, 0L, false);
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
