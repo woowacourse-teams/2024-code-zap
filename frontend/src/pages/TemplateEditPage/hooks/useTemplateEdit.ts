@@ -51,7 +51,7 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
     );
   }, []);
 
-  const handleFileNameChange = useCallback((newFileName: string, idx: number) => {
+  const handleFilenameChange = useCallback((newFileName: string, idx: number) => {
     setSourceCodes((prevSourceCodes) =>
       prevSourceCodes.map((sourceCodes, index) =>
         index === idx ? { ...sourceCodes, filename: newFileName } : sourceCodes,
@@ -138,7 +138,7 @@ export const useTemplateEdit = ({ template, toggleEditButton }: Props) => {
     handleAddButtonClick,
     handleCancelButton,
     handleCodeChange,
-    handleFileNameChange,
+    handleFilenameChange,
     handleDeleteSourceCode,
     handleSaveButtonClick,
     error,

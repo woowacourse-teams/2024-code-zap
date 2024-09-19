@@ -26,15 +26,15 @@ export const validatePassword = (password: string) => {
 export const validateConfirmPassword = (password: string, confirmPassword: string) =>
   password === confirmPassword ? '' : '비밀번호가 일치하지 않습니다.';
 
-export const validateFileName = (fileName: string) => {
+export const validateFilename = (filename: string) => {
   const MAX_LENGTH = 255;
   const invalidChars = /[<>:"/\\|?*]/;
 
-  if (fileName.length > MAX_LENGTH) {
+  if (filename.length > MAX_LENGTH) {
     return `파일명의 길이는 ${MAX_LENGTH}자 이내로 입력해주세요!`;
   }
 
-  if (invalidChars.test(fileName)) {
+  if (invalidChars.test(filename)) {
     return '특수 문자 (<, >, :, ", /, , |, ?, *)는 사용할 수 없습니다!';
   }
 

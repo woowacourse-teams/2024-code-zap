@@ -37,7 +37,7 @@ export const useTemplateUpload = () => {
     );
   }, []);
 
-  const handleFileNameChange = useCallback((newFileName: string, idx: number) => {
+  const handleFilenameChange = useCallback((newFileName: string, idx: number) => {
     setSourceCodes((prevSourceCodes) =>
       prevSourceCodes.map((sourceCode, index) =>
         index === idx ? { ...sourceCode, filename: newFileName } : sourceCode,
@@ -123,7 +123,7 @@ export const useTemplateUpload = () => {
     handleDescriptionChange,
     handleTitleChange,
     handleCodeChange,
-    handleFileNameChange,
+    handleFilenameChange,
     handleAddButtonClick,
     handleDeleteSourceCode,
     handleCancelButton,
