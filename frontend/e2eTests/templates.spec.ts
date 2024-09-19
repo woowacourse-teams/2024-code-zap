@@ -13,9 +13,9 @@ test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을
 }) => {
   await page.getByRole('button', { name: '새 템플릿' }).click();
   await page.getByPlaceholder('제목을 입력해주세요').click();
-  await page.getByPlaceholder('제목을 입력해주세요').fill('asdf');
+  await page.getByPlaceholder('제목을 입력해주세요').fill('템플릿생성테스트');
   await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').click();
-  await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').fill('asdf');
+  await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').fill('템플릿생성테스트');
   await page.getByRole('button', { name: '저장' }).click();
 
   const toastMessage = page.locator('text=파일명을 입력해주세요');
@@ -28,19 +28,19 @@ test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 
 }) => {
   // 유저의 카테고리 리스트
   await waitForSuccess({ page, url: '/categories' });
+
   await uploadTemplateToCodezap({
     page,
-    title: 'test',
-    fileName: 'test',
-    code: 'test',
-    description: 'test',
-    tag: 'test',
+    title: '템플릿생성테스트',
+    fileName: '템플릿생성테스트',
+    code: '템플릿생성테스트',
+    description: '템플릿생성테스트',
+    tag: '템플릿생성테스트',
   });
 
-  // 템플릿 업로드
-  await waitForSuccess({ page, url: '/templates' });
-
-  const templateCard = page.getByRole('link', { name: 'll 방금 전 test test test test' }).first();
+  const templateCard = page
+    .getByRole('link', { name: 'll 방금 전 템플릿생성테스트 템플릿생성테스트 템플릿생성테스트 템플릿생성테스트' })
+    .first();
 
   await expect(templateCard).toBeVisible();
 });
@@ -76,51 +76,33 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
   await expect(sourceCodes).toBeVisible();
 });
 
-test('템플릿 수정 테스트를 위한 testForEdit 템플릿 생성', async ({ page }) => {
-  await uploadTemplateToCodezap({
-    page,
-    title: 'testForEdit',
-    fileName: 'testForEdit',
-    code: 'testForEdit',
-    description: 'testForEdit',
-    tag: 'testForEdit',
-  });
-
-  // 템플릿 업로드
-  await waitForSuccess({ page, url: '/templates' });
-
-  await expect(
-    page.getByRole('link', { name: 'll 방금 전 testForEdit testForEdit testForEdit testForEdit' }).first(),
-  ).toBeVisible();
-});
-
-test('`testForEdit` 템플릿의 제목을 `editedTemplate`로 변경하고, `editedTemplate`태그를 추가로 등록한다.', async ({
+test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 변경하고, `편집된템플릿`태그를 추가로 등록한다.', async ({
   page,
 }) => {
   await uploadTemplateToCodezap({
     page,
-    title: 'testForEdit',
-    fileName: 'testForEdit',
-    code: 'testForEdit',
-    description: 'testForEdit',
-    tag: 'testForEdit',
+    title: '템플릿편집테스트',
+    fileName: '템플릿편집테스트',
+    code: '템플릿편집테스트',
+    description: '템플릿편집테스트',
+    tag: '템플릿편집테스트',
   });
 
-  // 템플릿 업로드
-  await waitForSuccess({ page, url: '/templates' });
-
-  await page.getByRole('link', { name: 'll 방금 전 testForEdit testForEdit testForEdit' }).first().click();
+  await page
+    .getByRole('link', { name: 'll 방금 전 템플릿편집테스트 템플릿편집테스트 템플릿편집테스트' })
+    .first()
+    .click();
 
   await page.getByRole('button', { name: '템플릿 편집' }).click();
   await page.getByPlaceholder('제목을 입력해주세요').click();
-  await page.getByPlaceholder('제목을 입력해주세요').fill('editedTemplate');
+  await page.getByPlaceholder('제목을 입력해주세요').fill('편집된템플릿');
   await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').click();
-  await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill('editedTemplate');
+  await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill('편집된템플릿');
   await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').press('Enter');
   await page.getByRole('button', { name: '저장' }).click();
 
-  await expect(page.getByText('editedTemplate').first()).toBeVisible();
-  await expect(page.getByRole('button', { name: 'editedTemplate' })).toBeVisible();
+  await expect(page.getByText('편집된템플릿').first()).toBeVisible();
+  await expect(page.getByRole('button', { name: '편집된템플릿' })).toBeVisible();
 });
 
 test('템플릿 삭제 버튼을 누르면 삭제 확인 모달이 뜨고, 삭제 확인 모달에서 삭제 버튼을 누르면, 템플릿이 삭제되고 내탬플릿 화면으로 이동한다.', async ({
@@ -128,21 +110,23 @@ test('템플릿 삭제 버튼을 누르면 삭제 확인 모달이 뜨고, 삭�
 }) => {
   await uploadTemplateToCodezap({
     page,
-    title: 'test',
-    fileName: 'test',
-    code: 'test',
-    description: 'test',
-    tag: 'test',
+    title: '템플릿삭제테스트',
+    fileName: '템플릿삭제테스트',
+    code: '템플릿삭제테스트',
+    description: '템플릿삭제테스트',
+    tag: '템플릿삭제테스트',
   });
 
-  // 템플릿 업로드
-  await waitForSuccess({ page, url: '/templates' });
-
-  await page.getByRole('link', { name: 'll 방금 전 test test test test' }).first().click();
+  await page
+    .getByRole('link', { name: 'll 방금 전 템플릿삭제테스트 템플릿삭제테스트 템플릿삭제테스트 템플릿삭제테스트' })
+    .first()
+    .click();
 
   await page.getByRole('button', { name: '템플릿 삭제' }).click();
   await expect(page.getByText('정말 삭제하시겠습니까?')).toBeVisible();
 
   await page.getByRole('button', { name: '삭제', exact: true }).click();
-  await expect(page.getByRole('link', { name: 'll 방금 전 test test test 모든 태그' })).not.toBeVisible();
+  await expect(
+    page.getByRole('link', { name: 'll 방금 전 템플릿삭제테스트 템플릿삭제테스트 템플릿삭제테스트 모든 태그' }),
+  ).not.toBeVisible();
 });
