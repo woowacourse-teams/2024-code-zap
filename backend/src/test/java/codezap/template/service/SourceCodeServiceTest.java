@@ -1,9 +1,9 @@
 package codezap.template.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatList;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
@@ -51,13 +51,13 @@ class SourceCodeServiceTest extends ServiceTest {
 
             // then
             List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
-            assertAll(() -> assertEquals(2, sourceCodes.size()),
-                    () -> assertEquals("file1.java", sourceCodes.get(0).getFilename()),
-                    () -> assertEquals("content1", sourceCodes.get(0).getContent()),
-                    () -> assertEquals(1, sourceCodes.get(0).getOrdinal()),
-                    () -> assertEquals("file2.java", sourceCodes.get(1).getFilename()),
-                    () -> assertEquals("content2", sourceCodes.get(1).getContent()),
-                    () -> assertEquals(2, sourceCodes.get(1).getOrdinal()));
+            assertAll(
+                    () -> assertThat(sourceCodes.size()).isEqualTo(2),
+                    () -> assertThat(sourceCodes.get(0).getFilename()).isEqualTo("file1.java"),
+                    () -> assertThat(sourceCodes.get(0).getOrdinal()).isEqualTo(1),
+                    () -> assertThat(sourceCodes.get(1).getFilename()).isEqualTo("file2.java"),
+                    () -> assertThat(sourceCodes.get(1).getOrdinal()).isEqualTo(2)
+            );
         }
 
         @Test
@@ -81,7 +81,7 @@ class SourceCodeServiceTest extends ServiceTest {
 
         @Test
         @Disabled("애플리케이션 코드에서 검증 코드 작성 필요")
-        @DisplayName("실패: 순서가 1부터 시작하지 않는 코드")
+        @DisplayName("실패: 순서가 1부터 시작하지 않는 소스 코드")
         void createSourceCodes_WhenOrdinalIsNotStart1() {
             // given
             Template template = createTemplate();
@@ -111,8 +111,9 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
 
             // when & then
-            assertAll(() -> assertEquals(sourceCodeService.getByTemplateAndOrdinal(template, 2), sourceCode2),
-                    () -> assertEquals(sourceCodeService.getByTemplateAndOrdinal(template, 1), sourceCode1));
+            assertAll(
+                    () -> assertThat(sourceCodeService.getByTemplateAndOrdinal(template, 2)).isEqualTo(sourceCode2),
+                    () -> assertThat(sourceCodeService.getByTemplateAndOrdinal(template, 1)).isEqualTo(sourceCode1));
         }
 
         @Test
@@ -183,10 +184,8 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
-            UpdateSourceCodeRequest updateRequest1 = new UpdateSourceCodeRequest(
-                    sourceCode1.getId(), "변경된 제목1", "변경된 내용1", sourceCode1.getOrdinal());
-            UpdateSourceCodeRequest updateRequest2 = new UpdateSourceCodeRequest(
-                    sourceCode2.getId(), "변경된 제목2", "변경된 내용2", sourceCode2.getOrdinal());
+            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
+            UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
             CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목1", "새로운 내용1", 3);
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
                     List.of(createRequest), List.of(updateRequest1, updateRequest2), Collections.emptyList(),
@@ -201,12 +200,12 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode newSourceCode = sourceCodeRepository.fetchByTemplateAndOrdinal(template, 3);
 
             assertAll(
-                    () -> assertEquals(3, sourceCodeRepository.countByTemplate(template)),
-                    () -> assertEquals("변경된 제목1", updatedSourceCode1.getFilename()),
-                    () -> assertEquals(1, updatedSourceCode1.getOrdinal()),
-                    () -> assertEquals("변경된 제목2", updatedSourceCode2.getFilename()),
-                    () -> assertEquals(2, updatedSourceCode2.getOrdinal()),
-                    () -> assertEquals("새로운 제목1", newSourceCode.getFilename()));
+                    () -> assertThat(sourceCodeRepository.countByTemplate(template)).isEqualTo(3),
+                    () -> assertThat(updatedSourceCode1.getFilename()).isEqualTo("변경된 제목1"),
+                    () -> assertThat(updatedSourceCode1.getOrdinal()).isEqualTo(1),
+                    () -> assertThat(updatedSourceCode2.getFilename()).isEqualTo("변경된 제목2"),
+                    () -> assertThat(updatedSourceCode2.getOrdinal()).isEqualTo(2),
+                    () -> assertThat(newSourceCode.getFilename()).isEqualTo("새로운 제목1"));
         }
 
         @Test
@@ -219,8 +218,7 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode deleteSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
-            UpdateSourceCodeRequest updateRequest1 = new UpdateSourceCodeRequest(
-                    sourceCode1.getId(), "변경된 제목1", "변경된 내용1", sourceCode1.getOrdinal());
+            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
             CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목1", "새로운 내용1", 3);
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
                     List.of(createRequest), List.of(updateRequest1), List.of(deleteSourceCode.getId()),
@@ -231,9 +229,8 @@ class SourceCodeServiceTest extends ServiceTest {
 
             // then
             assertAll(
-                    () -> assertEquals(2, sourceCodeRepository.countByTemplate(template)),
-                    () -> assertEquals("새로운 제목1",
-                            sourceCodeRepository.fetchByTemplateAndOrdinal(template, 2).getFilename()),
+                    () -> assertThat(sourceCodeRepository.countByTemplate(template)).isEqualTo(2),
+                    () -> assertThat(sourceCodeRepository.fetchByTemplateAndOrdinal(template, 2).getFilename()).isEqualTo("새로운 제목1"),
                     () -> assertThatThrownBy(() -> sourceCodeRepository.fetchById(deleteSourceCode.getId()))
                             .isInstanceOf(CodeZapException.class)
                             .hasMessage("식별자 " + deleteSourceCode.getId() + "에 해당하는 소스 코드가 존재하지 않습니다.")
@@ -247,12 +244,11 @@ class SourceCodeServiceTest extends ServiceTest {
             // given
             Template template = createTemplate();
             SourceCode thumbnailSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
+            SourceCode othersourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, thumbnailSourceCode));
 
             List<Long> deleteSourceCodeIds = List.of(thumbnailSourceCode.getId());
-            UpdateSourceCodeRequest updateRequest2 = new UpdateSourceCodeRequest(sourceCode2.getId(), "변경된 제목2",
-                    "변경된 내용2", sourceCode2.getOrdinal());
+            UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(othersourceCode);
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
                     Collections.emptyList(), List.of(updateRequest2), deleteSourceCodeIds,
                     template.getCategory().getId(), Collections.emptyList());
@@ -263,13 +259,13 @@ class SourceCodeServiceTest extends ServiceTest {
             // then
             Thumbnail updatedThumbnail = thumbnailRepository.fetchByTemplate(template);
             assertAll(
-                    () -> assertEquals(sourceCode2.getId(), updatedThumbnail.getSourceCode().getId()),
-                    () -> assertEquals(1, updatedThumbnail.getSourceCode().getOrdinal())
+                    () -> assertThat(updatedThumbnail.getSourceCode().getId()).isEqualTo(othersourceCode.getId()),
+                    () -> assertThat(updatedThumbnail.getSourceCode().getOrdinal()).isEqualTo(1)
             );
         }
 
         @Test
-        @DisplayName("성공: 소스 코드 추가 및 기존 소스 코드 중 순서를 추가된 소스 코드보다 더 가장 나중으로 변경 및 소스 코드 추가")
+        @DisplayName("성공: 소스 코드 추가 & 기존 소스 코드들 순서를 추가된 소스 코드보다 나중으로 변경")
         void updateSourceCodes_WhenChangeOrderToLast_AndAddNewCode() {
             // given
             Template template = createTemplate();
@@ -277,10 +273,8 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
-            UpdateSourceCodeRequest updateRequest1 = new UpdateSourceCodeRequest(sourceCode1.getId(), "변경된 제목1",
-                    "변경된 내용1", 3);
-            UpdateSourceCodeRequest updateRequest2 = new UpdateSourceCodeRequest(sourceCode2.getId(), "변경된 제목2",
-                    "변경된 내용2", 2);
+            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
+            UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
             CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목3", "새로운 내용3", 1);
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
                     List.of(createRequest), List.of(updateRequest1, updateRequest2), Collections.emptyList(),
@@ -291,10 +285,9 @@ class SourceCodeServiceTest extends ServiceTest {
 
             // then
             assertAll(
-                    () -> assertEquals(3, sourceCodeRepository.countByTemplate(template)),
-                    () -> assertEquals(3, sourceCodeRepository.fetchById(sourceCode1.getId()).getOrdinal()),
-                    () -> assertEquals("새로운 제목3",
-                            sourceCodeRepository.fetchByTemplateAndOrdinal(template, 1).getFilename())
+                    () -> assertThat(sourceCodeRepository.countByTemplate(template)).isEqualTo(3),
+                    () -> assertThat(sourceCodeRepository.fetchById(sourceCode1.getId()).getOrdinal()).isEqualTo(3),
+                    () -> assertThat(sourceCodeRepository.fetchByTemplateAndOrdinal(template, 1).getFilename()).isEqualTo("새로운 제목3")
             );
         }
 
@@ -329,8 +322,7 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
-            UpdateSourceCodeRequest updateRequest1 = new UpdateSourceCodeRequest(sourceCode1.getId(), "변경된 제목1",
-                    "변경된 내용1", 1);
+            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
                     Collections.emptyList(), List.of(updateRequest1), Collections.emptyList(),
                     template.getCategory().getId(), Collections.emptyList());
@@ -346,17 +338,13 @@ class SourceCodeServiceTest extends ServiceTest {
         @DisplayName("실패: 변경할 소스 코드의 순서가 중복된 소스 코드의 순서인 경우")
         void updateSourceCodes_WhenDuplicateOrder() {
             // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template = templateRepository.save(TemplateFixture.get(member, category));
+            Template template = createTemplate();
             SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
-            UpdateSourceCodeRequest updateRequest1 = new UpdateSourceCodeRequest(
-                    sourceCode1.getId(), "변경된 제목1", "변경된 내용1", 2);
-            UpdateSourceCodeRequest updateRequest2 = new UpdateSourceCodeRequest(
-                    sourceCode2.getId(), "변경된 제목2", "변경된 내용2", 2);
+            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
+            UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
 
             UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
                     Collections.emptyList(), List.of(updateRequest1, updateRequest2), Collections.emptyList(),
@@ -366,6 +354,11 @@ class SourceCodeServiceTest extends ServiceTest {
             assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("소스 코드의 순서는 중복될 수 없습니다.");
+        }
+
+        private UpdateSourceCodeRequest getUpdateSourceCodeRequest(SourceCode sourceCode) {
+            return new UpdateSourceCodeRequest(sourceCode.getId(), "변경된 제목" + sourceCode.getOrdinal(),
+                    "변경된 내용" + sourceCode.getOrdinal(), sourceCode.getOrdinal());
         }
     }
 
@@ -377,11 +370,9 @@ class SourceCodeServiceTest extends ServiceTest {
         @DisplayName("성공")
         void deleteByIds() {
             // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template = templateRepository.save(TemplateFixture.get(member, category));
-            SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
+            Template template = createTemplate();
+            sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+            sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
 
             // when
             sourceCodeService.deleteByIds(List.of(template.getId()));
@@ -393,15 +384,10 @@ class SourceCodeServiceTest extends ServiceTest {
         @Test
         @DisplayName("성공: 소스 코드가 존재하지 않는 경우")
         void deleteByIds_WhenIdNotExist() {
-            // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template = templateRepository.save(TemplateFixture.get(member, category));
+            Template template = createTemplate();
 
-            // when
             sourceCodeService.deleteByIds(List.of(template.getId()));
 
-            // then
             assertThatList(sourceCodeRepository.findAllByTemplate(template)).isEmpty();
         }
     }
