@@ -59,25 +59,24 @@ class MemberCategoryApplicationServiceTest {
         @Test
         @DisplayName("카테고리 생성 실패 : 멤버 존재하지 않음")
         void createFailNotExistsMember() {
-            MemberDto memberDto = MemberDto.from(MemberFixture.memberFixture());
+            MemberDto nonExistentMemberDto = MemberDto.from(MemberFixture.memberFixture());
             String categoryName = "카테고리 1";
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
 
-            assertThatThrownBy(() -> sut.create(memberDto, createCategoryRequest))
+            assertThatThrownBy(() -> sut.create(nonExistentMemberDto, createCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + memberDto.id() + "에 해당하는 멤버가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + nonExistentMemberDto.id() + "에 해당하는 멤버가 존재하지 않습니다.");
         }
 
         @Test
         @DisplayName("카테고리 생성 실패 : 카테고리 이름 중복")
         void createFailDuplicatedCategory() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             String categoryName = "카테고리 1";
             categoryRepository.save(new Category(categoryName, member));
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
 
-            assertThatThrownBy(() -> sut.create(memberDto, createCategoryRequest))
+            assertThatThrownBy(() -> sut.create(MemberDto.from(member), createCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
         }
@@ -148,13 +147,12 @@ class MemberCategoryApplicationServiceTest {
         @DisplayName("카테고리 수정 실패 : 카테고리 이름 중복")
         void updateFailDuplicatedCategory() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             Category category = categoryRepository.save(new Category("카테고리 1", member));
             String duplicateCategory = "카테고리 2";
             categoryRepository.save(new Category(duplicateCategory, member));
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicateCategory);
 
-            assertThatThrownBy(() -> sut.update(memberDto, category.getId(), updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(MemberDto.from(member), category.getId(), updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + duplicateCategory + "인 카테고리가 이미 존재합니다.");
         }
@@ -163,12 +161,11 @@ class MemberCategoryApplicationServiceTest {
         @DisplayName("카테고리 수정 실패 : 카테고리가 존재하지 않음")
         void updateFailNotExistsCategory() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             String updatedCategoryName = "카테고리 수정";
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
             Long notExistsId = 100L;
 
-            assertThatThrownBy(() -> sut.update(memberDto, notExistsId, updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(MemberDto.from(member), notExistsId, updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notExistsId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
@@ -177,14 +174,12 @@ class MemberCategoryApplicationServiceTest {
         @DisplayName("카테고리 수정 실패 : 카테고리 수정 권한이 없음")
         void updateFailWithUnauthorized() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             Member otherMember = memberRepository.save(MemberFixture.createFixture("켬미"));
             Category category = categoryRepository.save(new Category("카테고리 1", otherMember));
             String updatedCategoryName = "카테고리 수정";
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
-            Long categoryId = category.getId();
 
-            assertThatThrownBy(() -> sut.update(memberDto, categoryId, updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(MemberDto.from(member), category.getId(), updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
         }
