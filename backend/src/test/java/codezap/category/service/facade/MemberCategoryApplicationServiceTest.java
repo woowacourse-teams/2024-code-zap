@@ -172,5 +172,21 @@ class MemberCategoryApplicationServiceTest {
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notExistsId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
+
+        @Test
+        @DisplayName("카테고리 수정 실패 : 카테고리 수정 권한이 없음")
+        void updateFailWithUnauthorized() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            MemberDto memberDto = MemberDto.from(member);
+            Member otherMember = memberRepository.save(MemberFixture.createFixture("켬미"));
+            Category category = categoryRepository.save(new Category("카테고리 1", otherMember));
+            String updatedCategoryName = "카테고리 수정";
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
+            Long categoryId = category.getId();
+
+            assertThatThrownBy(() -> sut.update(memberDto, categoryId, updateCategoryRequest))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
+        }
     }
 }
