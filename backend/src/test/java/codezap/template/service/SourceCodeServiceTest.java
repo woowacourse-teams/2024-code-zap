@@ -186,9 +186,13 @@ class SourceCodeServiceTest extends ServiceTest {
             UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
             UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
             CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목1", "새로운 내용1", 3);
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    List.of(createRequest), List.of(updateRequest1, updateRequest2), Collections.emptyList(),
-                    template.getCategory().getId(), Collections.emptyList());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    List.of(createRequest),
+                    List.of(updateRequest1, updateRequest2),
+                    Collections.emptyList(),
+                    template.getCategory().getId(),
+                    Collections.emptyList()
+            );
 
             // when
             sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
@@ -219,9 +223,13 @@ class SourceCodeServiceTest extends ServiceTest {
 
             UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
             CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목1", "새로운 내용1", 3);
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    List.of(createRequest), List.of(updateRequest1), List.of(deleteSourceCode.getId()),
-                    template.getCategory().getId(), Collections.emptyList());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    List.of(createRequest),
+                    List.of(updateRequest1),
+                    List.of(deleteSourceCode.getId()),
+                    template.getCategory().getId(),
+                    Collections.emptyList()
+            );
 
             // when
             sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
@@ -250,9 +258,13 @@ class SourceCodeServiceTest extends ServiceTest {
 
             List<Long> deleteSourceCodeIds = List.of(thumbnailSourceCode.getId());
             UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(othersourceCode);
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    Collections.emptyList(), List.of(updateRequest2), deleteSourceCodeIds,
-                    template.getCategory().getId(), Collections.emptyList());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    Collections.emptyList(),
+                    List.of(updateRequest2),
+                    deleteSourceCodeIds,
+                    template.getCategory().getId(),
+                    Collections.emptyList()
+            );
 
             // when
             sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
@@ -277,10 +289,14 @@ class SourceCodeServiceTest extends ServiceTest {
             UpdateSourceCodeRequest ordinalUpdateRequest = new UpdateSourceCodeRequest(sourceCode1.getId(), "변경된 제목1",
                     "변경된 내용1", 3);
             UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
-            CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목3", "새로운 내용3", sourceCode1.getOrdinal());
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    List.of(createRequest), List.of(ordinalUpdateRequest, updateRequest2), Collections.emptyList(),
-                    template.getCategory().getId(), Collections.emptyList());
+            CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목3", "새로운 내용3",
+                    sourceCode1.getOrdinal());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    List.of(createRequest),
+                    List.of(ordinalUpdateRequest, updateRequest2),
+                    Collections.emptyList(),
+                    template.getCategory().getId(),
+                    Collections.emptyList());
 
             // when
             sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
@@ -307,9 +323,13 @@ class SourceCodeServiceTest extends ServiceTest {
 
             List<Long> deleteSourceCodeIds = List.of(sourceCode1.getId(), sourceCode2.getId());
 
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    Collections.emptyList(), Collections.emptyList(), deleteSourceCodeIds,
-                    template.getCategory().getId(), Collections.emptyList());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    Collections.emptyList(),
+                    Collections.emptyList(),
+                    deleteSourceCodeIds,
+                    template.getCategory().getId(),
+                    Collections.emptyList()
+            );
 
             // when & then
             assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
@@ -327,9 +347,13 @@ class SourceCodeServiceTest extends ServiceTest {
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
             UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    Collections.emptyList(), List.of(updateRequest1), Collections.emptyList(),
-                    template.getCategory().getId(), Collections.emptyList());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    Collections.emptyList(),
+                    List.of(updateRequest1),
+                    Collections.emptyList(),
+                    template.getCategory().getId(),
+                    Collections.emptyList()
+            );
 
             // when & then
             assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
@@ -350,9 +374,13 @@ class SourceCodeServiceTest extends ServiceTest {
             UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
             UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
 
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest("템플릿 수정", "템플릿 설명",
-                    Collections.emptyList(), List.of(updateRequest1, updateRequest2), Collections.emptyList(),
-                    template.getCategory().getId(), Collections.emptyList());
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
+                    Collections.emptyList(),
+                    List.of(updateRequest1, updateRequest2),
+                    Collections.emptyList(),
+                    template.getCategory().getId(),
+                    Collections.emptyList()
+            );
 
             // when & then
             assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
@@ -367,6 +395,23 @@ class SourceCodeServiceTest extends ServiceTest {
                     "변경된 내용" + sourceCode.getOrdinal(),
                     sourceCode.getOrdinal()
             );
+        }
+
+        private UpdateTemplateRequest getUpdateTemplateRequest(
+                List<CreateSourceCodeRequest> createSourceCodes,
+                List<UpdateSourceCodeRequest> updateSourceCodes,
+                List<Long> deleteSourceCodeIds,
+                Long categoryId,
+                List<String> tags
+        ) {
+            return new UpdateTemplateRequest(
+                    "템플릿 수정",
+                    "템플릿 설명",
+                    createSourceCodes,
+                    updateSourceCodes,
+                    deleteSourceCodeIds,
+                    categoryId,
+                    tags);
         }
     }
 
