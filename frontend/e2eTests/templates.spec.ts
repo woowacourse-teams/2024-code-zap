@@ -12,9 +12,7 @@ test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을
   page,
 }) => {
   await page.getByRole('button', { name: '새 템플릿' }).click();
-  await page.getByPlaceholder('제목을 입력해주세요').click();
   await page.getByPlaceholder('제목을 입력해주세요').fill('템플릿생성테스트');
-  await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').click();
   await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').fill('템플릿생성테스트');
   await page.getByRole('button', { name: '저장' }).click();
 
@@ -94,9 +92,7 @@ test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 
     .click();
 
   await page.getByRole('button', { name: '템플릿 편집' }).click();
-  await page.getByPlaceholder('제목을 입력해주세요').click();
   await page.getByPlaceholder('제목을 입력해주세요').fill('편집된템플릿');
-  await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').click();
   await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill('편집된템플릿');
   await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').press('Enter');
   await page.getByRole('button', { name: '저장' }).click();

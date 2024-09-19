@@ -24,25 +24,17 @@ export const uploadTemplateToCodezap = async ({
   await page.getByRole('button', { name: '새 템플릿' }).click();
 
   // 제목 입력
-  await page.getByPlaceholder('제목을 입력해주세요').click();
   await page.getByPlaceholder('제목을 입력해주세요').fill(title);
 
   // 설명 입력
   if (description) {
-    await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').click();
     await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').fill(description);
   }
 
   // 파일명 입력
-  await page.getByPlaceholder('파일명.js').click();
   await page.getByPlaceholder('파일명.js').fill(fileName);
 
   // 코드 입력
-  await page
-    .locator('div')
-    .filter({ hasText: /^\/\/ 코드를 입력해주세요$/ })
-    .nth(1)
-    .click();
   await page
     .locator('div')
     .filter({ hasText: /^\/\/ 코드를 입력해주세요$/ })
@@ -51,7 +43,6 @@ export const uploadTemplateToCodezap = async ({
 
   // 태그 입력
   if (tag) {
-    await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').click();
     await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill(tag);
     await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').press('Enter');
   }
