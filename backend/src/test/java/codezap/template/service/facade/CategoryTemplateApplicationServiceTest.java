@@ -41,7 +41,7 @@ class CategoryTemplateApplicationServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("성공: 작성자의 권한 확인 후 템플릿 생성")
-        void createTemplate_Success() {
+        void createTemplate() {
             // given
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category membersCategory = categoryRepository.save(new Category("Members", member));
@@ -54,7 +54,7 @@ class CategoryTemplateApplicationServiceTest extends ServiceTest {
             Long result = categoryTemplateApplicationService.createTemplate(member, request);
 
             // then
-            assertThat(result).isEqualTo(1L);
+            assertThat(categoryRepository.existsById(result)).isTrue();
         }
 
         @Test
