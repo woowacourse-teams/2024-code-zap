@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
@@ -27,7 +26,7 @@ import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 import codezap.template.repository.TemplateRepository;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @DatabaseIsolation
 class MemberServiceTest {
 
@@ -48,17 +47,17 @@ class MemberServiceTest {
     class SignupTest {
 
         @Test
-        @DisplayName("회원가입 성공")
+        @DisplayName("회원가입 성공: 멤버 생성 및 기본 카테고리 생성 성공")
         void signup() {
             Member member = MemberFixture.memberFixture();
             SignupRequest signupRequest = new SignupRequest(member.getName(), member.getPassword());
 
             Long savedId = memberService.signup(signupRequest);
 
-            boolean isDefaultCategory = categoryRepository.existsByNameAndMember("카테고리 없음", member);
+            boolean existsDefaultCategory = categoryRepository.existsByNameAndMember("카테고리 없음", member);
             assertAll(
                     () -> assertThat(savedId).isEqualTo(member.getId()),
-                    () -> assertThat(isDefaultCategory).isTrue()
+                    () -> assertThat(existsDefaultCategory).isTrue()
             );
         }
 
@@ -88,23 +87,22 @@ class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("아이디 중복 검사 실패: 중복된 아이디")
+        @DisplayName("아이디 중복 검사 실패: 아이디 중복")
         void assertUniqueName_fail_duplicate() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            String memberName = member.getName();
 
-            assertThatThrownBy(() -> memberService.assertUniqueName(memberName))
+            assertThatThrownBy(() -> memberService.assertUniqueName(member.getName()))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("아이디가 이미 존재합니다.");
         }
     }
 
     @Nested
-    @DisplayName("회원 조회 테스트")
+    @DisplayName("회원 ID로 멤버 조회 테스트")
     class FindMember {
 
         @Test
-        @DisplayName("회원 정보 조회 성공")
+        @DisplayName("회원 ID로 멤버 조회 성공")
         void findMember() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
@@ -114,7 +112,7 @@ class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("회원 정보 조회 실패: 본인 정보가 아닌 경우")
+        @DisplayName("회원 ID로 멤버 조회 실패: 본인 ID가 아닌 경우")
         void findMember_Throw() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             MemberDto memberDto = MemberDto.from(member);
@@ -126,7 +124,7 @@ class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("회원 정보 조회 실패: DB에 없는 멤버인 경우")
+        @DisplayName("회원 ID로 멤버 조회 실패: DB에 없는 멤버인 경우")
         void findMember_Throw_Not_Exists() {
             Member member = MemberFixture.memberFixture();
             MemberDto memberDto = MemberDto.from(member);
@@ -139,8 +137,9 @@ class MemberServiceTest {
     }
 
     @Nested
-    @DisplayName("템플릿을 소유한 멤버 조회")
+    @DisplayName("템플릿을 소유한 멤버 조회 테스트")
     class GetByTemplateId {
+
         @Test
         @DisplayName("템플릿을 소유한 멤버 조회 성공")
         void getByTemplateId() {
@@ -165,7 +164,7 @@ class MemberServiceTest {
     }
 
     @Nested
-    @DisplayName("아이디로 멤버 조회")
+    @DisplayName("아이디로 멤버 조회 테스트")
     class GetById {
         @Test
         @DisplayName("아이디로 멤버 조회 성공")
