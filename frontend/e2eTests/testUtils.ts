@@ -22,9 +22,9 @@ export const loginToCodezap = async ({ page, username, password }: LoginToCodeza
 
 interface WaitForSuccessProps {
   page: Page;
-  url: string;
+  apiUrl: string;
 }
 
-export const waitForSuccess = async ({ page, url }: WaitForSuccessProps) => {
-  await page.waitForResponse((response) => response.url().includes(url) && response.status() === 200);
+export const waitForSuccess = async ({ page, apiUrl }: WaitForSuccessProps) => {
+  await page.waitForResponse((response) => response.url().includes(apiUrl) && response.status() === 200);
 };

@@ -11,12 +11,12 @@ test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 
 
   await createCategory({ page, newCategoryName });
 
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
   await expect(page.getByRole('button', { name: newCategoryName })).toBeVisible();
 
   await deleteCategory({ page, newCategoryName });
 
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
   await expect(page.getByRole('button', { name: newCategoryName })).not.toBeVisible();
 });
 
@@ -26,7 +26,7 @@ test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 �
 
   await createCategory({ page, newCategoryName });
 
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
   await expect(page.getByRole('button', { name: newCategoryName })).toBeVisible();
 
   await page.getByRole('button', { name: '카테고리 편집' }).click();
@@ -41,7 +41,7 @@ test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 �
 
   await deleteCategory({ page, newCategoryName: editedCategoryName });
 
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
   await expect(page.getByRole('button', { name: editedCategoryName })).not.toBeVisible();
 });
 
@@ -62,12 +62,12 @@ test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ 
 
   await page.getByRole('button', { name: '저장' }).click();
 
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
   await expect(page.getByRole('button', { name: expectedCategoryName })).toBeVisible();
 
   await deleteCategory({ page, newCategoryName: expectedCategoryName });
 
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
   await expect(page.getByRole('button', { name: expectedCategoryName })).not.toBeVisible();
 });
 

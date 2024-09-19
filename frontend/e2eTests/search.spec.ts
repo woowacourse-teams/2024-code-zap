@@ -11,7 +11,7 @@ test('검색창에 `테스트`를 입력하면 `테스트`가 내용에 포함�
 
   await searchTemplates({ page, keyword });
 
-  await waitForSuccess({ page, url: '/templates?keyword' });
+  await waitForSuccess({ page, apiUrl: '/templates?keyword' });
   await expect(page.getByRole('link', { name: /테스트2/ })).toBeVisible();
 });
 
@@ -20,7 +20,7 @@ test('검색창에 `ㅁㅅㅌㅇ`를 입력할 경우 `검색 결과가 없습�
 
   await searchTemplates({ page, keyword });
 
-  await waitForSuccess({ page, url: '/templates?keyword' });
+  await waitForSuccess({ page, apiUrl: '/templates?keyword' });
   await expect(page.locator('div').filter({ hasText: /^검색 결과가 없습니다\.$/ })).toBeVisible();
 });
 
