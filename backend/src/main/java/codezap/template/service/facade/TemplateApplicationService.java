@@ -71,7 +71,10 @@ public class TemplateApplicationService {
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
-                        thumbnailService.getByTemplate(template).getSourceCode())
+                        thumbnailService.getByTemplate(template).getSourceCode(),
+                        //todo 값 삽입 필요
+                        0L,
+                        false)
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
