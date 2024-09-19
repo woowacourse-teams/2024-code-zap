@@ -2,11 +2,11 @@ import { Page } from '@playwright/test';
 
 interface LoginToCodezapProps {
   page: Page;
-  username: string;
+  id: string;
   password: string;
 }
 
-export const loginToCodezap = async ({ page, username, password }: LoginToCodezapProps) => {
+export const loginToCodezap = async ({ page, id, password }: LoginToCodezapProps) => {
   await page.goto('/');
   await page.getByRole('link', { name: '로그인', exact: true }).getByRole('button').click();
   await page
@@ -14,10 +14,12 @@ export const loginToCodezap = async ({ page, username, password }: LoginToCodeza
     .filter({ hasText: /^아이디 \(닉네임\)$/ })
     .locator('div')
     .click();
-  await page.locator('input[type="text"]').fill(username);
+  await page.locator('input[type="text"]').fill(id);
   await page.locator('input[type="text"]').press('Tab');
   await page.locator('input[type="password"]').fill(password);
   await page.locator('form').getByRole('button', { name: '로그인' }).click();
+
+  await waitForSuccess({ page, apiUrl: '/login' });
 };
 
 interface WaitForSuccessProps {
