@@ -1,11 +1,11 @@
 import { expect, test } from '@playwright/test';
 
-import { loginToCodezap, uploadTemplateToCodezap } from './templateActions';
-import { waitForSuccess } from './utils';
+import { uploadTemplateToCodezap } from './templates.actions';
+import { loginToCodezap, waitForSuccess } from './utils';
 
 // 로그인 동작을 모든 테스트 전에 실행
 test.beforeEach(async ({ page }) => {
-  await loginToCodezap(page, 'll', 'llll1111');
+  await loginToCodezap({ page, username: 'll', password: 'llll1111' });
 });
 
 test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을 입력해주세요`라는 토스트 메시지가 나온다.', async ({
