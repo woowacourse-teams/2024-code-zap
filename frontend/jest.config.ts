@@ -20,7 +20,7 @@ const config: Config = {
     'react-syntax-highlighter/dist/esm': 'react-syntax-highlighter/dist/cjs',
   },
   transformIgnorePatterns: ['/node_modules/(?!react-syntax-highlighter)'],
-  testPathIgnorePatterns: ['/e2eTests/'],
+  testPathIgnorePatterns: ['/playwright/'],
 };
 
 export default config;
