@@ -75,7 +75,7 @@ class TemplateServiceTest {
                             new CreateSourceCodeRequest("filename2", "content2", 2)
                     ),
                     1,
-                    1L,
+                    category.getId(),
                     List.of("tag1", "tag2")
             );
 
@@ -84,7 +84,8 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(actual.getTitle()).isEqualTo(templateRequest.title()),
                     () -> assertThat(actual.getMember()).isEqualTo(member),
-                    () -> assertThat(actual.getCategory()).isEqualTo(category)
+                    () -> assertThat(actual.getCategory()).isEqualTo(category),
+                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description())
             );
 
         }
@@ -106,7 +107,8 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(actual.getTitle()).isEqualTo(template.getTitle()),
                     () -> assertThat(actual.getMember()).isEqualTo(member),
-                    () -> assertThat(actual.getCategory()).isEqualTo(category)
+                    () -> assertThat(actual.getCategory()).isEqualTo(category),
+                    () -> assertThat(actual.getDescription()).isEqualTo(template.getDescription())
             );
         }
 
