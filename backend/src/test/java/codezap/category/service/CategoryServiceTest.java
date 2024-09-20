@@ -62,20 +62,6 @@ class CategoryServiceTest {
         }
 
         @Test
-        @DisplayName("카테고리 생성 실패: 동일한 멤버, 중복된 이름의 카테고리 이름 생성")
-        void createCategoryFailWithSameMemberAndDuplicateName() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            String duplicatedCategoryName = "category";
-            categoryRepository.save(new Category(duplicatedCategoryName, member));
-
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
-
-            assertThatThrownBy(() -> categoryService.create(member, createCategoryRequest))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
-        }
-
-        @Test
         @DisplayName("카테고리 생성 성공: 다른 멤버, 중복된 이름의 카테고리 이름 생성")
         void createCategorySuccessWithOtherMemberAndSameName() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
@@ -87,6 +73,20 @@ class CategoryServiceTest {
 
             assertThat(categoryService.create(otherMember, createCategoryRequest).id())
                     .isEqualTo(2L);
+        }
+
+        @Test
+        @DisplayName("카테고리 생성 실패: 동일한 멤버, 중복된 이름의 카테고리 이름 생성")
+        void createCategoryFailWithSameMemberAndDuplicateName() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            String duplicatedCategoryName = "category";
+            categoryRepository.save(new Category(duplicatedCategoryName, member));
+
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
+
+            assertThatThrownBy(() -> categoryService.create(member, createCategoryRequest))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
         }
     }
 
