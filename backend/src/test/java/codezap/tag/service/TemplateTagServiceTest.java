@@ -1,11 +1,13 @@
 package codezap.tag.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +19,7 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
+import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -124,6 +127,23 @@ class TemplateTagServiceTest extends ServiceTest {
 
             // when & then
             assertThat(templateTagService.getByTemplate(template)).isEmpty();
+        }
+
+        @Test
+        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
+        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
+        void getByTemplate_WhenNotExistTemplate() {
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template unSavedTemplate = TemplateFixture.get(member, category);
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThatThrownBy(() -> templateTagService.getByTemplate(unSavedTemplate))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
         }
     }
 
