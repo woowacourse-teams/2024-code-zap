@@ -132,10 +132,11 @@ class TemplateServiceTest {
         void getByMemberIdSuccess() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
             var member2 = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(TemplateFixture.get(member1, category));
-            var template2 = templateRepository.save(TemplateFixture.get(member1, category));
-            var template3 = templateRepository.save(TemplateFixture.get(member2, category));
+            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template3 = templateRepository.save(TemplateFixture.get(member2, category2));
 
             var actual = sut.getByMemberId(member1.getId());
 
