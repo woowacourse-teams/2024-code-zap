@@ -2,6 +2,7 @@ package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
@@ -116,8 +117,10 @@ class ThumbnailServiceTest {
             sut.deleteByTemplateIds(List.of(template1.getId()));
             var actual = thumbnailRepository.findAll();
 
-            assertThat(actual).hasSize(1);
-            assertThat(actual.get(0).getTemplate()).isEqualTo(template2);
+            assertAll(
+                    () -> assertThat(actual).hasSize(1),
+                    () -> assertThat(actual.get(0).getTemplate()).isEqualTo(template2)
+            );
         }
 
         @Test
@@ -133,8 +136,10 @@ class ThumbnailServiceTest {
             sut.deleteByTemplateIds(List.of(nonExistentID));
             var actual = thumbnailRepository.findAll();
 
-            assertThat(actual).hasSize(1);
-            assertThat(actual.get(0).getTemplate()).isEqualTo(template);
+            assertAll(
+                    () -> assertThat(actual).hasSize(1),
+                    () -> assertThat(actual.get(0).getTemplate()).isEqualTo(template)
+            );
         }
     }
 }
