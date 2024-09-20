@@ -343,11 +343,11 @@ class SourceCodeServiceTest extends ServiceTest {
         void updateSourceCodes_WhenNotContainsAny_UpdateOrDelete() {
             // given
             Template template = createSavedTemplate();
-            SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-            Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
+            SourceCode includedSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+            SourceCode notIncludedSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
+            Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, includedSourceCode));
 
-            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
+            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(includedSourceCode);
             UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
                     Collections.emptyList(),
                     List.of(updateRequest1),
