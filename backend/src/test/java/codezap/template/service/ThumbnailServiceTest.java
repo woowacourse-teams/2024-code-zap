@@ -82,7 +82,11 @@ class ThumbnailServiceTest {
 
             var actual = sut.getByTemplate(template);
 
-            assertThat(actual.getTemplate()).isEqualTo(template);
+            assertAll(
+                    () -> assertThat(actual.getId()).isEqualTo(sourceCode.getId()),
+                    () -> assertThat(actual.getTemplate()).isEqualTo(template),
+                    () -> assertThat(actual.getSourceCode()).isEqualTo(sourceCode)
+            );
         }
 
         @Test
