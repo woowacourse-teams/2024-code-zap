@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
@@ -42,7 +43,7 @@ class TemplateTagServiceTest extends ServiceTest {
         @DisplayName("성공: 템플릿에 해당하는 태그 생성")
         void createTags() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             List<String> tagNames = Arrays.asList("tag1", "tag2", "tag3");
 
             // when
@@ -57,7 +58,7 @@ class TemplateTagServiceTest extends ServiceTest {
         @DisplayName("성공: 이미 있는 태그가 포함된 경우 중복 저장하지 않고 새 태그만 생성")
         void createTags_WhenExistTemplateTagContains() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             Tag existTag = tagRepository.save(new Tag("tag1"));
             TemplateTag existTemplateTag = templateTagRepository.save(new TemplateTag(template, existTag));
             List<String> tagNames = Arrays.asList(existTag.getName(), "tag2", "tag3");
@@ -75,7 +76,7 @@ class TemplateTagServiceTest extends ServiceTest {
         @DisplayName("성공: 이미 있는 태그이지만 이 템플릿의 태그가 아닌 경우 템플릿 태그만 추가")
         void createTags_WhenExistTagContains() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             Tag existTag = tagRepository.save(new Tag("tag1"));
             List<String> newTagNames = Arrays.asList("tag2", "tag3");
             List<String> tagNames = Arrays.asList(existTag.getName(), newTagNames.get(0), newTagNames.get(1));
@@ -107,7 +108,7 @@ class TemplateTagServiceTest extends ServiceTest {
         @DisplayName("성공: 템플릿에 해당하는 태그 목록 반환")
         void getByTemplate() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
             TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
@@ -122,7 +123,7 @@ class TemplateTagServiceTest extends ServiceTest {
         @DisplayName("성공: 템플릿에 해당하는 태그가 없는 경우 빈 목록 반환")
         void getByTemplate_WhenNotExistTemplateTag() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             tagRepository.save(new Tag("tag1"));
             tagRepository.save(new Tag("tag2"));
 
@@ -159,7 +160,7 @@ class TemplateTagServiceTest extends ServiceTest {
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
-            Template template1 = createTemplate();
+            Template template1 = createSavedTemplate();
             templateTagRepository.save(new TemplateTag(template1, tag1));
 
             Template template2 = createSecondTemplate();
@@ -179,7 +180,7 @@ class TemplateTagServiceTest extends ServiceTest {
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
-            Template template1 = createTemplate();
+            Template template1 = createSavedTemplate();
             templateTagRepository.save(new TemplateTag(template1, tag1));
             templateTagRepository.save(new TemplateTag(template1, tag2));
 
@@ -192,6 +193,17 @@ class TemplateTagServiceTest extends ServiceTest {
                     List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
             );
         }
+
+        @Test
+        @DisplayName("성공: 해당하는 태그가 없는 경우 빈 목록 반환")
+        void findAllByTemplates_WhenNotExist() {
+            // given
+            Template template1 = createSavedTemplate();
+
+            // when & then
+            FindAllTagsResponse actual = templateTagService.findAllByTemplates(List.of(template1));
+            assertThat(actual).isEqualTo(new FindAllTagsResponse(Collections.EMPTY_LIST));
+        }
     }
 
     @Nested
@@ -203,7 +215,7 @@ class TemplateTagServiceTest extends ServiceTest {
         void updateTags() {
             // given
             String tagName = "tag1";
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             List<String> newTags = List.of(tagName);
 
             // when
@@ -220,10 +232,28 @@ class TemplateTagServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("성공: 기존 태그 전체 삭제로 태그 업데이트 가능")
+        void updateTags_WhenRemoveAllTags() {
+            // given
+            Template template = createSavedTemplate();
+            List<Tag> tags = tagRepository.saveAll(List.of(new Tag("tag1"), new Tag("tag2")));
+            templateTagRepository.saveAll(
+                    List.of(new TemplateTag(template, tags.get(0)), new TemplateTag(template, tags.get(1))));
+
+            List<String> updatedTags = List.of();
+
+            // when
+            templateTagService.updateTags(template, updatedTags);
+
+            // then
+            assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();
+        }
+
+        @Test
         @DisplayName("성공: 동일한 태그가 이미 있는 경우 중복 저장하지 않음")
         void updateTags_Success() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             templateTagRepository.save(new TemplateTag(template, tag1));
 
@@ -249,7 +279,7 @@ class TemplateTagServiceTest extends ServiceTest {
         @DisplayName("성공")
         void deleteByIds() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
             templateTagRepository.save(new TemplateTag(template, tag1));
@@ -259,14 +289,18 @@ class TemplateTagServiceTest extends ServiceTest {
             templateTagService.deleteByIds(List.of(template.getId()));
 
             // then
-            assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();
+            assertAll(
+                    () -> assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty(),
+                    () -> assertThat(tagRepository.findByName(tag1.getName())).isPresent(),
+                    () -> assertThat(tagRepository.findByName(tag2.getName())).isPresent()
+            );
         }
 
         @Test
         @DisplayName("성공: 템플릿에 해당하는 태그가 없는 경우")
         void deleteByIds_WhenNotExistTemplateTag() {
             // given
-            Template template = createTemplate();
+            Template template = createSavedTemplate();
 
             // when
             templateTagService.deleteByIds(List.of(template.getId()));
@@ -276,7 +310,7 @@ class TemplateTagServiceTest extends ServiceTest {
         }
     }
 
-    private Template createTemplate() {
+    private Template createSavedTemplate() {
         Member member = memberRepository.save(MemberFixture.getFirstMember());
         Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
         return templateRepository.save(TemplateFixture.get(member, category));
