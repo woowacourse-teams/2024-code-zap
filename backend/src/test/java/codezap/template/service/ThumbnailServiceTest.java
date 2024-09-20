@@ -103,8 +103,8 @@ class ThumbnailServiceTest {
     class DeleteByTemplateIDs {
 
         @Test
-        @DisplayName("썸네일 삭제 성공")
-        void deleteByTemplateSuccess() {
+        @DisplayName("썸네일 삭제 성공: 1개의 썸네일 삭제")
+        void deleteByTemplateSuccessWithOneThumbnail() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
@@ -120,6 +120,24 @@ class ThumbnailServiceTest {
             assertThat(actual).hasSize(1)
                     .containsExactly(savedThumbnail2)
                     .doesNotContain(savedThumbnail1);
+        }
+
+        @Test
+        @DisplayName("썸네일 삭제 성공: 2개의 썸네일 삭제")
+        void deleteByTemplateSuccessWithTwoThumbnail() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "Filename 1", "Content 1", 1));
+            var savedThumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "Filename 2", "Content 2", 1));
+            var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
+
+            sut.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
+            var actual = thumbnailRepository.findAll();
+
+            assertThat(actual).isEmpty();
         }
 
         @Test
