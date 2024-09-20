@@ -64,7 +64,8 @@ class TemplateTagServiceTest extends ServiceTest {
 
             // then
             List<String> savedTemplateTagNames = getSavedTagNames(template);
-            assertThat(savedTemplateTagNames).containsExactlyElementsOf(tagNames);
+            assertThat(savedTemplateTagNames).hasSize(3)
+                    .containsExactlyElementsOf(tagNames);
         }
 
         @Test
@@ -109,8 +110,8 @@ class TemplateTagServiceTest extends ServiceTest {
             TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
 
             // when & then
-            assertThat(templateTagService.getByTemplate(template)).containsExactly(templateTag1.getTag(),
-                    templateTag2.getTag());
+            assertThat(templateTagService.getByTemplate(template))
+                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
         }
 
         @Test
@@ -214,10 +215,8 @@ class TemplateTagServiceTest extends ServiceTest {
             List<String> saveTemplateTags = templateTagRepository.findAllByTemplate(template).stream()
                     .map(templateTag -> templateTag.getTag().getName())
                     .toList();
-            assertAll(
-                    () -> assertThat(saveTemplateTags).hasSize(2),
-                    () -> assertThat(saveTemplateTags).containsExactlyElementsOf(newTags)
-            );
+            assertThat(saveTemplateTags).hasSize(2)
+                    .containsExactlyElementsOf(newTags);
         }
     }
 
