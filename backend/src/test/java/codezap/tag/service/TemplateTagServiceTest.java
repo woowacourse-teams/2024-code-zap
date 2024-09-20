@@ -49,24 +49,24 @@ class TemplateTagServiceTest extends ServiceTest {
             templateTagService.createTags(template, tagNames);
 
             // then
-            List<String> savedTemplateTagNames = getSavedTagNames(template);
+            List<String> savedTemplateTagNames = getSavedTemplateTagNames(template);
             assertThat(savedTemplateTagNames).containsExactlyElementsOf(tagNames);
         }
 
         @Test
-        @DisplayName("성공: 이미 있는 템플릿 태그가 포함된 경우 중복 저장하지 않고 새 태그만 생성")
+        @DisplayName("성공: 이미 있는 태그가 포함된 경우 중복 저장하지 않고 새 태그만 생성")
         void createTags_WhenExistTemplateTagContains() {
             // given
             Template template = createTemplate();
             Tag existTag = tagRepository.save(new Tag("tag1"));
-            TemplateTag existTemplateTag = new TemplateTag(template, existTag);
+            TemplateTag existTemplateTag = templateTagRepository.save(new TemplateTag(template, existTag));
             List<String> tagNames = Arrays.asList(existTag.getName(), "tag2", "tag3");
 
             // when
             templateTagService.createTags(template, tagNames);
 
             // then
-            List<String> savedTemplateTagNames = getSavedTagNames(template);
+            List<String> savedTemplateTagNames = getSavedTemplateTagNames(template);
             assertThat(savedTemplateTagNames).hasSize(3)
                     .containsExactlyElementsOf(tagNames);
         }
@@ -77,21 +77,22 @@ class TemplateTagServiceTest extends ServiceTest {
             // given
             Template template = createTemplate();
             Tag existTag = tagRepository.save(new Tag("tag1"));
-            List<String> tagNames = Arrays.asList(existTag.getName(), "tag2", "tag3");
-            List<String> beforeTemplateTags = getSavedTagNames(template);
+            List<String> newTagNames = Arrays.asList("tag2", "tag3");
+            List<String> tagNames = Arrays.asList(existTag.getName(), newTagNames.get(0), newTagNames.get(1));
+            List<String> beforeTemplateTags = getSavedTemplateTagNames(template);
 
             // when
             templateTagService.createTags(template, tagNames);
 
             // then
-            List<String> afterTemplateTags = getSavedTagNames(template);
+            List<String> afterTemplateTags = getSavedTemplateTagNames(template);
             assertAll(
-                    () -> assertThat(beforeTemplateTags).doesNotContain(existTag.getName()),
+                    () -> assertThat(beforeTemplateTags).doesNotContainAnyElementsOf(newTagNames),
                     () -> assertThat(afterTemplateTags).containsExactlyElementsOf(tagNames)
             );
         }
 
-        private List<String> getSavedTagNames(Template template) {
+        private List<String> getSavedTemplateTagNames(Template template) {
             return templateTagRepository.findAllByTemplate(template).stream()
                     .map(templateTag -> templateTag.getTag().getName())
                     .toList();
