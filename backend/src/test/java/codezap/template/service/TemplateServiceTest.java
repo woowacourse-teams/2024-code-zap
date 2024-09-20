@@ -194,9 +194,6 @@ class TemplateServiceTest {
             Pageable pageable = PageRequest.of(0, 10);
 
             Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
-            for (Template template : actual.getContent()) {
-                System.out.println(template.getTitle());
-            }
 
             assertAll(
                     () -> assertThat(actual.getContent())
