@@ -52,11 +52,11 @@ class CategoryServiceTest {
             CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
 
             CreateCategoryResponse response = categoryService.create(member, request);
-            Category savedCategory = categoryService.fetchById(response.id());
+            Category savedCategory = categoryRepository.fetchById(response.id());
 
             assertAll(
                     () -> assertThat(response.id()).isEqualTo(1L),
-                    () -> assertThat(response.name()).isEqualTo(categoryName),
+                    () -> assertThat(savedCategory.getName()).isEqualTo(categoryName),
                     () -> assertThat(savedCategory.getMember()).isEqualTo(member)
             );
         }
