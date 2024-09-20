@@ -63,6 +63,7 @@ class CategoryServiceTest {
 
         @Test
         @DisplayName("카테고리 생성 성공: 다른 멤버, 중복된 이름의 카테고리 이름 생성")
+        @Transactional
         void createCategorySuccessWithOtherMemberAndSameName() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
@@ -70,9 +71,14 @@ class CategoryServiceTest {
             categoryRepository.save(new Category(duplicatedCategoryName, member));
 
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
+            CreateCategoryResponse createCategoryResponse = categoryService.create(otherMember, createCategoryRequest);
+            Category savedCategory = categoryRepository.fetchById(createCategoryResponse.id());
 
-            assertThat(categoryService.create(otherMember, createCategoryRequest).id())
-                    .isEqualTo(2L);
+            assertAll(
+                    () -> assertThat(createCategoryResponse.id()).isEqualTo(2L),
+                    () -> assertThat(savedCategory.getName()).isEqualTo(duplicatedCategoryName),
+                    () -> assertThat(savedCategory.getMember()).isEqualTo(otherMember)
+            );
         }
 
         @Test
