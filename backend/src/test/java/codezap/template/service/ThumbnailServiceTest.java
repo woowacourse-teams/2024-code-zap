@@ -109,18 +109,17 @@ class ThumbnailServiceTest {
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "Filename 1", "Content 1", 1));
-            thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
+            var savedThumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "Filename 2", "Content 2", 1));
-            thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
+            var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
             sut.deleteByTemplateIds(List.of(template1.getId()));
             var actual = thumbnailRepository.findAll();
 
-            assertAll(
-                    () -> assertThat(actual).hasSize(1),
-                    () -> assertThat(actual.get(0).getTemplate()).isEqualTo(template2)
-            );
+            assertThat(actual).hasSize(1)
+                    .containsExactly(savedThumbnail2)
+                    .doesNotContain(savedThumbnail1);
         }
 
         @Test
@@ -130,16 +129,14 @@ class ThumbnailServiceTest {
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode = sourceCodeRepository.save(new SourceCode(template, "Filename 1", "Content 1", 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+            var savedThumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode));
             var nonExistentID = 100L;
 
             sut.deleteByTemplateIds(List.of(nonExistentID));
             var actual = thumbnailRepository.findAll();
 
-            assertAll(
-                    () -> assertThat(actual).hasSize(1),
-                    () -> assertThat(actual.get(0).getTemplate()).isEqualTo(template)
-            );
+            assertThat(actual).hasSize(1)
+                    .containsExactly(savedThumbnail);
         }
     }
 }
