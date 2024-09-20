@@ -150,9 +150,8 @@ class TemplateJpaRepositoryTest {
 
             assertAll(
                     () -> assertThat(result.getContent())
-                            .allMatch(template ->
-                                    template.getTitle().contains(keyword) || template.getDescription()
-                                            .contains(keyword)),
+                            .allMatch(template -> template.getTitle().contains(keyword)
+                                    || template.getDescription().contains(keyword)),
                     () -> assertThat(result.getContent()).hasSize(3)
             );
         }
@@ -213,10 +212,11 @@ class TemplateJpaRepositoryTest {
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
             assertAll(
-                    () -> assertThat(result.getContent()).containsExactlyInAnyOrder(
-                            templateRepository.fetchById(1L),
-                            templateRepository.fetchById(2L),
-                            templateRepository.fetchById(3L)),
+                    () -> assertThat(result.getContent())
+                            .containsExactlyInAnyOrder(
+                                    templateRepository.fetchById(1L),
+                                    templateRepository.fetchById(2L),
+                                    templateRepository.fetchById(3L)),
                     () -> assertThat(result.getContent()).hasSize(3)
             );
         }
@@ -238,10 +238,9 @@ class TemplateJpaRepositoryTest {
             assertAll(
                     () -> assertThat(result.getContent()).hasSize(2),
                     () -> assertThat(result.getContent())
-                            .allMatch(template ->
-                                    template.getMember().getId().equals(member1.getId())
-                                            && (template.getTitle().contains(keyword) || template.getDescription()
-                                            .contains(keyword)))
+                            .allMatch(template -> template.getMember().getId().equals(member1.getId())
+                                    && (template.getTitle().contains(keyword)
+                                    || template.getDescription().contains(keyword)))
             );
         }
 

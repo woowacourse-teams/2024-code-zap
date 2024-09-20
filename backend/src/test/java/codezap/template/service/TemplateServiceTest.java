@@ -282,10 +282,9 @@ class TemplateServiceTest {
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
                     () -> assertThat(actual.getContent())
-                            .allMatch(template ->
-                                    template.getMember().getId().equals(member1.getId())
-                                            && (template.getTitle().contains(keyword) || template.getDescription()
-                                            .contains(keyword)))
+                            .allMatch(template -> template.getMember().getId().equals(member1.getId())
+                                    && (template.getTitle().contains(keyword)
+                                    || template.getDescription().contains(keyword)))
             );
         }
 
@@ -322,8 +321,10 @@ class TemplateServiceTest {
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
-                    () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(1L),
-                            templateRepository.fetchById(2L))
+                    () -> assertThat(actual.getContent())
+                            .containsExactlyInAnyOrder(
+                                    templateRepository.fetchById(1L),
+                                    templateRepository.fetchById(2L))
             );
         }
 
