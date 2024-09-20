@@ -25,7 +25,7 @@ test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 
   page,
 }) => {
   // 유저의 카테고리 리스트
-  await waitForSuccess({ page, url: '/categories' });
+  await waitForSuccess({ page, apiUrl: '/categories' });
 
   await uploadTemplateToCodezap({
     page,
@@ -47,7 +47,7 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
   page,
 }) => {
   // 템플릿 목록
-  await waitForSuccess({ page, url: '/templates' });
+  await waitForSuccess({ page, apiUrl: '/templates' });
 
   const templateCard = page.getByRole('link', { name: 'll 2024년 9월 12일 테스트2' });
 
