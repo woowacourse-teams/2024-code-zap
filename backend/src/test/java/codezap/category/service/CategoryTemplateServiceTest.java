@@ -68,13 +68,12 @@ class CategoryTemplateServiceTest {
         @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리는 삭제할 수 없음")
         void deleteCategoryFailWithNotExistCategory() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            Category category = categoryRepository.save(new Category("category1", member));
 
-            categoryTemplateService.deleteById(member, category.getId());
+            long notSavedCategoryId = 100L;
 
-            assertThatCode(() -> categoryTemplateService.deleteById(member, category.getId()))
+            assertThatCode(() -> categoryTemplateService.deleteById(member, notSavedCategoryId))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + category.getId() + "에 해당하는 카테고리가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
     }
 }
