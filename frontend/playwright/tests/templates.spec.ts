@@ -19,10 +19,11 @@ test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을
 
 test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 저장버튼을 눌러 템플릿을 생성한다. 목록 페이지에서 새로 생성된 제목의 템플릿 카드를 확인할 수 있다.', async ({
   page,
+  browserName,
 }) => {
   await page.goto('/my-templates');
 
-  const testTitle = '템플릿생성테스트';
+  const testTitle = `템플릿생성테스트-${browserName}`;
 
   await uploadTemplateToCodezap({
     page,
@@ -48,7 +49,7 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
   // 템플릿 목록
   await waitForSuccess({ page, apiUrl: '/templates' });
 
-  const templateCard = page.getByRole('link', { name: 'll 2024년 9월 20일 상세조회테스트' });
+  const templateCard = page.getByRole('link', { name: '상세조회테스트' });
 
   await expect(templateCard).toBeVisible();
   await templateCard.click();
@@ -75,12 +76,13 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
 
 test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 변경하고, `편집된템플릿`태그를 추가로 등록한다.', async ({
   page,
+  browserName,
 }) => {
   await page.goto('/my-templates');
 
-  const beforeTemplateTitle = '템플릿편집테스트';
-  const afterTemplateTitle = '편집된템플릿';
-  const addedTagName = '추가된태그';
+  const beforeTemplateTitle = `템플릿편집테스트-${browserName}`;
+  const afterTemplateTitle = `편집된템플릿-${browserName}`;
+  const addedTagName = `추가된태그-${browserName}`;
 
   await uploadTemplateToCodezap({
     page,
@@ -110,27 +112,28 @@ test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 
 
 test('템플릿 삭제 버튼을 누르면 삭제 확인 모달이 뜨고, 삭제 확인 모달에서 삭제 버튼을 누르면, 템플릿이 삭제되고 내탬플릿 화면으로 이동한다.', async ({
   page,
+  browserName,
 }) => {
   await page.goto('/my-templates');
+
+  const testTitle = `템플릿삭제테스트-${browserName}`;
+
   await uploadTemplateToCodezap({
     page,
-    title: '템플릿삭제테스트',
-    fileName: '템플릿삭제테스트',
-    code: '템플릿삭제테스트',
-    description: '템플릿삭제테스트',
-    tag: '템플릿삭제테스트',
+    title: testTitle,
+    fileName: testTitle,
+    code: testTitle,
+    description: testTitle,
+    tag: testTitle,
   });
 
-  await page
-    .getByRole('link', { name: 'll 방금 전 템플릿삭제테스트 템플릿삭제테스트 템플릿삭제테스트 템플릿삭제테스트' })
-    .first()
-    .click();
+  await page.getByRole('link', { name: testTitle }).first().click();
 
   await page.getByRole('button', { name: '템플릿 삭제' }).click();
+
   await expect(page.getByText('정말 삭제하시겠습니까?')).toBeVisible();
 
   await page.getByRole('button', { name: '삭제', exact: true }).click();
-  await expect(
-    page.getByRole('link', { name: 'll 방금 전 템플릿삭제테스트 템플릿삭제테스트 템플릿삭제테스트 모든 태그' }),
-  ).not.toBeVisible();
+
+  await expect(page.getByRole('link', { name: testTitle })).not.toBeVisible();
 });
