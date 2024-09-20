@@ -61,9 +61,13 @@ class ThumbnailServiceTest {
             var sourceCode = sourceCodeRepository.save(new SourceCode(template, "Filename 1", "Content 1", 1));
 
             sut.createThumbnail(template, sourceCode);
-            var actual = thumbnailRepository.findAll();
+            var actual = thumbnailRepository.fetchByTemplate(template);
 
-            assertThat(actual).hasSize(1);
+            assertAll(
+                    () -> assertThat(actual.getId()).isEqualTo(1L),
+                    () -> assertThat(actual.getTemplate()).isEqualTo(template),
+                    () -> assertThat(actual.getSourceCode()).isEqualTo(sourceCode)
+            );
         }
     }
 
