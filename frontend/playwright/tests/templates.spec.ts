@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { uploadTemplateToCodezap } from './templates.actions';
+import { deleteTemplate, uploadTemplateToCodezap } from './templates.actions';
 import { waitForSuccess } from './utils';
 
 test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을 입력해주세요`라는 토스트 메시지가 나온다.', async ({
@@ -21,20 +21,24 @@ test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 
   page,
 }) => {
   await page.goto('/my-templates');
+
+  const testTitle = '템플릿생성테스트';
+
   await uploadTemplateToCodezap({
     page,
-    title: '템플릿생성테스트',
-    fileName: '템플릿생성테스트',
-    code: '템플릿생성테스트',
-    description: '템플릿생성테스트',
-    tag: '템플릿생성테스트',
+    title: testTitle,
+    fileName: testTitle,
+    code: testTitle,
+    description: testTitle,
+    tag: testTitle,
   });
 
-  const templateCard = page
-    .getByRole('link', { name: 'll 방금 전 템플릿생성테스트 템플릿생성테스트 템플릿생성테스트 템플릿생성테스트' })
-    .first();
+  const templateCard = page.getByRole('link', { name: testTitle }).first();
 
   await expect(templateCard).toBeVisible();
+
+  // 테스트용으로 생성한 템플릿 삭제
+  await deleteTemplate({ page, templateName: testTitle });
 });
 
 test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성날짜, 변경날짜, 카테고리, 코드 스니펫 목록을 확인할 수 있다.', async ({
@@ -73,28 +77,35 @@ test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 
   page,
 }) => {
   await page.goto('/my-templates');
+
+  const beforeTemplateTitle = '템플릿편집테스트';
+  const afterTemplateTitle = '편집된템플릿';
+  const addedTagName = '추가된태그';
+
   await uploadTemplateToCodezap({
     page,
-    title: '템플릿편집테스트',
-    fileName: '템플릿편집테스트',
-    code: '템플릿편집테스트',
-    description: '템플릿편집테스트',
-    tag: '템플릿편집테스트',
+    title: beforeTemplateTitle,
+    fileName: beforeTemplateTitle,
+    code: beforeTemplateTitle,
+    description: beforeTemplateTitle,
+    tag: beforeTemplateTitle,
   });
 
-  await page
-    .getByRole('link', { name: 'll 방금 전 템플릿편집테스트 템플릿편집테스트 템플릿편집테스트' })
-    .first()
-    .click();
+  await page.getByRole('link', { name: beforeTemplateTitle }).first().click();
 
   await page.getByRole('button', { name: '템플릿 편집' }).click();
-  await page.getByPlaceholder('제목을 입력해주세요').fill('편집된템플릿');
-  await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill('편집된템플릿');
+  await page.getByPlaceholder('제목을 입력해주세요').fill(afterTemplateTitle);
+  await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill(addedTagName);
   await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').press('Enter');
   await page.getByRole('button', { name: '저장' }).click();
 
-  await expect(page.getByText('편집된템플릿').first()).toBeVisible();
-  await expect(page.getByRole('button', { name: '편집된템플릿' })).toBeVisible();
+  await page.goto('/my-templates');
+
+  await expect(page.getByText(afterTemplateTitle).first()).toBeVisible();
+  await expect(page.getByRole('button', { name: addedTagName }).first()).toBeVisible();
+
+  // 테스트용으로 생성한 템플릿 삭제
+  await deleteTemplate({ page, templateName: afterTemplateTitle });
 });
 
 test('템플릿 삭제 버튼을 누르면 삭제 확인 모달이 뜨고, 삭제 확인 모달에서 삭제 버튼을 누르면, 템플릿이 삭제되고 내탬플릿 화면으로 이동한다.', async ({

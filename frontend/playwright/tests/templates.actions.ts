@@ -57,3 +57,19 @@ export const uploadTemplateToCodezap = async ({
 
   await expect(page).toHaveURL('/my-templates');
 };
+
+interface deleteTemplateProps {
+  page: Page;
+  templateName: string;
+}
+
+export const deleteTemplate = async ({ page, templateName }: deleteTemplateProps) => {
+  await page.getByRole('link', { name: templateName }).first().click();
+  await page.getByRole('button', { name: '템플릿 삭제' }).click();
+
+  await expect(page.getByText('정말 삭제하시겠습니까?')).toBeVisible();
+
+  await page.getByRole('button', { name: '삭제', exact: true }).click();
+
+  await expect(page.getByRole('link', { name: ` ${templateName}` })).not.toBeVisible();
+};
