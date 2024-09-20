@@ -131,7 +131,7 @@ class CategoryServiceTest {
     class FindAllCategoryTest {
 
         @Test
-        @DisplayName("카테고리 전체 조회 테스트")
+        @DisplayName("성공")
         void findAllCategoriesSuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
