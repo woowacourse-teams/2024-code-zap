@@ -2,6 +2,7 @@ package codezap.category.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,12 @@ class CategoryTemplateServiceTest {
 
         categoryTemplateService.deleteById(member, savedCategory.getId());
 
-        assertThat(categoryRepository.findAllByMemberOrderById(member)).hasSize(beforeDeleteSize - 1);
+        assertAll(
+                () -> assertThat(categoryRepository.findAllByMemberOrderById(member))
+                        .hasSize(beforeDeleteSize - 1),
+                () -> assertThat(categoryRepository.existsById(savedCategory.getId()))
+                        .isFalse()
+        );
     }
 
     @Test
