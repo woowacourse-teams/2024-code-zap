@@ -5,7 +5,11 @@ import { loginToCodezap, waitForSuccess } from './utils';
 
 // 로그인 동작을 모든 테스트 전에 실행
 test.beforeEach(async ({ page }) => {
-  await loginToCodezap({ page, username: 'll', password: 'llll1111' });
+  await loginToCodezap({
+    page,
+    username: process.env.PLAYWRIGHT_TEST_USERNAME || '',
+    password: process.env.PLAYWRIGHT_TEST_PASSWORD || '',
+  });
 });
 
 test('템플릿 업로드 시, 파일명을 입력하지 않으면 `파일명을 입력해주세요`라는 토스트 메시지가 나온다.', async ({
@@ -49,19 +53,19 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
   // 템플릿 목록
   await waitForSuccess({ page, apiUrl: '/templates' });
 
-  const templateCard = page.getByRole('link', { name: 'll 2024년 9월 12일 테스트2' });
+  const templateCard = page.getByRole('link', { name: 'll 2024년 9월 20일 상세조회테스트' });
 
   await expect(templateCard).toBeVisible();
   await templateCard.click();
 
-  const title = page.getByText('테스트2').first();
+  const title = page.getByText('상세조회테스트').first();
   const name = page.getByText('ll', { exact: true });
-  const editedDate = page.getByText('2024년 9월 12일');
-  const createdDate = page.getByText('(2024년 9월 11일)');
-  const tag = page.getByRole('button', { name: 'test' });
+  const editedDate = page.getByText('2024년 9월 20일');
+  const createdDate = page.getByText('(2024년 8월 21일)');
+  const tag = page.getByRole('button', { name: '테스트' });
   const filename = page
     .locator('div')
-    .filter({ hasText: /^test2.ts$/ })
+    .filter({ hasText: /^test.ts$/ })
     .nth(1);
   const sourceCodes = page.getByRole('textbox').getByText('// 함수');
 
@@ -77,6 +81,9 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
 test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 변경하고, `편집된템플릿`태그를 추가로 등록한다.', async ({
   page,
 }) => {
+  // 유저의 카테고리 리스트
+  await waitForSuccess({ page, apiUrl: '/categories' });
+
   await uploadTemplateToCodezap({
     page,
     title: '템플릿편집테스트',
@@ -104,6 +111,9 @@ test('`템플릿편집테스트` 템플릿의 제목을 `편집된템플릿`로 
 test('템플릿 삭제 버튼을 누르면 삭제 확인 모달이 뜨고, 삭제 확인 모달에서 삭제 버튼을 누르면, 템플릿이 삭제되고 내탬플릿 화면으로 이동한다.', async ({
   page,
 }) => {
+  // 유저의 카테고리 리스트
+  await waitForSuccess({ page, apiUrl: '/categories' });
+
   await uploadTemplateToCodezap({
     page,
     title: '템플릿삭제테스트',

@@ -6,7 +6,7 @@ import { loginToCodezap, waitForSuccess } from './utils';
 test.beforeEach(async ({ page }) => {
   await loginToCodezap({
     page,
-    id: process.env.PLAYWRIGHT_TEST_ID || '',
+    username: process.env.PLAYWRIGHT_TEST_USERNAME || '',
     password: process.env.PLAYWRIGHT_TEST_PASSWORD || '',
   });
 });
