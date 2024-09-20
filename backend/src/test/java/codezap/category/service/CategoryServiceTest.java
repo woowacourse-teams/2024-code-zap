@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,16 +45,19 @@ class CategoryServiceTest {
 
         @Test
         @DisplayName("카테고리 생성 성공")
+        @Transactional
         void createCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String categoryName = "categoryName";
             CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
 
             CreateCategoryResponse response = categoryService.create(member, request);
+            Category savedCategory = categoryService.fetchById(response.id());
 
             assertAll(
                     () -> assertThat(response.id()).isEqualTo(1L),
-                    () -> assertThat(response.name()).isEqualTo(categoryName)
+                    () -> assertThat(response.name()).isEqualTo(categoryName),
+                    () -> assertThat(savedCategory.getMember()).isEqualTo(member)
             );
         }
 
