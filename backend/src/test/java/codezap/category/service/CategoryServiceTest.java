@@ -46,9 +46,9 @@ class CategoryServiceTest {
         void createCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String categoryName = "categoryName";
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
+            CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
 
-            CreateCategoryResponse response = categoryService.create(member, createCategoryRequest);
+            CreateCategoryResponse response = categoryService.create(member, request);
 
             assertAll(
                     () -> assertThat(response.id()).isEqualTo(1L),
