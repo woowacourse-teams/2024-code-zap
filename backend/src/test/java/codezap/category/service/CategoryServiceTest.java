@@ -142,6 +142,15 @@ class CategoryServiceTest {
 
             assertThat(findAllCategoriesResponse.categories()).hasSize(2);
         }
+
+        @Test
+        @DisplayName("성공 : 카테고리가 존재하지 않으면 빈 리스트를 반환한다.")
+        void findAllCategoriesEmptyList() {
+
+            FindAllCategoriesResponse findAllCategoriesResponse = categoryService.findAll();
+
+            assertThat(findAllCategoriesResponse.categories()).isEmpty();
+        }
     }
 
     @Nested
