@@ -27,7 +27,7 @@ class CategoryTemplateServiceTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private CategoryTemplateService categoryService;
+    private CategoryTemplateService categoryTemplateService;
 
     @Test
     @DisplayName("카테고리 삭제 성공")
@@ -36,7 +36,7 @@ class CategoryTemplateServiceTest {
         Category savedCategory = categoryRepository.save(new Category("category1", member));
         int beforeDeleteSize = categoryRepository.findAllByMemberOrderById(member).size();
 
-        categoryService.deleteById(member, savedCategory.getId());
+        categoryTemplateService.deleteById(member, savedCategory.getId());
 
         assertThat(categoryRepository.findAllByMemberOrderById(member)).hasSize(beforeDeleteSize - 1);
     }
@@ -48,7 +48,7 @@ class CategoryTemplateServiceTest {
         Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
         Category savedCategory = categoryRepository.save(new Category("category1", member));
 
-        assertThatCode(() -> categoryService.deleteById(otherMember, savedCategory.getId()))
+        assertThatCode(() -> categoryTemplateService.deleteById(otherMember, savedCategory.getId()))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
     }
@@ -59,9 +59,9 @@ class CategoryTemplateServiceTest {
         Member member = memberRepository.save(MemberFixture.memberFixture());
         Category category = categoryRepository.save(new Category("category1", member));
 
-        categoryService.deleteById(member, category.getId());
+        categoryTemplateService.deleteById(member, category.getId());
 
-        assertThatCode(() -> categoryService.deleteById(member, category.getId()))
+        assertThatCode(() -> categoryTemplateService.deleteById(member, category.getId()))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("식별자 " + category.getId() + "에 해당하는 카테고리가 존재하지 않습니다.");
     }
