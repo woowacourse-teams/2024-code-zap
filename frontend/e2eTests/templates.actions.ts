@@ -21,6 +21,9 @@ export const uploadTemplateToCodezap = async ({
   description?: string;
   tag?: string;
 }) => {
+  // 유저의 카테고리 리스트
+  await waitForSuccess({ page, apiUrl: '/categories' });
+
   await page.getByRole('button', { name: '새 템플릿' }).click();
 
   // 제목 입력
