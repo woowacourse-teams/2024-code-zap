@@ -95,6 +95,21 @@ class SourceCodeServiceTest extends ServiceTest {
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("소스 코드의 순서는 1부터 시작해야 합니다.");
         }
+
+        @Test
+        @Disabled("애플리케이션 코드에서 검증 코드 작성 필요")
+        @DisplayName("실패: 소스 코드의 순서들이 연속적이지 않은 경우")
+        void createSourceCodes_WhenOrdinalIsNotSort() {
+            // given
+            Template template = createTemplate();
+            CreateSourceCodeRequest request1 = new CreateSourceCodeRequest("file1.java", "content1", 1);
+            CreateSourceCodeRequest request2 = new CreateSourceCodeRequest("file2.java", "content2", 3);
+
+            // when & then
+            assertThatThrownBy(() -> sourceCodeService.createSourceCodes(template, List.of(request1, request2)))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("소스 코드의 순서는 1부터 시작해야 합니다.");
+        }
     }
 
     @Nested
