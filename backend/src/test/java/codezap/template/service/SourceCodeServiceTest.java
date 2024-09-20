@@ -314,7 +314,7 @@ class SourceCodeServiceTest extends ServiceTest {
 
         @Test
         @Disabled("현재는 전체 삭제를 막지 않고 thumbnail으로 인해 DataIntegrityViolationException 발생, 애플리케이션 코드에서 로직 변경 필요")
-        @DisplayName("실패: 소스 코드 전체 삭제")
+        @DisplayName("실패: 템플릿의 전체 소스 코드 삭제는 불가능함")
         void updateSourceCodes_WhenDeleteAll() {
             // given
             Template template = createSavedTemplate();
