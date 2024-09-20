@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -181,6 +182,22 @@ class TemplateServiceTest {
                     () -> assertThat(actual.getContent())
                             .allMatch(template -> template.getMember().getId().equals(member1.getId()))
             );
+        }
+
+        @Test
+        @Disabled("Pageable에 대한 null 검증이 필요함")
+        @DisplayName("검색 기능 실패: Pageable을 전달하지 않은 경우")
+        void findAllFailureWithNullPageable() {
+            saveInitialData();
+            Long memberId = member1.getId();
+            String keyword = null;
+            Long categoryId = null;
+            List<Long> tagIds = null;
+            Pageable pageable = null;
+
+            assertThatThrownBy(() ->sut.findAll(memberId, keyword, categoryId, tagIds, pageable))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("Pageable을 필수로 작성해야 합니다.");
         }
 
         @Test
