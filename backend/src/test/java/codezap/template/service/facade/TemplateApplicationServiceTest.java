@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 import java.util.stream.Stream;
 
+import jakarta.transaction.Transactional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -42,6 +44,7 @@ import codezap.template.repository.ThumbnailRepository;
 
 @SpringBootTest
 @DatabaseIsolation
+@Transactional
 class TemplateApplicationServiceTest {
 
     @Autowired
@@ -62,6 +65,7 @@ class TemplateApplicationServiceTest {
     ThumbnailRepository thumbnailRepository;
 
     @Nested
+    @DisplayName("템플릿 생성")
     class CreateTemplate {
 
         @Test
@@ -70,7 +74,6 @@ class TemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-
             var request = createTemplateRequest(category);
 
             // when
@@ -98,6 +101,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("ID로 템플릿 조회")
     class GetById {
 
         @Test
@@ -106,7 +110,6 @@ class TemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
@@ -118,6 +121,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("사용자 ID로 모든 태그 조회")
     class GetAllTagsByMemberId {
 
         @Test
@@ -204,17 +208,10 @@ class TemplateApplicationServiceTest {
             var sourceCode1 = sourceCodeRepository.save(new SourceCode(template, "filename1", "content1", 1));
             var sourceCode2 = sourceCodeRepository.save(new SourceCode(template, "filename2", "content2", 2));
             thumbnailRepository.save(new Thumbnail(template, sourceCode1));
+
             var createRequest = List.of(new CreateSourceCodeRequest("filename3", "content3", 3));
-            var updateRequest1 = new UpdateSourceCodeRequest(
-                    sourceCode1.getId(),
-                    sourceCode1.getFilename(),
-                    sourceCode1.getContent(),
-                    sourceCode1.getOrdinal());
-            var updateRequest2 = new UpdateSourceCodeRequest(
-                    sourceCode2.getId(),
-                    sourceCode2.getFilename(),
-                    sourceCode2.getContent(),
-                    sourceCode2.getOrdinal());
+            var updateRequest1 = updateSourceCodeRequest(sourceCode1);
+            var updateRequest2 = updateSourceCodeRequest(sourceCode2);
             var updateRequest = List.of(updateRequest1, updateRequest2);
             List<Long> deleteIds = List.of();
             var request = new UpdateTemplateRequest(
@@ -230,6 +227,14 @@ class TemplateApplicationServiceTest {
             assertThatCode(() -> sut.update(member, template.getId(), request, category))
                     .doesNotThrowAnyException();
         }
+
+        private UpdateSourceCodeRequest updateSourceCodeRequest(SourceCode sourceCode) {
+            return new UpdateSourceCodeRequest(
+                    sourceCode.getId(),
+                    sourceCode.getFilename(),
+                    sourceCode.getContent(),
+                    sourceCode.getOrdinal());
+        }
     }
 
     @Nested
@@ -241,11 +246,11 @@ class TemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
-            var template2 = templateRepository.save(new Template(member, "title2", "description", category));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
-            var template3 = templateRepository.save(new Template(member, "title3", "description", category));
+            var template3 = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode3 = sourceCodeRepository.save(new SourceCode(template3, "filename3", "content3", 3));
 
             var deleteIds = List.of(1L, 2L);
