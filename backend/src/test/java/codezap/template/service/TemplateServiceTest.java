@@ -144,7 +144,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("멤버 ID로 템플릿 조회 성공: 해당하는 템플릿이 없는 경우")
+        @DisplayName("멤버 ID로 템플릿 조회 성공: 해당하는 템플릿이 없는 경우 빈 목록 반환")
         void getByMemberIdSuccessWithEmptyList() {
             var memberId = 100L;
 
@@ -164,7 +164,7 @@ class TemplateServiceTest {
         private Template template1, template2, template3;
 
         @Test
-        @DisplayName("검색 기능: 회원 ID로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 회원 ID로 템플릿 목록 조회 성공")
         void findAllSuccessByMemberId() {
             saveInitialData();
             Long memberId = member1.getId();
@@ -183,7 +183,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 키워드로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 키워드로 템플릿 목록 조회 성공")
         void findAllSuccessByKeyword() {
             saveInitialData();
             Long memberId = null;
@@ -207,7 +207,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 카테고리 ID로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 카테고리 ID로 템플릿 목록 조회 성공")
         void findAllSuccessByCategoryId() {
             saveInitialData();
             Long memberId = null;
@@ -226,7 +226,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 태그 ID 목록으로 템플릿 조회, 모든 태그를 가진 템플릿만 조회 성공")
+        @DisplayName("검색 기능: 태그 ID 목록으로 템플릿 목록 조회, 모든 태그를 가진 템플릿만 조회 성공")
         void findAllSuccessByTagIds() {
             saveInitialData();
             Long memberId = null;
@@ -247,7 +247,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 단일 태그 ID로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 단일 태그 ID로 템플릿 목록 조회 성공")
         void findAllSuccessBySingleTagId() {
             saveInitialData();
             Long memberId = null;
@@ -268,7 +268,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 회원 ID와 키워드로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 회원 ID와 키워드로 템플릿 목록 조회 성공")
         void findAllSuccessByMemberIdAndKeyword() {
             saveInitialData();
             Long memberId = member1.getId();
@@ -290,7 +290,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 회원 ID와 카테고리 ID로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 회원 ID와 카테고리 ID로 템플릿 목록 조회 성공")
         void findAllSuccessByMemberIdAndCategoryId() {
             saveInitialData();
             Long memberId = member1.getId();
@@ -309,7 +309,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 회원 ID와 태그 ID 목록으로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 회원 ID와 태그 ID 목록으로 템플릿 목록 조회 성공")
         void findAllSuccessByMemberIdAndTagIds() {
             saveInitialData();
             Long memberId = member1.getId();
@@ -328,7 +328,7 @@ class TemplateServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 모든 검색 기준으로 템플릿 조회 성공")
+        @DisplayName("검색 기능: 모든 검색 기준으로 템플릿 목록 조회 성공")
         void findAllSuccessWithAllCriteria() {
             saveInitialData();
             Long memberId = member1.getId();
