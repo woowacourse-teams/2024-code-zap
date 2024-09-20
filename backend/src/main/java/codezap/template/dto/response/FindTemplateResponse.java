@@ -37,7 +37,7 @@ public record FindTemplateResponse(
         Long likeCount,
 
         @Schema(description = "조회 회원의 좋아요 여부", example = "true")
-        Boolean isLike,
+        Boolean isLiked,
 
         @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
         LocalDateTime createdAt,
@@ -45,7 +45,7 @@ public record FindTemplateResponse(
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
-    public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags, Long likeCount, Boolean isLike) {
+    public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags, Long likeCount, Boolean isLiked) {
         return new FindTemplateResponse(
                 template.getId(),
                 null,
@@ -55,7 +55,7 @@ public record FindTemplateResponse(
                 FindCategoryResponse.from(template.getCategory()),
                 mapToFindTagByTemplateResponse(tags),
                 likeCount,
-                isLike,
+                isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()
         );
@@ -71,7 +71,7 @@ public record FindTemplateResponse(
                 category,
                 tags,
                 likeCount,
-                isLike,
+                isLiked,
                 createdAt,
                 modifiedAt
         );
