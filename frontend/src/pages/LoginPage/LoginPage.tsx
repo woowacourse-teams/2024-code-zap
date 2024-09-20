@@ -2,9 +2,10 @@ import { Link } from 'react-router-dom';
 
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
-import { useLoginForm } from '@/hooks/authentication/useLoginForm';
-import { useToggle } from '@/hooks/utils';
+import { useToggle } from '@/hooks';
 import { END_POINTS } from '@/routes';
+
+import { useLoginForm } from './hooks';
 import * as S from './LoginPage.style';
 
 const LoginPage = () => {

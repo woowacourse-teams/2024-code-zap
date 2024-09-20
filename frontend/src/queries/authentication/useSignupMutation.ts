@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { postSignup } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks/utils';
+import { useCustomContext } from '@/hooks';
 import { END_POINTS } from '@/routes';
 import { SignupRequest } from '@/types';
 

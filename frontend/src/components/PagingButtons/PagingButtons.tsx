@@ -1,5 +1,6 @@
 import { Text } from '@/components';
 import { theme } from '@/style/theme';
+
 import * as S from './PagingButtons.style';
 
 interface Props {

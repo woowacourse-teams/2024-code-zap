@@ -4,12 +4,13 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
+import { useCustomContext, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import { useCustomContext, useToggle } from '@/hooks/utils';
-import { usePressESC } from '@/hooks/utils/usePressESC';
-import { useScrollDisable } from '@/hooks/utils/useScrollDisable';
+import { usePressESC } from '@/hooks/usePressESC';
+import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { END_POINTS } from '@/routes';
+
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 

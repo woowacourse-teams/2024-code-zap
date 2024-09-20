@@ -11,20 +11,21 @@ export const loginToCodezap = async ({ page, username, password }: LoginToCodeza
   await page.getByRole('link', { name: '로그인', exact: true }).getByRole('button').click();
 
   await page.locator('input[type="text"]').fill(username);
+
   await page.locator('input[type="text"]').press('Tab');
   await page.locator('input[type="password"]').fill(password);
   await page.locator('form').getByRole('button', { name: '로그인' }).click();
 
-  await waitForSuccess({ page, url: '/login' });
+  await waitForSuccess({ page, apiUrl: '/login' });
 };
 
 interface WaitForSuccessProps {
   page: Page;
-  url: string;
+  apiUrl: string;
 }
 
-export const waitForSuccess = async ({ page, url }: WaitForSuccessProps) => {
+export const waitForSuccess = async ({ page, apiUrl }: WaitForSuccessProps) => {
   await page.waitForResponse(
-    (response) => response.url().includes(url) && (response.status() === 200 || response.status() === 201),
+    (response) => response.url().includes(apiUrl) && (response.status() === 200 || response.status() === 201),
   );
 };

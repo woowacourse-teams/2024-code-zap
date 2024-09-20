@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
+
 import type { Props } from './Button';
 
 const variants = (color: string | undefined) => ({

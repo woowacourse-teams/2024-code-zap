@@ -2,6 +2,7 @@ import { useTheme } from '@emotion/react';
 import { PropsWithChildren } from 'react';
 
 import { Text } from '@/components';
+
 import * as S from './SelectList.style';
 
 export interface OptionProps {
