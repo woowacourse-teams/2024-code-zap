@@ -81,7 +81,7 @@ public class AuthServiceTest {
     }
 
     @Nested
-    @DisplayName("쿠키 인증 테스트")
+    @DisplayName("로그인 상 확인 테스트")
     class CheckLoginTest {
 
         @Test
