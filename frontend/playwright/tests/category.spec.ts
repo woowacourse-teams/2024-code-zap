@@ -1,15 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 import { createCategory, deleteCategory, getCategoryButton } from './category.actions';
-import { loginToCodezap, waitForSuccess } from './utils';
-
-test.beforeEach(async ({ page }) => {
-  await loginToCodezap({
-    page,
-    username: process.env.PLAYWRIGHT_TEST_USERNAME || '',
-    password: process.env.PLAYWRIGHT_TEST_PASSWORD || '',
-  });
-});
+import { waitForSuccess } from './utils';
 
 test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 수 있다.', async ({ page, browserName }) => {
   const newCategoryName = `생성테스트-${browserName}`;
