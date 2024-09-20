@@ -3,46 +3,62 @@ package codezap.member.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
+import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
+import codezap.fixture.CategoryFixture;
+import codezap.fixture.TemplateFixture;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.RandomSaltGenerator;
-import codezap.auth.encryption.SHA2PasswordEncryptor;
-import codezap.auth.encryption.SaltGenerator;
+import codezap.template.domain.Template;
+import codezap.template.repository.TemplateRepository;
 
-public class MemberServiceTest {
+@SpringBootTest
+@DatabaseIsolation
+class MemberServiceTest {
 
-    private final MemberRepository memberRepository = new FakeMemberRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private final SaltGenerator saltGenerator = new RandomSaltGenerator();
-    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
-    private final MemberService memberService = new MemberService(memberRepository, categoryRepository, saltGenerator, passwordEncryptor);
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private TemplateRepository templateRepository;
+
+    @Autowired
+    private MemberService memberService;
 
     @Nested
     @DisplayName("회원가입 테스트")
     class SignupTest {
 
         @Test
-        @DisplayName("회원가입 성공")
+        @DisplayName("회원가입 성공: 멤버 생성 및 기본 카테고리 생성 성공")
         void signup() {
             Member member = MemberFixture.memberFixture();
             SignupRequest signupRequest = new SignupRequest(member.getName(), member.getPassword());
 
-            assertEquals(memberService.signup(signupRequest), 1L);
+            Long savedId = memberService.signup(signupRequest);
+
+            boolean existsDefaultCategory = categoryRepository.existsByNameAndMember("카테고리 없음", member);
+            assertAll(
+                    () -> assertThat(savedId).isEqualTo(member.getId()),
+                    () -> assertThat(existsDefaultCategory).isTrue()
+            );
         }
 
         @Test
@@ -59,11 +75,11 @@ public class MemberServiceTest {
 
     @Nested
     @DisplayName("아이디 중복 검사 테스트")
-    class AssertUniquename {
+    class AssertUniqueName {
 
         @Test
         @DisplayName("아이디 중복 검사 통과: 사용가능한 아이디")
-        void assertUniquename() {
+        void assertUniqueName() {
             String name = "code";
 
             assertThatCode(() -> memberService.assertUniqueName(name))
@@ -71,8 +87,8 @@ public class MemberServiceTest {
         }
 
         @Test
-        @DisplayName("아이디 중복 검사 실패: 중복된 아이디")
-        void assertUniquename_fail_duplicate() {
+        @DisplayName("아이디 중복 검사 실패: 아이디 중복")
+        void assertUniqueName_fail_duplicate() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
             assertThatThrownBy(() -> memberService.assertUniqueName(member.getName()))
@@ -82,26 +98,92 @@ public class MemberServiceTest {
     }
 
     @Nested
-    @DisplayName("회원 조회 테스트")
-    class findMember {
+    @DisplayName("회원 ID로 멤버 조회 테스트")
+    class FindMember {
 
         @Test
-        @DisplayName("회원 정보 조회 성공")
+        @DisplayName("회원 ID로 멤버 조회 성공")
         void findMember() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            assertThat(memberService.findMember(MemberDto.from(member), member.getId()))
-                    .isEqualTo(FindMemberResponse.from(member));
+            FindMemberResponse actual = memberService.findMember(MemberDto.from(member), member.getId());
+
+            assertThat(actual).isEqualTo(FindMemberResponse.from(member));
         }
 
         @Test
-        @DisplayName("회원 정보 조회 실패: 본인 정보가 아닌 경우")
+        @DisplayName("회원 ID로 멤버 조회 실패: 본인 ID가 아닌 경우")
         void findMember_Throw() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
+            MemberDto memberDto = MemberDto.from(member);
+            Long otherId = member.getId() + 1;
 
-            assertThatThrownBy(() -> memberService.findMember(MemberDto.from(member), member.getId() + 1))
+            assertThatThrownBy(() -> memberService.findMember(memberDto, otherId))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("본인의 정보만 조회할 수 있습니다.");
+        }
+
+        @Test
+        @DisplayName("회원 ID로 멤버 조회 실패: DB에 없는 멤버인 경우")
+        void findMember_Throw_Not_Exists() {
+            Member member = MemberFixture.memberFixture();
+            MemberDto memberDto = MemberDto.from(member);
+            Long memberId = member.getId();
+
+            assertThatThrownBy(() -> memberService.findMember(memberDto, memberId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + memberId + "에 해당하는 멤버가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("템플릿을 소유한 멤버 조회 테스트")
+    class GetByTemplateId {
+
+        @Test
+        @DisplayName("템플릿을 소유한 멤버 조회 성공")
+        void getByTemplateId() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+
+            Member actual = memberService.getByTemplateId(template.getId());
+
+            assertThat(actual).isEqualTo(member);
+        }
+
+        @Test
+        @DisplayName("템플릿을 소유한 멤버 조회 실패 : DB에 없는 템플릿인 경우")
+        void getByTemplateId_Fail() {
+            Long notExistsId = 100L;
+
+            assertThatCode(() -> memberService.getByTemplateId(notExistsId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("템플릿에 대한 멤버가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("아이디로 멤버 조회 테스트")
+    class GetById {
+        @Test
+        @DisplayName("아이디로 멤버 조회 성공")
+        void getById() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            Member actual = memberService.getById(member.getId());
+
+            assertThat(actual).isEqualTo(member);
+        }
+
+        @Test
+        @DisplayName("아이디로 멤버 조회 실패 : 존재하지 않는 아이디")
+        void getById_Fail() {
+            Long notExitsId = 100L;
+
+            assertThatCode(() -> memberService.getById(notExitsId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notExitsId + "에 해당하는 멤버가 존재하지 않습니다.");
         }
     }
 }

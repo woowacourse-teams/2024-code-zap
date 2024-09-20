@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
 
 import codezap.global.DatabaseIsolation;
 import codezap.global.auditing.JpaAuditingConfiguration;
