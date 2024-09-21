@@ -2,64 +2,78 @@ package codezap.category.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.template.repository.FakeTemplateRepository;
-import codezap.template.repository.TemplateRepository;
 
+@SpringBootTest
+@DatabaseIsolation
 class CategoryTemplateServiceTest {
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository();
 
-    private final CategoryTemplateService categoryService =
-            new CategoryTemplateService(categoryRepository, templateRepository);
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-    @Test
-    @DisplayName("카테고리 삭제 성공")
-    void deleteCategorySuccess() {
-        Member member = memberRepository.save(MemberFixture.memberFixture());
-        categoryRepository.save(new Category("category1", member));
-        Category savedCategory = categoryRepository.save(new Category("category1", member));
-        int beforeDeleteSize = categoryRepository.findAllByMemberOrderById(member).size();
+    @Autowired
+    private MemberRepository memberRepository;
 
-        categoryService.deleteById(member, savedCategory.getId());
+    @Autowired
+    private CategoryTemplateService categoryTemplateService;
 
-        assertThat(categoryRepository.findAllByMemberOrderById(member)).hasSize(beforeDeleteSize - 1);
-    }
+    @Nested
+    @DisplayName("카테고리 삭제 테스트")
+    class DeleteById {
 
-    @Test
-    @DisplayName("카테고리 삭제 실패: 권한 없음")
-    void deleteCategoryFailWithUnauthorized() {
-        Member member = memberRepository.save(MemberFixture.memberFixture());
-        Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
-        Category savedCategory = categoryRepository.save(new Category("category1", member));
+        @Test
+        @DisplayName("카테고리 삭제 성공")
+        void deleteCategorySuccess() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category savedCategory = categoryRepository.save(new Category("category1", member));
+            int beforeDeleteSize = categoryRepository.findAllByMemberOrderById(member).size();
 
-        assertThatCode(() -> categoryService.deleteById(otherMember, savedCategory.getId()))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
-    }
+            categoryTemplateService.deleteById(member, savedCategory.getId());
 
-    @Test
-    @DisplayName("카테고리 삭제 실패: 이미 없는 카테고리")
-    void deleteCategoryFailWithNotExistCateory() {
-        Member member = memberRepository.save(MemberFixture.memberFixture());
-        Category category = categoryRepository.save(new Category("category1", member));
+            assertAll(
+                    () -> assertThat(categoryRepository.findAllByMemberOrderById(member))
+                            .hasSize(beforeDeleteSize - 1),
+                    () -> assertThat(categoryRepository.existsById(savedCategory.getId()))
+                            .isFalse()
+            );
+        }
 
-        categoryService.deleteById(member, category.getId());
+        @Test
+        @DisplayName("카테고리 삭제 실패: 권한 없음")
+        void deleteCategoryFailWithUnauthorized() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
+            Category savedCategory = categoryRepository.save(new Category("category1", member));
 
-        assertThatCode(() -> categoryService.deleteById(member, category.getId()))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("식별자 " + category.getId() + "에 해당하는 카테고리가 존재하지 않습니다.");
+            assertThatCode(() -> categoryTemplateService.deleteById(otherMember, savedCategory.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리는 삭제할 수 없음")
+        void deleteCategoryFailWithNotExistCategory() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            long notSavedCategoryId = 100L;
+
+            assertThatCode(() -> categoryTemplateService.deleteById(member, notSavedCategoryId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
     }
 }
