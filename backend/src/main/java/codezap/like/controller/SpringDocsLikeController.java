@@ -1,4 +1,4 @@
-package codezap.template.controller;
+package codezap.like.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

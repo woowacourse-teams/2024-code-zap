@@ -1,4 +1,4 @@
-package codezap.template.controller;
+package codezap.like.controller;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
