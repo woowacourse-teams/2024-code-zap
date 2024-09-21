@@ -17,7 +17,7 @@ public class LikeController implements SpringDocsLikeController {
     }
 
     @DeleteMapping("like/{templateId}")
-    public ResponseEntity<Void> cancleLike(MemberDto memberDto) {
+    public ResponseEntity<Void> cancelLike(MemberDto memberDto) {
         throw new NotImplementedException();
     }
 }
