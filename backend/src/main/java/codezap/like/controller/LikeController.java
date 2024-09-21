@@ -3,6 +3,7 @@ package codezap.like.controller;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import codezap.member.dto.MemberDto;
@@ -15,8 +16,8 @@ public class LikeController implements SpringDocsLikeController {
         throw new NotImplementedException();
     }
 
-    @PostMapping("dislike/{templateId}")
-    public ResponseEntity<Void> dislike(MemberDto memberDto) {
+    @DeleteMapping("like/{templateId}")
+    public ResponseEntity<Void> cancleLike(MemberDto memberDto) {
         throw new NotImplementedException();
     }
 }

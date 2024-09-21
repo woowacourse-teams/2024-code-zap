@@ -34,5 +34,5 @@ public interface SpringDocsLikeController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/dislike/1", errorCases = {
             @ErrorCase(description = "인증 정보에 해당하는 멤버가 없는 경우", exampleMessage = "인증 정보가 정확하지 않습니다.")
     })
-    ResponseEntity<Void> dislike(MemberDto memberDto);
+    ResponseEntity<Void> cancelLike(MemberDto memberDto);
 }
