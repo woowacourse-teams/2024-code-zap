@@ -12,7 +12,6 @@ import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.repository.MemberRepository;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -22,7 +21,6 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final TemplateRepository templateRepository;
-    private final MemberRepository memberRepository;
 
     @Transactional
     public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
