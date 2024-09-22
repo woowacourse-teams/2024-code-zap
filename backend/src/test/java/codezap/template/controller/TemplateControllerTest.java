@@ -78,8 +78,7 @@ class TemplateControllerTest {
     private final TemplateService templateService = new TemplateService(templateRepository);
     private final CategoryService categoryService = new CategoryService(
             categoryRepository,
-            templateRepository,
-            memberRepository);
+            templateRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());

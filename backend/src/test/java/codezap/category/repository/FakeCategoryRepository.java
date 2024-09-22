@@ -18,10 +18,6 @@ public class FakeCategoryRepository implements CategoryRepository {
 
     private final List<Category> categories;
 
-    public FakeCategoryRepository() {
-        this.categories = new ArrayList<>();
-    }
-
     public FakeCategoryRepository(List<Category> categories) {
         this.categories = new ArrayList<>(categories);
         idCounter.set(1 + categories.size());
