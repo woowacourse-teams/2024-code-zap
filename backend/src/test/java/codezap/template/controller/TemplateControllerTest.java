@@ -57,7 +57,6 @@ import codezap.template.repository.TemplateRepository;
 import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
-import codezap.template.service.facade.CategoryTemplateApplicationService;
 import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.facade.TemplateApplicationService;
 
@@ -92,16 +91,9 @@ class TemplateControllerTest {
                     thumbnailService
             );
 
-    private final CategoryTemplateApplicationService categoryTemplateApplicationService =
-            new CategoryTemplateApplicationService(
-                    categoryService,
-                    templateApplicationService
-            );
-
     private final MemberTemplateApplicationService memberTemplateApplicationService =
             new MemberTemplateApplicationService(
                     new MemberService(memberRepository, categoryRepository, saltGenerator, passwordEncryptor),
-                    categoryTemplateApplicationService,
                     templateApplicationService
             );
 

@@ -38,7 +38,9 @@ public class TemplateApplicationService {
     private final ThumbnailService thumbnailService;
 
     @Transactional
-    public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
+    public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
+        Category category = categoryService.fetchById(createTemplateRequest.categoryId());
+        category.validateAuthorization(member);
         Template template = templateService.createTemplate(member, createTemplateRequest, category);
         tagService.createTags(template, createTemplateRequest.tags());
         sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
@@ -82,7 +84,9 @@ public class TemplateApplicationService {
     }
 
     @Transactional
-    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest, Category category) {
+    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
+        Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
+        category.validateAuthorization(member);
         Template template = templateService.updateTemplate(member, templateId, updateTemplateRequest, category);
         tagService.updateTags(template, updateTemplateRequest.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);

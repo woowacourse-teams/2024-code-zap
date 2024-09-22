@@ -2,8 +2,11 @@ package codezap.template.service.facade;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -24,6 +27,8 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
+import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -69,7 +74,7 @@ class TemplateApplicationServiceTest {
     class CreateTemplate {
 
         @Test
-        @DisplayName("템플릿 생성 성공")
+        @DisplayName("성공: 작성자의 권한 확인 후 템플릿 생성")
         void createTemplate() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -77,10 +82,25 @@ class TemplateApplicationServiceTest {
             var request = createTemplateRequest(category);
 
             // when
-            var actual = sut.createTemplate(member, category, request);
+            var actual = sut.createTemplate(member, request);
 
             // then
-            assertThat(actual).isEqualTo(1L);
+            assertThat(categoryRepository.existsById(actual)).isTrue();
+        }
+
+        @Test
+        @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
+        void createTemplate_Fail_NoAuthorization() {
+            // given
+            var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(new Category("Members", ownerMember));
+            var request = createTemplateRequest(category);
+
+            // when & then
+            assertThatThrownBy(() -> sut.createTemplate(otherMember, request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
         }
 
         private static CreateTemplateRequest createTemplateRequest(Category category) {
@@ -159,11 +179,12 @@ class TemplateApplicationServiceTest {
 
 
     @Nested
+    @DisplayName("템플릿 전체 조회")
     class FindAllBy {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 검색 성공")
+        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 조회 성공")
         void findAllBy(
                 Long memberId,
                 String keyword,
@@ -196,6 +217,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 수정")
     class Update {
 
         @Test
@@ -215,17 +237,53 @@ class TemplateApplicationServiceTest {
             var updateRequest = List.of(updateRequest1, updateRequest2);
             List<Long> deleteIds = List.of();
             var request = new UpdateTemplateRequest(
-                    "title1",
-                    "description1",
+                    "Updated Template",
+                    "Updated Description",
                     createRequest,
                     updateRequest,
                     deleteIds,
                     category.getId(),
                     List.of());
 
+            // when
+            sut.update(member, template.getId(), request);
+
             // when & then
-            assertThatCode(() -> sut.update(member, template.getId(), request, category))
-                    .doesNotThrowAnyException();
+            var updatedTemplate = templateRepository.fetchById(template.getId());
+            assertAll(
+                    () -> assertEquals("Updated Template", updatedTemplate.getTitle()),
+                    () -> assertEquals("Updated Description", updatedTemplate.getDescription())
+            );
+        }
+
+        @Test
+        @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
+        void updateTemplate_WhenNoAuthorization() {
+            // given
+            Member otherMember = memberRepository.save(MemberFixture.getFirstMember());
+            Category othersCategory = categoryRepository.save(new Category("Members", otherMember));
+
+            Member member = memberRepository.save(MemberFixture.getSecondMember());
+            Category category = categoryRepository.save(new Category("Members", member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+
+            SourceCode sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+            UpdateSourceCodeRequest updateSourceCodeRequest = updateSourceCodeRequest(sourceCode);
+
+            UpdateTemplateRequest request = new UpdateTemplateRequest(
+                    "Updated Template",
+                    "Updated Description",
+                    Collections.emptyList(),
+                    List.of(updateSourceCodeRequest),
+                    Collections.emptyList(),
+                    othersCategory.getId(),
+                    Collections.emptyList());
+
+            // when & then
+            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
         }
 
         private UpdateSourceCodeRequest updateSourceCodeRequest(SourceCode sourceCode) {
@@ -238,6 +296,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 삭제")
     class DeleteByMemberAndIds {
 
         @Test
@@ -264,7 +323,9 @@ class TemplateApplicationServiceTest {
 
             assertAll(
                     () -> assertThat(actualTemplatesLeft).containsExactly(template3),
-                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3)
+                    () -> assertThat(actualTemplatesLeft).doesNotContain(template1, template2),
+                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3),
+                    () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );
         }
     }

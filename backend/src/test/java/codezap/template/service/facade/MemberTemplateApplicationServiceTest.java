@@ -219,7 +219,9 @@ class MemberTemplateApplicationServiceTest {
 
             assertAll(
                     () -> assertThat(actualTemplatesLeft).containsExactly(template3),
-                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3)
+                    () -> assertThat(actualTemplatesLeft).doesNotContain(template1, template2),
+                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3),
+                    () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );
         }
     }

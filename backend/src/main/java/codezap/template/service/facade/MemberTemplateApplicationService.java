@@ -20,11 +20,10 @@ import lombok.RequiredArgsConstructor;
 public class MemberTemplateApplicationService {
 
     private final MemberService memberService;
-    private final CategoryTemplateApplicationService categoryTemplateApplicationService;
     private final TemplateApplicationService templateApplicationService;
 
     public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
-        return categoryTemplateApplicationService.createTemplate(member, createTemplateRequest);
+        return templateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
@@ -45,7 +44,7 @@ public class MemberTemplateApplicationService {
     }
 
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        categoryTemplateApplicationService.update(member, templateId, updateTemplateRequest);
+        templateApplicationService.update(member, templateId, updateTemplateRequest);
     }
 
     public void deleteByIds(Member member, List<Long> ids) {
