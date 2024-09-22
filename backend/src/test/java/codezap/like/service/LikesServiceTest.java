@@ -1,6 +1,7 @@
 package codezap.like.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -57,6 +58,41 @@ class LikesServiceTest extends ServiceTest {
             likesService.like(MemberDto.from(member), template.getId());
 
             //todo 현재 확인하기 어려움. 추후 메서드 추가에 따라 테스트 코드 변경하기
+        }
+    }
+
+    @Nested
+    @DisplayName("좋아요 취소 기능 테스트")
+    class CancelLikesTest {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            likesService.like(MemberDto.from(member), template.getId());
+
+            likesService.cancelLike(MemberDto.from(member), template.getId());
+
+            assertThat(likesRepository.existsByTemplateAndMember(template, member)).isFalse();
+        }
+
+        @Test
+        @DisplayName("성공: 여러번 좋아요를 취소해도 정상 동작으로 판단")
+        void multipleLikes() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            likesService.cancelLike(MemberDto.from(member), template.getId());
+
+            assertThatCode(() -> likesService.cancelLike(MemberDto.from(member), template.getId()))
+                    .doesNotThrowAnyException();
         }
     }
 }

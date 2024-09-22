@@ -1,6 +1,5 @@
 package codezap.like.controller;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +25,7 @@ public class LikesController implements SpringDocsLikesController {
 
     @DeleteMapping("like/{templateId}")
     public ResponseEntity<Void> cancelLike(MemberDto memberDto, @PathVariable long templateId) {
-        throw new NotImplementedException();
+        likesService.cancelLike(memberDto, templateId);
+        return ResponseEntity.noContent().build();
     }
 }
