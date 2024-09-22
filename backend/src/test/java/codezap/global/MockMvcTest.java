@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -27,7 +26,6 @@ import codezap.member.service.MemberService;
 @EnableConfigurationProperties(CorsProperties.class)
 public abstract class MockMvcTest {
 
-    @Autowired
     protected MockMvc mvc;
 
     protected ObjectMapper objectMapper;

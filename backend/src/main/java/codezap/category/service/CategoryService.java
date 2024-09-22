@@ -33,8 +33,7 @@ public class CategoryService {
     }
 
     public FindAllCategoriesResponse findAllByMemberId(Long memberId) {
-        Member member = memberRepository.fetchById(memberId);
-        return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberIdOrderById(member));
+        return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberIdOrderById(memberId));
     }
 
     public FindAllCategoriesResponse findAll() {

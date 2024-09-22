@@ -48,7 +48,7 @@ class CategoryControllerTest extends MockMvcTest {
             long categoryId = 1L;
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            when(memberCategoryApplicationService.create(
+            when(categoryService.create(
                     MemberFixture.memberFixture(), createCategoryRequest))
                     .thenReturn(new CreateCategoryResponse(1L, "category"));
 
@@ -95,7 +95,7 @@ class CategoryControllerTest extends MockMvcTest {
         List<Category> categories = List.of(new Category("category1", member), new Category("category1", member));
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
-        when(memberCategoryApplicationService.findAllByMember(any())).thenReturn(findAllCategoriesResponse);
+        when(categoryService.findAllByMemberId(any())).thenReturn(findAllCategoriesResponse);
 
         mvc.perform(get("/categories")
                         .param("memberId", "1")
@@ -161,7 +161,7 @@ class CategoryControllerTest extends MockMvcTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicatedName);
 
             doThrow(new CodeZapException(HttpStatus.CONFLICT, "이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
-                    .when(memberCategoryApplicationService).update(any(), any(), any());
+                    .when(categoryService).update(any(), any(), any());
 
             mvc.perform(put("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)

@@ -57,7 +57,7 @@ public class CategoryRepositoryTest {
 
         @Test
         @DisplayName("회원의 모든 카테고리를 오름차순으로 조회 성공")
-        void findAllByMemberOrderByIdSuccess() {
+        void findAllByMemberIdOrderByIdSuccess() {
             // given
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
             var category1 = sut.save(new Category("category1", member1));
@@ -69,8 +69,8 @@ public class CategoryRepositoryTest {
             var category4 = sut.save(new Category("category4", member2));
 
             // when
-            var actual1 = sut.findAllByMemberIdOrderById(member1);
-            var actual2 = sut.findAllByMemberIdOrderById(member2);
+            var actual1 = sut.findAllByMemberIdOrderById(member1.getId());
+            var actual2 = sut.findAllByMemberIdOrderById(member2.getId());
 
             // then
             assertAll(

@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.InvalidDataAccessApiUsageException;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -124,12 +123,13 @@ class CategoryServiceTest {
         }
 
         @Test
-        @DisplayName("성공 : 존재하지 않는 멤버로 조회를 하면 DB 에러가 발생한다.")
+        @DisplayName("성공 : 존재하지 않는 멤버로 조회를 하면 빈 리스트를 반환한다.")
         void failWithNotExistMember() {
             long nonExistentMemberId = 100L;
 
-            assertThatThrownBy(() -> sut.findAllByMemberId(nonExistentMemberId))
-                    .isInstanceOf(InvalidDataAccessApiUsageException.class);
+            var actual = sut.findAllByMemberId(nonExistentMemberId).categories();
+
+            assertThat(actual).isEmpty();
         }
     }
 
@@ -267,12 +267,12 @@ class CategoryServiceTest {
         void deleteCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Category savedCategory = categoryRepository.save(new Category("category1", member));
-            int beforeDeleteSize = categoryRepository.findAllByMemberIdOrderById(member).size();
+            int beforeDeleteSize = categoryRepository.findAllByMemberIdOrderById(member.getId()).size();
 
             sut.deleteById(member, savedCategory.getId());
 
             assertAll(
-                    () -> assertThat(categoryRepository.findAllByMemberIdOrderById(member))
+                    () -> assertThat(categoryRepository.findAllByMemberIdOrderById(member.getId()))
                             .hasSize(beforeDeleteSize - 1),
                     () -> assertThat(categoryRepository.existsById(savedCategory.getId()))
                             .isFalse()
