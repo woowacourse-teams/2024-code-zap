@@ -24,7 +24,6 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
-import codezap.member.dto.MemberDto;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
@@ -68,7 +67,6 @@ class MemberTemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var memberDto = MemberDto.from(member);
             var sourceCodeRequest = List.of(new CreateSourceCodeRequest("filename", "content", 1));
             var request = new CreateTemplateRequest(
                     "title",
@@ -79,7 +77,7 @@ class MemberTemplateApplicationServiceTest {
                     List.of());
 
             // when
-            var actual = sut.createTemplate(memberDto, request);
+            var actual = sut.createTemplate(member, request);
 
             // then
             assertThat(actual).isEqualTo(1L);
@@ -161,7 +159,6 @@ class MemberTemplateApplicationServiceTest {
         void update() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var memberDto = MemberDto.from(member);
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template = templateRepository.save(new Template(member, "title1", "description", category));
             var sourceCode1 = sourceCodeRepository.save(new SourceCode(template, "filename1", "content1", 1));
@@ -190,7 +187,7 @@ class MemberTemplateApplicationServiceTest {
                     List.of());
 
             // when & then
-            assertThatCode(() -> sut.update(memberDto, template.getId(), request))
+            assertThatCode(() -> sut.update(member, template.getId(), request))
                     .doesNotThrowAnyException();
         }
     }
@@ -203,7 +200,6 @@ class MemberTemplateApplicationServiceTest {
         void deleteByMemberAndIds() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var memberDto = MemberDto.from(member);
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template1 = templateRepository.save(new Template(member, "title1", "description", category));
             var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
@@ -215,7 +211,7 @@ class MemberTemplateApplicationServiceTest {
             var deleteIds = List.of(1L, 2L);
 
             // when
-            sut.deleteByIds(memberDto, deleteIds);
+            sut.deleteByIds(member, deleteIds);
 
             // then
             var actualTemplatesLeft = templateRepository.findAll();

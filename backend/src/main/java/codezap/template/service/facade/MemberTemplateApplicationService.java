@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.service.MemberService;
 import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -24,8 +23,7 @@ public class MemberTemplateApplicationService {
     private final CategoryTemplateApplicationService categoryTemplateApplicationService;
     private final TemplateApplicationService templateApplicationService;
 
-    public Long createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest) {
-        Member member = memberService.getById(memberDto.id());
+    public Long createTemplate(Member member, CreateTemplateRequest createTemplateRequest) {
         return categoryTemplateApplicationService.createTemplate(member, createTemplateRequest);
     }
 
@@ -46,13 +44,11 @@ public class MemberTemplateApplicationService {
         return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
     }
 
-    public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Member member = memberService.getById(memberDto.id());
+    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         categoryTemplateApplicationService.update(member, templateId, updateTemplateRequest);
     }
 
-    public void deleteByIds(MemberDto memberDto, List<Long> ids) {
-        Member member = memberService.getById(memberDto.id());
+    public void deleteByIds(Member member, List<Long> ids) {
         templateApplicationService.deleteByMemberAndIds(member, ids);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
@@ -27,7 +27,7 @@ public interface SpringDocTemplateController {
             새로운 템플릿을 생성합니다. \n
             템플릿명, 템플릿 설명, 소스 코드 목록, 썸네일 순서, 카테고리 ID, 태그 목록이 필요합니다. \n
             * 템플릿 이름은 비어있거나 공백일 수 없다.
-                        
+            
             소스 코드 목록은 파일명, 소스 코드, 소스 코드 순서가 필요합니다. \n
             * 소스 코드 순서는 1부터 시작합니다.
             * 소스 코드 순서는 오름차순으로 정렬하여 보내야 합니다.
@@ -53,7 +53,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "이름에 맞는 태그가 없는 경우", exampleMessage = "이름이 tag1인 태그는 존재하지 않습니다."),
             @ErrorCase(description = "해당 순서인 소스 코드가 없는 경우", exampleMessage = "템플릿에 1번째 소스 코드가 존재하지 않습니다."),
     })
-    ResponseEntity<Void> createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest);
+    ResponseEntity<Void> createTemplate(Member member, CreateTemplateRequest createTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 조회", description = """
@@ -63,13 +63,13 @@ public interface SpringDocTemplateController {
               - 검색 키워드 (템플릿명, 템플릿 설명, 파일명, 소스 코드)
               - 카테고리 ID
               - 태그 ID들 \n
-              
+            
             페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
             - 페이징 조건 \n
               - 페이지 번호(pageNumber)
               - 한 페이지에 템플릿 개수(pageSize)
               - 페이지 정렬 방식(sort) \n
-              
+            
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc) \n
@@ -126,7 +126,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
             @ErrorCase(description = "소스 코드가 없는 경우", exampleMessage = "식별자 1에 해당하는 소스 코드가 존재하지 않습니다."),
     })
-    ResponseEntity<Void> updateTemplate(MemberDto memberDto, Long id, UpdateTemplateRequest updateTemplateRequest);
+    ResponseEntity<Void> updateTemplate(Member member, Long id, UpdateTemplateRequest updateTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿들을 삭제합니다.")
@@ -141,5 +141,5 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
             @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<Void> deleteTemplates(MemberDto memberDto, List<Long> ids);
+    ResponseEntity<Void> deleteTemplates(Member member, List<Long> ids);
 }
