@@ -51,7 +51,8 @@ public class TemplateApplicationService {
         List<Tag> tags = templateTagService.getByTemplate(template);
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-        return FindTemplateResponse.of(template, sourceCodes, tags);
+        //todo 좋아요 값 삽입 필요
+        return FindTemplateResponse.of(template, sourceCodes, tags, 0L, false);
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
@@ -71,7 +72,10 @@ public class TemplateApplicationService {
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
-                        thumbnailService.getByTemplate(template).getSourceCode())
+                        thumbnailService.getByTemplate(template).getSourceCode(),
+                        //todo 값 삽입 필요
+                        0L,
+                        false)
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
