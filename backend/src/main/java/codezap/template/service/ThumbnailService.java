@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ThumbnailService {
+
     private final ThumbnailRepository thumbnailRepository;
 
     public void createThumbnail(Template template, SourceCode thumbnail) {

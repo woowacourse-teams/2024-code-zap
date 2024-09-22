@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MemberCategoryTemplateApplicationService {
+
     private final MemberService memberService;
     private final CategoryTemplateService categoryTemplateService;
 
@@ -18,5 +19,4 @@ public class MemberCategoryTemplateApplicationService {
         Member member = memberService.getById(memberDto.id());
         categoryTemplateService.deleteById(member, id);
     }
-
 }

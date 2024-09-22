@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CategoryTemplateApplicationService {
+
     private final CategoryService categoryService;
     private final TemplateApplicationService templateApplicationService;
 

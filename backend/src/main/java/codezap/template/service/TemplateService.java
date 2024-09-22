@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TemplateService {
+
     private final TemplateRepository templateRepository;
 
     public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
