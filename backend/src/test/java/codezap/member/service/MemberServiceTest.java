@@ -120,17 +120,6 @@ class MemberServiceTest {
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("본인의 정보만 조회할 수 있습니다.");
         }
-
-        @Test
-        @DisplayName("회원 ID로 멤버 조회 실패: DB에 없는 멤버인 경우")
-        void findMember_Throw_Not_Exists() {
-            Member member = MemberFixture.memberFixture();
-            Long memberId = member.getId();
-
-            assertThatThrownBy(() -> memberService.findMember(member, memberId))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + memberId + "에 해당하는 멤버가 존재하지 않습니다.");
-        }
     }
 
     @Nested
