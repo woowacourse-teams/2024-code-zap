@@ -112,18 +112,18 @@ class TemplateApplicationServiceTest {
 
     @Nested
     @DisplayName("ID로 템플릿 조회")
-    class GetById {
+    class FindByTemplateId {
 
         @Test
         @DisplayName("ID로 템플릿 조회 성공")
-        void getById() {
+        void findByTemplateId() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
-            var actual = sut.getTemplateById(template.getId());
+            var actual = sut.findTemplateById(template.getId());
 
             // then
             assertThat(actual.id()).isEqualTo(1L);

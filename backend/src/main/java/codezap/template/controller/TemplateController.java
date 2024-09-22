@@ -39,12 +39,11 @@ public class TemplateController implements SpringDocTemplateController {
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
         Long createdTemplateId = templateApplicationService.createTemplate(member, createTemplateRequest);
-        return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
-                .build();
+        return ResponseEntity.created(URI.create("/templates/" + createdTemplateId)).build();
     }
 
     @GetMapping
-    public ResponseEntity<FindAllTemplatesResponse> getTemplates(
+    public ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
@@ -61,8 +60,8 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(@PathVariable Long id) {
-        return ResponseEntity.ok(templateApplicationService.getTemplateById(id));
+    public ResponseEntity<FindTemplateResponse> findTemplateById(@PathVariable Long id) {
+        return ResponseEntity.ok(templateApplicationService.findTemplateById(id));
     }
 
     @PostMapping("/{id}")

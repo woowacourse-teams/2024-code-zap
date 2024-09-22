@@ -86,7 +86,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
             @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
     })
-    ResponseEntity<FindAllTemplatesResponse> getTemplates(
+    ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -100,7 +100,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<FindTemplateResponse> getTemplateById(Long id);
+    ResponseEntity<FindTemplateResponse> findTemplateById(Long id);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")

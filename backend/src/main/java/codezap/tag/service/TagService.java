@@ -46,7 +46,7 @@ public class TagService {
         );
     }
 
-    public List<Tag> getByTemplate(Template template) {
+    public List<Tag> findAllByTemplate(Template template) {
         return templateTagRepository.findAllByTemplate(template).stream()
                 .map(TemplateTag::getTag)
                 .toList();

@@ -54,9 +54,9 @@ public class TemplateApplicationService {
         return template.getId();
     }
 
-    public FindTemplateResponse getTemplateById(Long id) {
+    public FindTemplateResponse findTemplateById(Long id) {
         Template template = templateService.getById(id);
-        List<Tag> tags = tagService.getByTemplate(template);
+        List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
         FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(template, sourceCodes, tags);
         return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
@@ -82,7 +82,7 @@ public class TemplateApplicationService {
         List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
-                        tagService.getByTemplate(template),
+                        tagService.findAllByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode())
                 )
                 .toList();
