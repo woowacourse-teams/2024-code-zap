@@ -47,10 +47,9 @@ class LikesJpaRepositoryTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            Likes likes = new Likes(null, template, member);
+            likesRepository.save(new Likes(null, template, member));
 
-            assertThatCode(() -> likesRepository.save(likes))
-                    .doesNotThrowAnyException();
+            assertThat(likesRepository.countByTemplate(template)).isEqualTo(1);
         }
     }
 

@@ -46,7 +46,6 @@ class LikesServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("성공: 동일한 사람이 동일한 템플릿에 여러번 좋아요를 해도 Likes 가 한번만 생성된다.")
-        @Disabled
         void multipleLikes() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Template template = templateRepository.save(TemplateFixture.get(
@@ -57,7 +56,7 @@ class LikesServiceTest extends ServiceTest {
             likesService.like(MemberDto.from(member), template.getId());
             likesService.like(MemberDto.from(member), template.getId());
 
-            //todo 현재 확인하기 어려움. 추후 메서드 추가에 따라 테스트 코드 변경하기
+            assertThat(likesRepository.countByTemplate(template)).isEqualTo(1L);
         }
     }
 
