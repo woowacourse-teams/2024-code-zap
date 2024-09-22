@@ -54,7 +54,7 @@ class LikesJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("템플릿과 멤버 정보로 좋아요 조회")
+    @DisplayName("템플릿과 멤버 정보로 좋아요 조회 테스트")
     class FindByTemplateAndMemberTest {
 
         @Test
@@ -86,7 +86,7 @@ class LikesJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("템플릿과 멤버로 좋아요 삭제")
+    @DisplayName("템플릿과 멤버로 좋아요 삭제 테스트")
     class DeleteByTemplateAndMember {
 
         @Test
@@ -119,7 +119,7 @@ class LikesJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("템플릿 좋아요 수 조회")
+    @DisplayName("템플릿 좋아요 수 조회 테스트")
     class CountByTemplate {
 
         @Test
