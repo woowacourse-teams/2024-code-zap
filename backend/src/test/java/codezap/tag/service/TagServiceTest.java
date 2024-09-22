@@ -60,7 +60,6 @@ class TagServiceTest extends ServiceTest {
             // given
             Template template = createSavedTemplate();
             Tag existTag = tagRepository.save(new Tag("tag1"));
-            TemplateTag existTemplateTag = templateTagRepository.save(new TemplateTag(template, existTag));
             List<String> tagNames = Arrays.asList(existTag.getName(), "tag2", "tag3");
 
             // when
