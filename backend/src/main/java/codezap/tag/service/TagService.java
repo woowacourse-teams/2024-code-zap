@@ -18,7 +18,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class TemplateTagService {
+public class TagService {
+
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
 

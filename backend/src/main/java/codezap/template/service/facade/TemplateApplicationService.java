@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
+import codezap.category.service.CategoryService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
-import codezap.tag.service.TemplateTagService;
+import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -28,15 +29,18 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TemplateApplicationService {
-    private final TemplateTagService templateTagService;
+
     private final TemplateService templateService;
-    private final ThumbnailService thumbnailService;
     private final SourceCodeService sourceCodeService;
+
+    private final CategoryService categoryService;
+    private final TagService tagService;
+    private final ThumbnailService thumbnailService;
 
     @Transactional
     public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
         Template template = templateService.createTemplate(member, createTemplateRequest, category);
-        templateTagService.createTags(template, createTemplateRequest.tags());
+        tagService.createTags(template, createTemplateRequest.tags());
         sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
         SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
                 template,
@@ -48,7 +52,7 @@ public class TemplateApplicationService {
 
     public FindTemplateResponse getById(Long id) {
         Template template = templateService.getById(id);
-        List<Tag> tags = templateTagService.getByTemplate(template);
+        List<Tag> tags = tagService.getByTemplate(template);
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
         return FindTemplateResponse.of(template, sourceCodes, tags);
@@ -56,7 +60,7 @@ public class TemplateApplicationService {
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
         List<Template> template = templateService.getByMemberId(memberId);
-        return templateTagService.findAllByTemplates(template);
+        return tagService.findAllByTemplates(template);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -70,7 +74,7 @@ public class TemplateApplicationService {
         List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
-                        templateTagService.getByTemplate(template),
+                        tagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode())
                 )
                 .toList();
@@ -80,7 +84,7 @@ public class TemplateApplicationService {
     @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest, Category category) {
         Template template = templateService.updateTemplate(member, templateId, updateTemplateRequest, category);
-        templateTagService.updateTags(template, updateTemplateRequest.tags());
+        tagService.updateTags(template, updateTemplateRequest.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);
         sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
     }
@@ -89,7 +93,7 @@ public class TemplateApplicationService {
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         thumbnailService.deleteByTemplateIds(ids);
         sourceCodeService.deleteByIds(ids);
-        templateTagService.deleteByIds(ids);
+        tagService.deleteByIds(ids);
         templateService.deleteByMemberAndIds(member, ids);
     }
 }

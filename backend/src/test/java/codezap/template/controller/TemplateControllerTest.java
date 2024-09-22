@@ -26,6 +26,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codezap.auth.configuration.AuthArgumentResolver;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.RandomSaltGenerator;
+import codezap.auth.encryption.SHA2PasswordEncryptor;
+import codezap.auth.encryption.SaltGenerator;
 import codezap.auth.manager.CookieCredentialManager;
 import codezap.auth.provider.basic.BasicAuthCredentialProvider;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -40,11 +44,7 @@ import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.member.service.MemberService;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.RandomSaltGenerator;
-import codezap.auth.encryption.SHA2PasswordEncryptor;
-import codezap.auth.encryption.SaltGenerator;
-import codezap.tag.service.TemplateTagService;
+import codezap.tag.service.TagService;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
@@ -84,10 +84,11 @@ class TemplateControllerTest {
 
     private final TemplateApplicationService templateApplicationService =
             new TemplateApplicationService(
-                    new TemplateTagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
                     templateService,
-                    thumbnailService,
-                    sourceCodeService
+                    sourceCodeService,
+                    categoryService,
+                    new TagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
+                    thumbnailService
             );
 
     private final CategoryTemplateApplicationService categoryTemplateApplicationService =
