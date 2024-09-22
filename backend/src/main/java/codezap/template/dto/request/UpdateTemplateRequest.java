@@ -37,15 +37,15 @@ public record UpdateTemplateRequest(
         List<UpdateSourceCodeRequest> updateSourceCodes,
 
         @Schema(description = "삭제하는 소스 코드 ID 목록")
-        @NotNull(message = "삭제하는 소스 코드 ID 목록이 null 입니다.")
+        @NotNull(message = "삭제하는 소스 코드 ID 목록이 null 입니다.", groups = NotNullGroup.class)
         List<Long> deleteSourceCodeIds,
 
         @Schema(description = "카테고리 ID", example = "1")
-        @NotNull(message = "카테고리 ID가 null 입니다.")
+        @NotNull(message = "카테고리 ID가 null 입니다.", groups = NotNullGroup.class)
         Long categoryId,
 
         @Schema(description = "태그 목록")
-        @NotNull(message = "태그 목록이 null 입니다.")
+        @NotNull(message = "태그 목록이 null 입니다.", groups = NotNullGroup.class)
         List<String> tags
 ) implements ValidatedSourceCodesOrdinalRequest, ValidatedSourceCodesCountRequest {
     @Override
