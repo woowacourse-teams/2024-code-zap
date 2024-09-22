@@ -7,14 +7,21 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import codezap.like.service.LikesService;
 import codezap.member.dto.MemberDto;
+import lombok.RequiredArgsConstructor;
 
 @Controller
-public class LikeController implements SpringDocsLikeController {
+@RequiredArgsConstructor
+public class LikesController implements SpringDocsLikesController {
+
+    private final LikesService likesService;
 
     @PostMapping("like/{templateId}")
     public ResponseEntity<Void> like(MemberDto memberDto, @PathVariable long templateId) {
-        throw new NotImplementedException();
+        likesService.like(memberDto, templateId);
+        return ResponseEntity.ok()
+                .build();
     }
 
     @DeleteMapping("like/{templateId}")

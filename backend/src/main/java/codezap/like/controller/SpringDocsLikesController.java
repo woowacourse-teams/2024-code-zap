@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "좋아요 API", description = "좋아요 기능 관련 API")
-public interface SpringDocsLikeController {
+public interface SpringDocsLikesController {
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "좋아요", description = "템플릿을 좋아요 합니다.")

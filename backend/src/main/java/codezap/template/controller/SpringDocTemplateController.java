@@ -73,7 +73,7 @@ public interface SpringDocTemplateController {
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc) 
-              - 좋아요 수가 많은 순 (like, desc) \n
+              - 좋아요 수가 많은 순 (likes, desc) \n
             """)
     @ApiResponse(responseCode = "200", description = "템플릿 검색 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST,
