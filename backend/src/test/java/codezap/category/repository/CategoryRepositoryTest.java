@@ -69,8 +69,8 @@ public class CategoryRepositoryTest {
             var category4 = sut.save(new Category("category4", member2));
 
             // when
-            var actual1 = sut.findAllByMemberOrderById(member1);
-            var actual2 = sut.findAllByMemberOrderById(member2);
+            var actual1 = sut.findAllByMemberIdOrderById(member1);
+            var actual2 = sut.findAllByMemberIdOrderById(member2);
 
             // then
             assertAll(

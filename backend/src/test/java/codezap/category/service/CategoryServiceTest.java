@@ -59,8 +59,8 @@ class CategoryServiceTest {
             CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
 
             CreateCategoryResponse response = sut.create(member, request);
-            Category savedCategory = categoryRepository.fetchById(response.id());
 
+            Category savedCategory = categoryRepository.fetchById(response.id());
             assertAll(
                     () -> assertThat(response.id()).isEqualTo(1L),
                     () -> assertThat(savedCategory.getName()).isEqualTo(categoryName),
@@ -104,7 +104,7 @@ class CategoryServiceTest {
     }
 
     @Nested
-    @DisplayName("멤버로 카테고리 조회 테스트")
+    @DisplayName("멤버 ID로 카테고리 조회 테스트")
     class FindAllCategoryByMemberTest {
 
         @Test
@@ -116,7 +116,7 @@ class CategoryServiceTest {
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
             Category category3 = categoryRepository.save(new Category("notMyCategory", otherMember));
 
-            FindAllCategoriesResponse categoryByMember = sut.findAllByMember(member);
+            FindAllCategoriesResponse categoryByMember = sut.findAllByMemberId(member.getId());
 
             assertThat(categoryByMember.categories()).hasSize(2)
                     .containsExactly(FindCategoryResponse.from(category1), FindCategoryResponse.from(category2))
@@ -126,9 +126,9 @@ class CategoryServiceTest {
         @Test
         @DisplayName("성공 : 존재하지 않는 멤버로 조회를 하면 DB 에러가 발생한다.")
         void failWithNotExistMember() {
-            Member notExistMember = MemberFixture.createFixture("notExist");
+            long nonExistentMemberId = 100L;
 
-            assertThatThrownBy(() -> sut.findAllByMember(notExistMember))
+            assertThatThrownBy(() -> sut.findAllByMemberId(nonExistentMemberId))
                     .isInstanceOf(InvalidDataAccessApiUsageException.class);
         }
     }
@@ -153,7 +153,6 @@ class CategoryServiceTest {
         @Test
         @DisplayName("성공 : 카테고리가 존재하지 않으면 빈 리스트를 반환한다.")
         void findAllCategoriesEmptyList() {
-
             FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
 
             assertThat(findAllCategoriesResponse.categories()).isEmpty();
@@ -268,12 +267,12 @@ class CategoryServiceTest {
         void deleteCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Category savedCategory = categoryRepository.save(new Category("category1", member));
-            int beforeDeleteSize = categoryRepository.findAllByMemberOrderById(member).size();
+            int beforeDeleteSize = categoryRepository.findAllByMemberIdOrderById(member).size();
 
             sut.deleteById(member, savedCategory.getId());
 
             assertAll(
-                    () -> assertThat(categoryRepository.findAllByMemberOrderById(member))
+                    () -> assertThat(categoryRepository.findAllByMemberIdOrderById(member))
                             .hasSize(beforeDeleteSize - 1),
                     () -> assertThat(categoryRepository.existsById(savedCategory.getId()))
                             .isFalse()

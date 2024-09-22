@@ -20,7 +20,6 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
-import codezap.category.service.facade.MemberCategoryApplicationService;
 import codezap.global.validation.ValidationSequence;
 import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/categories")
 public class CategoryController implements SpringDocCategoryController {
 
-    private final MemberCategoryApplicationService memberCategoryApplicationService;
     private final CategoryService categoryService;
 
     @PostMapping
@@ -38,13 +36,13 @@ public class CategoryController implements SpringDocCategoryController {
             @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
-        CreateCategoryResponse createdCategory = memberCategoryApplicationService.create(member, createCategoryRequest);
+        CreateCategoryResponse createdCategory = categoryService.create(member, createCategoryRequest);
         return ResponseEntity.created(URI.create("/categories/" + createdCategory.id())).body(createdCategory);
     }
 
     @GetMapping
     public ResponseEntity<FindAllCategoriesResponse> getCategories(@RequestParam Long memberId) {
-        return ResponseEntity.ok(memberCategoryApplicationService.findAllByMember(memberId));
+        return ResponseEntity.ok(categoryService.findAllByMemberId(memberId));
     }
 
     @PutMapping("/{id}")
@@ -53,7 +51,7 @@ public class CategoryController implements SpringDocCategoryController {
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
-        memberCategoryApplicationService.update(member, id, updateCategoryRequest);
+        categoryService.update(member, id, updateCategoryRequest);
         return ResponseEntity.ok().build();
     }
 

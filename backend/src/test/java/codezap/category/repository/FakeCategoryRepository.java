@@ -36,7 +36,7 @@ public class FakeCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findAllByMemberOrderById(Member member) {
+    public List<Category> findAllByMemberIdOrderById(Member member) {
         return categories.stream()
                 .filter(category -> Objects.equals(category.getMember(), member))
                 .sorted(Comparator.comparing(Category::getId))

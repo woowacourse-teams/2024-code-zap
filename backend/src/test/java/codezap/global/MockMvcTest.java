@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
-import codezap.category.service.facade.MemberCategoryApplicationService;
 import codezap.global.cors.CorsProperties;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
@@ -38,9 +37,6 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected CredentialManager credentialManager;
-
-    @MockBean
-    protected MemberCategoryApplicationService memberCategoryApplicationService;
 
     @MockBean
     protected CategoryService categoryService;

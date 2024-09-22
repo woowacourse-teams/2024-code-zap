@@ -9,7 +9,7 @@ public interface CategoryRepository {
 
     Category fetchById(Long id);
 
-    List<Category> findAllByMemberOrderById(Member member);
+    List<Category> findAllByMemberIdOrderById(Member member);
 
     List<Category> findAll();
 
