@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import codezap.category.dto.response.FindCategoryResponse;
-import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
@@ -45,10 +44,16 @@ public record FindTemplateResponse(
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
-    public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags, Long likeCount, Boolean isLiked) {
+    public static FindTemplateResponse of(
+            Template template,
+            List<SourceCode> sourceCodes,
+            List<Tag> tags,
+            Long likeCount,
+            Boolean isLiked
+    ) {
         return new FindTemplateResponse(
                 template.getId(),
-                null,
+                FindMemberResponse.from(template.getMember()),
                 template.getTitle(),
                 template.getDescription(),
                 mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
@@ -58,22 +63,6 @@ public record FindTemplateResponse(
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()
-        );
-    }
-
-    public FindTemplateResponse updateMember(Member member) {
-        return new FindTemplateResponse(
-                id,
-                new FindMemberResponse(member.getId(), member.getName()),
-                title,
-                description,
-                sourceCodes,
-                category,
-                tags,
-                likeCount,
-                isLiked,
-                createdAt,
-                modifiedAt
         );
     }
 
