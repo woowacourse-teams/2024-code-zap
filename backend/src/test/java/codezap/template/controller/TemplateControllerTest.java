@@ -40,6 +40,9 @@ import codezap.category.service.CategoryService;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.GlobalExceptionHandler;
+import codezap.like.repository.FakeLikeRepository;
+import codezap.like.repository.LikesRepository;
+import codezap.like.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
@@ -74,11 +77,13 @@ class TemplateControllerTest {
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
     );
+    private final LikesRepository likesRepository = new FakeLikeRepository();
 
     private final SaltGenerator saltGenerator = new RandomSaltGenerator();
     private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
     private final TemplateService templateService = new TemplateService(templateRepository);
     private final CategoryService categoryService = new CategoryService(categoryRepository);
+    private final LikesService likesService = new LikesService(templateRepository, memberRepository, likesRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
@@ -88,7 +93,8 @@ class TemplateControllerTest {
                     new TemplateTagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
                     templateService,
                     thumbnailService,
-                    sourceCodeService
+                    sourceCodeService,
+                    likesService
             );
 
     private final CategoryTemplateApplicationService categoryTemplateApplicationService =
