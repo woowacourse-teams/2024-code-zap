@@ -9,7 +9,6 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 
@@ -21,8 +20,7 @@ public class MemberCategoryApplicationService {
     private final CategoryService categoryService;
 
     @Transactional
-    public CreateCategoryResponse create(MemberDto memberDto, CreateCategoryRequest createCategoryRequest) {
-        Member member = memberService.getById(memberDto.id());
+    public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
         return categoryService.create(member, createCategoryRequest);
     }
 
@@ -32,8 +30,7 @@ public class MemberCategoryApplicationService {
     }
 
     @Transactional
-    public void update(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest) {
-        Member member = memberService.getById(memberDto.id());
+    public void update(Member member, Long id, UpdateCategoryRequest updateCategoryRequest) {
         categoryService.update(member, id, updateCategoryRequest);
     }
 }

@@ -20,7 +20,6 @@ import codezap.category.repository.CategoryRepository;
 import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.MemberRepository;
 
@@ -47,7 +46,7 @@ class MemberCategoryApplicationServiceTest {
             String categoryName = "카테고리 1";
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
 
-            CreateCategoryResponse response = sut.create(MemberDto.from(member), createCategoryRequest);
+            CreateCategoryResponse response = sut.create(member, createCategoryRequest);
 
             Category category = categoryRepository.fetchById(response.id());
             assertAll(
@@ -59,13 +58,13 @@ class MemberCategoryApplicationServiceTest {
         @Test
         @DisplayName("카테고리 생성 실패 : 멤버 존재하지 않음")
         void createFailNotExistsMember() {
-            MemberDto nonExistentMemberDto = MemberDto.from(MemberFixture.memberFixture());
+            Member nonExistentMember = MemberFixture.memberFixture();
             String categoryName = "카테고리 1";
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
 
-            assertThatThrownBy(() -> sut.create(nonExistentMemberDto, createCategoryRequest))
+            assertThatThrownBy(() -> sut.create(nonExistentMember, createCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + nonExistentMemberDto.id() + "에 해당하는 멤버가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + nonExistentMember.getId() + "에 해당하는 멤버가 존재하지 않습니다.");
         }
 
         @Test
@@ -76,7 +75,7 @@ class MemberCategoryApplicationServiceTest {
             categoryRepository.save(new Category(categoryName, member));
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(categoryName);
 
-            assertThatThrownBy(() -> sut.create(MemberDto.from(member), createCategoryRequest))
+            assertThatThrownBy(() -> sut.create(member, createCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
         }
@@ -122,7 +121,7 @@ class MemberCategoryApplicationServiceTest {
             Category category = categoryRepository.save(new Category("카테고리 1", member));
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("카테고리 수정");
 
-            sut.update(MemberDto.from(member), category.getId(), updateCategoryRequest);
+            sut.update(member, category.getId(), updateCategoryRequest);
 
             Category actual = categoryRepository.fetchById(category.getId());
             assertAll(
@@ -134,13 +133,13 @@ class MemberCategoryApplicationServiceTest {
         @Test
         @DisplayName("카테고리 수정 실패 : 멤버 존재하지 않음")
         void updateFailNotExistsMember() {
-            MemberDto nonExistentMemberDto = MemberDto.from(MemberFixture.memberFixture());
+            Member nonExistentMember = MemberFixture.memberFixture();
             String updatedCategoryName = "카테고리 수정";
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
 
-            assertThatThrownBy(() -> sut.update(nonExistentMemberDto, 1L, updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(nonExistentMember, 1L, updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + nonExistentMemberDto.id() + "에 해당하는 멤버가 존재하지 않습니다.");
+                    .hasMessage("식별자 " + nonExistentMember.getId() + "에 해당하는 멤버가 존재하지 않습니다.");
         }
 
         @Test
@@ -152,7 +151,7 @@ class MemberCategoryApplicationServiceTest {
             categoryRepository.save(new Category(duplicateCategory, member));
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicateCategory);
 
-            assertThatThrownBy(() -> sut.update(MemberDto.from(member), category.getId(), updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(member, category.getId(), updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + duplicateCategory + "인 카테고리가 이미 존재합니다.");
         }
@@ -165,7 +164,7 @@ class MemberCategoryApplicationServiceTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
             Long notExistsId = 100L;
 
-            assertThatThrownBy(() -> sut.update(MemberDto.from(member), notExistsId, updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(member, notExistsId, updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notExistsId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
@@ -179,7 +178,7 @@ class MemberCategoryApplicationServiceTest {
             String updatedCategoryName = "카테고리 수정";
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(updatedCategoryName);
 
-            assertThatThrownBy(() -> sut.update(MemberDto.from(member), category.getId(), updateCategoryRequest))
+            assertThatThrownBy(() -> sut.update(member, category.getId(), updateCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
         }

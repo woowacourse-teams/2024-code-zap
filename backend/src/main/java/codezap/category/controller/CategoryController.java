@@ -22,7 +22,7 @@ import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.facade.MemberCategoryApplicationService;
 import codezap.category.service.facade.MemberCategoryTemplateApplicationService;
 import codezap.global.validation.ValidationSequence;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -35,10 +35,10 @@ public class CategoryController implements SpringDocCategoryController {
 
     @PostMapping
     public ResponseEntity<CreateCategoryResponse> createCategory(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
-        CreateCategoryResponse createdCategory = memberCategoryApplicationService.create(memberDto, createCategoryRequest);
+        CreateCategoryResponse createdCategory = memberCategoryApplicationService.create(member, createCategoryRequest);
         return ResponseEntity.created(URI.create("/categories/" + createdCategory.id()))
                 .body(createdCategory);
     }
@@ -52,17 +52,17 @@ public class CategoryController implements SpringDocCategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
-        memberCategoryApplicationService.update(memberDto, id, updateCategoryRequest);
+        memberCategoryApplicationService.update(member, id, updateCategoryRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id) {
-        memberCategoryTemplateApplicationService.deleteById(memberDto, id);
+    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple Member member, @PathVariable Long id) {
+        memberCategoryTemplateApplicationService.deleteById(member, id);
         return ResponseEntity.noContent()
                 .build();
     }

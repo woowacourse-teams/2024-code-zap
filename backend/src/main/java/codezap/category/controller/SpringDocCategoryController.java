@@ -9,7 +9,7 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +34,7 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다."),
     })
     ResponseEntity<CreateCategoryResponse> createCategory(
-            MemberDto memberDto,
+            Member member,
             CreateCategoryRequest createCategoryRequest
     );
 
@@ -55,7 +55,7 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories/1", errorCases = {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
-    ResponseEntity<Void> updateCategory(MemberDto memberDto, Long id, UpdateCategoryRequest updateCategoryRequest);
+    ResponseEntity<Void> updateCategory(Member member, Long id, UpdateCategoryRequest updateCategoryRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
@@ -72,5 +72,5 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우",
                     exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
-    ResponseEntity<Void> deleteCategory(MemberDto memberDto, Long id);
+    ResponseEntity<Void> deleteCategory(Member member, Long id);
 }

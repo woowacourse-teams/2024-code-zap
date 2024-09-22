@@ -31,9 +31,7 @@ import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.MockMvcTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.fixture.MemberFixture;
-
 
 @Import(CategoryController.class)
 class CategoryControllerTest extends MockMvcTest {
@@ -51,7 +49,7 @@ class CategoryControllerTest extends MockMvcTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
             when(memberCategoryApplicationService.create(
-                    MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest))
+                    MemberFixture.memberFixture(), createCategoryRequest))
                     .thenReturn(new CreateCategoryResponse(1L, "category"));
 
             mvc.perform(post("/categories")
@@ -190,7 +188,7 @@ class CategoryControllerTest extends MockMvcTest {
                     .andExpect(status().isNoContent());
 
             verify(memberCategoryTemplateApplicationService, times(1))
-                    .deleteById(MemberDto.from(MemberFixture.memberFixture()), categoryId);
+                    .deleteById(MemberFixture.memberFixture(), categoryId);
         }
 
         @Test

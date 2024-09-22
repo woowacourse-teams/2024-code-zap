@@ -10,7 +10,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,7 +25,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public MemberDto resolveArgument(
+    public Member resolveArgument(
             MethodParameter parameter,
             ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest,
@@ -33,6 +33,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     ) {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         String credential = credentialManager.getCredential(request);
-        return MemberDto.from(credentialProvider.extractMember(credential));
+        return credentialProvider.extractMember(credential);
     }
 }
