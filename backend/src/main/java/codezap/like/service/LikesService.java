@@ -31,6 +31,10 @@ public class LikesService {
         likesRepository.save(likes);
     }
 
+    public long getLikesCount(Template template) {
+        return likesRepository.countByTemplate(template);
+    }
+
     @Transactional
     public void cancelLike(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);

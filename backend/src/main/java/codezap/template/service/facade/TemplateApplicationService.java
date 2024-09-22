@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
+import codezap.like.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -32,6 +33,7 @@ public class TemplateApplicationService {
     private final TemplateService templateService;
     private final ThumbnailService thumbnailService;
     private final SourceCodeService sourceCodeService;
+    private final LikesService likesService;
 
     @Transactional
     public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
@@ -51,8 +53,11 @@ public class TemplateApplicationService {
         List<Tag> tags = templateTagService.getByTemplate(template);
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-        //todo 좋아요 값 삽입 필요
-        return FindTemplateResponse.of(template, sourceCodes, tags, 0L, false);
+
+        return FindTemplateResponse.of(template, sourceCodes, tags,
+                likesService.getLikesCount(template),
+                false //todo 좋아요 여부 삽입 필요
+                );
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
@@ -73,8 +78,8 @@ public class TemplateApplicationService {
                         template,
                         templateTagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
+                        likesService.getLikesCount(template),
                         //todo 값 삽입 필요
-                        0L,
                         false)
                 )
                 .toList();

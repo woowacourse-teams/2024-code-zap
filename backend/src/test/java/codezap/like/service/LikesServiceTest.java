@@ -3,7 +3,6 @@ package codezap.like.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -92,6 +91,39 @@ class LikesServiceTest extends ServiceTest {
 
             assertThatCode(() -> likesService.cancelLike(MemberDto.from(member), template.getId()))
                     .doesNotThrowAnyException();
+        }
+    }
+
+    @Nested
+    @DisplayName("좋아요 개수 조회 기능 테스트")
+    class CountByTemplateTest {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member1,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+
+            likesService.like(MemberDto.from(member1), template.getId());
+            likesService.like(MemberDto.from(member2), template.getId());
+
+            assertThat(likesService.getLikesCount(template)).isEqualTo(2L);
+        }
+
+        @Test
+        @DisplayName("성공: 좋아요가 없으면 0개가 조회된다.")
+        void successWithNoLikes() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            assertThat(likesService.getLikesCount(template)).isEqualTo(0L);
         }
     }
 }
