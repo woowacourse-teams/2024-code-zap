@@ -4,6 +4,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import codezap.member.dto.MemberDto;
@@ -12,12 +13,12 @@ import codezap.member.dto.MemberDto;
 public class LikeController implements SpringDocsLikeController {
 
     @PostMapping("like/{templateId}")
-    public ResponseEntity<Void> like(MemberDto memberDto) {
+    public ResponseEntity<Void> like(MemberDto memberDto, @PathVariable long templateId) {
         throw new NotImplementedException();
     }
 
     @DeleteMapping("like/{templateId}")
-    public ResponseEntity<Void> cancelLike(MemberDto memberDto) {
+    public ResponseEntity<Void> cancelLike(MemberDto memberDto, @PathVariable long templateId) {
         throw new NotImplementedException();
     }
 }

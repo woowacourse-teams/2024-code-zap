@@ -23,7 +23,7 @@ public interface SpringDocsLikeController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/like/1", errorCases = {
             @ErrorCase(description = "인증 정보에 해당하는 멤버가 없는 경우", exampleMessage = "인증 정보가 정확하지 않습니다.")
     })
-    ResponseEntity<Void> like(MemberDto memberDto);
+    ResponseEntity<Void> like(MemberDto memberDto, long templateId);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "좋아요 취소", description = "템플릿 좋아요를 취소합니다.")
@@ -34,5 +34,5 @@ public interface SpringDocsLikeController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/dislike/1", errorCases = {
             @ErrorCase(description = "인증 정보에 해당하는 멤버가 없는 경우", exampleMessage = "인증 정보가 정확하지 않습니다.")
     })
-    ResponseEntity<Void> cancelLike(MemberDto memberDto);
+    ResponseEntity<Void> cancelLike(MemberDto memberDto, long templateId);
 }
