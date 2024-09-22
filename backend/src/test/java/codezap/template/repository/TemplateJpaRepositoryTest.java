@@ -49,7 +49,6 @@ class TemplateJpaRepositoryTest {
     void existsByCategoryId() {
         // given
         Member member = memberRepository.save(MemberFixture.getFirstMember());
-        Member member2 = memberRepository.save(MemberFixture.getSecondMember());
         Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
         Category otherCategory = categoryRepository.save(CategoryFixture.getSecondCategory());
         templateRepository.save(new Template(member, "Template 1", "Description 1", category));
