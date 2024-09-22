@@ -62,7 +62,7 @@ class TemplateJpaRepositoryTest {
 
     @Nested
     @DisplayName("템플릿 id로 템플릿 조회")
-    class fetchById {
+    class FetchById {
 
         @Test
         @DisplayName("템플릿 id로 템플릿 조회 성공")
@@ -86,7 +86,7 @@ class TemplateJpaRepositoryTest {
 
     @Nested
     @DisplayName("회원 id로 템플릿 조회")
-    class findByMemberId {
+    class FindByMemberId {
 
         @Test
         @DisplayName("회원 id로 템플릿 조회 성공")
@@ -206,7 +206,7 @@ class TemplateJpaRepositoryTest {
             saveThreeTemplates();
             saveTemplateTags();
 
-            List<Long> tagIds = Arrays.asList(tag2.getId());
+            List<Long> tagIds = List.of(tag2.getId());
             Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
             Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
