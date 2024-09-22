@@ -32,9 +32,7 @@ public class TemplateApplicationService {
 
     private final TemplateService templateService;
     private final SourceCodeService sourceCodeService;
-
     private final MemberService memberService;
-
     private final CategoryService categoryService;
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
@@ -48,8 +46,7 @@ public class TemplateApplicationService {
         sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
         SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
                 template,
-                createTemplateRequest.thumbnailOrdinal()
-        );
+                createTemplateRequest.thumbnailOrdinal());
         thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
     }
@@ -58,8 +55,7 @@ public class TemplateApplicationService {
         Template template = templateService.getById(id);
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-        FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(template, sourceCodes, tags);
-        return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
+        return FindTemplateResponse.of(template, sourceCodes, tags, 0L, false);
     }
 
     public FindAllTemplatesResponse findAllTemplatesBy(
@@ -73,7 +69,8 @@ public class TemplateApplicationService {
         FindAllTemplatesResponse findAllTemplatesResponse = makeTemplatesResponse(templates);
         List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates()
                 .stream()
-                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(memberService.getByTemplateId(findAllTemplateItemResponse.id())))
+                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(
+                        memberService.getByTemplateId(findAllTemplateItemResponse.id())))
                 .toList();
         return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
     }
@@ -83,8 +80,9 @@ public class TemplateApplicationService {
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         tagService.findAllByTemplate(template),
-                        thumbnailService.getByTemplate(template).getSourceCode())
-                )
+                        thumbnailService.getByTemplate(template).getSourceCode(),
+                        0L,
+                        false))
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
     }
