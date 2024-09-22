@@ -118,4 +118,37 @@ class LikesJpaRepositoryTest {
                     .doesNotThrowAnyException();
         }
     }
+
+    @Nested
+    @DisplayName("템플릿 좋아요 수 조회")
+    class CountByTemplate {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member1,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            likesRepository.save(template.like(member1));
+            likesRepository.save(template.like(member2));
+
+            assertThat(likesRepository.countByTemplate(template)).isEqualTo(2);
+        }
+
+        @Test
+        @DisplayName("성공: 좋아요가 없으면 0개가 조회된다.")
+        void successWithNoLikes() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            assertThat(likesRepository.countByTemplate(template)).isEqualTo(0);
+        }
+    }
 }

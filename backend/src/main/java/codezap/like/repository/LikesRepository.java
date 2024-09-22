@@ -9,5 +9,7 @@ public interface LikesRepository {
 
     boolean existsByTemplateAndMember(Template template, Member member);
 
+    long countByTemplate(Template template);
+
     void deleteByTemplateAndMember(Template template, Member member);
 }
