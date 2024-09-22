@@ -77,7 +77,7 @@ class TemplateControllerTest {
     private final SaltGenerator saltGenerator = new RandomSaltGenerator();
     private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
     private final TemplateService templateService = new TemplateService(templateRepository);
-    private final CategoryService categoryService = new CategoryService(categoryRepository);
+    private final CategoryService categoryService = new CategoryService(categoryRepository, templateRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());

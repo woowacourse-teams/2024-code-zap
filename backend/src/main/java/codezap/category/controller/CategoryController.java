@@ -19,7 +19,7 @@ import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
-import codezap.category.service.CategoryTemplateService;
+import codezap.category.service.CategoryService;
 import codezap.category.service.facade.MemberCategoryApplicationService;
 import codezap.global.validation.ValidationSequence;
 import codezap.member.domain.Member;
@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 public class CategoryController implements SpringDocCategoryController {
 
     private final MemberCategoryApplicationService memberCategoryApplicationService;
-    private final CategoryTemplateService categoryTemplateService;
+    private final CategoryService categoryService;
 
     @PostMapping
     public ResponseEntity<CreateCategoryResponse> createCategory(
@@ -59,7 +59,7 @@ public class CategoryController implements SpringDocCategoryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple Member member, @PathVariable Long id) {
-        categoryTemplateService.deleteById(member, id);
+        categoryService.deleteById(member, id);
         return ResponseEntity.noContent().build();
     }
 }

@@ -186,7 +186,7 @@ class CategoryControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
 
-            verify(categoryTemplateService, times(1))
+            verify(categoryService, times(1))
                     .deleteById(MemberFixture.memberFixture(), categoryId);
         }
 
@@ -209,7 +209,7 @@ class CategoryControllerTest extends MockMvcTest {
             long id = 2L;
 
             doThrow(new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
-                    .when(categoryTemplateService).deleteById(any(), any());
+                    .when(categoryService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + id)
                             .accept(MediaType.APPLICATION_JSON)
@@ -223,7 +223,7 @@ class CategoryControllerTest extends MockMvcTest {
         void updateCategoryFailWithlongName() throws Exception {
             long categoryId = 1L;
             doThrow(new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
-                    .when(categoryTemplateService).deleteById(any(), any());
+                    .when(categoryService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)
