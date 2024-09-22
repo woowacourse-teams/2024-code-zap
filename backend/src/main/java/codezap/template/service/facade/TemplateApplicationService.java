@@ -10,8 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
 import codezap.member.domain.Member;
+import codezap.member.service.MemberService;
 import codezap.tag.domain.Tag;
-import codezap.tag.dto.response.FindAllTagsResponse;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
@@ -33,6 +33,8 @@ public class TemplateApplicationService {
     private final TemplateService templateService;
     private final SourceCodeService sourceCodeService;
 
+    private final MemberService memberService;
+
     private final CategoryService categoryService;
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
@@ -52,24 +54,28 @@ public class TemplateApplicationService {
         return template.getId();
     }
 
-    public FindTemplateResponse getById(Long id) {
+    public FindTemplateResponse getTemplateById(Long id) {
         Template template = templateService.getById(id);
         List<Tag> tags = tagService.getByTemplate(template);
-
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-        return FindTemplateResponse.of(template, sourceCodes, tags);
+        FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(template, sourceCodes, tags);
+        return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
     }
 
-    public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
-        List<Template> template = templateService.getByMemberId(memberId);
-        return tagService.findAllByTemplates(template);
-    }
-
-    public FindAllTemplatesResponse findAllBy(
-            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
+    public FindAllTemplatesResponse findAllTemplatesBy(
+            Long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> tagIds,
+            Pageable pageable
     ) {
         Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        return makeTemplatesResponse(templates);
+        FindAllTemplatesResponse findAllTemplatesResponse = makeTemplatesResponse(templates);
+        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates()
+                .stream()
+                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(memberService.getByTemplateId(findAllTemplateItemResponse.id())))
+                .toList();
+        return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
     }
 
     private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {

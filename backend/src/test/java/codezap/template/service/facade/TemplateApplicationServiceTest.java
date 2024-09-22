@@ -30,14 +30,8 @@ import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
-import codezap.tag.domain.Tag;
-import codezap.tag.dto.response.FindAllTagsResponse;
-import codezap.tag.dto.response.FindTagResponse;
-import codezap.tag.repository.TagRepository;
-import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
-import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -62,10 +56,6 @@ class TemplateApplicationServiceTest {
     SourceCodeRepository sourceCodeRepository;
     @Autowired
     CategoryRepository categoryRepository;
-    @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    TemplateTagRepository templateTagRepository;
     @Autowired
     ThumbnailRepository thumbnailRepository;
 
@@ -133,47 +123,10 @@ class TemplateApplicationServiceTest {
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
-            var actual = sut.getById(template.getId());
+            var actual = sut.getTemplateById(template.getId());
 
             // then
             assertThat(actual.id()).isEqualTo(1L);
-        }
-    }
-
-    @Nested
-    @DisplayName("사용자 ID로 모든 태그 조회")
-    class GetAllTagsByMemberId {
-
-        @Test
-        @DisplayName("사용자 ID로 모든 태그 조회 성공")
-        void getAllTagsByMemberId() {
-            // given
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-
-            var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var template2 = templateRepository.save(new Template(member, "title2", "description", category));
-            var template3 = templateRepository.save(new Template(member, "title3", "description", category));
-            var tag1 = tagRepository.save(new Tag("tag1"));
-            var tag2 = tagRepository.save(new Tag("tag2"));
-            var tag3 = tagRepository.save(new Tag("tag3"));
-            templateTagRepository.save(new TemplateTag(template1, tag1));
-            templateTagRepository.save(new TemplateTag(template1, tag2));
-            templateTagRepository.save(new TemplateTag(template2, tag2));
-            templateTagRepository.save(new TemplateTag(template2, tag3));
-            templateTagRepository.save(new TemplateTag(template3, tag3));
-            templateTagRepository.save(new TemplateTag(template3, tag1));
-
-            // when
-            var actual = sut.getAllTagsByMemberId(member.getId());
-
-            // then
-            var expected = new FindAllTagsResponse(List.of(
-                    FindTagResponse.from(tag1),
-                    FindTagResponse.from(tag2),
-                    FindTagResponse.from(tag3)));
-
-            assertThat(actual).isEqualTo(expected);
         }
     }
 
@@ -200,7 +153,7 @@ class TemplateApplicationServiceTest {
             thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
             // when & then
-            assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
+            assertThatCode(() -> sut.findAllTemplatesBy(memberId, keyword, categoryId, tagIds, pageable))
                     .doesNotThrowAnyException();
         }
 

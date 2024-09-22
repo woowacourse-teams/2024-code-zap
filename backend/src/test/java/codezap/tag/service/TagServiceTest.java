@@ -33,7 +33,7 @@ import codezap.template.domain.TemplateTag;
 class TagServiceTest extends ServiceTest {
 
     @Autowired
-    private TagService tagService;
+    private TagService sut;
 
     @Nested
     @DisplayName("템플릿에 대한 태그 생성")
@@ -47,7 +47,7 @@ class TagServiceTest extends ServiceTest {
             List<String> tagNames = Arrays.asList("tag1", "tag2", "tag3");
 
             // when
-            tagService.createTags(template, tagNames);
+            sut.createTags(template, tagNames);
 
             // then
             List<String> savedTemplateTagNames = getSavedTemplateTagNames(template);
@@ -64,7 +64,7 @@ class TagServiceTest extends ServiceTest {
             List<String> tagNames = Arrays.asList(existTag.getName(), "tag2", "tag3");
 
             // when
-            tagService.createTags(template, tagNames);
+            sut.createTags(template, tagNames);
 
             // then
             List<String> savedTemplateTagNames = getSavedTemplateTagNames(template);
@@ -83,7 +83,7 @@ class TagServiceTest extends ServiceTest {
             List<String> beforeTemplateTags = getSavedTemplateTagNames(template);
 
             // when
-            tagService.createTags(template, tagNames);
+            sut.createTags(template, tagNames);
 
             // then
             List<String> afterTemplateTags = getSavedTemplateTagNames(template);
@@ -115,7 +115,7 @@ class TagServiceTest extends ServiceTest {
             TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
 
             // when & then
-            assertThat(tagService.getByTemplate(template))
+            assertThat(sut.getByTemplate(template))
                     .containsExactly(templateTag1.getTag(), templateTag2.getTag());
         }
 
@@ -128,7 +128,7 @@ class TagServiceTest extends ServiceTest {
             tagRepository.save(new Tag("tag2"));
 
             // when & then
-            assertThat(tagService.getByTemplate(template)).isEmpty();
+            assertThat(sut.getByTemplate(template)).isEmpty();
         }
 
         @Test
@@ -143,9 +143,46 @@ class TagServiceTest extends ServiceTest {
             tagRepository.save(new Tag("tag2"));
 
             // when & then
-            assertThatThrownBy(() -> tagService.getByTemplate(unSavedTemplate))
+            assertThatThrownBy(() -> sut.getByTemplate(unSavedTemplate))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("사용자 ID로 모든 태그 조회")
+    class GetAllTagsByMemberId {
+
+        @Test
+        @DisplayName("사용자 ID로 모든 태그 조회 성공")
+        void getAllTagsByMemberId() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
+            var template2 = templateRepository.save(new Template(member, "title2", "description", category));
+            var template3 = templateRepository.save(new Template(member, "title3", "description", category));
+            var tag1 = tagRepository.save(new Tag("tag1"));
+            var tag2 = tagRepository.save(new Tag("tag2"));
+            var tag3 = tagRepository.save(new Tag("tag3"));
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            templateTagRepository.save(new TemplateTag(template1, tag2));
+            templateTagRepository.save(new TemplateTag(template2, tag2));
+            templateTagRepository.save(new TemplateTag(template2, tag3));
+            templateTagRepository.save(new TemplateTag(template3, tag3));
+            templateTagRepository.save(new TemplateTag(template3, tag1));
+
+            // when
+            var actual = sut.findAllByMemberId(member.getId());
+
+            // then
+            var expected = new FindAllTagsResponse(List.of(
+                    FindTagResponse.from(tag1),
+                    FindTagResponse.from(tag2),
+                    FindTagResponse.from(tag3)));
+
+            assertThat(actual).isEqualTo(expected);
         }
     }
 
@@ -167,7 +204,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then
-            FindAllTagsResponse actual = tagService.findAllByTemplates(List.of(template1, template2));
+            FindAllTagsResponse actual = sut.findAllByTemplates(List.of(template1, template2));
             assertThat(actual).isEqualTo(new FindAllTagsResponse(
                     List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
             );
@@ -188,7 +225,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then
-            FindAllTagsResponse actual = tagService.findAllByTemplates(List.of(template1, template2));
+            FindAllTagsResponse actual = sut.findAllByTemplates(List.of(template1, template2));
             assertThat(actual).isEqualTo(new FindAllTagsResponse(
                     List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
             );
@@ -201,7 +238,7 @@ class TagServiceTest extends ServiceTest {
             Template template1 = createSavedTemplate();
 
             // when & then
-            FindAllTagsResponse actual = tagService.findAllByTemplates(List.of(template1));
+            FindAllTagsResponse actual = sut.findAllByTemplates(List.of(template1));
             assertThat(actual).isEqualTo(new FindAllTagsResponse(Collections.EMPTY_LIST));
         }
     }
@@ -219,7 +256,7 @@ class TagServiceTest extends ServiceTest {
             List<String> newTags = List.of(tagName);
 
             // when
-            tagService.updateTags(template, newTags);
+            sut.updateTags(template, newTags);
 
             // then
             List<String> saveTemplateTags = templateTagRepository.findAllByTemplate(template).stream()
@@ -243,7 +280,7 @@ class TagServiceTest extends ServiceTest {
             List<String> updatedTags = List.of();
 
             // when
-            tagService.updateTags(template, updatedTags);
+            sut.updateTags(template, updatedTags);
 
             // then
             assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();
@@ -260,7 +297,7 @@ class TagServiceTest extends ServiceTest {
             List<String> newTags = List.of(tag1.getName(), "tag2");
 
             // when
-            tagService.updateTags(template, newTags);
+            sut.updateTags(template, newTags);
 
             // then
             List<String> saveTemplateTags = templateTagRepository.findAllByTemplate(template).stream()
@@ -286,7 +323,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template, tag2));
 
             // when
-            tagService.deleteByIds(List.of(template.getId()));
+            sut.deleteByIds(List.of(template.getId()));
 
             // then
             assertAll(
@@ -303,7 +340,7 @@ class TagServiceTest extends ServiceTest {
             Template template = createSavedTemplate();
 
             // when
-            tagService.deleteByIds(List.of(template.getId()));
+            sut.deleteByIds(List.of(template.getId()));
 
             // then
             assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();

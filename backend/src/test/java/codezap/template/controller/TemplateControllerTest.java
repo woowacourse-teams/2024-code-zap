@@ -57,7 +57,6 @@ import codezap.template.repository.TemplateRepository;
 import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
-import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.facade.TemplateApplicationService;
 
 class TemplateControllerTest {
@@ -66,11 +65,9 @@ class TemplateControllerTest {
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(
-            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
-    );
+            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory()));
     private final MemberRepository memberRepository = new FakeMemberRepository(
-            List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
-    );
+            List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember()));
 
     private final SaltGenerator saltGenerator = new RandomSaltGenerator();
     private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
@@ -80,32 +77,34 @@ class TemplateControllerTest {
             templateRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
+    private final MemberService memberService = new MemberService(
+            memberRepository,
+            categoryRepository,
+            saltGenerator,
+            passwordEncryptor);
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
+    private final TagService tagService = new TagService(
+            new FakeTagRepository(),
+            new FakeTemplateRepository(),
+            new FakeTemplateTagRepository());
 
     private final TemplateApplicationService templateApplicationService =
             new TemplateApplicationService(
                     templateService,
                     sourceCodeService,
+                    memberService,
                     categoryService,
-                    new TagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
+                    tagService,
                     thumbnailService
             );
 
-    private final MemberTemplateApplicationService memberTemplateApplicationService =
-            new MemberTemplateApplicationService(
-                    new MemberService(memberRepository, categoryRepository, saltGenerator, passwordEncryptor),
-                    templateApplicationService
-            );
-
     private final MockMvc mvc =
-            MockMvcBuilders.standaloneSetup(
-                            new TemplateController(memberTemplateApplicationService))
+            MockMvcBuilders.standaloneSetup(new TemplateController(templateApplicationService))
                     .setControllerAdvice(new GlobalExceptionHandler())
                     .setCustomArgumentResolvers(
                             new AuthArgumentResolver(
                                     new CookieCredentialManager(),
-                                    new BasicAuthCredentialProvider(memberRepository)
-                            ),
+                                    new BasicAuthCredentialProvider(memberRepository)),
                             new PageableHandlerMethodArgumentResolver())
                     .build();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -350,8 +349,8 @@ class TemplateControllerTest {
 //        MemberDto member = MemberDtoFixture.getFirstMemberDto();
 //        CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
 //        CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title2");
-//        memberTemplateApplicationService.createTemplate(member, templateRequest1);
-//        memberTemplateApplicationService.createTemplate(member, templateRequest2);
+//        templateApplicationService.createTemplate(member, templateRequest1);
+//        templateApplicationService.createTemplate(member, templateRequest2);
 //
 //        // when & then
 //        mvc.perform(get("/templates")
@@ -372,7 +371,7 @@ class TemplateControllerTest {
 //            // given
 //            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
 //            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-//            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+//            templateApplicationService.createTemplate(memberDto, templateRequest);
 //
 //            // when & then
 //            mvc.perform(get("/templates/1")
@@ -633,7 +632,7 @@ class TemplateControllerTest {
             categoryService.create(member, new CreateCategoryRequest("category1"));
             categoryService.create(member, new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            memberTemplateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.createTemplate(member, templateRequest);
         }
     }
 
@@ -648,7 +647,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            memberTemplateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.createTemplate(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -666,8 +665,8 @@ class TemplateControllerTest {
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest1 = templateRequestWithTwoSourceCodes();
             CreateTemplateRequest templateRequest2 = templateRequestWithTwoSourceCodes();
-            memberTemplateApplicationService.createTemplate(member, templateRequest1);
-            memberTemplateApplicationService.createTemplate(member, templateRequest2);
+            templateApplicationService.createTemplate(member, templateRequest1);
+            templateApplicationService.createTemplate(member, templateRequest2);
 
             // when & then
             mvc.perform(delete("/templates/1,2")
@@ -684,7 +683,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            memberTemplateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.createTemplate(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1,1")
@@ -702,7 +701,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            memberTemplateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.createTemplate(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -719,7 +718,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            memberTemplateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.createTemplate(member, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
 
             // when

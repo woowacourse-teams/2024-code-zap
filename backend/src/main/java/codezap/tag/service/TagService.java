@@ -12,6 +12,7 @@ import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
+import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final TemplateRepository templateRepository;
     private final TemplateTagRepository templateTagRepository;
 
     @Transactional
@@ -48,6 +50,11 @@ public class TagService {
         return templateTagRepository.findAllByTemplate(template).stream()
                 .map(TemplateTag::getTag)
                 .toList();
+    }
+
+    public FindAllTagsResponse findAllByMemberId(Long memberId) {
+        List<Template> template = templateRepository.findByMemberId(memberId);
+        return findAllByTemplates(template);
     }
 
     public FindAllTagsResponse findAllByTemplates(List<Template> templates) {
