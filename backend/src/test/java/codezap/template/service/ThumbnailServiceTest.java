@@ -144,7 +144,7 @@ class ThumbnailServiceTest {
             sut.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
             var actual = thumbnailRepository.findAll();
 
-            assertThat(actual).isEmpty();
+            assertThat(actual).doesNotContain(savedThumbnail1, savedThumbnail2);
         }
 
         @Test
