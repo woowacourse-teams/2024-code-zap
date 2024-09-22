@@ -632,7 +632,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category1"));
             categoryService.create(member, new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
             memberTemplateApplicationService.createTemplate(member, templateRequest);
         }
     }
@@ -647,7 +647,7 @@ class TemplateControllerTest {
             // given
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
             memberTemplateApplicationService.createTemplate(member, templateRequest);
 
             // when & then
@@ -664,8 +664,8 @@ class TemplateControllerTest {
             // given
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title");
-            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest1 = templateRequestWithTwoSourceCodes();
+            CreateTemplateRequest templateRequest2 = templateRequestWithTwoSourceCodes();
             memberTemplateApplicationService.createTemplate(member, templateRequest1);
             memberTemplateApplicationService.createTemplate(member, templateRequest2);
 
@@ -683,7 +683,7 @@ class TemplateControllerTest {
             // given
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
             memberTemplateApplicationService.createTemplate(member, templateRequest);
 
             // when & then
@@ -701,7 +701,7 @@ class TemplateControllerTest {
             // given
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
             memberTemplateApplicationService.createTemplate(member, templateRequest);
 
             // when & then
@@ -718,7 +718,7 @@ class TemplateControllerTest {
             // given
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
             memberTemplateApplicationService.createTemplate(member, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
 
@@ -751,9 +751,9 @@ class TemplateControllerTest {
         }
     }
 
-    private static CreateTemplateRequest createTemplateRequestWithTwoSourceCodes(String title) {
+    private static CreateTemplateRequest templateRequestWithTwoSourceCodes() {
         return new CreateTemplateRequest(
-                title,
+                "title",
                 "description",
                 List.of(
                         new CreateSourceCodeRequest("filename1", "content1", 1),
