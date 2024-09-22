@@ -8,4 +8,6 @@ public interface LikesRepository {
     Likes save(Likes likes);
 
     boolean existsByTemplateAndMember(Template template, Member member);
+
+    void deleteByTemplateAndMember(Template template, Member member);
 }

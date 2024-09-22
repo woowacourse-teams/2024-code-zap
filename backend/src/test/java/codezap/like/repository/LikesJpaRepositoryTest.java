@@ -85,4 +85,37 @@ class LikesJpaRepositoryTest {
                     .isFalse();
         }
     }
+
+    @Nested
+    @DisplayName("템플릿과 멤버로 좋아요 삭제")
+    class DeleteByTemplateAndMember {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            likesRepository.save(template.like(member));
+
+            likesRepository.deleteByTemplateAndMember(template, member);
+
+            assertThat(likesRepository.existsByTemplateAndMember(template, member)).isFalse();
+        }
+
+        @Test
+        @DisplayName("성공: 삭제할 데이터가 존재하지 않아도 정상 동작으로 판단")
+        void successWithNoLike() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            assertThatCode(() -> likesRepository.deleteByTemplateAndMember(template, member))
+                    .doesNotThrowAnyException();
+        }
+    }
 }
