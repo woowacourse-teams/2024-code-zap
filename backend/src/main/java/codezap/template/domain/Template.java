@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import org.hibernate.annotations.Formula;
 import org.springframework.http.HttpStatus;
 
 import codezap.category.domain.Category;
@@ -49,6 +50,9 @@ public class Template extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "template")
     private List<SourceCode> sourceCodes = new ArrayList<>();
+
+    @Formula("(select count(*) from likes where likes.template_id = id)")
+    private Long likesCount;
 
     public Template(Member member, String title, String description, Category category) {
         this.member = member;

@@ -70,7 +70,8 @@ public class FakeTemplateRepository implements TemplateRepository {
                 entity.getTitle(),
                 entity.getDescription(),
                 entity.getCategory(),
-                entity.getSourceCodes()
+                entity.getSourceCodes(),
+                0L
         );
         templates.removeIf(template -> Objects.equals(template.getId(), entity.getId()));
         templates.add(saved);
