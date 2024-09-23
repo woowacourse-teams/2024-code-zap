@@ -81,11 +81,11 @@ public class AuthServiceTest {
     }
 
     @Nested
-    @DisplayName("로그인 상 확인 테스트")
+    @DisplayName("로그인 상태 확인 테스트")
     class CheckLoginTest {
 
         @Test
-        @DisplayName("쿠키 인증 성공")
+        @DisplayName("성공")
         void checkLogin() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String basicAuthCredentials = credentialProvider.createCredential(member);
@@ -95,7 +95,7 @@ public class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("쿠키 인증 실패: 잘못된 크레덴셜")
+        @DisplayName("실패: 잘못된 크레덴셜")
         void checkLogin_WithInvalidCredential_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String invalidCredential = HttpHeaders.encodeBasicAuth(
