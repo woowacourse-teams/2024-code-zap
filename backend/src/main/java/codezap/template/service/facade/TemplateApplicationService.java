@@ -54,9 +54,7 @@ public class TemplateApplicationService {
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
 
-        return FindTemplateResponse.of(template, sourceCodes, tags,
-                false
-        );
+        return FindTemplateResponse.of(template, sourceCodes, tags, false);
     }
 
     public FindTemplateResponse getByIdWithMember(Long id, Member member) {
@@ -65,9 +63,7 @@ public class TemplateApplicationService {
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
 
-        return FindTemplateResponse.of(template, sourceCodes, tags,
-                likesService.isLike(template, member)
-        );
+        return FindTemplateResponse.of(template, sourceCodes, tags, likesService.isLike(template, member));
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
