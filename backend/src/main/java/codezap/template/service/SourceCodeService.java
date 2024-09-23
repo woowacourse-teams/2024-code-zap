@@ -50,7 +50,7 @@ public class SourceCodeService {
 
         updateThumbnail(updateTemplateRequest, template, thumbnail);
         updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
-        validateSourceCodesCount(template, updateTemplateRequest);
+        //validateSourceCodesCount(template, updateTemplateRequest);
     }
 
     private void updateThumbnail(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
