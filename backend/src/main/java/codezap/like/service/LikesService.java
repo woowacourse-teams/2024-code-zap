@@ -31,10 +31,6 @@ public class LikesService {
         likesRepository.save(likes);
     }
 
-    public long getLikesCount(Template template) {
-        return likesRepository.countByTemplate(template);
-    }
-
     public Boolean isLike(Template template, Member member) {
         return likesRepository.existsByTemplateAndMember(template, member);
     }

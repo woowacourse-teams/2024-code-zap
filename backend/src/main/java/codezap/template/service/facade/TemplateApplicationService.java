@@ -56,7 +56,6 @@ public class TemplateApplicationService {
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
 
         return FindTemplateResponse.of(template, sourceCodes, tags,
-                likesService.getLikesCount(template),
                 false
                 );
     }
@@ -68,7 +67,6 @@ public class TemplateApplicationService {
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
 
         return FindTemplateResponse.of(template, sourceCodes, tags,
-                likesService.getLikesCount(template),
                 likesService.isLike(template, member)
         );
     }
@@ -98,7 +96,6 @@ public class TemplateApplicationService {
                         template,
                         templateTagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
-                        likesService.getLikesCount(template),
                         likePredicate.isLike(template))
                 )
                 .toList();

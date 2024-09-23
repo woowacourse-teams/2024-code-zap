@@ -45,7 +45,7 @@ public record FindTemplateResponse(
         @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00:00", type = "string")
         LocalDateTime modifiedAt
 ) {
-    public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags, Long likeCount, Boolean isLiked) {
+    public static FindTemplateResponse of(Template template, List<SourceCode> sourceCodes, List<Tag> tags, Boolean isLiked) {
         return new FindTemplateResponse(
                 template.getId(),
                 null,
@@ -54,7 +54,7 @@ public record FindTemplateResponse(
                 mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
                 FindCategoryResponse.from(template.getCategory()),
                 mapToFindTagByTemplateResponse(tags),
-                likeCount,
+                template.getLikesCount(),
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()

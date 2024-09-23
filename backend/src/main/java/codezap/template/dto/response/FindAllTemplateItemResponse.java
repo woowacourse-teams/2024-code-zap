@@ -33,7 +33,7 @@ public record FindAllTemplateItemResponse(
         LocalDateTime modifiedAt
 ) {
     public static FindAllTemplateItemResponse of(
-            Template template, List<Tag> templateTags, SourceCode thumbnailSourceCode, Long likeCount, Boolean isLiked
+            Template template, List<Tag> templateTags, SourceCode thumbnailSourceCode, Boolean isLiked
     ) {
         return new FindAllTemplateItemResponse(
                 template.getId(),
@@ -44,7 +44,7 @@ public record FindAllTemplateItemResponse(
                         .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
                         .toList(),
                 FindThumbnailResponse.from(thumbnailSourceCode),
-                likeCount,
+                template.getLikesCount(),
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()
