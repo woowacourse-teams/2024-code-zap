@@ -1,4 +1,4 @@
-package codezap.like.repository;
+package codezap.likes.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -13,7 +13,7 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.repository.JpaRepositoryTest;
-import codezap.like.domain.Likes;
+import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;

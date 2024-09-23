@@ -1,11 +1,11 @@
-package codezap.like.service;
+package codezap.likes.service;
 
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
 
-import codezap.like.domain.Likes;
-import codezap.like.repository.LikesRepository;
+import codezap.likes.domain.Likes;
+import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.MemberRepository;

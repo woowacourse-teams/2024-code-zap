@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.like.service.LikesService;
+import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;

@@ -19,7 +19,7 @@ import org.springframework.http.HttpStatus;
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.global.exception.CodeZapException;
-import codezap.like.domain.Likes;
+import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

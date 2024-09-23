@@ -1,4 +1,4 @@
-package codezap.like.domain;
+package codezap.likes.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

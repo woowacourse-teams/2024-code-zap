@@ -24,7 +24,7 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
-import codezap.like.repository.LikesRepository;
+import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;

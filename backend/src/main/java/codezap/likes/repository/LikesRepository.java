@@ -1,6 +1,6 @@
-package codezap.like.repository;
+package codezap.likes.repository;
 
-import codezap.like.domain.Likes;
+import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 
