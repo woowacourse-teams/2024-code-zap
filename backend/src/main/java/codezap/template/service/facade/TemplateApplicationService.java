@@ -1,7 +1,6 @@
 package codezap.template.service.facade;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +56,7 @@ public class TemplateApplicationService {
 
         return FindTemplateResponse.of(template, sourceCodes, tags,
                 false
-                );
+        );
     }
 
     public FindTemplateResponse getByIdWithMember(Long id, Member member) {
