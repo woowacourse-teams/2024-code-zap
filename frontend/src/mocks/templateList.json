@@ -4,6 +4,8 @@
       "id": 1,
       "title": "title1",
       "description": "description1",
+      "isLiked": true,
+      "likeCount": 100,
       "thumbnail": {
         "filename": "MyComponent.tsx",
         "content": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};",
@@ -35,6 +37,8 @@
       "id": 2,
       "title": "title2",
       "description": "description2가 끝인줄 알았는데 말이지 description이 과연 어디까지 길어질 수 있을지 계속 타이핑 해볼까?",
+      "isLiked": false,
+      "likeCount": 3213,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Hello, world!');",
@@ -66,6 +70,8 @@
       "id": 3,
       "title": "title3",
       "description": "description3",
+      "isLiked": true,
+      "likeCount": 41233,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }",
@@ -88,6 +94,8 @@
       "id": 4,
       "title": "title4",
       "description": "description4",
+      "isLiked": false,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "body { margin: 0; padding: 0; }",
@@ -113,6 +121,8 @@
       "id": 5,
       "title": "title5",
       "description": "description5",
+      "isLiked": true,
+      "likeCount": 3,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Program { public static void main(String[] args) { System.out.println(\"Run program\"); } }",
@@ -135,6 +145,8 @@
       "id": 6,
       "title": "title6",
       "description": "description6",
+      "isLiked": false,
+      "likeCount": 482,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, Example!\"); } }",
@@ -166,6 +178,8 @@
       "id": 7,
       "title": "title7",
       "description": "description7",
+      "isLiked": true,
+      "likeCount": 10,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('App running');",
@@ -197,6 +211,8 @@
       "id": 8,
       "title": "title8",
       "description": "description8",
+      "isLiked": false,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Index file');",
@@ -219,6 +235,8 @@
       "id": 9,
       "title": "title9",
       "description": "description9",
+      "isLiked": true,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Main file');",
@@ -250,6 +268,8 @@
       "id": 10,
       "title": "title10",
       "description": "description10",
+      "isLiked": false,
+      "likeCount": 1281,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Hello, Frontend!')",
@@ -275,6 +295,8 @@
       "id": 11,
       "title": "title11",
       "description": "description11",
+      "isLiked": true,
+      "likeCount": 19231,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Backend logic');",
@@ -306,6 +328,8 @@
       "id": 12,
       "title": "title12",
       "description": "description12",
+      "isLiked": false,
+      "likeCount": 3,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Example snippet');",
@@ -328,6 +352,8 @@
       "id": 13,
       "title": "title13",
       "description": "description13",
+      "isLiked": true,
+      "likeCount": 2,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "class OOPExample { constructor() { console.log('OOP Example'); } }",
@@ -359,6 +385,8 @@
       "id": 14,
       "title": "title14",
       "description": "description14",
+      "isLiked": false,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Hello { public static void main(String[] args) { System.out.println(\"Hello\"); } }",
@@ -381,6 +409,8 @@
       "id": 15,
       "title": "title15",
       "description": "description15",
+      "isLiked": false,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Example snippet')",
@@ -412,6 +442,8 @@
       "id": 16,
       "title": "title16",
       "description": "description16",
+      "isLiked": true,
+      "likeCount": 521,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Backend { public static void main(String[] args) { System.out.println(\"Backend\"); } }",
@@ -437,6 +469,8 @@
       "id": 17,
       "title": "title17",
       "description": "description17",
+      "isLiked": false,
+      "likeCount": 83,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "import React from 'react';",
@@ -462,6 +496,8 @@
       "id": 18,
       "title": "title18",
       "description": "description18",
+      "isLiked": false,
+      "likeCount": 31,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "class OOP { constructor() { console.log('OOP'); } }",
@@ -494,6 +530,8 @@
       "id": 19,
       "title": "title19",
       "description": "description19",
+      "isLiked": true,
+      "likeCount": 90,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class JavaSnippet { public static void main(String[] args) { System.out.println(\"Java Snippet\"); } }",
@@ -516,6 +554,8 @@
       "id": 20,
       "title": "title20",
       "description": "description20",
+      "isLiked": false,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Python example')",
@@ -541,6 +581,8 @@
       "id": 21,
       "title": "title21",
       "description": "description21",
+      "isLiked": false,
+      "likeCount": 1,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Log snippet');",
@@ -563,6 +605,8 @@
       "id": 22,
       "title": "title22",
       "description": "description22",
+      "isLiked": false,
+      "likeCount": 5,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "import React from 'react';\n\nconst Component = () => <div>React Component</div>;\n\nexport default Component;",
@@ -588,6 +632,8 @@
       "id": 23,
       "title": "title23",
       "description": "description23",
+      "isLiked": false,
+      "likeCount": 7,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Snippet');",
@@ -610,6 +656,8 @@
       "id": 24,
       "title": "title24",
       "description": "description24",
+      "isLiked": true,
+      "likeCount": 1,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Frontend snippet');",
@@ -635,6 +683,8 @@
       "id": 25,
       "title": "title25",
       "description": "description25",
+      "isLiked": false,
+      "likeCount": 4,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Python code')",
@@ -660,6 +710,8 @@
       "id": 26,
       "title": "title26",
       "description": "description26",
+      "isLiked": true,
+      "likeCount": 1230,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Backend code');",
@@ -685,6 +737,8 @@
       "id": 27,
       "title": "title27",
       "description": "description27",
+      "isLiked": false,
+      "likeCount": 41,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('React code');",
@@ -710,6 +764,8 @@
       "id": 28,
       "title": "title28",
       "description": "description28",
+      "isLiked": true,
+      "likeCount": 94,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Style snippet');",
@@ -732,6 +788,8 @@
       "id": 29,
       "title": "title29",
       "description": "description29",
+      "isLiked": false,
+      "likeCount": 6,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Frontend code');",
@@ -757,6 +815,8 @@
       "id": 30,
       "title": "title30",
       "description": "description30",
+      "isLiked": true,
+      "likeCount": 3812,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Another Python example')",
@@ -779,6 +839,8 @@
       "id": 31,
       "title": "title31",
       "description": "description31",
+      "isLiked": false,
+      "likeCount": 732,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('JavaScript example');",
@@ -801,6 +863,8 @@
       "id": 32,
       "title": "title32",
       "description": "description32",
+      "isLiked": false,
+      "likeCount": 4,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "const Component = () => <div>Another React Component</div>;\n\nexport default Component;",
@@ -826,6 +890,8 @@
       "id": 33,
       "title": "title33",
       "description": "description33",
+      "isLiked": false,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Empty snippet');",
@@ -848,6 +914,8 @@
       "id": 34,
       "title": "title34",
       "description": "description34",
+      "isLiked": true,
+      "likeCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Another frontend snippet');",
