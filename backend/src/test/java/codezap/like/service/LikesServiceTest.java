@@ -14,7 +14,6 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.ServiceTest;
-import codezap.like.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.template.domain.Template;

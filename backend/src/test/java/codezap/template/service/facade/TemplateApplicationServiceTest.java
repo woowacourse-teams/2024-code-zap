@@ -41,7 +41,6 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
-import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.ThumbnailRepository;
