@@ -34,7 +34,7 @@ public record FindTemplateResponse(
         List<FindTagResponse> tags,
 
         @Schema(description = "좋아요 수", example = "134")
-        Long likeCount,
+        Long likesCount,
 
         @Schema(description = "조회 회원의 좋아요 여부", example = "true")
         Boolean isLiked,
@@ -72,7 +72,7 @@ public record FindTemplateResponse(
                 sourceCodes,
                 category,
                 tags,
-                likeCount,
+                likesCount,
                 isLiked,
                 createdAt,
                 modifiedAt

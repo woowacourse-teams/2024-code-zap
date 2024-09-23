@@ -451,8 +451,8 @@ class TemplateServiceTest {
                 }
             }
 
-            private void likeTemplate(long templateId, long likeCount) {
-                for (long memberId = 1L; memberId <= likeCount; memberId++) {
+            private void likeTemplate(long templateId, long likesCount) {
+                for (long memberId = 1L; memberId <= likesCount; memberId++) {
                     likesRepository.save(new Likes(
                             null,
                             templateRepository.fetchById(templateId),

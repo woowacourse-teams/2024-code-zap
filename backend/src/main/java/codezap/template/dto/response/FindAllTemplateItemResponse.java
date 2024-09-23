@@ -24,7 +24,7 @@ public record FindAllTemplateItemResponse(
         @Schema(description = "썸네일")
         FindThumbnailResponse thumbnail,
         @Schema(description = "좋아요 수", example = "134")
-        Long likeCount,
+        Long likesCount,
         @Schema(description = "조회 멤버의 좋아요 여부", example = "true")
         Boolean isLiked,
         @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
@@ -59,7 +59,7 @@ public record FindAllTemplateItemResponse(
                 description,
                 tags,
                 thumbnail,
-                likeCount,
+                likesCount,
                 isLiked,
                 createdAt,
                 modifiedAt
