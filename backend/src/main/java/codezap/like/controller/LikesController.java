@@ -19,8 +19,7 @@ public class LikesController implements SpringDocsLikesController {
     @PostMapping("like/{templateId}")
     public ResponseEntity<Void> like(MemberDto memberDto, @PathVariable long templateId) {
         likesService.like(memberDto, templateId);
-        return ResponseEntity.ok()
-                .build();
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("like/{templateId}")
