@@ -8,6 +8,7 @@ export {
   SORTING_OPTIONS,
   DEFAULT_SORTING_OPTION,
   getTemplateList,
+  getTemplateExplore,
   getTemplate,
   postTemplate,
   editTemplate,
@@ -25,3 +26,4 @@ export {
   getLoginState,
   checkName,
 } from './authentication';
+export { LIKE_API_URL, postLike, deleteLike } from './like';

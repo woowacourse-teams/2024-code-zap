@@ -2,10 +2,13 @@ export type { SourceCodes, Tag, Category, Template, TemplateListItem } from './t
 export type {
   SortingKey,
   SortingOption,
+  TemplateRequest,
   TemplateEditRequest,
   TemplateListResponse,
   TemplateUploadRequest,
   TemplateListRequest,
+  LikePostRequest,
+  LikeDeleteRequest,
   CategoryUploadRequest,
   CategoryEditRequest,
   CategoryDeleteRequest,

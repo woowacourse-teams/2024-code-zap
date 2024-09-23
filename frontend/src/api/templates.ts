@@ -1,6 +1,7 @@
 import { END_POINTS } from '@/routes';
 import type {
   Template,
+  TemplateRequest,
   TemplateEditRequest,
   TemplateListResponse,
   TemplateUploadRequest,
@@ -8,6 +9,7 @@ import type {
   CustomError,
 } from '@/types';
 import { SortingOption } from '@/types';
+
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -54,7 +56,7 @@ export const getTemplateList = async ({
     queryParams.append('tagIds', tagIds.toString());
   }
 
-  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
+  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
 
   const response = await customFetch<TemplateListResponse>({
     url,
@@ -71,14 +73,16 @@ export const getTemplateExplore = async ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
   size = PAGE_SIZE,
+  memberId,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
+    memberId: String(memberId),
     sort,
     page: page.toString(),
     size: size.toString(),
   });
 
-  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
+  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
 
   const response = await customFetch<TemplateListResponse>({
     url,
@@ -91,9 +95,9 @@ export const getTemplateExplore = async ({
   throw new Error(response.detail);
 };
 
-export const getTemplate = async (id: number) => {
+export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
   const response = await customFetch<Template>({
-    url: `${TEMPLATE_API_URL}/${id}`,
+    url: `${TEMPLATE_API_URL}/${id}${memberId ? '/login' : ''}`,
   });
 
   if ('sourceCodes' in response) {
