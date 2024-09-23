@@ -58,6 +58,20 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<FindAllTemplatesResponse> getTemplatesWithMember(
+            @AuthenticationPrinciple MemberDto memberDto,
+            @RequestParam(required = false) Long memberId,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<Long> tagIds,
+            @PageableDefault(size = 20, page = 1) Pageable pageable
+    ) {
+        FindAllTemplatesResponse response = memberTemplateApplicationService.getAllTemplatesByWithMember(
+                memberId, keyword, categoryId, tagIds, pageable, memberDto);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateResponse> getTemplateById(
             @PathVariable Long id

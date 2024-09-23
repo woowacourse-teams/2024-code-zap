@@ -40,6 +40,17 @@ public class MemberTemplateApplicationService {
         return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
     }
 
+    public FindAllTemplatesResponse getAllTemplatesByWithMember(Long memberId, String keyword, Long categoryId,
+            List<Long> tagIds, Pageable pageable, MemberDto loginMemberDto
+    ) {
+        Member loginMember = memberService.getById(loginMemberDto.id());
+        FindAllTemplatesResponse findAllTemplatesResponse = templateApplicationService.findAllByWithMember(memberId, keyword, categoryId, tagIds, pageable, loginMember);
+        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates().stream()
+                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(memberService.getByTemplateId(findAllTemplateItemResponse.id())))
+                .toList();
+        return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
+    }
+
     public FindTemplateResponse getTemplateById(Long id) {
         FindTemplateResponse findTemplateResponse = templateApplicationService.getById(id);
         return findTemplateResponse.updateMember(memberService.getByTemplateId(id));

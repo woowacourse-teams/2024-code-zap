@@ -1,6 +1,7 @@
 package codezap.template.service.facade;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -81,21 +82,33 @@ public class TemplateApplicationService {
             Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
     ) {
         Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        return makeTemplatesResponse(templates);
+        return makeTemplatesResponse(templates, (template) -> false);
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
+    public FindAllTemplatesResponse findAllByWithMember(Long memberId, String keyword, Long categoryId,
+            List<Long> tagIds, Pageable pageable, Member loginMember
+    ) {
+        Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
+        return makeTemplatesResponse(templates, (template -> likesService.isLike(template, loginMember)));
+    }
+
+    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page, LikePredicate likePredicate) {
         List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
                         likesService.getLikesCount(template),
-                        //todo 값 삽입 필요
-                        false)
+                        likePredicate.isLike(template))
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
+    }
+
+    @FunctionalInterface
+    private interface LikePredicate {
+
+        boolean isLike(Template template);
     }
 
     @Transactional
