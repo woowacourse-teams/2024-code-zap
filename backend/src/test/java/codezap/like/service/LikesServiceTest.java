@@ -71,7 +71,7 @@ class LikesServiceTest extends ServiceTest {
                     member,
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
-            likesService.like(MemberDto.from(member), template.getId());
+            likesRepository.save(template.like(member));
 
             likesService.cancelLike(MemberDto.from(member), template.getId());
 
