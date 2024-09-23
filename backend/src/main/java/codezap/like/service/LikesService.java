@@ -35,6 +35,10 @@ public class LikesService {
         return likesRepository.countByTemplate(template);
     }
 
+    public Boolean isLike(Template template, Member member) {
+        return likesRepository.existsByTemplateAndMember(template, member);
+    }
+
     @Transactional
     public void cancelLike(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);

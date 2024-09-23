@@ -14,6 +14,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.ServiceTest;
+import codezap.like.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.template.domain.Template;
@@ -124,6 +125,37 @@ class LikesServiceTest extends ServiceTest {
             ));
 
             assertThat(likesService.getLikesCount(template)).isEqualTo(0L);
+        }
+    }
+
+    @Nested
+    @DisplayName("좋아요 여부 조회 테스트")
+    class IsLikeTest {
+
+        @Test
+        @DisplayName("성공: 좋아요를 했을 때")
+        void successWithLike() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            likesRepository.save(template.like(member));
+
+            assertThat(likesService.isLike(template, member)).isTrue();
+        }
+
+        @Test
+        @DisplayName("성공: 좋아요를 하지 않았을 때")
+        void successWithNoLike() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Template template = templateRepository.save(TemplateFixture.get(
+                    member,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+
+            assertThat(likesService.isLike(template, member)).isFalse();
         }
     }
 }
