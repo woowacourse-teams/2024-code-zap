@@ -24,6 +24,7 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
+import codezap.like.repository.LikesRepository;
 import codezap.member.dto.MemberDto;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
@@ -58,6 +59,9 @@ class MemberTemplateApplicationServiceTest {
 
     @Autowired
     ThumbnailRepository thumbnailRepository;
+
+    @Autowired
+    LikesRepository likesRepository;
 
     @Nested
     class CreateTemplate {
@@ -134,22 +138,68 @@ class MemberTemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("ID로 템플릿 조회 (비회원)")
     class GetTemplateById {
 
         @Test
-        @DisplayName("ID로 템플릿 조회 성공")
+        @DisplayName("성공")
         void getTemplateById() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
             var actual = sut.getTemplateById(template.getId());
 
             // then
-            assertThat(actual.id()).isEqualTo(1L);
+            assertAll(
+
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isFalse()
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("ID로 템플릿 조회 (회원)")
+    class GetTemplateByIdWithMember {
+
+        @Test
+        @DisplayName("성공: 좋아요를 했을 때")
+        void getTemplateByIdWithMemberLikes() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            likesRepository.save(template.like(member));
+
+            // when
+            var actual = sut.getTemplateByIdWithMember(template.getId(), MemberDto.from(member));
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isTrue()
+            );
+        }
+
+        @Test
+        @DisplayName("성공: 좋아요를 하지 않았을 때")
+        void getTemplateByIdWithMemberNoLikes() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+
+            // when
+            var actual = sut.getTemplateByIdWithMember(template.getId(), MemberDto.from(member));
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isFalse()
+            );
         }
     }
 

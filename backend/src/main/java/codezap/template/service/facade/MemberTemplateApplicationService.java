@@ -45,6 +45,12 @@ public class MemberTemplateApplicationService {
         return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
     }
 
+    public FindTemplateResponse getTemplateByIdWithMember(Long id, MemberDto memberDto) {
+        Member member = memberService.getById(memberDto.id());
+        FindTemplateResponse findTemplateResponse = templateApplicationService.getByIdWithMember(id, member);
+        return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
+    }
+
     public void update(MemberDto memberDto, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Member member = memberService.getById(memberDto.id());
         categoryTemplateApplicationService.update(member, templateId, updateTemplateRequest);

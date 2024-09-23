@@ -65,6 +65,14 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(memberTemplateApplicationService.getTemplateById(id));
     }
 
+    @GetMapping("/{id}/login")
+    public ResponseEntity<FindTemplateResponse> getTemplateByIdWithMember(
+            @AuthenticationPrinciple MemberDto memberDto,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(memberTemplateApplicationService.getTemplateByIdWithMember(id, memberDto));
+    }
+
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
             @AuthenticationPrinciple MemberDto memberDto,

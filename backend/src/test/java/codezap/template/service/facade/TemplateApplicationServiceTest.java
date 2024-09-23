@@ -24,6 +24,7 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
+import codezap.like.repository.LikesRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -63,6 +64,8 @@ class TemplateApplicationServiceTest {
     TemplateTagRepository templateTagRepository;
     @Autowired
     ThumbnailRepository thumbnailRepository;
+    @Autowired
+    LikesRepository likesRepository;
 
     @Nested
     @DisplayName("템플릿 생성")
@@ -101,7 +104,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
-    @DisplayName("ID로 템플릿 조회")
+    @DisplayName("ID로 템플릿 조회 (비회원)")
     class GetById {
 
         @Test
@@ -116,7 +119,52 @@ class TemplateApplicationServiceTest {
             var actual = sut.getById(template.getId());
 
             // then
-            assertThat(actual.id()).isEqualTo(1L);
+            assertAll(
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isFalse()
+            );
+        }
+    }
+
+    @Nested
+    @DisplayName("ID로 템플릿 조회 (회원)")
+    class GetByIdWithMember {
+
+        @Test
+        @DisplayName("ID로 템플릿 조회 성공: 좋아요를 했을 때")
+        void getByIdWithMemberLikes() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            likesRepository.save(template.like(member));
+
+            // when
+            var actual = sut.getByIdWithMember(template.getId(), member);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isTrue()
+            );
+        }
+
+        @Test
+        @DisplayName("ID로 템플릿 조회 성공: 좋아요를 하지 않았을 때")
+        void getByIdWithMemberNoLikes() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+
+            // when
+            var actual = sut.getByIdWithMember(template.getId(), member);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isFalse()
+            );
         }
     }
 

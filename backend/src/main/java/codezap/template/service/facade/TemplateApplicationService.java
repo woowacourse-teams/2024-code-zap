@@ -56,8 +56,20 @@ public class TemplateApplicationService {
 
         return FindTemplateResponse.of(template, sourceCodes, tags,
                 likesService.getLikesCount(template),
-                false //todo 좋아요 여부 삽입 필요
+                false
                 );
+    }
+
+    public FindTemplateResponse getByIdWithMember(Long id, Member member) {
+        Template template = templateService.getById(id);
+        List<Tag> tags = templateTagService.getByTemplate(template);
+
+        List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
+
+        return FindTemplateResponse.of(template, sourceCodes, tags,
+                likesService.getLikesCount(template),
+                likesService.isLike(template, member)
+        );
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
