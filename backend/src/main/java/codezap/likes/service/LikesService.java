@@ -24,7 +24,7 @@ public class LikesService {
     public void like(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         Member member = memberRepository.fetchById(memberDto.id());
-        if (likesRepository.existsByTemplateAndMember(template, member)) {
+        if (isLike(template, member)) {
             return;
         }
         Likes likes = template.like(member);
