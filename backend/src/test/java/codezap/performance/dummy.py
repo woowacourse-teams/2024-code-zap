@@ -76,8 +76,8 @@ def create_members(session: sessionmaker, fake: Faker, count: int = 1) -> List[M
         if name not in used_names:
             members.append(Member(
                 name=name,
-                password=ttAE37vCKnPOYer5RFJOKGdA8OkHqFSGpnUYxMNduHk=,
-                salt=QQeYnrOdNc5SktHJfXWPFruGsiT+47WIykNQM2zwe9A=,
+                password='ttAE37vCKnPOYer5RFJOKGdA8OkHqFSGpnUYxMNduHk=',
+                salt='QQeYnrOdNc5SktHJfXWPFruGsiT+47WIykNQM2zwe9A=',
                 created_at=fake.date_time_this_year(),
                 modified_at=fake.date_time_this_month()
             ))
