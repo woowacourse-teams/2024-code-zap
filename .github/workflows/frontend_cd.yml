@@ -26,15 +26,12 @@ jobs:
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
             echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
-            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.production
           else
-            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_BETA_API_URL }}" > ${{ env.frontend-directory }}/.env.development
-            echo "REACT_APP_BASE_URL=${{ secrets.REACT_APP_BETA_BASE_URL }}" >> ${{ env.frontend-directory }}/.env.development
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_BETA_API_URL }}" > ${{ env.frontend-directory }}/.env.production
           fi
 
           echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.production
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
 
       - name: 환경 파일 권한 설정
         run: chmod 644 ${{ env.frontend-directory }}/.env.*
