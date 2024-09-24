@@ -7,7 +7,7 @@ import { Button, Flex, LikeWidget, TagButton, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
-import { formatWithK, getLanguageByFilename } from '@/utils';
+import { getLanguageByFilename } from '@/utils';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
 import * as S from './TemplateCard.style';
@@ -53,7 +53,7 @@ const TemplateCard = ({ template }: Props) => {
             </Flex>
           </Flex>
           <Flex align='center'>
-            <LikeWidget likeCount={formatWithK(template.likeCount)} isLiked={template.isLiked} />
+            <LikeWidget likeCount={template.likeCount} isLiked={template.isLiked} />
           </Flex>
         </Flex>
 
