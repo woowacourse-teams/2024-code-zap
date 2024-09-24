@@ -52,6 +52,7 @@ jobs:
           docker compose restart
   deploy_instance_b:
     needs: build
+    if: ${{ contains(github.ref, 'main') }}
     runs-on:
       - self-hosted
       - spring
