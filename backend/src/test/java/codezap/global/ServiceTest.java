@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.repository.CategoryRepository;
+import codezap.likes.repository.LikesRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
@@ -35,4 +36,7 @@ public class ServiceTest {
 
     @Autowired
     protected ThumbnailRepository thumbnailRepository;
+
+    @Autowired
+    protected LikesRepository likesRepository;
 }

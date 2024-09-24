@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
+import codezap.likes.service.LikedChecker;
+import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -32,6 +34,7 @@ public class TemplateApplicationService {
     private final TemplateService templateService;
     private final ThumbnailService thumbnailService;
     private final SourceCodeService sourceCodeService;
+    private final LikesService likesService;
 
     @Transactional
     public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
@@ -51,8 +54,17 @@ public class TemplateApplicationService {
         List<Tag> tags = templateTagService.getByTemplate(template);
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-        //todo 좋아요 값 삽입 필요
-        return FindTemplateResponse.of(template, sourceCodes, tags, 0L, false);
+
+        return FindTemplateResponse.of(template, sourceCodes, tags, false);
+    }
+
+    public FindTemplateResponse getByIdWithMember(Long id, Member member) {
+        Template template = templateService.getById(id);
+        List<Tag> tags = templateTagService.getByTemplate(template);
+
+        List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
+
+        return FindTemplateResponse.of(template, sourceCodes, tags, likesService.isLiked(member, template));
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
@@ -64,18 +76,23 @@ public class TemplateApplicationService {
             Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
     ) {
         Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        return makeTemplatesResponse(templates);
+        return makeTemplatesResponse(templates, (template) -> false);
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
+    public FindAllTemplatesResponse findAllByWithMember(
+            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable, Member loginMember
+    ) {
+        Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
+        return makeTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
+    }
+
+    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {
         List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
-                        //todo 값 삽입 필요
-                        0L,
-                        false)
+                        likedChecker.isLiked(template))
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);

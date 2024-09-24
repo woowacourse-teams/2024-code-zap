@@ -32,16 +32,42 @@ public class MemberTemplateApplicationService {
         return templateApplicationService.getAllTagsByMemberId(memberId);
     }
 
-    public FindAllTemplatesResponse getAllTemplatesBy(Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable) {
-        FindAllTemplatesResponse findAllTemplatesResponse = templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
-        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates().stream()
-                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(memberService.getByTemplateId(findAllTemplateItemResponse.id())))
+    public FindAllTemplatesResponse getAllTemplatesBy(
+            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
+    ) {
+        FindAllTemplatesResponse findAllTemplatesResponse = templateApplicationService.findAllBy(
+                memberId, keyword, categoryId, tagIds, pageable);
+        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates()
+                .stream()
+                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(
+                        memberService.getByTemplateId(findAllTemplateItemResponse.id())))
+                .toList();
+        return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
+    }
+
+    public FindAllTemplatesResponse getAllTemplatesByWithMember(
+            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable,
+            MemberDto loginMemberDto
+    ) {
+        Member loginMember = memberService.getById(loginMemberDto.id());
+        FindAllTemplatesResponse findAllTemplatesResponse = templateApplicationService.findAllByWithMember(
+                memberId, keyword, categoryId, tagIds, pageable, loginMember);
+        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates()
+                .stream()
+                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(
+                        memberService.getByTemplateId(findAllTemplateItemResponse.id())))
                 .toList();
         return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
     }
 
     public FindTemplateResponse getTemplateById(Long id) {
         FindTemplateResponse findTemplateResponse = templateApplicationService.getById(id);
+        return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
+    }
+
+    public FindTemplateResponse getTemplateByIdWithMember(Long id, MemberDto memberDto) {
+        Member member = memberService.getById(memberDto.id());
+        FindTemplateResponse findTemplateResponse = templateApplicationService.getByIdWithMember(id, member);
         return findTemplateResponse.updateMember(memberService.getByTemplateId(id));
     }
 

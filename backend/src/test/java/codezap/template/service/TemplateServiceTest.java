@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
@@ -24,6 +26,8 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
+import codezap.likes.domain.Likes;
+import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
@@ -55,6 +59,9 @@ class TemplateServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private LikesRepository likesRepository;
 
     @Autowired
     private TemplateService sut;
@@ -195,7 +202,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = null;
 
-            assertThatThrownBy(() ->sut.findAll(memberId, keyword, categoryId, tagIds, pageable))
+            assertThatThrownBy(() -> sut.findAll(memberId, keyword, categoryId, tagIds, pageable))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("Pageable을 필수로 작성해야 합니다.");
         }
@@ -398,7 +405,65 @@ class TemplateServiceTest {
             );
         }
 
+        @Nested
+        @DisplayName("정렬 기능 테스트")
+        class SortTest {
+
+            @Test
+            @DisplayName("좋아요 순 정렬 테스트")
+            void sortByLikesCount() {
+                saveMembers10();
+                Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+                saveTemplates5(category);
+                likeTemplate(3L, 10L);
+                likeTemplate(5L, 7L);
+                likeTemplate(2L, 5L);
+                likeTemplate(4L, 1L);
+                likeTemplate(1L, 0L);
+
+                List<Template> templates = sut.findAll(null, "", null, null,
+                                PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
+                        .getContent();
+
+                assertThat(templates).containsExactly(
+                        templateRepository.fetchById(3L),
+                        templateRepository.fetchById(5L),
+                        templateRepository.fetchById(2L),
+                        templateRepository.fetchById(4L),
+                        templateRepository.fetchById(1L)
+                );
+            }
+
+            private void saveMembers10() {
+                for (int i = 0; i < 10; i++) {
+                    memberRepository.save(new Member("name" + i, "password" + 1, "salt"));
+                }
+            }
+
+            private void saveTemplates5(Category category) {
+                for (int i = 0; i < 5; i++) {
+                    templateRepository.save(new Template(
+                            memberRepository.fetchById(1L),
+                            "title" + i,
+                            "description",
+                            category
+                    ));
+                }
+            }
+
+            private void likeTemplate(long templateId, long likesCount) {
+                for (long memberId = 1L; memberId <= likesCount; memberId++) {
+                    likesRepository.save(new Likes(
+                            null,
+                            templateRepository.fetchById(templateId),
+                            memberRepository.fetchById(memberId)
+                    ));
+                }
+            }
+        }
+
         private void saveInitialData() {
+
             saveTwoMembers();
             saveTwoCategory();
             saveTwoTags();

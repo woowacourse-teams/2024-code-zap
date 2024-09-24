@@ -24,7 +24,7 @@ public record FindAllTemplateItemResponse(
         @Schema(description = "썸네일")
         FindThumbnailResponse thumbnail,
         @Schema(description = "좋아요 수", example = "134")
-        Long likeCount,
+        Long likesCount,
         @Schema(description = "조회 멤버의 좋아요 여부", example = "true")
         Boolean isLiked,
         @Schema(description = "템플릿 생성 시간", example = "2024-11-10 12:00:00", type = "string")
@@ -33,7 +33,7 @@ public record FindAllTemplateItemResponse(
         LocalDateTime modifiedAt
 ) {
     public static FindAllTemplateItemResponse of(
-            Template template, List<Tag> templateTags, SourceCode thumbnailSourceCode, Long likeCount, Boolean isLiked
+            Template template, List<Tag> templateTags, SourceCode thumbnailSourceCode, Boolean isLiked
     ) {
         return new FindAllTemplateItemResponse(
                 template.getId(),
@@ -44,7 +44,7 @@ public record FindAllTemplateItemResponse(
                         .map(tag -> new FindTagResponse(tag.getId(), tag.getName()))
                         .toList(),
                 FindThumbnailResponse.from(thumbnailSourceCode),
-                likeCount,
+                template.getLikesCount(),
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()
@@ -59,7 +59,7 @@ public record FindAllTemplateItemResponse(
                 description,
                 tags,
                 thumbnail,
-                likeCount,
+                likesCount,
                 isLiked,
                 createdAt,
                 modifiedAt
