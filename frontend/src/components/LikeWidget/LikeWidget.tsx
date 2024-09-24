@@ -9,14 +9,14 @@ interface Props {
   likeCount: number;
   isLiked: boolean;
   clickable?: boolean;
-  onLikeButtonClick?: () => void;
+  onLikeWidgetClick?: () => void;
 }
 
-const LikeWidget = ({ likeCount, isLiked, clickable = false, onLikeButtonClick }: Props) => {
+const LikeWidget = ({ likeCount, isLiked, clickable = false, onLikeWidgetClick }: Props) => {
   console.log('temp');
 
   return (
-    <S.LikeButtonWidgetContainer isLiked={isLiked} clickable={clickable} onClick={onLikeButtonClick}>
+    <S.LikeButtonWidgetContainer isLiked={isLiked} clickable={clickable} onClick={onLikeWidgetClick}>
       <LikeIcon state={isLiked ? 'like' : clickable ? 'unlike' : 'unClickable'} size={14} />
       <Text.Small color={theme.color.light.secondary_800}>{formatWithK(likeCount)}</Text.Small>
     </S.LikeButtonWidgetContainer>
