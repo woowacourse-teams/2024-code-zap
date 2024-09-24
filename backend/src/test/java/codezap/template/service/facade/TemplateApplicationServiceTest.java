@@ -252,7 +252,8 @@ class TemplateApplicationServiceTest {
             saveDummyTemplates20();
 
             // when
-            List<FindAllTemplateItemResponse> searchedTemplates = sut.findAllBy(null, null, null, null, Pageable.ofSize(1))
+            List<FindAllTemplateItemResponse> searchedTemplates = sut.findAllBy(null, null, null, null,
+                            Pageable.ofSize(1))
                     .templates();
 
             //then
@@ -320,8 +321,7 @@ class TemplateApplicationServiceTest {
 
             // when
             List<FindAllTemplateItemResponse> templates =
-                    sut.findAllByWithMember(null, null, null, null,
-                                    Pageable.ofSize(1), loginMember)
+                    sut.findAllByWithMember(null, null, null, null, Pageable.ofSize(1), loginMember)
                             .templates();
             List<FindAllTemplateItemResponse> likesTemplate = templates.stream()
                     .filter((template) -> likeTemplatesIds.contains(template.id()))
