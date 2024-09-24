@@ -8,7 +8,7 @@ export const END_POINTS = {
   TEMPLATES_UPLOAD: '/templates/upload',
 
   // like
-  LIKES: 'like',
+  LIKES: '/like',
 
   // categories
   CATEGORIES: '/categories',
