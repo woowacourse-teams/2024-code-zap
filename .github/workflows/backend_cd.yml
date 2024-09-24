@@ -49,6 +49,7 @@ jobs:
         run: |
           cd ${{ secrets.SPRING_DIRECTORY }}
           mv code-zap*.jar ${{ secrets.JAR_NAME }}
+          cd ${{ secrets.COMPOSE_DIRECTORY }}
           docker compose restart
   deploy_instance_b:
     needs: build
@@ -66,4 +67,5 @@ jobs:
         run: |
           cd ${{ secrets.SPRING_DIRECTORY }}
           mv code-zap*.jar ${{ secrets.JAR_NAME }}
+          cd ${{ secrets.COMPOSE_DIRECTORY }}
           docker compose restart
