@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
+import codezap.likes.service.LikePredicate;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
@@ -95,12 +96,6 @@ public class TemplateApplicationService {
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
-    }
-
-    @FunctionalInterface
-    private interface LikePredicate {
-
-        boolean isLike(Template template);
     }
 
     @Transactional
