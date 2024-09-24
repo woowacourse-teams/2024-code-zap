@@ -17,5 +17,3 @@ export const LikeButtonWidgetContainer = styled.div<{ isLiked: boolean; clickabl
     ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : theme.color.light.secondary_800)};
   border-radius: 1rem;
 `;
-
-export const LikeCount = styled.span``;
