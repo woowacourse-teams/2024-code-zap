@@ -3,7 +3,7 @@ package codezap.likes.service;
 import codezap.template.domain.Template;
 
 @FunctionalInterface
-public interface LikePredicate {
+public interface LikeChecker {
 
     boolean isLike(Template template);
 }
