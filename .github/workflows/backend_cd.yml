@@ -4,39 +4,67 @@ on:
   push:
     branches:
       - main
-      - dev/be
+      - develop
 
 jobs:
   build:
     runs-on:
-      - self-hosted
-      - spring
-      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
+      - ubuntu-latest
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
+
+      - name: JDK 설치
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
 
       - name: gradle 캐싱
         uses: gradle/actions/setup-gradle@v4
 
       - name: bootJar로 jar 파일 생성
-        run: |
-          ./gradlew bootJar
-          mv build/libs/*.jar ${{ secrets.JAR_DIRECTORY }}
-        working-directory: ./backend
+        run: ./gradlew bootJar
+        working-directory: backend
 
-      - name: 클린업
-        if: always()
-        run: rm -rf ../2024-code-zap/*
+      - name: Artifact 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-zap-jar
+          path: backend/build/libs/*.jar
 
-  deploy:
+  deploy_instance_a:
     needs: build
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'production' || 'develop' }}
+      - ${{ contains(github.ref, 'main') && 'prod_a' || 'develop' }}
     steps:
+      - name: Artifact 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: code-zap-jar
+          path: ${{ secrets.SPRING_DIRECTORY }}
       - name: 배포 스크립트 실행
         run: |
-          cd ${{ secrets.ZAP_DIRECTORY }}
+          cd ${{ secrets.SPRING_DIRECTORY }}
+          ls -l
+          mv code-zap*.jar ${{ secrets.JAR_NAME }}
+          docker compose restart
+  deploy_instance_b:
+    needs: build
+    runs-on:
+      - self-hosted
+      - spring
+      - ${{ contains(github.ref, 'main') && 'prod_b' || 'develop' }}
+    steps:
+      - name: Artifact 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: code-zap-jar
+          path: ${{ secrets.SPRING_DIRECTORY }}
+      - name: 배포 스크립트 실행
+        run: |
+          cd ${{ secrets.SPRING_DIRECTORY }}
+          mv code-zap*.jar ${{ secrets.JAR_NAME }}
           docker compose restart
