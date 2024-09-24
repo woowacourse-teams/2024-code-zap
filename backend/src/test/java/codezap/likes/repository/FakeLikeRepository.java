@@ -11,7 +11,7 @@ public class FakeLikeRepository implements LikesRepository {
     }
 
     @Override
-    public boolean existsByTemplateAndMember(Template template, Member member) {
+    public boolean existsByMemberAndTemplate(Member member, Template template) {
         return false;
     }
 
@@ -21,7 +21,7 @@ public class FakeLikeRepository implements LikesRepository {
     }
 
     @Override
-    public void deleteByTemplateAndMember(Template template, Member member) {
+    public void deleteByMemberAndTemplate(Member member, Template template) {
 
     }
 }

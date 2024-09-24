@@ -41,7 +41,7 @@ class LikesServiceTest extends ServiceTest {
 
             likesService.like(MemberDto.from(member), template.getId());
 
-            assertThat(likesRepository.existsByTemplateAndMember(template, member)).isTrue();
+            assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isTrue();
         }
 
         @Test
@@ -76,7 +76,7 @@ class LikesServiceTest extends ServiceTest {
 
             likesService.cancelLike(MemberDto.from(member), template.getId());
 
-            assertThat(likesRepository.existsByTemplateAndMember(template, member)).isFalse();
+            assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isFalse();
         }
 
         @Test
@@ -110,7 +110,7 @@ class LikesServiceTest extends ServiceTest {
 
             likesRepository.save(new Likes(null, template, member));
 
-            assertThat(likesService.isLiked(template, member)).isTrue();
+            assertThat(likesService.isLiked(member, template)).isTrue();
         }
 
         @Test
@@ -122,7 +122,7 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            assertThat(likesService.isLiked(template, member)).isFalse();
+            assertThat(likesService.isLiked(member, template)).isFalse();
         }
     }
 }

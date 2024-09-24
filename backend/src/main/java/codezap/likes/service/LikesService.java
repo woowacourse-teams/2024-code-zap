@@ -24,21 +24,21 @@ public class LikesService {
     public void like(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         Member member = memberRepository.fetchById(memberDto.id());
-        if (isLiked(template, member)) {
+        if (isLiked(member, template)) {
             return;
         }
         Likes likes = new Likes(null, template, member);
         likesRepository.save(likes);
     }
 
-    public Boolean isLiked(Template template, Member member) {
-        return likesRepository.existsByTemplateAndMember(template, member);
+    public Boolean isLiked(Member member, Template template) {
+        return likesRepository.existsByMemberAndTemplate(member, template);
     }
 
     @Transactional
     public void cancelLike(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         Member member = memberRepository.fetchById(memberDto.id());
-        likesRepository.deleteByTemplateAndMember(template, member);
+        likesRepository.deleteByMemberAndTemplate(member, template);
     }
 }

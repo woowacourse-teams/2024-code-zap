@@ -7,9 +7,9 @@ import codezap.template.domain.Template;
 public interface LikesRepository {
     Likes save(Likes likes);
 
-    boolean existsByTemplateAndMember(Template template, Member member);
+    boolean existsByMemberAndTemplate(Member member, Template template);
 
     long countByTemplate(Template template);
 
-    void deleteByTemplateAndMember(Template template, Member member);
+    void deleteByMemberAndTemplate(Member member, Template template);
 }

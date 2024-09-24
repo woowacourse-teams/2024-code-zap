@@ -54,7 +54,7 @@ class LikesJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("템플릿과 멤버 정보로 좋아요 조회 테스트")
+    @DisplayName("멤버와 템플릿 정보로 좋아요 조회 테스트")
     class FindByTemplateAndMemberTest {
 
         @Test
@@ -67,7 +67,7 @@ class LikesJpaRepositoryTest {
             ));
             likesRepository.save(new Likes(null, template, member));
 
-            assertThat(likesRepository.existsByTemplateAndMember(template, member))
+            assertThat(likesRepository.existsByMemberAndTemplate(member, template))
                     .isTrue();
         }
 
@@ -80,13 +80,13 @@ class LikesJpaRepositoryTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            assertThat(likesRepository.existsByTemplateAndMember(template, member))
+            assertThat(likesRepository.existsByMemberAndTemplate(member, template))
                     .isFalse();
         }
     }
 
     @Nested
-    @DisplayName("템플릿과 멤버로 좋아요 삭제 테스트")
+    @DisplayName("멤버와 템플릿으로 좋아요 삭제 테스트")
     class DeleteByTemplateAndMember {
 
         @Test
@@ -99,9 +99,9 @@ class LikesJpaRepositoryTest {
             ));
             likesRepository.save(new Likes(null, template, member));
 
-            likesRepository.deleteByTemplateAndMember(template, member);
+            likesRepository.deleteByMemberAndTemplate(member, template);
 
-            assertThat(likesRepository.existsByTemplateAndMember(template, member)).isFalse();
+            assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isFalse();
         }
 
         @Test
@@ -113,7 +113,7 @@ class LikesJpaRepositoryTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            assertThatCode(() -> likesRepository.deleteByTemplateAndMember(template, member))
+            assertThatCode(() -> likesRepository.deleteByMemberAndTemplate(member, template))
                     .doesNotThrowAnyException();
         }
     }
