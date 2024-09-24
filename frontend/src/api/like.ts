@@ -10,26 +10,26 @@ const API_URL = process.env.REACT_APP_API_URL;
 
 export const LIKE_API_URL = `${API_URL}${END_POINTS.LIKES}`;
 
-export const postLike = async ({ templateId }: LikePostRequest): Promise<void | CustomError> => {
+export const postLike = async ({ templateId }: LikePostRequest) => {
   const response = await customFetch<HttpResponse>({
     method: 'POST',
     url: `${LIKE_API_URL}/${templateId}`,
   });
 
-  if (typeof response === 'object' && response !== null && 'status' in response) {
+  if (response.status >= 400) {
     throw response as CustomError;
   }
 
   return response;
 };
 
-export const deleteLike = async ({ templateId }: LikeDeleteRequest): Promise<void | CustomError> => {
+export const deleteLike = async ({ templateId }: LikeDeleteRequest) => {
   const response = await customFetch<HttpResponse>({
     method: 'DELETE',
     url: `${LIKE_API_URL}/${templateId}`,
   });
 
-  if (typeof response === 'object' && response !== null && 'status' in response) {
+  if (response.status >= 400) {
     throw response as CustomError;
   }
 
