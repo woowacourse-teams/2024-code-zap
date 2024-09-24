@@ -42,11 +42,14 @@ export const getTemplateList = async ({
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
     keyword,
-    memberId: String(memberId),
     sort,
     page: page.toString(),
     size: size.toString(),
   });
+
+  if (memberId) {
+    queryParams.append('memberId', memberId.toString());
+  }
 
   if (categoryId) {
     queryParams.append('categoryId', categoryId.toString());
@@ -76,7 +79,6 @@ export const getTemplateExplore = async ({
   memberId,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
-    memberId: String(memberId),
     sort,
     page: page.toString(),
     size: size.toString(),
