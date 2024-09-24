@@ -63,7 +63,7 @@ public class TemplateApplicationService {
 
         List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
 
-        return FindTemplateResponse.of(template, sourceCodes, tags, likesService.isLike(template, member));
+        return FindTemplateResponse.of(template, sourceCodes, tags, likesService.isLiked(template, member));
     }
 
     public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
@@ -82,7 +82,7 @@ public class TemplateApplicationService {
             List<Long> tagIds, Pageable pageable, Member loginMember
     ) {
         Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        return makeTemplatesResponse(templates, (template -> likesService.isLike(template, loginMember)));
+        return makeTemplatesResponse(templates, (template -> likesService.isLiked(template, loginMember)));
     }
 
     private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page, LikePredicate likePredicate) {

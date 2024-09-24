@@ -110,7 +110,7 @@ class LikesServiceTest extends ServiceTest {
 
             likesRepository.save(new Likes(null, template, member));
 
-            assertThat(likesService.isLike(template, member)).isTrue();
+            assertThat(likesService.isLiked(template, member)).isTrue();
         }
 
         @Test
@@ -122,7 +122,7 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            assertThat(likesService.isLike(template, member)).isFalse();
+            assertThat(likesService.isLiked(template, member)).isFalse();
         }
     }
 }

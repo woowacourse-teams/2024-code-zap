@@ -24,14 +24,14 @@ public class LikesService {
     public void like(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         Member member = memberRepository.fetchById(memberDto.id());
-        if (isLike(template, member)) {
+        if (isLiked(template, member)) {
             return;
         }
         Likes likes = new Likes(null, template, member);
         likesRepository.save(likes);
     }
 
-    public Boolean isLike(Template template, Member member) {
+    public Boolean isLiked(Template template, Member member) {
         return likesRepository.existsByTemplateAndMember(template, member);
     }
 
