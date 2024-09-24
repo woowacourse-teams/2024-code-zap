@@ -79,8 +79,8 @@ public class TemplateApplicationService {
         return makeTemplatesResponse(templates, (template) -> false);
     }
 
-    public FindAllTemplatesResponse findAllByWithMember(Long memberId, String keyword, Long categoryId,
-            List<Long> tagIds, Pageable pageable, Member loginMember
+    public FindAllTemplatesResponse findAllByWithMember(
+            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable, Member loginMember
     ) {
         Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
         return makeTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
