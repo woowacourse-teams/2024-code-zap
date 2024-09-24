@@ -5,7 +5,7 @@ import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
 
 import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Flex, Heading, Modal, SelectList, TagButton, Text } from '@/components';
+import { Button, Flex, Heading, LikeWidget, Modal, SelectList, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -14,6 +14,7 @@ import type { SourceCodes } from '@/types';
 import { formatRelativeTime, getLanguageByFilename } from '@/utils';
 
 import { useTemplate } from './hooks';
+import { useLike } from './hooks/useLike';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
@@ -43,6 +44,12 @@ const TemplatePage = () => {
     isOpenList,
     handleIsOpenList,
   } = useTemplate(Number(id));
+
+  const { likeCount, isLiked, toggleLike, isProcessing } = useLike({
+    templateId: Number(id),
+    initialLikeCount: template?.likeCount || 0,
+    initialIsLiked: template?.isLiked || false,
+  });
 
   if (!template) {
     return <div>템플릿을 불러오는 중...</div>;
@@ -87,9 +94,18 @@ const TemplatePage = () => {
                   )}
                 </Flex>
 
-                <Heading.Medium color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
-                  {template.title}
-                </Heading.Medium>
+                <Flex align='center' justify='space-between' gap='1rem'>
+                  <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
+                    {template.title}
+                  </Heading.Large>
+                  <LikeWidget
+                    likeCount={likeCount}
+                    isLiked={isLiked}
+                    clickable
+                    onLikeWidgetClick={!isProcessing ? toggleLike : () => {}}
+                  />
+                </Flex>
+
                 <Flex gap='0.5rem' align='center'>
                   <Flex align='center' gap='0.125rem'>
                     <PersonIcon width={14} />
