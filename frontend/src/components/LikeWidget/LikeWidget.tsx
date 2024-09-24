@@ -1,7 +1,8 @@
-import LikeIcon from '../../assets/images/like';
-import { theme } from '../../style/theme';
-import { formatWithK } from '../../utils/formatWithK';
-import Text from '../Text/Text';
+import { LikeIcon } from '@/assets/images';
+import { Text } from '@/components';
+import { theme } from '@/style/theme';
+import { formatWithK } from '@/utils';
+
 import * as S from './LikeWidget.style';
 
 interface Props {
@@ -11,11 +12,11 @@ interface Props {
   onLikeButtonClick?: () => void;
 }
 
-const LikeWidget = ({ likeCount, isLiked, clickable, onLikeButtonClick }: Props) => {
+const LikeWidget = ({ likeCount, isLiked, clickable = false, onLikeButtonClick }: Props) => {
   console.log('temp');
 
   return (
-    <S.LikeButtonWidgetContainer isLiked={isLiked} onClick={onLikeButtonClick}>
+    <S.LikeButtonWidgetContainer isLiked={isLiked} clickable={clickable} onClick={onLikeButtonClick}>
       <LikeIcon state={isLiked ? 'like' : clickable ? 'unlike' : 'unClickable'} size={14} />
       <Text.Small color={theme.color.light.secondary_800}>{formatWithK(likeCount)}</Text.Small>
     </S.LikeButtonWidgetContainer>

@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 
 import { theme } from '../../style/theme';
 
-export const LikeButtonWidgetContainer = styled.div<{ isLiked: boolean }>`
+export const LikeButtonWidgetContainer = styled.div<{ isLiked: boolean; clickable: boolean }>`
+  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
+
   display: flex;
   align-items: center;
   justify-content: space-between;
