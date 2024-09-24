@@ -208,12 +208,12 @@ const likeHandlers = [
     }
 
     template.isLiked = true;
-    template.likeCount += 1;
+    template.likesCount += 1;
 
     return HttpResponse.json({
       status: 200,
       message: 'Liked successfully',
-      likeCount: template.likeCount,
+      likesCount: template.likesCount,
       isLiked: template.isLiked,
     });
   }),
@@ -231,12 +231,12 @@ const likeHandlers = [
     }
 
     template.isLiked = false;
-    template.likeCount -= 1;
+    template.likesCount -= 1;
 
     return HttpResponse.json({
       status: 200,
       message: 'Disliked successfully',
-      likeCount: template.likeCount,
+      likesCount: template.likesCount,
       isLiked: template.isLiked,
     });
   }),

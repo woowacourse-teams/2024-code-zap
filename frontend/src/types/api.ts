@@ -69,6 +69,6 @@ export interface TemplateRequest {
   memberId?: number | undefined;
 }
 
-export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc' | 'likeCount,desc';
+export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc' | 'likesCount,desc';
 
 export type SortingOption = { key: SortingKey; value: string };

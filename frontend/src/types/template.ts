@@ -27,7 +27,7 @@ export interface Template {
   sourceCodes: SourceCodes[];
   category: Category;
   tags: Tag[];
-  likeCount: number;
+  likesCount: number;
   isLiked: boolean;
   createdAt: string;
   modifiedAt: string;
@@ -43,7 +43,7 @@ export interface TemplateListItem {
   description: string;
   thumbnail: Thumbnail;
   tags: Tag[];
-  likeCount: number;
+  likesCount: number;
   isLiked: boolean;
   createdAt: string;
   modifiedAt: string;

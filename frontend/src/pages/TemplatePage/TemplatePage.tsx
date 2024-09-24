@@ -45,9 +45,9 @@ const TemplatePage = () => {
     handleIsOpenList,
   } = useTemplate(Number(id));
 
-  const { likeCount, isLiked, toggleLike, isProcessing } = useLike({
+  const { likesCount, isLiked, toggleLike, isProcessing } = useLike({
     templateId: Number(id),
-    initialLikeCount: template?.likeCount || 0,
+    initialLikesCount: template?.likesCount || 0,
     initialIsLiked: template?.isLiked || false,
   });
 
@@ -99,7 +99,7 @@ const TemplatePage = () => {
                     {template.title}
                   </Heading.Large>
                   <LikeWidget
-                    likeCount={likeCount}
+                    likesCount={likesCount}
                     isLiked={isLiked}
                     clickable
                     onLikeWidgetClick={!isProcessing ? toggleLike : () => {}}

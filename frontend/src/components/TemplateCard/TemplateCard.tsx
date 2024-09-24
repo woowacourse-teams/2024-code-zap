@@ -53,7 +53,7 @@ const TemplateCard = ({ template }: Props) => {
             </Flex>
           </Flex>
           <Flex align='center'>
-            <LikeWidget likeCount={template.likeCount} isLiked={template.isLiked} />
+            <LikeWidget likesCount={template.likesCount} isLiked={template.isLiked} />
           </Flex>
         </Flex>
 

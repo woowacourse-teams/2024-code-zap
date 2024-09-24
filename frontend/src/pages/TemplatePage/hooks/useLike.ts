@@ -4,12 +4,12 @@ import { useDislikeMutation, useLikeMutation } from '@/queries/likes';
 
 interface UseLikeProps {
   templateId: number;
-  initialLikeCount: number;
+  initialLikesCount: number;
   initialIsLiked: boolean;
 }
 
-export const useLike = ({ templateId, initialLikeCount, initialIsLiked }: UseLikeProps) => {
-  const [likeCount, setLikeCount] = useState(initialLikeCount);
+export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLikeProps) => {
+  const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -17,9 +17,9 @@ export const useLike = ({ templateId, initialLikeCount, initialIsLiked }: UseLik
   const { mutateAsync: dislikeTemplate } = useDislikeMutation();
 
   useEffect(() => {
-    setLikeCount(initialLikeCount);
+    setLikesCount(initialLikesCount);
     setIsLiked(initialIsLiked);
-  }, [initialLikeCount, initialIsLiked]);
+  }, [initialLikesCount, initialIsLiked]);
 
   const toggleLike = async () => {
     if (isProcessing) {
@@ -31,15 +31,15 @@ export const useLike = ({ templateId, initialLikeCount, initialIsLiked }: UseLik
     try {
       if (!isLiked) {
         setIsLiked(true);
-        setLikeCount((prev) => prev + 1);
+        setLikesCount((prev) => prev + 1);
         await likeTemplate(templateId);
       } else {
         setIsLiked(false);
-        setLikeCount((prev) => prev - 1);
+        setLikesCount((prev) => prev - 1);
         await dislikeTemplate(templateId);
       }
     } catch (error) {
-      setLikeCount((prev) => prev + (isLiked ? -1 : 1));
+      setLikesCount((prev) => prev + (isLiked ? -1 : 1));
       setIsLiked(initialIsLiked);
     } finally {
       setIsProcessing(false);
@@ -47,7 +47,7 @@ export const useLike = ({ templateId, initialLikeCount, initialIsLiked }: UseLik
   };
 
   return {
-    likeCount,
+    likesCount,
     isLiked,
     toggleLike,
     isProcessing,
