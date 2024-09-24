@@ -48,7 +48,6 @@ jobs:
       - name: 배포 스크립트 실행
         run: |
           cd ${{ secrets.SPRING_DIRECTORY }}
-          ls -l
           mv code-zap*.jar ${{ secrets.JAR_NAME }}
           docker compose restart
   deploy_instance_b:
