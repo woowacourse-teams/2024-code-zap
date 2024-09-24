@@ -41,7 +41,7 @@ const TemplateCard = ({ template }: Props) => {
           <Flex align='center' gap='0.125rem'>
             <PersonIcon width={14} />
             <Text.Small color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}>
-              {member?.name || ''}
+              {member.name}
             </Text.Small>
           </Flex>
 

@@ -47,7 +47,7 @@ export interface TemplateListItem {
   isLiked: boolean;
   createdAt: string;
   modifiedAt: string;
-  member?: {
+  member: {
     id: number;
     name: string;
   };

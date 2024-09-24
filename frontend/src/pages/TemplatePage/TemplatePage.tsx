@@ -96,7 +96,7 @@ const TemplatePage = () => {
                     <Text.Small
                       color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
                     >
-                      {template?.member?.name || ''}
+                      {template.member.name}
                     </Text.Small>
                   </Flex>
                   <Flex align='center' gap='0.125rem'>
