@@ -33,12 +33,13 @@ jobs:
           name: code-zap-jar
           path: backend/build/libs/*.jar
 
-  deploy_instance_a:
+  deploy_develop:
     needs: build
+    if: ${{ github.ref == 'refs/heads/dev/be' }}
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'prod_a' || 'develop' }}
+      - develop
     steps:
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
@@ -50,13 +51,17 @@ jobs:
           cd ${{ secrets.SPRING_DIRECTORY }}
           mv code-zap*.jar ${{ secrets.JAR_NAME }}
           docker compose restart
-  deploy_instance_b:
+
+  deploy_production:
     needs: build
-    if: ${{ contains(github.ref, 'main') }}
+    if: ${{ github.ref == 'refs/heads/main' }}
+    strategy:
+      matrix:
+        environment: [prod_a, prod_b]
     runs-on:
       - self-hosted
       - spring
-      - prod_b
+      - ${{ matrix.environment }}
     steps:
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
