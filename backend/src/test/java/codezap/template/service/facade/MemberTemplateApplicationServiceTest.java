@@ -155,7 +155,6 @@ class MemberTemplateApplicationServiceTest {
 
             // then
             assertAll(
-
                     () -> assertThat(actual.id()).isEqualTo(1L),
                     () -> assertThat(actual.isLiked()).isFalse()
             );
