@@ -3,7 +3,7 @@ package codezap.likes.service;
 import codezap.template.domain.Template;
 
 @FunctionalInterface
-public interface LikeChecker {
+public interface LikedChecker {
 
-    boolean isLike(Template template);
+    boolean isLiked(Template template);
 }

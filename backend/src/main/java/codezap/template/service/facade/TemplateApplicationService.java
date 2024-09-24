@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.likes.service.LikeChecker;
+import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
@@ -86,13 +86,13 @@ public class TemplateApplicationService {
         return makeTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page, LikeChecker likeChecker) {
+    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {
         List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         templateTagService.getByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
-                        likeChecker.isLike(template))
+                        likedChecker.isLiked(template))
                 )
                 .toList();
         return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
