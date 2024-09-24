@@ -14,7 +14,7 @@ const LikeIcon = ({ state, size }: Props) => {
 
   const strokeColor = {
     like: '#FF5936',
-    unlike: 'white',
+    unlike: '#393E46',
     unClickable: '#393E46',
   }[state];
 
