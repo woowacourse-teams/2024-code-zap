@@ -27,7 +27,7 @@ class LikesServiceTest extends ServiceTest {
     private LikesService likesService;
 
     @Nested
-    @DisplayName("좋아요 기능 테스트")
+    @DisplayName("좋아요")
     class LikesTest {
 
         @Test
@@ -61,7 +61,7 @@ class LikesServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("좋아요 취소 기능 테스트")
+    @DisplayName("좋아요 취소")
     class CancelLikesTest {
 
         @Test
@@ -96,7 +96,7 @@ class LikesServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("좋아요 여부 조회 테스트")
+    @DisplayName("좋아요 여부 조회")
     class IsLikeTest {
 
         @Test
