@@ -56,7 +56,7 @@ jobs:
     runs-on:
       - self-hosted
       - spring
-      - ${{ contains(github.ref, 'main') && 'prod_b' || 'develop' }}
+      - prod_b
     steps:
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
