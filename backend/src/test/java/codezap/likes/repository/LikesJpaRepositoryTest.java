@@ -97,7 +97,7 @@ class LikesJpaRepositoryTest {
                     member,
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
-            likesRepository.save(template.like(member));
+            likesRepository.save(new Likes(null, template, member));
 
             likesRepository.deleteByTemplateAndMember(template, member);
 
@@ -132,8 +132,8 @@ class LikesJpaRepositoryTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            likesRepository.save(template.like(member1));
-            likesRepository.save(template.like(member2));
+            likesRepository.save(new Likes(null, template, member1));
+            likesRepository.save(new Likes(null, template, member2));
 
             assertThat(likesRepository.countByTemplate(template)).isEqualTo(2);
         }

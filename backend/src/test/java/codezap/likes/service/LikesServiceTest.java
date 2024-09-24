@@ -14,6 +14,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.ServiceTest;
+import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.member.dto.MemberDto;
 import codezap.template.domain.Template;
@@ -71,7 +72,7 @@ class LikesServiceTest extends ServiceTest {
                     member,
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
-            likesRepository.save(template.like(member));
+            likesRepository.save(new Likes(null, template, member));
 
             likesService.cancelLike(MemberDto.from(member), template.getId());
 
@@ -107,7 +108,7 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            likesRepository.save(template.like(member));
+            likesRepository.save(new Likes(null, template, member));
 
             assertThat(likesService.isLike(template, member)).isTrue();
         }

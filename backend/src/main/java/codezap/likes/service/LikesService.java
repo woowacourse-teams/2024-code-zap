@@ -27,7 +27,7 @@ public class LikesService {
         if (isLike(template, member)) {
             return;
         }
-        Likes likes = template.like(member);
+        Likes likes = new Likes(null, template, member);
         likesRepository.save(likes);
     }
 

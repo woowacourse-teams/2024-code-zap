@@ -24,6 +24,7 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
+import codezap.likes.domain.Likes;
 import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
@@ -139,7 +140,7 @@ class TemplateApplicationServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
-            likesRepository.save(template.like(member));
+            likesRepository.save(new Likes(null, template, member));
 
             // when
             var actual = sut.getByIdWithMember(template.getId(), member);
@@ -316,7 +317,7 @@ class TemplateApplicationServiceTest {
             saveDummyTemplates20();
             List<Long> likeTemplatesIds = List.of(1L, 5L, 7L, 9L, 13L);
             for (long likeTemplateId : likeTemplatesIds) {
-                likesRepository.save(templateRepository.fetchById(likeTemplateId).like(loginMember));
+                likesRepository.save(new Likes(null, templateRepository.fetchById(likeTemplateId), loginMember));
             }
 
             // when
