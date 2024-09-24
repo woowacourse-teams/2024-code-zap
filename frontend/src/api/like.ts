@@ -1,7 +1,6 @@
 import { HttpResponse } from 'msw';
 
 import { END_POINTS } from '@/routes';
-import type { CustomError } from '@/types';
 import { LikeDeleteRequest, LikePostRequest } from '@/types';
 
 import { customFetch } from './customFetch';
@@ -16,10 +15,6 @@ export const postLike = async ({ templateId }: LikePostRequest) => {
     url: `${LIKE_API_URL}/${templateId}`,
   });
 
-  if (response.status >= 400) {
-    throw response as CustomError;
-  }
-
   return response;
 };
 
@@ -28,10 +23,6 @@ export const deleteLike = async ({ templateId }: LikeDeleteRequest) => {
     method: 'DELETE',
     url: `${LIKE_API_URL}/${templateId}`,
   });
-
-  if (response.status >= 400) {
-    throw response as CustomError;
-  }
 
   return response;
 };
