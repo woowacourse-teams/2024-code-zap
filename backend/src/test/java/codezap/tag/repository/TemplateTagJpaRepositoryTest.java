@@ -51,8 +51,8 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("Template 을 이용한 TemplateTag 목록 조회 성공")
-    void findAllByTemplateTest() {
+    @DisplayName("Template 을 이용한 Tag 목록 조회 성공")
+    void findAllTagsByTemplateTest() {
         //given
         Template template = templateRepository.save(createNthTemplate(member, category, 1));
 
@@ -60,15 +60,15 @@ class TemplateTagJpaRepositoryTest {
         Tag tag2 = tagRepository.save(new Tag("tag2"));
         Tag tag3 = tagRepository.save(new Tag("tag3"));
 
-        TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
-        TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
+        templateTagRepository.save(new TemplateTag(template, tag1));
+        templateTagRepository.save(new TemplateTag(template, tag2));
 
         //when
-        List<TemplateTag> templateTags = templateTagRepository.findAllByTemplate(template);
+        List<Tag> tags = templateTagRepository.findAllTagsByTemplate(template);
 
         //then
-        assertThat(templateTags).containsExactly(templateTag1, templateTag2)
-                .doesNotContain(new TemplateTag(template, tag3));
+        assertThat(tags).containsExactly(tag1, tag2)
+                .doesNotContain(tag3);
     }
 
     @Nested

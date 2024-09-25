@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import codezap.tag.domain.Tag;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
@@ -20,6 +21,14 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     public List<TemplateTag> findAllByTemplate(Template template) {
         return templateTags.stream()
                 .filter(templateTag -> Objects.equals(templateTag.getTemplate(), template))
+                .toList();
+    }
+
+    @Override
+    public List<Tag> findAllTagsByTemplate(Template template) {
+        return templateTags.stream()
+                .filter(templateTag -> Objects.equals(templateTag.getTemplate(), template))
+                .map(TemplateTag::getTag)
                 .toList();
     }
 
