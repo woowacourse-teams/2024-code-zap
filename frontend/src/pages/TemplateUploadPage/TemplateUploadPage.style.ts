@@ -1,9 +1,15 @@
 import styled from '@emotion/styled';
 
-import { Button } from '@/components';
 import { theme } from '@/style/theme';
 
 export const TemplateEditContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+`;
+
+export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -16,11 +22,13 @@ export const TemplateEditContainer = styled.div`
   margin-top: 3rem;
 `;
 
-export const DeleteButton = styled(Button)`
-  position: absolute;
-  top: 0.3rem;
-  right: 0.4rem;
-  height: 2.4rem;
+export const ButtonGroup = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+
+  width: 100%;
+  padding: 0.5rem 0 0 0;
 `;
 
 export const UnderlineInputWrapper = styled.div`
