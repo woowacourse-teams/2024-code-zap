@@ -26,6 +26,6 @@ public class LikesController implements SpringDocsLikesController {
     @DeleteMapping("like/{templateId}")
     public ResponseEntity<Void> cancelLike(@AuthenticationPrinciple MemberDto memberDto, @PathVariable long templateId) {
         likesService.cancelLike(memberDto, templateId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
