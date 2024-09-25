@@ -3,7 +3,7 @@ import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 
 import { ClockIcon, PersonIcon } from '@/assets/images';
-import { Button, Flex, LikeWidget, TagButton, Text } from '@/components';
+import { Button, Flex, LikeCounter, TagButton, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
@@ -53,7 +53,7 @@ const TemplateCard = ({ template }: Props) => {
             </Flex>
           </Flex>
           <Flex align='center'>
-            <LikeWidget likesCount={template.likesCount} isLiked={template.isLiked} />
+            <LikeCounter likesCount={template.likesCount} isLiked={template.isLiked} />
           </Flex>
         </Flex>
 

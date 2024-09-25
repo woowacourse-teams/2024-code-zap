@@ -5,7 +5,7 @@ import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
 
 import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Flex, Heading, LikeWidget, Modal, SelectList, TagButton, Text } from '@/components';
+import { Button, Flex, Heading, LikeButton, Modal, SelectList, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -98,11 +98,10 @@ const TemplatePage = () => {
                   <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                     {template.title}
                   </Heading.Large>
-                  <LikeWidget
+                  <LikeButton
                     likesCount={likesCount}
                     isLiked={isLiked}
-                    clickable
-                    onLikeWidgetClick={!isProcessing ? toggleLike : () => {}}
+                    onLikeButtonClick={!isProcessing ? toggleLike : () => {}}
                   />
                 </Flex>
 
