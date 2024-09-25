@@ -5,6 +5,8 @@ export { default as Header } from './Header/Header';
 export { default as Heading } from './Heading/Heading';
 export { default as Input } from './Input/Input';
 export { default as Layout } from './Layout/Layout';
+export { default as LikeButton } from './LikeButton/LikeButton';
+export { default as LikeCounter } from './LikeCounter/LikeCounter';
 export { default as Modal } from './Modal/Modal';
 export { default as PagingButtons } from './PagingButtons/PagingButtons';
 export { default as SelectList } from './SelectList/SelectList';

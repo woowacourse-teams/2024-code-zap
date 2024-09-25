@@ -8,9 +8,11 @@ import {
   LOGIN_STATE_API_URL,
   LOGOUT_API_URL,
   SIGNUP_API_URL,
+  TAG_API_URL,
+  LIKE_API_URL,
 } from '@/api';
 import { Category } from '@/types';
-import { TAG_API_URL } from '../api/tags';
+
 import mockCategoryList from './categoryList.json';
 import mockTagList from './tagList.json';
 import mockTemplateList from './templateList.json';
@@ -192,4 +194,58 @@ const categoryHandlers = [
 
 const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];
 
-export const handlers = [...tagHandlers, ...templateHandlers, ...categoryHandlers, ...authenticationHandler];
+const likeHandlers = [
+  http.post(`${LIKE_API_URL}/:templateId`, (req) => {
+    const { templateId } = req.params;
+    const template = mockTemplateList.templates.find((temp) => temp.id.toString() === templateId);
+
+    if (!template) {
+      return HttpResponse.json({ status: 404, message: 'Template not found' });
+    }
+
+    if (template.isLiked) {
+      return HttpResponse.json({ status: 400, message: 'Already liked' });
+    }
+
+    template.isLiked = true;
+    template.likesCount += 1;
+
+    return HttpResponse.json({
+      status: 200,
+      message: 'Liked successfully',
+      likesCount: template.likesCount,
+      isLiked: template.isLiked,
+    });
+  }),
+
+  http.delete(`${LIKE_API_URL}/:templateId`, (req) => {
+    const { templateId } = req.params;
+    const template = mockTemplateList.templates.find((temp) => temp.id.toString() === templateId);
+
+    if (!template) {
+      return HttpResponse.json({ status: 404, message: 'Template not found' });
+    }
+
+    if (!template.isLiked) {
+      return HttpResponse.json({ status: 400, message: 'Not liked yet' });
+    }
+
+    template.isLiked = false;
+    template.likesCount -= 1;
+
+    return HttpResponse.json({
+      status: 200,
+      message: 'Disliked successfully',
+      likesCount: template.likesCount,
+      isLiked: template.isLiked,
+    });
+  }),
+];
+
+export const handlers = [
+  ...tagHandlers,
+  ...templateHandlers,
+  ...categoryHandlers,
+  ...authenticationHandler,
+  ...likeHandlers,
+];

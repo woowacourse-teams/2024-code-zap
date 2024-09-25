@@ -2,8 +2,8 @@ import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-lang
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 
-import { PersonIcon } from '@/assets/images';
-import { Button, Flex, TagButton, Text } from '@/components';
+import { ClockIcon, PersonIcon } from '@/assets/images';
+import { Button, Flex, LikeCounter, TagButton, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
@@ -38,16 +38,23 @@ const TemplateCard = ({ template }: Props) => {
     <S.TemplateCardContainer data-testid='template-card'>
       <Flex direction='column' gap='1rem'>
         <Flex justify='space-between' gap='3rem'>
-          <Flex align='center' gap='0.125rem'>
-            <PersonIcon width={14} />
-            <Text.Small color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}>
-              {member?.name || ''}
-            </Text.Small>
+          <Flex gap='0.75rem'>
+            <Flex align='center' gap='0.25rem'>
+              <PersonIcon width={14} />
+              <Text.Small color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}>
+                {member.name}
+              </Text.Small>
+            </Flex>
+            <Flex align='center' gap='0.25rem'>
+              <ClockIcon width={14} />
+              <S.NoWrapTextWrapper>
+                <Text.Small color={theme.color.light.primary_500}>{formatRelativeTime(modifiedAt)}</Text.Small>
+              </S.NoWrapTextWrapper>
+            </Flex>
           </Flex>
-
-          <S.NoWrapTextWrapper>
-            <Text.XSmall color={theme.color.light.secondary_500}>{formatRelativeTime(modifiedAt)}</Text.XSmall>
-          </S.NoWrapTextWrapper>
+          <Flex align='center'>
+            <LikeCounter likesCount={template.likesCount} isLiked={template.isLiked} />
+          </Flex>
         </Flex>
 
         <S.EllipsisTextWrapper>

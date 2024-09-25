@@ -4,6 +4,8 @@
       "id": 1,
       "title": "title1",
       "description": "description1",
+      "isLiked": true,
+      "likesCount": 100,
       "thumbnail": {
         "filename": "MyComponent.tsx",
         "content": "import React from 'react';\n\ninterface MyComponentProps {\n  name: string;\n  age: number;\n}\n\nconst MyComponent: React.FC<MyComponentProps> = ({ name, age }) => {\n  return (\n    <div>\n      <h1>Hello, {name}!</h1>\n      <p>You are {age} years old.</p>\n    </div>\n  );\n};",
@@ -29,12 +31,15 @@
         { "id": 5, "name": "Backend" }
       ],
       "modifiedAt": "2024-07-01 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 2,
       "title": "title2",
       "description": "description2가 끝인줄 알았는데 말이지 description이 과연 어디까지 길어질 수 있을지 계속 타이핑 해볼까?",
+      "isLiked": false,
+      "likesCount": 3213,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Hello, world!');",
@@ -60,12 +65,15 @@
         { "id": 4, "name": "React" }
       ],
       "modifiedAt": "2024-07-11 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 3,
       "title": "title3",
       "description": "description3",
+      "isLiked": true,
+      "likesCount": 41233,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, World!\"); } }",
@@ -82,12 +90,15 @@
       "category": { "id": 4, "name": "CategoryID4" },
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-10 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 4,
       "title": "title4",
       "description": "description4",
+      "isLiked": false,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "body { margin: 0; padding: 0; }",
@@ -107,12 +118,15 @@
         { "id": 7, "name": "Styling" }
       ],
       "modifiedAt": "2024-07-09 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 5,
       "title": "title5",
       "description": "description5",
+      "isLiked": true,
+      "likesCount": 3,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Program { public static void main(String[] args) { System.out.println(\"Run program\"); } }",
@@ -129,12 +143,15 @@
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-08 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 6,
       "title": "title6",
       "description": "description6",
+      "isLiked": false,
+      "likesCount": 482,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Example { public static void main(String[] args) { System.out.println(\"Hello, Example!\"); } }",
@@ -160,12 +177,15 @@
         { "id": 2, "name": "Example" }
       ],
       "modifiedAt": "2024-07-07 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 7,
       "title": "title7",
       "description": "description7",
+      "isLiked": true,
+      "likesCount": 10,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('App running');",
@@ -191,12 +211,15 @@
         { "id": 9, "name": "Frontend" }
       ],
       "modifiedAt": "2024-07-06 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 8,
       "title": "title8",
       "description": "description8",
+      "isLiked": false,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Index file');",
@@ -213,12 +236,15 @@
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [],
       "modifiedAt": "2024-07-05 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 9,
       "title": "title9",
       "description": "description9",
+      "isLiked": true,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Main file');",
@@ -244,12 +270,15 @@
         { "id": 7, "name": "Styling" }
       ],
       "modifiedAt": "2024-07-04 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 10,
       "title": "title10",
       "description": "description10",
+      "isLiked": false,
+      "likesCount": 1281,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Hello, Frontend!')",
@@ -269,12 +298,15 @@
         { "id": 10, "name": "Python" }
       ],
       "modifiedAt": "2024-07-03 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 11,
       "title": "title11",
       "description": "description11",
+      "isLiked": true,
+      "likesCount": 19231,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Backend logic');",
@@ -300,12 +332,15 @@
         { "id": 5, "name": "Backend" }
       ],
       "modifiedAt": "2024-07-02 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 12,
       "title": "title12",
       "description": "description12",
+      "isLiked": false,
+      "likesCount": 3,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Example snippet');",
@@ -322,12 +357,15 @@
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [],
       "modifiedAt": "2024-07-01 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 13,
       "title": "title13",
       "description": "description13",
+      "isLiked": true,
+      "likesCount": 2,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "class OOPExample { constructor() { console.log('OOP Example'); } }",
@@ -353,12 +391,15 @@
         { "id": 8, "name": "OOP" }
       ],
       "modifiedAt": "2024-07-11 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 14,
       "title": "title14",
       "description": "description14",
+      "isLiked": false,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Hello { public static void main(String[] args) { System.out.println(\"Hello\"); } }",
@@ -375,12 +416,15 @@
       "category": { "id": 4, "name": "CategoryID4" },
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-10 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 15,
       "title": "title15",
       "description": "description15",
+      "isLiked": false,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Example snippet')",
@@ -406,12 +450,15 @@
         { "id": 2, "name": "Example" }
       ],
       "modifiedAt": "2024-07-09 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 16,
       "title": "title16",
       "description": "description16",
+      "isLiked": true,
+      "likesCount": 521,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class Backend { public static void main(String[] args) { System.out.println(\"Backend\"); } }",
@@ -431,12 +478,15 @@
         { "id": 5, "name": "Backend" }
       ],
       "modifiedAt": "2024-07-08 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 17,
       "title": "title17",
       "description": "description17",
+      "isLiked": false,
+      "likesCount": 83,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "import React from 'react';",
@@ -456,12 +506,15 @@
         { "id": 6, "name": "CSS" }
       ],
       "modifiedAt": "2024-07-07 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 18,
       "title": "title18",
       "description": "description18",
+      "isLiked": false,
+      "likesCount": 31,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "class OOP { constructor() { console.log('OOP'); } }",
@@ -488,12 +541,15 @@
         { "id": 2, "name": "Example" }
       ],
       "modifiedAt": "2024-07-06 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 19,
       "title": "title19",
       "description": "description19",
+      "isLiked": true,
+      "likesCount": 90,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "public class JavaSnippet { public static void main(String[] args) { System.out.println(\"Java Snippet\"); } }",
@@ -510,12 +566,15 @@
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-05 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 20,
       "title": "title20",
       "description": "description20",
+      "isLiked": false,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Python example')",
@@ -535,12 +594,15 @@
         { "id": 2, "name": "Example" }
       ],
       "modifiedAt": "2024-07-04 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 21,
       "title": "title21",
       "description": "description21",
+      "isLiked": false,
+      "likesCount": 1,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Log snippet');",
@@ -557,12 +619,15 @@
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [],
       "modifiedAt": "2024-07-03 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 22,
       "title": "title22",
       "description": "description22",
+      "isLiked": false,
+      "likesCount": 5,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "import React from 'react';\n\nconst Component = () => <div>React Component</div>;\n\nexport default Component;",
@@ -582,12 +647,15 @@
         { "id": 6, "name": "CSS" }
       ],
       "modifiedAt": "2024-07-02 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 23,
       "title": "title23",
       "description": "description23",
+      "isLiked": false,
+      "likesCount": 7,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Snippet');",
@@ -604,12 +672,15 @@
       "category": { "id": 4, "name": "CategoryID4" },
       "tags": [],
       "modifiedAt": "2024-07-01 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 24,
       "title": "title24",
       "description": "description24",
+      "isLiked": true,
+      "likesCount": 1,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Frontend snippet');",
@@ -629,12 +700,15 @@
         { "id": 9, "name": "Frontend" }
       ],
       "modifiedAt": "2024-07-11 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 25,
       "title": "title25",
       "description": "description25",
+      "isLiked": false,
+      "likesCount": 4,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Python code')",
@@ -654,12 +728,15 @@
         { "id": 2, "name": "Example" }
       ],
       "modifiedAt": "2024-07-10 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 26,
       "title": "title26",
       "description": "description26",
+      "isLiked": true,
+      "likesCount": 1230,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Backend code');",
@@ -679,12 +756,15 @@
         { "id": 5, "name": "Backend" }
       ],
       "modifiedAt": "2024-07-09 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 27,
       "title": "title27",
       "description": "description27",
+      "isLiked": false,
+      "likesCount": 41,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('React code');",
@@ -704,12 +784,15 @@
         { "id": 6, "name": "CSS" }
       ],
       "modifiedAt": "2024-07-08 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 28,
       "title": "title28",
       "description": "description28",
+      "isLiked": true,
+      "likesCount": 94,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Style snippet');",
@@ -726,12 +809,15 @@
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 7, "name": "Styling" }],
       "modifiedAt": "2024-07-07 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 29,
       "title": "title29",
       "description": "description29",
+      "isLiked": false,
+      "likesCount": 6,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Frontend code');",
@@ -751,12 +837,15 @@
         { "id": 9, "name": "Frontend" }
       ],
       "modifiedAt": "2024-07-06 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 30,
       "title": "title30",
       "description": "description30",
+      "isLiked": true,
+      "likesCount": 3812,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "print('Another Python example')",
@@ -773,12 +862,15 @@
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [{ "id": 10, "name": "Python" }],
       "modifiedAt": "2024-07-05 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 31,
       "title": "title31",
       "description": "description31",
+      "isLiked": false,
+      "likesCount": 732,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('JavaScript example');",
@@ -795,12 +887,15 @@
       "category": { "id": 3, "name": "CategoryID3" },
       "tags": [{ "id": 3, "name": "JavaScript" }],
       "modifiedAt": "2024-07-04 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 32,
       "title": "title32",
       "description": "description32",
+      "isLiked": false,
+      "likesCount": 4,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "const Component = () => <div>Another React Component</div>;\n\nexport default Component;",
@@ -820,12 +915,15 @@
         { "id": 6, "name": "CSS" }
       ],
       "modifiedAt": "2024-07-03 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 33,
       "title": "title33",
       "description": "description33",
+      "isLiked": false,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Empty snippet');",
@@ -842,12 +940,15 @@
       "category": { "id": 2, "name": "CategoryID2" },
       "tags": [],
       "modifiedAt": "2024-07-02 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 34,
       "title": "title34",
       "description": "description34",
+      "isLiked": true,
+      "likesCount": 0,
       "thumbnail": {
         "filename": "thumbnail.jsx",
         "content": "console.log('Another frontend snippet');",
@@ -867,7 +968,8 @@
         { "id": 9, "name": "Frontend" }
       ],
       "modifiedAt": "2024-07-01 12:34",
-      "createdAt": "2024-07-09 12:34"
+      "createdAt": "2024-07-09 12:34",
+      "member": { "id": 2, "name": "MemberID2" }
     }
   ]
 }
