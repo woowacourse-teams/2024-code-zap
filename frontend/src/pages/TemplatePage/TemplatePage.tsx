@@ -164,7 +164,7 @@ const TemplatePage = () => {
                 <SelectList.Option
                   key={sourceCode.id}
                   onClick={handleSelectOption(index)}
-                  isSelected={currentFile === sourceCode.id}
+                  isSelected={currentFile === index}
                 >
                   {sourceCode.filename}
                 </SelectList.Option>

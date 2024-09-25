@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useSelectList } from '@/hooks';
+import { useSourceCodeSelectList } from '@/hooks/template';
 import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 
@@ -10,9 +10,7 @@ export const useTemplate = (id: number) => {
 
   const { data: template } = useTemplateQuery(Number(id));
   const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
-  const { currentFile, setCurrentFile, sourceCodeRefs, handleSelectOption } = useSelectList(
-    template?.sourceCodes || [],
-  );
+  const { currentFile, sourceCodeRefs, handleSelectOption } = useSourceCodeSelectList(template?.sourceCodes || []);
 
   const [isEdit, setIsEdit] = useState(false);
 
@@ -20,10 +18,9 @@ export const useTemplate = (id: number) => {
 
   useEffect(() => {
     if (template && template?.sourceCodes.length > 0) {
-      setCurrentFile(template?.sourceCodes[0].id as number);
       setIsOpenList(template?.sourceCodes.map(() => true));
     }
-  }, [template, setCurrentFile]);
+  }, [template]);
 
   const toggleEditButton = () => {
     setIsEdit((prev) => !prev);
