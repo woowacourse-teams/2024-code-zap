@@ -27,11 +27,11 @@ export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLi
     try {
       if (!isLiked) {
         setIsLiked(true);
-        setLikesCount(initialLikesCount + 1 - +initialIsLiked);
+        setLikesCount((prev) => prev + 1);
         await likeTemplate(templateId);
       } else {
         setIsLiked(false);
-        setLikesCount(initialLikesCount - 1 + +!initialIsLiked);
+        setLikesCount((prev) => prev - 1);
         await dislikeTemplate(templateId);
       }
     } catch (error) {
