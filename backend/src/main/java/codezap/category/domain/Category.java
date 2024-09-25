@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -29,7 +30,11 @@ import lombok.NoArgsConstructor;
                         name = "name_with_member",
                         columnNames = {"member_id", "name"}
                 )
+        },
+        indexes = {
+                @Index(name = "idx_member_id", columnList = "member_id")
         }
+
 )
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
