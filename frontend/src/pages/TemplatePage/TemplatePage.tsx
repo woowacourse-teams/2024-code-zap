@@ -5,7 +5,7 @@ import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
 
 import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Flex, Heading, LikeButton, Modal, SelectList, TagButton, Text } from '@/components';
+import { Button, Flex, Heading, LikeButton, Modal, SelectList, TagButton, Text, NonmemberAlerter } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -20,6 +20,8 @@ import * as S from './TemplatePage.style';
 const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
+  const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
+
   const {
     memberInfo: { name },
   } = useAuth();
@@ -50,6 +52,16 @@ const TemplatePage = () => {
     initialLikesCount: template?.likesCount || 0,
     initialIsLiked: template?.isLiked || false,
   });
+
+  const handleLikeButtonClick = () => {
+    if (!name) {
+      toggleNonmemberAlerter();
+
+      return;
+    }
+
+    toggleLike();
+  };
 
   if (!template) {
     return <div>템플릿을 불러오는 중...</div>;
@@ -98,7 +110,7 @@ const TemplatePage = () => {
                   <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                     {template.title}
                   </Heading.Large>
-                  <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={toggleLike} />
+                  <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
                 </Flex>
 
                 <Flex gap='0.5rem' align='center'>
@@ -262,6 +274,8 @@ const TemplatePage = () => {
           </S.SidebarContainer>
         </Flex>
       )}
+
+      <NonmemberAlerter isOpen={isNonmemberAlerterOpen} toggleModal={toggleNonmemberAlerter} />
     </>
   );
 };
