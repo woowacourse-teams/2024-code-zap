@@ -77,7 +77,7 @@ const TemplatePage = () => {
                 <Flex justify='space-between'>
                   <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
                   {template.member.name === name && (
-                    <Flex justify='flex-end'>
+                    <Flex gap='1rem'>
                       <S.EditButton
                         size='small'
                         variant='text'

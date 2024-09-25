@@ -64,9 +64,13 @@ export const NoScrollbarContainer = styled.div`
   }
 `;
 
-export const EditButton = styled(Button)``;
+export const EditButton = styled(Button)`
+  padding: 0;
+`;
 
-export const DeleteButton = styled(Button)``;
+export const DeleteButton = styled(Button)`
+  padding: 0;
+`;
 
 export const CustomCodeMirrorTheme = EditorView.theme({
   '.cm-activeLine': { backgroundColor: `transparent !important` },

@@ -9,13 +9,13 @@ export const LikeButtonContainer = styled.button<{ isLiked: boolean }>`
   align-items: center;
   justify-content: space-between;
 
-  width: 4.25rem;
+  width: 4.5rem;
   height: 2.5rem;
-  padding: 0 0.25rem;
+  padding: 0 0.75rem;
 
   color: ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : 'white')};
 
   border: 1px solid
     ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : theme.color.light.secondary_800)};
-  border-radius: 12px;
+  border-radius: 16px;
 `;

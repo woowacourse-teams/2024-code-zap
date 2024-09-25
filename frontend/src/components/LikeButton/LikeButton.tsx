@@ -13,7 +13,7 @@ interface Props {
 
 const LikeCounter = ({ likesCount, isLiked, onLikeButtonClick }: Props) => (
   <S.LikeButtonContainer isLiked={isLiked} onClick={onLikeButtonClick}>
-    <LikeIcon state={isLiked ? 'like' : 'unlike'} size={32} />
+    <LikeIcon state={isLiked ? 'like' : 'unlike'} size={20} />
     <Text.Medium color={theme.color.light.secondary_800}>{formatWithK(likesCount)}</Text.Medium>
   </S.LikeButtonContainer>
 );
