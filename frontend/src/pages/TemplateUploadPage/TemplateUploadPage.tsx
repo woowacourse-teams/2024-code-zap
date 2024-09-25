@@ -22,14 +22,20 @@ const TemplateUploadPage = () => {
   const [title, handleTitleChange] = useInput('');
   const [description, handleDescriptionChange] = useInput('');
 
-  const { sourceCodes, handleFilenameChange, handleCodeChange, addNewEmptySourceCode, handleDeleteSourceCode } =
-    useSourceCode([
-      {
-        filename: '',
-        content: '',
-        ordinal: 1,
-      },
-    ]);
+  const {
+    sourceCodes,
+    isValidContentChange,
+    handleFilenameChange,
+    handleContentChange,
+    addNewEmptySourceCode,
+    handleDeleteSourceCode,
+  } = useSourceCode([
+    {
+      filename: '',
+      content: '',
+      ordinal: 1,
+    },
+  ]);
 
   const tagProps = useTag([]);
 
@@ -113,7 +119,8 @@ const TemplateUploadPage = () => {
             sourceCodeRef={(el) => (sourceCodeRefs.current[index] = el)}
             filename={sourceCode.filename}
             content={sourceCode.content}
-            onChangeContent={(newContent) => handleCodeChange(newContent, index)}
+            isValidContentChange={isValidContentChange}
+            onChangeContent={(newContent) => handleContentChange(newContent, index)}
             onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}

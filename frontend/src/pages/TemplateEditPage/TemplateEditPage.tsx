@@ -24,8 +24,9 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const {
     sourceCodes,
     deleteSourceCodeIds,
+    isValidContentChange,
     handleFilenameChange,
-    handleCodeChange,
+    handleContentChange,
     addNewEmptySourceCode,
     handleDeleteSourceCode,
   } = useSourceCode(template.sourceCodes);
@@ -116,7 +117,8 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
             sourceCodeRef={(el) => (sourceCodeRefs.current[index] = el)}
             filename={sourceCode.filename}
             content={sourceCode.content}
-            onChangeContent={(newContent) => handleCodeChange(newContent, index)}
+            isValidContentChange={isValidContentChange}
+            onChangeContent={(newContent) => handleContentChange(newContent, index)}
             onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}

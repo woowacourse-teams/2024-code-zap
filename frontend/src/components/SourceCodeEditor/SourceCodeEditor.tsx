@@ -1,10 +1,8 @@
 import { ViewUpdate } from '@codemirror/view';
-import { ChangeEvent, useRef } from 'react';
+import { useRef } from 'react';
 
 import { TrashcanIcon } from '@/assets/images';
 import { SourceCode } from '@/components';
-import { useToast } from '@/hooks/useToast';
-import { validateFilename, validateSourceCode } from '@/service';
 import { getLanguageByFilename } from '@/utils';
 
 import * as S from './SourceCodeEditor.style';
@@ -15,6 +13,7 @@ interface Props {
   content: string;
   onChangeFilename: (newFileName: string) => void;
   onChangeContent: (newContent: string) => void;
+  isValidContentChange?: (newContent: string) => boolean;
   handleDeleteSourceCode: () => void;
   sourceCodeRef?: React.Ref<HTMLInputElement> | null;
 }
@@ -25,43 +24,32 @@ const SourceCodeEditor = ({
   content,
   onChangeFilename,
   onChangeContent,
+  isValidContentChange = () => true,
   handleDeleteSourceCode,
   sourceCodeRef = null,
 }: Props) => {
   const previousContentRef = useRef<string>(content);
-  const { failAlert } = useToast();
-  //TODO: 파일명과 소스코드 검증을 이 컴포넌트에서 하고 있는데 괜찮은가? 이 컴포넌트의 책임이 맞는가?
 
-  const handleFilenameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const newFilename = event.target.value;
-
-    const errorMessage = validateFilename(newFilename);
-
-    if (errorMessage) {
-      failAlert(errorMessage);
-
-      return;
-    }
-
-    onChangeFilename(newFilename);
+  const handleFilenameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeFilename(event.target.value);
   };
 
   const handleContentChange = (value: string, viewUpdate: ViewUpdate) => {
-    const errorMessage = validateSourceCode(value);
+    const isValid = isValidContentChange(value);
 
-    if (errorMessage) {
-      failAlert(errorMessage);
-
+    if (!isValid) {
       const previousContent = previousContentRef.current;
       const transaction = viewUpdate.state.update({
         changes: { from: 0, to: value.length, insert: previousContent },
       });
 
       viewUpdate.view.dispatch(transaction);
-    } else {
-      onChangeContent(value);
-      previousContentRef.current = value;
+
+      return;
     }
+
+    onChangeContent(value);
+    previousContentRef.current = value;
   };
 
   return (
