@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useSourceCodeSelectList } from '@/hooks/template';
+import { useSelectList } from '@/hooks';
 import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 
@@ -10,7 +10,7 @@ export const useTemplate = (id: number) => {
 
   const { data: template } = useTemplateQuery(Number(id));
   const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
-  const { currentFile, sourceCodeRefs, handleSelectOption } = useSourceCodeSelectList(template?.sourceCodes || []);
+  const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
   const [isEdit, setIsEdit] = useState(false);
 

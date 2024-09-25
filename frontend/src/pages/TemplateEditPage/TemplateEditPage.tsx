@@ -1,15 +1,13 @@
 import { PlusIcon } from '@/assets/images';
 import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput } from '@/components';
-import { useInput } from '@/hooks';
+import { useInput, useSelectList } from '@/hooks';
 import { useCategory } from '@/hooks/category';
-import { useSourceCodeSelectList } from '@/hooks/template';
+import { useTag, useSourceCode } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateEditMutation } from '@/queries/templates';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
 
-import { useSourceCode } from '../../hooks/template/useSourceCode';
-import { useTag } from '../../hooks/template/useTag';
 import * as S from './TemplateEditPage.style';
 
 interface Props {
@@ -35,7 +33,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const initTags = template.tags.map((tag) => tag.name);
   const tagProps = useTag(initTags);
 
-  const { currentFile, sourceCodeRefs, handleSelectOption } = useSourceCodeSelectList(sourceCodes);
+  const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
   const { mutateAsync: updateTemplate, error } = useTemplateEditMutation(template.id);
 

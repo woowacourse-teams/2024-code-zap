@@ -2,9 +2,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { PlusIcon } from '@/assets/images';
 import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text } from '@/components';
-import { useInput } from '@/hooks';
+import { useInput, useSelectList } from '@/hooks';
 import { useCategory } from '@/hooks/category';
-import { useSourceCodeSelectList, useSourceCode, useTag } from '@/hooks/template';
+import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
@@ -33,7 +33,7 @@ const TemplateUploadPage = () => {
 
   const tagProps = useTag([]);
 
-  const { currentFile, sourceCodeRefs, handleSelectOption } = useSourceCodeSelectList(sourceCodes);
+  const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
   const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
 
