@@ -11,7 +11,6 @@ interface UseLikeProps {
 export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLikeProps) => {
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const { mutateAsync: likeTemplate } = useLikeMutation();
   const { mutateAsync: dislikeTemplate } = useDislikeMutation();
@@ -22,12 +21,6 @@ export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLi
   }, [initialLikesCount, initialIsLiked]);
 
   const toggleLike = async () => {
-    if (isProcessing) {
-      return;
-    }
-
-    setIsProcessing(true);
-
     try {
       if (!isLiked) {
         setIsLiked(true);
@@ -41,8 +34,6 @@ export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLi
     } catch (error) {
       setLikesCount((prev) => prev + (isLiked ? -1 : 1));
       setIsLiked(initialIsLiked);
-    } finally {
-      setIsProcessing(false);
     }
   };
 
@@ -50,6 +41,5 @@ export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLi
     likesCount,
     isLiked,
     toggleLike,
-    isProcessing,
   };
 };

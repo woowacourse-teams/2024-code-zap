@@ -45,7 +45,7 @@ const TemplatePage = () => {
     handleIsOpenList,
   } = useTemplate(Number(id));
 
-  const { likesCount, isLiked, toggleLike, isProcessing } = useLike({
+  const { likesCount, isLiked, toggleLike } = useLike({
     templateId: Number(id),
     initialLikesCount: template?.likesCount || 0,
     initialIsLiked: template?.isLiked || false,
@@ -98,11 +98,7 @@ const TemplatePage = () => {
                   <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                     {template.title}
                   </Heading.Large>
-                  <LikeButton
-                    likesCount={likesCount}
-                    isLiked={isLiked}
-                    onLikeButtonClick={!isProcessing ? toggleLike : () => {}}
-                  />
+                  <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={toggleLike} />
                 </Flex>
 
                 <Flex gap='0.5rem' align='center'>
