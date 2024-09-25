@@ -21,19 +21,22 @@ export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLi
   }, [initialLikesCount, initialIsLiked]);
 
   const toggleLike = async () => {
+    const prevLikesCount = likesCount;
+    const prevIsLiked = isLiked;
+
     try {
       if (!isLiked) {
         setIsLiked(true);
-        setLikesCount((prev) => prev + 1);
+        setLikesCount(initialLikesCount + 1 - +initialIsLiked);
         await likeTemplate(templateId);
       } else {
         setIsLiked(false);
-        setLikesCount((prev) => prev - 1);
+        setLikesCount(initialLikesCount - 1 + +!initialIsLiked);
         await dislikeTemplate(templateId);
       }
     } catch (error) {
-      setLikesCount((prev) => prev + (isLiked ? -1 : 1));
-      setIsLiked(initialIsLiked);
+      setLikesCount(prevLikesCount);
+      setIsLiked(prevIsLiked);
     }
   };
 
