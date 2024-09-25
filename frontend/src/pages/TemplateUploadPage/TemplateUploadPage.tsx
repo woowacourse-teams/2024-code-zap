@@ -48,11 +48,11 @@ const TemplateUploadPage = () => {
       return '제목을 입력해주세요';
     }
 
-    if (sourceCodes.filter((sourceCode) => !sourceCode.filename).length) {
+    if (sourceCodes.filter(({ filename }) => !filename || filename.trim() === '').length) {
       return '파일명을 입력해주세요';
     }
 
-    if (sourceCodes.filter((sourceCode) => !sourceCode.content).length) {
+    if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
       return '소스코드 내용을 입력해주세요';
     }
 
