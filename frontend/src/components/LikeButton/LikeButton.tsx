@@ -11,11 +11,11 @@ interface Props {
   onLikeButtonClick: () => void;
 }
 
-const LikeCounter = ({ likesCount, isLiked, onLikeButtonClick }: Props) => (
+const LikeButton = ({ likesCount, isLiked, onLikeButtonClick }: Props) => (
   <S.LikeButtonContainer isLiked={isLiked} onClick={onLikeButtonClick}>
     <LikeIcon state={isLiked ? 'like' : 'unlike'} size={20} />
     <Text.Medium color={theme.color.light.secondary_800}>{formatWithK(likesCount)}</Text.Medium>
   </S.LikeButtonContainer>
 );
 
-export default LikeCounter;
+export default LikeButton;
