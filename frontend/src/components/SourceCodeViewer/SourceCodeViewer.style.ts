@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 
-import { ChevronIcon } from '@/assets/images';
 import { Button } from '@/components';
 
 export const SourceCodeViewerContainer = styled.div`
@@ -21,7 +20,7 @@ export const FilenameContainer = styled.div`
   background: ${({ theme }) => theme.color.light.tertiary_600};
 `;
 
-export const ToggleBox = styled.div`
+export const ToggleButton = styled.button`
   cursor: pointer;
 
   display: flex;
@@ -33,7 +32,7 @@ export const ToggleBox = styled.div`
   min-width: 0;
 `;
 
-export const SourceCodeToggleIcon = styled(ChevronIcon)<{ isOpen: boolean }>`
+export const SourceCodeToggleIcon = styled.span<{ isOpen: boolean }>`
   transform: ${({ isOpen }) => (isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
   width: 16px;
   height: 16px;
@@ -42,8 +41,12 @@ export const SourceCodeToggleIcon = styled(ChevronIcon)<{ isOpen: boolean }>`
 
 export const NoScrollbarContainer = styled.div`
   scrollbar-width: none;
+
   overflow: auto;
+
   width: 100%;
+
+  text-align: start;
 
   -ms-overflow-style: none;
   &::-webkit-scrollbar {

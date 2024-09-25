@@ -1,3 +1,4 @@
+import { ChevronIcon } from '@/assets/images';
 import { SourceCode, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { useToast } from '@/hooks/useToast';
@@ -28,14 +29,16 @@ const SourceCodeViewer = ({ mode = 'detailView', filename = '', content, sourceC
     <S.SourceCodeViewerContainer id={filename} ref={sourceCodeRef}>
       {mode === 'detailView' && (
         <S.FilenameContainer>
-          <S.ToggleBox onClick={toggleSourceCode}>
-            <S.SourceCodeToggleIcon isOpen={isSourceCodeOpen} aria-label='소스코드 펼침' />
+          <S.ToggleButton onClick={toggleSourceCode}>
+            <S.SourceCodeToggleIcon isOpen={isSourceCodeOpen} aria-label='소스코드 펼침'>
+              <ChevronIcon />
+            </S.SourceCodeToggleIcon>
             <S.NoScrollbarContainer>
               <Text.Small color='#fff' weight='bold'>
                 {filename}
               </Text.Small>
             </S.NoScrollbarContainer>
-          </S.ToggleBox>
+          </S.ToggleButton>
           <S.CopyButton size='small' variant='text' onClick={copyCode(content)}>
             <Text.Small color={theme.color.light.primary_500} weight='bold'>
               {'복사'}
