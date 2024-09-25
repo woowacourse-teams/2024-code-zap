@@ -6,10 +6,10 @@ export const LikeButtonContainer = styled.button<{ isLiked: boolean }>`
   cursor: pointer;
 
   display: flex;
+  gap: 0.5rem;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 
-  width: 4.5rem;
   height: 2.5rem;
   padding: 0 0.75rem;
 
