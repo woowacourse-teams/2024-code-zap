@@ -214,7 +214,7 @@ class CategoryServiceTest {
 
             assertThatThrownBy(() -> sut.update(otherMember, savedCategory.getId(), request))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
         @Test
