@@ -274,8 +274,9 @@ class CategoryServiceTest {
             assertAll(
                     () -> assertThat(categoryRepository.findAllByMemberIdOrderById(member.getId()))
                             .hasSize(beforeDeleteSize - 1),
-                    () -> assertThat(categoryRepository.existsById(savedCategory.getId()))
-                            .isFalse()
+                    () -> assertThatThrownBy(() -> categoryRepository.fetchById(savedCategory.getId()))
+                            .isInstanceOf(CodeZapException.class)
+                            .hasMessage("식별자 1에 해당하는 카테고리가 존재하지 않습니다.")
             );
         }
 

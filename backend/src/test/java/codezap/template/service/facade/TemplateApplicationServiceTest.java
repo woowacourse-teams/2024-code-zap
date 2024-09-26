@@ -75,7 +75,7 @@ class TemplateApplicationServiceTest {
             var actual = sut.createTemplate(member, request);
 
             // then
-            assertThat(categoryRepository.existsById(actual)).isTrue();
+            assertThat(categoryRepository.fetchById(actual)).isNotNull();
         }
 
         @Test
