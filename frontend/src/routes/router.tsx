@@ -33,7 +33,7 @@ const router = createBrowserRouter([
             <ErrorBoundary fallback={<NotFoundPage />}>
               <Suspense
                 fallback={
-                  <Flex align='center' justify='center' css={{ width: '100vw', height: '100vh' }}>
+                  <Flex align='center' justify='center' width='100vw' height='100vh'>
                     <LoadingBall />
                   </Flex>
                 }
