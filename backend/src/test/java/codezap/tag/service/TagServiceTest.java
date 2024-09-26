@@ -199,7 +199,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then
-            List<Tag> actual =  new ArrayList<>();
+            List<Tag> actual = new ArrayList<>();
             actual.addAll(sut.findAllByTemplate(template1));
             actual.addAll(sut.findAllByTemplate(template2));
             assertThat(actual).isEqualTo(List.of(tag1, tag2));
@@ -233,7 +233,7 @@ class TagServiceTest extends ServiceTest {
         void findAllByTemplates_WhenNotExist() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template1 = createSavedTemplate();
+            createSavedTemplate();
 
             // when & then
             FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
