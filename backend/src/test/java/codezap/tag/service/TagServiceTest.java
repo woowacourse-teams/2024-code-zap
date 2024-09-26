@@ -185,20 +185,22 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 템플릿 목록에 해당하는 모든 태그 반환")
-        void findAllByTemplates() {
+        @DisplayName("성공: 해당 멤버에 모든 태그 반환")
+        void findAllByMemberIdSuccess() {
             // given
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
-            Template template1 = createSavedTemplate();
-            templateTagRepository.save(new TemplateTag(template1, tag1));
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(new Category("자바", member));
 
-            Template template2 = createSecondTemplate();
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when
-            FindAllTagsResponse actual = sut.findAllByMemberId(template1.getMember().getId());
+            FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
 
             // then
             assertThat(actual).isEqualTo(new FindAllTagsResponse(
@@ -208,7 +210,7 @@ class TagServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("성공: 템플릿들이 중복된 태그를 가지는 경우 중복 제거 후 반환")
-        void findAllByTemplates_WhenDuplicatedTags() {
+        void findAllByMemberId_WhenDuplicatedTags() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
 

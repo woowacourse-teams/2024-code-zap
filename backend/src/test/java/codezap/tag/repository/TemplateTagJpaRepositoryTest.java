@@ -79,8 +79,9 @@ class TemplateTagJpaRepositoryTest {
         @DisplayName("태그 목록 조회 성공 : 정상적으로 태그 목록 조회")
         void testFindDistinctByTemplateIn() {
             // given
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
             Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
-            Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
+            Template template2 = templateRepository.save(createNthTemplate(otherMember, category, 2));
             Template template3 = templateRepository.save(createNthTemplate(member, category, 3));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
