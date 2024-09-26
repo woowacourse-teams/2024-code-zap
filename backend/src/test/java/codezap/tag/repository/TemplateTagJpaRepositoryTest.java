@@ -93,9 +93,7 @@ class TemplateTagJpaRepositoryTest {
             templateTagRepository.save(new TemplateTag(template3, tag3));
 
             // when
-            List<Long> result = templateTagRepository.findDistinctByTemplateIn(
-                    List.of(template1.getId(), template3.getId())
-            );
+            List<Long> result = templateTagRepository.findAllTagIdDistinctByMemberId(member.getId());
 
             // then
             assertThat(result).hasSize(2)
@@ -106,16 +104,16 @@ class TemplateTagJpaRepositoryTest {
         @Test
         @DisplayName("태그 목록 조회 성공 : 존재하지 않는 템플릿 id를 사용하면 예외가 터지지 않고 해당 id 값이 무시된다.")
         void notExistTemplateIdTest() {
-            long notExistTemplateId = 100L;
+            long notExistMemberId = 100L;
 
             assertAll(
-                    () -> assertThatThrownBy(() -> templateRepository.fetchById(notExistTemplateId))
+                    () -> assertThatThrownBy(() -> templateRepository.fetchById(notExistMemberId))
                             .isInstanceOf(CodeZapException.class)
                             .hasMessageContaining("템플릿이 존재하지 않습니다."),
                     () -> assertThatCode(() ->
-                            templateTagRepository.findDistinctByTemplateIn(List.of(notExistTemplateId)))
+                            templateTagRepository.findAllTagIdDistinctByMemberId(notExistMemberId))
                             .doesNotThrowAnyException(),
-                    () -> assertThat(templateTagRepository.findDistinctByTemplateIn(List.of(notExistTemplateId)))
+                    () -> assertThat(templateTagRepository.findAllTagIdDistinctByMemberId(notExistMemberId))
                             .isEmpty()
             );
         }
