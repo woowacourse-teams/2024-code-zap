@@ -18,6 +18,7 @@ public class LikesService {
     private final TemplateRepository templateRepository;
     private final LikesRepository likesRepository;
 
+    @Transactional
     public void like(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         if (isLiked(member, template)) {
