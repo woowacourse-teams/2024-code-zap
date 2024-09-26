@@ -52,8 +52,7 @@ public class TagService {
     }
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
-        List<Template> templates = templateRepository.findByMemberId(memberId);
-        List<Long> templateIds = templates.stream().map(Template::getId).toList();
+        List<Long> templateIds = templateRepository.findAllIdsByMemberId(memberId);
         List<Long> templateTagIds = templateTagRepository.findDistinctByTemplateIn(templateIds);
         return new FindAllTagsResponse(templateTagIds.stream()
                 .map(id -> FindTagResponse.from(tagRepository.fetchById(id)))

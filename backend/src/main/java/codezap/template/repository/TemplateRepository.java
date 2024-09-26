@@ -21,4 +21,6 @@ public interface TemplateRepository {
     Template save(Template template);
 
     void deleteById(Long id);
+
+    List<Long> findAllIdsByMemberId(Long memberId);
 }
