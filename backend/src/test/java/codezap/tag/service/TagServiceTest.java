@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -198,11 +197,13 @@ class TagServiceTest extends ServiceTest {
             Template template2 = createSecondTemplate();
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
-            // when & then
-            List<Tag> actual = new ArrayList<>();
-            actual.addAll(sut.findAllByTemplate(template1));
-            actual.addAll(sut.findAllByTemplate(template2));
-            assertThat(actual).isEqualTo(List.of(tag1, tag2));
+            // when
+            FindAllTagsResponse actual = sut.findAllByMemberId(template1.getMember().getId());
+
+            // then
+            assertThat(actual).isEqualTo(new FindAllTagsResponse(
+                    List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
+            );
         }
 
         @Test
