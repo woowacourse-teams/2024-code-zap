@@ -308,8 +308,8 @@ class TemplateApplicationServiceTest {
 
             //then
             assertAll(
-                    () -> assertThat(likesTemplate).allMatch((template) -> template.isLiked() == true),
-                    () -> assertThat(notLikesTemplate).allMatch((template) -> template.isLiked() == false)
+                    () -> assertThat(likesTemplate).allMatch(FindAllTemplateItemResponse::isLiked),
+                    () -> assertThat(notLikesTemplate).allMatch((template) -> !template.isLiked())
             );
         }
 
