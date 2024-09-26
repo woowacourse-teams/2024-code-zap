@@ -36,14 +36,18 @@ const TemplateCard = ({ template }: Props) => {
 
   return (
     <S.TemplateCardContainer data-testid='template-card'>
-      <Flex direction='column' gap='1rem'>
-        <Flex justify='space-between' gap='3rem'>
-          <Flex gap='0.75rem'>
-            <Flex align='center' gap='0.25rem'>
+      <Flex width='100%' direction='column' gap='1rem'>
+        <Flex width='100%' justify='space-between' gap='1rem'>
+          <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
+            <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
               <PersonIcon width={14} />
-              <Text.Small color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}>
-                {member.name}
-              </Text.Small>
+              <S.EllipsisTextWrapper style={{ width: '100%' }}>
+                <Text.Small
+                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                >
+                  {member.name}
+                </Text.Small>
+              </S.EllipsisTextWrapper>
             </Flex>
             <Flex align='center' gap='0.25rem'>
               <ClockIcon width={14} />
@@ -52,7 +56,7 @@ const TemplateCard = ({ template }: Props) => {
               </S.NoWrapTextWrapper>
             </Flex>
           </Flex>
-          <Flex align='center'>
+          <Flex align='center' justify='flex-end' flex='0 0 auto'>
             <LikeCounter likesCount={template.likesCount} isLiked={template.isLiked} />
           </Flex>
         </Flex>
