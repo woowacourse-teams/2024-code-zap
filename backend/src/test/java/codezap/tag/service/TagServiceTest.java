@@ -201,10 +201,6 @@ class TagServiceTest extends ServiceTest {
     @Nested
     @DisplayName("템플릿 목록으로 템플릿 태그 조회")
     class GetAllTemplateTagsByTemplates {
-        //     public List<TemplateTag> getAllTemplateTagsByTemplates(List<Template> templates) {
-        //        List<Long> templateIds = templates.stream().map(Template::getId).toList();
-        //        return templateTagRepository.findAllByTemplateIdsIn(templateIds);
-        //    }
 
         @Test
         @DisplayName("성공: 템플릿 목록에 하나라도 해당하는 템플릿 태그 목록 반환")
