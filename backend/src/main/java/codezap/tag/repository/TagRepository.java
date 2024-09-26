@@ -15,12 +15,7 @@ public interface TagRepository {
 
     List<String> findNameByNamesIn(List<String> names);
 
-    boolean existsById(Long id);
-
-    boolean existsByName(String name);
-
     Tag save(Tag tag);
 
     <S extends Tag> List<S> saveAll(Iterable<S> entities);
-
 }

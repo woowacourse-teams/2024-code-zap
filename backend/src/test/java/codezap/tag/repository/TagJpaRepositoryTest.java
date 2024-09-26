@@ -103,27 +103,4 @@ class TagJpaRepositoryTest {
         assertThat(actual).hasSize(2)
                 .containsExactly("태그1", "태그3");
     }
-
-    @Nested
-    @DisplayName("태그명 존재 여부")
-    class existsByName {
-
-        @Test
-        @DisplayName("태그명 존재 여부 성공 : 해당 아이디가 존재하면 true를 반환한다.")
-        void existsByNameReturnTrue() {
-            Tag tag = tagRepository.save(new Tag("태그"));
-
-            boolean actual = tagRepository.existsByName(tag.getName());
-
-            assertThat(actual).isTrue();
-        }
-
-        @Test
-        @DisplayName("태그명 존재 여부 성공 : 해당 아이디가 존재하지 않으면 false를 반환한다.")
-        void existsByNameReturnFalse() {
-            boolean actual = tagRepository.existsByName("태그");
-
-            assertThat(actual).isFalse();
-        }
-    }
 }
