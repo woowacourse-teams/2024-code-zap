@@ -41,7 +41,6 @@ export const getTemplateList = async ({
   memberId,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
-    keyword,
     sort,
     page: page.toString(),
     size: size.toString(),
@@ -57,6 +56,10 @@ export const getTemplateList = async ({
 
   if (tagIds?.length !== 0 && tagIds !== undefined) {
     queryParams.append('tagIds', tagIds.toString());
+  }
+
+  if (keyword) {
+    queryParams.append('keyword', keyword);
   }
 
   const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
