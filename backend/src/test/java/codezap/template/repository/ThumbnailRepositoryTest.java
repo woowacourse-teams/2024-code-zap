@@ -79,7 +79,7 @@ public class ThumbnailRepositoryTest {
             // then
             assertThatThrownBy(() -> sut.fetchByTemplate(template))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + 1 + "에 해당하는 썸네일이 존재하지 않습니다.");
+                    .hasMessage("식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다.");
         }
 
         @Test
