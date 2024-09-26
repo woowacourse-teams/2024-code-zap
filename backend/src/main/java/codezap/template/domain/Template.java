@@ -2,7 +2,6 @@ package codezap.template.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,6 +21,7 @@ import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Template extends BaseTimeEntity {
 
     @Id
@@ -44,7 +45,7 @@ public class Template extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Category category;
 
     @OneToMany(mappedBy = "template")
@@ -67,25 +68,8 @@ public class Template extends BaseTimeEntity {
     }
 
     public void validateAuthorization(Member member) {
-        if (!member.equals(this.member)) {
+        if (!getMember().equals(member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Template template = (Template) o;
-        return Objects.equals(getId(), template.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
     }
 }

@@ -1,7 +1,5 @@
 package codezap.category.domain;
 
-import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +16,7 @@ import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,21 +31,20 @@ import lombok.NoArgsConstructor;
                 )
         }
 )
+@Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
     private Long id;
 
     @ManyToOne(optional = false)
-    @Getter
     private Member member;
 
     @Column(nullable = false)
-    @Getter
     private String name;
 
     @Column(nullable = false)
@@ -74,22 +72,5 @@ public class Category extends BaseTimeEntity {
 
     public boolean isDefault() {
         return isDefault;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Category category = (Category) o;
-        return Objects.equals(getId(), category.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
     }
 }
