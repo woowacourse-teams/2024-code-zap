@@ -94,7 +94,7 @@ class TemplateTagJpaRepositoryTest {
             templateTagRepository.save(new TemplateTag(template3, tag3));
 
             // when
-            List<Tag> result = templateTagRepository.findAllTagIdDistinctByMemberId(member.getId());
+            List<Tag> result = templateTagRepository.findAllTagDistinctByMemberId(member.getId());
 
             // then
             assertThat(result).hasSize(2)
@@ -112,9 +112,9 @@ class TemplateTagJpaRepositoryTest {
                             .isInstanceOf(CodeZapException.class)
                             .hasMessageContaining("템플릿이 존재하지 않습니다."),
                     () -> assertThatCode(() ->
-                            templateTagRepository.findAllTagIdDistinctByMemberId(notExistTemplateId))
+                            templateTagRepository.findAllTagDistinctByMemberId(notExistTemplateId))
                             .doesNotThrowAnyException(),
-                    () -> assertThat(templateTagRepository.findAllTagIdDistinctByMemberId(notExistTemplateId))
+                    () -> assertThat(templateTagRepository.findAllTagDistinctByMemberId(notExistTemplateId))
                             .isEmpty()
             );
         }

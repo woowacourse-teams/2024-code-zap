@@ -31,7 +31,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
                     (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
             )
             """)
-    List<Tag> findAllTagIdDistinctByMemberId(Long memberId);
+    List<Tag> findAllTagDistinctByMemberId(Long memberId);
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")
