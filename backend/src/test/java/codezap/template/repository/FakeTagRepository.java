@@ -53,6 +53,11 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
+    public List<Tag> findByNameIn(List<String> names) {
+        return List.of();
+    }
+
+    @Override
     public <S extends Tag> List<S> saveAll(Iterable<S> entities) {
         entities.forEach(this::save);
         return (List<S>) tags;
