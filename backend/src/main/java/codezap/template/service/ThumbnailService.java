@@ -18,6 +18,7 @@ public class ThumbnailService {
 
     private final ThumbnailRepository thumbnailRepository;
 
+    @Transactional
     public void createThumbnail(Template template, SourceCode thumbnail) {
         thumbnailRepository.save(new Thumbnail(template, thumbnail));
     }

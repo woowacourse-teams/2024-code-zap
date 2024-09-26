@@ -52,6 +52,7 @@ public class TemplateService {
         return templateRepository.findAll(new TemplateSpecification(memberId, keyword, categoryId, tagIds), pageable);
     }
 
+    @Transactional
     public Template update(
             Member member,
             Long templateId,

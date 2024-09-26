@@ -21,6 +21,7 @@ public class LikesService {
     private final MemberRepository memberRepository;
     private final LikesRepository likesRepository;
 
+    @Transactional
     public void like(MemberDto memberDto, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         Member member = memberRepository.fetchById(memberDto.id());
