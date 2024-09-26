@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, SearchIcon, ZapzapLogo } from '@/assets/images';
-import { Dropdown, Flex, Heading, Input, PagingButtons, TemplateCard } from '@/components';
+import { Dropdown, Flex, Heading, Input, NoSearchResults, PagingButtons, TemplateCard } from '@/components';
+import { LoadingBallContainer } from '@/components/LoadingBall/LoadingBall.style';
 import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { scroll } from '@/utils';
@@ -18,10 +19,14 @@ const TemplateExplorePage = () => {
   const debouncedKeyword = useDebounce(keyword, 300);
 
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
-  const { data: templateData } = useTemplateExploreQuery({ sort: sortingOption.key, page, keyword: debouncedKeyword });
+  const { data: templateData, isPending } = useTemplateExploreQuery({
+    sort: sortingOption.key,
+    page,
+    keyword: debouncedKeyword,
+  });
   const windowWidth = useWindowWidth();
 
-  const templates = templateData?.templates || [];
+  const templateList = templateData?.templates || [];
   const totalPages = templateData?.totalPages || 0;
 
   const handlePageChange = (page: number) => {
@@ -61,18 +66,27 @@ const TemplateExplorePage = () => {
           getOptionLabel={(option) => option.value}
         />
       </Flex>
+      {templateList.length === 0 ? (
+        isPending ? (
+          <LoadingBallContainer />
+        ) : (
+          <NoSearchResults />
+        )
+      ) : (
+        <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
+          {templateList.map((template) => (
+            <Link to={`/templates/${template.id}`} key={template.id}>
+              <TemplateCard template={template} />
+            </Link>
+          ))}
+        </S.TemplateExplorePageContainer>
+      )}
 
-      <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
-        {templates.map((template) => (
-          <Link to={`/templates/${template.id}`} key={template.id}>
-            <TemplateCard template={template} />
-          </Link>
-        ))}
-      </S.TemplateExplorePageContainer>
-
-      <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-        <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
-      </Flex>
+      {templateList.length !== 0 && (
+        <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
+          <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+        </Flex>
+      )}
 
       <S.ScrollTopButton
         onClick={() => {
