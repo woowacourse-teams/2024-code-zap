@@ -20,14 +20,5 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             """)
     List<Long> findDistinctByTemplateIn(List<Long> templateIds);
 
-    @Query("""
-            SELECT DISTINCT tt.id.templateId
-            FROM TemplateTag tt
-            WHERE tt.id.tagId IN :tagIds
-            GROUP BY tt.id.templateId
-            HAVING COUNT(DISTINCT tt.id.tagId) = :tagSize
-            """)
-    List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize);
-
     void deleteAllByTemplateId(Long id);
 }

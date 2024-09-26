@@ -53,9 +53,4 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
                 .map(templateTag -> templateTag.getTag().getId())
                 .toList();
     }
-
-    @Override
-    public List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize) {
-        return List.of();
-    }
 }
