@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -183,11 +184,6 @@ class TagServiceTest extends ServiceTest {
 
             assertThat(actual).isEqualTo(expected);
         }
-    }
-
-    @Nested
-    @DisplayName("여러 템플릿으로 모든 태그 조회")
-    class FindAllByTemplates {
 
         @Test
         @DisplayName("성공: 템플릿 목록에 해당하는 모든 태그 반환")
@@ -203,16 +199,18 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then
-            FindAllTagsResponse actual = sut.findAllByTemplates(List.of(template1, template2));
-            assertThat(actual).isEqualTo(new FindAllTagsResponse(
-                    List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
-            );
+            List<Tag> actual =  new ArrayList<>();
+            actual.addAll(sut.findAllByTemplate(template1));
+            actual.addAll(sut.findAllByTemplate(template2));
+            assertThat(actual).isEqualTo(List.of(tag1, tag2));
         }
 
         @Test
         @DisplayName("성공: 템플릿들이 중복된 태그를 가지는 경우 중복 제거 후 반환")
         void findAllByTemplates_WhenDuplicatedTags() {
             // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
@@ -224,7 +222,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then
-            FindAllTagsResponse actual = sut.findAllByTemplates(List.of(template1, template2));
+            FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
             assertThat(actual).isEqualTo(new FindAllTagsResponse(
                     List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
             );
@@ -234,10 +232,11 @@ class TagServiceTest extends ServiceTest {
         @DisplayName("성공: 해당하는 태그가 없는 경우 빈 목록 반환")
         void findAllByTemplates_WhenNotExist() {
             // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
             Template template1 = createSavedTemplate();
 
             // when & then
-            FindAllTagsResponse actual = sut.findAllByTemplates(List.of(template1));
+            FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
             assertThat(actual).isEqualTo(new FindAllTagsResponse(Collections.EMPTY_LIST));
         }
     }
