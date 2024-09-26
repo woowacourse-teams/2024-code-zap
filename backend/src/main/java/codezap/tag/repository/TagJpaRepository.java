@@ -28,6 +28,4 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
 
     @Query("select t.name from Tag t where t.name in :names")
     List<String> findNameByNamesIn(@Param("names") List<String> names);
-
-    boolean existsByName(String name);
 }

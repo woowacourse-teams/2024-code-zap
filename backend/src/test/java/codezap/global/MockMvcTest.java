@@ -5,11 +5,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -19,18 +17,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
-import codezap.category.service.facade.MemberCategoryApplicationService;
-import codezap.category.service.facade.MemberCategoryTemplateApplicationService;
+import codezap.category.service.CategoryService;
 import codezap.global.cors.CorsProperties;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
-import codezap.template.service.TemplateService;
 
 @WebMvcTest(SpringExtension.class)
 @EnableConfigurationProperties(CorsProperties.class)
 public abstract class MockMvcTest {
 
-    @Autowired
     protected MockMvc mvc;
 
     protected ObjectMapper objectMapper;
@@ -42,13 +37,7 @@ public abstract class MockMvcTest {
     protected CredentialManager credentialManager;
 
     @MockBean
-    protected TemplateService templateService;
-
-    @MockBean
-    protected MemberCategoryApplicationService memberCategoryApplicationService;
-
-    @MockBean
-    protected MemberCategoryTemplateApplicationService memberCategoryTemplateApplicationService;
+    protected CategoryService categoryService;
 
     @MockBean
     protected MemberService memberService;

@@ -18,7 +18,6 @@ import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.fixture.MemberFixture;
@@ -106,7 +105,7 @@ class MemberServiceTest {
         void findMember() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            FindMemberResponse actual = memberService.findMember(MemberDto.from(member), member.getId());
+            FindMemberResponse actual = memberService.findMember(member, member.getId());
 
             assertThat(actual).isEqualTo(FindMemberResponse.from(member));
         }
@@ -115,24 +114,11 @@ class MemberServiceTest {
         @DisplayName("회원 ID로 멤버 조회 실패: 본인 ID가 아닌 경우")
         void findMember_Throw() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            MemberDto memberDto = MemberDto.from(member);
             Long otherId = member.getId() + 1;
 
-            assertThatThrownBy(() -> memberService.findMember(memberDto, otherId))
+            assertThatThrownBy(() -> memberService.findMember(member, otherId))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("본인의 정보만 조회할 수 있습니다.");
-        }
-
-        @Test
-        @DisplayName("회원 ID로 멤버 조회 실패: DB에 없는 멤버인 경우")
-        void findMember_Throw_Not_Exists() {
-            Member member = MemberFixture.memberFixture();
-            MemberDto memberDto = MemberDto.from(member);
-            Long memberId = member.getId();
-
-            assertThatThrownBy(() -> memberService.findMember(memberDto, memberId))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + memberId + "에 해당하는 멤버가 존재하지 않습니다.");
         }
     }
 
@@ -160,30 +146,6 @@ class MemberServiceTest {
             assertThatCode(() -> memberService.getByTemplateId(notExistsId))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("템플릿에 대한 멤버가 존재하지 않습니다.");
-        }
-    }
-
-    @Nested
-    @DisplayName("아이디로 멤버 조회 테스트")
-    class GetById {
-        @Test
-        @DisplayName("아이디로 멤버 조회 성공")
-        void getById() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-
-            Member actual = memberService.getById(member.getId());
-
-            assertThat(actual).isEqualTo(member);
-        }
-
-        @Test
-        @DisplayName("아이디로 멤버 조회 실패 : 존재하지 않는 아이디")
-        void getById_Fail() {
-            Long notExitsId = 100L;
-
-            assertThatCode(() -> memberService.getById(notExitsId))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + notExitsId + "에 해당하는 멤버가 존재하지 않습니다.");
         }
     }
 }

@@ -8,8 +8,6 @@ import codezap.template.domain.Thumbnail;
 
 public interface ThumbnailRepository {
 
-    Thumbnail fetchById(Long id);
-
     Thumbnail fetchByTemplate(Template template);
 
     Optional<Thumbnail> findByTemplate(Template template);

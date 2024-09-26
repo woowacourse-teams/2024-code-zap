@@ -1,7 +1,5 @@
 package codezap.category.domain;
 
-import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,13 +16,13 @@ import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -33,6 +31,8 @@ import lombok.NoArgsConstructor;
                 )
         }
 )
+@Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
@@ -66,24 +66,11 @@ public class Category extends BaseTimeEntity {
 
     public void validateAuthorization(Member member) {
         if (!getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
+            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Category category = (Category) o;
-        return Objects.equals(getId(), category.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
+    public boolean isDefault() {
+        return isDefault;
     }
 }

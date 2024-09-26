@@ -13,11 +13,6 @@ import codezap.template.domain.Thumbnail;
 public interface ThumbnailJpaRepository extends
         ThumbnailRepository, JpaRepository<Thumbnail, Long> {
 
-    default Thumbnail fetchById(Long id) {
-        return findById(id).orElseThrow(
-                () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 썸네일이 존재하지 않습니다."));
-    }
-
     default Thumbnail fetchByTemplate(Template template) {
         return findByTemplate(template).orElseThrow(
                 () -> new CodeZapException(HttpStatus.NOT_FOUND,

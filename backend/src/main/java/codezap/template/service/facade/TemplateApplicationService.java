@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
+import codezap.category.service.CategoryService;
 import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
-import codezap.tag.dto.response.FindAllTagsResponse;
-import codezap.tag.service.TemplateTagService;
+import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -30,78 +30,86 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class TemplateApplicationService {
-    private final TemplateTagService templateTagService;
+
     private final TemplateService templateService;
-    private final ThumbnailService thumbnailService;
     private final SourceCodeService sourceCodeService;
+    private final CategoryService categoryService;
+    private final TagService tagService;
+    private final ThumbnailService thumbnailService;
     private final LikesService likesService;
 
     @Transactional
-    public Long createTemplate(Member member, Category category, CreateTemplateRequest createTemplateRequest) {
-        Template template = templateService.createTemplate(member, createTemplateRequest, category);
-        templateTagService.createTags(template, createTemplateRequest.tags());
+    public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
+        Category category = categoryService.fetchById(createTemplateRequest.categoryId());
+        category.validateAuthorization(member);
+        Template template = templateService.create(member, createTemplateRequest, category);
+        tagService.createTags(template, createTemplateRequest.tags());
         sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
         SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
                 template,
-                createTemplateRequest.thumbnailOrdinal()
-        );
+                createTemplateRequest.thumbnailOrdinal());
         thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
     }
 
-    public FindTemplateResponse getById(Long id) {
+    public FindTemplateResponse findById(Long id) {
         Template template = templateService.getById(id);
-        List<Tag> tags = templateTagService.getByTemplate(template);
-
-        List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-
+        List<Tag> tags = tagService.findAllByTemplate(template);
+        List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
         return FindTemplateResponse.of(template, sourceCodes, tags, false);
     }
 
-    public FindTemplateResponse getByIdWithMember(Long id, Member member) {
+    public FindTemplateResponse findByIdWithMember(Long id, Member member) {
         Template template = templateService.getById(id);
-        List<Tag> tags = templateTagService.getByTemplate(template);
-
-        List<SourceCode> sourceCodes = sourceCodeService.findSourceCodesByTemplate(template);
-
-        return FindTemplateResponse.of(template, sourceCodes, tags, likesService.isLiked(member, template));
-    }
-
-    public FindAllTagsResponse getAllTagsByMemberId(Long memberId) {
-        List<Template> template = templateService.getByMemberId(memberId);
-        return templateTagService.findAllByTemplates(template);
+        List<Tag> tags = tagService.findAllByTemplate(template);
+        List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
+        boolean isLiked = likesService.isLiked(member, template);
+        return FindTemplateResponse.of(template, sourceCodes, tags, isLiked);
     }
 
     public FindAllTemplatesResponse findAllBy(
-            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable
+            Long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> tagIds,
+            Pageable pageable
     ) {
-        Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        return makeTemplatesResponse(templates, (template) -> false);
+        Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        return makeResponse(templates, (template) -> false);
     }
 
     public FindAllTemplatesResponse findAllByWithMember(
-            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Pageable pageable, Member loginMember
+            Long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> tagIds,
+            Pageable pageable,
+            Member member
     ) {
-        Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        return makeTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
+        Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        return makeResponse(templates, (template -> likesService.isLiked(member, template)));
     }
 
-    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {
-        List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
+    private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
+        List<FindAllTemplateItemResponse> findAllTemplateByResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
-                        templateTagService.getByTemplate(template),
+                        tagService.findAllByTemplate(template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
-                        likedChecker.isLiked(template))
-                )
+                        likedChecker.isLiked(template)))
                 .toList();
-        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
+        return new FindAllTemplatesResponse(
+                page.getTotalPages(),
+                page.getTotalElements(),
+                findAllTemplateByResponse);
     }
 
     @Transactional
-    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest, Category category) {
-        Template template = templateService.updateTemplate(member, templateId, updateTemplateRequest, category);
-        templateTagService.updateTags(template, updateTemplateRequest.tags());
+    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
+        Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
+        category.validateAuthorization(member);
+        Template template = templateService.update(member, templateId, updateTemplateRequest, category);
+        tagService.updateTags(template, updateTemplateRequest.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);
         sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
     }
@@ -110,7 +118,7 @@ public class TemplateApplicationService {
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         thumbnailService.deleteByTemplateIds(ids);
         sourceCodeService.deleteByIds(ids);
-        templateTagService.deleteByIds(ids);
+        tagService.deleteByIds(ids);
         templateService.deleteByMemberAndIds(member, ids);
     }
 }

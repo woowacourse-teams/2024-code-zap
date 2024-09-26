@@ -17,8 +17,6 @@ public interface SourceCodeRepository {
 
     List<SourceCode> findAllByTemplateAndOrdinal(Template template, int ordinal);
 
-    List<SourceCode> findAll();
-
     int countByTemplate(Template template);
 
     SourceCode save(SourceCode sourceCode);

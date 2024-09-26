@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.auth.configuration.AuthenticationPrinciple;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.service.MemberService;
@@ -40,8 +40,8 @@ public class MemberController implements SpringDocMemberController {
 
     @GetMapping("/members/{id}")
     public ResponseEntity<FindMemberResponse> findMember(
-            @AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id
+            @AuthenticationPrinciple Member member, @PathVariable Long id
     ) {
-        return ResponseEntity.ok(memberService.findMember(memberDto, id));
+        return ResponseEntity.ok(memberService.findMember(member, id));
     }
 }

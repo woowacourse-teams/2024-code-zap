@@ -87,7 +87,7 @@ class TemplateServiceTest {
                     List.of("tag1", "tag2")
             );
 
-            var actual = sut.createTemplate(member, templateRequest, category);
+            var actual = sut.create(member, templateRequest, category);
 
             assertAll(
                     () -> assertThat(actual.getTitle()).isEqualTo(templateRequest.title()),
@@ -149,7 +149,8 @@ class TemplateServiceTest {
             var actual = sut.getByMemberId(member1.getId());
 
             assertThat(actual).hasSize(2)
-                    .containsExactly(template1, template2);
+                    .containsExactly(template1, template2)
+                    .doesNotContain(template3);
         }
 
         @Test
@@ -182,7 +183,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -202,7 +203,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = null;
 
-            assertThatThrownBy(() -> sut.findAll(memberId, keyword, categoryId, tagIds, pageable))
+            assertThatThrownBy(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("Pageable을 필수로 작성해야 합니다.");
         }
@@ -217,7 +218,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent())
@@ -238,7 +239,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -257,7 +258,7 @@ class TemplateServiceTest {
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent())
@@ -278,7 +279,7 @@ class TemplateServiceTest {
             List<Long> tagIds = List.of(tag2.getId());
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(
@@ -299,7 +300,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -320,7 +321,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(1),
@@ -339,7 +340,7 @@ class TemplateServiceTest {
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -360,7 +361,7 @@ class TemplateServiceTest {
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(1),
@@ -378,7 +379,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertThat(actual.getContent()).isEmpty();
         }
@@ -397,7 +398,7 @@ class TemplateServiceTest {
             List<Long> tagIds = null;
             Pageable pageable = PageRequest.of(1, 10);
 
-            Page<Template> actual = sut.findAll(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(5),
@@ -421,7 +422,7 @@ class TemplateServiceTest {
                 likeTemplate(4L, 1L);
                 likeTemplate(1L, 0L);
 
-                List<Template> templates = sut.findAll(null, "", null, null,
+                List<Template> templates = sut.findAllBy(null, "", null, null,
                                 PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
                         .getContent();
 
@@ -523,7 +524,7 @@ class TemplateServiceTest {
                     List.of()
             );
 
-            sut.updateTemplate(member, template.getId(), updateTemplateRequest, category);
+            sut.update(member, template.getId(), updateTemplateRequest, category);
 
             assertAll(
                     () -> assertThat(template.getTitle()).isEqualTo(updateTemplateRequest.title()),
@@ -547,7 +548,7 @@ class TemplateServiceTest {
             );
             var nonExistentID = 100L;
 
-            assertThatThrownBy(() -> sut.updateTemplate(member, nonExistentID, updateTemplateRequest, category))
+            assertThatThrownBy(() -> sut.update(member, nonExistentID, updateTemplateRequest, category))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + nonExistentID + "에 해당하는 템플릿이 존재하지 않습니다.");
         }
@@ -569,7 +570,7 @@ class TemplateServiceTest {
                     List.of()
             );
 
-            assertThatThrownBy(() -> sut.updateTemplate(otherMember, template.getId(), updateTemplateRequest, category))
+            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), updateTemplateRequest, category))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
         }
@@ -588,7 +589,7 @@ class TemplateServiceTest {
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId()));
-            Page<Template> actual = sut.findAll(member.getId(), null, null, null, PageRequest.of(0, 10));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, PageRequest.of(0, 10));
 
             assertThat(actual.getContent()).hasSize(1)
                     .containsExactly(template2);
@@ -605,7 +606,7 @@ class TemplateServiceTest {
             var template4 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
-            Page<Template> actual = sut.findAll(member.getId(), null, null, null, PageRequest.of(0, 10));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, PageRequest.of(0, 10));
 
             assertThat(actual.getContent()).hasSize(2)
                     .containsExactly(template2, template3);
@@ -616,7 +617,7 @@ class TemplateServiceTest {
         void deleteTemplateSuccessWithNonExistentTemplate() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template = templateRepository.save(TemplateFixture.get(member, category));
+            templateRepository.save(TemplateFixture.get(member, category));
             Long nonExistentID = 100L;
 
             assertThatThrownBy(() -> sut.deleteByMemberAndIds(member, List.of(nonExistentID)))

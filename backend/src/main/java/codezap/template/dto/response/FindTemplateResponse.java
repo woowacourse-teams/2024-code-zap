@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import codezap.category.dto.response.FindCategoryResponse;
-import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
@@ -53,46 +52,20 @@ public record FindTemplateResponse(
     ) {
         return new FindTemplateResponse(
                 template.getId(),
-                null,
+                FindMemberResponse.from(template.getMember()),
                 template.getTitle(),
                 template.getDescription(),
-                mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
+                sourceCodes.stream()
+                        .map(FindAllSourceCodeByTemplateResponse::from)
+                        .toList(),
                 FindCategoryResponse.from(template.getCategory()),
-                mapToFindTagByTemplateResponse(tags),
+                tags.stream()
+                        .map(FindTagResponse::from)
+                        .toList(),
                 template.getLikesCount(),
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()
         );
-    }
-
-    public FindTemplateResponse updateMember(Member member) {
-        return new FindTemplateResponse(
-                id,
-                new FindMemberResponse(member.getId(), member.getName()),
-                title,
-                description,
-                sourceCodes,
-                category,
-                tags,
-                likesCount,
-                isLiked,
-                createdAt,
-                modifiedAt
-        );
-    }
-
-    private static List<FindAllSourceCodeByTemplateResponse> mapToFindAllSourceCodeByTemplateResponse(
-            List<SourceCode> sourceCodes
-    ) {
-        return sourceCodes.stream()
-                .map(FindAllSourceCodeByTemplateResponse::from)
-                .toList();
-    }
-
-    private static List<FindTagResponse> mapToFindTagByTemplateResponse(List<Tag> tags) {
-        return tags.stream()
-                .map(FindTagResponse::from)
-                .toList();
     }
 }

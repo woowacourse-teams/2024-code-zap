@@ -15,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import codezap.auth.dto.LoginAndCredentialDto;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
+import codezap.auth.encryption.PasswordEncryptor;
+import codezap.auth.encryption.SHA2PasswordEncryptor;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.basic.BasicAuthCredentialProvider;
 import codezap.global.exception.CodeZapException;
@@ -22,8 +24,6 @@ import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.SHA2PasswordEncryptor;
 
 public class AuthServiceTest {
     private final MemberRepository memberRepository = new FakeMemberRepository();

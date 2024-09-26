@@ -2,8 +2,11 @@ package codezap.template.service.facade;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -17,25 +20,22 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
+import codezap.global.exception.CodeZapException;
 import codezap.likes.domain.Likes;
 import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
-import codezap.tag.domain.Tag;
-import codezap.tag.dto.response.FindAllTagsResponse;
-import codezap.tag.dto.response.FindTagResponse;
-import codezap.tag.repository.TagRepository;
-import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
-import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -44,6 +44,7 @@ import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TemplateRepository;
+import codezap.template.repository.TemplateSpecification;
 import codezap.template.repository.ThumbnailRepository;
 
 @SpringBootTest
@@ -62,10 +63,6 @@ class TemplateApplicationServiceTest {
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    TemplateTagRepository templateTagRepository;
-    @Autowired
     ThumbnailRepository thumbnailRepository;
     @Autowired
     LikesRepository likesRepository;
@@ -75,7 +72,7 @@ class TemplateApplicationServiceTest {
     class CreateTemplate {
 
         @Test
-        @DisplayName("템플릿 생성 성공")
+        @DisplayName("성공: 작성자의 권한 확인 후 템플릿 생성")
         void createTemplate() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -83,10 +80,25 @@ class TemplateApplicationServiceTest {
             var request = createTemplateRequest(category);
 
             // when
-            var actual = sut.createTemplate(member, category, request);
+            var actual = sut.create(member, request);
 
             // then
-            assertThat(actual).isEqualTo(1L);
+            assertThat(categoryRepository.fetchById(actual)).isNotNull();
+        }
+
+        @Test
+        @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
+        void createTemplate_Fail_NoAuthorization() {
+            // given
+            var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(new Category("Members", ownerMember));
+            var request = createTemplateRequest(category);
+
+            // when & then
+            assertThatThrownBy(() -> sut.create(otherMember, request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
         private static CreateTemplateRequest createTemplateRequest(Category category) {
@@ -108,18 +120,18 @@ class TemplateApplicationServiceTest {
 
     @Nested
     @DisplayName("ID로 템플릿 조회 (비회원)")
-    class GetById {
+    class FindByTemplateId {
 
         @Test
         @DisplayName("ID로 템플릿 조회 성공")
-        void getById() {
+        void findByTemplateId() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
-            var actual = sut.getById(template.getId());
+            var actual = sut.findById(template.getId());
 
             // then
             assertAll(
@@ -143,7 +155,7 @@ class TemplateApplicationServiceTest {
             likesRepository.save(new Likes(null, template, member));
 
             // when
-            var actual = sut.getByIdWithMember(template.getId(), member);
+            var actual = sut.findByIdWithMember(template.getId(), member);
 
             // then
             assertAll(
@@ -161,50 +173,13 @@ class TemplateApplicationServiceTest {
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
-            var actual = sut.getByIdWithMember(template.getId(), member);
+            var actual = sut.findByIdWithMember(template.getId(), member);
 
             // then
             assertAll(
                     () -> assertThat(actual.id()).isEqualTo(1L),
                     () -> assertThat(actual.isLiked()).isFalse()
             );
-        }
-    }
-
-    @Nested
-    @DisplayName("사용자 ID로 모든 태그 조회")
-    class GetAllTagsByMemberId {
-
-        @Test
-        @DisplayName("사용자 ID로 모든 태그 조회 성공")
-        void getAllTagsByMemberId() {
-            // given
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-
-            var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var template2 = templateRepository.save(new Template(member, "title2", "description", category));
-            var template3 = templateRepository.save(new Template(member, "title3", "description", category));
-            var tag1 = tagRepository.save(new Tag("tag1"));
-            var tag2 = tagRepository.save(new Tag("tag2"));
-            var tag3 = tagRepository.save(new Tag("tag3"));
-            templateTagRepository.save(new TemplateTag(template1, tag1));
-            templateTagRepository.save(new TemplateTag(template1, tag2));
-            templateTagRepository.save(new TemplateTag(template2, tag2));
-            templateTagRepository.save(new TemplateTag(template2, tag3));
-            templateTagRepository.save(new TemplateTag(template3, tag3));
-            templateTagRepository.save(new TemplateTag(template3, tag1));
-
-            // when
-            var actual = sut.getAllTagsByMemberId(member.getId());
-
-            // then
-            var expected = new FindAllTagsResponse(List.of(
-                    FindTagResponse.from(tag1),
-                    FindTagResponse.from(tag2),
-                    FindTagResponse.from(tag3)));
-
-            assertThat(actual).isEqualTo(expected);
         }
     }
 
@@ -215,7 +190,7 @@ class TemplateApplicationServiceTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 검색 성공")
+        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 조회 성공")
         void findAllBy(
                 Long memberId,
                 String keyword,
@@ -258,7 +233,7 @@ class TemplateApplicationServiceTest {
                     .templates();
 
             //then
-            assertThat(searchedTemplates).allMatch((findAllTemplateItem) -> findAllTemplateItem.isLiked() == false);
+            assertThat(searchedTemplates).allMatch((findAllTemplateItem) -> !findAllTemplateItem.isLiked());
         }
 
         private void saveDummyTemplates20() {
@@ -333,8 +308,8 @@ class TemplateApplicationServiceTest {
 
             //then
             assertAll(
-                    () -> assertThat(likesTemplate).allMatch((template) -> template.isLiked() == true),
-                    () -> assertThat(notLikesTemplate).allMatch((template) -> template.isLiked() == false)
+                    () -> assertThat(likesTemplate).allMatch(FindAllTemplateItemResponse::isLiked),
+                    () -> assertThat(notLikesTemplate).allMatch((template) -> !template.isLiked())
             );
         }
 
@@ -350,6 +325,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 수정")
     class Update {
 
         @Test
@@ -369,17 +345,53 @@ class TemplateApplicationServiceTest {
             var updateRequest = List.of(updateRequest1, updateRequest2);
             List<Long> deleteIds = List.of();
             var request = new UpdateTemplateRequest(
-                    "title1",
-                    "description1",
+                    "Updated Template",
+                    "Updated Description",
                     createRequest,
                     updateRequest,
                     deleteIds,
                     category.getId(),
                     List.of());
 
+            // when
+            sut.update(member, template.getId(), request);
+
             // when & then
-            assertThatCode(() -> sut.update(member, template.getId(), request, category))
-                    .doesNotThrowAnyException();
+            var updatedTemplate = templateRepository.fetchById(template.getId());
+            assertAll(
+                    () -> assertEquals("Updated Template", updatedTemplate.getTitle()),
+                    () -> assertEquals("Updated Description", updatedTemplate.getDescription())
+            );
+        }
+
+        @Test
+        @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
+        void updateTemplate_WhenNoAuthorization() {
+            // given
+            Member otherMember = memberRepository.save(MemberFixture.getFirstMember());
+            Category othersCategory = categoryRepository.save(new Category("Members", otherMember));
+
+            Member member = memberRepository.save(MemberFixture.getSecondMember());
+            Category category = categoryRepository.save(new Category("Members", member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+
+            SourceCode sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+            UpdateSourceCodeRequest updateSourceCodeRequest = updateSourceCodeRequest(sourceCode);
+
+            UpdateTemplateRequest request = new UpdateTemplateRequest(
+                    "Updated Template",
+                    "Updated Description",
+                    Collections.emptyList(),
+                    List.of(updateSourceCodeRequest),
+                    Collections.emptyList(),
+                    othersCategory.getId(),
+                    Collections.emptyList());
+
+            // when & then
+            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
         }
 
         private UpdateSourceCodeRequest updateSourceCodeRequest(SourceCode sourceCode) {
@@ -392,6 +404,7 @@ class TemplateApplicationServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 삭제")
     class DeleteByMemberAndIds {
 
         @Test
@@ -413,12 +426,17 @@ class TemplateApplicationServiceTest {
             sut.deleteByMemberAndIds(member, deleteIds);
 
             // then
-            var actualTemplatesLeft = templateRepository.findAll();
-            var actualSourceCodeLeft = sourceCodeRepository.findAll();
+            Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null);
+            var actualTemplatesLeft = templateRepository.findAll(spec, PageRequest.of(0, 10));
+            var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
+            actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
+            actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));
 
             assertAll(
                     () -> assertThat(actualTemplatesLeft).containsExactly(template3),
-                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3)
+                    () -> assertThat(actualTemplatesLeft).doesNotContain(template1, template2),
+                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3),
+                    () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );
         }
     }

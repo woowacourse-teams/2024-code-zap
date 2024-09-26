@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplatesResponse;
@@ -45,7 +45,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "소스 코드가 0개 입력된 경우", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
+            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
@@ -53,7 +53,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "이름에 맞는 태그가 없는 경우", exampleMessage = "이름이 tag1인 태그는 존재하지 않습니다."),
             @ErrorCase(description = "해당 순서인 소스 코드가 없는 경우", exampleMessage = "템플릿에 1번째 소스 코드가 존재하지 않습니다."),
     })
-    ResponseEntity<Void> createTemplate(MemberDto memberDto, CreateTemplateRequest createTemplateRequest);
+    ResponseEntity<Void> createTemplate(Member member, CreateTemplateRequest createTemplateRequest);
 
     @Operation(summary = "템플릿 조회 (비회원)", description = """
             조건에 맞는 모든 템플릿을 조회합니다. \n
@@ -86,7 +86,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
             @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
     })
-    ResponseEntity<FindAllTemplatesResponse> getTemplates(
+    ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -127,7 +127,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
     })
     ResponseEntity<FindAllTemplatesResponse> getTemplatesWithMember(
-            MemberDto memberDto,
+            Member member,
             Long memberId,
             String keyword,
             Long categoryId,
@@ -140,7 +140,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<FindTemplateResponse> getTemplateById(Long id);
+    ResponseEntity<FindTemplateResponse> findTemplateById(Long id);
 
     @SecurityRequirement(name = "쿠키 인증 토큰 (회원)")
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
@@ -148,7 +148,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1/login", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
-    ResponseEntity<FindTemplateResponse> getTemplateByIdWithMember(MemberDto memberDto, Long id);
+    ResponseEntity<FindTemplateResponse> getTemplateByIdWithMember(Member member, Long id);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
@@ -166,7 +166,7 @@ public interface SpringDocTemplateController {
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
-            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리에 대한 권한이 없습니다."),
+            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
@@ -174,7 +174,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
             @ErrorCase(description = "소스 코드가 없는 경우", exampleMessage = "식별자 1에 해당하는 소스 코드가 존재하지 않습니다."),
     })
-    ResponseEntity<Void> updateTemplate(MemberDto memberDto, Long id, UpdateTemplateRequest updateTemplateRequest);
+    ResponseEntity<Void> updateTemplate(Member member, Long id, UpdateTemplateRequest updateTemplateRequest);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿들을 삭제합니다.")
@@ -188,6 +188,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
             @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+            @ErrorCase(description = "썸네일이 없는 경우", exampleMessage = "식별자가 1인 템플릿에 해당하는 썸네일이 없습니다.")
     })
-    ResponseEntity<Void> deleteTemplates(MemberDto memberDto, List<Long> ids);
+    ResponseEntity<Void> deleteTemplates(Member member, List<Long> ids);
 }

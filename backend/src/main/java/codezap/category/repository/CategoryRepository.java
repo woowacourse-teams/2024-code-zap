@@ -9,11 +9,9 @@ public interface CategoryRepository {
 
     Category fetchById(Long id);
 
-    List<Category> findAllByMemberOrderById(Member member);
+    List<Category> findAllByMemberIdOrderById(Long memberId);
 
     List<Category> findAll();
-
-    boolean existsById(Long categoryId);
 
     boolean existsByNameAndMember(String categoryName, Member member);
 

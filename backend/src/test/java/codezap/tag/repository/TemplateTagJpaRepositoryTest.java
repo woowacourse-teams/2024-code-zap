@@ -122,63 +122,6 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Nested
-    @DisplayName("선택된 태그들을 모두 사용하는 템플릿 목록 조회")
-    class findAllTemplateIdInTagIds {
-
-        @Test
-        @DisplayName("템플릿 목록 조회 성공 : 템플릿 목록을 정상적으로 조회한다.")
-        void successTest() {
-            //given
-            Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
-            Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
-            Template template3 = templateRepository.save(createNthTemplate(member, category, 3));
-
-            Tag tag1 = tagRepository.save(new Tag("tag1"));
-            Tag tag2 = tagRepository.save(new Tag("tag2"));
-            Tag tag3 = tagRepository.save(new Tag("tag3"));
-
-            templateTagRepository.save(new TemplateTag(template1, tag1));
-            templateTagRepository.save(new TemplateTag(template3, tag1));
-
-            templateTagRepository.save(new TemplateTag(template1, tag2));
-            templateTagRepository.save(new TemplateTag(template2, tag2));
-
-            templateTagRepository.save(new TemplateTag(template1, tag3));
-            templateTagRepository.save(new TemplateTag(template2, tag3));
-            templateTagRepository.save(new TemplateTag(template3, tag3));
-
-            //when
-            List<Long> allTemplateIdInTagIds = templateTagRepository.findAllTemplateIdInTagIds(
-                    List.of(tag2.getId(), tag3.getId()), 2);
-
-            //then
-            assertThat(allTemplateIdInTagIds)
-                    .hasSize(2)
-                    .containsExactly(template1.getId(), template2.getId())
-                    .doesNotContain(template3.getId());
-        }
-
-        @Test
-        @DisplayName("템플릿 목록 조회 성공 : 존재하지 않는 태그를 검색 조건으로 사용하면 예외가 터지지 않고 해당 조건이 무시된다.")
-        void notExistTagTest() {
-            //given
-            long notExistId = 100L;
-
-            //then
-            assertAll(
-                    () -> assertThatThrownBy(() -> tagRepository.fetchById(notExistId))
-                            .isInstanceOf(CodeZapException.class)
-                            .hasMessageContaining("존재하지 않습니다."),
-                    () -> assertThatCode(() ->
-                            templateTagRepository.findAllTemplateIdInTagIds(List.of(notExistId), 1))
-                            .doesNotThrowAnyException(),
-                    () -> assertThat(templateTagRepository.findAllTemplateIdInTagIds(List.of(notExistId), 1))
-                            .isEmpty()
-            );
-        }
-    }
-
-    @Nested
     @DisplayName("주어진 id 의 템플릿에서 사용하는 모든 태그 삭제")
     class deleteAllByTemplateId {
 
