@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,7 +23,7 @@ public interface SpringDocsLikesController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/like/1", errorCases = {
             @ErrorCase(description = "인증 정보에 해당하는 멤버가 없는 경우", exampleMessage = "인증 정보가 정확하지 않습니다.")
     })
-    ResponseEntity<Void> like(MemberDto memberDto, long templateId);
+    ResponseEntity<Void> like(Member member, long templateId);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "좋아요 취소", description = "템플릿 좋아요를 취소합니다.")
@@ -34,5 +34,5 @@ public interface SpringDocsLikesController {
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/dislike/1", errorCases = {
             @ErrorCase(description = "인증 정보에 해당하는 멤버가 없는 경우", exampleMessage = "인증 정보가 정확하지 않습니다.")
     })
-    ResponseEntity<Void> cancelLike(MemberDto memberDto, long templateId);
+    ResponseEntity<Void> cancelLike(Member member, long templateId);
 }
