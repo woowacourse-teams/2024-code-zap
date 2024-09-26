@@ -12,7 +12,5 @@ public interface MemberRepository {
 
     boolean existsByName(String name);
 
-    boolean existsById(Long id);
-
     Member save(Member member);
 }
