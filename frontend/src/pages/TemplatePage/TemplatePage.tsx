@@ -23,6 +23,7 @@ const TemplatePage = () => {
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
 
   const {
+    isLogin,
     memberInfo: { name },
   } = useAuth();
 
@@ -54,7 +55,7 @@ const TemplatePage = () => {
   });
 
   const handleLikeButtonClick = () => {
-    if (!name) {
+    if (!isLogin) {
       toggleNonmemberAlerter();
 
       return;
