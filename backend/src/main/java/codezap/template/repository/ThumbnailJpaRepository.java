@@ -3,6 +3,7 @@ package codezap.template.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -19,6 +20,12 @@ public interface ThumbnailJpaRepository extends
                         "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
     }
 
+    @Query("""
+        SELECT t, sc
+        FROM Thumbnail t
+        join fetch t.sourceCode sc
+        WHERE t.template = :template
+        """)
     Optional<Thumbnail> findByTemplate(Template template);
 
     void deleteByTemplateId(Long id);
