@@ -27,6 +27,10 @@ export const SORTING_OPTIONS: SortingOption[] = [
     key: 'modifiedAt,asc',
     value: '오래된 순',
   },
+  {
+    key: 'likesCount,desc',
+    value: '좋아요 순',
+  },
 ];
 
 export const DEFAULT_SORTING_OPTION = SORTING_OPTIONS[0];
