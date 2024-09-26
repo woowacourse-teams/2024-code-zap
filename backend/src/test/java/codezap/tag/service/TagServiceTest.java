@@ -185,7 +185,7 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 해당 멤버에 모든 태그 반환")
+        @DisplayName("성공: 해당 멤버의 모든 태그 반환")
         void findAllByMemberIdSuccess() {
             // given
             Tag tag1 = tagRepository.save(new Tag("tag1"));
