@@ -11,8 +11,6 @@ public interface TemplateTagRepository {
 
     List<Long> findDistinctByTemplateIn(List<Long> templateIds);
 
-    List<TemplateTag> findAll();
-
     List<Long> findAllTemplateIdInTagIds(List<Long> tagIds, long tagSize);
 
     TemplateTag save(TemplateTag templateTag);

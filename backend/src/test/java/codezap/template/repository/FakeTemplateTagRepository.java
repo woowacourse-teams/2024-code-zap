@@ -46,11 +46,6 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
-    public List<TemplateTag> findAll() {
-        return templateTags;
-    }
-
-    @Override
     public List<Long> findDistinctByTemplateIn(List<Long> templateIds) {
         return templateTags.stream()
                 .filter(templateTag -> templateIds.contains(templateTag.getTemplate().getId()))
