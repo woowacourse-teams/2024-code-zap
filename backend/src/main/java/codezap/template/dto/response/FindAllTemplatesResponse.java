@@ -12,7 +12,4 @@ public record FindAllTemplatesResponse(
         @Schema(description = "템플릿 목록")
         List<FindAllTemplateItemResponse> templates
 ) {
-    public FindAllTemplatesResponse updateTemplates(List<FindAllTemplateItemResponse> templates) {
-        return new FindAllTemplatesResponse(totalPages, totalElements, templates);
-    }
 }

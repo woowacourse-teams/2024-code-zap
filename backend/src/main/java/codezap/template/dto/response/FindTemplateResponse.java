@@ -56,27 +56,17 @@ public record FindTemplateResponse(
                 FindMemberResponse.from(template.getMember()),
                 template.getTitle(),
                 template.getDescription(),
-                mapToFindAllSourceCodeByTemplateResponse(sourceCodes),
+                sourceCodes.stream()
+                        .map(FindAllSourceCodeByTemplateResponse::from)
+                        .toList(),
                 FindCategoryResponse.from(template.getCategory()),
-                mapToFindTagByTemplateResponse(tags),
+                tags.stream()
+                        .map(FindTagResponse::from)
+                        .toList(),
                 likeCount,
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()
         );
-    }
-
-    private static List<FindAllSourceCodeByTemplateResponse> mapToFindAllSourceCodeByTemplateResponse(
-            List<SourceCode> sourceCodes
-    ) {
-        return sourceCodes.stream()
-                .map(FindAllSourceCodeByTemplateResponse::from)
-                .toList();
-    }
-
-    private static List<FindTagResponse> mapToFindTagByTemplateResponse(List<Tag> tags) {
-        return tags.stream()
-                .map(FindTagResponse::from)
-                .toList();
     }
 }

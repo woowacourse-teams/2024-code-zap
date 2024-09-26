@@ -27,10 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codezap.auth.configuration.AuthArgumentResolver;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.RandomSaltGenerator;
-import codezap.auth.encryption.SHA2PasswordEncryptor;
-import codezap.auth.encryption.SaltGenerator;
 import codezap.auth.manager.CookieCredentialManager;
 import codezap.auth.provider.basic.BasicAuthCredentialProvider;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -43,7 +39,6 @@ import codezap.global.exception.GlobalExceptionHandler;
 import codezap.member.domain.Member;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.member.service.MemberService;
 import codezap.tag.service.TagService;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -70,19 +65,12 @@ class TemplateControllerTest {
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember()));
 
-    private final SaltGenerator saltGenerator = new RandomSaltGenerator();
-    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
     private final TemplateService templateService = new TemplateService(templateRepository);
     private final CategoryService categoryService = new CategoryService(
             categoryRepository,
             templateRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
-    private final MemberService memberService = new MemberService(
-            memberRepository,
-            categoryRepository,
-            saltGenerator,
-            passwordEncryptor);
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
     private final TagService tagService = new TagService(
             new FakeTagRepository(),
@@ -93,7 +81,6 @@ class TemplateControllerTest {
             new TemplateApplicationService(
                     templateService,
                     sourceCodeService,
-                    memberService,
                     categoryService,
                     tagService,
                     thumbnailService

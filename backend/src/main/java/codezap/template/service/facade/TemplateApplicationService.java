@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
 import codezap.member.domain.Member;
-import codezap.member.service.MemberService;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
@@ -32,7 +31,6 @@ public class TemplateApplicationService {
 
     private final TemplateService templateService;
     private final SourceCodeService sourceCodeService;
-    private final MemberService memberService;
     private final CategoryService categoryService;
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
@@ -66,17 +64,7 @@ public class TemplateApplicationService {
             Pageable pageable
     ) {
         Page<Template> templates = templateService.findAll(memberId, keyword, categoryId, tagIds, pageable);
-        FindAllTemplatesResponse findAllTemplatesResponse = makeTemplatesResponse(templates);
-        List<FindAllTemplateItemResponse> findAllTemplateItemResponsesWithMember = findAllTemplatesResponse.templates()
-                .stream()
-                .map(findAllTemplateItemResponse -> findAllTemplateItemResponse.updateMember(
-                        memberService.getByTemplateId(findAllTemplateItemResponse.id())))
-                .toList();
-        return findAllTemplatesResponse.updateTemplates(findAllTemplateItemResponsesWithMember);
-    }
-
-    private FindAllTemplatesResponse makeTemplatesResponse(Page<Template> page) {
-        List<FindAllTemplateItemResponse> findTemplateByAllResponse = page.stream()
+        List<FindAllTemplateItemResponse> findAllTemplateByResponse = templates.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         tagService.findAllByTemplate(template),
@@ -84,7 +72,10 @@ public class TemplateApplicationService {
                         0L,
                         false))
                 .toList();
-        return new FindAllTemplatesResponse(page.getTotalPages(), page.getTotalElements(), findTemplateByAllResponse);
+        return new FindAllTemplatesResponse(
+                templates.getTotalPages(),
+                templates.getTotalElements(),
+                findAllTemplateByResponse);
     }
 
     @Transactional
