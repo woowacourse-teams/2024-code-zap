@@ -52,6 +52,12 @@ public class TagService {
                 .toList();
     }
 
+    public List<Tag> findAllByTemplateId(Long templateId) {
+        return templateTagRepository.findAllByTemplateId(templateId).stream()
+                .map(TemplateTag::getTag)
+                .toList();
+    }
+
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
         List<Template> templates = templateRepository.findByMemberId(memberId);
         List<Long> templateIds = templates.stream().map(Template::getId).toList();

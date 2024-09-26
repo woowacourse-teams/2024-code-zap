@@ -94,7 +94,7 @@ public class TemplateApplicationService {
         List<FindAllTemplateItemResponse> findAllTemplateByResponse = page.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
-                        tagService.findAllByTemplate(template),
+                        tagService.findAllByTemplateId(template.getId()),
                         thumbnailService.getByTemplate(template).getSourceCode(),
                         likedChecker.isLiked(template)))
                 .toList();
