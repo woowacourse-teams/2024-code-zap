@@ -14,6 +14,14 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
     List<TemplateTag> findAllByTemplate(Template template);
 
     @Query("""
+        SELECT tt, t
+        FROM TemplateTag tt
+        JOIN FETCH tt.tag t
+        WHERE tt.id.templateId = :templateId
+        """)
+    List<TemplateTag> findAllByTemplateId(Long templateId);
+
+    @Query("""
             SELECT DISTINCT tt.id.tagId
             FROM TemplateTag tt
             WHERE tt.id.templateId IN :templateIds

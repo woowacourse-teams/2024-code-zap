@@ -24,6 +24,13 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
+    public List<TemplateTag> findAllByTemplateId(Long templateId) {
+        return templateTags.stream()
+                .filter(templateTag -> Objects.equals(templateTag.getTemplate(), templateId))
+                .toList();
+    }
+
+    @Override
     public TemplateTag save(TemplateTag entity) {
         var saved = new TemplateTag(
                 entity.getTemplate(),
