@@ -93,26 +93,40 @@ public class TemplateApplicationService {
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
         List<Template> templates = page.getContent();
-        List<TemplateTag> allTemplateTagsByTemplates = tagService.getAllTemplateTagsByTemplates(templates);
+        List<FindAllTemplateItemResponse> findAllTemplateByResponse = getFindAllTemplateItemResponses(templates, likedChecker);
 
-        List<FindAllTemplateItemResponse> findAllTemplateByResponse = templates.stream()
-                .map(template -> FindAllTemplateItemResponse.of(
-                        template,
-                        getTagByTemplateId(allTemplateTagsByTemplates, template),
-                        thumbnailService.getByTemplate(template).getSourceCode(),
-                        likedChecker.isLiked(template)))
-                .toList();
         return new FindAllTemplatesResponse(
                 page.getTotalPages(),
                 page.getTotalElements(),
                 findAllTemplateByResponse);
     }
 
-    private List<Tag> getTagByTemplateId(List<TemplateTag> templateTags, Template template) {
+    private List<FindAllTemplateItemResponse> getFindAllTemplateItemResponses(List<Template> templates, LikedChecker likedChecker) {
+        List<TemplateTag> allTemplateTagsByTemplates = tagService.getAllTemplateTagsByTemplates(templates);
+        List<Thumbnail> allThumbnailsByTemplates = thumbnailService.getAllByTemplates(templates);
+
+        return templates.stream()
+                .map(template -> FindAllTemplateItemResponse.of(
+                        template,
+                        getTagByTemplate(allTemplateTagsByTemplates, template),
+                        getThumbnailSourceCodeByTemplate(allThumbnailsByTemplates, template),
+                        likedChecker.isLiked(template)))
+                .toList();
+    }
+
+    private List<Tag> getTagByTemplate(List<TemplateTag> templateTags, Template template) {
         return templateTags.stream()
                 .filter(templateTag -> templateTag.hasTemplate(template))
                 .map(TemplateTag::getTag)
                 .toList();
+    }
+
+    private SourceCode getThumbnailSourceCodeByTemplate(List<Thumbnail> thumbnails, Template template) {
+        return thumbnails.stream()
+                .filter(thumbnail -> thumbnail.hasTemplate(template))
+                .findFirst()
+                .map(Thumbnail::getSourceCode)
+                .orElseGet(() -> thumbnailService.getByTemplate(template).getSourceCode());
     }
 
     @Transactional
