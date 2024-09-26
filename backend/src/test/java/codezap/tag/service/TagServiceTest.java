@@ -214,8 +214,8 @@ class TagServiceTest extends ServiceTest {
             TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(secondTemplate, tag2));
 
             // when & then
-            assertThat(sut.findAllByTemplateId(template.getId()))
-                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
+            assertThat(sut.getAllTemplateTagsByTemplates(List.of(template, secondTemplate)))
+                    .containsExactly(templateTag1, templateTag2);
         }
 
         @Test
@@ -227,7 +227,7 @@ class TagServiceTest extends ServiceTest {
             tagRepository.save(new Tag("tag2"));
 
             // when & then
-            assertThat(sut.findAllByTemplateId(template.getId())).isEmpty();
+            assertThat(sut.getAllTemplateTagsByTemplates(List.of(template))).isEmpty();
         }
     }
 
