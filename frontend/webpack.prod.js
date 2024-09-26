@@ -19,5 +19,10 @@ module.exports = () => {
         exclude: /\.(png|jpg|gif|webp|webm|map|ico)$/i,
       }),
     ],
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
+    },
   });
 };
