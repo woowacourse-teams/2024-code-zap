@@ -38,7 +38,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        Long createdTemplateId = templateApplicationService.createTemplate(member, createTemplateRequest);
+        Long createdTemplateId = templateApplicationService.create(member, createTemplateRequest);
         return ResponseEntity.created(URI.create("/templates/" + createdTemplateId)).build();
     }
 
@@ -50,7 +50,7 @@ public class TemplateController implements SpringDocTemplateController {
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20, page = 1) Pageable pageable
     ) {
-        FindAllTemplatesResponse response = templateApplicationService.findAllTemplatesBy(
+        FindAllTemplatesResponse response = templateApplicationService.findAllBy(
                 memberId,
                 keyword,
                 categoryId,
@@ -59,9 +59,35 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<FindAllTemplatesResponse> getTemplatesWithMember(
+            @AuthenticationPrinciple Member member,
+            @RequestParam(required = false) Long memberId,
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) List<Long> tagIds,
+            @PageableDefault(size = 20, page = 1) Pageable pageable
+    ) {
+        return ResponseEntity.ok(templateApplicationService.findAllByWithMember(
+                memberId,
+                keyword,
+                categoryId,
+                tagIds,
+                pageable,
+                member));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateResponse> findTemplateById(@PathVariable Long id) {
-        return ResponseEntity.ok(templateApplicationService.findTemplateById(id));
+        return ResponseEntity.ok(templateApplicationService.findById(id));
+    }
+
+    @GetMapping("/{id}/login")
+    public ResponseEntity<FindTemplateResponse> getTemplateByIdWithMember(
+            @AuthenticationPrinciple Member member,
+            @PathVariable Long id
+    ) {
+        return ResponseEntity.ok(templateApplicationService.findByIdWithMember(id, member));
     }
 
     @PostMapping("/{id}")

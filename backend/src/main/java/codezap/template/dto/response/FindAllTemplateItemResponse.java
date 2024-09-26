@@ -29,8 +29,7 @@ public record FindAllTemplateItemResponse(
         FindThumbnailResponse thumbnail,
 
         @Schema(description = "좋아요 수", example = "134")
-        Long likeCount,
-
+        Long likesCount,
         @Schema(description = "조회 멤버의 좋아요 여부", example = "true")
         Boolean isLiked,
 
@@ -44,7 +43,6 @@ public record FindAllTemplateItemResponse(
             Template template,
             List<Tag> tags,
             SourceCode thumbnailSourceCode,
-            Long likeCount,
             Boolean isLiked
     ) {
         return new FindAllTemplateItemResponse(
@@ -56,7 +54,7 @@ public record FindAllTemplateItemResponse(
                         .map(FindTagResponse::from)
                         .toList(),
                 FindThumbnailResponse.from(thumbnailSourceCode),
-                likeCount,
+                template.getLikesCount(),
                 isLiked,
                 template.getCreatedAt(),
                 template.getModifiedAt()

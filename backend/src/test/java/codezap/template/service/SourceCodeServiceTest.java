@@ -158,7 +158,7 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
 
             // when & then
-            assertThat(sourceCodeService.findSourceCodesByTemplate(template))
+            assertThat(sourceCodeService.findAllByTemplate(template))
                     .containsExactly(sourceCode1, sourceCode2);
         }
 
@@ -169,7 +169,7 @@ class SourceCodeServiceTest extends ServiceTest {
             Template template = createSavedTemplate();
 
             // when & then
-            assertThat(sourceCodeService.findSourceCodesByTemplate(template)).isEmpty();
+            assertThat(sourceCodeService.findAllByTemplate(template)).isEmpty();
         }
     }
 

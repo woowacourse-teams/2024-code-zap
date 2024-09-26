@@ -25,7 +25,7 @@ public class TemplateService {
 
     private final TemplateRepository templateRepository;
 
-    public Template createTemplate(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
+    public Template create(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
         Template template = new Template(
                 member,
                 createTemplateRequest.title(),
@@ -42,7 +42,7 @@ public class TemplateService {
         return templateRepository.findByMemberId(memberId);
     }
 
-    public Page<Template> findAll(
+    public Page<Template> findAllBy(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -52,7 +52,7 @@ public class TemplateService {
         return templateRepository.findAll(new TemplateSpecification(memberId, keyword, categoryId, tagIds), pageable);
     }
 
-    public Template updateTemplate(
+    public Template update(
             Member member,
             Long templateId,
             UpdateTemplateRequest updateTemplateRequest,

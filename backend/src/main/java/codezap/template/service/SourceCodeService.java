@@ -36,7 +36,7 @@ public class SourceCodeService {
         return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
     }
 
-    public List<SourceCode> findSourceCodesByTemplate(Template template) {
+    public List<SourceCode> findAllByTemplate(Template template) {
         return sourceCodeRepository.findAllByTemplate(template);
     }
 

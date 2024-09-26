@@ -36,6 +36,9 @@ import codezap.category.service.CategoryService;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.GlobalExceptionHandler;
+import codezap.likes.repository.FakeLikeRepository;
+import codezap.likes.repository.LikesRepository;
+import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
@@ -60,18 +63,25 @@ class TemplateControllerTest {
     private static final int MAX_LENGTH = 255;
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
+
     private final CategoryRepository categoryRepository = new FakeCategoryRepository(
             List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory()));
+
     private final MemberRepository memberRepository = new FakeMemberRepository(
             List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember()));
 
+    private final LikesRepository likesRepository = new FakeLikeRepository();
+
     private final TemplateService templateService = new TemplateService(templateRepository);
-    private final CategoryService categoryService = new CategoryService(
-            categoryRepository,
-            templateRepository);
+
+    private final CategoryService categoryService = new CategoryService(categoryRepository, templateRepository);
+
+    private final LikesService likesService = new LikesService(templateRepository, memberRepository, likesRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
+
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
+
     private final TagService tagService = new TagService(
             new FakeTagRepository(),
             new FakeTemplateRepository(),
@@ -83,8 +93,8 @@ class TemplateControllerTest {
                     sourceCodeService,
                     categoryService,
                     tagService,
-                    thumbnailService
-            );
+                    thumbnailService,
+                    likesService);
 
     private final MockMvc mvc =
             MockMvcBuilders.standaloneSetup(new TemplateController(templateApplicationService))
@@ -95,6 +105,7 @@ class TemplateControllerTest {
                                     new BasicAuthCredentialProvider(memberRepository)),
                             new PageableHandlerMethodArgumentResolver())
                     .build();
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     Cookie cookie;
@@ -1044,7 +1055,7 @@ class TemplateControllerTest {
             categoryService.create(member, new CreateCategoryRequest("category1"));
             categoryService.create(member, new CreateCategoryRequest("category2"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            templateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.create(member, templateRequest);
         }
     }
 
@@ -1059,7 +1070,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            templateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.create(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -1077,8 +1088,8 @@ class TemplateControllerTest {
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest1 = templateRequestWithTwoSourceCodes();
             CreateTemplateRequest templateRequest2 = templateRequestWithTwoSourceCodes();
-            templateApplicationService.createTemplate(member, templateRequest1);
-            templateApplicationService.createTemplate(member, templateRequest2);
+            templateApplicationService.create(member, templateRequest1);
+            templateApplicationService.create(member, templateRequest2);
 
             // when & then
             mvc.perform(delete("/templates/1,2")
@@ -1095,7 +1106,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            templateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.create(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1,1")
@@ -1113,7 +1124,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            templateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.create(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -1130,7 +1141,7 @@ class TemplateControllerTest {
             Member member = MemberFixture.getFirstMember();
             categoryService.create(member, new CreateCategoryRequest("category"));
             CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
-            templateApplicationService.createTemplate(member, templateRequest);
+            templateApplicationService.create(member, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
 
             // when
