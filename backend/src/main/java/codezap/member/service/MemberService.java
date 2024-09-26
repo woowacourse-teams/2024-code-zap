@@ -2,6 +2,8 @@ package codezap.member.service;
 
 import java.util.Objects;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ public class MemberService {
     private final SaltGenerator saltGenerator;
     private final PasswordEncryptor passwordEncryptor;
 
+    @Transactional
     public Long signup(SignupRequest request) {
         assertUniqueName(request.name());
         String salt = saltGenerator.generate();
