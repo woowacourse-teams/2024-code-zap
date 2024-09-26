@@ -12,7 +12,7 @@ public interface TemplateTagRepository {
 
     List<Tag> findAllTagsByTemplate(Template template);
 
-    List<Long> findAllTagIdDistinctByMemberId(Long memberId);
+    List<Tag> findAllTagIdDistinctByMemberId(Long memberId);
 
     TemplateTag save(TemplateTag templateTag);
 

@@ -61,7 +61,7 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
-    public List<Long> findAllTagIdDistinctByMemberId(Long memberId) {
+    public List<Tag> findAllTagIdDistinctByMemberId(Long memberId) {
         List<Long> templateIds = templateTags.stream()
                 .filter(templateTag -> Objects.equals(templateTag.getTemplate().getMember().getId(), memberId))
                 .map(templateTag -> templateTag.getTag().getId())
@@ -70,7 +70,7 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
         return templateTags.stream()
                 .filter(templateTag -> templateIds.contains(templateTag.getTemplate().getId()))
                 .distinct()
-                .map(templateTag -> templateTag.getTag().getId())
+                .map(TemplateTag::getTag)
                 .toList();
     }
 }

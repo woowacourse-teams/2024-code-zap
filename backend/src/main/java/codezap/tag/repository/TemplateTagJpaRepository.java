@@ -22,13 +22,16 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
     List<Tag> findAllTagsByTemplate(Template template);
 
     @Query("""
-            SELECT DISTINCT tt.id.tagId
-            FROM TemplateTag tt
-            WHERE tt.id.templateId IN (
-                SELECT t.id FROM Template t WHERE t.member.id = :memberId
+            SELECT DISTINCT t
+            FROM Tag t
+            WHERE t.id IN (
+                SELECT DISTINCT tt.id.tagId
+                FROM TemplateTag tt
+                WHERE tt.id.templateId IN
+                    (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
             )
             """)
-    List<Long> findAllTagIdDistinctByMemberId(Long memberId);
+    List<Tag> findAllTagIdDistinctByMemberId(Long memberId);
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")

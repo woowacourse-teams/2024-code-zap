@@ -52,9 +52,9 @@ public class TagService {
     }
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
-        List<Long> templateTagIds = templateTagRepository.findAllTagIdDistinctByMemberId(memberId);
-        return new FindAllTagsResponse(templateTagIds.stream()
-                .map(id -> FindTagResponse.from(tagRepository.fetchById(id)))
+        List<Tag> tags = templateTagRepository.findAllTagIdDistinctByMemberId(memberId);
+        return new FindAllTagsResponse(tags.stream()
+                .map(FindTagResponse::from)
                 .toList());
     }
 
