@@ -78,14 +78,6 @@ public class FakeTemplateRepository implements TemplateRepository {
         templates.removeIf(template -> Objects.equals(template.getId(), id));
     }
 
-    @Override
-    public List<Long> findAllIdsByMemberId(Long memberId) {
-        return templates.stream()
-                .filter(template -> template.getMember().getId().equals(memberId))
-                .map(Template::getId)
-                .toList();
-    }
-
     private long getOrGenerateId(Template entity) {
         if (existsById(entity.getId())) {
             return entity.getId();
