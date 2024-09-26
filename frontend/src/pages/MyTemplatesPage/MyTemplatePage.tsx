@@ -1,4 +1,4 @@
-import { useState, useCallback, Suspense } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
@@ -42,9 +42,9 @@ const MyTemplatePage = () => {
     page,
   });
 
-  const templates = templateData?.templates || [];
-  const categories = categoryData?.categories || [];
-  const tags = tagData?.tags || [];
+  const templateList = templateData?.templates || [];
+  const categoryList = categoryData?.categories || [];
+  const tagList = tagData?.tags || [];
   const totalPages = templateData?.totalPages || 0;
 
   const { mutateAsync: deleteTemplates } = useTemplateDeleteMutation(selectedList);
@@ -70,13 +70,13 @@ const MyTemplatePage = () => {
   };
 
   const handleAllSelected = () => {
-    if (selectedList.length === templates.length) {
+    if (selectedList.length === templateList.length) {
       setSelectedList([]);
 
       return;
     }
 
-    setSelectedList(templates.map((template) => template.id));
+    setSelectedList(templateList.map((template) => template.id));
   };
 
   const handleDelete = () => {
@@ -86,7 +86,7 @@ const MyTemplatePage = () => {
   };
 
   const renderTemplateContent = () => {
-    if (templates.length === 0) {
+    if (templateList.length === 0) {
       if (debouncedKeyword !== '') {
         return (
           <Flex justify='center' align='center' padding='2rem'>
@@ -101,7 +101,7 @@ const MyTemplatePage = () => {
 
     return (
       <TemplateGrid
-        templates={templates}
+        templateList={templateList}
         cols={getGridCols(windowWidth)}
         isEditMode={isEditMode}
         selectedList={selectedList}
@@ -115,7 +115,7 @@ const MyTemplatePage = () => {
       <TopBanner name={name ?? '나'} />
       <S.MainContainer>
         <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
-          <CategoryFilterMenu categories={categories} onSelectCategory={handleCategoryMenuClick} />
+          <CategoryFilterMenu categoryList={categoryList} onSelectCategory={handleCategoryMenuClick} />
         </Flex>
 
         <Flex direction='column' width='100%' gap='1rem'>
@@ -126,7 +126,7 @@ const MyTemplatePage = () => {
                   돌아가기
                 </Button>
                 <Button variant='outlined' size='small' onClick={handleAllSelected}>
-                  {selectedList.length === templates.length ? '전체 해제' : '전체 선택'}
+                  {selectedList.length === templateList.length ? '전체 해제' : '전체 선택'}
                 </Button>
                 <Button
                   variant={selectedList.length ? 'contained' : 'text'}
@@ -161,12 +161,12 @@ const MyTemplatePage = () => {
               getOptionLabel={(option) => option.value}
             />
           </Flex>
-          {tags.length !== 0 && (
-            <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
+          {tagList.length !== 0 && (
+            <TagFilterMenu tagList={tagList} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
           )}
-          <Suspense fallback={<div>거짓말이야~~</div>}>{renderTemplateContent()}</Suspense>
+          {renderTemplateContent()}
 
-          {templates.length !== 0 && (
+          {templateList.length !== 0 && (
             <Flex justify='center' gap='0.5rem' margin='1rem 0'>
               <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
             </Flex>
