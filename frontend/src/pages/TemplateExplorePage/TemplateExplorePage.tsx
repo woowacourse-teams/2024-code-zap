@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, ZapzapLogo } from '@/assets/images';
-import { Dropdown, Flex, Heading, PagingButtons, TemplateCard } from '@/components';
-import { useDropdown, useWindowWidth } from '@/hooks';
+import { ArrowUpIcon, SearchIcon, ZapzapLogo } from '@/assets/images';
+import { Dropdown, Flex, Heading, Input, PagingButtons, TemplateCard } from '@/components';
+import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { scroll } from '@/utils';
 
@@ -14,8 +14,11 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
   const [page, setPage] = useState<number>(1);
+  const [keyword, handleKeywordChange] = useInput('');
+  const debouncedKeyword = useDebounce(keyword, 300);
+
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
-  const { data: templateData } = useTemplateExploreQuery({ sort: sortingOption.key, page });
+  const { data: templateData } = useTemplateExploreQuery({ sort: sortingOption.key, page, keyword: debouncedKeyword });
   const windowWidth = useWindowWidth();
 
   const templates = templateData?.templates || [];
@@ -26,14 +29,31 @@ const TemplateExplorePage = () => {
     setPage(page);
   };
 
+  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setPage(1);
+    }
+  };
+
   return (
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex justify='flex-start' align='center' gap='1rem'>
         <ZapzapLogo width={50} height={50} />
         <Heading.Medium color='black'>여러 템플릿을 구경해보세요:)</Heading.Medium>
       </Flex>
-      <Flex width='100%' justify='flex-end'>
-        {' '}
+
+      <Flex width='100%' gap='1rem'>
+        <S.SearchInput size='medium' variant='text'>
+          <Input.Adornment>
+            <SearchIcon aria-label='' />
+          </Input.Adornment>
+          <Input.TextField
+            placeholder='검색'
+            value={keyword}
+            onChange={handleKeywordChange}
+            onKeyDown={handleSearchSubmit}
+          />
+        </S.SearchInput>
         <Dropdown
           {...dropdownProps}
           options={SORTING_OPTIONS}
