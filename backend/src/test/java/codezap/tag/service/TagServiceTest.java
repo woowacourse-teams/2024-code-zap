@@ -199,6 +199,43 @@ class TagServiceTest extends ServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 목록으로 템플릿 태그 조회")
+    class GetAllTemplateTagsByTemplates {
+        //     public List<TemplateTag> getAllTemplateTagsByTemplates(List<Template> templates) {
+        //        List<Long> templateIds = templates.stream().map(Template::getId).toList();
+        //        return templateTagRepository.findAllByTemplateIdsIn(templateIds);
+        //    }
+
+        @Test
+        @DisplayName("성공: 템플릿 목록에 하나라도 해당하는 템플릿 태그 목록 반환")
+        void getAllTemplateTagsByTemplates() {
+            // given
+            Template template = createSavedTemplate();
+            Template secondTemplate = createSecondTemplate();
+            Tag tag1 = tagRepository.save(new Tag("tag1"));
+            Tag tag2 = tagRepository.save(new Tag("tag2"));
+            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
+            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(secondTemplate, tag2));
+
+            // when & then
+            assertThat(sut.findAllByTemplateId(template.getId()))
+                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿 목록에 전혀 해당하는 템플릿 태그 빈 목록 반환")
+        void getAllTemplateTagsByTemplates_WhenNotExistTemplateTag() {
+            // given
+            Template template = createSavedTemplate();
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThat(sut.findAllByTemplateId(template.getId())).isEmpty();
+        }
+    }
+
+    @Nested
     @DisplayName("사용자 ID로 모든 태그 조회")
     class FindAllByMemberId {
 

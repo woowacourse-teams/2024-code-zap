@@ -16,6 +16,7 @@ import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
+import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
@@ -91,10 +92,13 @@ public class TemplateApplicationService {
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
-        List<FindAllTemplateItemResponse> findAllTemplateByResponse = page.stream()
+        List<Template> templates = page.getContent();
+        List<TemplateTag> allTemplateTagsByTemplates = tagService.getAllTemplateTagsByTemplates(templates);
+
+        List<FindAllTemplateItemResponse> findAllTemplateByResponse = templates.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
-                        tagService.findAllByTemplateId(template.getId()),
+                        getTagByTemplateId(allTemplateTagsByTemplates, template),
                         thumbnailService.getByTemplate(template).getSourceCode(),
                         likedChecker.isLiked(template)))
                 .toList();
@@ -102,6 +106,13 @@ public class TemplateApplicationService {
                 page.getTotalPages(),
                 page.getTotalElements(),
                 findAllTemplateByResponse);
+    }
+
+    private List<Tag> getTagByTemplateId(List<TemplateTag> templateTags, Template template) {
+        return templateTags.stream()
+                .filter(templateTag -> templateTag.hasTemplate(template))
+                .map(TemplateTag::getTag)
+                .toList();
     }
 
     @Transactional

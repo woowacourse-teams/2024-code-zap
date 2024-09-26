@@ -71,6 +71,7 @@ class TemplateTagJpaRepositoryTest {
                 .doesNotContain(new TemplateTag(template, tag3));
     }
 
+
     @Test
     @DisplayName("Template Id 을 이용한 TemplateTag 목록 조회 성공")
     void findAllByTemplateIdTest() {
@@ -90,6 +91,31 @@ class TemplateTagJpaRepositoryTest {
         //then
         assertThat(templateTags).containsExactly(templateTag1, templateTag2)
                 .doesNotContain(new TemplateTag(template, tag3));
+    }
+
+    @Test
+    @DisplayName("Template Id 목록 중 하나라도 일치하는 TemplateTag 목록 조회 성공")
+    void findAllByTemplateIdsInTest() {
+        //given
+        Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template2 = templateRepository.save(createNthTemplate(member, category, 1));
+
+        Tag tag1 = tagRepository.save(new Tag("tag1"));
+        Tag tag2 = tagRepository.save(new Tag("tag2"));
+        Tag tag3 = tagRepository.save(new Tag("tag3"));
+
+        TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template1, tag1));
+
+        TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template2, tag2));
+
+        //when
+        List<TemplateTag> templateTags = templateTagRepository.findAllByTemplateIdsIn(
+                List.of(template1.getId(), template2.getId())
+        );
+
+        //then
+        assertThat(templateTags).containsExactly(templateTag1, templateTag2)
+                .doesNotContain(new TemplateTag(template1, tag3));
     }
 
     @Nested

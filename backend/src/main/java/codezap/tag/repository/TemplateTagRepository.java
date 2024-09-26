@@ -13,6 +13,8 @@ public interface TemplateTagRepository {
 
     List<Long> findDistinctByTemplateIn(List<Long> templateIds);
 
+    List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds);
+
     TemplateTag save(TemplateTag templateTag);
 
     <S extends TemplateTag> List<S> saveAll(Iterable<S> entities);
