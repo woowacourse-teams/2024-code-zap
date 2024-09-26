@@ -59,7 +59,7 @@ public class CategoryService {
     @Transactional
     public void deleteById(Member member, Long id) {
         Category category = categoryRepository.fetchById(id);
-        validateAuthorizedMember(category, member);
+        category.validateAuthorization(member);
 
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
@@ -68,11 +68,5 @@ public class CategoryService {
             throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
-    }
-
-    private void validateAuthorizedMember(Category category, Member member) {
-        if (!member.equals(category.getMember())) {
-            throw new CodeZapException(HttpStatus.FORBIDDEN, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
-        }
     }
 }
