@@ -66,10 +66,6 @@ public class Template extends BaseTimeEntity {
         this.category = category;
     }
 
-    public void updateSourceCodes(List<SourceCode> sourceCode) {
-        sourceCodes.addAll(sourceCode);
-    }
-
     public void validateAuthorization(Member member) {
         if (!member.equals(this.member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
