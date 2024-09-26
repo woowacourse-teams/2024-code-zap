@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+import { Input } from '@/components';
 import { theme } from '@/style/theme';
 
 export const TemplateExplorePageContainer = styled.div<{ cols: number }>`
@@ -21,6 +22,10 @@ export const MainContainer = styled.main`
   @media (max-width: 768px) {
     gap: 0;
   }
+`;
+
+export const SearchInput = styled(Input)`
+  box-shadow: inset 1px 2px 8px #00000030;
 `;
 
 export const ScrollTopButton = styled.button`

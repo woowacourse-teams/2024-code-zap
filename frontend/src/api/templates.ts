@@ -32,7 +32,7 @@ export const SORTING_OPTIONS: SortingOption[] = [
 export const DEFAULT_SORTING_OPTION = SORTING_OPTIONS[0];
 
 export const getTemplateList = async ({
-  keyword = '',
+  keyword,
   categoryId,
   tagIds,
   sort = DEFAULT_SORTING_OPTION.key,
@@ -41,7 +41,6 @@ export const getTemplateList = async ({
   memberId,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
-    keyword,
     sort,
     page: page.toString(),
     size: size.toString(),
@@ -57,6 +56,10 @@ export const getTemplateList = async ({
 
   if (tagIds?.length !== 0 && tagIds !== undefined) {
     queryParams.append('tagIds', tagIds.toString());
+  }
+
+  if (keyword) {
+    queryParams.append('keyword', keyword);
   }
 
   const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
@@ -77,12 +80,17 @@ export const getTemplateExplore = async ({
   page = 1,
   size = PAGE_SIZE,
   memberId,
+  keyword,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
     sort,
     page: page.toString(),
     size: size.toString(),
   });
+
+  if (keyword) {
+    queryParams.append('keyword', keyword);
+  }
 
   const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
 
