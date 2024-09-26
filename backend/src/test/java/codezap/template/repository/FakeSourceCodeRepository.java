@@ -32,11 +32,6 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
     }
 
     @Override
-    public List<SourceCode> findAll() {
-        return sourceCodes;
-    }
-
-    @Override
     public List<SourceCode> findAllByTemplate(Template template) {
         return sourceCodes.stream()
                 .filter(sourceCode -> Objects.equals(sourceCode.getTemplate(), template))

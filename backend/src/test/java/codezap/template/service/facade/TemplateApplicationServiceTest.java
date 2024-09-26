@@ -272,7 +272,9 @@ class TemplateApplicationServiceTest {
 
             // then
             var actualTemplatesLeft = templateRepository.findAll();
-            var actualSourceCodeLeft = sourceCodeRepository.findAll();
+            var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
+            actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
+            actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));
 
             assertAll(
                     () -> assertThat(actualTemplatesLeft).containsExactly(template3),
