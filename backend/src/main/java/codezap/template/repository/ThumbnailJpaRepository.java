@@ -1,5 +1,6 @@
 package codezap.template.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,6 +28,14 @@ public interface ThumbnailJpaRepository extends
         WHERE t.template = :template
         """)
     Optional<Thumbnail> findByTemplate(Template template);
+
+    @Query("""
+            SELECT t, sc
+            FROM Thumbnail t
+            join fetch t.sourceCode sc
+            WHERE t.template.id IN :templateIds
+            """)
+    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
 
     void deleteByTemplateId(Long id);
 }
