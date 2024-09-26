@@ -58,7 +58,7 @@ public class FakeCategoryRepository implements CategoryRepository {
                 getOrGenerateId(entity),
                 entity.getMember(),
                 entity.getName(),
-                entity.getIsDefault()
+                entity.isDefault()
         );
         categories.removeIf(category -> Objects.equals(category.getId(), entity.getId()));
         categories.add(saved);

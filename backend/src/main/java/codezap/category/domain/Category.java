@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 @Table(
         uniqueConstraints = {
                 @UniqueConstraint(
@@ -39,12 +38,15 @@ public class Category extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
     private Long id;
 
     @ManyToOne(optional = false)
+    @Getter
     private Member member;
 
     @Column(nullable = false)
+    @Getter
     private String name;
 
     @Column(nullable = false)
@@ -68,6 +70,10 @@ public class Category extends BaseTimeEntity {
         if (!getMember().equals(member)) {
             throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리에 대한 권한이 없습니다.");
         }
+    }
+
+    public boolean isDefault() {
+        return isDefault;
     }
 
     @Override
