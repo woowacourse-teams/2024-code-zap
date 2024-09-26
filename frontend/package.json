@@ -17,6 +17,7 @@
   },
   "keywords": [],
   "author": "",
+  "sideEffects": false,
   "license": "ISC",
   "dependencies": {
     "@emotion/react": "^11.11.4",
