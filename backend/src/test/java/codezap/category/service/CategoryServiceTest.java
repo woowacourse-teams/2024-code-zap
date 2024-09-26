@@ -31,6 +31,7 @@ import codezap.template.repository.TemplateRepository;
 
 @SpringBootTest
 @DatabaseIsolation
+@Transactional
 class CategoryServiceTest {
 
     @Autowired
@@ -51,7 +52,6 @@ class CategoryServiceTest {
 
         @Test
         @DisplayName("카테고리 생성 성공")
-        @Transactional
         void createCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String categoryName = "categoryName";
@@ -69,7 +69,6 @@ class CategoryServiceTest {
 
         @Test
         @DisplayName("카테고리 생성 성공: 다른 멤버, 중복된 이름의 카테고리 이름 생성")
-        @Transactional
         void createCategorySuccessWithOtherMemberAndSameName() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
