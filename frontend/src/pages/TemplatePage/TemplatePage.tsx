@@ -90,17 +90,18 @@ const TemplatePage = () => {
                 <Flex justify='space-between'>
                   <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
                   {template.member.name === name && (
-                    <Flex gap='0.5rem' margin='0 0.125rem'>
+                    <Flex width='5.5rem' justify='space-around'>
                       <S.EditButton
                         size='small'
                         variant='text'
                         onClick={() => {
                           handleEditButtonClick();
                         }}
+                        style={{ width: '2rem' }}
                       >
                         <Text.Small color={theme.color.light.secondary_700}>편집</Text.Small>
                       </S.EditButton>
-                      <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
+                      <S.DeleteButton size='small' variant='text' onClick={toggleModal} style={{ width: '2rem' }}>
                         <Text.Small color={theme.color.light.secondary_700}>삭제</Text.Small>
                       </S.DeleteButton>
                     </Flex>
