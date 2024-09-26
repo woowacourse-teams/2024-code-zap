@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.likes.service.LikesService;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -18,14 +18,14 @@ public class LikesController implements SpringDocsLikesController {
     private final LikesService likesService;
 
     @PostMapping("like/{templateId}")
-    public ResponseEntity<Void> like(@AuthenticationPrinciple MemberDto memberDto, @PathVariable long templateId) {
-        likesService.like(memberDto, templateId);
+    public ResponseEntity<Void> like(@AuthenticationPrinciple Member member, @PathVariable long templateId) {
+        likesService.like(member, templateId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("like/{templateId}")
-    public ResponseEntity<Void> cancelLike(@AuthenticationPrinciple MemberDto memberDto, @PathVariable long templateId) {
-        likesService.cancelLike(memberDto, templateId);
+    public ResponseEntity<Void> cancelLike(@AuthenticationPrinciple Member member, @PathVariable long templateId) {
+        likesService.cancelLike(member, templateId);
         return ResponseEntity.ok().build();
     }
 }

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import codezap.likes.domain.Likes;
 import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +16,11 @@ import lombok.RequiredArgsConstructor;
 public class LikesService {
 
     private final TemplateRepository templateRepository;
-    private final MemberRepository memberRepository;
     private final LikesRepository likesRepository;
 
     @Transactional
-    public void like(MemberDto memberDto, long templateId) {
+    public void like(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
-        Member member = memberRepository.fetchById(memberDto.id());
         if (isLiked(member, template)) {
             return;
         }
@@ -37,9 +33,8 @@ public class LikesService {
     }
 
     @Transactional
-    public void cancelLike(MemberDto memberDto, long templateId) {
+    public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
-        Member member = memberRepository.fetchById(memberDto.id());
         likesRepository.deleteByMemberAndTemplate(member, template);
     }
 }
