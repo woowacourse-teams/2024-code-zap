@@ -4,7 +4,7 @@ import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
 
-import { ChevronIcon, ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
+import { ChevronIcon, ClockIcon, PersonIcon } from '@/assets/images';
 import { Button, Flex, Heading, LikeButton, Modal, SelectList, TagButton, Text, NonmemberAlerter } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useToggle } from '@/hooks';
@@ -90,18 +90,19 @@ const TemplatePage = () => {
                 <Flex justify='space-between'>
                   <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
                   {template.member.name === name && (
-                    <Flex gap='1rem'>
+                    <Flex width='5.5rem' justify='space-around'>
                       <S.EditButton
                         size='small'
                         variant='text'
                         onClick={() => {
                           handleEditButtonClick();
                         }}
+                        style={{ width: '2rem' }}
                       >
-                        <PencilIcon width={28} height={28} aria-label='템플릿 편집' />
+                        <Text.Small color={theme.color.light.secondary_700}>편집</Text.Small>
                       </S.EditButton>
-                      <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                        <TrashcanIcon aria-label='템플릿 삭제' />
+                      <S.DeleteButton size='small' variant='text' onClick={toggleModal} style={{ width: '2rem' }}>
+                        <Text.Small color={theme.color.light.secondary_700}>삭제</Text.Small>
                       </S.DeleteButton>
                     </Flex>
                   )}
@@ -115,13 +116,22 @@ const TemplatePage = () => {
                 </Flex>
 
                 <Flex gap='0.5rem' align='center'>
-                  <Flex align='center' gap='0.125rem'>
+                  <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
                     <PersonIcon width={14} />
-                    <Text.Small
-                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                    <div
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        flex: 1,
+                      }}
                     >
-                      {template.member.name}
-                    </Text.Small>
+                      <Text.Small
+                        color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                      >
+                        {template.member.name}
+                      </Text.Small>
+                    </div>
                   </Flex>
                   <Flex align='center' gap='0.125rem'>
                     <ClockIcon width={16} />
