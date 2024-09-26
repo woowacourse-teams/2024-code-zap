@@ -25,6 +25,7 @@ public class TemplateService {
 
     private final TemplateRepository templateRepository;
 
+    @Transactional
     public Template create(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
         Template template = new Template(
                 member,
