@@ -149,7 +149,8 @@ class TemplateServiceTest {
             var actual = sut.getByMemberId(member1.getId());
 
             assertThat(actual).hasSize(2)
-                    .containsExactly(template1, template2);
+                    .containsExactly(template1, template2)
+                    .doesNotContain(template3);
         }
 
         @Test
@@ -616,7 +617,7 @@ class TemplateServiceTest {
         void deleteTemplateSuccessWithNonExistentTemplate() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template = templateRepository.save(TemplateFixture.get(member, category));
+            templateRepository.save(TemplateFixture.get(member, category));
             Long nonExistentID = 100L;
 
             assertThatThrownBy(() -> sut.deleteByMemberAndIds(member, List.of(nonExistentID)))
