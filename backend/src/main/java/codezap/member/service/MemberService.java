@@ -57,8 +57,4 @@ public class MemberService {
             throw new CodeZapException(HttpStatus.FORBIDDEN, "본인의 정보만 조회할 수 있습니다.");
         }
     }
-
-    public Member getById(Long id) {
-        return memberRepository.fetchById(id);
-    }
 }
