@@ -5,7 +5,18 @@ import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { useParams } from 'react-router-dom';
 
 import { ChevronIcon, ClockIcon, PersonIcon } from '@/assets/images';
-import { Button, Flex, Heading, LikeButton, Modal, SelectList, TagButton, Text, NonmemberAlerter } from '@/components';
+import {
+  Button,
+  Flex,
+  Heading,
+  LikeButton,
+  Modal,
+  SelectList,
+  TagButton,
+  Text,
+  NonmemberAlerter,
+  LoadingFallback,
+} from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -65,7 +76,7 @@ const TemplatePage = () => {
   };
 
   if (!template) {
-    return <div>템플릿을 불러오는 중...</div>;
+    return <LoadingFallback />;
   }
 
   return (
