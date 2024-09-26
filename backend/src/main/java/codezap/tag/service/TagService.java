@@ -67,6 +67,7 @@ public class TagService {
         createTags(template, tags);
     }
 
+    @Transactional
     public void deleteAllByTemplateIds(List<Long> templateIds) {
         templateTagRepository.deleteByTemplateIds(templateIds);
     }

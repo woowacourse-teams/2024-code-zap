@@ -54,8 +54,9 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
     }
 
     @Override
-    public void deleteByTemplateId(Long id) {
-        thumbnails.removeIf(thumbnail -> Objects.equals(thumbnail.getId(), id));
+    public void deleteByTemplateIds(List<Long> templateIds) {
+        templateIds.forEach(id ->
+                thumbnails.removeIf(thumbnail -> Objects.equals(thumbnail.getId(), id)));
     }
 
     private long getOrGenerateId(Thumbnail entity) {

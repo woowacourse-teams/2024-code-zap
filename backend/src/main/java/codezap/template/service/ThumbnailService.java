@@ -32,6 +32,6 @@ public class ThumbnailService {
 
     @Transactional
     public void deleteByTemplateIds(List<Long> templateIds) {
-        templateIds.forEach(thumbnailRepository::deleteByTemplateId);
+        thumbnailRepository.deleteByTemplateIds(templateIds);
     }
 }
