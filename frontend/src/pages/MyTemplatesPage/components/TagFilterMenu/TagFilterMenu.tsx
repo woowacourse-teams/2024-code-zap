@@ -19,26 +19,26 @@ interface Props {
 const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
   const [deselectedTags, setDeselectedTags] = useState<Tag[]>([]);
   const [isTagBoxOpen, toggleTagBox] = useToggle(false);
-  const [height, setHeight] = useState('auto');
+  const [height, setHeight] = useState(`${LINE_HEIGHT_REM}rem`);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showMoreButton, setShowMoreButton] = useState(false);
   const windowWidth = useWindowWidth();
 
-  const updateTagContainerState = () => {
-    if (containerRef.current) {
-      const containerHeight = containerRef.current.scrollHeight;
-
-      setHeight(isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`);
-
-      if (containerHeight > remToPx(LINE_HEIGHT_REM)) {
-        setShowMoreButton(true);
-      } else {
-        setShowMoreButton(false);
-      }
-    }
-  };
-
   useEffect(() => {
+    const updateTagContainerState = () => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.scrollHeight;
+
+        setHeight(isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`);
+
+        if (containerHeight > remToPx(LINE_HEIGHT_REM)) {
+          setShowMoreButton(true);
+        } else {
+          setShowMoreButton(false);
+        }
+      }
+    };
+
     updateTagContainerState();
   }, [tags, selectedTagIds, isTagBoxOpen, windowWidth]);
 
