@@ -1,12 +1,12 @@
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
     clean: true,
   },
   devServer: {
@@ -73,6 +73,14 @@ module.exports = {
       org: 'code-zap',
       project: 'javascript-react',
     }),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      reportFilename: 'bundle-report.html',
+      openAnalyzer: false,
+      generateStatsFile: true,
+      statsFilename: 'bundle-stats.json',
+      excludeAssets: [/node_modules/],
+    }),
   ],
   resolve: {
     alias: {
@@ -80,5 +88,4 @@ module.exports = {
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
-  devtool: 'source-map',
 };
