@@ -142,5 +142,8 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
             @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "썸네일이 없는 경우", exampleMessage = "식별자가 1인 템플릿에 해당하는 썸네일이 없습니다."),
+    })
     ResponseEntity<Void> deleteTemplates(Member member, List<Long> ids);
 }
