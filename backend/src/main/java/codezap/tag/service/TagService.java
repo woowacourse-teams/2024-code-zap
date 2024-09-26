@@ -67,8 +67,7 @@ public class TagService {
         createTags(template, tags);
     }
 
-    @Transactional
-    public void deleteByIds(List<Long> templateIds) {
-        templateIds.forEach(templateTagRepository::deleteAllByTemplateId);
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
+        templateTagRepository.deleteByTemplateIds(templateIds);
     }
 }

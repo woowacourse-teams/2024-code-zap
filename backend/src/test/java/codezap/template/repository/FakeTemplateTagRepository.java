@@ -50,8 +50,14 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
-    public void deleteAllByTemplateId(Long id) {
-        templateTags.removeIf(templateTag -> Objects.equals(templateTag.getTemplate().getId(), id));
+    public void deleteAllByTemplateId(Long templateId) {
+        templateTags.removeIf(templateTag -> Objects.equals(templateTag.getId(), templateId));
+    }
+
+    @Override
+    public void deleteByTemplateIds(List<Long> templateIds) {
+        templateIds.forEach(id ->
+                templateTags.removeIf(templateTag -> Objects.equals(templateTag.getId(), id)));
     }
 
     @Override

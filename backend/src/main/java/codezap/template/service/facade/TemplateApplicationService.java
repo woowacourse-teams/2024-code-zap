@@ -118,7 +118,7 @@ public class TemplateApplicationService {
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         thumbnailService.deleteByTemplateIds(ids);
         sourceCodeService.deleteByTemplateIds(ids);
-        tagService.deleteByIds(ids);
+        tagService.deleteAllByTemplateIds(ids);
         templateService.deleteByMemberAndIds(member, ids);
     }
 }

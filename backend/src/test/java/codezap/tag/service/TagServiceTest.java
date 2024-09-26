@@ -321,7 +321,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template, tag2));
 
             // when
-            sut.deleteByIds(List.of(template.getId()));
+            sut.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertAll(
@@ -338,7 +338,7 @@ class TagServiceTest extends ServiceTest {
             Template template = createSavedTemplate();
 
             // when
-            sut.deleteByIds(List.of(template.getId()));
+            sut.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();

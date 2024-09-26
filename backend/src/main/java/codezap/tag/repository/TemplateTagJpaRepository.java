@@ -3,6 +3,7 @@ package codezap.tag.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import codezap.tag.domain.Tag;
@@ -27,5 +28,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             """)
     List<Long> findDistinctByTemplateIn(List<Long> templateIds);
 
-    void deleteAllByTemplateId(Long id);
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")
+    void deleteByTemplateIds(List<Long> templateIds);
 }
