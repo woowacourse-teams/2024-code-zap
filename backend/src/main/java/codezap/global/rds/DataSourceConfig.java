@@ -45,8 +45,8 @@ public class DataSourceConfig {
         DataSource readerDataSource = readeDataSource();
 
         Map<Object, Object> dataSourceMap = new HashMap<>();
-        dataSourceMap.put("write", writerDataSource);
-        dataSourceMap.put("read", readerDataSource);
+        dataSourceMap.put(DataSourceRouter.WRITER_KEY, writerDataSource);
+        dataSourceMap.put(DataSourceRouter.READER_KEY, readerDataSource);
 
         dataSourceRouter.setTargetDataSources(dataSourceMap);
         dataSourceRouter.setDefaultTargetDataSource(writerDataSource);
