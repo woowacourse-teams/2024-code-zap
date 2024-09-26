@@ -5,6 +5,7 @@ import java.io.Serializable;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
@@ -36,12 +37,12 @@ public class TemplateTag extends BaseTimeEntity {
     @EmbeddedId
     private TemplateTagId id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("templateId")
     @JoinColumn(name = "template_id")
     private Template template;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("tagId")
     @JoinColumn(name = "tag_id")
     private Tag tag;
