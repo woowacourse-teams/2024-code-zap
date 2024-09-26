@@ -99,7 +99,7 @@ public class SourceCodeService {
     }
 
     @Transactional
-    public void deleteByIds(List<Long> templateIds) {
-        templateIds.forEach(sourceCodeRepository::deleteByTemplateId);
+    public void deleteByTemplateIds(List<Long> templateIds) {
+        sourceCodeRepository.deleteByTemplateIds(templateIds);
     }
 }
