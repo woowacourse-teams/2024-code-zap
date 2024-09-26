@@ -26,6 +26,14 @@ public class ThumbnailService {
         return thumbnailRepository.fetchByTemplate(template);
     }
 
+    public List<Thumbnail> getAllByTemplates(List<Template> templates) {
+        List<Long> templateIds = templates.stream()
+                .map(Template::getId)
+                .toList();
+
+        return thumbnailRepository.findAllByTemplateIn(templateIds);
+    }
+
     public ExploreTemplatesResponse findAll() {
         return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }
