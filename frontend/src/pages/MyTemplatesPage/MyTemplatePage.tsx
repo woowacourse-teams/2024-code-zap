@@ -1,14 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, PlusIcon, SearchIcon, ZapzapCuriousLogo } from '@/assets/images';
-import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text, LoadingBall } from '@/components';
+import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text } from '@/components';
 import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useCategoryListQuery } from '@/queries/categories';
-import { useTagListQuery } from '@/queries/tags';
-import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/templates';
+import { useTemplateDeleteMutation, useTemplateCategoryTagQueries } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 import { scroll } from '@/utils';
@@ -36,15 +34,14 @@ const MyTemplatePage = () => {
 
   const [page, setPage] = useState<number>(1);
 
-  const { data: templateData, isPending } = useTemplateListQuery({
+  const [{ data: templateData }, { data: categoryData }, { data: tagData }] = useTemplateCategoryTagQueries({
     keyword: debouncedKeyword,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
     sort: sortingOption.key,
     page,
   });
-  const { data: categoryData } = useCategoryListQuery();
-  const { data: tagData } = useTagListQuery();
+
   const templates = templateData?.templates || [];
   const categories = categoryData?.categories || [];
   const tags = tagData?.tags || [];
@@ -89,10 +86,6 @@ const MyTemplatePage = () => {
   };
 
   const renderTemplateContent = () => {
-    if (isPending) {
-      return <LoadingBall />;
-    }
-
     if (templates.length === 0) {
       if (debouncedKeyword !== '') {
         return (
@@ -171,7 +164,7 @@ const MyTemplatePage = () => {
           {tags.length !== 0 && (
             <TagFilterMenu tags={tags} selectedTagIds={selectedTagIds} onSelectTags={handleTagMenuClick} />
           )}
-          {renderTemplateContent()}
+          <Suspense fallback={<div>거짓말이야~~</div>}>{renderTemplateContent()}</Suspense>
 
           {templates.length !== 0 && (
             <Flex justify='center' gap='0.5rem' margin='1rem 0'>
@@ -181,32 +174,15 @@ const MyTemplatePage = () => {
         </Flex>
 
         {isDeleteModalOpen && (
-          <Modal isOpen={isDeleteModalOpen} toggleModal={toggleDeleteModal} size='xsmall'>
-            <Flex direction='column' justify='space-between' align='center' margin='1rem 0 0 0' gap='2rem'>
-              <Flex direction='column' justify='center' align='center' gap='0.75rem'>
-                <Text.Large color='black' weight='bold'>
-                  정말 삭제하시겠습니까?
-                </Text.Large>
-                <Text.Medium color='black'>삭제된 템플릿은 복구할 수 없습니다.</Text.Medium>
-              </Flex>
-              <Flex justify='center' align='center' gap='0.5rem'>
-                <Button variant='outlined' onClick={toggleDeleteModal}>
-                  취소
-                </Button>
-                <Button onClick={handleDelete}>삭제</Button>
-              </Flex>
-            </Flex>
-          </Modal>
+          <ConfirmDeleteModal
+            isDeleteModalOpen={isDeleteModalOpen}
+            toggleDeleteModal={toggleDeleteModal}
+            handleDelete={handleDelete}
+          />
         )}
       </S.MainContainer>
 
-      <S.ScrollTopButton
-        onClick={() => {
-          scroll.top('smooth');
-        }}
-      >
-        <ArrowUpIcon aria-label='맨 위로' />
-      </S.ScrollTopButton>
+      <ScrollTopButton />
     </S.MyTemplatePageContainer>
   );
 };
@@ -240,3 +216,38 @@ const NewTemplateButton = () => {
 };
 
 export default MyTemplatePage;
+
+interface ConfirmDeleteModalProps {
+  isDeleteModalOpen: boolean;
+  toggleDeleteModal: () => void;
+  handleDelete: () => void;
+}
+
+const ConfirmDeleteModal = ({ isDeleteModalOpen, toggleDeleteModal, handleDelete }: ConfirmDeleteModalProps) => (
+  <Modal isOpen={isDeleteModalOpen} toggleModal={toggleDeleteModal} size='xsmall'>
+    <Flex direction='column' justify='space-between' align='center' margin='1rem 0 0 0' gap='2rem'>
+      <Flex direction='column' justify='center' align='center' gap='0.75rem'>
+        <Text.Large color='black' weight='bold'>
+          정말 삭제하시겠습니까?
+        </Text.Large>
+        <Text.Medium color='black'>삭제된 템플릿은 복구할 수 없습니다.</Text.Medium>
+      </Flex>
+      <Flex justify='center' align='center' gap='0.5rem'>
+        <Button variant='outlined' onClick={toggleDeleteModal}>
+          취소
+        </Button>
+        <Button onClick={handleDelete}>삭제</Button>
+      </Flex>
+    </Flex>
+  </Modal>
+);
+
+const ScrollTopButton = () => (
+  <S.ScrollTopButton
+    onClick={() => {
+      scroll.top('smooth');
+    }}
+  >
+    <ArrowUpIcon aria-label='맨 위로' />
+  </S.ScrollTopButton>
+);
