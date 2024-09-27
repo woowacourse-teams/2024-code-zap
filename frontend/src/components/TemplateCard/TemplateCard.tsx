@@ -2,13 +2,14 @@ import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-lang
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 
-import { PersonIcon } from '@/assets/images';
-import { Button, Flex, TagButton, Text } from '@/components';
-import { useToggle } from '@/hooks/utils';
+import { ClockIcon, PersonIcon } from '@/assets/images';
+import { Button, Flex, LikeCounter, TagButton, Text } from '@/components';
+import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { getLanguageByFilename } from '@/utils';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+
 import * as S from './TemplateCard.style';
 
 interface Props {
@@ -35,18 +36,29 @@ const TemplateCard = ({ template }: Props) => {
 
   return (
     <S.TemplateCardContainer data-testid='template-card'>
-      <Flex direction='column' gap='1rem'>
-        <Flex justify='space-between' gap='3rem'>
-          <Flex align='center' gap='0.125rem'>
-            <PersonIcon width={14} />
-            <Text.Small color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}>
-              {member?.name || ''}
-            </Text.Small>
+      <Flex width='100%' direction='column' gap='1rem'>
+        <Flex width='100%' justify='space-between' gap='1rem'>
+          <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
+            <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
+              <PersonIcon width={14} />
+              <S.EllipsisTextWrapper style={{ width: '100%' }}>
+                <Text.Small
+                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                >
+                  {member.name}
+                </Text.Small>
+              </S.EllipsisTextWrapper>
+            </Flex>
+            <Flex align='center' gap='0.25rem'>
+              <ClockIcon width={14} />
+              <S.NoWrapTextWrapper>
+                <Text.Small color={theme.color.light.primary_500}>{formatRelativeTime(modifiedAt)}</Text.Small>
+              </S.NoWrapTextWrapper>
+            </Flex>
           </Flex>
-
-          <S.NoWrapTextWrapper>
-            <Text.XSmall color={theme.color.light.secondary_500}>{formatRelativeTime(modifiedAt)}</Text.XSmall>
-          </S.NoWrapTextWrapper>
+          <Flex align='center' justify='flex-end' flex='0 0 auto'>
+            <LikeCounter likesCount={template.likesCount} isLiked={template.isLiked} />
+          </Flex>
         </Flex>
 
         <S.EllipsisTextWrapper>

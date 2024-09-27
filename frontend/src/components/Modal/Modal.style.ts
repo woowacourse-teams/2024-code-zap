@@ -62,7 +62,6 @@ export const ModalContainer = styled.div<{ size: ModalSize }>`
 
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 
   max-height: 90vh;
   padding: 1rem;

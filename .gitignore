@@ -10,6 +10,9 @@
 ### Environment Variable ###
 .env
 
+### playwright authentication context
+.auth
+
 *.crt
 *.csr
 *.key

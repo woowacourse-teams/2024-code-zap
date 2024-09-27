@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
-import { useSignupForm } from '@/hooks/authentication';
-import { useToggle } from '@/hooks/utils';
+import { useToggle } from '@/hooks';
+
+import { useSignupForm } from './hooks';
 import * as S from './SignupPage.style';
 
 const SignupPage = () => {

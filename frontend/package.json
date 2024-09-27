@@ -1,12 +1,14 @@
 {
   "name": "code-zap",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
-    "tsc": "npx tsc --noEmit",
+    "tsc": "tsc --noEmit",
     "build": "webpack --mode production --config webpack.prod.js",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
@@ -30,6 +32,7 @@
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^1.6.1",
+    "@playwright/test": "^1.47.0",
     "@storybook/addon-essentials": "^8.2.1",
     "@storybook/addon-interactions": "^8.2.1",
     "@storybook/addon-links": "^8.2.1",

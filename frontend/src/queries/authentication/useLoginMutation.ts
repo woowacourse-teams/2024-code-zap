@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
+import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
-import { useCustomContext } from '@/hooks/utils';
 import { END_POINTS } from '@/routes';
 import { LoginRequest } from '@/types';
 

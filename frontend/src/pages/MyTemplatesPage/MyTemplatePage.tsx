@@ -2,31 +2,29 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, PlusIcon, SearchIcon, ZapzapCuriousLogo } from '@/assets/images';
+import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
 import {
-  CategoryFilterMenu,
   Flex,
   Heading,
   Input,
-  TemplateGrid,
   PagingButtons,
   Dropdown,
-  TagFilterMenu,
   Button,
   Modal,
   Text,
   LoadingBall,
+  NoSearchResults,
 } from '@/components';
-import { useAuth } from '@/hooks/authentication/useAuth';
-import { useWindowWidth, useDebounce, useToggle } from '@/hooks/utils';
-import { useDropdown } from '@/hooks/utils/useDropdown';
-import { useInput } from '@/hooks/utils/useInput';
-import { useCategoryListQuery } from '@/queries/category';
-import { useTagListQuery } from '@/queries/tag';
-import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/template';
+import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
+import { useCategoryListQuery } from '@/queries/categories';
+import { useTagListQuery } from '@/queries/tags';
+import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 import { scroll } from '@/utils';
+
+import { CategoryFilterMenu, TemplateGrid, TagFilterMenu } from './components';
 import * as S from './MyTemplatePage.style';
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
@@ -108,12 +106,7 @@ const MyTemplatePage = () => {
 
     if (templates.length === 0) {
       if (debouncedKeyword !== '') {
-        return (
-          <Flex justify='center' align='center' padding='2rem'>
-            <ZapzapCuriousLogo width={48} height={48} />
-            <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>
-          </Flex>
-        );
+        return <NoSearchResults />;
       } else {
         return <NewTemplateButton />;
       }

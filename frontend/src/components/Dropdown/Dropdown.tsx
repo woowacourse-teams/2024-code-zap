@@ -1,4 +1,5 @@
 import { ChevronIcon } from '@/assets/images';
+
 import { theme } from '../../style/theme';
 import Text from '../Text/Text';
 import * as S from './Dropdown.style';

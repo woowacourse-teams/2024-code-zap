@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { useDropdown } from '@/hooks/utils/useDropdown';
+import { useDropdown } from '@/hooks';
+
 import Dropdown from './Dropdown';
 
 const meta: Meta<typeof Dropdown> = {

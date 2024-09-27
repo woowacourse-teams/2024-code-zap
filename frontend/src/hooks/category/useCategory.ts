@@ -1,6 +1,7 @@
-import { useCategoryListQuery } from '@/queries/category';
+import { useCategoryListQuery } from '@/queries/categories';
 import type { Category } from '@/types';
-import { useDropdown } from '../utils/useDropdown';
+
+import { useDropdown } from '../';
 
 export const useCategory = (initCategory?: Category) => {
   const { data } = useCategoryListQuery();

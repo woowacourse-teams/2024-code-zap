@@ -25,6 +25,14 @@ export interface TemplateEditRequest {
   tags: string[];
 }
 
+export interface LikePostRequest {
+  templateId: number;
+}
+
+export interface LikeDeleteRequest {
+  templateId: number;
+}
+
 export interface CategoryListResponse {
   categories: Category[];
 }
@@ -56,6 +64,11 @@ export interface TemplateListRequest {
   memberId?: number | undefined;
 }
 
-export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc';
+export interface TemplateRequest {
+  id: number;
+  memberId?: number | undefined;
+}
+
+export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc' | 'likesCount,desc';
 
 export type SortingOption = { key: SortingKey; value: string };
