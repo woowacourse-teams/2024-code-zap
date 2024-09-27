@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
@@ -36,6 +37,11 @@ public class TemplateSpecification implements Specification<Template> {
         addCategoryPredicate(predicates, criteriaBuilder, root);
         addTagPredicate(predicates, criteriaBuilder, root, query);
         addKeywordPredicate(predicates, criteriaBuilder, root, query);
+
+        if (query.getResultType().equals(Template.class)) {
+            root.fetch("category", JoinType.LEFT);
+            root.fetch("member", JoinType.LEFT);
+        }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
