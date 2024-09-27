@@ -2,8 +2,19 @@ import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, PlusIcon, SearchIcon, ZapzapCuriousLogo } from '@/assets/images';
-import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text, LoadingBall } from '@/components';
+import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
+import {
+  Flex,
+  Heading,
+  Input,
+  PagingButtons,
+  Dropdown,
+  Button,
+  Modal,
+  Text,
+  LoadingBall,
+  NoSearchResults,
+} from '@/components';
 import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useCategoryListQuery } from '@/queries/categories';
@@ -95,12 +106,7 @@ const MyTemplatePage = () => {
 
     if (templates.length === 0) {
       if (debouncedKeyword !== '') {
-        return (
-          <Flex justify='center' align='center' padding='2rem'>
-            <ZapzapCuriousLogo width={48} height={48} />
-            <Text.Large color={theme.color.light.secondary_700}>검색 결과가 없습니다.</Text.Large>
-          </Flex>
-        );
+        return <NoSearchResults />;
       } else {
         return <NewTemplateButton />;
       }
