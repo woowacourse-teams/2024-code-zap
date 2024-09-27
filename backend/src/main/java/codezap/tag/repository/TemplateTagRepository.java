@@ -14,6 +14,12 @@ public interface TemplateTagRepository {
 
     List<Tag> findAllTagDistinctByMemberId(Long memberId);
 
+    List<TemplateTag> findAllByTemplateId(Long templateId);
+
+    List<Long> findDistinctByTemplateIn(List<Long> templateIds);
+
+    List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds);
+
     TemplateTag save(TemplateTag templateTag);
 
     <S extends TemplateTag> List<S> saveAll(Iterable<S> entities);

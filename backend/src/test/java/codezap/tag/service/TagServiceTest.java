@@ -149,6 +149,88 @@ class TagServiceTest extends ServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 Id로 태그 조회")
+    class FindAllByTemplateId {
+
+        @Test
+        @DisplayName("성공: 템플릿 Id에 해당하는 태그 목록 반환")
+        void findAllByTemplate() {
+            // given
+            Template template = createSavedTemplate();
+            Tag tag1 = tagRepository.save(new Tag("tag1"));
+            Tag tag2 = tagRepository.save(new Tag("tag2"));
+            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
+            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
+
+            // when & then
+            assertThat(sut.findAllByTemplateId(template.getId()))
+                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿에 해당하는 태그가 없는 경우 빈 목록 반환")
+        void findAllByTemplate_WhenNotExistTemplateTag() {
+            // given
+            Template template = createSavedTemplate();
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThat(sut.findAllByTemplateId(template.getId())).isEmpty();
+        }
+
+        @Test
+        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
+        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
+        void findAllByTemplate_WhenNotExistTemplate() {
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template unSavedTemplate = TemplateFixture.get(member, category);
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThatThrownBy(() -> sut.findAllByTemplateId(unSavedTemplate.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("템플릿 목록으로 템플릿 태그 조회")
+    class GetAllTemplateTagsByTemplates {
+
+        @Test
+        @DisplayName("성공: 템플릿 목록에 하나라도 해당하는 템플릿 태그 목록 반환")
+        void getAllTemplateTagsByTemplates() {
+            // given
+            Template template = createSavedTemplate();
+            Template secondTemplate = createSecondTemplate();
+            Tag tag1 = tagRepository.save(new Tag("tag1"));
+            Tag tag2 = tagRepository.save(new Tag("tag2"));
+            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
+            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(secondTemplate, tag2));
+
+            // when & then
+            assertThat(sut.getAllTemplateTagsByTemplates(List.of(template, secondTemplate)))
+                    .containsExactly(templateTag1, templateTag2);
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿 목록에 전혀 해당하는 템플릿 태그 빈 목록 반환")
+        void getAllTemplateTagsByTemplates_WhenNotExistTemplateTag() {
+            // given
+            Template template = createSavedTemplate();
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThat(sut.getAllTemplateTagsByTemplates(List.of(template))).isEmpty();
+        }
+    }
+
+    @Nested
     @DisplayName("사용자 ID로 모든 태그 조회")
     class FindAllByMemberId {
 

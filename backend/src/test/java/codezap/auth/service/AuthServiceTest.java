@@ -10,6 +10,8 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
 import codezap.auth.dto.LoginAndCredentialDto;
@@ -18,18 +20,23 @@ import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.encryption.PasswordEncryptor;
 import codezap.auth.encryption.SHA2PasswordEncryptor;
 import codezap.auth.provider.CredentialProvider;
-import codezap.auth.provider.basic.BasicAuthCredentialProvider;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
+@SpringBootTest
+@DatabaseIsolation
 public class AuthServiceTest {
-    private final MemberRepository memberRepository = new FakeMemberRepository();
-    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
-    private final CredentialProvider credentialProvider = new BasicAuthCredentialProvider(memberRepository);
-    private final AuthService authService = new AuthService(credentialProvider, memberRepository, passwordEncryptor);
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private CredentialProvider credentialProvider;
+
+    @Autowired
+    private AuthService authService;
 
     @Nested
     @DisplayName("로그인 테스트")
@@ -76,11 +83,11 @@ public class AuthServiceTest {
     }
 
     @Nested
-    @DisplayName("쿠키 인증 테스트")
+    @DisplayName("로그인 상태 확인 테스트")
     class CheckLoginTest {
 
         @Test
-        @DisplayName("쿠키 인증 성공")
+        @DisplayName("성공")
         void checkLogin() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String basicAuthCredentials = credentialProvider.createCredential(member);
@@ -90,7 +97,7 @@ public class AuthServiceTest {
         }
 
         @Test
-        @DisplayName("쿠키 인증 실패: 잘못된 크레덴셜")
+        @DisplayName("실패: 잘못된 크레덴셜")
         void checkLogin_WithInvalidCredential_ThrowsException() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             String invalidCredential = HttpHeaders.encodeBasicAuth(

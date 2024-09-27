@@ -22,9 +22,27 @@ public interface ThumbnailJpaRepository extends
                         "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
     }
 
+    @Query("""
+        SELECT t, sc
+        FROM Thumbnail t
+        join fetch t.sourceCode sc
+        WHERE t.template = :template
+        """)
     Optional<Thumbnail> findByTemplate(Template template);
+
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Thumbnail t WHERE t.template.id in :templateIds")
     void deleteByTemplateIds(List<Long> templateIds);
+
+    @Query("""
+            SELECT t, sc
+            FROM Thumbnail t
+            join fetch t.sourceCode sc
+            WHERE t.template.id IN :templateIds
+            """)
+    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
+
+    void deleteByTemplateId(Long id);
+
 }

@@ -13,9 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.SourceCodeFixture;
+import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.JpaRepositoryTest;
+import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
@@ -58,6 +62,51 @@ public class ThumbnailRepositoryTest {
 
             // then
             assertThat(actual).isEqualTo(thumbnail);
+        }
+    }
+
+    @Nested
+    @DisplayName("템플릿 목록으로 썸네일 목록 조회")
+    class FindAllByTemplateIn {
+
+        @Test
+        @DisplayName("템플릿 목록으로 썸네일 목록 조회 성공")
+        void findAllByTemplateIn() {
+            // given
+            var template1 = createSavedTemplate();
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
+            var thumbnail1 = sut.save(new Thumbnail(template1, sourceCode1));
+
+            var template2 = createSecondTemplate();
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
+            var thumbnail2 = sut.save(new Thumbnail(template2, sourceCode2));
+
+            // when
+            var actual = sut.findAllByTemplateIn(List.of(template1.getId(), template2.getId()));
+
+            // then
+            assertThat(actual).containsExactlyInAnyOrder(thumbnail1, thumbnail2);
+        }
+
+        @Test
+        @DisplayName("템플릿 목록으로 썸네일 목록 조회 성공: 해당하는 썸네일이 없는 경우 빈 목록 반환")
+        void findAllByTemplateInWhenNotExistThumbnail() {
+            // given
+            var template1 = createSavedTemplate();
+
+            assertThat(sut.findAllByTemplateIn(List.of(template1.getId()))).isEmpty();
+        }
+
+        private Template createSavedTemplate() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            return templateRepository.save(TemplateFixture.get(member, category));
+        }
+
+        private Template createSecondTemplate() {
+            Member member = memberRepository.save(MemberFixture.getSecondMember());
+            Category category = categoryRepository.save(CategoryFixture.getSecondCategory());
+            return templateRepository.save(TemplateFixture.get(member, category));
         }
     }
 

@@ -29,6 +29,10 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
         return templateTags.stream()
                 .filter(templateTag -> Objects.equals(templateTag.getTemplate(), template))
                 .map(TemplateTag::getTag)
+
+    public List<TemplateTag> findAllByTemplateId(Long templateId) {
+        return templateTags.stream()
+                .filter(templateTag -> Objects.equals(templateTag.getTemplate(), templateId))
                 .toList();
     }
 
@@ -72,5 +76,10 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
                 .distinct()
                 .map(TemplateTag::getTag)
                 .toList();
+    }
+
+    @Override
+    public List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds) {
+        return List.of();
     }
 }

@@ -51,4 +51,8 @@ public class TemplateTag extends BaseTimeEntity {
         this.template = template;
         this.tag = tag;
     }
+
+    public boolean hasTemplate(Template template) {
+        return this.getTemplate().equals(template);
+    }
 }

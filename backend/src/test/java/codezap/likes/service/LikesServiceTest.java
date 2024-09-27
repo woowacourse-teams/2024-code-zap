@@ -16,7 +16,6 @@ import codezap.global.DatabaseIsolation;
 import codezap.global.ServiceTest;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.template.domain.Template;
 
 @SpringBootTest
@@ -39,7 +38,7 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            likesService.like(MemberDto.from(member), template.getId());
+            likesService.like(member, template.getId());
 
             assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isTrue();
         }
@@ -53,8 +52,8 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            likesService.like(MemberDto.from(member), template.getId());
-            likesService.like(MemberDto.from(member), template.getId());
+            likesService.like(member, template.getId());
+            likesService.like(member, template.getId());
 
             assertThat(likesRepository.countByTemplate(template)).isEqualTo(1L);
         }
@@ -74,7 +73,7 @@ class LikesServiceTest extends ServiceTest {
             ));
             likesRepository.save(new Likes(null, template, member));
 
-            likesService.cancelLike(MemberDto.from(member), template.getId());
+            likesService.cancelLike(member, template.getId());
 
             assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isFalse();
         }
@@ -88,9 +87,9 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            likesService.cancelLike(MemberDto.from(member), template.getId());
+            likesService.cancelLike(member, template.getId());
 
-            assertThatCode(() -> likesService.cancelLike(MemberDto.from(member), template.getId()))
+            assertThatCode(() -> likesService.cancelLike(member, template.getId()))
                     .doesNotThrowAnyException();
         }
     }

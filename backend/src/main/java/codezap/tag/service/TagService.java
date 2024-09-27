@@ -48,6 +48,17 @@ public class TagService {
         return templateTagRepository.findAllTagsByTemplate(template);
     }
 
+    public List<Tag> findAllByTemplateId(Long templateId) {
+        return templateTagRepository.findAllByTemplateId(templateId).stream()
+                .map(TemplateTag::getTag)
+                .toList();
+    }
+
+    public List<TemplateTag> getAllTemplateTagsByTemplates(List<Template> templates) {
+        List<Long> templateIds = templates.stream().map(Template::getId).toList();
+        return templateTagRepository.findAllByTemplateIdsIn(templateIds);
+    }
+
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
         List<Tag> tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
         return new FindAllTagsResponse(tags.stream()

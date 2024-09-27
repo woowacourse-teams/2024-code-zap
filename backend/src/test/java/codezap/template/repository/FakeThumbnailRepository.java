@@ -42,6 +42,11 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
     }
 
     @Override
+    public List<Thumbnail> findAllByTemplateIn(List<Long> templateIds) {
+        return List.of();
+    }
+
+    @Override
     public Thumbnail save(Thumbnail entity) {
         var saved = new Thumbnail(
                 getOrGenerateId(entity),

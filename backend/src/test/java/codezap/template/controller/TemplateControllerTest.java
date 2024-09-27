@@ -76,7 +76,7 @@ class TemplateControllerTest {
 
     private final CategoryService categoryService = new CategoryService(categoryRepository, templateRepository);
 
-    private final LikesService likesService = new LikesService(templateRepository, memberRepository, likesRepository);
+    private final LikesService likesService = new LikesService(templateRepository, likesRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
 
