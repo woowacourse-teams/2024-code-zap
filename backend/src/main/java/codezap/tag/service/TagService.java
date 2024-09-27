@@ -45,9 +45,7 @@ public class TagService {
     }
 
     public List<Tag> findAllByTemplate(Template template) {
-        return templateTagRepository.findAllTagsByTemplate(template)
-                .stream()
-                .toList();
+        return templateTagRepository.findAllTagsByTemplate(template);
     }
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
