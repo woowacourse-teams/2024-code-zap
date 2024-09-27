@@ -86,6 +86,10 @@ const TemplateCard = ({ template }: Props) => {
           S.CustomCodeMirrorTheme,
           EditorView.editable.of(false),
         ]}
+        basicSetup={{
+          foldKeymap: true,
+          foldGutter: false,
+        }}
         css={{
           '.cm-editor': {
             borderRadius: '8px',
