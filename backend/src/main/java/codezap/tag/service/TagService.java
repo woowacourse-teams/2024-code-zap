@@ -12,7 +12,6 @@ import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -20,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class TagService {
 
     private final TagRepository tagRepository;
-    private final TemplateRepository templateRepository;
     private final TemplateTagRepository templateTagRepository;
 
     @Transactional
@@ -47,9 +45,7 @@ public class TagService {
     }
 
     public List<Tag> findAllByTemplate(Template template) {
-        return templateTagRepository.findAllByTemplate(template).stream()
-                .map(TemplateTag::getTag)
-                .toList();
+        return templateTagRepository.findAllTagsByTemplate(template);
     }
 
     public List<Tag> findAllByTemplateId(Long templateId) {
@@ -64,11 +60,9 @@ public class TagService {
     }
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
-        List<Template> templates = templateRepository.findByMemberId(memberId);
-        List<Long> templateIds = templates.stream().map(Template::getId).toList();
-        List<Long> templateTagIds = templateTagRepository.findDistinctByTemplateIn(templateIds);
-        return new FindAllTagsResponse(templateTagIds.stream()
-                .map(id -> FindTagResponse.from(tagRepository.fetchById(id)))
+        List<Tag> tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
+        return new FindAllTagsResponse(tags.stream()
+                .map(FindTagResponse::from)
                 .toList());
     }
 
@@ -79,7 +73,7 @@ public class TagService {
     }
 
     @Transactional
-    public void deleteByIds(List<Long> templateIds) {
-        templateIds.forEach(templateTagRepository::deleteAllByTemplateId);
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
+        templateTagRepository.deleteByTemplateIds(templateIds);
     }
 }

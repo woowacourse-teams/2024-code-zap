@@ -1,6 +1,7 @@
 package codezap.likes.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,6 +30,6 @@ public class Likes extends BaseTimeEntity {
     @ManyToOne(optional = false)
     private Template template;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member member;
 }

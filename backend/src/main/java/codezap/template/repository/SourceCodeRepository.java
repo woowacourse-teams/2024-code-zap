@@ -25,5 +25,5 @@ public interface SourceCodeRepository {
 
     void deleteById(Long id);
 
-    void deleteByTemplateId(Long id);
+    void deleteByTemplateIds(List<Long> templateIds);
 }

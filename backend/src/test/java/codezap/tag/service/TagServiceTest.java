@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -268,28 +267,32 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 템플릿 목록에 해당하는 모든 태그 반환")
-        void findAllByTemplates() {
+        @DisplayName("성공: 해당 멤버의 모든 태그 반환")
+        void findAllByMemberIdSuccess() {
             // given
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
-            Template template1 = createSavedTemplate();
-            templateTagRepository.save(new TemplateTag(template1, tag1));
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(new Category("자바", member));
 
-            Template template2 = createSecondTemplate();
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
-            // when & then
-            List<Tag> actual = new ArrayList<>();
-            actual.addAll(sut.findAllByTemplateId(template1.getId()));
-            actual.addAll(sut.findAllByTemplateId(template2.getId()));
-            assertThat(actual).isEqualTo(List.of(tag1, tag2));
+            // when
+            FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
+
+            // then
+            assertThat(actual).isEqualTo(new FindAllTagsResponse(
+                    List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
+            );
         }
 
         @Test
         @DisplayName("성공: 템플릿들이 중복된 태그를 가지는 경우 중복 제거 후 반환")
-        void findAllByTemplates_WhenDuplicatedTags() {
+        void findAllByMemberId_WhenDuplicatedTags() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
 
@@ -403,7 +406,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template, tag2));
 
             // when
-            sut.deleteByIds(List.of(template.getId()));
+            sut.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertAll(
@@ -420,7 +423,7 @@ class TagServiceTest extends ServiceTest {
             Template template = createSavedTemplate();
 
             // when
-            sut.deleteByIds(List.of(template.getId()));
+            sut.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();

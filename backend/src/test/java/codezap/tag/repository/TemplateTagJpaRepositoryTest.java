@@ -51,8 +51,8 @@ class TemplateTagJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("Template 을 이용한 TemplateTag 목록 조회 성공")
-    void findAllByTemplateTest() {
+    @DisplayName("Template 을 이용한 Tag 목록 조회 성공")
+    void findAllTagsByTemplateTest() {
         //given
         Template template = templateRepository.save(createNthTemplate(member, category, 1));
 
@@ -60,15 +60,15 @@ class TemplateTagJpaRepositoryTest {
         Tag tag2 = tagRepository.save(new Tag("tag2"));
         Tag tag3 = tagRepository.save(new Tag("tag3"));
 
-        TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
-        TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
+        templateTagRepository.save(new TemplateTag(template, tag1));
+        templateTagRepository.save(new TemplateTag(template, tag2));
 
         //when
-        List<TemplateTag> templateTags = templateTagRepository.findAllByTemplate(template);
+        List<Tag> tags = templateTagRepository.findAllTagsByTemplate(template);
 
         //then
-        assertThat(templateTags).containsExactly(templateTag1, templateTag2)
-                .doesNotContain(new TemplateTag(template, tag3));
+        assertThat(tags).containsExactly(tag1, tag2)
+                .doesNotContain(tag3);
     }
 
 
@@ -126,8 +126,9 @@ class TemplateTagJpaRepositoryTest {
         @DisplayName("태그 목록 조회 성공 : 정상적으로 태그 목록 조회")
         void testFindDistinctByTemplateIn() {
             // given
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
             Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
-            Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
+            Template template2 = templateRepository.save(createNthTemplate(otherMember, category, 2));
             Template template3 = templateRepository.save(createNthTemplate(member, category, 3));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
@@ -140,18 +141,16 @@ class TemplateTagJpaRepositoryTest {
             templateTagRepository.save(new TemplateTag(template3, tag3));
 
             // when
-            List<Long> result = templateTagRepository.findDistinctByTemplateIn(
-                    List.of(template1.getId(), template3.getId())
-            );
+            List<Tag> result = templateTagRepository.findAllTagDistinctByMemberId(member.getId());
 
             // then
             assertThat(result).hasSize(2)
-                    .containsExactly(tag1.getId(), tag3.getId())
-                    .doesNotContain(tag2.getId());
+                    .containsExactly(tag1, tag3)
+                    .doesNotContain(tag2);
         }
 
         @Test
-        @DisplayName("태그 목록 조회 성공 : 존재하지 않는 템플릿 id를 사용하면 예외가 터지지 않고 해당 id 값이 무시된다.")
+        @DisplayName("태그 목록 조회 성공 : 존재하지 않는 멤버 id를 사용하면 예외가 터지지 않고 해당 id 값이 무시된다.")
         void notExistTemplateIdTest() {
             long notExistTemplateId = 100L;
 
@@ -160,9 +159,9 @@ class TemplateTagJpaRepositoryTest {
                             .isInstanceOf(CodeZapException.class)
                             .hasMessageContaining("템플릿이 존재하지 않습니다."),
                     () -> assertThatCode(() ->
-                            templateTagRepository.findDistinctByTemplateIn(List.of(notExistTemplateId)))
+                            templateTagRepository.findAllTagDistinctByMemberId(notExistTemplateId))
                             .doesNotThrowAnyException(),
-                    () -> assertThat(templateTagRepository.findDistinctByTemplateIn(List.of(notExistTemplateId)))
+                    () -> assertThat(templateTagRepository.findAllTagDistinctByMemberId(notExistTemplateId))
                             .isEmpty()
             );
         }

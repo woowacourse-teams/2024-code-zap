@@ -84,7 +84,6 @@ class TemplateControllerTest {
 
     private final TagService tagService = new TagService(
             new FakeTagRepository(),
-            new FakeTemplateRepository(),
             new FakeTemplateTagRepository());
 
     private final TemplateApplicationService templateApplicationService =

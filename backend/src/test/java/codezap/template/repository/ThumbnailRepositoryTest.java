@@ -125,7 +125,7 @@ public class ThumbnailRepositoryTest {
             sut.save(new Thumbnail(template, sourceCode));
 
             // when
-            sut.deleteByTemplateId(template.getId());
+            sut.deleteByTemplateIds(List.of(template.getId()));
 
             // then
             assertThatThrownBy(() -> sut.fetchByTemplate(template))
@@ -136,7 +136,7 @@ public class ThumbnailRepositoryTest {
         @Test
         @DisplayName("템플릿 id로 썸네일 삭제 성공: 존재하지 않는 템플릿의 id로 삭제해도 예외로 처리하지 않는다.")
         void deleteByNotExistTemplateId() {
-            assertThatCode(() -> sut.deleteByTemplateId(100L))
+            assertThatCode(() -> sut.deleteByTemplateIds(List.of(100L)))
                     .doesNotThrowAnyException();
         }
     }

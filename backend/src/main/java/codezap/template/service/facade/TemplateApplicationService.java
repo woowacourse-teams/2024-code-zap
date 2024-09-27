@@ -142,8 +142,8 @@ public class TemplateApplicationService {
     @Transactional
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         thumbnailService.deleteByTemplateIds(ids);
-        sourceCodeService.deleteByIds(ids);
-        tagService.deleteByIds(ids);
+        sourceCodeService.deleteByTemplateIds(ids);
+        tagService.deleteAllByTemplateIds(ids);
         templateService.deleteByMemberAndIds(member, ids);
     }
 }

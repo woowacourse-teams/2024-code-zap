@@ -3,15 +3,23 @@ package codezap.tag.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import codezap.tag.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 
 @SuppressWarnings("unused")
 public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepository<TemplateTag, Long> {
 
-    List<TemplateTag> findAllByTemplate(Template template);
+    @Query("""
+            SELECT t
+            FROM Tag t
+            JOIN TemplateTag tt ON t.id = tt.id.tagId
+            WHERE tt.template = :template
+            """)
+    List<Tag> findAllTagsByTemplate(Template template);
 
     @Query("""
         SELECT tt, t
@@ -30,11 +38,18 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
     List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds);
 
     @Query("""
-            SELECT DISTINCT tt.id.tagId
-            FROM TemplateTag tt
-            WHERE tt.id.templateId IN :templateIds
-            """)
-    List<Long> findDistinctByTemplateIn(List<Long> templateIds);
+            SELECT DISTINCT t
+            FROM Tag t
+            WHERE t.id IN (
+                SELECT DISTINCT tt.id.tagId
+                FROM TemplateTag tt
+                WHERE tt.id.templateId IN
+                    (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
+        )
+        """)
+    List<Tag> findAllTagDistinctByMemberId(Long memberId);
 
-    void deleteAllByTemplateId(Long id);
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")
+    void deleteByTemplateIds(List<Long> templateIds);
 }
