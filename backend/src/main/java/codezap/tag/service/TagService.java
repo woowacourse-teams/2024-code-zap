@@ -1,5 +1,6 @@
 package codezap.tag.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,25 +24,22 @@ public class TagService {
 
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
-        List<String> existingTags = tagRepository.findNameByNamesIn(tagNames);
-        templateTagRepository.saveAll(
-                existingTags.stream()
-                        .map(tagRepository::fetchByName)
-                        .map(tag -> new TemplateTag(template, tag))
-                        .toList()
-        );
+        List<Tag> existingTags = new ArrayList<>(tagRepository.findByNameIn(tagNames));
+        List<String> existNames = existingTags.stream()
+                .map(Tag::getName)
+                .toList();
 
         List<Tag> newTags = tagRepository.saveAll(
                 tagNames.stream()
-                        .filter(tagName -> !existingTags.contains(tagName))
+                        .filter(name -> !existNames.contains(name))
                         .map(Tag::new)
                         .toList()
         );
-        templateTagRepository.saveAll(
-                newTags.stream()
-                        .map(tag -> new TemplateTag(template, tag))
-                        .toList()
-        );
+        existingTags.addAll(newTags);
+
+        for (Tag existingTag : existingTags) {
+            templateTagRepository.save(new TemplateTag(template, existingTag));
+        }
     }
 
     public List<Tag> findAllByTemplate(Template template) {
