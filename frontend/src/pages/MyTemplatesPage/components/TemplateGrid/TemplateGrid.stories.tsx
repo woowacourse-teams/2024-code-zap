@@ -1,13 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { templates } from '@/mocks/templateList.json';
+
 import TemplateGrid from './TemplateGrid';
 
 const meta: Meta<typeof TemplateGrid> = {
   title: 'TemplateGrid',
   component: TemplateGrid,
   args: {
-    templates,
+    templateList: templates,
   },
 };
 

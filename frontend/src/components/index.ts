@@ -23,3 +23,4 @@ export { default as NoSearchResults } from './NoSearchResults/NoSearchResults';
 
 // Skeleton UI
 export { default as LoadingBall } from './LoadingBall/LoadingBall';
+export { default as LoadingFallback } from './LoadingFallback/LoadingFallback';
