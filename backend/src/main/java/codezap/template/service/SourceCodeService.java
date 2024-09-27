@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class SourceCodeService {
+
     private final SourceCodeRepository sourceCodeRepository;
 
     @Transactional
@@ -35,7 +36,7 @@ public class SourceCodeService {
         return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
     }
 
-    public List<SourceCode> findSourceCodesByTemplate(Template template) {
+    public List<SourceCode> findAllByTemplate(Template template) {
         return sourceCodeRepository.findAllByTemplate(template);
     }
 
@@ -51,6 +52,24 @@ public class SourceCodeService {
         updateThumbnail(updateTemplateRequest, template, thumbnail);
         updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
         validateSourceCodesCount(template, updateTemplateRequest);
+    }
+
+    private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
+        SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
+        sourceCode.updateSourceCode(
+                updateSourceCodeRequest.filename(),
+                updateSourceCodeRequest.content(),
+                updateSourceCodeRequest.ordinal()
+        );
+    }
+
+    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
+        return new SourceCode(
+                template,
+                createSourceCodeRequest.filename(),
+                createSourceCodeRequest.content(),
+                createSourceCodeRequest.ordinal()
+        );
     }
 
     private void updateThumbnail(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
@@ -70,24 +89,6 @@ public class SourceCodeService {
                 .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode(), sourceCode))
                 .findFirst()
                 .ifPresent(thumbnail::updateThumbnail);
-    }
-
-    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
-        return new SourceCode(
-                template,
-                createSourceCodeRequest.filename(),
-                createSourceCodeRequest.content(),
-                createSourceCodeRequest.ordinal()
-        );
-    }
-
-    private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
-        SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
-        sourceCode.updateSourceCode(
-                updateSourceCodeRequest.filename(),
-                updateSourceCodeRequest.content(),
-                updateSourceCodeRequest.ordinal()
-        );
     }
 
     private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {

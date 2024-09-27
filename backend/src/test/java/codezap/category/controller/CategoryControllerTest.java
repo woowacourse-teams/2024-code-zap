@@ -31,9 +31,7 @@ import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.MockMvcTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.fixture.MemberFixture;
-
 
 @Import(CategoryController.class)
 class CategoryControllerTest extends MockMvcTest {
@@ -47,11 +45,11 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 생성 성공")
         void createCategorySuccess() throws Exception {
-            Long categoryId = 1L;
+            long categoryId = 1L;
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            when(memberCategoryApplicationService.create(
-                    MemberDto.from(MemberFixture.memberFixture()), createCategoryRequest))
+            when(categoryService.create(
+                    MemberFixture.memberFixture(), createCategoryRequest))
                     .thenReturn(new CreateCategoryResponse(1L, "category"));
 
             mvc.perform(post("/categories")
@@ -78,7 +76,7 @@ class CategoryControllerTest extends MockMvcTest {
 
         @Test
         @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
-        void createCategoryFailWithLongName() throws Exception {
+        void createCategoryFailWithlongName() throws Exception {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             mvc.perform(post("/categories")
@@ -97,7 +95,7 @@ class CategoryControllerTest extends MockMvcTest {
         List<Category> categories = List.of(new Category("category1", member), new Category("category1", member));
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
-        when(memberCategoryApplicationService.findAllByMember(any())).thenReturn(findAllCategoriesResponse);
+        when(categoryService.findAllByMemberId(any())).thenReturn(findAllCategoriesResponse);
 
         mvc.perform(get("/categories")
                         .param("memberId", "1")
@@ -116,7 +114,7 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 수정 성공")
         void updateCategorySuccess() throws Exception {
-            Long categoryId = 1L;
+            long categoryId = 1L;
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("updateCategory");
 
             mvc.perform(put("/categories/" + categoryId)
@@ -129,7 +127,7 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 수정 실패: 권한 없음")
         void updateCategoryFailWithUnauthorized() throws Exception {
-            Long categoryId = 1L;
+            long categoryId = 1L;
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
 
             doThrow(new CodeZapException(HttpStatus.UNAUTHORIZED, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
@@ -144,8 +142,8 @@ class CategoryControllerTest extends MockMvcTest {
 
         @Test
         @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
-        void updateCategoryFailWithLongName() throws Exception {
-            Long categoryId = 1L;
+        void updateCategoryFailWithlongName() throws Exception {
+            long categoryId = 1L;
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             mvc.perform(put("/categories/" + categoryId)
@@ -158,12 +156,12 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 수정 실패: 중복된 이름의 카테고리 존재")
         void updateCategoryFailWithDuplicatedName() throws Exception {
-            Long categoryId = 1L;
+            long categoryId = 1L;
             String duplicatedName = "duplicatedName";
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicatedName);
 
             doThrow(new CodeZapException(HttpStatus.CONFLICT, "이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
-                    .when(memberCategoryApplicationService).update(any(), any(), any());
+                    .when(categoryService).update(any(), any(), any());
 
             mvc.perform(put("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)
@@ -174,7 +172,6 @@ class CategoryControllerTest extends MockMvcTest {
         }
     }
 
-
     @Nested
     @DisplayName("카테고리 삭제 테스트")
     class deleteCategoryTest {
@@ -182,21 +179,21 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 삭제 성공")
         void deleteCategorySuccess() throws Exception {
-            Long categoryId = 1L;
+            long categoryId = 1L;
 
             mvc.perform(delete("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
 
-            verify(memberCategoryTemplateApplicationService, times(1))
-                    .deleteById(MemberDto.from(MemberFixture.memberFixture()), categoryId);
+            verify(categoryService, times(1))
+                    .deleteById(MemberFixture.memberFixture(), categoryId);
         }
 
         @Test
         @DisplayName("카테고리 삭제 실패: 권한 없음")
         void deleteCategoryFailWithUnauthorized() throws Exception {
-            Long categoryId = 1L;
+            long categoryId = 1L;
             doThrow(new CodeZapException(HttpStatus.UNAUTHORIZED, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialProvider).extractMember(anyString());
 
@@ -209,10 +206,10 @@ class CategoryControllerTest extends MockMvcTest {
         @Test
         @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리의 삭제 요청")
         void updateCategoryFailWithDuplicatedName() throws Exception {
-            Long id = 2L;
+            long id = 2L;
 
             doThrow(new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
-                    .when(memberCategoryTemplateApplicationService).deleteById(any(), any());
+                    .when(categoryService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + id)
                             .accept(MediaType.APPLICATION_JSON)
@@ -223,10 +220,10 @@ class CategoryControllerTest extends MockMvcTest {
 
         @Test
         @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
-        void updateCategoryFailWithLongName() throws Exception {
-            Long categoryId = 1L;
+        void updateCategoryFailWithlongName() throws Exception {
+            long categoryId = 1L;
             doThrow(new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
-                    .when(memberCategoryTemplateApplicationService).deleteById(any(), any());
+                    .when(categoryService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + categoryId)
                             .accept(MediaType.APPLICATION_JSON)

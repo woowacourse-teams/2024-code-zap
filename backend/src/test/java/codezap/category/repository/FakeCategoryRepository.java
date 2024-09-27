@@ -18,10 +18,6 @@ public class FakeCategoryRepository implements CategoryRepository {
 
     private final List<Category> categories;
 
-    public FakeCategoryRepository() {
-        this.categories = new ArrayList<>();
-    }
-
     public FakeCategoryRepository(List<Category> categories) {
         this.categories = new ArrayList<>(categories);
         idCounter.set(1 + categories.size());
@@ -36,9 +32,9 @@ public class FakeCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public List<Category> findAllByMemberOrderById(Member member) {
+    public List<Category> findAllByMemberIdOrderById(Long memberId) {
         return categories.stream()
-                .filter(category -> Objects.equals(category.getMember(), member))
+                .filter(category -> Objects.equals(category.getMember().getId(), memberId))
                 .sorted(Comparator.comparing(Category::getId))
                 .toList();
     }
@@ -46,11 +42,6 @@ public class FakeCategoryRepository implements CategoryRepository {
     @Override
     public List<Category> findAll() {
         return categories;
-    }
-
-    @Override
-    public boolean existsById(Long id) {
-        return categories.stream().anyMatch(category -> Objects.equals(category.getId(), id));
     }
 
     @Override
@@ -67,11 +58,15 @@ public class FakeCategoryRepository implements CategoryRepository {
                 getOrGenerateId(entity),
                 entity.getMember(),
                 entity.getName(),
-                entity.getIsDefault()
+                entity.isDefault()
         );
         categories.removeIf(category -> Objects.equals(category.getId(), entity.getId()));
         categories.add(saved);
         return saved;
+    }
+
+    private boolean existsById(Long id) {
+        return categories.stream().anyMatch(category -> Objects.equals(category.getId(), id));
     }
 
     private long getOrGenerateId(Category entity) {

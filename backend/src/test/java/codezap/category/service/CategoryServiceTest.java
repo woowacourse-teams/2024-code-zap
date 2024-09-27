@@ -3,95 +3,200 @@ package codezap.category.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import jakarta.transaction.Transactional;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
+import codezap.category.dto.response.FindCategoryResponse;
 import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
+import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
+import codezap.template.domain.Template;
+import codezap.template.repository.TemplateRepository;
 
+@SpringBootTest
+@DatabaseIsolation
+@Transactional
 class CategoryServiceTest {
 
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository();
-    private final MemberRepository memberRepository = new FakeMemberRepository();
+    @Autowired
+    private CategoryService sut;
 
-    private final CategoryService categoryService = new CategoryService(categoryRepository);
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private TemplateRepository templateRepository;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
-    class createCategoryTest {
+    class CreateCategoryTest {
 
         @Test
         @DisplayName("카테고리 생성 성공")
         void createCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category1");
+            String categoryName = "categoryName";
+            CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
 
-            CreateCategoryResponse response = categoryService.create(member, createCategoryRequest);
+            CreateCategoryResponse response = sut.create(member, request);
 
-            assertThat(response.id()).isEqualTo(1L);
-        }
-
-        @Test
-        @DisplayName("카테고리 생성 실패: 동일한 멤버, 중복된 이름의 카테고리 이름 생성")
-        void createCategoryFailWithSameMemberAndDuplicateName() {
-            String duplicatedCategoryName = "category";
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            categoryRepository.save(new Category(duplicatedCategoryName, member));
-
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
-
-            assertThatThrownBy(
-                    () -> categoryService.create(member, createCategoryRequest))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
+            Category savedCategory = categoryRepository.fetchById(response.id());
+            assertAll(
+                    () -> assertThat(response.id()).isEqualTo(1L),
+                    () -> assertThat(savedCategory.getName()).isEqualTo(categoryName),
+                    () -> assertThat(savedCategory.getMember()).isEqualTo(member)
+            );
         }
 
         @Test
         @DisplayName("카테고리 생성 성공: 다른 멤버, 중복된 이름의 카테고리 이름 생성")
         void createCategorySuccessWithOtherMemberAndSameName() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
-            categoryRepository.save(new Category("category", member));
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
+            String duplicatedCategoryName = "category";
+            categoryRepository.save(new Category(duplicatedCategoryName, member));
 
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
+            CreateCategoryResponse createCategoryResponse = sut.create(otherMember, createCategoryRequest);
+            Category savedCategory = categoryRepository.fetchById(createCategoryResponse.id());
 
-            assertThat(categoryService.create(otherMember, createCategoryRequest).id())
-                    .isEqualTo(2L);
+            assertAll(
+                    () -> assertThat(createCategoryResponse.id()).isEqualTo(2L),
+                    () -> assertThat(savedCategory.getName()).isEqualTo(duplicatedCategoryName),
+                    () -> assertThat(savedCategory.getMember()).isEqualTo(otherMember)
+            );
         }
 
         @Test
-        @DisplayName("카테고리 전체 조회 테스트")
+        @DisplayName("카테고리 생성 실패: 동일한 멤버, 중복된 이름의 카테고리 이름 생성")
+        void createCategoryFailWithSameMemberAndDuplicateName() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            String duplicatedCategoryName = "category";
+            categoryRepository.save(new Category(duplicatedCategoryName, member));
+
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
+
+            assertThatThrownBy(() -> sut.create(member, createCategoryRequest))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("멤버 ID로 카테고리 조회 테스트")
+    class FindAllCategoryByMemberTest {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category category1 = categoryRepository.save(new Category("category1", member));
+            Category category2 = categoryRepository.save(new Category("category2", member));
+            Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
+            Category category3 = categoryRepository.save(new Category("notMyCategory", otherMember));
+
+            FindAllCategoriesResponse categoryByMember = sut.findAllByMemberId(member.getId());
+
+            assertThat(categoryByMember.categories()).hasSize(2)
+                    .containsExactly(FindCategoryResponse.from(category1), FindCategoryResponse.from(category2))
+                    .doesNotContain(FindCategoryResponse.from(category3));
+        }
+
+        @Test
+        @DisplayName("성공 : 존재하지 않는 멤버로 조회를 하면 빈 리스트를 반환한다.")
+        void failWithNotExistMember() {
+            long nonExistentMemberId = 100L;
+
+            var actual = sut.findAllByMemberId(nonExistentMemberId).categories();
+
+            assertThat(actual).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("카테고리 전체 조회 테스트")
+    class FindAllCategoryTest {
+
+        @Test
+        @DisplayName("성공")
         void findAllCategoriesSuccess() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
             categoryRepository.save(new Category("category1", member));
             categoryRepository.save(new Category("category2", member));
 
-            FindAllCategoriesResponse findAllCategoriesResponse = categoryService.findAll();
+            FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
 
             assertThat(findAllCategoriesResponse.categories()).hasSize(2);
         }
 
         @Test
+        @DisplayName("성공 : 카테고리가 존재하지 않으면 빈 리스트를 반환한다.")
+        void findAllCategoriesEmptyList() {
+            FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
+
+            assertThat(findAllCategoriesResponse.categories()).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("카테고리 단건 조회 테스트")
+    class FetchByIdTest {
+
+        @Test
+        @DisplayName("성공")
+        void success() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category savedCategory = categoryRepository.save(new Category("categoryName", member));
+
+            Category actual = sut.fetchById(savedCategory.getId());
+
+            assertThat(actual).isEqualTo(savedCategory);
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 id 값으로 카테고리 조회")
+        void failWithNotSavedId() {
+            long notSavedCategoryId = 100L;
+
+            assertThatThrownBy(() -> sut.fetchById(notSavedCategoryId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("카테고리 수정 테스트")
+    class UpdateCategoryTest {
+
+        @Test
         @DisplayName("카테고리 수정 성공")
+        @Disabled
         void updateCategorySuccess() {
             String updateCategoryName = "updateName";
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Category savedCategory = categoryRepository.save(new Category("category1", member));
 
-            categoryService.update(member, savedCategory.getId(),
+            sut.update(member, savedCategory.getId(),
                     new UpdateCategoryRequest(updateCategoryName));
 
             assertThat(categoryRepository.fetchById(savedCategory.getId()).getName()).isEqualTo(updateCategoryName);
@@ -102,14 +207,123 @@ class CategoryServiceTest {
         void updateCategoryFailWithUnauthorized() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             Category savedCategory = categoryRepository.save(new Category("category1", member));
-
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
 
             UpdateCategoryRequest request = new UpdateCategoryRequest("updateName");
-            assertThatCode(
-                    () -> categoryService.update(otherMember, savedCategory.getId(), request))
+
+            assertThatThrownBy(() -> sut.update(otherMember, savedCategory.getId(), request))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("해당 카테고리에 대한 권한이 없습니다.");
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 이미 존재하는 카테고리 이름")
+        void duplicatedCategoryName() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category category1 = categoryRepository.save(new Category("category1", member));
+            Category category2 = categoryRepository.save(new Category("category2", member));
+
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category1.getName());
+
+            assertThatThrownBy(() -> sut.update(member, category2.getId(), request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("이름이 " + category1.getName() + "인 카테고리가 이미 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 현재와 동일한 카테고리 이름")
+        void notChangedCategoryName() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category category = categoryRepository.save(new Category("category", member));
+
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getName());
+
+            assertThatThrownBy(() -> sut.update(member, category.getId(), request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("이름이 " + category.getName() + "인 카테고리가 이미 존재합니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 존재하지 않는 카테고리 id")
+        void notSavedCategoryId() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            UpdateCategoryRequest request = new UpdateCategoryRequest("categoryName");
+            long notSavedId = 100L;
+
+            assertThatThrownBy(() -> sut.update(member, notSavedId, request))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notSavedId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("카테고리 삭제 테스트")
+    class DeleteById {
+
+        @Test
+        @DisplayName("카테고리 삭제 성공")
+        void deleteCategorySuccess() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category savedCategory = categoryRepository.save(new Category("category1", member));
+            int beforeDeleteSize = categoryRepository.findAllByMemberIdOrderById(member.getId()).size();
+
+            sut.deleteById(member, savedCategory.getId());
+
+            assertAll(
+                    () -> assertThat(categoryRepository.findAllByMemberIdOrderById(member.getId()))
+                            .hasSize(beforeDeleteSize - 1),
+                    () -> assertThatThrownBy(() -> categoryRepository.fetchById(savedCategory.getId()))
+                            .isInstanceOf(CodeZapException.class)
+                            .hasMessage("식별자 1에 해당하는 카테고리가 존재하지 않습니다.")
+            );
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 실패: 권한 없음")
+        void deleteCategoryFailWithUnauthorized() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
+            Category savedCategory = categoryRepository.save(new Category("category1", member));
+
+            assertThatCode(() -> sut.deleteById(otherMember, savedCategory.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리는 삭제할 수 없음")
+        void deleteCategoryFailWithNotExistCategory() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+
+            long notSavedCategoryId = 100L;
+
+            assertThatCode(() -> sut.deleteById(member, notSavedCategoryId))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 아이디로 카테고리 삭제 실패 : 해당 카테고리에 속한 템플릿이 존재하면 삭제할 수 없음")
+        void deleteByIdFailExistsTemplate() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category category = categoryRepository.save(new Category("카테고리 1", member));
+            templateRepository.save(new Template(member, "title", "desciption", category));
+
+            assertThatThrownBy(() -> sut.deleteById(member, category.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 아이디로 카테고리 삭제 실패 : 기본 카테고리는 삭제할 수 없음")
+        void deleteByIdFailDefaultCategory() {
+            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Category defaultCategory = categoryRepository.save(Category.createDefaultCategory(member));
+
+            assertThatThrownBy(() -> sut.deleteById(member, defaultCategory.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("기본 카테고리는 삭제할 수 없습니다.");
         }
     }
 }

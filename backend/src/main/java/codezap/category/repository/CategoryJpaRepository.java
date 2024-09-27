@@ -17,7 +17,7 @@ public interface CategoryJpaRepository extends CategoryRepository, JpaRepository
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."));
     }
 
-    List<Category> findAllByMemberOrderById(Member member);
+    List<Category> findAllByMemberIdOrderById(Long memberId);
 
     boolean existsByNameAndMember(String categoryName, Member member);
 }

@@ -51,11 +51,6 @@ public class FakeTemplateRepository implements TemplateRepository {
     }
 
     @Override
-    public List<Template> findAll() {
-        return templates;
-    }
-
-    @Override
     public List<Template> findByMemberId(Long id) {
         return templates.stream()
                 .filter(template -> Objects.equals(template.getMember().getId(), id))
@@ -70,7 +65,8 @@ public class FakeTemplateRepository implements TemplateRepository {
                 entity.getTitle(),
                 entity.getDescription(),
                 entity.getCategory(),
-                entity.getSourceCodes()
+                entity.getSourceCodes(),
+                0L
         );
         templates.removeIf(template -> Objects.equals(template.getId(), entity.getId()));
         templates.add(saved);

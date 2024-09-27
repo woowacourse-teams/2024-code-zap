@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,5 +48,5 @@ public interface SpringDocMemberController {
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1", errorCases = {
             @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 회원이 존재하지 않습니다.")
     })
-    ResponseEntity<FindMemberResponse> findMember(MemberDto memberDto, Long id);
+    ResponseEntity<FindMemberResponse> findMember(Member member, Long id);
 }

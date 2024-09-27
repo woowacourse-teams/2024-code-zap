@@ -19,10 +19,9 @@ import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
-import codezap.category.service.facade.MemberCategoryApplicationService;
-import codezap.category.service.facade.MemberCategoryTemplateApplicationService;
+import codezap.category.service.CategoryService;
 import codezap.global.validation.ValidationSequence;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -30,40 +29,35 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/categories")
 public class CategoryController implements SpringDocCategoryController {
 
-    private final MemberCategoryApplicationService memberCategoryApplicationService;
-    private final MemberCategoryTemplateApplicationService memberCategoryTemplateApplicationService;
+    private final CategoryService categoryService;
 
     @PostMapping
     public ResponseEntity<CreateCategoryResponse> createCategory(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
-        CreateCategoryResponse createdCategory = memberCategoryApplicationService.create(memberDto, createCategoryRequest);
-        return ResponseEntity.created(URI.create("/categories/" + createdCategory.id()))
-                .body(createdCategory);
+        CreateCategoryResponse createdCategory = categoryService.create(member, createCategoryRequest);
+        return ResponseEntity.created(URI.create("/categories/" + createdCategory.id())).body(createdCategory);
     }
 
     @GetMapping
-    public ResponseEntity<FindAllCategoriesResponse> getCategories(
-            @RequestParam Long memberId
-    ) {
-        return ResponseEntity.ok(memberCategoryApplicationService.findAllByMember(memberId));
+    public ResponseEntity<FindAllCategoriesResponse> getCategories(@RequestParam Long memberId) {
+        return ResponseEntity.ok(categoryService.findAllByMemberId(memberId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
-        memberCategoryApplicationService.update(memberDto, id, updateCategoryRequest);
+        categoryService.update(member, id, updateCategoryRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id) {
-        memberCategoryTemplateApplicationService.deleteById(memberDto, id);
-        return ResponseEntity.noContent()
-                .build();
+    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple Member member, @PathVariable Long id) {
+        categoryService.deleteById(member, id);
+        return ResponseEntity.noContent().build();
     }
 }

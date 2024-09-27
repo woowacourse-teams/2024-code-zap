@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -35,16 +36,13 @@ import codezap.category.service.CategoryService;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.GlobalExceptionHandler;
+import codezap.likes.repository.FakeLikeRepository;
+import codezap.likes.repository.LikesRepository;
+import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
-import codezap.member.service.MemberService;
-import codezap.auth.encryption.PasswordEncryptor;
-import codezap.auth.encryption.RandomSaltGenerator;
-import codezap.auth.encryption.SHA2PasswordEncryptor;
-import codezap.auth.encryption.SaltGenerator;
-import codezap.tag.service.TemplateTagService;
+import codezap.tag.service.TagService;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
@@ -58,8 +56,6 @@ import codezap.template.repository.TemplateRepository;
 import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
 import codezap.template.service.ThumbnailService;
-import codezap.template.service.facade.CategoryTemplateApplicationService;
-import codezap.template.service.facade.MemberTemplateApplicationService;
 import codezap.template.service.facade.TemplateApplicationService;
 
 class TemplateControllerTest {
@@ -67,53 +63,49 @@ class TemplateControllerTest {
     private static final int MAX_LENGTH = 255;
 
     private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
-            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
-    );
-    private final MemberRepository memberRepository = new FakeMemberRepository(
-            List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
-    );
 
-    private final SaltGenerator saltGenerator = new RandomSaltGenerator();
-    private final PasswordEncryptor passwordEncryptor = new SHA2PasswordEncryptor();
+    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
+            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory()));
+
+    private final MemberRepository memberRepository = new FakeMemberRepository(
+            List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember()));
+
+    private final LikesRepository likesRepository = new FakeLikeRepository();
+
     private final TemplateService templateService = new TemplateService(templateRepository);
-    private final CategoryService categoryService = new CategoryService(categoryRepository);
+
+    private final CategoryService categoryService = new CategoryService(categoryRepository, templateRepository);
+
+    private final LikesService likesService = new LikesService(templateRepository, likesRepository);
 
     private final SourceCodeService sourceCodeService = new SourceCodeService(new FakeSourceCodeRepository());
+
     private final ThumbnailService thumbnailService = new ThumbnailService(new FakeThumbnailRepository());
+
+    private final TagService tagService = new TagService(
+            new FakeTagRepository(),
+            new FakeTemplateRepository(),
+            new FakeTemplateTagRepository());
 
     private final TemplateApplicationService templateApplicationService =
             new TemplateApplicationService(
-                    new TemplateTagService(new FakeTagRepository(), new FakeTemplateTagRepository()),
                     templateService,
-                    thumbnailService,
-                    sourceCodeService
-            );
-
-    private final CategoryTemplateApplicationService categoryTemplateApplicationService =
-            new CategoryTemplateApplicationService(
+                    sourceCodeService,
                     categoryService,
-                    templateApplicationService
-            );
-
-    private final MemberTemplateApplicationService memberTemplateApplicationService =
-            new MemberTemplateApplicationService(
-                    new MemberService(memberRepository, categoryRepository, saltGenerator, passwordEncryptor),
-                    categoryTemplateApplicationService,
-                    templateApplicationService
-            );
+                    tagService,
+                    thumbnailService,
+                    likesService);
 
     private final MockMvc mvc =
-            MockMvcBuilders.standaloneSetup(
-                            new TemplateController(memberTemplateApplicationService, templateApplicationService))
+            MockMvcBuilders.standaloneSetup(new TemplateController(templateApplicationService))
                     .setControllerAdvice(new GlobalExceptionHandler())
                     .setCustomArgumentResolvers(
                             new AuthArgumentResolver(
                                     new CookieCredentialManager(),
-                                    new BasicAuthCredentialProvider(memberRepository)
-                            ),
+                                    new BasicAuthCredentialProvider(memberRepository)),
                             new PageableHandlerMethodArgumentResolver())
                     .build();
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     Cookie cookie;
@@ -154,6 +146,28 @@ class TemplateControllerTest {
                     .andExpect(status().isCreated());
         }
 
+        @ParameterizedTest
+        @ValueSource(strings = {"", "      "})
+        @DisplayName("템플릿 생성 실패: 템플릿명이 비어 있거나 공백")
+        void createTemplateFailWithBlankTitle(String title) throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    title,
+                    "description",
+                    List.of(new CreateSourceCodeRequest("a", "content", 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("템플릿명이 비어 있거나 공백입니다."));
+        }
+
         @Test
         @DisplayName("템플릿 생성 실패: 템플릿명 길이 초과")
         void createTemplateFailWithLongTitle() throws Exception {
@@ -176,9 +190,30 @@ class TemplateControllerTest {
                     .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
         }
 
+        @Test
+        @DisplayName("템플릿 생성 실패: 템플릿 설명 null")
+        void createTemplateFailWithNullDescription() throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    null,
+                    List.of(new CreateSourceCodeRequest("title", "content", 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("템플릿 설명이 null 입니다."));
+        }
+
         @ParameterizedTest
-        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
+        @DisplayName("템플릿 생성 실패: 템플릿 설명 길이 초과")
         void createTemplateFailWithLongDescription(String repeatTarget, int exceededLength) throws Exception {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
@@ -196,6 +231,28 @@ class TemplateControllerTest {
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "      "})
+        @DisplayName("템플릿 생성 실패: 파일명이 비어 있거나 공백")
+        void createTemplateFailWithBlankFileName(String fileName) throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "fileName",
+                    "description",
+                    List.of(new CreateSourceCodeRequest(fileName, "content", 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("파일명이 비어 있거나 공백입니다."));
         }
 
         @Test
@@ -221,9 +278,31 @@ class TemplateControllerTest {
         }
 
         @ParameterizedTest
+        @DisplayName("템플릿 생성 실패: 소스 코드가 비어 있거나 공백")
+        @ValueSource(strings = {"", "      "})
+        void createTemplateFailWithBlankContent(String sourceCode) throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(new CreateSourceCodeRequest("title", sourceCode, 1)),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("소스 코드가 비어 있거나 공백입니다."));
+        }
+
+        @ParameterizedTest
         @DisplayName("템플릿 생성 실패: 소스 코드 길이 초과")
         @CsvSource({"a, 65536", "ㄱ, 21846"})
-        void createTemplateFailWithLongContent(String repeatTarget, int exceededLength) throws Exception {
+        void createTemplateFailWithLongSourceCode(String repeatTarget, int exceededLength) throws Exception {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
@@ -241,6 +320,70 @@ class TemplateControllerTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
         }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 소스 코드 0개")
+        void createTemplateFailWithLongEmptySourceCode() throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(),
+                    1,
+                    1L,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("소스 코드 최소 1개 입력해야 합니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 카테고리 ID null")
+        void createTemplateFailWithLongNullCategoryId() throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(new CreateSourceCodeRequest("title", "sourceCode", 1)),
+                    1,
+                    null,
+                    List.of("tag1", "tag2")
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("카테고리 ID가 null 입니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 생성 실패: 태그 목록 null")
+        void createTemplateFailWithLongNullTags() throws Exception {
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(new CreateSourceCodeRequest("title", "sourceCode", 1)),
+                    1,
+                    1L,
+                    null
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("태그 목록이 null 입니다."));
+        }
+
 
         @ParameterizedTest
         @DisplayName("템플릿 생성 실패: 잘못된 소스 코드 순서 입력")
@@ -303,7 +446,7 @@ class TemplateControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("해당 카테고리에 대한 권한이 없습니다."));
+                    .andExpect(jsonPath("$.detail").value("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."));
         }
 
         @Test
@@ -353,11 +496,11 @@ class TemplateControllerTest {
 //    @DisplayName("템플릿 검색 성공")
 //    void findAllTemplatesSuccess() throws Exception {
 //        // given
-//        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
+//        MemberDto member = MemberDtoFixture.getFirstMemberDto();
 //        CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title1");
 //        CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title2");
-//        memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
-//        memberTemplateApplicationService.createTemplate(memberDto, templateRequest2);
+//        templateApplicationService.createTemplate(member, templateRequest1);
+//        templateApplicationService.createTemplate(member, templateRequest2);
 //
 //        // when & then
 //        mvc.perform(get("/templates")
@@ -378,7 +521,7 @@ class TemplateControllerTest {
 //            // given
 //            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
 //            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-//            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+//            templateApplicationService.createTemplate(memberDto, templateRequest);
 //
 //            // when & then
 //            mvc.perform(get("/templates/1")
@@ -439,6 +582,436 @@ class TemplateControllerTest {
                     .andExpect(status().isOk());
         }
 
+        @ParameterizedTest
+        @ValueSource(strings = {"", "      "})
+        @DisplayName("템플릿 생성 실패: 템플릿명이 비어 있거나 공백")
+        void updateTemplateFailWithBlankName(String title) throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    title,
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("템플릿명이 비어 있거나 공백입니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 템플릿명 길이 초과")
+        void updateTemplateFailWithLongName() throws Exception {
+            // given
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    exceededTitle,
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 템플릿 설명 null")
+        void updateTemplateFailWithNullContent() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    null,
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("템플릿 설명이 null 입니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 수정 실패: 템플릿 설명 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void updateTemplateFailWithLongContent(String repeatTarget, int exceedLength) throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    repeatTarget.repeat(exceedLength),
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "      "})
+        @DisplayName("템플릿 수정 실패: 파일 이름이 비어 있거나 공백")
+        void updateTemplateFailWithBlankFileName(String fileName) throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest(fileName, "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("파일명이 비어 있거나 공백입니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 파일 이름 길이 초과")
+        void updateTemplateFailWithLongFileName() throws Exception {
+            // given
+            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest(exceededTitle, "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {"", "      "})
+        @DisplayName("템플릿 수정 실패: 소스 코드가 비어 있거나 공백")
+        void updateTemplateFailWithLongFileSourceCode(String sourceCode) throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", sourceCode, 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("소스 코드가 비어 있거나 공백입니다."));
+        }
+
+        @ParameterizedTest
+        @DisplayName("템플릿 수정 실패: 소스 코드 길이 초과")
+        @CsvSource({"a, 65536", "ㄱ, 21846"})
+        void updateTemplateFailWithLongFileSourceCode(String repeatTarget, int exceedLength) throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", repeatTarget.repeat(exceedLength), 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 추가하는 소스 코드 목록 null")
+        void updateTemplateFailWithNullCreateSourceCode() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    null,
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    1L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("추가하는 소스 코드 목록이 null 입니다."));
+
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록 null")
+        void updateTemplateFailWithNullUpdateSourceCode() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    null,
+                    List.of(1L),
+                    1L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록이 null 입니다."));
+
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 삭제 소스 코드 목록 null")
+        void updateTemplateFailWithNullDeleteSourceCode() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    null,
+                    1L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("삭제하는 소스 코드 ID 목록이 null 입니다."));
+
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 카테고리 ID null")
+        void updateTemplateFailWithNullCategoryId() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    null,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("카테고리 ID가 null 입니다."));
+
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 태그 목록 null")
+        void updateTemplateFailWithNullTags() throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("filename4", "content4", 3)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
+                    ),
+                    List.of(1L),
+                    1L,
+                    null
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("태그 목록이 null 입니다."));
+
+        }
+
+        // 정상 요청: 2, 3, 1
+        @ParameterizedTest
+        @DisplayName("템플릿 수정 실패: 잘못된 소스 코드 순서 입력")
+        @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
+        void updateTemplateFailWithWrongSourceCodeOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal)
+                throws Exception {
+            // given
+            createTemplateAndTwoCategories();
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    "updateTitle",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", createOrdinal1),
+                            new CreateSourceCodeRequest("filename4", "content4", createOrdinal2)
+                    ),
+                    List.of(
+                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", updateOrdinal)
+                    ),
+                    List.of(1L),
+                    2L,
+                    List.of("tag1", "tag3")
+            );
+
+            // when & then
+            mvc.perform(post("/templates/1")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
+        }
+
         @Test
         @DisplayName("템플릿 수정 실패: 권한 없음")
         void updateTemplateFailWithUnauthorized() throws Exception {
@@ -477,170 +1050,12 @@ class TemplateControllerTest {
                     .andExpect(jsonPath("$.detail").value("해당 템플릿에 대한 권한이 없습니다."));
         }
 
-        @Test
-        @DisplayName("템플릿 수정 실패: 템플릿명 길이 초과")
-        void updateTemplateFailWithLongName() throws Exception {
-            // given
-            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            createTemplateAndTwoCategories();
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
-                    exceededTitle,
-                    "description",
-                    List.of(
-                            new CreateSourceCodeRequest("filename3", "content3", 2),
-                            new CreateSourceCodeRequest("filename4", "content4", 3)
-                    ),
-                    List.of(
-                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
-                    ),
-                    List.of(1L),
-                    2L,
-                    List.of("tag1", "tag3")
-            );
-
-            // when & then
-            mvc.perform(post("/templates/1")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿명은 최대 255자까지 입력 가능합니다."));
-        }
-
-        @Test
-        @DisplayName("템플릿 수정 실패: 파일 이름 길이 초과")
-        void updateTemplateFailWithLongFileName() throws Exception {
-            // given
-            String exceededTitle = "a".repeat(MAX_LENGTH + 1);
-            createTemplateAndTwoCategories();
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(
-                            new CreateSourceCodeRequest(exceededTitle, "content3", 2),
-                            new CreateSourceCodeRequest("filename4", "content4", 3)
-                    ),
-                    List.of(
-                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
-                    ),
-                    List.of(1L),
-                    2L,
-                    List.of("tag1", "tag3")
-            );
-
-            // when & then
-            mvc.perform(post("/templates/1")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("파일명은 최대 255자까지 입력 가능합니다."));
-        }
-
-        @ParameterizedTest
-        @DisplayName("템플릿 수정 실패: 파일 내용 길이 초과")
-        @CsvSource({"a, 65536", "ㄱ, 21846"})
-        void updateTemplateFailWithLongFileContent(String repeatTarget, int exceedLength) throws Exception {
-            // given
-            createTemplateAndTwoCategories();
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
-                    "title",
-                    "description",
-                    List.of(
-                            new CreateSourceCodeRequest("filename3", repeatTarget.repeat(exceedLength), 2),
-                            new CreateSourceCodeRequest("filename4", "content4", 3)
-                    ),
-                    List.of(
-                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
-                    ),
-                    List.of(1L),
-                    2L,
-                    List.of("tag1", "tag3")
-            );
-
-            // when & then
-            mvc.perform(post("/templates/1")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드는 최대 65,535 Byte까지 입력 가능합니다."));
-        }
-
-        @ParameterizedTest
-        @DisplayName("템플릿 수정 실패: 템플릿 설명 길이 초과")
-        @CsvSource({"a, 65536", "ㄱ, 21846"})
-        void updateTemplateFailWithLongContent(String repeatTarget, int exceedLength) throws Exception {
-            // given
-            createTemplateAndTwoCategories();
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
-                    "title",
-                    repeatTarget.repeat(exceedLength),
-                    List.of(
-                            new CreateSourceCodeRequest("filename3", "content3", 2),
-                            new CreateSourceCodeRequest("filename4", "content4", 3)
-                    ),
-                    List.of(
-                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)
-                    ),
-                    List.of(1L),
-                    2L,
-                    List.of("tag1", "tag3")
-            );
-
-            // when & then
-            mvc.perform(post("/templates/1")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."));
-        }
-
-        // 정상 요청: 2, 3, 1
-        @ParameterizedTest
-        @DisplayName("템플릿 수정 실패: 잘못된 소스 코드 순서 입력")
-        @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
-        void updateTemplateFailWithWrongSourceCodeOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal)
-                throws Exception {
-            // given
-            createTemplateAndTwoCategories();
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
-                    "updateTitle",
-                    "description",
-                    List.of(
-                            new CreateSourceCodeRequest("filename3", "content3", createOrdinal1),
-                            new CreateSourceCodeRequest("filename4", "content4", createOrdinal2)
-                    ),
-                    List.of(
-                            new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", updateOrdinal)
-                    ),
-                    List.of(1L),
-                    2L,
-                    List.of("tag1", "tag3")
-            );
-
-            // when & then
-            mvc.perform(post("/templates/1")
-                            .cookie(cookie)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateTemplateRequest)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
-        }
-
         private void createTemplateAndTwoCategories() {
             Member member = MemberFixture.getFirstMember();
-            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
             categoryService.create(member, new CreateCategoryRequest("category1"));
             categoryService.create(member, new CreateCategoryRequest("category2"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
+            templateApplicationService.create(member, templateRequest);
         }
     }
 
@@ -653,10 +1068,9 @@ class TemplateControllerTest {
         void deleteTemplateSuccess() throws Exception {
             // given
             Member member = MemberFixture.getFirstMember();
-            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
+            templateApplicationService.create(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -671,12 +1085,11 @@ class TemplateControllerTest {
         void deleteTemplatesSuccess() throws Exception {
             // given
             Member member = MemberFixture.getFirstMember();
-            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest1 = createTemplateRequestWithTwoSourceCodes("title");
-            CreateTemplateRequest templateRequest2 = createTemplateRequestWithTwoSourceCodes("title");
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest1);
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest2);
+            CreateTemplateRequest templateRequest1 = templateRequestWithTwoSourceCodes();
+            CreateTemplateRequest templateRequest2 = templateRequestWithTwoSourceCodes();
+            templateApplicationService.create(member, templateRequest1);
+            templateApplicationService.create(member, templateRequest2);
 
             // when & then
             mvc.perform(delete("/templates/1,2")
@@ -691,10 +1104,9 @@ class TemplateControllerTest {
         void deleteTemplateFailWithDuplication() throws Exception {
             // given
             Member member = MemberFixture.getFirstMember();
-            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
+            templateApplicationService.create(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1,1")
@@ -710,10 +1122,9 @@ class TemplateControllerTest {
         void deleteTemplateFailWithUnauthorized() throws Exception {
             // given
             Member member = MemberFixture.getFirstMember();
-            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
+            templateApplicationService.create(member, templateRequest);
 
             // when & then
             mvc.perform(delete("/templates/1")
@@ -728,10 +1139,9 @@ class TemplateControllerTest {
         void deleteTemplateFailNotMine() throws Exception {
             // given
             Member member = MemberFixture.getFirstMember();
-            MemberDto memberDto = MemberDto.from(MemberFixture.getFirstMember());
             categoryService.create(member, new CreateCategoryRequest("category"));
-            CreateTemplateRequest templateRequest = createTemplateRequestWithTwoSourceCodes("title");
-            memberTemplateApplicationService.createTemplate(memberDto, templateRequest);
+            CreateTemplateRequest templateRequest = templateRequestWithTwoSourceCodes();
+            templateApplicationService.create(member, templateRequest);
             Member secondMember = MemberFixture.getSecondMember();
 
             // when
@@ -763,9 +1173,9 @@ class TemplateControllerTest {
         }
     }
 
-    private static CreateTemplateRequest createTemplateRequestWithTwoSourceCodes(String title) {
+    private static CreateTemplateRequest templateRequestWithTwoSourceCodes() {
         return new CreateTemplateRequest(
-                title,
+                "title",
                 "description",
                 List.of(
                         new CreateSourceCodeRequest("filename1", "content1", 1),

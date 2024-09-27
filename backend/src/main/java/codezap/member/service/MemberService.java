@@ -2,6 +2,8 @@ package codezap.member.service;
 
 import java.util.Objects;
 
+import jakarta.transaction.Transactional;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +13,6 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.repository.MemberRepository;
@@ -26,6 +27,7 @@ public class MemberService {
     private final SaltGenerator saltGenerator;
     private final PasswordEncryptor passwordEncryptor;
 
+    @Transactional
     public Long signup(SignupRequest request) {
         assertUniqueName(request.name());
         String salt = saltGenerator.generate();
@@ -41,22 +43,18 @@ public class MemberService {
         }
     }
 
-    public FindMemberResponse findMember(MemberDto memberDto, Long id) {
-        checkSameMember(memberDto, id);
-        return FindMemberResponse.from(memberRepository.fetchById(id));
+    public FindMemberResponse findMember(Member member, Long id) {
+        checkSameMember(member, id);
+        return FindMemberResponse.from(member);
     }
 
-    public Member getByTemplateId(Long templateId) {
-        return memberRepository.fetchByTemplateId(templateId);
-    }
-
-    private void checkSameMember(MemberDto memberDto, Long id) {
-        if (!Objects.equals(memberDto.id(), id)) {
+    private void checkSameMember(Member member, Long id) {
+        if (!Objects.equals(member.getId(), id)) {
             throw new CodeZapException(HttpStatus.FORBIDDEN, "본인의 정보만 조회할 수 있습니다.");
         }
     }
 
-    public Member getById(Long id) {
-        return memberRepository.fetchById(id);
+    public Member getByTemplateId(Long templateId) {
+        return memberRepository.fetchByTemplateId(templateId);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import codezap.tag.dto.response.FindAllTagsResponse;
-import codezap.template.service.facade.MemberTemplateApplicationService;
+import codezap.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -15,13 +15,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/tags")
 public class TagController implements SpringDocTagController {
 
-    private final MemberTemplateApplicationService memberTemplateApplicationService;
+    private final TagService tagService;
 
     @GetMapping
     public ResponseEntity<FindAllTagsResponse> getTags(
             @RequestParam Long memberId
     ) {
-        FindAllTagsResponse response = memberTemplateApplicationService.getAllTagsByMemberId(memberId);
+        FindAllTagsResponse response = tagService.findAllByMemberId(memberId);
         return ResponseEntity.ok(response);
     }
 }

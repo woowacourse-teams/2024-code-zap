@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -26,7 +27,5 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
     Optional<Tag> findByName(String name);
 
     @Query("select t.name from Tag t where t.name in :names")
-    List<String> findNameByNamesIn(List<String> names);
-
-    boolean existsByName(String name);
+    List<String> findNameByNamesIn(@Param("names") List<String> names);
 }

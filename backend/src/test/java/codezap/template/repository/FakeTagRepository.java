@@ -37,8 +37,7 @@ public class FakeTagRepository implements TagRepository {
                 .toList();
     }
 
-    @Override
-    public boolean existsByName(String name) {
+    private boolean existsByName(String name) {
         return tags.stream().anyMatch(tag -> Objects.equals(tag.getName(), name));
     }
 
@@ -54,6 +53,12 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
+    public <S extends Tag> List<S> saveAll(Iterable<S> entities) {
+        entities.forEach(this::save);
+        return (List<S>) tags;
+    }
+
+    @Override
     public Tag save(Tag entity) {
         var saved = new Tag(
                 getOrGenerateId(entity),
@@ -64,12 +69,6 @@ public class FakeTagRepository implements TagRepository {
         return saved;
     }
 
-    @Override
-    public <S extends Tag> List<S> saveAll(Iterable<S> entities) {
-        entities.forEach(this::save);
-        return (List<S>) tags;
-    }
-
     private long getOrGenerateId(Tag entity) {
         if (existsById(entity.getId())) {
             return entity.getId();
@@ -77,7 +76,7 @@ public class FakeTagRepository implements TagRepository {
         return idCounter.getAndIncrement();
     }
 
-    public boolean existsById(Long id) {
+    private boolean existsById(Long id) {
         return tags.stream().anyMatch(tag -> Objects.equals(tag.getId(), id));
     }
 }

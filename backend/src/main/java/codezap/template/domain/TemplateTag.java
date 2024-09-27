@@ -1,7 +1,6 @@
 package codezap.template.domain;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
@@ -14,38 +13,24 @@ import codezap.global.auditing.BaseTimeEntity;
 import codezap.tag.domain.Tag;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class TemplateTag extends BaseTimeEntity {
 
     @Embeddable
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor
     @Getter
+    @EqualsAndHashCode
     private static class TemplateTagId implements Serializable {
         private Long templateId;
         private Long tagId;
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            TemplateTagId that = (TemplateTagId) o;
-            return Objects.equals(getTemplateId(), that.getTemplateId()) && Objects.equals(getTagId(), that.getTagId());
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(getTemplateId(), getTagId());
-        }
     }
 
     @EmbeddedId
@@ -65,22 +50,5 @@ public class TemplateTag extends BaseTimeEntity {
         this.id = new TemplateTagId(template.getId(), tag.getId());
         this.template = template;
         this.tag = tag;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        TemplateTag that = (TemplateTag) o;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
     }
 }
