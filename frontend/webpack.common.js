@@ -1,12 +1,13 @@
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
+const packageJson = require('./package.json');
 
 module.exports = {
   entry: './src/index.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js',
+    filename: `bundle.v${packageJson.version}.[contenthash].js`,
     clean: true,
   },
   devServer: {
@@ -27,6 +28,9 @@ module.exports = {
           dataUrlCondition: {
             maxSize: 4 * 1024, // 4kb
           },
+        },
+        generator: {
+          filename: `images/[name].[contenthash][ext]`,
         },
       },
       {
@@ -57,7 +61,7 @@ module.exports = {
         test: /\.(woff|woff2|eot|ttf|otf)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'fonts/[name][ext][query]',
+          filename: `fonts/[name].[contenthash][ext]`,
         },
       },
     ],
