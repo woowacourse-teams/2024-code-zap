@@ -3,18 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
-import {
-  Flex,
-  Heading,
-  Input,
-  PagingButtons,
-  Dropdown,
-  Button,
-  Modal,
-  Text,
-  LoadingBall,
-  NoSearchResults,
-} from '@/components';
+import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text, NoSearchResults } from '@/components';
 import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useTemplateDeleteMutation, useTemplateCategoryTagQueries } from '@/queries/templates';
