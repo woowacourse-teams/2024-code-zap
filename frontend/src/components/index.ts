@@ -19,6 +19,8 @@ export { default as Text } from './Text/Text';
 export { default as Toast } from './Toast/Toast';
 export { default as Guide } from './Guide/Guide';
 export { default as Footer } from './Footer/Footer';
+export { default as NoSearchResults } from './NoSearchResults/NoSearchResults';
 
 // Skeleton UI
 export { default as LoadingBall } from './LoadingBall/LoadingBall';
+export { default as LoadingFallback } from './LoadingFallback/LoadingFallback';

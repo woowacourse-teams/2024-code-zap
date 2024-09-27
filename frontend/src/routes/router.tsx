@@ -1,8 +1,8 @@
-/* eslint-disable import/extensions */
+import { ErrorBoundary } from '@sentry/react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Layout } from '@/components';
+import { Layout, LoadingFallback } from '@/components';
 
 import RouteGuard from './RouteGuard';
 import { END_POINTS } from './endPoints';
@@ -45,9 +45,11 @@ const router = createBrowserRouter([
         path: END_POINTS.MY_TEMPLATES,
         element: (
           <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
-            <CustomSuspense>
-              <MyTemplatePage />
-            </CustomSuspense>
+            <ErrorBoundary fallback={<NotFoundPage />}>
+              <Suspense fallback={<LoadingFallback />}>
+                <MyTemplatePage />
+              </Suspense>
+            </ErrorBoundary>
           </RouteGuard>
         ),
       },
