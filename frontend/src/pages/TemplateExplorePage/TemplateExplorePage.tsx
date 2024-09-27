@@ -3,8 +3,16 @@ import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, SearchIcon, ZapzapLogo } from '@/assets/images';
-import { Dropdown, Flex, Heading, Input, NoSearchResults, PagingButtons, TemplateCard } from '@/components';
-import { LoadingBallContainer } from '@/components/LoadingBall/LoadingBall.style';
+import {
+  Dropdown,
+  Flex,
+  Heading,
+  Input,
+  LoadingBall,
+  NoSearchResults,
+  PagingButtons,
+  TemplateCard,
+} from '@/components';
 import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { scroll } from '@/utils';
@@ -68,7 +76,7 @@ const TemplateExplorePage = () => {
       </Flex>
       {templateList.length === 0 ? (
         isPending ? (
-          <LoadingBallContainer />
+          <LoadingBall />
         ) : (
           <NoSearchResults />
         )
