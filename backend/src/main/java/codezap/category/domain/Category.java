@@ -26,16 +26,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "name_with_member",
-                        columnNames = {"member_id", "name"}
-                )
-        },
-        indexes = {
-                @Index(name = "idx_member_id", columnList = "member_id")
-        }
-
+        uniqueConstraints = @UniqueConstraint(
+                name = "name_with_member",
+                columnNames = {"member_id", "name"}
+        ),
+        indexes = @Index(name = "idx_member_id", columnList = "member_id")
 )
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
