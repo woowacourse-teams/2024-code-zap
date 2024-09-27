@@ -15,8 +15,6 @@ public interface TagRepository {
 
     List<Tag> findByNameIn(List<String> names);
 
-    List<String> findNameByNamesIn(List<String> names);
-
     Tag save(Tag tag);
 
     <S extends Tag> List<S> saveAll(Iterable<S> entities);
