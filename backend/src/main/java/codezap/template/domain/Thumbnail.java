@@ -38,4 +38,8 @@ public class Thumbnail extends BaseTimeEntity {
     public void updateThumbnail(SourceCode sourceCode) {
         this.sourceCode = sourceCode;
     }
+
+    public boolean hasTemplate(Template template) {
+        return this.template.equals(template);
+    }
 }

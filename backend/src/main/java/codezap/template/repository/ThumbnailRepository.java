@@ -14,6 +14,8 @@ public interface ThumbnailRepository {
 
     List<Thumbnail> findAll();
 
+    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
+
     Thumbnail save(Thumbnail thumbnail);
 
     void deleteByTemplateId(Long id);
