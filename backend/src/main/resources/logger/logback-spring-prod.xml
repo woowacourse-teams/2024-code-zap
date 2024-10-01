@@ -12,16 +12,7 @@
         <appender-ref ref="console-appender"/>
     </logger>
 
-    <turboFilter class="ch.qos.logback.classic.turbo.MatchingFilter">
-        <filterExpression>
-            message.contains("/actuator/health")
-        </filterExpression>
-        <onMatch>DENY</onMatch>
-        <onMismatch>NEUTRAL</onMismatch>
-    </turboFilter>
-
-    <root level="INFO">
-        <appender-ref ref="info-appender"/>
+    <root level="WARN">
         <appender-ref ref="warn-appender"/>
         <appender-ref ref="error-appender"/>
     </root>
