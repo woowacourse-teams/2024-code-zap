@@ -12,6 +12,14 @@
         <appender-ref ref="console-appender"/>
     </logger>
 
+    <turboFilter class="ch.qos.logback.classic.turbo.MatchingFilter">
+        <filterExpression>
+            message.contains("/health")
+        </filterExpression>
+        <onMatch>DENY</onMatch>
+        <onMismatch>NEUTRAL</onMismatch>
+    </turboFilter>
+
     <root level="INFO">
         <appender-ref ref="info-appender"/>
         <appender-ref ref="warn-appender"/>
