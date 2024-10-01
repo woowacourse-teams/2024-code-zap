@@ -6,10 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.Arrays;
 import java.util.List;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +20,12 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
-import codezap.fixture.MemberFixture;
-import codezap.fixture.TemplateFixture;
-import codezap.global.DatabaseIsolation;
 import codezap.global.auditing.JpaAuditingConfiguration;
-import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
 import codezap.tag.repository.TagRepository;
-import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
-import codezap.template.domain.TemplateTag;
 
 @DataJpaTest
 @Import(JpaAuditingConfiguration.class)
@@ -51,33 +41,11 @@ class TemplateSearchJpaRepositoryTest {
     private CategoryRepository categoryRepository;
     @Autowired
     private TagRepository tagRepository;
-    @Autowired
-    private TemplateTagRepository templateTagRepository;
-
-    private Member member1, member2;
-    private Category category1, category2;
-    private Tag tag1, tag2;
-    private Template template1, template2, template3;
-
-    @BeforeEach
-    void setUp() {
-//        saveInitialData();
-
-        category1 = categoryRepository.fetchById(1L);
-        category2 = categoryRepository.fetchById(2L);
-
-        tag1 = tagRepository.fetchById(1L);
-        tag2 = tagRepository.fetchById(2L);
-
-        template1 = templateRepository.fetchById(1L);
-        template2 = templateRepository.fetchById(2L);
-        template3 = templateRepository.fetchById(3L);
-    }
 
     @Test
     @DisplayName("검색 테스트: 회원 ID로 템플릿 조회 성공")
     void testFindByMemberId() {
-        member1 = memberRepository.fetchById(1L);
+        Member member1 = memberRepository.fetchById(1L);
         Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
@@ -106,6 +74,7 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 카테고리 ID로 템플릿 조회 성공")
     void testFindByCategoryId() {
+        Category category1 = categoryRepository.fetchById(1L);
         Specification<Template> spec = new TemplateSpecification(null, null, category1.getId(),
                 null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -120,6 +89,8 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 태그 ID 목록으로 템플릿 조회, 모든 태그를 가진 템플릿만 조회 성공")
     void testFindByTagIds() {
+        Tag tag1 = tagRepository.fetchById(1L);
+        Tag tag2 = tagRepository.fetchById(2L);
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
         Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -136,6 +107,7 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 단일 태그 ID로 템플릿 조회 성공")
     void testFindBySingleTagId() {
+        Tag tag2 = tagRepository.fetchById(2L);
         List<Long> tagIds = List.of(tag2.getId());
         Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -153,7 +125,7 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 회원 ID와 키워드로 템플릿 조회 성공")
     void testFindByMemberIdAndKeyword() {
-        member1 = memberRepository.fetchById(1L);
+        Member member1 = memberRepository.fetchById(1L);
         String keyword = "Template";
         Specification<Template> spec = new TemplateSpecification(member1.getId(), keyword, null,
                 null);
@@ -171,7 +143,8 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 회원 ID와 카테고리 ID로 템플릿 조회 성공")
     void testFindByMemberIdAndCategoryId() {
-        member1 = memberRepository.fetchById(1L);
+        Member member1 = memberRepository.fetchById(1L);
+        Category category1 = categoryRepository.fetchById(1L);
         Specification<Template> spec = new TemplateSpecification(member1.getId(), null, category1.getId(),
                 null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
@@ -186,7 +159,9 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 회원 ID와 태그 ID 목록으로 템플릿 조회 성공")
     void testFindByMemberIdAndTagIds() {
-        member1 = memberRepository.fetchById(1L);
+        Member member1 = memberRepository.fetchById(1L);
+        Tag tag1 = tagRepository.fetchById(1L);
+        Tag tag2 = tagRepository.fetchById(2L);
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
         Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null,
                 tagIds);
@@ -202,7 +177,10 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 모든 검색 기준으로 템플릿 조회 성공")
     void testFindWithAllCriteria() {
-        member1 = memberRepository.fetchById(1L);
+        Member member1 = memberRepository.fetchById(1L);
+        Category category1 = categoryRepository.fetchById(1L);
+        Tag tag1 = tagRepository.fetchById(1L);
+        Tag tag2 = tagRepository.fetchById(2L);
         String keyword = "Template";
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
         Specification<Template> spec = new TemplateSpecification(member1.getId(), keyword, category1.getId(),
@@ -222,45 +200,5 @@ class TemplateSearchJpaRepositoryTest {
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertThat(result.getContent()).isEmpty();
-    }
-
-    private void saveInitialData() {
-        saveTwoMembers();
-        saveTwoCategory();
-        saveTwoTags();
-        saveThreeTemplates();
-        saveTemplateTags();
-    }
-
-    private void saveTwoMembers() {
-        member1 = memberRepository.save(MemberFixture.getFirstMember());
-        member2 = memberRepository.save(MemberFixture.getSecondMember());
-    }
-
-    private void saveTwoCategory() {
-        category1 = categoryRepository.save(new Category("Category 1", member1));
-        category2 = categoryRepository.save(new Category("Category 2", member1));
-    }
-
-    private void saveTwoTags() {
-        tag1 = tagRepository.save(new Tag("Tag 1"));
-        tag2 = tagRepository.save(new Tag("Tag 2"));
-    }
-
-    private void saveThreeTemplates() {
-        template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-        template2 = templateRepository.save(TemplateFixture.get(member1, category2));
-        template3 = templateRepository.save(TemplateFixture.get(member2, category1));
-    }
-
-    private void saveTemplateTags() {
-        templateTagRepository.save(new TemplateTag(template1, tag1));
-        templateTagRepository.save(new TemplateTag(template1, tag2));
-
-        templateTagRepository.save(new TemplateTag(template2, tag1));
-        templateTagRepository.save(new TemplateTag(template2, tag2));
-
-        templateTagRepository.save(new TemplateTag(template3, tag2));
-
     }
 }
