@@ -75,6 +75,24 @@ VALUES ('2024-09-27 08:43:08.860091', '2024-09-27 08:43:08.860091', 2, 2);
 INSERT INTO template_tag (created_at, modified_at, tag_id, template_id)
 VALUES ('2024-09-27 08:43:08.867619', '2024-09-27 08:43:08.867619', 2, 3);
 
--- 전문 검색 인덱스 추가
-CREATE FULLTEXT INDEX idx_template_fulltext ON template (title, description);
-CREATE FULLTEXT INDEX idx_source_code_fulltext ON source_code (content, filename);
+-- 전문 검색 인덱스가 존재하는지 조회
+SELECT COUNT(1) INTO @indexExists FROM information_schema.statistics
+WHERE table_name = 'template'
+  AND index_name = 'idx_template_fulltext';
+
+-- 없다면 전문 검색 인덱스 생성
+SET @createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_template_fulltext ON template (title, description);', 'SELECT 1');
+PREPARE stmt FROM @createIndex;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+-- 전문 검색 인덱스가 존재하는지 조회
+SELECT COUNT(1) INTO @indexExists FROM information_schema.statistics
+WHERE table_name = 'source_code'
+  AND index_name = 'idx_source_code_fulltext';
+
+-- 없다면 전문 검색 인덱스 생성
+SET @createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_source_code_fulltext ON source_code (content, filename);', 'SELECT 1');
+PREPARE stmt FROM @createIndex;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
