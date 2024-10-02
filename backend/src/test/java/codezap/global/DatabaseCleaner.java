@@ -13,6 +13,7 @@ public class DatabaseCleaner extends AbstractTestExecutionListener {
         JdbcTemplate jdbcTemplate = testContext.getApplicationContext().getBean(JdbcTemplate.class);
         List<String> queries = getTruncateQueries(jdbcTemplate);
         truncate(queries, jdbcTemplate);
+        createIfNotExistFullTextIndex(jdbcTemplate);
     }
 
     private List<String> getTruncateQueries(final JdbcTemplate jdbcTemplate) {
@@ -28,5 +29,24 @@ public class DatabaseCleaner extends AbstractTestExecutionListener {
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 0;");
         queries.forEach(jdbcTemplate::execute);
         jdbcTemplate.execute("SET FOREIGN_KEY_CHECKS = 1;");
+    }
+
+    private void createIfNotExistFullTextIndex(JdbcTemplate jdbcTemplate) {
+        if (!indexExists(jdbcTemplate, "template", "idx_template_fulltext")) {
+            jdbcTemplate.execute("ALTER TABLE template ADD FULLTEXT INDEX idx_template_fulltext (title, description)");
+        }
+        if (!indexExists(jdbcTemplate, "source_code", "idx_source_code_fulltext")) {
+            jdbcTemplate.execute("ALTER TABLE source_code ADD FULLTEXT INDEX idx_source_code_fulltext (content, filename)");
+        }
+    }
+
+    private boolean indexExists(JdbcTemplate jdbcTemplate, String tableName, String indexName) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM INFORMATION_SCHEMA.STATISTICS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?",
+                Integer.class,
+                tableName,
+                indexName
+        );
+        return count != null && count > 0;
     }
 }
