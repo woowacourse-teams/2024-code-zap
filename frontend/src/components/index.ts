@@ -11,7 +11,9 @@ export { default as Modal } from './Modal/Modal';
 export { default as NonmemberAlerter } from './NonmemberAlerter/NonmemberAlerter';
 export { default as PagingButtons } from './PagingButtons/PagingButtons';
 export { default as SelectList } from './SelectList/SelectList';
+export { default as SourceCode } from './SourceCode/SourceCode';
 export { default as SourceCodeEditor } from './SourceCodeEditor/SourceCodeEditor';
+export { default as SourceCodeViewer } from './SourceCodeViewer/SourceCodeViewer';
 export { default as TagButton } from './TagButton/TagButton';
 export { default as TagInput } from './TagInput/TagInput';
 export { default as TemplateCard } from './TemplateCard/TemplateCard';
@@ -19,6 +21,9 @@ export { default as Text } from './Text/Text';
 export { default as Toast } from './Toast/Toast';
 export { default as Guide } from './Guide/Guide';
 export { default as Footer } from './Footer/Footer';
+export { default as CategoryDropdown } from './CategoryDropdown/CategoryDropdown';
+export { default as CategoryGuide } from './CategoryGuide/CategoryGuide';
+export { default as NewCategoryInput } from './NewCategoryInput/NewCategoryInput';
 export { default as NoSearchResults } from './NoSearchResults/NoSearchResults';
 
 // Skeleton UI

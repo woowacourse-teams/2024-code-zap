@@ -5,7 +5,6 @@ import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
 import { theme } from '@/style/theme';
-import { removeAllWhitespace } from '@/utils/removeAllWhitespace';
 
 interface Props {
   value: string;
@@ -27,17 +26,15 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   };
 
   const addTag = () => {
-    const newTag = removeAllWhitespace(value);
-
-    if (newTag === '') {
+    if (value === '') {
       return;
     }
 
-    if (tags.includes(newTag)) {
+    if (tags.includes(value)) {
       return;
     }
 
-    setTags((prev) => [...prev, newTag]);
+    setTags((prev) => [...prev, value]);
   };
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {

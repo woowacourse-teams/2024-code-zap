@@ -8,4 +8,5 @@ export { useScrollToTargetElement } from './useScrollToTargetElement';
 export { useWindowWidth } from './useWindowWidth';
 export { useToggle } from './useToggle';
 export { useLoaderDelay } from './useLoaderDelay';
+export { useNoSpaceInput } from './useNoSpaceInput';
 export { useSelectList } from './useSelectList';
