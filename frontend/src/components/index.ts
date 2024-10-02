@@ -10,6 +10,7 @@ export { default as LikeCounter } from './LikeCounter/LikeCounter';
 export { default as Modal } from './Modal/Modal';
 export { default as NonmemberAlerter } from './NonmemberAlerter/NonmemberAlerter';
 export { default as PagingButtons } from './PagingButtons/PagingButtons';
+export { default as ScreenReaderScript } from './ScreenReaderScript/ScreenReaderScript';
 export { default as SelectList } from './SelectList/SelectList';
 export { default as SourceCode } from './SourceCode/SourceCode';
 export { default as SourceCodeEditor } from './SourceCodeEditor/SourceCodeEditor';
