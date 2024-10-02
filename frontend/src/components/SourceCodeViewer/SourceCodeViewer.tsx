@@ -34,7 +34,7 @@ const SourceCodeViewer = ({ mode = 'detailView', filename = '', content, sourceC
               <ChevronIcon />
             </S.SourceCodeToggleIcon>
             <S.NoScrollbarContainer>
-              <Text.Small color='#fff' weight='bold'>
+              <Text.Small color={theme.color.light.white} weight='bold'>
                 {filename}
               </Text.Small>
             </S.NoScrollbarContainer>
