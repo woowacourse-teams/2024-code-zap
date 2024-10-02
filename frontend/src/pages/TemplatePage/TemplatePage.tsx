@@ -1,8 +1,20 @@
 import { useTheme } from '@emotion/react';
 import { useParams } from 'react-router-dom';
 
-import { ClockIcon, PencilIcon, PersonIcon, TrashcanIcon } from '@/assets/images';
-import { Button, Flex, Heading, LikeButton, Modal, SelectList, SourceCodeViewer, TagButton, Text } from '@/components';
+import { ClockIcon, PersonIcon } from '@/assets/images';
+import {
+  Button,
+  Flex,
+  Heading,
+  LikeButton,
+  Modal,
+  SelectList,
+  SourceCodeViewer,
+  TagButton,
+  Text,
+  NonmemberAlerter,
+  LoadingFallback,
+} from '@/components';
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
@@ -15,7 +27,10 @@ import * as S from './TemplatePage.style';
 const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
+  const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
+
   const {
+    isLogin,
     memberInfo: { name },
   } = useAuth();
 
@@ -38,8 +53,18 @@ const TemplatePage = () => {
     initialIsLiked: template?.isLiked || false,
   });
 
+  const handleLikeButtonClick = () => {
+    if (!isLogin) {
+      toggleNonmemberAlerter();
+
+      return;
+    }
+
+    toggleLike();
+  };
+
   if (!template) {
-    return <div>템플릿을 불러오는 중...</div>;
+    return <LoadingFallback />;
   }
 
   return (
@@ -64,18 +89,19 @@ const TemplatePage = () => {
                 <Flex justify='space-between'>
                   <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
                   {template.member.name === name && (
-                    <Flex gap='1rem'>
+                    <Flex width='5.5rem' justify='space-around'>
                       <S.EditButton
                         size='small'
                         variant='text'
                         onClick={() => {
                           handleEditButtonClick();
                         }}
+                        style={{ width: '2rem' }}
                       >
-                        <PencilIcon width={28} height={28} aria-label='템플릿 편집' />
+                        <Text.Small color={theme.color.light.secondary_700}>편집</Text.Small>
                       </S.EditButton>
-                      <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                        <TrashcanIcon aria-label='템플릿 삭제' />
+                      <S.DeleteButton size='small' variant='text' onClick={toggleModal} style={{ width: '2rem' }}>
+                        <Text.Small color={theme.color.light.secondary_700}>삭제</Text.Small>
                       </S.DeleteButton>
                     </Flex>
                   )}
@@ -85,17 +111,26 @@ const TemplatePage = () => {
                   <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
                     {template.title}
                   </Heading.Large>
-                  <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={toggleLike} />
+                  <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
                 </Flex>
 
                 <Flex gap='0.5rem' align='center'>
-                  <Flex align='center' gap='0.125rem'>
+                  <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
                     <PersonIcon width={14} />
-                    <Text.Small
-                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                    <div
+                      style={{
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        flex: 1,
+                      }}
                     >
-                      {template.member.name}
-                    </Text.Small>
+                      <Text.Small
+                        color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
+                      >
+                        {template.member.name}
+                      </Text.Small>
+                    </div>
                   </Flex>
                   <Flex align='center' gap='0.125rem'>
                     <ClockIcon width={16} />
@@ -173,6 +208,8 @@ const TemplatePage = () => {
           </S.SidebarContainer>
         </Flex>
       )}
+
+      <NonmemberAlerter isOpen={isNonmemberAlerterOpen} toggleModal={toggleNonmemberAlerter} />
     </>
   );
 };

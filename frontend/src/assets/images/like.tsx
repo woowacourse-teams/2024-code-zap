@@ -9,13 +9,13 @@ interface Props {
 
 const LikeIcon = ({ state, size }: Props) => {
   const fillColor = {
-    like: theme.color.light.analogous_primary_400,
+    like: theme.color.light.analogous_primary_300,
     unlike: 'none',
     unClickable: theme.color.light.secondary_800,
   }[state];
 
   const strokeColor = {
-    like: theme.color.light.analogous_primary_400,
+    like: theme.color.light.analogous_primary_300,
     unlike: theme.color.light.secondary_800,
     unClickable: theme.color.light.secondary_800,
   }[state];

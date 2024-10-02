@@ -6,16 +6,16 @@ export const LikeButtonContainer = styled.button<{ isLiked: boolean }>`
   cursor: pointer;
 
   display: flex;
-  gap: 0.5rem;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
-  height: 2.5rem;
-  padding: 0 0.75rem;
+  min-width: 5.5rem;
+  height: 2.25rem;
+  padding: 0 1rem;
 
   color: ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : 'white')};
 
-  border: 1px solid
+  border: 1.5008px solid
     ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : theme.color.light.secondary_800)};
-  border-radius: 16px;
+  border-radius: 24px;
 `;
