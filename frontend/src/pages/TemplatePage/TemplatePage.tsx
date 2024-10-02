@@ -20,8 +20,7 @@ import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
 import { formatRelativeTime } from '@/utils';
 
-import { useTemplate } from './hooks';
-import { useLike } from './hooks/useLike';
+import { useTemplate, useLike } from './hooks';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
