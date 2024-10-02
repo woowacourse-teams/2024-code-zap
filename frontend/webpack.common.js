@@ -78,14 +78,6 @@ module.exports = {
       org: 'code-zap',
       project: 'javascript-react',
     }),
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      reportFilename: 'bundle-report.html',
-      openAnalyzer: false,
-      generateStatsFile: true,
-      statsFilename: 'bundle-stats.json',
-      excludeAssets: [/node_modules/],
-    }),
   ],
   resolve: {
     alias: {
