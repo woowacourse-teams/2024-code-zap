@@ -20,12 +20,4 @@ public class CorsProperties {
         this.allowedOrigins = allowedOrigins;
         this.allowedOriginsPatterns = allowedOriginsPatterns;
     }
-
-    public String[] getAllowedOrigins() {
-        return allowedOrigins;
-    }
-
-    public String[] getAllowedOriginsPatterns() {
-        return allowedOriginsPatterns;
-    }
 }
