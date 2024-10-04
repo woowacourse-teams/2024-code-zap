@@ -20,6 +20,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 
 @Component
 public class ApiErrorResponsesCustomizer implements OperationCustomizer {
+
     @Override
     public Operation customize(Operation operation, HandlerMethod handlerMethod) {
         List<ApiErrorResponse> apiErrorResponses = getApiErrorResponses(handlerMethod);
