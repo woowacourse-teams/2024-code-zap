@@ -32,7 +32,12 @@ public class FullTextSearchMySQLDialect extends MySQLDialect {
         }
 
         @Override
-        public void render(SqlAppender sqlAppender, List<? extends SqlAstNode> arguments, ReturnableType<?> returnType, SqlAstTranslator<?> translator) {
+        public void render(
+                SqlAppender sqlAppender,
+                List<? extends SqlAstNode> arguments,
+                ReturnableType<?> returnType,
+                SqlAstTranslator<?> translator
+        ) {
             sqlAppender.appendSql("MATCH(");
             translator.render(arguments.get(0), SqlAstNodeRenderingMode.DEFAULT);
             sqlAppender.appendSql(", ");

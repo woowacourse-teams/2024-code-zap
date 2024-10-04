@@ -22,31 +22,31 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
     List<Tag> findAllTagsByTemplate(Template template);
 
     @Query("""
-        SELECT tt, t
-        FROM TemplateTag tt
-        JOIN FETCH tt.tag t
-        WHERE tt.id.templateId = :templateId
-        """)
+            SELECT tt, t
+            FROM TemplateTag tt
+            JOIN FETCH tt.tag t
+            WHERE tt.id.templateId = :templateId
+            """)
     List<TemplateTag> findAllByTemplateId(Long templateId);
 
     @Query("""
-        SELECT tt, t
-        FROM TemplateTag tt
-        JOIN FETCH tt.tag t
-        WHERE tt.id.templateId in :templateIds
-        """)
+            SELECT tt, t
+            FROM TemplateTag tt
+            JOIN FETCH tt.tag t
+            WHERE tt.id.templateId in :templateIds
+            """)
     List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds);
 
     @Query("""
-            SELECT DISTINCT t
-            FROM Tag t
-            WHERE t.id IN (
-                SELECT DISTINCT tt.id.tagId
-                FROM TemplateTag tt
-                WHERE tt.id.templateId IN
-                    (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
-        )
-        """)
+                SELECT DISTINCT t
+                FROM Tag t
+                WHERE t.id IN (
+                    SELECT DISTINCT tt.id.tagId
+                    FROM TemplateTag tt
+                    WHERE tt.id.templateId IN
+                        (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
+            )
+            """)
     List<Tag> findAllTagDistinctByMemberId(Long memberId);
 
     @Modifying(clearAutomatically = true)
