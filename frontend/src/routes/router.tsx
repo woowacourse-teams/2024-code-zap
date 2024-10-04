@@ -1,30 +1,45 @@
 import { ErrorBoundary } from '@sentry/react';
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout, LoadingFallback } from '@/components';
-import {
-  TemplatePage,
-  TemplateUploadPage,
-  SignupPage,
-  LoginPage,
-  LandingPage,
-  NotFoundPage,
-  TemplateExplorePage,
-  MyTemplatePage,
-} from '@/pages';
 
 import RouteGuard from './RouteGuard';
 import { END_POINTS } from './endPoints';
 
+const LandingPage = lazy(() => import('@/pages/LandingPage/LandingPage'));
+const TemplatePage = lazy(() => import('@/pages/TemplatePage/TemplatePage'));
+const TemplateUploadPage = lazy(() => import('@/pages/TemplateUploadPage/TemplateUploadPage'));
+const SignupPage = lazy(() => import('@/pages/SignupPage/SignupPage'));
+const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage/NotFoundPage'));
+const TemplateExplorePage = lazy(() => import('@/pages/TemplateExplorePage/TemplateExplorePage'));
+const MyTemplatePage = lazy(() => import('@/pages/MyTemplatesPage/MyTemplatePage'));
+
+const CustomSuspense = ({ children }: { children: JSX.Element }) => (
+  <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+);
+
 const router = createBrowserRouter([
   {
-    errorElement: <NotFoundPage />,
-    element: <Layout />,
+    errorElement: (
+      <CustomSuspense>
+        <NotFoundPage />
+      </CustomSuspense>
+    ),
+    element: (
+      <CustomSuspense>
+        <Layout />
+      </CustomSuspense>
+    ),
     children: [
       {
         path: END_POINTS.HOME,
-        element: <LandingPage />,
+        element: (
+          <CustomSuspense>
+            <LandingPage />
+          </CustomSuspense>
+        ),
       },
       {
         path: END_POINTS.MY_TEMPLATES,
@@ -40,17 +55,27 @@ const router = createBrowserRouter([
       },
       {
         path: END_POINTS.TEMPLATES_EXPLORE,
-        element: <TemplateExplorePage />,
+        element: (
+          <CustomSuspense>
+            <TemplateExplorePage />
+          </CustomSuspense>
+        ),
       },
       {
         path: END_POINTS.TEMPLATE,
-        element: <TemplatePage />,
+        element: (
+          <CustomSuspense>
+            <TemplatePage />
+          </CustomSuspense>
+        ),
       },
       {
         path: END_POINTS.TEMPLATES_UPLOAD,
         element: (
           <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
-            <TemplateUploadPage />
+            <CustomSuspense>
+              <TemplateUploadPage />
+            </CustomSuspense>
           </RouteGuard>
         ),
       },
@@ -58,7 +83,9 @@ const router = createBrowserRouter([
         path: END_POINTS.SIGNUP,
         element: (
           <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.HOME}>
-            <SignupPage />
+            <CustomSuspense>
+              <SignupPage />
+            </CustomSuspense>
           </RouteGuard>
         ),
       },
@@ -66,13 +93,19 @@ const router = createBrowserRouter([
         path: END_POINTS.LOGIN,
         element: (
           <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.HOME}>
-            <LoginPage />
+            <CustomSuspense>
+              <LoginPage />
+            </CustomSuspense>
           </RouteGuard>
         ),
       },
       {
         path: '*',
-        element: <NotFoundPage />,
+        element: (
+          <CustomSuspense>
+            <NotFoundPage />
+          </CustomSuspense>
+        ),
       },
     ],
   },

@@ -10,12 +10,16 @@
     "dev": "webpack-dev-server --config webpack.dev.js --open",
     "tsc": "tsc --noEmit",
     "build": "webpack --mode production --config webpack.prod.js",
+    "build:report": "webpack-bundle-analyzer --port 8888 dist/bundle-stats.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "lint:style": "stylelint '**/style.ts' --fix"
   },
   "keywords": [],
   "author": "",
+  "sideEffects": [
+    "./src/routes/router.tsx"
+  ],
   "license": "ISC",
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -80,6 +84,7 @@
     "undici": "^6.19.2",
     "util": "^0.12.5",
     "webpack": "^5.92.1",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.4"
   },
