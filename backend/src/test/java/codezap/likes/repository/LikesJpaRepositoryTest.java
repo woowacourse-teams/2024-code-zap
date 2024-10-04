@@ -2,6 +2,9 @@ package codezap.likes.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -148,6 +151,51 @@ class LikesJpaRepositoryTest {
             ));
 
             assertThat(likesRepository.countByTemplate(template)).isEqualTo(0);
+        }
+    }
+
+    @Nested
+    @DisplayName("템플릿 ID로 템플릿에 존재하는 좋아요 삭제 테스트")
+    class DeleteByTemplateIds {
+
+        @Test
+        @DisplayName("성공: 템플릿 ID로 템플릿에 존재하는 좋아요 삭제 (템플릿 1개)")
+        void testDeleteByTemplateId() {
+            var member1 = memberRepository.save(MemberFixture.getFirstMember());
+            var member2 = memberRepository.save(MemberFixture.getSecondMember());
+            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
+            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template1, member2));
+            likesRepository.save(new Likes(template2, member1));
+
+            likesRepository.deleteByTemplateIds(List.of(template1.getId()));
+
+            assertAll(
+                    () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
+                    () -> assertThat(likesRepository.countByTemplate(template2)).isEqualTo(1)
+            );
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿 ID로 템플릿에 존재하는 좋아요 삭제 (템플릿 2개)")
+        void testDeleteByTemplateIds() {
+            var member1 = memberRepository.save(MemberFixture.getFirstMember());
+            var member2 = memberRepository.save(MemberFixture.getSecondMember());
+            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
+            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template1, member2));
+            likesRepository.save(new Likes(template2, member1));
+
+            likesRepository.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
+
+            assertAll(
+                    () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
+                    () -> assertThat(likesRepository.countByTemplate(template2)).isEqualTo(0)
+            );
         }
     }
 }
