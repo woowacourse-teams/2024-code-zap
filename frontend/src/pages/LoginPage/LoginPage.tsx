@@ -27,7 +27,14 @@ const LoginPage = () => {
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
               <Input.Label>아이디 (닉네임)</Input.Label>
-              <Input.TextField type='text' value={name} onChange={handleNameChange} autoComplete='username' />
+              <Input.TextField
+                type='text'
+                placeholder='아이디를 입력해주세요'
+                value={name}
+                onChange={handleNameChange}
+                autoComplete='username'
+                css={{ '::placeholder': { color: 'transparent' } }}
+              />
               <Input.HelperText>{errors.name}</Input.HelperText>
             </Input>
 
@@ -35,12 +42,16 @@ const LoginPage = () => {
               <Input.Label>비밀번호</Input.Label>
               <Input.TextField
                 type={showPassword ? 'text' : 'password'}
+                placeholder='비밀번호를 입력해주세요'
                 value={password}
                 onChange={handlePasswordChange}
                 autoComplete='current-password'
+                css={{ '::placeholder': { color: 'transparent' } }}
               />
               <Input.Adornment>
-                <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
+                <button aria-label='비밀번호 보기'>
+                  <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-hidden />
+                </button>
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>
