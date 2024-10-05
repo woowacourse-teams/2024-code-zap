@@ -30,10 +30,10 @@ const LoginPage = () => {
               <Input.TextField
                 type='text'
                 placeholder='아이디를 입력해주세요'
+                placeholderColor='transparent'
                 value={name}
                 onChange={handleNameChange}
                 autoComplete='username'
-                css={{ '::placeholder': { color: 'transparent' } }}
               />
               <Input.HelperText>{errors.name}</Input.HelperText>
             </Input>
@@ -43,10 +43,10 @@ const LoginPage = () => {
               <Input.TextField
                 type={showPassword ? 'text' : 'password'}
                 placeholder='비밀번호를 입력해주세요'
+                placeholderColor='transparent'
                 value={password}
                 onChange={handlePasswordChange}
                 autoComplete='current-password'
-                css={{ '::placeholder': { color: 'transparent' } }}
               />
               <Input.Adornment>
                 <button aria-label='비밀번호 보기'>
