@@ -27,7 +27,13 @@ const LoginPage = () => {
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
               <Input.Label>아이디 (닉네임)</Input.Label>
-              <Input.TextField type='text' value={name} onChange={handleNameChange} autoComplete='username' />
+              <Input.TextField
+                type='text'
+                value={name}
+                onChange={handleNameChange}
+                autoComplete='username'
+                aria-label='아이디 입력. 1자 ~ 255자의 올바른 문자를 입력해주세요'
+              />
               <Input.HelperText>{errors.name}</Input.HelperText>
             </Input>
 
@@ -38,6 +44,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={handlePasswordChange}
                 autoComplete='current-password'
+                aria-label='비밀번호 입력. 영문자, 숫자를 포함한 8 ~ 16자의 비밀번호를 입력해주세요.'
               />
               <Input.Adornment>
                 <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
