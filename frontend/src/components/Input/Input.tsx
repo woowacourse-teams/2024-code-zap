@@ -45,12 +45,15 @@ const TextField = ({ ...rests }: TextFieldProps) => <S.TextField {...rests} />;
 
 const Label = ({ children, ...rests }: PropsWithChildren<LabelProps>) => <S.Label {...rests}>{children}</S.Label>;
 
-const Adornment = ({ children, ...rests }: PropsWithChildren<AdornmentProps>) => (
-  <S.Adornment {...rests} data-adornment>
-    {children}
-  </S.Adornment>
-);
+const Adornment = ({ children, as, ...rests }: PropsWithChildren<AdornmentProps>) => {
+  const buttonProps = as === 'button' ? { type: 'button' } : {};
 
+  return (
+    <S.Adornment as={as} {...rests} {...buttonProps} data-adornment>
+      {children}
+    </S.Adornment>
+  );
+};
 const HelperText = ({ children, ...rests }: PropsWithChildren<HelperTextProps>) => (
   <S.HelperText {...rests}>{children}</S.HelperText>
 );
