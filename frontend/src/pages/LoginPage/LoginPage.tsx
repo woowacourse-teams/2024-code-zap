@@ -48,10 +48,8 @@ const LoginPage = () => {
                 onChange={handlePasswordChange}
                 autoComplete='current-password'
               />
-              <Input.Adornment>
-                <button aria-label='비밀번호 보기'>
-                  <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-hidden />
-                </button>
+              <Input.Adornment as='button' aria-label='비밀번호 보기' onClick={handlePasswordToggle}>
+                <EyeIcon aria-hidden />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>

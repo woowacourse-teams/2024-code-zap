@@ -23,7 +23,9 @@ export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export interface LabelProps extends LabelHTMLAttributes<HTMLLabelElement> {}
 
-export interface AdornmentProps extends HTMLAttributes<HTMLDivElement> {}
+export interface AdornmentProps extends HTMLAttributes<HTMLDivElement> {
+  as?: 'div' | 'button';
+}
 
 export interface HelperTextProps extends HTMLAttributes<HTMLSpanElement> {}
 
