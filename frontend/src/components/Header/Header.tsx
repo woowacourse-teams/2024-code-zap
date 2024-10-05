@@ -125,7 +125,7 @@ const LoginButton = () => (
 );
 
 const HeaderMenuButton = ({ menuOpen, toggleMenu }: { menuOpen: boolean; toggleMenu: () => void }) => (
-  <S.HamburgerIconWrapper>
+  <S.HamburgerIconWrapper aria-label='메뉴'>
     <HamburgerIcon menuOpen={menuOpen} onClick={toggleMenu} />
   </S.HamburgerIconWrapper>
 );
