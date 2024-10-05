@@ -23,7 +23,7 @@ public class GroupedByteLengthValidator implements ConstraintValidator<ByteLengt
                 .allMatch(this::isValid);
     }
 
-    public boolean isValid(String target) {
+    private boolean isValid(String target) {
         int byteLength = target.getBytes(StandardCharsets.UTF_8).length;
         return min <= byteLength && byteLength <= max;
     }
