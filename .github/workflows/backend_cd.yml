@@ -69,13 +69,14 @@ jobs:
           token: ${{ secrets.PRIVATE_REPO_ACCESS }}
 
       - name: Properties 복사
-        run: ${{ secrets.RUN_COPY_PROPERTIES }}
+        run: ${{ secrets.RUN_COPY_COMPOSE }}
 
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
           name: code-zap
-          path: ${{ secrets.SPRING_DIRECTORY }}
+          path: ${{ secrets.SPRING_PATH }}
 
       - name: 배포
+        working-directory: ${{ secrets.PROJECT_PATH }}
         run: ${{ secrets.RUN_SERVER }}
