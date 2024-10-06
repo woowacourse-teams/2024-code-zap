@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
@@ -161,11 +162,11 @@ class LikesJpaRepositoryTest {
         @Test
         @DisplayName("성공: 템플릿 ID로 템플릿에 존재하는 좋아요 삭제 (템플릿 1개)")
         void testDeleteByTemplateId() {
-            var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var member2 = memberRepository.save(MemberFixture.getSecondMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
+            Template template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
@@ -181,11 +182,11 @@ class LikesJpaRepositoryTest {
         @Test
         @DisplayName("성공: 템플릿 ID로 템플릿에 존재하는 좋아요 삭제 (템플릿 2개)")
         void testDeleteByTemplateIds() {
-            var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var member2 = memberRepository.save(MemberFixture.getSecondMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
+            Template template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
