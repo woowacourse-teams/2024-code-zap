@@ -8,8 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on:
-      - ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
@@ -30,46 +29,33 @@ jobs:
       - name: Artifact 업로드
         uses: actions/upload-artifact@v4
         with:
-          name: code-zap-jar
+          name: code-zap
           path: backend/build/libs/*.jar
 
   deploy_develop:
     needs: build
-    if: ${{ github.ref == 'refs/heads/dev/be' }}
-    runs-on:
-      - self-hosted
-      - spring
-      - develop
+    environment: develop
+    runs-on: develop
     steps:
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: code-zap-jar
+          name: code-zap
           path: ${{ secrets.SPRING_DIRECTORY }}
-      - name: 배포 스크립트 실행
-        run: |
-          cd ${{ secrets.SPRING_DIRECTORY }}
-          mv code-zap*.jar ${{ secrets.JAR_NAME }}
-          docker compose restart
+      - name: 배포
+        run: docker compose restart
 
   deploy_production:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' }}
-    strategy:
-      matrix:
-        environment: [prod_a, prod_b]
+    environment: production
     runs-on:
-      - self-hosted
-      - spring
-      - ${{ matrix.environment }}
+      - prod_a
+      - prod_b
     steps:
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
           name: code-zap-jar
           path: ${{ secrets.SPRING_DIRECTORY }}
-      - name: 배포 스크립트 실행
-        run: |
-          cd ${{ secrets.SPRING_DIRECTORY }}
-          mv code-zap*.jar ${{ secrets.JAR_NAME }}
-          docker compose restart
+      - name: 배포
+        run: docker compose restart
