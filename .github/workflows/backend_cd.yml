@@ -43,16 +43,21 @@ jobs:
           submodules: true
           token: ${{ secrets.PRIVATE_REPO_ACCESS }}
 
-      - name: Properties 복사
-        run: ${{ secrets.RUN_COPY_PROPERTIES }}
+      - name: Compose 설정 복사
+        run: ${{ secrets.RUN_COPY_COMPOSE }}
+
+      - name: Compose 환경변수 주입
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: echo ${{ secrets.ENV_VARIABLES }} > .env
 
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
           name: code-zap
-          path: ${{ secrets.SPRING_DIRECTORY }}
+          path: ${{ secrets.SPRING_PATH }}
 
       - name: 배포
+        working-directory: ${{ secrets.PROJECT_PATH }}
         run: ${{ secrets.RUN_SERVER }}
 
   deploy_production:
@@ -68,8 +73,12 @@ jobs:
           submodules: true
           token: ${{ secrets.PRIVATE_REPO_ACCESS }}
 
-      - name: Properties 복사
+      - name: Compose 설정 복사
         run: ${{ secrets.RUN_COPY_COMPOSE }}
+
+      - name: Compose 환경변수 주입
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: echo ${{ secrets.ENV_VARIABLES }} > .env
 
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
