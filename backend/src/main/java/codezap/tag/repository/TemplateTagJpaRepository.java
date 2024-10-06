@@ -43,8 +43,9 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
                 WHERE t.id IN (
                     SELECT DISTINCT tt.id.tagId
                     FROM TemplateTag tt
-                    WHERE tt.id.templateId IN
-                        (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
+                    WHERE tt.id.templateId IN (
+                        SELECT te.id FROM Template te WHERE te.member.id = :memberId
+                    )
             )
             """)
     List<Tag> findAllTagDistinctByMemberId(Long memberId);
