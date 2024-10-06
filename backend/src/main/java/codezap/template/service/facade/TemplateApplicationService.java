@@ -60,7 +60,7 @@ public class TemplateApplicationService {
         return FindTemplateResponse.of(template, sourceCodes, tags, false);
     }
 
-    public FindTemplateResponse findByIdWithMember(Long id, Member loginMember) {
+    public FindTemplateResponse findById(Long id, Member loginMember) {
         Template template = templateService.getById(id);
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
@@ -79,7 +79,7 @@ public class TemplateApplicationService {
         return makeResponse(templates, (template) -> false);
     }
 
-    public FindAllTemplatesResponse findAllByWithMember(
+    public FindAllTemplatesResponse findAllBy(
             Long memberId,
             String keyword,
             Long categoryId,

@@ -60,7 +60,7 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<FindAllTemplatesResponse> getTemplatesWithMember(
+    public ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
             @AuthenticationPrinciple Member member,
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String keyword,
@@ -68,7 +68,7 @@ public class TemplateController implements SpringDocTemplateController {
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(templateApplicationService.findAllByWithMember(
+        return ResponseEntity.ok(templateApplicationService.findAllBy(
                 memberId,
                 keyword,
                 categoryId,
@@ -83,11 +83,11 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/{id}/login")
-    public ResponseEntity<FindTemplateResponse> getTemplateByIdWithMember(
+    public ResponseEntity<FindTemplateResponse> findTemplateById(
             @AuthenticationPrinciple Member member,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(templateApplicationService.findByIdWithMember(id, member));
+        return ResponseEntity.ok(templateApplicationService.findById(id, member));
     }
 
     @PostMapping("/{id}")

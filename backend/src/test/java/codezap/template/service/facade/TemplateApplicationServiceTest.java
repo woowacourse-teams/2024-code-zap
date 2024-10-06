@@ -155,7 +155,7 @@ class TemplateApplicationServiceTest {
             likesRepository.save(new Likes(null, template, member));
 
             // when
-            var actual = sut.findByIdWithMember(template.getId(), member);
+            var actual = sut.findById(template.getId(), member);
 
             // then
             assertAll(
@@ -173,7 +173,7 @@ class TemplateApplicationServiceTest {
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             // when
-            var actual = sut.findByIdWithMember(template.getId(), member);
+            var actual = sut.findById(template.getId(), member);
 
             // then
             assertAll(
@@ -269,7 +269,7 @@ class TemplateApplicationServiceTest {
             thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
             // when & then
-            assertThatCode(() -> sut.findAllByWithMember(memberId, keyword, categoryId, tagIds, pageable, member))
+            assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable, member))
                     .doesNotThrowAnyException();
         }
 
@@ -297,7 +297,7 @@ class TemplateApplicationServiceTest {
 
             // when
             List<FindAllTemplateItemResponse> templates =
-                    sut.findAllByWithMember(null, null, null, null, Pageable.ofSize(1), loginMember)
+                    sut.findAllBy(null, null, null, null, Pageable.ofSize(1), loginMember)
                             .templates();
             List<FindAllTemplateItemResponse> likesTemplate = templates.stream()
                     .filter((template) -> likeTemplatesIds.contains(template.id()))
