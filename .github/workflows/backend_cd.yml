@@ -62,7 +62,7 @@ jobs:
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: code-zap-jar
+          name: code-zap
           path: ${{ secrets.SPRING_DIRECTORY }}
 
       - name: 배포
