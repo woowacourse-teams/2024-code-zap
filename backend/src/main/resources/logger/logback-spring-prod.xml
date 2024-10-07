@@ -13,7 +13,7 @@
     </logger>
 
     <root level="WARN">
-        <appender-ref ref="warn-appender"/>
+        <appender-ref ref="warn-appender"/> 
         <appender-ref ref="error-appender"/>
     </root>
 
