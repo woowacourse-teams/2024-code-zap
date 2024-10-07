@@ -16,7 +16,7 @@ interface Props {
 
 const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
-  const { visuallyHiddenProps, updateScreenReaderMessage } = useScreenReader();
+  const { updateScreenReaderMessage } = useScreenReader();
 
   const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Enter') {
@@ -89,8 +89,6 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
           }}
         />
       </Input>
-
-      <div {...visuallyHiddenProps}></div>
     </Flex>
   );
 };
