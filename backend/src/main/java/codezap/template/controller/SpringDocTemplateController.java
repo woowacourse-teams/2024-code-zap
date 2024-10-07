@@ -63,6 +63,10 @@ public interface SpringDocTemplateController {
               - 카테고리 ID
               - 태그 ID들 \n
                         
+            조건에 멤버 ID가 있을 경우
+            - 멤버 ID가 로그인된 멤버 정보와 동일하면 공개 템플릿, 비공개 템플릿 모두 반환
+            - 멤버 ID가 로그인된 멤버 정보와 동일하지 않으면 공개 템플릿만 반환
+                        
             페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
             - 페이징 조건 \n
               - 페이지 번호(pageNumber)
@@ -72,7 +76,7 @@ public interface SpringDocTemplateController {
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc)
-              - 좋아요 순 (likesCount, desc) \n
+              - 좋아요순 (likesCount, desc) \n
             """)
     @ApiResponse(responseCode = "200", description = "템플릿 검색 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST,
@@ -103,6 +107,10 @@ public interface SpringDocTemplateController {
               - 카테고리 ID
               - 태그 ID들 \n
                         
+            조건에 멤버 ID가 있을 경우
+            - 멤버 ID가 로그인된 멤버 정보와 동일하면 공개 템플릿, 비공개 템플릿 모두 반환
+            - 멤버 ID가 로그인된 멤버 정보와 동일하지 않으면 공개 템플릿만 반환
+                        
             페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
             - 페이징 조건 \n
               - 페이지 번호(pageNumber)
@@ -112,7 +120,7 @@ public interface SpringDocTemplateController {
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc)
-              - 좋아요 순 (likesCount, desc) \n
+              - 좋아요순 (likesCount, desc) \n
             """)
     @ApiResponse(responseCode = "200", description = "템플릿 검색 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST,
