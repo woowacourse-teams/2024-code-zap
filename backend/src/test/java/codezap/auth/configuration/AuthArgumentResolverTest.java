@@ -155,12 +155,11 @@ class AuthArgumentResolverTest {
         }
 
         private Member resolveArgument(Method method, NativeWebRequest webRequest) {
-            ModelAndViewContainer modelAndViewContainer = new ModelAndViewContainer();
             WebDataBinderFactory webDataBinderFactory = (request, target, objectName) -> null;
 
             return authArgumentResolver.resolveArgument(
                     new MethodParameter(method, 0),
-                    modelAndViewContainer,
+                    new ModelAndViewContainer(),
                     webRequest,
                     webDataBinderFactory);
         }
