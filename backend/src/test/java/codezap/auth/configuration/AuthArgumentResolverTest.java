@@ -46,7 +46,7 @@ class AuthArgumentResolverTest {
         void canSupportsTest() {
             Method supportMethod = ReflectionSupport.findMethod(
                             SupportTestController.class, "supportMethod", Member.class)
-                    .get();
+                    .orElseThrow();
             MethodParameter methodParameter = new MethodParameter(supportMethod, 0);
 
             assertThat(authArgumentResolver.supportsParameter(methodParameter))
@@ -58,7 +58,7 @@ class AuthArgumentResolverTest {
         void notSupportsTest() {
             Method supportMethod = ReflectionSupport.findMethod(
                             SupportTestController.class, "notSupportMethod", Member.class)
-                    .get();
+                    .orElseThrow();
             MethodParameter methodParameter = new MethodParameter(supportMethod, 0);
 
             assertThat(authArgumentResolver.supportsParameter(methodParameter))
@@ -89,7 +89,7 @@ class AuthArgumentResolverTest {
         class RequiredFalseTest {
             Method notRequiredMethod = ReflectionSupport.findMethod(ResolveTestController.class,
                             "notRequiredMethod", Member.class)
-                    .get();
+                    .orElseThrow();
 
             @Test
             @DisplayName("성공: credential 정보가 없을때 null 이 반환된다.")
@@ -122,7 +122,7 @@ class AuthArgumentResolverTest {
         class RequiredTrueTest {
             Method requiredMethod = ReflectionSupport.findMethod(ResolveTestController.class,
                             "requiredMethod", Member.class)
-                    .get();
+                    .orElseThrow();
 
             @Test
             @DisplayName("실패: credential 정보가 없을때 예외가 발생한다..")
