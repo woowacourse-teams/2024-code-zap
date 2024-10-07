@@ -30,10 +30,13 @@ const SourceCodeViewer = ({ mode = 'detailView', filename = '', content, sourceC
       {mode === 'detailView' && (
         <S.FilenameContainer>
           <S.ToggleButton onClick={toggleSourceCode}>
-            <S.SourceCodeToggleIcon isOpen={isSourceCodeOpen} aria-label='소스코드 펼침'>
+            <S.SourceCodeToggleIcon
+              isOpen={isSourceCodeOpen}
+              aria-label={isSourceCodeOpen ? '소스코드 접기' : '소스코드 펼침'}
+            >
               <ChevronIcon />
             </S.SourceCodeToggleIcon>
-            <S.NoScrollbarContainer>
+            <S.NoScrollbarContainer aria-label={`파일명 ${filename}`}>
               <Text.Small color={theme.color.light.white} weight='bold'>
                 {filename}
               </Text.Small>
