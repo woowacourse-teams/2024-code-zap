@@ -76,7 +76,7 @@ class CategoryControllerTest extends MockMvcTest {
 
         @Test
         @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
-        void createCategoryFailWithlongName() throws Exception {
+        void createCategoryFailWithLongName() throws Exception {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
 
             mvc.perform(post("/categories")
@@ -84,7 +84,7 @@ class CategoryControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(createCategoryRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("카테고리 이름은 최대 255자까지 입력 가능합니다."));
+                    .andExpect(jsonPath("$.detail").value("카테고리 이름은 최대 15자까지 입력 가능합니다."));
         }
     }
 
