@@ -1,8 +1,8 @@
-import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction, useState } from 'react';
+import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction } from 'react';
 
-import { Flex, Input, TagButton, Text, ScreenReaderScript } from '@/components';
+import { Flex, Input, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks';
+import { useCustomContext, useScreenReader } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
 import { theme } from '@/style/theme';
 
@@ -16,7 +16,7 @@ interface Props {
 
 const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
-  const [screenReaderMessage, setScreenReaderMessage] = useState('');
+  const { visuallyHiddenProps, updateScreenReaderMessage } = useScreenReader();
 
   const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Enter') {
@@ -32,7 +32,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
     }
 
     setTags((prev) => [...prev, value]);
-    setScreenReaderMessage(`${value} 태그 등록`);
+    updateScreenReaderMessage(`${value} 태그 등록`);
   };
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +90,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
         />
       </Input>
 
-      <ScreenReaderScript message={screenReaderMessage} />
+      <div {...visuallyHiddenProps}></div>
     </Flex>
   );
 };
