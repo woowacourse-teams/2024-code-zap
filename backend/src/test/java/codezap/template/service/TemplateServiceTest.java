@@ -73,7 +73,8 @@ class TemplateServiceTest {
                     ),
                     1,
                     category.getId(),
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             var actual = sut.create(member, templateRequest, category);

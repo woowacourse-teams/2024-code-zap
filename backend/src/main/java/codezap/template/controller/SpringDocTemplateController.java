@@ -25,9 +25,9 @@ public interface SpringDocTemplateController {
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 생성", description = """
             새로운 템플릿을 생성합니다. \n
-            템플릿명, 템플릿 설명, 소스 코드 목록, 썸네일 순서, 카테고리 ID, 태그 목록이 필요합니다. \n
+            템플릿명, 템플릿 설명, 소스 코드 목록, 썸네일 순서, 카테고리 ID, 태그 목록, 템플릿 공개 여부가 필요합니다. \n
             * 템플릿 이름은 비어있거나 공백일 수 없다.
-            
+                        
             소스 코드 목록은 파일명, 소스 코드, 소스 코드 순서가 필요합니다. \n
             * 소스 코드 순서는 1부터 시작합니다.
             * 소스 코드 순서는 오름차순으로 정렬하여 보내야 합니다.
@@ -62,13 +62,13 @@ public interface SpringDocTemplateController {
               - 검색 키워드 (템플릿명, 템플릿 설명, 파일명, 소스 코드)
               - 카테고리 ID
               - 태그 ID들 \n
-            
+                        
             페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
             - 페이징 조건 \n
               - 페이지 번호(pageNumber)
               - 한 페이지에 템플릿 개수(pageSize)
               - 페이지 정렬 방식(sort) \n
-            
+                        
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc)
@@ -102,13 +102,13 @@ public interface SpringDocTemplateController {
               - 검색 키워드 (템플릿명, 템플릿 설명, 파일명, 소스 코드)
               - 카테고리 ID
               - 태그 ID들 \n
-            
+                        
             페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
             - 페이징 조건 \n
               - 페이지 번호(pageNumber)
               - 한 페이지에 템플릿 개수(pageSize)
               - 페이지 정렬 방식(sort) \n
-            
+                        
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc)

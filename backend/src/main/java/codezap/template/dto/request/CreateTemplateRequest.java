@@ -40,7 +40,12 @@ public record CreateTemplateRequest(
 
         @Schema(description = "태그 목록")
         @NotNull(message = "태그 목록이 null 입니다.", groups = NotNullGroup.class)
-        List<String> tags
+        List<String> tags,
+
+        @Schema(description = "템플릿 공개 여부", example = "true")
+        @NotNull(message = "템플릿 공개 여부가 null 입니다.", groups = NotNullGroup.class)
+        boolean isPublic
+
 ) implements ValidatedSourceCodesOrdinalRequest {
     @Override
     public List<Integer> extractSourceCodesOrdinal() {

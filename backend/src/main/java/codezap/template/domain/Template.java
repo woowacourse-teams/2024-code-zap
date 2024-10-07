@@ -54,11 +54,19 @@ public class Template extends BaseTimeEntity {
     @Formula("(select count(*) from likes where likes.template_id = id)")
     private Long likesCount;
 
+    @Column(nullable = false)
+    private boolean isPublic;
+
     public Template(Member member, String title, String description, Category category) {
+        this(member, title, description, category, true);
+    }
+
+    public Template(Member member, String title, String description, Category category, boolean isPublic) {
         this.member = member;
         this.title = title;
         this.description = description;
         this.category = category;
+        this.isPublic = isPublic;
     }
 
     public void updateTemplate(String title, String description, Category category) {

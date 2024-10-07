@@ -114,7 +114,8 @@ class TemplateApplicationServiceTest {
                     sourceCodes,
                     thumbnailOrdinal,
                     category.getId(),
-                    tags);
+                    tags,
+                    true);
         }
     }
 

@@ -134,7 +134,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("a".repeat(MAX_LENGTH), repeatTarget.repeat(maxLength), 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -155,7 +156,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("a", "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -177,7 +179,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("a", "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -198,7 +201,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -220,7 +224,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -242,7 +247,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest(fileName, "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -264,7 +270,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest(exceededTitle, "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -286,7 +293,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", sourceCode, 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -308,7 +316,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", repeatTarget.repeat(exceededLength), 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -329,7 +338,8 @@ class TemplateControllerTest {
                     List.of(),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -350,7 +360,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", "sourceCode", 1)),
                     1,
                     null,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -371,7 +382,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", "sourceCode", 1)),
                     1,
                     1L,
-                    null
+                    null,
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -395,7 +407,8 @@ class TemplateControllerTest {
                             new CreateSourceCodeRequest("title", "content", secondIndex)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -416,7 +429,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -436,7 +450,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     1,
                     2L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -457,7 +472,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     1,
                     3L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -478,7 +494,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("filename", "content", 1)),
                     10,
                     1L,
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    true
             );
 
             mvc.perform(post("/templates")
@@ -1182,7 +1199,8 @@ class TemplateControllerTest {
                 ),
                 1,
                 1L,
-                List.of("tag1", "tag2")
+                List.of("tag1", "tag2"),
+                false
         );
     }
 }
