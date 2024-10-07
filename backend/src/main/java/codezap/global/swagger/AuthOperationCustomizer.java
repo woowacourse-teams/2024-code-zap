@@ -90,7 +90,7 @@ public class AuthOperationCustomizer implements OperationCustomizer {
      */
     private void hideAuthInfoParameter(Operation operation) {
         if (operation.getParameters() != null) {
-            operation.getParameters().removeIf(parameter -> parameter.getName().equals("memberDto"));
+            operation.getParameters().removeIf(parameter -> parameter.getName().equals("member"));
         }
     }
 }
