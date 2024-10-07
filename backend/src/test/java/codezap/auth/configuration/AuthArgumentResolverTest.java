@@ -25,9 +25,9 @@ import org.springframework.web.context.request.async.StandardServletAsyncWebRequ
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 class AuthArgumentResolverTest {
-    CredentialManager credentialManager = new CookieCredentialManager();
-    CredentialProvider credentialProvider = new PlainCredentialProvider();
-    AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager, credentialProvider);
+    private final CredentialManager credentialManager = new CookieCredentialManager();
+    private final CredentialProvider credentialProvider = new PlainCredentialProvider();
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager, credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")
@@ -78,11 +78,11 @@ class AuthArgumentResolverTest {
             }
         }
 
-        MockHttpServletRequest httpServletRequest = new MockHttpServletRequest("GET", "/templates");
-        StandardServletAsyncWebRequest nativeWebRequest =
+        private final MockHttpServletRequest httpServletRequest = new MockHttpServletRequest("GET", "/templates");
+        private final StandardServletAsyncWebRequest nativeWebRequest =
                 new StandardServletAsyncWebRequest(httpServletRequest, new MockHttpServletResponse());
-        Member member = MemberFixture.getFirstMember();
-        Cookie credentialCookie = new Cookie(CREDENTIAL_COOKIE_NAME, credentialProvider.createCredential(member));
+        private final Member member = MemberFixture.getFirstMember();
+        private final Cookie credentialCookie = new Cookie(CREDENTIAL_COOKIE_NAME, credentialProvider.createCredential(member));
 
         @Nested
         @DisplayName("required 값이 false 라면")
