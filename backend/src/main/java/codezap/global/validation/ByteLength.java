@@ -10,7 +10,7 @@ import jakarta.validation.Payload;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ByteLengthValidator.class)
+@Constraint(validatedBy = {ByteLengthValidator.class, GroupedByteLengthValidator.class})
 public @interface ByteLength {
 
     String message();
