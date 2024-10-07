@@ -1,25 +1,8 @@
 package codezap.auth.configuration;
 
+import static codezap.auth.manager.CookieCredentialManager.CREDENTIAL_COOKIE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import static codezap.auth.manager.CookieCredentialManager.CREDENTIAL_COOKIE_NAME;
-
-import java.lang.reflect.Method;
-
-import jakarta.servlet.http.Cookie;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.support.ReflectionSupport;
-import org.springframework.core.MethodParameter;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.bind.support.WebDataBinderFactory;
-import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.async.StandardServletAsyncWebRequest;
-import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codezap.auth.manager.CookieCredentialManager;
 import codezap.auth.manager.CredentialManager;
@@ -28,6 +11,18 @@ import codezap.auth.provider.PlainCredentialProvider;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
+import jakarta.servlet.http.Cookie;
+import java.lang.reflect.Method;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.support.ReflectionSupport;
+import org.springframework.core.MethodParameter;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.context.request.NativeWebRequest;
+import org.springframework.web.context.request.async.StandardServletAsyncWebRequest;
+import org.springframework.web.method.support.ModelAndViewContainer;
 
 class AuthArgumentResolverTest {
     CredentialManager credentialManager = new CookieCredentialManager();
@@ -155,13 +150,12 @@ class AuthArgumentResolverTest {
         }
 
         private Member resolveArgument(Method method, NativeWebRequest webRequest) {
-            WebDataBinderFactory webDataBinderFactory = (request, target, objectName) -> null;
 
             return authArgumentResolver.resolveArgument(
                     new MethodParameter(method, 0),
                     new ModelAndViewContainer(),
                     webRequest,
-                    webDataBinderFactory);
+                    (request, target, objectName) -> null);
         }
     }
 }
