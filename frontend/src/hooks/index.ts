@@ -10,3 +10,4 @@ export { useToggle } from './useToggle';
 export { useLoaderDelay } from './useLoaderDelay';
 export { useNoSpaceInput } from './useNoSpaceInput';
 export { useSelectList } from './useSelectList';
+export { useCustomNavigate } from './useCustomNavigate';
