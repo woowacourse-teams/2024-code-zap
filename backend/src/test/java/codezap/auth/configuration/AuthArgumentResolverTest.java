@@ -47,7 +47,7 @@ class AuthArgumentResolverTest {
         }
 
         @Test
-        @DisplayName("AuthenticationPrinciple 어노테이션이 파라미터에 존재하면 지원할 수 있는 메서드이다.")
+        @DisplayName("성공: AuthenticationPrinciple 어노테이션이 파라미터에 존재하면 지원할 수 있는 메서드이다.")
         void canSupportsTest() {
             Method supportMethod = ReflectionSupport.findMethod(
                             SupportTestController.class, "supportMethod", Member.class)
@@ -59,7 +59,7 @@ class AuthArgumentResolverTest {
         }
 
         @Test
-        @DisplayName("AuthenticationPrinciple 어노테이션이 파라미터에 존재하지 않으면 지원할 수 없는 메서드이다.")
+        @DisplayName("성공: AuthenticationPrinciple 어노테이션이 파라미터에 존재하지 않으면 지원할 수 없는 메서드이다.")
         void notSupportsTest() {
             Method supportMethod = ReflectionSupport.findMethod(
                             SupportTestController.class, "notSupportMethod", Member.class)
@@ -97,7 +97,7 @@ class AuthArgumentResolverTest {
                     .get();
 
             @Test
-            @DisplayName("credential 정보가 없을때 null 이 반환된다.")
+            @DisplayName("성공: credential 정보가 없을때 null 이 반환된다.")
             void noCredentialTest() {
                 //given
 
@@ -109,7 +109,7 @@ class AuthArgumentResolverTest {
             }
 
             @Test
-            @DisplayName("credential 정보가 존재하면 Member 가 반환된다.")
+            @DisplayName("성공: credential 정보가 존재하면 Member 가 반환된다.")
             void existCredentialTest() {
                 //given
                 httpServletRequest.setCookies(credentialCookie);
@@ -130,7 +130,7 @@ class AuthArgumentResolverTest {
                     .get();
 
             @Test
-            @DisplayName("credential 정보가 없을때 예외가 발생한다..")
+            @DisplayName("실패: credential 정보가 없을때 예외가 발생한다..")
             void noCredentialTest() {
                 //given
 
@@ -141,7 +141,7 @@ class AuthArgumentResolverTest {
             }
 
             @Test
-            @DisplayName("credential 정보가 존재하면 Member 가 반환된다.")
+            @DisplayName("성공: credential 정보가 존재하면 Member 가 반환된다.")
             void existCredentialTest() {
                 //given
                 httpServletRequest.setCookies(credentialCookie);
