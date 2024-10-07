@@ -5,6 +5,7 @@ import codezap.member.domain.Member;
 public class PlainCredentialProvider implements CredentialProvider {
 
     private static final String DELIMITER = ";";
+
     @Override
     public String createCredential(Member member) {
         return String.join(DELIMITER,
