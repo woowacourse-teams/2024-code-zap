@@ -3,6 +3,8 @@ package codezap.template.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -176,11 +178,11 @@ public class SourceCodeRepositoryTest {
             var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
             var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
             var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
-            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
+            sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
+            sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
 
-            sut.deleteByTemplateId(1L);
+            sut.deleteByTemplateIds(List.of(1L));
             var result = sut.findAllByTemplate(template1);
 
             assertThat(result).isEmpty();

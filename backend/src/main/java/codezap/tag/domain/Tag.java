@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
@@ -18,6 +20,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
+@Table(indexes = @Index(name = "idx_tag_name", columnList = "name"))
 public class Tag extends BaseTimeEntity {
 
     @Id

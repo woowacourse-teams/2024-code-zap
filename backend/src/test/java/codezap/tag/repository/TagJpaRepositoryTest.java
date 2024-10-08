@@ -3,7 +3,6 @@ package codezap.tag.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -89,18 +88,5 @@ class TagJpaRepositoryTest {
 
             assertThat(actual).isEmpty();
         }
-    }
-
-    @Test
-    @DisplayName("이름 목록 조회 성공 : 이름 목록에 포함된 모든 태그를 반환한다.")
-    void findNameByNamesIn() {
-        tagRepository.save(new Tag("태그1"));
-        tagRepository.save(new Tag("태그2"));
-        tagRepository.save(new Tag("태그3"));
-
-        List<String> actual = tagRepository.findNameByNamesIn(List.of("태그1", "태그3", "태그4"));
-
-        assertThat(actual).hasSize(2)
-                .containsExactly("태그1", "태그3");
     }
 }

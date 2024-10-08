@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
@@ -37,6 +38,11 @@ public class TemplateSpecification implements Specification<Template> {
         addTagPredicate(predicates, criteriaBuilder, root, query);
         addKeywordPredicate(predicates, criteriaBuilder, root, query);
 
+        if (query.getResultType().equals(Template.class)) {
+            root.fetch("category", JoinType.LEFT);
+            root.fetch("member", JoinType.LEFT);
+        }
+
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
@@ -50,18 +56,24 @@ public class TemplateSpecification implements Specification<Template> {
             CriteriaQuery<?> query
     ) {
         if (keyword != null && !keyword.trim().isEmpty()) {
-            String likeKeyword = "%" + keyword.trim() + "%";
-            Predicate titlePredicate = criteriaBuilder.like(root.get("title"), likeKeyword);
-            Predicate descriptionPredicate = criteriaBuilder.like(root.get("description"), likeKeyword);
+            String searchKeyword = keyword.trim();
+
+            Predicate titleDescriptionPredicate = criteriaBuilder.isTrue(
+                    criteriaBuilder.function("MATCH", Boolean.class,
+                            root.get("title"),
+                            root.get("description"),
+                            criteriaBuilder.literal(searchKeyword)));
 
             Subquery<Long> sourceCodeSubquery = query.subquery(Long.class);
             Root<SourceCode> sourceCodeRoot = sourceCodeSubquery.from(SourceCode.class);
             sourceCodeSubquery.select(sourceCodeRoot.get("template").get("id"));
-            sourceCodeSubquery.where(
-                    criteriaBuilder.or(
-                            criteriaBuilder.like(sourceCodeRoot.get("content"), likeKeyword),
-                            criteriaBuilder.like(sourceCodeRoot.get("filename"), likeKeyword)));
-            predicates.add(criteriaBuilder.or(titlePredicate, descriptionPredicate, root.get("id").in(sourceCodeSubquery)));
+            sourceCodeSubquery.where(criteriaBuilder.isTrue(
+                    criteriaBuilder.function("MATCH", Boolean.class,
+                            sourceCodeRoot.get("content"),
+                            sourceCodeRoot.get("filename"),
+                            criteriaBuilder.literal(searchKeyword))));
+
+            predicates.add(criteriaBuilder.or(titleDescriptionPredicate, root.get("id").in(sourceCodeSubquery)));
         }
     }
 

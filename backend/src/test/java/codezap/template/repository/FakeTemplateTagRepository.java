@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import codezap.tag.domain.Tag;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
@@ -24,6 +25,25 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
+    public List<Tag> findAllTagsByTemplate(Template template) {
+        return templateTags.stream()
+                .filter(templateTag -> Objects.equals(templateTag.getTemplate(), template))
+                .map(TemplateTag::getTag)
+                .toList();
+    }
+
+    public List<TemplateTag> findAllByTemplateId(Long templateId) {
+        return templateTags.stream()
+                .filter(templateTag -> Objects.equals(templateTag.getTemplate(), templateId))
+                .toList();
+    }
+
+    @Override
+    public List<Long> findDistinctByTemplateIn(List<Long> templateIds) {
+        return List.of();
+    }
+
+    @Override
     public TemplateTag save(TemplateTag entity) {
         var saved = new TemplateTag(
                 entity.getTemplate(),
@@ -41,16 +61,32 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
     }
 
     @Override
-    public void deleteAllByTemplateId(Long id) {
-        templateTags.removeIf(templateTag -> Objects.equals(templateTag.getTemplate().getId(), id));
+    public void deleteAllByTemplateId(Long templateId) {
+        templateTags.removeIf(templateTag -> Objects.equals(templateTag.getId(), templateId));
     }
 
     @Override
-    public List<Long> findDistinctByTemplateIn(List<Long> templateIds) {
+    public void deleteByTemplateIds(List<Long> templateIds) {
+        templateIds.forEach(id ->
+                templateTags.removeIf(templateTag -> Objects.equals(templateTag.getId(), id)));
+    }
+
+    @Override
+    public List<Tag> findAllTagDistinctByMemberId(Long memberId) {
+        List<Long> templateIds = templateTags.stream()
+                .filter(templateTag -> Objects.equals(templateTag.getTemplate().getMember().getId(), memberId))
+                .map(templateTag -> templateTag.getTag().getId())
+                .toList();
+
         return templateTags.stream()
                 .filter(templateTag -> templateIds.contains(templateTag.getTemplate().getId()))
                 .distinct()
-                .map(templateTag -> templateTag.getTag().getId())
+                .map(TemplateTag::getTag)
                 .toList();
+    }
+
+    @Override
+    public List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds) {
+        return List.of();
     }
 }
