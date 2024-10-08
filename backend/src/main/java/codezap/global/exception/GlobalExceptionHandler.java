@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,7 +60,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
                 codeZapException.getErrorCode().getHttpStatus(),
                 codeZapException.getMessage());
-        problemDetail.setProperty("type", codeZapException.getErrorCode().getCode());
+        return setProperties(problemDetail, codeZapException.getErrorCode().getCode());
+    }
+
+    @Override
+    protected ResponseEntity<Object> createResponseEntity(
+            @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request
+    ) {
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(statusCode);
+        if (body instanceof Exception) {
+            problemDetail.setDetail(((Exception) body).getMessage());
+        }
+        return ResponseEntity.status(statusCode)
+                .body(setProperties(problemDetail, 1000));
+    }
+
+    private ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
+        problemDetail.setProperty("type", code);
         problemDetail.setProperty("timestamp", LocalDateTime.now());
 
         return problemDetail;
