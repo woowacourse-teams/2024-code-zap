@@ -94,8 +94,6 @@ class AuthArgumentResolverTest {
             @Test
             @DisplayName("성공: credential 정보가 없을때 null 이 반환된다.")
             void noCredentialTest() {
-                //given
-
                 //when
                 Member member = resolveArgument(notRequiredMethod, nativeWebRequest);
 
