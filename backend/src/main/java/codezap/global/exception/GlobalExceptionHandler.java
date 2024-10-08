@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
@@ -26,40 +25,43 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
         log.info("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
 
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                codeZapException.getErrorCode().getHttpStatus(),
-                codeZapException.getMessage());
-        problemDetail.setProperty("type", codeZapException.getErrorCode().getCode());
-        problemDetail.setProperty("timestamp", LocalDateTime.now());
-
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
-                .body(problemDetail);
+                .body(exceptionToProblemDetail(codeZapException));
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request
     ) {
+        log.info("[MethodArgumentNotValidException] {}가 발생했습니다. \n", exception.getClass().getName(), exception);
+
         BindingResult bindingResult = exception.getBindingResult();
         List<String> errorMessages = bindingResult.getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
+        CodeZapException codeZapException =
+                new CodeZapException(ErrorCode.INVALID_MESSAGE_FORMAT, String.join("\n", errorMessages));
 
-        log.info("[MethodArgumentNotValidException] {}가 발생했습니다. \n", exception.getClass().getName(), exception);
-        return ResponseEntity.badRequest()
-                .body(ProblemDetail.forStatusAndDetail(
-                        HttpStatus.BAD_REQUEST,
-                        String.join("\n", errorMessages))
-                );
+        return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
+                .body(exceptionToProblemDetail(codeZapException));
     }
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleException(Exception exception) {
         log.error("[Exception] 예상치 못한 오류 {} 가 발생했습니다.", exception.getClass().getName(), exception);
+        CodeZapException codeZapException =
+                new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "서버에서 예상치 못한 오류가 발생하였습니다.");
         return ResponseEntity.internalServerError()
-                .body(ProblemDetail.forStatusAndDetail(
-                        HttpStatus.INTERNAL_SERVER_ERROR,
-                        "서버에서 예상치 못한 오류가 발생하였습니다.")
-                );
+                .body(exceptionToProblemDetail(codeZapException));
+    }
+
+    private ProblemDetail exceptionToProblemDetail(CodeZapException codeZapException) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                codeZapException.getErrorCode().getHttpStatus(),
+                codeZapException.getMessage());
+        problemDetail.setProperty("type", codeZapException.getErrorCode().getCode());
+        problemDetail.setProperty("timestamp", LocalDateTime.now());
+
+        return problemDetail;
     }
 }
