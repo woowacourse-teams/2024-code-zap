@@ -10,6 +10,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    SPRING_GLOBAL_EXCEPTION(1000, HttpStatus.BAD_REQUEST),
+
     INVALID_MESSAGE_FORMAT(1101, HttpStatus.BAD_REQUEST),
     INVALID_HEADER_OPTION(1102, HttpStatus.BAD_REQUEST),
     INVALID_ID_REQUEST(1103, HttpStatus.BAD_REQUEST),

@@ -73,7 +73,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             problemDetail.setDetail(((Exception) body).getMessage());
         }
         return ResponseEntity.status(statusCode)
-                .body(setProperties(problemDetail, 1000));
+                .body(setProperties(problemDetail, ErrorCode.SPRING_GLOBAL_EXCEPTION.getCode()));
     }
 
     private ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
