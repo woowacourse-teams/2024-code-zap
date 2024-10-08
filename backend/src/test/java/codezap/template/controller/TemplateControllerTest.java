@@ -406,7 +406,8 @@ class TemplateControllerTest {
                     List.of(new CreateSourceCodeRequest("title", "sourceCode", 1)),
                     1,
                     1L,
-                    List.of(exceededTag)
+                    List.of(exceededTag),
+                    true
             );
 
             mvc.perform(post("/templates")
