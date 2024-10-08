@@ -1,4 +1,4 @@
-const ScreenReader = () => (
+const ScreenReaderOnly = () => (
   <div
     id='screen-reader'
     aria-live='polite'
@@ -18,4 +18,4 @@ const ScreenReader = () => (
   />
 );
 
-export default ScreenReader;
+export default ScreenReaderOnly;

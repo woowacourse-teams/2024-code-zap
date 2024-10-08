@@ -7,7 +7,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
 
-import { ScreenReader } from './components/index';
+import { ScreenReaderOnly } from './components/index';
 import router from './routes/router';
 import GlobalStyles from './style/GlobalStyles';
 import { theme } from './style/theme';
@@ -50,7 +50,7 @@ enableMocking().then(() => {
               <HeaderProvider>
                 <GlobalStyles />
                 <RouterProvider router={router} />
-                <ScreenReader />
+                <ScreenReaderOnly />
               </HeaderProvider>
             </ToastProvider>
           </AuthProvider>

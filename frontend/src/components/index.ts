@@ -31,4 +31,4 @@ export { default as LoadingBall } from './LoadingBall/LoadingBall';
 export { default as LoadingFallback } from './LoadingFallback/LoadingFallback';
 
 // ScreenReader
-export { default as ScreenReader } from './ScreenReader/ScreenReader';
+export { default as ScreenReaderOnly } from './ScreenReaderOnly/ScreenReaderOnly';
