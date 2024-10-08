@@ -7,11 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 
 @Component
 public class CookieCredentialManager implements CredentialManager {
@@ -29,7 +29,7 @@ public class CookieCredentialManager implements CredentialManager {
 
     private void checkCookieExist(final Cookie[] cookies) {
         if (cookies == null) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+            throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
     }
 
@@ -37,7 +37,7 @@ public class CookieCredentialManager implements CredentialManager {
         return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(CREDENTIAL_COOKIE_NAME))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(HttpStatus.UNAUTHORIZED,
+                .orElseThrow(() -> new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
                         "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."));
     }
 

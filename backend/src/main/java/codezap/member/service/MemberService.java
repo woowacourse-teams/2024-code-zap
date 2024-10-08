@@ -4,7 +4,6 @@ import java.util.Objects;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import codezap.auth.encryption.PasswordEncryptor;
@@ -12,6 +11,7 @@ import codezap.auth.encryption.SaltGenerator;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
@@ -39,7 +39,7 @@ public class MemberService {
 
     public void assertUniqueName(String name) {
         if (memberRepository.existsByName(name)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "아이디가 이미 존재합니다.");
+            throw new CodeZapException(ErrorCode.DUPLICATE_ID, "아이디가 이미 존재합니다.");
         }
     }
 
@@ -50,7 +50,7 @@ public class MemberService {
 
     private void checkSameMember(Member member, Long id) {
         if (!Objects.equals(member.getId(), id)) {
-            throw new CodeZapException(HttpStatus.FORBIDDEN, "본인의 정보만 조회할 수 있습니다.");
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "본인의 정보만 조회할 수 있습니다.");
         }
     }
 

@@ -1,6 +1,5 @@
 package codezap.category.service;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,6 +10,7 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class CategoryService {
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
         if (categoryRepository.existsByNameAndMember(categoryName, member)) {
-            throw new CodeZapException(HttpStatus.CONFLICT, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
+            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
         }
     }
 
@@ -62,10 +62,10 @@ public class CategoryService {
         category.validateAuthorization(member);
 
         if (templateRepository.existsByCategoryId(id)) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
+            throw new CodeZapException(ErrorCode.CATEGORY_HAS_TEMPLATES, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
         if (category.isDefault()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "기본 카테고리는 삭제할 수 없습니다.");
+            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
     }

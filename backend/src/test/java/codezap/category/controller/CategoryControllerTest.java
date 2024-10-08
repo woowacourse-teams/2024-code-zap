@@ -20,7 +20,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import codezap.category.domain.Category;
@@ -30,6 +29,7 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.MockMvcTest;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 
@@ -64,7 +64,7 @@ class CategoryControllerTest extends MockMvcTest {
         void createCategoryFailWithNotLogin() throws Exception {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
-            doThrow(new CodeZapException(HttpStatus.UNAUTHORIZED, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
+            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialProvider).extractMember(anyString());
 
             mvc.perform(post("/categories")
@@ -130,7 +130,7 @@ class CategoryControllerTest extends MockMvcTest {
             long categoryId = 1L;
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
 
-            doThrow(new CodeZapException(HttpStatus.UNAUTHORIZED, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
+            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialProvider).extractMember(anyString());
 
             mvc.perform(put("/categories/" + categoryId)
@@ -160,7 +160,7 @@ class CategoryControllerTest extends MockMvcTest {
             String duplicatedName = "duplicatedName";
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicatedName);
 
-            doThrow(new CodeZapException(HttpStatus.CONFLICT, "이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
+            doThrow(new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
                     .when(categoryService).update(any(), any(), any());
 
             mvc.perform(put("/categories/" + categoryId)
@@ -194,7 +194,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 삭제 실패: 권한 없음")
         void deleteCategoryFailWithUnauthorized() throws Exception {
             long categoryId = 1L;
-            doThrow(new CodeZapException(HttpStatus.UNAUTHORIZED, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
+            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialProvider).extractMember(anyString());
 
             mvc.perform(delete("/categories/" + categoryId)
@@ -208,7 +208,7 @@ class CategoryControllerTest extends MockMvcTest {
         void updateCategoryFailWithDuplicatedName() throws Exception {
             long id = 2L;
 
-            doThrow(new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
+            doThrow(new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
                     .when(categoryService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + id)
@@ -222,7 +222,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
         void updateCategoryFailWithlongName() throws Exception {
             long categoryId = 1L;
-            doThrow(new CodeZapException(HttpStatus.BAD_REQUEST, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
+            doThrow(new CodeZapException(ErrorCode.CATEGORY_HAS_TEMPLATES, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
                     .when(categoryService).deleteById(any(), any());
 
             mvc.perform(delete("/categories/" + categoryId)
