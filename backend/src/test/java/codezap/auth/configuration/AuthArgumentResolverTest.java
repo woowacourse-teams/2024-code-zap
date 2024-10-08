@@ -85,14 +85,14 @@ class AuthArgumentResolverTest {
         private final Cookie credentialCookie = new Cookie(CREDENTIAL_COOKIE_NAME, credentialProvider.createCredential(member));
 
         @Nested
-        @DisplayName("required 값이 false 라면")
+        @DisplayName("required 값이 false 일 경우")
         class RequiredFalseTest {
             Method notRequiredMethod = ReflectionSupport.findMethod(ResolveTestController.class,
                             "notRequiredMethod", Member.class)
                     .orElseThrow();
 
             @Test
-            @DisplayName("성공: credential 정보가 없을때 null 이 반환된다.")
+            @DisplayName("성공: credential 정보가 없을 때 null 이 반환된다.")
             void noCredentialTest() {
                 //when
                 Member member = resolveArgument(notRequiredMethod, nativeWebRequest);
@@ -116,14 +116,14 @@ class AuthArgumentResolverTest {
         }
 
         @Nested
-        @DisplayName("required 값이 true 라면")
+        @DisplayName("required 값이 true  일 경우")
         class RequiredTrueTest {
             Method requiredMethod = ReflectionSupport.findMethod(ResolveTestController.class,
                             "requiredMethod", Member.class)
                     .orElseThrow();
 
             @Test
-            @DisplayName("실패: credential 정보가 없을때 예외가 발생한다..")
+            @DisplayName("실패: credential 정보가 없을때 예외가 발생한다.")
             void noCredentialTest() {
                 //given
 
