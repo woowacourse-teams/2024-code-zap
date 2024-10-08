@@ -27,8 +27,6 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
     @Query(value = "SELECT * FROM tag WHERE tag.name = BINARY :name", nativeQuery = true)
     Optional<Tag> findByName(@Param("name") String name);
 
-    @Query(
-            value = "SELECT * FROM tag WHERE tag.name COLLATE utf8mb4_bin IN :names",
-            nativeQuery = true)
+    @Query(value = "SELECT * FROM tag WHERE tag.name COLLATE utf8mb4_bin IN :names", nativeQuery = true)
     List<Tag> findAllByNames(@Param("names") List<String> names);
 }
