@@ -93,7 +93,8 @@ public class TemplateApplicationService {
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
         List<Template> templates = page.getContent();
-        List<FindAllTemplateItemResponse> findAllTemplateByResponse = getFindAllTemplateItemResponses(templates, likedChecker);
+        List<FindAllTemplateItemResponse> findAllTemplateByResponse =
+                getFindAllTemplateItemResponses(templates, likedChecker);
 
         return new FindAllTemplatesResponse(
                 page.getTotalPages(),
@@ -101,7 +102,10 @@ public class TemplateApplicationService {
                 findAllTemplateByResponse);
     }
 
-    private List<FindAllTemplateItemResponse> getFindAllTemplateItemResponses(List<Template> templates, LikedChecker likedChecker) {
+    private List<FindAllTemplateItemResponse> getFindAllTemplateItemResponses(
+            List<Template> templates,
+            LikedChecker likedChecker
+    ) {
         List<TemplateTag> allTemplateTagsByTemplates = tagService.getAllTemplateTagsByTemplates(templates);
         List<Thumbnail> allThumbnailsByTemplates = thumbnailService.getAllByTemplates(templates);
 
@@ -144,6 +148,7 @@ public class TemplateApplicationService {
         thumbnailService.deleteByTemplateIds(ids);
         sourceCodeService.deleteByTemplateIds(ids);
         tagService.deleteAllByTemplateIds(ids);
+        likesService.deleteAllByTemplateIds(ids);
         templateService.deleteByMemberAndIds(member, ids);
     }
 }

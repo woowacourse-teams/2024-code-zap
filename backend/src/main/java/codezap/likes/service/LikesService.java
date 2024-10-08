@@ -1,5 +1,7 @@
 package codezap.likes.service;
 
+import java.util.List;
+
 import jakarta.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -36,5 +38,10 @@ public class LikesService {
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         likesRepository.deleteByMemberAndTemplate(member, template);
+    }
+
+    @Transactional
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
+        likesRepository.deleteByTemplateIds(templateIds);
     }
 }

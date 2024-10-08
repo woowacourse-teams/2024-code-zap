@@ -32,4 +32,8 @@ public class Likes extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Member member;
+
+    public Likes(Template template, Member member) {
+        this(null, template, member);
+    }
 }
