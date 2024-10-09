@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 
 public class FakeTemplateRepository implements TemplateRepository {
 
@@ -67,7 +68,7 @@ public class FakeTemplateRepository implements TemplateRepository {
                 entity.getCategory(),
                 entity.getSourceCodes(),
                 0L,
-                true
+                Visibility.PUBLIC
         );
         templates.removeIf(template -> Objects.equals(template.getId(), entity.getId()));
         templates.add(saved);

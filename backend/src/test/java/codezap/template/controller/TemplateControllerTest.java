@@ -43,6 +43,7 @@ import codezap.member.domain.Member;
 import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.service.TagService;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
@@ -135,7 +136,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -157,7 +158,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -180,7 +181,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -202,7 +203,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -225,7 +226,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -248,7 +249,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -271,7 +272,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -294,7 +295,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -317,7 +318,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -339,7 +340,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -361,7 +362,7 @@ class TemplateControllerTest {
                     1,
                     null,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -383,7 +384,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     null,
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -407,7 +408,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of(exceededTag),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -431,7 +432,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -453,7 +454,7 @@ class TemplateControllerTest {
                     1,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -474,7 +475,7 @@ class TemplateControllerTest {
                     1,
                     2L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -496,7 +497,7 @@ class TemplateControllerTest {
                     1,
                     3L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -518,7 +519,7 @@ class TemplateControllerTest {
                     10,
                     1L,
                     List.of("tag1", "tag2"),
-                    true
+                    Visibility.PUBLIC
             );
 
             mvc.perform(post("/templates")
@@ -1223,7 +1224,7 @@ class TemplateControllerTest {
                 1,
                 1L,
                 List.of("tag1", "tag2"),
-                false
+                Visibility.PUBLIC
         );
     }
 }

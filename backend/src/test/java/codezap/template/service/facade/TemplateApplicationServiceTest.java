@@ -37,6 +37,7 @@ import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
@@ -115,7 +116,7 @@ class TemplateApplicationServiceTest {
                     thumbnailOrdinal,
                     category.getId(),
                     tags,
-                    true);
+                    Visibility.PUBLIC);
         }
     }
 

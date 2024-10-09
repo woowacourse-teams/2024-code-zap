@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import codezap.global.validation.ByteLength;
 import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.validation.ValidatedSourceCodesOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -43,10 +44,10 @@ public record CreateTemplateRequest(
         @ByteLength(max = 30, message = "태그 명은 최대 30자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         @Valid
         List<String> tags,
-  
-        @Schema(description = "템플릿 공개 여부", example = "true")
+
+        @Schema(description = "템플릿 공개 여부", example = "PUBLIC")
         @NotNull(message = "템플릿 공개 여부가 null 입니다.", groups = NotNullGroup.class)
-        boolean isPublic
+        Visibility visibility
 ) implements ValidatedSourceCodesOrdinalRequest {
 
     @Override

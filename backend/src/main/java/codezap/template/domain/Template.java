@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -55,18 +57,19 @@ public class Template extends BaseTimeEntity {
     private Long likesCount;
 
     @Column(nullable = false)
-    private boolean isPublic;
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
 
     public Template(Member member, String title, String description, Category category) {
-        this(member, title, description, category, true);
+        this(member, title, description, category, Visibility.PUBLIC);
     }
 
-    public Template(Member member, String title, String description, Category category, boolean isPublic) {
+    public Template(Member member, String title, String description, Category category, Visibility visibility) {
         this.member = member;
         this.title = title;
         this.description = description;
         this.category = category;
-        this.isPublic = isPublic;
+        this.visibility = visibility;
     }
 
     public void updateTemplate(String title, String description, Category category) {

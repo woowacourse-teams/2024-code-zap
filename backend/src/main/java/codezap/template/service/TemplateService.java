@@ -32,7 +32,7 @@ public class TemplateService {
                 createTemplateRequest.title(),
                 createTemplateRequest.description(),
                 category,
-                createTemplateRequest.isPublic());
+                createTemplateRequest.visibility());
         return templateRepository.save(template);
     }
 

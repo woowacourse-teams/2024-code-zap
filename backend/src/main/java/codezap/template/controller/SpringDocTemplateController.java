@@ -25,7 +25,7 @@ public interface SpringDocTemplateController {
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 생성", description = """
             새로운 템플릿을 생성합니다. \n
-            템플릿명, 템플릿 설명, 소스 코드 목록, 썸네일 순서, 카테고리 ID, 태그 목록, 템플릿 공개 여부가 필요합니다. \n
+            템플릿명, 템플릿 설명, 소스 코드 목록, 썸네일 순서, 카테고리 ID, 태그 목록, 템플릿 공개 범위가 필요합니다. \n
             * 템플릿 이름은 비어있거나 공백일 수 없다.
                         
             소스 코드 목록은 파일명, 소스 코드, 소스 코드 순서가 필요합니다. \n
