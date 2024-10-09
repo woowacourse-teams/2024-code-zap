@@ -10,6 +10,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+
     SPRING_GLOBAL_EXCEPTION(1000, HttpStatus.BAD_REQUEST),
 
     INVALID_MESSAGE_FORMAT(1101, HttpStatus.BAD_REQUEST),
@@ -36,11 +37,4 @@ public enum ErrorCode {
 
     private final int code;
     private final HttpStatus httpStatus;
-
-    public static ErrorCode of(HttpStatus httpStatus) {
-        return Arrays.stream(values())
-                .filter(value -> value.httpStatus.equals(httpStatus))
-                .findAny()
-                .orElseThrow();
-    }
 }
