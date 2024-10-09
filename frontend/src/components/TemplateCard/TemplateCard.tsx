@@ -77,7 +77,7 @@ const TemplateCard = ({ template }: Props) => {
         <S.TagListContainer>
           {tags.map((tag: Tag) => (
             <Flex key={tag.id}>
-              <TagButton name={tag.name} disabled={true} />
+              <TagButton id={tag.id} name={tag.name} disabled={true} />
             </Flex>
           ))}
         </S.TagListContainer>
@@ -92,7 +92,7 @@ const TemplateCard = ({ template }: Props) => {
         {tags.length !== 0 && showAllTagList && (
           <S.AllTagListContainer>
             {tags.map((tag: Tag) => (
-              <TagButton key={tag.id} name={tag.name} disabled={true} />
+              <TagButton key={tag.id} id={tag.id} name={tag.name} disabled={true} />
             ))}
           </S.AllTagListContainer>
         )}
