@@ -1,18 +1,10 @@
 package codezap.auth.configuration;
 
-import static codezap.auth.manager.CookieCredentialManager.CREDENTIAL_COOKIE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import codezap.auth.manager.CookieCredentialManager;
-import codezap.auth.manager.CredentialManager;
-import codezap.auth.provider.CredentialProvider;
-import codezap.auth.provider.PlainCredentialProvider;
-import codezap.fixture.MemberFixture;
-import codezap.global.exception.CodeZapException;
-import codezap.member.domain.Member;
-import jakarta.servlet.http.Cookie;
 import java.lang.reflect.Method;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -24,10 +16,19 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.async.StandardServletAsyncWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import codezap.auth.manager.CookieCredentialManager;
+import codezap.auth.manager.CredentialManager;
+import codezap.auth.provider.CredentialProvider;
+import codezap.auth.provider.PlainCredentialProvider;
+import codezap.fixture.MemberFixture;
+import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
+
 class AuthArgumentResolverTest {
     private final CredentialManager credentialManager = new CookieCredentialManager();
     private final CredentialProvider credentialProvider = new PlainCredentialProvider();
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager, credentialProvider);
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager,
+            credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")
@@ -82,7 +83,6 @@ class AuthArgumentResolverTest {
         private final StandardServletAsyncWebRequest nativeWebRequest =
                 new StandardServletAsyncWebRequest(httpServletRequest, new MockHttpServletResponse());
         private final Member member = MemberFixture.getFirstMember();
-        private final Cookie credentialCookie = new Cookie(CREDENTIAL_COOKIE_NAME, credentialProvider.createCredential(member));
 
         @Nested
         @DisplayName("required 값이 false 일 경우")
@@ -105,7 +105,7 @@ class AuthArgumentResolverTest {
             @DisplayName("성공: credential 정보가 존재하면 Member 가 반환된다.")
             void existCredentialTest() {
                 //given
-                httpServletRequest.setCookies(credentialCookie);
+                setCredentialCookie(httpServletRequest, member);
 
                 //when
                 Member resolvedArgument = resolveArgument(notRequiredMethod, nativeWebRequest);
@@ -137,7 +137,7 @@ class AuthArgumentResolverTest {
             @DisplayName("성공: credential 정보가 존재하면 Member 가 반환된다.")
             void existCredentialTest() {
                 //given
-                httpServletRequest.setCookies(credentialCookie);
+                setCredentialCookie(httpServletRequest, member);
 
                 //when
                 Member resolvedArgument = resolveArgument(requiredMethod, nativeWebRequest);
@@ -148,12 +148,18 @@ class AuthArgumentResolverTest {
         }
 
         private Member resolveArgument(Method method, NativeWebRequest webRequest) {
-
             return authArgumentResolver.resolveArgument(
                     new MethodParameter(method, 0),
                     new ModelAndViewContainer(),
                     webRequest,
                     (request, target, objectName) -> null);
+        }
+
+        private void setCredentialCookie(MockHttpServletRequest request, Member member) {
+            MockHttpServletResponse mockResponse = new MockHttpServletResponse();
+            String credential = credentialProvider.createCredential(member);
+            credentialManager.setCredential(mockResponse, credential);
+            request.setCookies(mockResponse.getCookies());
         }
     }
 }
