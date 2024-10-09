@@ -17,7 +17,7 @@
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_FILE_PATH}/%d{yyyy-MM-dd}/error/error%i.log</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>50MB</totalSizeCap>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
