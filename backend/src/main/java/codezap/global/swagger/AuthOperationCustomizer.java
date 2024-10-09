@@ -1,7 +1,5 @@
 package codezap.global.swagger;
 
-import java.time.LocalDateTime;
-
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -60,15 +58,15 @@ public class AuthOperationCustomizer implements OperationCustomizer {
                 .externalValue("인증 쿠키 없음")
                 .description("쿠키는 있지만 Authorization 대한 담은 쿠키가 없는 경우")
                 .value(getExampleJsonString(
-                        exceptionToProblemDetail(new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
-                                "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))));
+                        new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
+                                "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.").toProblemDetail()));
 
         Example noCookiesExample = new Example()
                 .externalValue("모든 쿠키 없음")
                 .description("쿠키 자체가 null인 경우")
                 .value(getExampleJsonString(
-                        exceptionToProblemDetail(new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
-                                "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))));
+                        new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
+                                "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.").toProblemDetail()));
 
         MediaType mediaType = new MediaType().schema(new Schema<>().$ref("#/components/schemas/Error"));
         mediaType.addExamples("인증 쿠키 없음", noTokenCookieExample);
@@ -81,16 +79,6 @@ public class AuthOperationCustomizer implements OperationCustomizer {
         apiResponses.addApiResponse(String.valueOf(HttpStatus.UNAUTHORIZED.value()), unauthorizedResponse);
 
         return apiResponses;
-    }
-
-    private ProblemDetail exceptionToProblemDetail(CodeZapException codeZapException) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                codeZapException.getErrorCode().getHttpStatus(),
-                codeZapException.getMessage());
-        problemDetail.setProperty("type", codeZapException.getErrorCode().getCode());
-        problemDetail.setProperty("timestamp", LocalDateTime.now());
-
-        return problemDetail;
     }
 
     private String getExampleJsonString(ProblemDetail problemDetail) {

@@ -22,12 +22,15 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String PROPERTY_TYPE = "type";
+    private static final String PROPERTY_TIMESTAMP = "timestamp";
+
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
         log.info("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
-                .body(exceptionToProblemDetail(codeZapException));
+                .body(codeZapException.toProblemDetail());
     }
 
     @Override
@@ -44,7 +47,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 new CodeZapException(ErrorCode.INVALID_MESSAGE_FORMAT, String.join("\n", errorMessages));
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
-                .body(exceptionToProblemDetail(codeZapException));
+                .body(codeZapException.toProblemDetail());
     }
 
     @ExceptionHandler
@@ -53,21 +56,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         CodeZapException codeZapException =
                 new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "서버에서 예상치 못한 오류가 발생하였습니다.");
         return ResponseEntity.internalServerError()
-                .body(exceptionToProblemDetail(codeZapException));
-    }
-
-    private ProblemDetail exceptionToProblemDetail(CodeZapException codeZapException) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                codeZapException.getErrorCode().getHttpStatus(),
-                codeZapException.getMessage());
-        return setProperties(problemDetail, codeZapException.getErrorCode().getCode());
+                .body(codeZapException.toProblemDetail());
     }
 
     @Override
     protected ResponseEntity<Object> createResponseEntity(
             @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request
     ) {
-
         ProblemDetail problemDetail = ProblemDetail.forStatus(statusCode);
         if (body instanceof Exception) {
             problemDetail.setDetail(((Exception) body).getMessage());
@@ -76,9 +71,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(setProperties(problemDetail, ErrorCode.SPRING_GLOBAL_EXCEPTION.getCode()));
     }
 
-    private ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
-        problemDetail.setProperty("type", code);
-        problemDetail.setProperty("timestamp", LocalDateTime.now());
+    public static ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
+        problemDetail.setProperty(PROPERTY_TYPE, code);
+        problemDetail.setProperty(PROPERTY_TIMESTAMP, LocalDateTime.now());
 
         return problemDetail;
     }
