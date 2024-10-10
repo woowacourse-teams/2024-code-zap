@@ -64,16 +64,24 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
               weight='bold'
               hoverStyle='none'
               onClick={handleTemplateUploadButton}
+              aria-description='템플릿 작성 페이지로 이동됩니다.'
             >
-              <PlusIcon aria-label='' />새 템플릿
+              <PlusIcon />새 템플릿
             </S.MobileHiddenButton>
 
             {!isChecking && isLogin ? <LogoutButton /> : <LoginButton />}
           </S.NavContainer>
         </S.HeaderMenu>
         <S.MobileMenuContainer>
-          <Button variant='outlined' size='small' weight='bold' hoverStyle='none' onClick={handleTemplateUploadButton}>
-            <PlusIcon aria-label='' />새 템플릿
+          <Button
+            variant='outlined'
+            size='small'
+            weight='bold'
+            hoverStyle='none'
+            onClick={handleTemplateUploadButton}
+            aria-description='템플릿 작성 페이지로 이동됩니다.'
+          >
+            <PlusIcon />새 템플릿
           </Button>
           <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
         </S.MobileMenuContainer>
@@ -125,7 +133,7 @@ const LoginButton = () => (
 );
 
 const HeaderMenuButton = ({ menuOpen, toggleMenu }: { menuOpen: boolean; toggleMenu: () => void }) => (
-  <S.HamburgerIconWrapper>
+  <S.HamburgerIconWrapper aria-label='메뉴'>
     <HamburgerIcon menuOpen={menuOpen} onClick={toggleMenu} />
   </S.HamburgerIconWrapper>
 );

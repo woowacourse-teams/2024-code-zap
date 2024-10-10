@@ -29,7 +29,7 @@ const LoginPage = () => {
               <Input.Label>아이디 (닉네임)</Input.Label>
               <Input.TextField
                 type='text'
-                placeholder='아이디를 입력해주세요'
+                placeholder='아이디 입력. 1자에서 255자의 올바른 문자를 입력해주세요'
                 placeholderColor='transparent'
                 value={name}
                 onChange={handleNameChange}
@@ -42,7 +42,7 @@ const LoginPage = () => {
               <Input.Label>비밀번호</Input.Label>
               <Input.TextField
                 type={showPassword ? 'text' : 'password'}
-                placeholder='비밀번호를 입력해주세요'
+                placeholder='비밀번호 입력. 영문자, 숫자를 포함한 8자에서 16자의 비밀번호를 입력해주세요.'
                 placeholderColor='transparent'
                 value={password}
                 onChange={handlePasswordChange}
