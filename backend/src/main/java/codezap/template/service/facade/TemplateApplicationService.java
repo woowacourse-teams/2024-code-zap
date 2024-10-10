@@ -60,11 +60,11 @@ public class TemplateApplicationService {
         return FindTemplateResponse.of(template, sourceCodes, tags, false);
     }
 
-    public FindTemplateResponse findByIdWithMember(Long id, Member member) {
+    public FindTemplateResponse findById(Long id, Member loginMember) {
         Template template = templateService.getById(id);
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
-        boolean isLiked = likesService.isLiked(member, template);
+        boolean isLiked = likesService.isLiked(loginMember, template);
         return FindTemplateResponse.of(template, sourceCodes, tags, isLiked);
     }
 
@@ -79,16 +79,16 @@ public class TemplateApplicationService {
         return makeResponse(templates, (template) -> false);
     }
 
-    public FindAllTemplatesResponse findAllByWithMember(
+    public FindAllTemplatesResponse findAllBy(
             Long memberId,
             String keyword,
             Long categoryId,
             List<Long> tagIds,
             Pageable pageable,
-            Member member
+            Member loginMember
     ) {
         Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
-        return makeResponse(templates, (template -> likesService.isLiked(member, template)));
+        return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {

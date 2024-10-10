@@ -33,6 +33,16 @@ public class CookieCredentialManager implements CredentialManager {
         }
     }
 
+    @Override
+    public boolean hasCredential(final HttpServletRequest httpServletRequest) {
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if (cookies == null) {
+            return false;
+        }
+        return Arrays.stream(cookies)
+                .anyMatch(cookie -> cookie.getName().equals(CREDENTIAL_COOKIE_NAME));
+    }
+
     private Cookie extractTokenCookie(final Cookie[] cookies) {
         return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(CREDENTIAL_COOKIE_NAME))
