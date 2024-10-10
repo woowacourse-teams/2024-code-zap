@@ -1,13 +1,8 @@
-import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
-import { quietlight } from '@uiw/codemirror-theme-quietlight';
-import CodeMirror, { EditorView } from '@uiw/react-codemirror';
-
 import { ClockIcon, PersonIcon } from '@/assets/images';
-import { Button, Flex, LikeCounter, TagButton, Text } from '@/components';
+import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
-import { getLanguageByFilename } from '@/utils';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
 import * as S from './TemplateCard.style';
@@ -76,28 +71,8 @@ const TemplateCard = ({ template }: Props) => {
         </S.EllipsisTextWrapper>
       </Flex>
 
-      <CodeMirror
-        value={thumbnail?.content}
-        height='10rem'
-        style={{ width: '100%', fontSize: '1rem', margin: '1rem 0' }}
-        theme={quietlight}
-        extensions={[
-          loadLanguage(getLanguageByFilename(thumbnail?.filename) as LanguageName) || [],
-          S.CustomCodeMirrorTheme,
-          EditorView.editable.of(false),
-        ]}
-        css={{
-          '.cm-editor': {
-            borderRadius: '8px',
-            overflow: 'hidden',
-          },
-          '.cm-scroller': {
-            padding: '1rem 0',
-            overflowY: 'auto',
-            height: '100%',
-          },
-        }}
-      />
+      <SourceCodeViewer mode='thumbnailView' content={thumbnail.content} />
+
       <Flex justify='space-between' onClick={blockMovingToDetailPage}>
         <S.TagListContainer>
           {tags.map((tag: Tag) => (

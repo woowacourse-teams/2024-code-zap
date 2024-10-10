@@ -99,7 +99,7 @@ export const MobileMenuContainer = styled.div`
   }
 `;
 
-export const HamburgerIconWrapper = styled.div`
+export const HamburgerIconWrapper = styled.button`
   display: none;
 
   @media (max-width: 768px) {

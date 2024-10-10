@@ -1,6 +1,5 @@
 const { merge } = require('webpack-merge');
 const Dotenv = require('dotenv-webpack');
-
 const common = require('./webpack.common.js');
 
 module.exports = () => {
@@ -15,5 +14,10 @@ module.exports = () => {
         ignoreStub: true,
       }),
     ],
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
+    },
   });
 };

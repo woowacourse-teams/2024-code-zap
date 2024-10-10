@@ -1,32 +1,33 @@
-import { useRef, useState } from 'react';
-
-import { SourceCodes } from '@/types';
+import { useEffect, useRef, useState } from 'react';
 
 import { useScrollToTargetElement } from './useScrollToTargetElement';
 
-export const useSelectList = (sourceCodes: SourceCodes[]) => {
+export const useSelectList = () => {
   const scrollTo = useScrollToTargetElement();
-  const [currentFile, setCurrentFile] = useState<number | null>(null);
 
-  const sourceCodeRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [currentOption, setCurrentOption] = useState<number | null>(null);
 
-  const handleSelectOption = (index: number) => (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
+  const linkedElementRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-    const targetElement = sourceCodeRefs.current[index];
-
-    scrollTo(targetElement);
-
-    const id = sourceCodes[index].id;
-
-    if (!id) {
-      console.error('id가 존재하지 않습니다.(useSelectList)');
-
-      return;
+  useEffect(() => {
+    if (!currentOption) {
+      setCurrentOption(0);
     }
+  }, [currentOption, setCurrentOption]);
 
-    setCurrentFile(id);
+  const scrollToLinkedElement = (index: number) => {
+    const targetLinkedElement = linkedElementRefs.current[index];
+
+    scrollTo(targetLinkedElement);
   };
 
-  return { currentFile, setCurrentFile, sourceCodeRefs, handleSelectOption };
+  const handleSelectOption = (index: number) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    scrollToLinkedElement(index);
+
+    setCurrentOption(index);
+  };
+
+  return { currentOption, linkedElementRefs, handleSelectOption };
 };

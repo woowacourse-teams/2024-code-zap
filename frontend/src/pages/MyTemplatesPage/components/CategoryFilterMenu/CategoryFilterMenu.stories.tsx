@@ -7,7 +7,7 @@ import CategoryFilterMenu from './CategoryFilterMenu';
 const meta: Meta<typeof CategoryFilterMenu> = {
   title: 'CategoryFilterMenu',
   component: CategoryFilterMenu,
-  args: { categories },
+  args: { categoryList: categories },
 };
 
 export default meta;

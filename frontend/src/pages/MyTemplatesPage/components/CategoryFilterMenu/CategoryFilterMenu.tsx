@@ -10,11 +10,11 @@ import { CategoryEditModal } from '../';
 import * as S from './CategoryFilterMenu.style';
 
 interface CategoryMenuProps {
-  categories: Category[];
+  categoryList: Category[];
   onSelectCategory: (selectedCategoryId: number) => void;
 }
 
-const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps) => {
+const CategoryFilterMenu = ({ categoryList, onSelectCategory }: CategoryMenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
   const [isEditModalOpen, toggleEditModal] = useToggle();
   const [isMenuOpen, toggleMenu] = useToggle(false);
@@ -35,17 +35,17 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
     }
   };
 
-  const [defaultCategory, ...userCategories] = categories.length ? categories : [{ id: 0, name: '' }];
+  const [defaultCategory, ...userCategories] = categoryList.length ? categoryList : [{ id: 0, name: '' }];
 
   const indexById: Record<number, number> = useMemo(() => {
-    const map: Record<number, number> = { 0: 0, [defaultCategory.id]: categories.length };
+    const map: Record<number, number> = { 0: 0, [defaultCategory.id]: categoryList.length };
 
     userCategories.forEach(({ id }, index) => {
       map[id] = index + 1;
     });
 
     return map;
-  }, [categories.length, defaultCategory.id, userCategories]);
+  }, [categoryList.length, defaultCategory.id, userCategories]);
 
   return (
     <>
@@ -81,7 +81,7 @@ const CategoryFilterMenu = ({ categories, onSelectCategory }: CategoryMenuProps)
           <S.HighlightBox
             data-testid='category-highlighter-box'
             selectedIndex={indexById[selectedId]}
-            categoryCount={categories.length}
+            categoryCount={categoryList.length}
             isMenuOpen={isMenuOpen}
           />
         </S.CategoryListContainer>

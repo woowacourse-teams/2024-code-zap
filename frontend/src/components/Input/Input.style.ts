@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
+
 import type { BaseProps, TextFieldProps } from './Input';
 
 const sizes = {
@@ -143,6 +144,12 @@ export const Adornment = styled.div<BaseProps>`
     css`
       width: 1.5rem;
       height: 1.5rem;
+    `}
+
+    ${({ as }) =>
+    as === 'button' &&
+    css`
+      cursor: pointer;
     `}
 `;
 

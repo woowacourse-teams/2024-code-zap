@@ -11,40 +11,40 @@ import * as S from './TagFilterMenu.style';
 const LINE_HEIGHT_REM = 1.875;
 
 interface Props {
-  tags: Tag[];
+  tagList: Tag[];
   selectedTagIds: number[];
   onSelectTags: (selectedTagIds: number[]) => void;
 }
 
-const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
+const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
   const [deselectedTags, setDeselectedTags] = useState<Tag[]>([]);
   const [isTagBoxOpen, toggleTagBox] = useToggle(false);
-  const [height, setHeight] = useState('auto');
+  const [height, setHeight] = useState(`${LINE_HEIGHT_REM}rem`);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showMoreButton, setShowMoreButton] = useState(false);
   const windowWidth = useWindowWidth();
 
-  const updateTagContainerState = () => {
-    if (containerRef.current) {
-      const containerHeight = containerRef.current.scrollHeight;
-
-      setHeight(isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`);
-
-      if (containerHeight > remToPx(LINE_HEIGHT_REM)) {
-        setShowMoreButton(true);
-      } else {
-        setShowMoreButton(false);
-      }
-    }
-  };
-
   useEffect(() => {
+    const updateTagContainerState = () => {
+      if (containerRef.current) {
+        const containerHeight = containerRef.current.scrollHeight;
+
+        setHeight(isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`);
+
+        if (containerHeight > remToPx(LINE_HEIGHT_REM)) {
+          setShowMoreButton(true);
+        } else {
+          setShowMoreButton(false);
+        }
+      }
+    };
+
     updateTagContainerState();
-  }, [tags, selectedTagIds, isTagBoxOpen, windowWidth]);
+  }, [tagList, selectedTagIds, isTagBoxOpen, windowWidth]);
 
   const handleButtonClick = (tagId: number) => {
     if (selectedTagIds.includes(tagId)) {
-      const deselectedTag = tags.find((tag) => tag.id === tagId);
+      const deselectedTag = tagList.find((tag) => tag.id === tagId);
 
       if (deselectedTag) {
         setDeselectedTags((prev) => [deselectedTag, ...prev.filter((tag) => tag.id !== tagId)]);
@@ -57,10 +57,10 @@ const TagFilterMenu = ({ tags, selectedTagIds, onSelectTags }: Props) => {
     }
   };
 
-  const selectedTags = selectedTagIds.map((id) => tags.find((tag) => tag.id === id)!).filter(Boolean);
+  const selectedTags = selectedTagIds.map((id) => tagList.find((tag) => tag.id === id)!).filter(Boolean);
 
   const unselectedTags = deselectedTags.concat(
-    tags.filter(
+    tagList.filter(
       (tag) => !selectedTagIds.includes(tag.id) && !deselectedTags.some((deselectedTag) => deselectedTag.id === tag.id),
     ),
   );

@@ -1,7 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-
 import { TigerLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
+import { useCustomNavigate } from '@/hooks';
 import { theme } from '@/style/theme';
 
 interface props {
@@ -9,7 +8,7 @@ interface props {
 }
 
 const NotFoundPage = ({ resetError }: props) => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   return (
     <Flex direction='column' gap='3rem' margin='2rem 0 0 0' justify='center' align='center'>

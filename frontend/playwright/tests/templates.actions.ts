@@ -35,7 +35,7 @@ export const uploadTemplateToCodezap = async ({
   }
 
   // 파일명 입력
-  await page.getByPlaceholder('파일명.js').fill(fileName);
+  await page.getByPlaceholder('파일명.[확장자]').fill(fileName);
 
   // 코드 입력
   await page

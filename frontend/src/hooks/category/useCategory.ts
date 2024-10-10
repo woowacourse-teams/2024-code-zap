@@ -1,4 +1,4 @@
-import { useCategoryListQuery } from '@/queries/categories';
+import { useCategoryListQuery, useCategoryUploadMutation } from '@/queries/categories';
 import type { Category } from '@/types';
 
 import { useDropdown } from '../';
@@ -12,8 +12,35 @@ export const useCategory = (initCategory?: Category) => {
   }
 
   const { isOpen, toggleDropdown, currentValue, handleCurrentValue, dropdownRef } = useDropdown<Category>(initCategory);
+  const { mutateAsync: postCategory, isPending } = useCategoryUploadMutation(handleCurrentValue);
 
   const getOptionLabel = (category: Category) => category.name;
 
-  return { options, isOpen, toggleDropdown, currentValue, handleCurrentValue, getOptionLabel, dropdownRef };
+  const getExistingCategory = (value: string) => options.find((category) => getOptionLabel(category) === value);
+
+  const createNewCategory = async (categoryName: string) => {
+    const existingCategory = getExistingCategory(categoryName);
+
+    if (existingCategory) {
+      handleCurrentValue(existingCategory);
+
+      return;
+    }
+
+    const newCategory = { name: categoryName };
+
+    await postCategory(newCategory);
+  };
+
+  return {
+    options,
+    isOpen,
+    toggleDropdown,
+    currentValue,
+    handleCurrentValue,
+    getOptionLabel,
+    createNewCategory,
+    dropdownRef,
+    isPending,
+  };
 };

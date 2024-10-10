@@ -3,17 +3,18 @@ import { Link } from 'react-router-dom';
 
 import { TemplateCard } from '@/components';
 import { TemplateListItem } from '@/types';
+
 import * as S from './TemplateGrid.style';
 
 interface Props {
-  templates: TemplateListItem[];
+  templateList: TemplateListItem[];
   isEditMode: boolean;
   selectedList: number[];
   setSelectedList: React.Dispatch<React.SetStateAction<number[]>>;
   cols?: number;
 }
 
-const TemplateGrid = ({ templates, isEditMode, selectedList, setSelectedList, cols = 2 }: Props) => {
+const TemplateGrid = ({ templateList, isEditMode, selectedList, setSelectedList, cols = 2 }: Props) => {
   useEffect(() => {
     const resetSelectedList = () => {
       setSelectedList([]);
@@ -30,7 +31,7 @@ const TemplateGrid = ({ templates, isEditMode, selectedList, setSelectedList, co
 
   return (
     <S.TemplateContainer cols={cols}>
-      {templates.map((template) =>
+      {templateList.map((template) =>
         isEditMode ? (
           <S.TemplateCardWrapper
             key={template.id}

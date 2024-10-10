@@ -1,6 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-
 import { Button, Flex, Modal, Text } from '@/components';
+import { useCustomNavigate } from '@/hooks';
 import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const NonmemberAlerter = ({ isOpen, content, toggleModal }: Props) => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   const handleLoginButtonClick = () => {
     navigate(END_POINTS.LOGIN);

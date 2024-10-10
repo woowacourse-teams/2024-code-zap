@@ -1,9 +1,8 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 
 import { postLogin } from '@/api/authentication';
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks';
+import { useCustomContext, useCustomNavigate } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { END_POINTS } from '@/routes';
 import { LoginRequest } from '@/types';
@@ -11,7 +10,7 @@ import { LoginRequest } from '@/types';
 export const useLoginMutation = () => {
   const { handleLoginState, handleMemberInfo } = useAuth();
   const { failAlert, successAlert } = useCustomContext(ToastContext);
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   return useMutation({
     mutationFn: (loginInfo: LoginRequest) => postLogin(loginInfo),
