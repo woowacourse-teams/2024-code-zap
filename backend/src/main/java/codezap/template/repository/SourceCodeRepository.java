@@ -7,6 +7,7 @@ import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 
 public interface SourceCodeRepository {
+
     SourceCode fetchById(Long id);
 
     List<SourceCode> findAllByTemplate(Template template);

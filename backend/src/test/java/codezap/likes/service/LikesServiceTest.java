@@ -2,6 +2,9 @@ package codezap.likes.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -122,6 +125,61 @@ class LikesServiceTest extends ServiceTest {
             ));
 
             assertThat(likesService.isLiked(member, template)).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("템플릿에 해당하는 좋아요 삭제")
+    class DeleteLikeByTemplateIds {
+
+        @Test
+        @DisplayName("성공: 템플릿 1개 삭제")
+        void deleteAllByTemplateIdSuccess() {
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Template template1 = templateRepository.save(TemplateFixture.get(
+                    member1,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            Template template2 = templateRepository.save(TemplateFixture.get(
+                    member1,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template1, member2));
+            likesRepository.save(new Likes(template2, member1));
+
+            likesService.deleteAllByTemplateIds(List.of(template1.getId()));
+
+            assertAll(
+                    () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
+                    () -> assertThat(likesRepository.countByTemplate(template2)).isEqualTo(1)
+            );
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿 2개 이상 삭제")
+        void deleteAllByTemplateIdsSuccess() {
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Template template1 = templateRepository.save(TemplateFixture.get(
+                    member1,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            Template template2 = templateRepository.save(TemplateFixture.get(
+                    member1,
+                    categoryRepository.save(CategoryFixture.getFirstCategory())
+            ));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template1, member2));
+            likesRepository.save(new Likes(template2, member1));
+
+            likesService.deleteAllByTemplateIds(List.of(template1.getId(), template2.getId()));
+
+            assertAll(
+                    () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
+                    () -> assertThat(likesRepository.countByTemplate(template2)).isEqualTo(0)
+            );
         }
     }
 }

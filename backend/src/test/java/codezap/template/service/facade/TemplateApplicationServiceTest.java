@@ -185,7 +185,6 @@ class TemplateApplicationServiceTest {
         }
     }
 
-
     @Nested
     @DisplayName("템플릿 목록 조회 (비회원)")
     class FindAllBy {
@@ -410,7 +409,7 @@ class TemplateApplicationServiceTest {
     class DeleteByMemberAndIds {
 
         @Test
-        @DisplayName("사용자 정보와 템플릿 ID로 템플릿 삭제 성공")
+        @DisplayName("성공: 썸네일, 소스코드, 태그, 좋아요가 모두 존재하는 템플릿")
         void deleteByMemberAndIds() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -421,8 +420,10 @@ class TemplateApplicationServiceTest {
             var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
             var template3 = templateRepository.save(TemplateFixture.get(member, category));
             var sourceCode3 = sourceCodeRepository.save(new SourceCode(template3, "filename3", "content3", 3));
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template2, member));
 
-            var deleteIds = List.of(1L, 2L);
+            var deleteIds = List.of(template1.getId(), template2.getId());
 
             // when
             sut.deleteByMemberAndIds(member, deleteIds);
