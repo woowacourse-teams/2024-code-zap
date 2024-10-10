@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String PROPERTY_TYPE = "type";
+    private static final String PROPERTY_ERROR_CODE = "errorCode";
     private static final String PROPERTY_TIMESTAMP = "timestamp";
 
     @ExceptionHandler
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     public static ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
-        problemDetail.setProperty(PROPERTY_TYPE, code);
+        problemDetail.setProperty(PROPERTY_ERROR_CODE, code);
         problemDetail.setProperty(PROPERTY_TIMESTAMP, LocalDateTime.now());
 
         return problemDetail;
