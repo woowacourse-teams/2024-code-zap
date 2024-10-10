@@ -14,6 +14,7 @@ import codezap.template.domain.Template;
 
 @SuppressWarnings("unused")
 public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaRepository<SourceCode, Long> {
+
     default SourceCode fetchById(Long id) {
         return findById(id).orElseThrow(
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));

@@ -37,12 +37,7 @@ public class FakeTemplateTagRepository implements TemplateTagRepository {
                 .filter(templateTag -> Objects.equals(templateTag.getTemplate(), templateId))
                 .toList();
     }
-
-    @Override
-    public List<Long> findDistinctByTemplateIn(List<Long> templateIds) {
-        return List.of();
-    }
-
+    
     @Override
     public TemplateTag save(TemplateTag entity) {
         var saved = new TemplateTag(

@@ -23,11 +23,11 @@ public interface ThumbnailJpaRepository extends
     }
 
     @Query("""
-        SELECT t, sc
-        FROM Thumbnail t
-        join fetch t.sourceCode sc
-        WHERE t.template = :template
-        """)
+            SELECT t, sc
+            FROM Thumbnail t
+            join fetch t.sourceCode sc
+            WHERE t.template = :template
+            """)
     Optional<Thumbnail> findByTemplate(Template template);
 
 
