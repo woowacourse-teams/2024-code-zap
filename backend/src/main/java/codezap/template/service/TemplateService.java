@@ -31,7 +31,8 @@ public class TemplateService {
                 member,
                 createTemplateRequest.title(),
                 createTemplateRequest.description(),
-                category);
+                category,
+                createTemplateRequest.visibility());
         return templateRepository.save(template);
     }
 

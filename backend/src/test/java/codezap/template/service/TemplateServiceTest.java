@@ -29,6 +29,7 @@ import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
@@ -73,7 +74,8 @@ class TemplateServiceTest {
                     ),
                     1,
                     category.getId(),
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    Visibility.PUBLIC
             );
 
             var actual = sut.create(member, templateRequest, category);

@@ -45,7 +45,8 @@ class TemplateTagTest {
             Category category = CategoryFixture.getFirstCategory();
             List<SourceCode> sourceCodes = List.of();
             long likesCount = 1L;
-            return new Template(id, member, "Template 1", "Description 1", category, sourceCodes, likesCount);
+            return new Template(
+                    id, member, "Template 1", "Description 1", category, sourceCodes, likesCount, Visibility.PUBLIC);
         }
     }
 }
