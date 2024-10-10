@@ -3,6 +3,7 @@ package codezap.tag.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +23,8 @@ class TagJpaRepositoryTest {
 
     @Nested
     @DisplayName("id로 태그 조회")
-    class fetchById {
+    class FetchById {
+
         @Test
         @DisplayName("id로 태그 조회 성공 : id로 태그를 알아낼 수 있다.")
         void fetchByIdSuccess() {
@@ -46,7 +48,8 @@ class TagJpaRepositoryTest {
 
     @Nested
     @DisplayName("태그명으로 태그 조회(fetch)")
-    class fetchByName {
+    class FetchByName {
+
         @Test
         @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 조회할 수 있다.")
         void fetchByNameSuccess() {
@@ -55,6 +58,19 @@ class TagJpaRepositoryTest {
             Tag actual = tagRepository.fetchByName(tag.getName());
 
             assertThat(actual).isEqualTo(tag);
+        }
+
+        @Test
+        @DisplayName("태그명으로 태그 조회 성공 : 대소문자 구분")
+        void findByNameSuccessCaseSensitive() {
+            Tag lowerCaseTag = tagRepository.save(new Tag("java"));
+            Tag upperCaseTag = tagRepository.save(new Tag("Java"));
+
+            var actual1 = tagRepository.fetchByName("java");
+            var actual2 = tagRepository.fetchByName("Java");
+
+            assertThat(actual1).isEqualTo(lowerCaseTag);
+            assertThat(actual2).isEqualTo(upperCaseTag);
         }
 
         @Test
@@ -70,7 +86,8 @@ class TagJpaRepositoryTest {
 
     @Nested
     @DisplayName("태그명으로 태그 조회(find)")
-    class findByName {
+    class FindByName {
+
         @Test
         @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 알아낼 수 있다.")
         void findByNameSuccess() {
@@ -87,6 +104,36 @@ class TagJpaRepositoryTest {
             Optional<Tag> actual = tagRepository.findByName("태그");
 
             assertThat(actual).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("태그명 리스트로 태그 조회")
+    class FindAllByNames {
+
+        @Test
+        @DisplayName("태그명 리스트로 태그 조회 성공")
+        void findAllByNamesSuccess() {
+            Tag lowerCaseTag1 = tagRepository.save(new Tag("java"));
+            Tag lowerCaseTag2 = tagRepository.save(new Tag("javascript"));
+            Tag lowerCaseTag3 = tagRepository.save(new Tag("typescript"));
+            Tag upperCaseTag1 = tagRepository.save(new Tag("Java"));
+            Tag upperCaseTag2 = tagRepository.save(new Tag("Javascript"));
+            Tag upperCaseTag3 = tagRepository.save(new Tag("Typescript"));
+            tagRepository.saveAll(List.of(
+                    lowerCaseTag1,
+                    lowerCaseTag2,
+                    lowerCaseTag3,
+                    upperCaseTag1,
+                    upperCaseTag2,
+                    upperCaseTag3));
+
+            var names = List.of(lowerCaseTag1.getName(), lowerCaseTag3.getName());
+            var actual = tagRepository.findAllByNames(names);
+
+            assertThat(actual)
+                    .containsExactlyInAnyOrder(lowerCaseTag1, lowerCaseTag3)
+                    .doesNotContain(lowerCaseTag2, upperCaseTag1, upperCaseTag2, upperCaseTag3);
         }
     }
 }

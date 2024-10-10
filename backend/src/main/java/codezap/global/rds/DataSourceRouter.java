@@ -12,7 +12,7 @@ public class DataSourceRouter extends AbstractRoutingDataSource {
     protected Object determineCurrentLookupKey() {
         boolean readOnly = TransactionSynchronizationManager.isCurrentTransactionReadOnly();
 
-        if(readOnly) {
+        if (readOnly) {
             return READER_KEY;
         }
         return WRITER_KEY;

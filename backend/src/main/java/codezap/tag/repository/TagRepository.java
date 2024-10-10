@@ -13,7 +13,7 @@ public interface TagRepository {
 
     Optional<Tag> findByName(String name);
 
-    List<Tag> findByNameIn(List<String> names);
+    List<Tag> findAllByNames(List<String> names);
 
     Tag save(Tag tag);
 
