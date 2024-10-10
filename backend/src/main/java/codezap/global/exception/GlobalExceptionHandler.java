@@ -44,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
         CodeZapException codeZapException =
-                new CodeZapException(ErrorCode.INVALID_MESSAGE_FORMAT, String.join("\n", errorMessages));
+                new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", errorMessages));
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
                 .body(codeZapException.toProblemDetail());

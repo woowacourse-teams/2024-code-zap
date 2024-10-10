@@ -69,7 +69,7 @@ public class TemplateService {
     @Transactional
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
-            throw new CodeZapException(ErrorCode.INVALID_TEMPLATE_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
         }
         ids.forEach(id -> deleteById(member, id));
     }
