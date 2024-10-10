@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
-import { useCustomContext, useToggle } from '@/hooks';
+import { useCustomContext, useCustomNavigate, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
 import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
@@ -19,7 +19,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   const [menuOpen, toggleMenu] = useToggle();
   const { failAlert } = useCustomContext(ToastContext);
   const location = useLocation();
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   useScrollDisable(menuOpen);
   usePressESC(menuOpen, toggleMenu);

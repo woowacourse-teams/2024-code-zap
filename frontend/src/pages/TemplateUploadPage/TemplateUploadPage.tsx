@@ -1,8 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-
 import { PlusIcon } from '@/assets/images';
 import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text } from '@/components';
-import { useInput, useSelectList } from '@/hooks';
+import { useCustomNavigate, useInput, useSelectList } from '@/hooks';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
@@ -14,7 +12,7 @@ import { TemplateUploadRequest } from '@/types';
 import * as S from './TemplateUploadPage.style';
 
 const TemplateUploadPage = () => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
   const { failAlert } = useToast();
 
   const categoryProps = useCategory();

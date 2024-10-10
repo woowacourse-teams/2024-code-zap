@@ -1,10 +1,9 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
 import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text, NoSearchResults } from '@/components';
-import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
+import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput, useCustomNavigate } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useTemplateDeleteMutation, useTemplateCategoryTagQueries } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
@@ -198,7 +197,7 @@ const TopBanner = ({ name }: TopBannerProps) => (
 );
 
 const NewTemplateButton = () => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   return (
     <S.NewTemplateButton onClick={() => navigate(END_POINTS.TEMPLATES_UPLOAD)}>
