@@ -1,16 +1,23 @@
 package codezap.global.exception;
 
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ProblemDetail;
 
 import lombok.Getter;
 
 @Getter
 public class CodeZapException extends RuntimeException {
 
-    private final HttpStatusCode httpStatusCode;
+    private final ErrorCode errorCode;
 
-    public CodeZapException(HttpStatusCode httpStatusCode, String message) {
+    public CodeZapException(ErrorCode errorCode, String message) {
         super(message);
-        this.httpStatusCode = httpStatusCode;
+        this.errorCode = errorCode;
+    }
+
+    public ProblemDetail toProblemDetail() {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+                errorCode.getHttpStatus(),
+                getMessage());
+        return GlobalExceptionHandler.setProperties(problemDetail, errorCode.getCode());
     }
 }

@@ -31,7 +31,7 @@ public interface SpringDocAuthController {
     })
     @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/login", errorCases = {
             @ErrorCase(description = "아이디 불일치", exampleMessage = "존재하지 않는 아이디 moly 입니다."),
-            @ErrorCase(description = "비밀번호 불일치", exampleMessage = "로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인해주세요."),
+            @ErrorCase(description = "비밀번호 불일치", exampleMessage = "로그인에 실패하였습니다. 비밀번호를 확인해주세요."),
     })
     ResponseEntity<LoginResponse> login(LoginRequest request, HttpServletResponse response);
 

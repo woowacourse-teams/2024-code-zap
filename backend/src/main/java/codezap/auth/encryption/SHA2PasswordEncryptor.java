@@ -4,10 +4,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 
 @Component
 public class SHA2PasswordEncryptor implements PasswordEncryptor {
@@ -17,7 +17,7 @@ public class SHA2PasswordEncryptor implements PasswordEncryptor {
         try {
             digest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
-            throw new CodeZapException(HttpStatus.INTERNAL_SERVER_ERROR, "암호화 알고리즘이 잘못 명시되었습니다.");
+            throw new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "암호화 알고리즘이 잘못 명시되었습니다.");
         }
     }
 
