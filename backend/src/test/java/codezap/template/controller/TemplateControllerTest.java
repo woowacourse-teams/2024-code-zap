@@ -121,7 +121,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 생성 테스트")
-    class createTemplateTest {
+    class CreateTemplateTest {
 
         @ParameterizedTest
         @DisplayName("템플릿 생성 성공")
@@ -383,6 +383,28 @@ class TemplateControllerTest {
                     .andExpect(jsonPath("$.detail").value("태그 목록이 null 입니다."));
         }
 
+        @Test
+        @DisplayName("템플릿 생성 실패: 태그 목록에서 30자 초과인 태그 존재")
+        void createTemplateFailWithOverSizeTags() throws Exception {
+            String exceededTag = "a".repeat(31);
+
+            CreateTemplateRequest templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(new CreateSourceCodeRequest("title", "sourceCode", 1)),
+                    1,
+                    1L,
+                    List.of(exceededTag)
+            );
+
+            mvc.perform(post("/templates")
+                            .cookie(cookie)
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(templateRequest)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("태그 명은 최대 30자까지 입력 가능합니다."));
+        }
 
         @ParameterizedTest
         @DisplayName("템플릿 생성 실패: 잘못된 소스 코드 순서 입력")
@@ -513,7 +535,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 단건 조회 테스트")
-    class findTemplateTest {
+    class FindTemplateTest {
 //        @Test
 //        @DisplayName("템플릿 단건 조회 성공")
 //        void findOneTemplateSuccess() throws Exception {
@@ -550,7 +572,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 수정 테스트")
-    class updateTemplateTest {
+    class UpdateTemplateTest {
 
         @Test
         @DisplayName("템플릿 수정 성공")
@@ -1060,7 +1082,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 삭제 테스트")
-    class deleteTemplateTest {
+    class DeleteTemplateTest {
 
         @Test
         @DisplayName("템플릿 삭제 성공: 1개")

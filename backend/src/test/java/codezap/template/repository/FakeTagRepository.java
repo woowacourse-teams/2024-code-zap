@@ -42,7 +42,7 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
-    public List<Tag> findByNameIn(List<String> names) {
+    public List<Tag> findAllByNames(List<String> names) {
         return List.of();
     }
 

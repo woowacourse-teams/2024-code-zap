@@ -12,8 +12,7 @@
         <appender-ref ref="console-appender"/>
     </logger>
 
-    <root level="INFO">
-        <appender-ref ref="info-appender"/>
+    <root level="WARN">
         <appender-ref ref="warn-appender"/>
         <appender-ref ref="error-appender"/>
     </root>
