@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import codezap.tag.domain.Tag;
 import codezap.template.domain.Template;
@@ -22,19 +23,19 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
     List<Tag> findAllTagsByTemplate(Template template);
 
     @Query("""
-        SELECT tt, t
-        FROM TemplateTag tt
-        JOIN FETCH tt.tag t
-        WHERE tt.id.templateId = :templateId
-        """)
+            SELECT tt, t
+            FROM TemplateTag tt
+            JOIN FETCH tt.tag t
+            WHERE tt.id.templateId = :templateId
+            """)
     List<TemplateTag> findAllByTemplateId(Long templateId);
 
     @Query("""
-        SELECT tt, t
-        FROM TemplateTag tt
-        JOIN FETCH tt.tag t
-        WHERE tt.id.templateId in :templateIds
-        """)
+            SELECT tt, t
+            FROM TemplateTag tt
+            JOIN FETCH tt.tag t
+            WHERE tt.id.templateId in :templateIds
+            """)
     List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds);
 
     @Query("""
@@ -43,13 +44,14 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             WHERE t.id IN (
                 SELECT DISTINCT tt.id.tagId
                 FROM TemplateTag tt
-                WHERE tt.id.templateId IN
-                    (SELECT te.id FROM Template te WHERE te.member.id = :memberId)
-        )
-        """)
+                WHERE tt.id.templateId IN (
+                    SELECT te.id FROM Template te WHERE te.member.id = :memberId
+                )
+            )
+            """)
     List<Tag> findAllTagDistinctByMemberId(Long memberId);
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteByTemplateIds(@Param("templateIds") List<Long> templateIds);
 }

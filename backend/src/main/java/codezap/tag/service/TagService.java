@@ -24,7 +24,7 @@ public class TagService {
 
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
-        List<Tag> existingTags = new ArrayList<>(tagRepository.findByNameIn(tagNames));
+        List<Tag> existingTags = new ArrayList<>(tagRepository.findAllByNames(tagNames));
         List<String> existNames = existingTags.stream()
                 .map(Tag::getName)
                 .toList();

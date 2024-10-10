@@ -7,6 +7,7 @@ import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 
 public interface LikesRepository {
+
     Likes save(Likes likes);
 
     boolean existsByMemberAndTemplate(Member member, Template template);

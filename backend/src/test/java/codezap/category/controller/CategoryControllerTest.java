@@ -40,7 +40,7 @@ class CategoryControllerTest extends MockMvcTest {
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
-    class createCategoryTest {
+    class CreateCategoryTest {
 
         @Test
         @DisplayName("카테고리 생성 성공")
@@ -109,7 +109,7 @@ class CategoryControllerTest extends MockMvcTest {
 
     @Nested
     @DisplayName("카테고리 수정 테스트")
-    class updateCategoryTest {
+    class UpdateCategoryTest {
 
         @Test
         @DisplayName("카테고리 수정 성공")
@@ -174,7 +174,7 @@ class CategoryControllerTest extends MockMvcTest {
 
     @Nested
     @DisplayName("카테고리 삭제 테스트")
-    class deleteCategoryTest {
+    class DeleteCategoryTest {
 
         @Test
         @DisplayName("카테고리 삭제 성공")
@@ -205,7 +205,7 @@ class CategoryControllerTest extends MockMvcTest {
 
         @Test
         @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리의 삭제 요청")
-        void updateCategoryFailWithDuplicatedName() throws Exception {
+        void deleteCategoryFailWithDuplicatedName() throws Exception {
             long id = 2L;
 
             doThrow(new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
@@ -220,7 +220,7 @@ class CategoryControllerTest extends MockMvcTest {
 
         @Test
         @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
-        void updateCategoryFailWithlongName() throws Exception {
+        void deleteCategoryFailWithlongName() throws Exception {
             long categoryId = 1L;
             doThrow(new CodeZapException(ErrorCode.CATEGORY_HAS_TEMPLATES, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
                     .when(categoryService).deleteById(any(), any());

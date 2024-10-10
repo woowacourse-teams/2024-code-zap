@@ -121,7 +121,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 생성 테스트")
-    class createTemplateTest {
+    class CreateTemplateTest {
 
         @ParameterizedTest
         @DisplayName("템플릿 생성 성공")
@@ -535,7 +535,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 단건 조회 테스트")
-    class findTemplateTest {
+    class FindTemplateTest {
 //        @Test
 //        @DisplayName("템플릿 단건 조회 성공")
 //        void findOneTemplateSuccess() throws Exception {
@@ -572,7 +572,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 수정 테스트")
-    class updateTemplateTest {
+    class UpdateTemplateTest {
 
         @Test
         @DisplayName("템플릿 수정 성공")
@@ -1082,7 +1082,7 @@ class TemplateControllerTest {
 
     @Nested
     @DisplayName("템플릿 삭제 테스트")
-    class deleteTemplateTest {
+    class DeleteTemplateTest {
 
         @Test
         @DisplayName("템플릿 삭제 성공: 1개")

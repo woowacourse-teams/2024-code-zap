@@ -29,6 +29,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
  */
 @Component
 public class AuthOperationCustomizer implements OperationCustomizer {
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
