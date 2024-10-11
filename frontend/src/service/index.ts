@@ -2,6 +2,6 @@ export {
   validateName,
   validatePassword,
   validateConfirmPassword,
-  validateFileName,
+  validateFilename,
   validateSourceCode,
 } from './validates';

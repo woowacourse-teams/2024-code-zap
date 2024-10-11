@@ -1,12 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { tags } from '@/mocks/tagList.json';
+
 import TagFilterMenu from './TagFilterMenu';
 
 const meta: Meta<typeof TagFilterMenu> = {
   title: 'TagFilterMenu',
   component: TagFilterMenu,
-  args: { tags },
+  args: { tagList: tags },
 };
 
 export default meta;

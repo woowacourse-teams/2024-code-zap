@@ -1,8 +1,7 @@
 import { ReactElement, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks';
+import { useCustomContext, useCustomNavigate } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 
 type RouteGuardProps = {
@@ -14,7 +13,7 @@ type RouteGuardProps = {
 const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) => {
   const { isLogin, isChecking } = useAuth();
   const { infoAlert } = useCustomContext(ToastContext);
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   useEffect(() => {
     if (isLoginRequired && !isChecking && !isLogin) {
