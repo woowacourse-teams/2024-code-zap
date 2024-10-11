@@ -71,7 +71,6 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
         {tags?.map((tag, idx) => (
           <TagButton
             key={idx}
-            id={idx}
             variant='edit'
             name={tag}
             onClick={() => {

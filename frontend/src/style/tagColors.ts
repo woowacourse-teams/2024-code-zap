@@ -10,3 +10,8 @@ export const TAG_COLORS = [
   { background: '#eefab9', border: '#baca60' },
   { background: '#dfceb7', border: '#bd9a69' },
 ];
+
+export const INPUT_TAG_COLOR = {
+  background: '#fcfcfc',
+  border: '#777777',
+};
