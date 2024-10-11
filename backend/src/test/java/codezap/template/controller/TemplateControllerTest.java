@@ -55,7 +55,6 @@ class TemplateControllerTest extends MockMvcTest {
             CreateTemplateRequest templateRequest = createValidTemplateRequest();
 
             mvc.perform(post("/templates")
-                            .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isCreated());
@@ -78,7 +77,6 @@ class TemplateControllerTest extends MockMvcTest {
         @DisplayName("템플릿 생성 실패: 문자열 잘못된 형식인 경우 400 빈환")
         void createTemplateFailWithInvalidInput(CreateTemplateRequest request, String expectedError) throws Exception {
             mvc.perform(post("/templates")
-                            .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
@@ -280,7 +278,6 @@ class TemplateControllerTest extends MockMvcTest {
             UpdateTemplateRequest updateTemplateRequest = createValidUpdateTemplateRequest();
 
             mvc.perform(post("/templates/1")
-                            .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isOk());
@@ -304,7 +301,6 @@ class TemplateControllerTest extends MockMvcTest {
         void updateTemplateFailWithInvalidInput(UpdateTemplateRequest request, String expectedError) throws Exception {
 
             mvc.perform(post("/templates/1")
-                            .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
