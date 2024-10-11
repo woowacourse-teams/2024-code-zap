@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
+
 import { ClockIcon, PersonIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
+import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
@@ -14,12 +17,17 @@ interface Props {
 const TemplateCard = ({ template }: Props) => {
   const { title, description, thumbnail, tags, modifiedAt, member } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
+  const navigate = useNavigate();
 
   const blockMovingToDetailPage = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const handleAuthorClick = () => {
+    navigate(END_POINTS.memberTemplates(member.id));
   };
 
   const handleAllTagList = (
@@ -34,7 +42,7 @@ const TemplateCard = ({ template }: Props) => {
       <Flex width='100%' direction='column' gap='1rem'>
         <Flex width='100%' justify='space-between' gap='1rem'>
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
-            <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
+            <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
               <PersonIcon width={14} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
                 <Text.Small
@@ -43,7 +51,7 @@ const TemplateCard = ({ template }: Props) => {
                   {member.name}
                 </Text.Small>
               </S.EllipsisTextWrapper>
-            </Flex>
+            </S.AuthorInfoContainer>
             <Flex align='center' gap='0.25rem'>
               <ClockIcon width={14} />
               <S.NoWrapTextWrapper>

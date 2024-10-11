@@ -89,6 +89,16 @@ export const BlankDescription = styled.div`
   height: 1rem;
 `;
 
+export const AuthorInfoContainer = styled.div`
+  cursor: pointer;
+
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+
+  min-width: 0;
+`;
+
 export const CustomCodeMirrorTheme = EditorView.theme({
   '.cm-activeLine': { backgroundColor: `transparent !important` },
   '.cm-activeLineGutter': { backgroundColor: `transparent !important` },

@@ -1,5 +1,5 @@
 import { useTheme } from '@emotion/react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { ClockIcon, PersonIcon } from '@/assets/images';
 import {
@@ -18,6 +18,7 @@ import {
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
+import { END_POINTS } from '@/routes/endPoints';
 import { formatRelativeTime } from '@/utils';
 
 import { useTemplate, useLike } from './hooks';
@@ -27,6 +28,7 @@ const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
+  const navigate = useNavigate();
 
   const {
     isLogin,
@@ -60,6 +62,12 @@ const TemplatePage = () => {
     }
 
     toggleLike();
+  };
+
+  const handleAuthorClick = () => {
+    if (template?.member?.id) {
+      navigate(END_POINTS.memberTemplates(template.member.id));
+    }
   };
 
   if (!template) {
@@ -113,8 +121,8 @@ const TemplatePage = () => {
                   <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
                 </Flex>
 
-                <Flex gap='0.5rem' align='center'>
-                  <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
+                <Flex gap='0.5rem' align='center' justify='space-between'>
+                  <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
                     <PersonIcon width={14} />
                     <div
                       style={{
@@ -130,7 +138,7 @@ const TemplatePage = () => {
                         {template.member.name}
                       </Text.Small>
                     </div>
-                  </Flex>
+                  </S.AuthorInfoContainer>
                   <Flex align='center' gap='0.125rem'>
                     <ClockIcon width={16} />
                     <Text.Small
