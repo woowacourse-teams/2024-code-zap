@@ -27,6 +27,7 @@ export { default as NewCategoryInput } from './NewCategoryInput/NewCategoryInput
 export { default as NoSearchResults } from './NoSearchResults/NoSearchResults';
 export { default as Textarea } from './Textarea/Textarea';
 export { default as ContactUs } from './ContactUs/ContactUs';
+export { default as Toggle } from './Toggle/Toggle';
 
 // Skeleton UI
 export { default as LoadingBall } from './LoadingBall/LoadingBall';
