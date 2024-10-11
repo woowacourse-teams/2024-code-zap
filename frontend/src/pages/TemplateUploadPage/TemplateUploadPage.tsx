@@ -1,6 +1,7 @@
 import { PlusIcon } from '@/assets/images';
 import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text } from '@/components';
 import { useCustomNavigate, useInput, useSelectList } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
@@ -14,6 +15,10 @@ import * as S from './TemplateUploadPage.style';
 const TemplateUploadPage = () => {
   const navigate = useCustomNavigate();
   const { failAlert } = useToast();
+
+  const {
+    memberInfo: { memberId },
+  } = useAuth();
 
   const categoryProps = useCategory();
 
@@ -87,7 +92,7 @@ const TemplateUploadPage = () => {
           return;
         }
 
-        navigate(END_POINTS.MY_TEMPLATES);
+        navigate(END_POINTS.memberTemplates(memberId!));
       },
     });
   };

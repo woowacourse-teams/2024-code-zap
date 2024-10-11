@@ -1,10 +1,10 @@
 import { useState, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, PlusIcon, SearchIcon } from '@/assets/images';
 import { Flex, Heading, Input, PagingButtons, Dropdown, Button, Modal, Text, NoSearchResults } from '@/components';
 import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput, useCustomNavigate } from '@/hooks';
-import { useAuth } from '@/hooks/authentication';
 import { useTemplateDeleteMutation, useTemplateCategoryTagQueries } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
@@ -16,10 +16,10 @@ import * as S from './MyTemplatePage.style';
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const MyTemplatePage = () => {
+  const { memberId: routeMemberId } = useParams<{ memberId: string }>();
+  const memberId = Number(routeMemberId);
+
   const windowWidth = useWindowWidth();
-  const {
-    memberInfo: { name },
-  } = useAuth();
 
   const [isEditMode, toggleIsEditMode] = useToggle();
   const [selectedList, setSelectedList] = useState<number[]>([]);
@@ -39,6 +39,7 @@ const MyTemplatePage = () => {
     tagIds: selectedTagIds,
     sort: sortingOption.key,
     page,
+    memberId,
   });
 
   const templateList = templateData?.templates || [];
@@ -106,7 +107,7 @@ const MyTemplatePage = () => {
 
   return (
     <S.MyTemplatePageContainer>
-      <TopBanner name={name ?? '나'} />
+      <TopBanner name={`${memberId}`} />
       <S.MainContainer>
         <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
           <CategoryFilterMenu categoryList={categoryList} onSelectCategory={handleCategoryMenuClick} />
@@ -190,7 +191,7 @@ const TopBanner = ({ name }: TopBannerProps) => (
     <S.TopBannerTextWrapper>
       <Heading.Medium color={theme.color.light.black}>{name}</Heading.Medium>
       <Heading.XSmall color={theme.color.light.black} weight='regular'>
-        {`${name ? '님' : ''}의 템플릿 입니다 :)`}
+        {'님의 템플릿 입니다 :)'}
       </Heading.XSmall>
     </S.TopBannerTextWrapper>
   </S.TopBannerContainer>

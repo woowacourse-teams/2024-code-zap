@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.MY_TEMPLATES,
+        path: END_POINTS.MEMBER_TEMPLATES,
         element: (
           <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
             <ErrorBoundary fallback={<NotFoundPage />}>

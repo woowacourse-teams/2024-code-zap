@@ -11,6 +11,7 @@ interface Props {
   sort?: SortingKey;
   page?: number;
   size?: number;
+  memberId?: number;
 }
 
 export const useTemplateCategoryTagQueries = ({
@@ -20,10 +21,10 @@ export const useTemplateCategoryTagQueries = ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
   size = PAGE_SIZE,
+  memberId: passedMemberId,
 }: Props) => {
-  const {
-    memberInfo: { memberId },
-  } = useAuth();
+  const { memberInfo } = useAuth();
+  const memberId = passedMemberId ?? memberInfo.memberId;
 
   return useSuspenseQueries({
     queries: [
@@ -32,11 +33,11 @@ export const useTemplateCategoryTagQueries = ({
         queryFn: () => getTemplateList({ keyword, categoryId, tagIds, sort, page, size, memberId }),
       },
       {
-        queryKey: [QUERY_KEY.CATEGORY_LIST],
+        queryKey: [QUERY_KEY.CATEGORY_LIST, memberId],
         queryFn: () => getCategoryList({ memberId }),
       },
       {
-        queryKey: [QUERY_KEY.TAG_LIST],
+        queryKey: [QUERY_KEY.TAG_LIST, memberId],
         queryFn: () => getTagList({ memberId }),
       },
     ],
