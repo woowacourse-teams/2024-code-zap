@@ -1,7 +1,7 @@
 import { XCircleIcon } from '@/assets/images';
 import { Text } from '@/components';
+import { TAG_COLORS } from '@/style/tagColors';
 import { theme } from '@/style/theme';
-import { getTagColor } from '@/utils';
 
 import * as S from './TagButton.style';
 
@@ -15,6 +15,8 @@ interface Props {
 }
 
 const TagButton = ({ id, name, isFocused = false, disabled = false, variant = 'default', onClick }: Props) => {
+  const getTagColor = (id: number) => TAG_COLORS[id % TAG_COLORS.length];
+
   const { background, border } = getTagColor(id);
 
   return (
