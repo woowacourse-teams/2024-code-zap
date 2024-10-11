@@ -21,6 +21,7 @@ import codezap.category.service.CategoryService;
 import codezap.global.cors.CorsProperties;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
+import codezap.tag.service.TagService;
 
 @WebMvcTest(SpringExtension.class)
 @EnableConfigurationProperties(CorsProperties.class)
@@ -41,6 +42,9 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected MemberService memberService;
+
+    @MockBean
+    protected TagService tagService;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
