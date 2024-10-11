@@ -17,6 +17,8 @@ export { default as ClockIcon } from './clock.svg';
 export { default as BooksIcon } from './books.svg';
 export { default as CheckCircleIcon } from './checkCircle.svg';
 export { default as LikeIcon } from './like';
+export { default as PrivateIcon } from './private.svg';
+export { default as PublicIcon } from './public.svg';
 
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';
