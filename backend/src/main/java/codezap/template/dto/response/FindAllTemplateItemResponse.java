@@ -7,6 +7,7 @@ import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindAllTemplateItemResponse(
@@ -27,6 +28,9 @@ public record FindAllTemplateItemResponse(
 
         @Schema(description = "썸네일")
         FindThumbnailResponse thumbnail,
+
+        @Schema(description = "공개 범위", example = "PUBLIC")
+        Visibility visibility,
 
         @Schema(description = "좋아요 수", example = "134")
         Long likesCount,
@@ -54,6 +58,7 @@ public record FindAllTemplateItemResponse(
                         .map(FindTagResponse::from)
                         .toList(),
                 FindThumbnailResponse.from(thumbnailSourceCode),
+                template.getVisibility(),
                 template.getLikesCount(),
                 isLiked,
                 template.getCreatedAt(),
