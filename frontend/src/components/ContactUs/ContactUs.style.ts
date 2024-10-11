@@ -7,5 +7,5 @@ export const ContactUSButton = styled.button`
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 `;

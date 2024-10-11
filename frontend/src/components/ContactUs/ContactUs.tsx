@@ -1,4 +1,5 @@
 import { useInput, useInputWithValidate, useToggle } from '@/hooks';
+import { useToast } from '@/hooks/useToast';
 import { validateEmail } from '@/service/validates';
 import { theme } from '@/style/theme';
 
@@ -7,23 +8,62 @@ import * as S from './ContactUs.style';
 
 const ContactUs = () => {
   const [isModalOpen, toggleModal] = useToggle();
-  const [contents, handleContents] = useInput('');
+  const [message, handleMessage, resetMessage] = useInput('');
   const {
     value: email,
     handleChange: handleEmail,
+    resetValue: resetEmail,
     errorMessage: emailErrorMessage,
   } = useInputWithValidate('', validateEmail);
 
-  const isValidContents = contents.trim().length;
+  const { failAlert, successAlert } = useToast();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const isValidContents = message.trim().length;
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (!isValidContents) {
+    if (!isValidContents || emailErrorMessage) {
       return;
     }
 
+    submitForm();
+  };
+
+  const submitForm = async () => {
+    const res = await sendData();
+
+    if (!res.ok) {
+      failAlert('보내기에 실패했습니다. 계속 실패한다면 이메일로 제보 부탁드립니다.');
+
+      return;
+    }
+
+    successSubmit();
+    successAlert('보내기 완료! 소중한 의견 감사합니다:)');
+  };
+
+  const sendData = () => {
+    const URL = process.env.GOOGLE_URL || '';
+
+    return fetch(URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify({ message, email }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  };
+
+  const successSubmit = () => {
+    resetForm();
     toggleModal();
+  };
+
+  const resetForm = () => {
+    resetEmail();
+    resetMessage();
   };
 
   return (
@@ -39,12 +79,15 @@ const ContactUs = () => {
           <S.Form onSubmit={handleSubmit}>
             <Text.Medium as='p' color={theme.color.light.secondary_500}>
               질문/피드백을 편하게 남겨주세요! 여러분의 의견은 더 나은 서비스를 만드는 데 큰 도움이 됩니다. <br />
-              답변이 필요하시면 아래 이메일 주소를 남겨주세요. 이메일은 오직 답변을 위해서만 사용됩니다 :)
+              이미지 등을 함께 보내실 경우 codezap2024@gmail.com으로 직접 이메일을 보내실 수 있습니다.
             </Text.Medium>
             <Textarea id='voc' variant='outlined'>
               <Textarea.Label htmlFor={'voc'}>무엇을 도와드릴까요?</Textarea.Label>
-              <Textarea.TextField minRows={5} maxRows={10} value={contents} onChange={handleContents} />
+              <Textarea.TextField minRows={5} maxRows={10} value={message} onChange={handleMessage} />
             </Textarea>
+            <Text.Medium as='p' color={theme.color.light.secondary_500}>
+              답변이 필요하시면 아래 이메일 주소를 남겨주세요. 이메일은 오직 답변을 위해서만 사용됩니다 :)
+            </Text.Medium>
             <Input variant='outlined' isValid={!emailErrorMessage}>
               <Input.Label>이메일 (선택)</Input.Label>
               <Input.TextField value={email} onChange={handleEmail} />
@@ -56,7 +99,9 @@ const ContactUs = () => {
           <Button onClick={toggleModal} variant='outlined'>
             닫기
           </Button>
-          <Button disabled={isValidContents ? false : true}>보내기</Button>
+          <Button disabled={isValidContents && !emailErrorMessage ? false : true} onClick={handleSubmit}>
+            보내기
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
