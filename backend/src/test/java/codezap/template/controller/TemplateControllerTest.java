@@ -212,7 +212,7 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(new CreateSourceCodeRequest("title", "content", firstIndex),
                             new CreateSourceCodeRequest("title", "content", secondIndex)), 1, 1L,
                     List.of("tag1", "tag2"),
-                    validRequest.visibility());
+                    Visibility.PUBLIC);
 
             mvc.perform(post("/templates")
                             .contentType(MediaType.APPLICATION_JSON)
