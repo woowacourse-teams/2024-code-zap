@@ -44,7 +44,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "소스 코드 순서가 잘못되었습니다."),
             @ErrorCase(description = "소스 코드가 0개 입력된 경우", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
     })
-    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
@@ -122,7 +122,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "해당 템플릿의 실제 소스 코드 수와 인자로 받은 소스 코드 수가 다를 경우",
                     exampleMessage = "소스 코드의 정보가 정확하지 않습니다."),
     })
-    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
             @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
@@ -140,7 +140,7 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1,1", errorCases = {
             @ErrorCase(description = "템플릿 ID가 중복된 경우", exampleMessage = "삭제하고자 하는 템플릿 ID가 중복되었습니다."),
     })
-    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {

@@ -75,7 +75,7 @@ class BasicAuthCredentialProviderTest {
 
             assertThatThrownBy(() -> basicAuthCredentialProvider.extractMember(wrongCredential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    .hasMessage("비밀번호가 일치하지 않습니다.");
         }
     }
 }

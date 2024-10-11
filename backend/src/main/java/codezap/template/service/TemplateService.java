@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 import codezap.template.dto.request.CreateTemplateRequest;
@@ -70,7 +70,7 @@ public class TemplateService {
     @Transactional
     public void deleteByMemberAndIds(Member member, List<Long> ids) {
         if (ids.size() != new HashSet<>(ids).size()) {
-            throw new CodeZapException(HttpStatus.BAD_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "삭제하고자 하는 템플릿 ID가 중복되었습니다.");
         }
         ids.forEach(id -> deleteById(member, id));
     }
