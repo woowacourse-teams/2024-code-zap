@@ -5,6 +5,8 @@ import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,11 +15,11 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.Formula;
-import org.springframework.http.HttpStatus;
 
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -54,11 +56,20 @@ public class Template extends BaseTimeEntity {
     @Formula("(select count(*) from likes where likes.template_id = id)")
     private Long likesCount;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
+
     public Template(Member member, String title, String description, Category category) {
+        this(member, title, description, category, Visibility.PUBLIC);
+    }
+
+    public Template(Member member, String title, String description, Category category, Visibility visibility) {
         this.member = member;
         this.title = title;
         this.description = description;
         this.category = category;
+        this.visibility = visibility;
     }
 
     public void updateTemplate(String title, String description, Category category) {
@@ -69,7 +80,7 @@ public class Template extends BaseTimeEntity {
 
     public void validateAuthorization(Member member) {
         if (!getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 템플릿에 대한 권한이 없습니다.");
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
         }
     }
 }

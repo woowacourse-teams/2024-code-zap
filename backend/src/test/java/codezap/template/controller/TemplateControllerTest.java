@@ -31,6 +31,7 @@ import codezap.fixture.TemplateFixture;
 import codezap.global.MockMvcTest;
 import codezap.tag.domain.Tag;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
@@ -68,7 +69,9 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(new CreateSourceCodeRequest("validFileName.txt", "Valid Content", 1)),
                     1,
                     1L,
-                    List.of("tag1", "tag2"));
+                    List.of("tag1", "tag2"),
+                    Visibility.PUBLIC
+            );
         }
 
         @ParameterizedTest
@@ -107,7 +110,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    validRequest.tags());
+                    validRequest.tags(),
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createRequestWithInvalidDescription(String invalidDescription) {
@@ -118,7 +122,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    validRequest.tags());
+                    validRequest.tags(),
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createRequestWithInvalidFileName(String invalidFileName) {
@@ -132,7 +137,8 @@ class TemplateControllerTest extends MockMvcTest {
                     invalidSourceCodes,
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    validRequest.tags());
+                    validRequest.tags(),
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createRequestWithInvalidSourceCode(String invalidSourceCode) {
@@ -146,7 +152,8 @@ class TemplateControllerTest extends MockMvcTest {
                     invalidSourceCodes,
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    validRequest.tags());
+                    validRequest.tags(),
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createRequestWithNoSourceCodes() {
@@ -157,7 +164,8 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(),
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    validRequest.tags());
+                    validRequest.tags(),
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createRequestWithNullCategoryId() {
@@ -168,7 +176,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     null,
-                    validRequest.tags());
+                    validRequest.tags(),
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createTemplateRequestWithNullTags() {
@@ -179,7 +188,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    null);
+                    null,
+                    validRequest.visibility());
         }
 
         private static CreateTemplateRequest createRequestWithLongTag() {
@@ -190,7 +200,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    List.of("a".repeat(31)));
+                    List.of("a".repeat(31)),
+                    validRequest.visibility());
         }
 
         @ParameterizedTest
@@ -200,7 +211,8 @@ class TemplateControllerTest extends MockMvcTest {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title", "description",
                     List.of(new CreateSourceCodeRequest("title", "content", firstIndex),
                             new CreateSourceCodeRequest("title", "content", secondIndex)), 1, 1L,
-                    List.of("tag1", "tag2"));
+                    List.of("tag1", "tag2"),
+                    validRequest.visibility());
 
             mvc.perform(post("/templates")
                             .contentType(MediaType.APPLICATION_JSON)

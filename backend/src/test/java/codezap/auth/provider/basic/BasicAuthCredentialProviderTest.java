@@ -43,7 +43,8 @@ class BasicAuthCredentialProviderTest {
 
     @Nested
     @DisplayName("인증 정보로부터 회원 추출")
-    class extractMember {
+    class ExtractMember {
+
         @Test
         @DisplayName("회원 추출 성공")
         void extractMember() {
@@ -74,7 +75,7 @@ class BasicAuthCredentialProviderTest {
 
             assertThatThrownBy(() -> basicAuthCredentialProvider.extractMember(wrongCredential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    .hasMessage("비밀번호가 일치하지 않습니다.");
         }
     }
 }

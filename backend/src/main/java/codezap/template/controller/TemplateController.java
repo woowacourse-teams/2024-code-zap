@@ -44,23 +44,26 @@ public class TemplateController implements SpringDocTemplateController {
 
     @GetMapping
     public ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
+            @AuthenticationPrinciple(required = false) Member member,
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        FindAllTemplatesResponse response = templateApplicationService.findAllBy(
-                memberId,
-                keyword,
-                categoryId,
-                tagIds,
-                pageable);
-        return ResponseEntity.ok(response);
+        if (member == null) {
+            return ResponseEntity.ok(
+                    templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable)
+            );
+        }
+        return ResponseEntity.ok(
+                templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable, member)
+        );
     }
 
+    @Deprecated
     @GetMapping("/login")
-    public ResponseEntity<FindAllTemplatesResponse> getTemplatesWithMember(
+    public ResponseEntity<FindAllTemplatesResponse> findAllTemplatesWithMember(
             @AuthenticationPrinciple Member member,
             @RequestParam(required = false) Long memberId,
             @RequestParam(required = false) String keyword,
@@ -68,26 +71,27 @@ public class TemplateController implements SpringDocTemplateController {
             @RequestParam(required = false) List<Long> tagIds,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(templateApplicationService.findAllByWithMember(
-                memberId,
-                keyword,
-                categoryId,
-                tagIds,
-                pageable,
-                member));
+        return findAllTemplates(member, memberId, keyword, categoryId, tagIds, pageable);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> findTemplateById(@PathVariable Long id) {
-        return ResponseEntity.ok(templateApplicationService.findById(id));
+    public ResponseEntity<FindTemplateResponse> findTemplateById(
+            @AuthenticationPrinciple(required = false) Member member,
+            @PathVariable Long id
+    ) {
+        if (member == null) {
+            return ResponseEntity.ok(templateApplicationService.findById(id));
+        }
+        return ResponseEntity.ok(templateApplicationService.findById(id, member));
     }
 
+    @Deprecated
     @GetMapping("/{id}/login")
-    public ResponseEntity<FindTemplateResponse> getTemplateByIdWithMember(
+    public ResponseEntity<FindTemplateResponse> findTemplateByIdWithMember(
             @AuthenticationPrinciple Member member,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(templateApplicationService.findByIdWithMember(id, member));
+        return findTemplateById(member, id);
     }
 
     @PostMapping("/{id}")

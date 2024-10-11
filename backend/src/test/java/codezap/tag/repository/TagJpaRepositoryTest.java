@@ -23,7 +23,8 @@ class TagJpaRepositoryTest {
 
     @Nested
     @DisplayName("id로 태그 조회")
-    class fetchById {
+    class FetchById {
+
         @Test
         @DisplayName("id로 태그 조회 성공 : id로 태그를 알아낼 수 있다.")
         void fetchByIdSuccess() {
@@ -47,7 +48,8 @@ class TagJpaRepositoryTest {
 
     @Nested
     @DisplayName("태그명으로 태그 조회(fetch)")
-    class fetchByName {
+    class FetchByName {
+
         @Test
         @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 조회할 수 있다.")
         void fetchByNameSuccess() {
@@ -84,7 +86,8 @@ class TagJpaRepositoryTest {
 
     @Nested
     @DisplayName("태그명으로 태그 조회(find)")
-    class findByName {
+    class FindByName {
+
         @Test
         @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 알아낼 수 있다.")
         void findByNameSuccess() {

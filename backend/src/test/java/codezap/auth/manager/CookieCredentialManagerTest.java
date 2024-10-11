@@ -22,7 +22,6 @@ class CookieCredentialManagerTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
-
     private CookieCredentialManager cookieCredentialManager;
 
     @BeforeEach
@@ -34,7 +33,7 @@ class CookieCredentialManagerTest {
 
     @Nested
     @DisplayName("인증 정보 반환")
-    class getCredential {
+    class GetCredential {
 
         @Test
         @DisplayName("인증 정보 반환 성공")

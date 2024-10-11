@@ -32,7 +32,11 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
     ) {
+        AuthenticationPrinciple parameterAnnotation = parameter.getParameterAnnotation(AuthenticationPrinciple.class);
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        if (!parameterAnnotation.required() && !credentialManager.hasCredential(request)) {
+            return null;
+        }
         String credential = credentialManager.getCredential(request);
         return credentialProvider.extractMember(credential);
     }

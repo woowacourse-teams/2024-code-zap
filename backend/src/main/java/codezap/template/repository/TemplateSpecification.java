@@ -17,6 +17,7 @@ import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 
 public class TemplateSpecification implements Specification<Template> {
+
     private final Long memberId;
     private final String keyword;
     private final Long categoryId;

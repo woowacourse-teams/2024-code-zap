@@ -290,7 +290,6 @@ class TemplateSearchServiceTest {
         }
     }
 
-
     @Nested
     class FindAllPagination {
 
