@@ -24,6 +24,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String PROPERTY_ERROR_CODE = "errorCode";
     private static final String PROPERTY_TIMESTAMP = "timestamp";
+    private static final String DEFAULT_DETAIL_MASSAGE = "디테일 값이 존재하지 않습니다.";
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
@@ -63,17 +64,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> createResponseEntity(
             @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request
     ) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(statusCode);
-        if (body instanceof Exception) {
-            problemDetail.setDetail(((Exception) body).getMessage());
+        if (body instanceof ProblemDetail) {
+            return ResponseEntity.status(statusCode)
+                    .body(setProperties((ProblemDetail) body, ErrorCode.SPRING_GLOBAL_EXCEPTION.getCode()));
         }
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(statusCode, DEFAULT_DETAIL_MASSAGE);
         return ResponseEntity.status(statusCode)
                 .body(setProperties(problemDetail, ErrorCode.SPRING_GLOBAL_EXCEPTION.getCode()));
     }
 
     public static ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
         problemDetail.setProperty(PROPERTY_ERROR_CODE, code);
-        problemDetail.setProperty(PROPERTY_TIMESTAMP, LocalDateTime.now());
+        problemDetail.setProperty(PROPERTY_TIMESTAMP, LocalDateTime.now().toString());
 
         return problemDetail;
     }
