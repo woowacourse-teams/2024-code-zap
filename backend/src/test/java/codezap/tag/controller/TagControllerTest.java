@@ -3,7 +3,6 @@ package codezap.tag.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,8 +32,8 @@ class TagControllerTest extends MockMvcTest {
         when(tagService.findAllByMemberId(any())).thenReturn(findAllTagsResponse);
 
         // when & then
-        mvc.perform(get("/tags?memberId=1"))
-                .andDo(print())
+        mvc.perform(get("/tags")
+                        .param("memberId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tags.size()").value(2));
     }
