@@ -15,9 +15,9 @@
             <pattern>[%boldRed(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%boldRed(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n</pattern>
         </encoder>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_FILE_PATH}/%d{yyyy-MM-dd}/error/error%i.log</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
+            <totalSizeCap>5GB</totalSizeCap>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 
