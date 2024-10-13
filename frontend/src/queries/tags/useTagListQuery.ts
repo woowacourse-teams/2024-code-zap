@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { QUERY_KEY, getTagList } from '@/api';
 import { useAuth } from '@/hooks/authentication/useAuth';
@@ -9,9 +9,8 @@ export const useTagListQuery = () => {
     memberInfo: { memberId },
   } = useAuth();
 
-  return useQuery<TagListResponse, Error>({
+  return useSuspenseQuery<TagListResponse, Error>({
     queryKey: [QUERY_KEY.TAG_LIST],
     queryFn: () => getTagList({ memberId }),
-    throwOnError: true,
   });
 };
