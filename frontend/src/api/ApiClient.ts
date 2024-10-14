@@ -23,53 +23,47 @@ class ApiClient {
       Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
     }
 
-    const response = await fetch(url.toString(), {
-      method: 'GET',
-      headers: this.headers,
-      credentials: this.credentials,
-    });
-
-    return this.handleResponse<T>(response);
+    return this.customFetch<T>('GET', url.toString());
   }
 
   async post<T, U>(endpoint: string, body: U): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'POST',
-      headers: this.headers,
-      credentials: this.credentials,
-      body: JSON.stringify(body),
-    });
-
-    return this.handleResponse<T>(response);
+    return this.customFetch<T>('POST', `${this.baseUrl}${endpoint}`, body);
   }
 
   async put<T, U>(endpoint: string, body: U): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'PUT',
-      headers: this.headers,
-      credentials: this.credentials,
-      body: JSON.stringify(body),
-    });
-
-    return this.handleResponse<T>(response);
+    return this.customFetch<T>('PUT', `${this.baseUrl}${endpoint}`, body);
   }
 
   async delete<T>(endpoint: string): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${endpoint}`, {
-      method: 'DELETE',
-      headers: this.headers,
-      credentials: this.credentials,
-    });
-
-    return this.handleResponse<T>(response);
+    return this.customFetch<T>('DELETE', `${this.baseUrl}${endpoint}`);
   }
 
-  private async handleResponse<T>(response: Response): Promise<T> {
-    // 응답 본문이 없으므로 null 반환 또는 빈 객체 반환
-    if (response.headers.get('content-length') === '0') {
-      return null as T;
-    }
+  private async customFetch<T>(method: string, url: string, body?: unknown) {
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: this.headers,
+        credentials: this.credentials,
+        body: body ? JSON.stringify(body) : null,
+      });
 
+      await this.handleError(response);
+
+      if (response.headers.get('content-length') === '0') {
+        return null as T;
+      }
+
+      return response.json() as Promise<T>;
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      } else {
+        throw new ApiError('일시적인 네트워크 장애입니다.', 500, '2000', 'fetch 네트워크 에러입니다.');
+      }
+    }
+  }
+
+  private async handleError(response: Response) {
     if (!response.ok) {
       const errorBody = await response.json();
 
@@ -81,8 +75,6 @@ class ApiClient {
       // TODO: 에러코드에 따른 메시지 반환 함수 만들기
       throw new ApiError('에러메시지입니다.', response.status, errorBody.errorCode, errorBody.detail);
     }
-
-    return response.json() as Promise<T>;
   }
 }
 
