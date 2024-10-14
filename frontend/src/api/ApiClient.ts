@@ -65,6 +65,11 @@ class ApiClient {
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {
+    // 응답 본문이 없으므로 null 반환 또는 빈 객체 반환
+    if (response.headers.get('content-length') === '0') {
+      return null as T;
+    }
+
     if (!response.ok) {
       const errorBody = await response.json();
 
