@@ -92,14 +92,21 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   );
 };
 
-const Logo = () => (
-  <Link to={END_POINTS.HOME}>
-    <Flex align='center' gap='0.5rem'>
-      <CodeZapLogo aria-label='로고 버튼' />
-      <Heading.XSmall color={theme.color.light.secondary_800}>코드잽</Heading.XSmall>
-    </Flex>
-  </Link>
-);
+const Logo = () => {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
+
+  return (
+    <Link to={END_POINTS.HOME}>
+      <Flex align='center' gap='0.5rem'>
+        <CodeZapLogo aria-label='로고 버튼' />
+        <Heading.XSmall color={isLandingPage ? theme.color.light.primary_500 : theme.color.light.secondary_800}>
+          코드잽
+        </Heading.XSmall>
+      </Flex>
+    </Link>
+  );
+};
 
 const NavOption = ({ route, name }: { route: string; name: string }) => {
   const location = useLocation();
