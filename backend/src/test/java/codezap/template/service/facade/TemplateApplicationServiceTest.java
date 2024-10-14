@@ -191,7 +191,7 @@ class TemplateApplicationServiceTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 조회 성공")
+        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 조회 성공 (private 템플릿 제외)")
         void findAllBy(
                 Long memberId,
                 String keyword,
@@ -202,23 +202,35 @@ class TemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content", 1));
-            thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
+
+            var template = templateRepository.save(new Template(member, "title1", "description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+
+            var privateTemplate = templateRepository.save(
+                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
+            var privateSourceCode = sourceCodeRepository.save(
+                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
 
             // when & then
-            assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
-                    .doesNotThrowAnyException();
+            assertAll(
+                    () -> assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
+                            .doesNotThrowAnyException(),
+                    () -> assertThat(sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable).templates())
+                            .extracting("id").doesNotContain(privateTemplate.getId())
+            );
+
         }
 
         static Stream<Arguments> findAllBy() {
             return Stream.of(
-                    Arguments.of(null, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(1L, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, 1L, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, null, Pageable.ofSize(2))
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(1L, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, 1L, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5))
             );
         }
 
@@ -276,13 +288,67 @@ class TemplateApplicationServiceTest {
 
         static Stream<Arguments> findAllBy() {
             return Stream.of(
-                    Arguments.of(null, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(1L, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, 1L, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, null, Pageable.ofSize(2))
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(1L, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, 1L, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5))
             );
+        }
+
+        @Test
+        @DisplayName("검색어, 카테고리ID, 태그ID로 템플릿 검색 성공: 사용자ID와 로그인 정보가 같을 경우 (private 템플릿 포함)")
+        void findAllByWithMemberIdSameLoginMember() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            Pageable pageable = Pageable.ofSize(5);
+
+            var template = templateRepository.save(new Template(member, "title1", "description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+
+            var privateTemplate = templateRepository.save(
+                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
+            var privateSourceCode = sourceCodeRepository.save(
+                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+
+            // when
+            var actual = sut.findAllBy(1L, null, null, null, pageable, member);
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactlyInAnyOrder(template.getId(), privateTemplate.getId());
+        }
+
+        @Test
+        @DisplayName("검색어, 카테고리ID, 태그ID로 템플릿 검색 성공: 사용자ID와 로그인 정보가 다를 경우 (private 템플릿 제외)")
+        void findAllByWithMemberIdDifferentLoginMember() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var loginMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            Pageable pageable = Pageable.ofSize(5);
+
+            var template = templateRepository.save(new Template(member, "title1", "description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+
+            var privateTemplate = templateRepository.save(
+                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
+            var privateSourceCode = sourceCodeRepository.save(
+                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+
+            // when
+            var actual = sut.findAllBy(1L, null, null, null, pageable, loginMember);
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactly(template.getId())
+                    .doesNotContain(privateTemplate.getId());
         }
 
         @Test
@@ -429,7 +495,7 @@ class TemplateApplicationServiceTest {
             sut.deleteByMemberAndIds(member, deleteIds);
 
             // then
-            Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null);
+            Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null, null);
             var actualTemplatesLeft = templateRepository.findAll(spec, PageRequest.of(0, 10));
             var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));

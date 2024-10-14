@@ -39,6 +39,9 @@ VALUES (2, 2, '2024-09-27 08:43:08.787995', 'Description 1', 1, '2024-09-27 08:4
 INSERT INTO template (id, category_id, created_at, description, member_id, modified_at, title, visibility)
 VALUES (3, 1, '2024-09-27 08:43:08.790778', 'Description 1', 2, '2024-09-27 08:43:08.790778', 'Template 1', 'PUBLIC');
 
+INSERT INTO template (id, category_id, created_at, description, member_id, modified_at, title, visibility)
+VALUES (4, 2, '2024-09-27 08:43:08.790780', 'Description 1', 2, '2024-09-27 08:43:08.790780', 'Template 1', 'PRIVATE');
+
 -- Source Code 삽입
 INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
 VALUES (1, 'content1', '2024-09-27 08:43:08.793152', 'filename1', '2024-09-27 08:43:08.793152', 1, 1);
@@ -49,6 +52,9 @@ VALUES (2, 'content2', '2024-09-27 08:43:08.797349', 'filename2', '2024-09-27 08
 INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
 VALUES (3, 'content1', '2024-09-27 08:43:08.810641', 'filename1', '2024-09-27 08:43:08.810641', 1, 3);
 
+INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
+VALUES (4, 'content1', '2024-09-27 08:43:08.790783', 'filename1', '2024-09-27 08:43:08.790783', 1, 4);
+
 -- Thumbnail 삽입
 INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
 VALUES (1, '2024-09-27 08:43:08.812840', '2024-09-27 08:43:08.812840', 1, 1);
@@ -58,6 +64,9 @@ VALUES (2, '2024-09-27 08:43:08.815866', '2024-09-27 08:43:08.815866', 2, 2);
 
 INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
 VALUES (3, '2024-09-27 08:43:08.817850', '2024-09-27 08:43:08.817850', 3, 3);
+
+INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
+VALUES (4, '2024-09-27 08:43:08.817850', '2024-09-27 08:43:08.817850', 4, 4);
 
 -- Template_Tag 삽입
 INSERT INTO template_tag (created_at, modified_at, tag_id, template_id)

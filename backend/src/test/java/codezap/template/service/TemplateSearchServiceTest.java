@@ -32,6 +32,7 @@ import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Visibility;
 import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.ThumbnailRepository;
@@ -67,7 +68,7 @@ class TemplateSearchServiceTest {
     private Member member1, member2;
     private Category category1, category2;
     private Tag tag1, tag2;
-    private Template template1, template2, template3;
+    private Template template1, template2, template3, template4;
 
     @Nested
     class FindAll {
@@ -87,6 +88,7 @@ class TemplateSearchServiceTest {
             template1 = templateRepository.fetchById(1L);
             template2 = templateRepository.fetchById(2L);
             template3 = templateRepository.fetchById(3L);
+            template4 = templateRepository.fetchById(4L);
         }
 
         @Test
@@ -96,9 +98,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -115,9 +118,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = null;
 
-            assertThatThrownBy(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
+            assertThatThrownBy(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("Pageable을 필수로 작성해야 합니다.");
         }
@@ -129,16 +133,17 @@ class TemplateSearchServiceTest {
             String keyword = "Template";
             Long categoryId = null;
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent())
                             .allMatch(template ->
                                     template.getTitle().contains(keyword) || template.getDescription()
                                             .contains(keyword)),
-                    () -> assertThat(actual.getContent()).hasSize(3)
+                    () -> assertThat(actual.getContent()).hasSize(4)
             );
         }
 
@@ -149,9 +154,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = category1.getId();
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -167,9 +173,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent())
@@ -187,9 +194,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = List.of(tag2.getId());
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(
@@ -201,15 +209,34 @@ class TemplateSearchServiceTest {
         }
 
         @Test
+        @DisplayName("검색 기능: 공개 범위로 템플릿 목록 조회 성공")
+        void findAllSuccessByVisibility() {
+            Long memberId = null;
+            String keyword = null;
+            Long categoryId = null;
+            List<Long> tagIds = null;
+            Visibility visibility = Visibility.PRIVATE;
+            Pageable pageable = PageRequest.of(0, 10);
+
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+
+            assertAll(
+                    () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(4L)),
+                    () -> assertThat(actual.getContent()).hasSize(1)
+            );
+        }
+
+        @Test
         @DisplayName("검색 기능: 회원 ID와 키워드로 템플릿 목록 조회 성공")
         void findAllSuccessByMemberIdAndKeyword() {
             Long memberId = member1.getId();
             String keyword = "Template";
             Long categoryId = null;
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -227,9 +254,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = category1.getId();
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(1),
@@ -245,9 +273,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(2),
@@ -259,15 +288,35 @@ class TemplateSearchServiceTest {
         }
 
         @Test
+        @DisplayName("검색 기능: 회원 ID와 공개 범위으로 템플릿 목록 조회 성공")
+        void findAllSuccessByMemberIdAndVisibility() {
+            Long memberId = member2.getId();
+            String keyword = null;
+            Long categoryId = null;
+            List<Long> tagIds = null;
+            Visibility visibility = Visibility.PUBLIC;
+            Pageable pageable = PageRequest.of(0, 10);
+
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+
+            assertAll(
+                    () -> assertThat(actual.getContent()).hasSize(1),
+                    () -> assertThat(actual.getContent())
+                            .containsExactlyInAnyOrder(templateRepository.fetchById(3L))
+            );
+        }
+
+        @Test
         @DisplayName("검색 기능: 모든 검색 기준으로 템플릿 목록 조회 성공")
         void findAllSuccessWithAllCriteria() {
             Long memberId = member1.getId();
             String keyword = "Template";
             Long categoryId = category1.getId();
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
+            Visibility visibility = Visibility.PUBLIC;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(1),
@@ -282,9 +331,10 @@ class TemplateSearchServiceTest {
             String keyword = "NonExistentKeyword";
             Long categoryId = null;
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertThat(actual.getContent()).isEmpty();
         }
@@ -310,9 +360,10 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = null;
+            Visibility visibility = null;
             Pageable pageable = PageRequest.of(1, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
                     () -> assertThat(actual.getContent()).hasSize(5),
@@ -326,7 +377,7 @@ class TemplateSearchServiceTest {
         saveTwoMembers();
         saveTwoCategory();
         saveTwoTags();
-        saveThreeTemplates();
+        saveFourTemplates();
         saveTemplateTags();
     }
 
@@ -345,18 +396,21 @@ class TemplateSearchServiceTest {
         tag2 = tagRepository.save(new Tag("Tag 2"));
     }
 
-    private void saveThreeTemplates() {
+    private void saveFourTemplates() {
         template1 = templateRepository.save(TemplateFixture.get(member1, category1));
         template2 = templateRepository.save(TemplateFixture.get(member1, category2));
         template3 = templateRepository.save(TemplateFixture.get(member2, category1));
+        template4 = templateRepository.save(TemplateFixture.get(member2, category2, Visibility.PRIVATE));
 
         SourceCode sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
         SourceCode sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
         SourceCode sourceCode3 = sourceCodeRepository.save(new SourceCode(template3, "filename1", "content1", 1));
+        SourceCode sourceCode4 = sourceCodeRepository.save(new SourceCode(template4, "filename1", "content1", 1));
 
         thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
         thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
         thumbnailRepository.save(new Thumbnail(template3, sourceCode3));
+        thumbnailRepository.save(new Thumbnail(template4, sourceCode4));
     }
 
     private void saveTemplateTags() {
