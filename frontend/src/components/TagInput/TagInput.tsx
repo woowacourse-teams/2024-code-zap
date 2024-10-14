@@ -2,7 +2,7 @@ import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction } from 'react';
 
 import { Flex, Input, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks';
+import { useCustomContext, useScreenReader } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
 import { theme } from '@/style/theme';
 
@@ -16,6 +16,7 @@ interface Props {
 
 const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
+  const { updateScreenReaderMessage } = useScreenReader();
 
   const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Enter') {
@@ -26,15 +27,12 @@ const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   };
 
   const addTag = () => {
-    if (value === '') {
-      return;
-    }
-
-    if (tags.includes(value)) {
+    if (value === '' || tags.includes(value)) {
       return;
     }
 
     setTags((prev) => [...prev, value]);
+    updateScreenReaderMessage(`${value} 태그 등록`);
   };
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {

@@ -32,3 +32,6 @@ export { default as LoadingFallback } from './LoadingFallback/LoadingFallback';
 
 // Error UI
 export { default as TempError } from './Error/TempError';
+
+// ScreenReader
+export { default as ScreenReaderOnly } from './ScreenReaderOnly/ScreenReaderOnly';
