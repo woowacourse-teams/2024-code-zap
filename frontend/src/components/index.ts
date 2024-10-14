@@ -25,6 +25,8 @@ export { default as CategoryDropdown } from './CategoryDropdown/CategoryDropdown
 export { default as CategoryGuide } from './CategoryGuide/CategoryGuide';
 export { default as NewCategoryInput } from './NewCategoryInput/NewCategoryInput';
 export { default as NoSearchResults } from './NoSearchResults/NoSearchResults';
+export { default as Textarea } from './Textarea/Textarea';
+export { default as ContactUs } from './ContactUs/ContactUs';
 
 // Skeleton UI
 export { default as LoadingBall } from './LoadingBall/LoadingBall';
