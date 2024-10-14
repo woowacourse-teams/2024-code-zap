@@ -10,3 +10,5 @@ export { default as CategoryListSectionSkeleton } from './CategoryListSection/Ca
 export { default as TagListSection } from './TagListSection/TagListSection';
 export { default as TagListSectionSkeleton } from './TagListSection/TagListSectionSkeleton';
 export { default as TemplateListSection } from './TemplateListSection/TemplateListSection';
+export { default as TemplateListSectionLoading } from './TemplateListSection/TemplateListSectionLoading';
+export { default as TemplateDeleteSelection } from './TemplateDeleteSelection/TemplateDeleteSelection';
