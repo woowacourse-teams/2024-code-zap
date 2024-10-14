@@ -24,11 +24,14 @@ export const MainContainer = styled.div`
 
 export const ButtonGroup = styled.div`
   display: flex;
-  gap: 0.5rem;
-  justify-content: flex-end;
-
+  justify-content: space-between;
   width: 100%;
-  padding: 0.5rem 0 0 0;
+  padding-top: 0.5rem;
+`;
+
+export const ToggleAndSaveButton = styled.div`
+  display: flex;
+  gap: 0.5rem;
 `;
 
 export const UnderlineInputWrapper = styled.div`

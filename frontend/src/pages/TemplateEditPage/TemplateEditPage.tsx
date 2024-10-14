@@ -1,12 +1,16 @@
-import { PlusIcon } from '@/assets/images';
-import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput } from '@/components';
+import { useState } from 'react';
+
+import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
+import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput, Toggle } from '@/components';
 import { useInput, useSelectList } from '@/hooks';
 import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateEditMutation } from '@/queries/templates';
+import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
+import { TemplateVisibility } from '@/types/template';
 
 import * as S from './TemplateEditPage.style';
 
@@ -33,6 +37,8 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
   const initTags = template.tags.map((tag) => tag.name);
   const tagProps = useTag(initTags);
+
+  const [visibility, setVisibility] = useState<TemplateVisibility>(DEFAULT_TEMPLATE_VISIBILITY);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
@@ -82,6 +88,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       deleteSourceCodeIds,
       categoryId: categoryProps.currentValue.id,
       tags: tagProps.tags,
+      visibility,
     };
 
     try {
@@ -141,9 +148,26 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
           <Button size='medium' variant='outlined' onClick={handleCancelButton}>
             취소
           </Button>
-          <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={sourceCodes.length === 0}>
-            저장
-          </Button>
+          <S.ToggleAndSaveButton>
+            <Toggle
+              options={[...TEMPLATE_VISIBILITY]}
+              optionAdornments={[
+                <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={18} />,
+                <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={18} />,
+              ]}
+              selectedOption={visibility}
+              switchOption={setVisibility}
+            />
+
+            <Button
+              size='medium'
+              variant='contained'
+              onClick={handleSaveButtonClick}
+              disabled={sourceCodes.length === 0}
+            >
+              저장
+            </Button>
+          </S.ToggleAndSaveButton>
         </S.ButtonGroup>
 
         {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}

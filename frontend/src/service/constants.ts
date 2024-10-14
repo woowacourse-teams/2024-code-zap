@@ -1,0 +1,2 @@
+export const TEMPLATE_VISIBILITY = ['PRIVATE', 'PUBLIC'] as const;
+export const DEFAULT_TEMPLATE_VISIBILITY = 'PUBLIC';

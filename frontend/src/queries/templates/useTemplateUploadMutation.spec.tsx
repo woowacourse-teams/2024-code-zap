@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import type { TemplateUploadRequest } from '@/types';
+
 import { useTemplateUploadMutation } from './useTemplateUploadMutation';
 
 const queryClient = new QueryClient();
@@ -27,6 +28,7 @@ describe('useTemplateUploadMutation', () => {
           ordinal: 1,
         },
       ],
+      visibility: 'PUBLIC',
     };
 
     await result.current.mutateAsync(body);
