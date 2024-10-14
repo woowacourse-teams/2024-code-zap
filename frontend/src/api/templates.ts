@@ -117,7 +117,7 @@ export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
 };
 
 export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void | CustomError> =>
-  await apiClient.post('/templates', JSON.stringify(newTemplate));
+  await apiClient.post('/templates', newTemplate);
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({
