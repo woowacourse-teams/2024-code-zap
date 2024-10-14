@@ -74,6 +74,7 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
             id={tag.id}
             name={tag.name}
             isFocused={true}
+            variant='edit'
             onClick={() => handleButtonClick(tag.id)}
           />
         ))}

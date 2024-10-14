@@ -1,4 +1,4 @@
-import { XCircleIcon } from '@/assets/images';
+import { XSignIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { TAG_COLORS, INPUT_TAG_COLOR } from '@/style/tagColors';
 import { theme } from '@/style/theme';
@@ -28,7 +28,7 @@ const TagButton = ({ id, name, isFocused = false, disabled = false, variant = 'd
       onClick={() => onClick && onClick()}
     >
       <Text.Medium color={theme.color.light.secondary_800}>{name}</Text.Medium>
-      {variant === 'edit' && <XCircleIcon width={16} height={16} aria-label='태그 삭제' />}
+      {variant === 'edit' && <XSignIcon width={10} height={10} aria-label='태그 삭제' />}
     </S.TagButtonWrapper>
   );
 };
