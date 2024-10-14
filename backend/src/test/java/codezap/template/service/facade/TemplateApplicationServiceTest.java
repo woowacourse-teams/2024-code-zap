@@ -418,7 +418,9 @@ class TemplateApplicationServiceTest {
                     updateRequest,
                     deleteIds,
                     category.getId(),
-                    List.of());
+                    List.of(),
+                    Visibility.PUBLIC
+            );
 
             // when
             sut.update(member, template.getId(), request);
@@ -453,7 +455,8 @@ class TemplateApplicationServiceTest {
                     List.of(updateSourceCodeRequest),
                     Collections.emptyList(),
                     othersCategory.getId(),
-                    Collections.emptyList());
+                    Collections.emptyList(),
+                    Visibility.PUBLIC);
 
             // when & then
             assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))

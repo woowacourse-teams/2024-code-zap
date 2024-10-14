@@ -230,7 +230,8 @@ class TemplateServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
 
             sut.update(member, template.getId(), updateTemplateRequest, category);
@@ -253,7 +254,8 @@ class TemplateServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
             var nonExistentID = 100L;
 
@@ -276,7 +278,8 @@ class TemplateServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
 
             assertThatThrownBy(() -> sut.update(otherMember, template.getId(), updateTemplateRequest, category))

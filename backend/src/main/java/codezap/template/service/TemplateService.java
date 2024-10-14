@@ -67,7 +67,12 @@ public class TemplateService {
     ) {
         Template template = templateRepository.fetchById(templateId);
         template.validateAuthorization(member);
-        template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
+        template.updateTemplate(
+                updateTemplateRequest.title(),
+                updateTemplateRequest.description(),
+                category,
+                updateTemplateRequest.visibility()
+        );
         return template;
     }
 
