@@ -96,7 +96,7 @@ const Logo = () => (
   <Link to={END_POINTS.HOME}>
     <Flex align='center' gap='0.5rem'>
       <CodeZapLogo aria-label='로고 버튼' />
-      <Heading.XSmall color={theme.color.light.primary_500}>코드잽</Heading.XSmall>
+      <Heading.XSmall color={theme.color.light.secondary_800}>코드잽</Heading.XSmall>
     </Flex>
   </Link>
 );
