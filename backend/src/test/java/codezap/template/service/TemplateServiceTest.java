@@ -84,7 +84,8 @@ class TemplateServiceTest {
                     () -> assertThat(actual.getTitle()).isEqualTo(templateRequest.title()),
                     () -> assertThat(actual.getMember()).isEqualTo(member),
                     () -> assertThat(actual.getCategory()).isEqualTo(category),
-                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description())
+                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description()),
+                    () -> assertThat(actual.getVisibility()).isEqualTo(templateRequest.visibility())
             );
 
         }
