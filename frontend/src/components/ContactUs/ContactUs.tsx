@@ -18,7 +18,7 @@ const ContactUs = () => {
 
   const { failAlert, successAlert } = useToast();
 
-  const isValidContents = message.trim().length;
+  const isValidContents = message.trim().length !== 0;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
