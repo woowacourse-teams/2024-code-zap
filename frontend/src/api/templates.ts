@@ -10,6 +10,7 @@ import type {
 } from '@/types';
 import { SortingOption } from '@/types';
 
+import { apiClient } from './ApiClient';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -96,17 +97,11 @@ export const getTemplateExplore = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
+  const response = await apiClient.get<TemplateListResponse>(
+    `/templates${memberId ? '/login' : ''}?${queryParams.toString()}`,
+  );
 
-  const response = await customFetch<TemplateListResponse>({
-    url,
-  });
-
-  if ('templates' in response) {
-    return response;
-  }
-
-  throw new Error(response.detail);
+  return response;
 };
 
 export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
@@ -122,11 +117,7 @@ export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
 };
 
 export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void | CustomError> =>
-  await customFetch({
-    method: 'POST',
-    url: `${TEMPLATE_API_URL}`,
-    body: JSON.stringify(newTemplate),
-  });
+  await apiClient.post('/templates', JSON.stringify(newTemplate));
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({
