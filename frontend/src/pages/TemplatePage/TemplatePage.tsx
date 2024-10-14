@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { useParams } from 'react-router-dom';
 
-import { ClockIcon, PersonIcon } from '@/assets/images';
+import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import {
   Button,
   Flex,
@@ -45,6 +45,8 @@ const TemplatePage = () => {
     handleSelectOption,
     handleDelete,
   } = useTemplate(Number(id));
+
+  const isPrivate = template?.visibility === 'PRIVATE';
 
   const { likesCount, isLiked, toggleLike } = useLike({
     templateId: Number(id),
@@ -107,9 +109,16 @@ const TemplatePage = () => {
                 </Flex>
 
                 <Flex align='center' justify='space-between' gap='1rem'>
-                  <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
-                    {template.title}
-                  </Heading.Large>
+                  <Flex gap='0.5rem'>
+                    {isPrivate && (
+                      <S.PrivateWrapper>
+                        <PrivateIcon width={14} color={theme.color.light.black} />
+                      </S.PrivateWrapper>
+                    )}
+                    <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
+                      {template.title}
+                    </Heading.Large>
+                  </Flex>
                   <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
                 </Flex>
 

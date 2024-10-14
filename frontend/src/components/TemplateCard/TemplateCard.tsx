@@ -1,4 +1,4 @@
-import { ClockIcon, PersonIcon } from '@/assets/images';
+import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
 import { theme } from '@/style/theme';
@@ -12,8 +12,9 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const { title, description, thumbnail, tags, modifiedAt, member } = template;
+  const { title, description, thumbnail, tags, modifiedAt, member, visibility } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
+  const isPrivate = visibility === 'PRIVATE';
 
   const blockMovingToDetailPage = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -34,6 +35,7 @@ const TemplateCard = ({ template }: Props) => {
       <Flex width='100%' direction='column' gap='1rem'>
         <Flex width='100%' justify='space-between' gap='1rem'>
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
+            {isPrivate && <PrivateIcon width={14} color={theme.color.light.secondary_800} />}
             <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
               <PersonIcon width={14} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
