@@ -1,22 +1,21 @@
-import { useState, useCallback, Suspense } from 'react';
+import { Suspense } from 'react';
 
-import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
+import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
-import { Flex, Input, PagingButtons, Dropdown, Button, ScrollTopButton, LoadingBall } from '@/components';
-import { useDebounce, useToggle, useDropdown, useInput } from '@/hooks';
+import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
 import { useAuth } from '@/hooks/authentication';
-import { useTemplateDeleteMutation, useTemplateListQuery } from '@/queries/templates';
-import { scroll } from '@/utils';
 
 import {
   TopBanner,
-  ConfirmDeleteModal,
   CategoryListSection,
   CategoryListSectionSkeleton,
   TagListSection,
   TagListSectionSkeleton,
   TemplateListSection,
+  TemplateDeleteSelection,
+  TemplateListSectionLoading,
 } from './components';
+import { useSelectAndDeleteTemplateList, useShowTemplateList } from './hooks';
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {
@@ -24,66 +23,33 @@ const MyTemplatePage = () => {
     memberInfo: { name },
   } = useAuth();
 
-  const [isEditMode, toggleIsEditMode] = useToggle();
-  const [selectedList, setSelectedList] = useState<number[]>([]);
-  const [isDeleteModalOpen, toggleDeleteModal] = useToggle();
-
-  const [keyword, handleKeywordChange] = useInput('');
-  const debouncedKeyword = useDebounce(keyword, 300);
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
-  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
-
-  const [page, setPage] = useState<number>(1);
-
-  const { data: templateData, isFetching: isTemplateListLoading } = useTemplateListQuery({
-    keyword: debouncedKeyword,
-    categoryId: selectedCategoryId,
-    tagIds: selectedTagIds,
-    sort: sortingOption.key,
+  const {
+    templateList,
+    isTemplateListFetching,
+    isTemplateListLoading,
+    totalPages,
+    dropdownProps,
+    keyword,
     page,
-  });
+    sortingOption,
+    selectedTagIds,
+    handleKeywordChange,
+    handleCategoryMenuClick,
+    handleTagMenuClick,
+    handleSearchSubmit,
+    handlePageChange,
+  } = useShowTemplateList();
 
-  const templateList = templateData?.templates || [];
-  const totalPages = templateData?.totalPages || 0;
-
-  const { mutateAsync: deleteTemplates } = useTemplateDeleteMutation(selectedList);
-
-  const handleCategoryMenuClick = useCallback((selectedCategoryId: number) => {
-    setSelectedCategoryId(selectedCategoryId);
-    setPage(1);
-  }, []);
-
-  const handleTagMenuClick = useCallback((selectedTagIds: number[]) => {
-    setSelectedTagIds(selectedTagIds);
-  }, []);
-
-  const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      setPage(1);
-    }
-  };
-
-  const handlePageChange = (page: number) => {
-    scroll.top();
-    setPage(page);
-  };
-
-  const handleAllSelected = () => {
-    if (selectedList.length === templateList.length) {
-      setSelectedList([]);
-
-      return;
-    }
-
-    setSelectedList(templateList.map((template) => template.id));
-  };
-
-  const handleDelete = () => {
-    deleteTemplates();
-    toggleIsEditMode();
-    toggleDeleteModal();
-  };
+  const {
+    isEditMode,
+    toggleIsEditMode,
+    isDeleteModalOpen,
+    toggleDeleteModal,
+    selectedList,
+    setSelectedList,
+    handleAllSelected,
+    handleDelete,
+  } = useSelectAndDeleteTemplateList({ templateList });
 
   return (
     <S.MyTemplatePageContainer>
@@ -94,29 +60,16 @@ const MyTemplatePage = () => {
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
-          <Flex justify='flex-end'>
-            {isEditMode ? (
-              <Flex gap='0.25rem'>
-                <Button variant='text' size='small' onClick={toggleIsEditMode}>
-                  돌아가기
-                </Button>
-                <Button variant='outlined' size='small' onClick={handleAllSelected}>
-                  {selectedList.length === templateList.length ? '전체 해제' : '전체 선택'}
-                </Button>
-                <Button
-                  variant={selectedList.length ? 'contained' : 'text'}
-                  size='small'
-                  onClick={selectedList.length ? toggleDeleteModal : toggleIsEditMode}
-                >
-                  {selectedList.length ? '삭제하기' : '취소하기'}
-                </Button>
-              </Flex>
-            ) : (
-              <Button variant='text' size='small' onClick={toggleIsEditMode}>
-                선택 삭제
-              </Button>
-            )}
-          </Flex>
+          <TemplateDeleteSelection
+            isEditMode={isEditMode}
+            isDeleteModalOpen={isDeleteModalOpen}
+            selectedListLength={selectedList.length}
+            templateListLength={templateList.length}
+            toggleIsEditMode={toggleIsEditMode}
+            toggleDeleteModal={toggleDeleteModal}
+            handleAllSelected={handleAllSelected}
+            handleDelete={handleDelete}
+          />
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
@@ -140,17 +93,19 @@ const MyTemplatePage = () => {
           <Suspense fallback={<TagListSectionSkeleton />}>
             <TagListSection selectedTagIds={selectedTagIds} handleTagMenuClick={handleTagMenuClick} />
           </Suspense>
-          {isTemplateListLoading ? (
-            <LoadingBall />
-          ) : (
-            <TemplateListSection
-              templateList={templateList}
-              isSearching={debouncedKeyword !== ''}
-              isEditMode={isEditMode}
-              selectedList={selectedList}
-              setSelectedList={setSelectedList}
-            />
-          )}
+
+          <S.TemplateListSectionWrapper>
+            {isTemplateListFetching && <TemplateListSectionLoading />}
+            {!isTemplateListLoading && (
+              <TemplateListSection
+                templateList={templateList}
+                isSearching={keyword !== ''}
+                isEditMode={isEditMode}
+                selectedList={selectedList}
+                setSelectedList={setSelectedList}
+              />
+            )}
+          </S.TemplateListSectionWrapper>
 
           {templateList.length !== 0 && (
             <Flex justify='center' gap='0.5rem' margin='1rem 0'>
@@ -158,14 +113,6 @@ const MyTemplatePage = () => {
             </Flex>
           )}
         </Flex>
-
-        {isDeleteModalOpen && (
-          <ConfirmDeleteModal
-            isDeleteModalOpen={isDeleteModalOpen}
-            toggleDeleteModal={toggleDeleteModal}
-            handleDelete={handleDelete}
-          />
-        )}
       </S.MainContainer>
 
       <ScrollTopButton />

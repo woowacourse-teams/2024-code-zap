@@ -44,3 +44,8 @@ export const NewTemplateButton = styled.button`
     background-color: ${theme.color.light.primary_50};
   }
 `;
+
+export const TemplateListSectionWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
