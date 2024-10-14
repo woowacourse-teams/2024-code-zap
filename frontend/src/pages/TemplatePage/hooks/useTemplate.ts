@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import { useSelectList } from '@/hooks';
+import { useCustomNavigate, useSelectList } from '@/hooks';
 import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 
 export const useTemplate = (id: number) => {
-  const navigate = useNavigate();
+  const navigate = useCustomNavigate();
 
   const { data: template } = useTemplateQuery(Number(id));
   const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
