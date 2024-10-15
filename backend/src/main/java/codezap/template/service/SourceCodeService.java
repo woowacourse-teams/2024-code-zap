@@ -100,6 +100,6 @@ public class SourceCodeService {
 
     @Transactional
     public void deleteAllByTemplateIds(List<Long> templateIds) {
-        sourceCodeRepository.deleteByTemplateIds(templateIds);
+        sourceCodeRepository.deleteAllByTemplateIds(templateIds);
     }
 }

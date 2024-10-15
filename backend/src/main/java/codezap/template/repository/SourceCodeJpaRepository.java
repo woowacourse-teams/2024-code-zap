@@ -37,5 +37,5 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM SourceCode s WHERE s.template.id in :templateIds")
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(List<Long> templateIds);
 }
