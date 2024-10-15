@@ -53,5 +53,5 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")
-    void deleteByTemplateIds(@Param("templateIds") List<Long> templateIds);
+    void deleteAllByTemplateIds(@Param("templateIds") List<Long> templateIds);
 }
