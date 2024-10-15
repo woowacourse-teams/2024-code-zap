@@ -5,6 +5,7 @@ plugins {
 }
 
 group = 'woowacourse'
+version = '0.0.1-' + new Date().format('yyyy-MM-dd-HHmm')
 
 java {
     toolchain {

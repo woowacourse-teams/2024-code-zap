@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: code-zap
-          path: backend/build/libs/code-zap.jar
+          path: backend/build/libs/*.jar
 
   deploy_develop:
     needs: build
@@ -61,4 +61,4 @@ jobs:
 
       - name: 배포
         working-directory: ${{ secrets.PROJECT_PATH }}
-        run: ${{ vars.RUN_SERVER }}
+        run: ${{ secrets.RUN_SERVER }}
