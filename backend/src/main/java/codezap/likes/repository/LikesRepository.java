@@ -16,5 +16,5 @@ public interface LikesRepository {
 
     void deleteByMemberAndTemplate(Member member, Template template);
 
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(List<Long> templateIds);
 }
