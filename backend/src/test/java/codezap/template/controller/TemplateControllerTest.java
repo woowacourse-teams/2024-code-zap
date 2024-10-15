@@ -232,30 +232,58 @@ class TemplateControllerTest extends MockMvcTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
         }
+
     }
+    @Nested
+    class FindAllTemplatesSuccess {
 
-    @Test
-    @DisplayName("템플릿 검색 성공")
-    void FindAllTemplatesSuccess() throws Exception {
-        // given
-        Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
-        FindAllTemplateItemResponse findAllTemplateItemResponse = FindAllTemplateItemResponse.of(
-                template,
-                List.of(new Tag(1L, "tag1")),
-                SourceCodeFixture.get(template, 1),
-                true);
+        @Test
+        @DisplayName("템플릿 검색 성공")
+        void findAllTemplatesSuccess() throws Exception {
+            // given
+            FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
 
-        when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
-                new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+            when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
+                    new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
 
-        // when & then
-        mvc.perform(get("/templates")
-                        .param("memberId", "1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.templates.size()").value(1))
-                .andExpect(jsonPath("$.totalPages").value(1))
-                .andExpect(jsonPath("$.totalElements").value(1));
+            // when & then
+            mvc.perform(get("/templates")
+                            .param("memberId", "1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.templates.size()").value(1))
+                    .andExpect(jsonPath("$.totalPages").value(1))
+                    .andExpect(jsonPath("$.totalElements").value(1));
+        }
+
+        @Test
+        @DisplayName("템플릿 검색 성공: 로그인한 사용자가 없는 경우도 조회 가능")
+        void findAllTemplatesSuccessWhenNoMember() throws Exception {
+            // given
+            FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
+
+            when(credentialManager.getCredential(any())).thenReturn(null);
+            when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
+                    new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+
+            // when & then
+            mvc.perform(get("/templates")
+                            .param("memberId", "1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.templates.size()").value(1))
+                    .andExpect(jsonPath("$.totalPages").value(1))
+                    .andExpect(jsonPath("$.totalElements").value(1));
+        }
+
+        private FindAllTemplateItemResponse getFindAllTemplateItemResponse() {
+            Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
+            return FindAllTemplateItemResponse.of(
+                    template,
+                    List.of(new Tag(1L, "tag1")),
+                    SourceCodeFixture.get(template, 1),
+                    true);
+        }
     }
 
     @Nested
@@ -273,6 +301,27 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(new Tag(1L, "tag1")),
                     true);
 
+            when(templateApplicationService.findById(1L)).thenReturn(findTemplateResponse);
+
+            // when & then
+            mvc.perform(get("/templates/1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.category.id").value(1));
+        }
+
+        @Test
+        @DisplayName("템플릿 단건 조회 성공: 로그인한 사용자가 없는 경우도 조회 가능")
+        void findOneTemplateSuccessWithNoMember() throws Exception {
+            // given
+            Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
+            FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(
+                    template,
+                    List.of(SourceCodeFixture.get(template, 1)),
+                    List.of(new Tag(1L, "tag1")),
+                    true);
+
+            when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findById(1L)).thenReturn(findTemplateResponse);
 
             // when & then
