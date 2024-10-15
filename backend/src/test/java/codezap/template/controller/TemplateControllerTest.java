@@ -305,7 +305,8 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value(expectedError));
+                    .andExpect(jsonPath("$.detail").value(expectedError))
+                    .andExpect(jsonPath("$.errorCode").value("1101"));
         }
 
         private static Stream<Arguments> invalidUpdateTemplateData() {
