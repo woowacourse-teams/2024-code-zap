@@ -74,7 +74,7 @@ class TemplateControllerTest extends MockMvcTest {
 
         @ParameterizedTest
         @MethodSource("invalidTemplateData")
-        @DisplayName("템플릿 생성 실패: 문자열 잘못된 형식인 경우 400 빈환")
+        @DisplayName("템플릿 생성 실패: 문자열 잘못된 형식인 경우 400 반환")
         void createTemplateFailWithInvalidInput(CreateTemplateRequest request, String expectedError) throws Exception {
             mvc.perform(post("/templates")
                             .contentType(MediaType.APPLICATION_JSON)
@@ -298,7 +298,7 @@ class TemplateControllerTest extends MockMvcTest {
 
         @ParameterizedTest
         @MethodSource("invalidUpdateTemplateData")
-        @DisplayName("템플릿 수정 실패: 문자열 잘못된 형식인 경우 400 빈환")
+        @DisplayName("템플릿 수정 실패: 문자열 잘못된 형식인 경우 400 반환")
         void updateTemplateFailWithInvalidInput(UpdateTemplateRequest request, String expectedError) throws Exception {
 
             mvc.perform(post("/templates/1")
