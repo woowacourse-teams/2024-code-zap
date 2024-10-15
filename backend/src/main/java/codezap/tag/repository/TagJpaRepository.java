@@ -24,8 +24,9 @@ public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
     }
 
-    Optional<Tag> findByName(String name);
+    @Query(value = "SELECT * FROM tag WHERE tag.name = BINARY :name", nativeQuery = true)
+    Optional<Tag> findByName(@Param("name") String name);
 
-    @Query("select t.name from Tag t where t.name in :names")
-    List<String> findNameByNamesIn(@Param("names") List<String> names);
+    @Query(value = "SELECT * FROM tag WHERE tag.name COLLATE utf8mb4_bin IN :names", nativeQuery = true)
+    List<Tag> findAllByNames(@Param("names") List<String> names);
 }

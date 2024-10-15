@@ -421,18 +421,39 @@ class SourceCodeServiceTest extends ServiceTest {
     class DeleteByIds {
 
         @Test
-        @DisplayName("성공")
-        void deleteByIds() {
+        @DisplayName("성공: 템플릿 한 개의 소스코드 삭제")
+        void deleteById() {
             // given
             Template template = createSavedTemplate();
             sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
 
             // when
-            sourceCodeService.deleteByIds(List.of(template.getId()));
+            sourceCodeService.deleteByTemplateIds(List.of(template.getId()));
 
             // then
             assertThat(sourceCodeRepository.findAllByTemplate(template)).isEmpty();
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿 두 개의 소스코드 삭제")
+        void deleteByIds() {
+            // given
+            Template template1 = createSavedTemplate();
+            sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
+            sourceCodeRepository.save(SourceCodeFixture.get(template1, 2));
+            Template template2 = createSavedTemplate();
+            sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
+            sourceCodeRepository.save(SourceCodeFixture.get(template2, 2));
+
+            // when
+            sourceCodeService.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
+
+            // then
+            assertAll(
+                    () -> assertThat(sourceCodeRepository.findAllByTemplate(template1)).isEmpty(),
+                    () -> assertThat(sourceCodeRepository.findAllByTemplate(template2)).isEmpty()
+            );
         }
 
         @Test
@@ -440,7 +461,7 @@ class SourceCodeServiceTest extends ServiceTest {
         void deleteByIds_WhenIdNotExist() {
             Template template = createSavedTemplate();
 
-            sourceCodeService.deleteByIds(List.of(template.getId()));
+            sourceCodeService.deleteByTemplateIds(List.of(template.getId()));
 
             assertThat(sourceCodeRepository.findAllByTemplate(template)).isEmpty();
         }

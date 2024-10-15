@@ -32,7 +32,8 @@ class MemberJpaRepositoryTest {
 
     @Nested
     @DisplayName("id로 Member 조회")
-    class fetchById {
+    class FetchById {
+
         @Test
         @DisplayName("성공 : id로 Member 조회 가능")
         void fetchByIdSuccess() {
@@ -56,7 +57,8 @@ class MemberJpaRepositoryTest {
 
     @Nested
     @DisplayName("닉네임(아이디)로 Member 조회")
-    class fetchByName {
+    class FetchByName {
+
         @Test
         @DisplayName("성공 : 닉네임으로 Member 조회 가능")
         void fetchByNameSuccess() {
@@ -80,7 +82,8 @@ class MemberJpaRepositoryTest {
 
     @Nested
     @DisplayName("템플릿 id로 Member 조회")
-    class fetchByTemplateId {
+    class FetchByTemplateId {
+
         @Test
         @DisplayName("성공 : 템플릿 id로 Member 조회 가능")
         void fetchByTemplateIdSuccess() {
@@ -106,7 +109,8 @@ class MemberJpaRepositoryTest {
 
     @Nested
     @DisplayName("닉네임(아이디) 존재 여부")
-    class existsByName {
+    class ExistsByName {
+
         @Test
         @DisplayName("성공 : 해당 닉네임이 존재하면 true를 반환")
         void existsByNameReturnTrue() {

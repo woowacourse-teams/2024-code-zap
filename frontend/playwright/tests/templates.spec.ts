@@ -35,7 +35,7 @@ test('템플릿 제목, 설명, 파일명, 소스코드, 태그를 입력하고 
       tag: testTitle,
     });
 
-    const templateCard = page.getByRole('link', { name: `testTitle` }).first();
+    const templateCard = page.getByRole('link', { name: testTitle }).first();
 
     await expect(templateCard).toBeVisible();
   } catch (error) {
@@ -50,7 +50,7 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
 }) => {
   await page.goto('/my-templates');
   // 템플릿 목록
-  await waitForSuccess({ page, apiUrl: '/templates' });
+  await waitForSuccess({ page, apiUrl: '/templates/login?keyword' });
 
   const templateCard = page.getByRole('link', { name: '상세조회테스트' });
 

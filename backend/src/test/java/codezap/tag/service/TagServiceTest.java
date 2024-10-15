@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -150,6 +149,88 @@ class TagServiceTest extends ServiceTest {
     }
 
     @Nested
+    @DisplayName("템플릿 Id로 태그 조회")
+    class FindAllByTemplateId {
+
+        @Test
+        @DisplayName("성공: 템플릿 Id에 해당하는 태그 목록 반환")
+        void findAllByTemplate() {
+            // given
+            Template template = createSavedTemplate();
+            Tag tag1 = tagRepository.save(new Tag("tag1"));
+            Tag tag2 = tagRepository.save(new Tag("tag2"));
+            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
+            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
+
+            // when & then
+            assertThat(sut.findAllByTemplateId(template.getId()))
+                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿에 해당하는 태그가 없는 경우 빈 목록 반환")
+        void findAllByTemplate_WhenNotExistTemplateTag() {
+            // given
+            Template template = createSavedTemplate();
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThat(sut.findAllByTemplateId(template.getId())).isEmpty();
+        }
+
+        @Test
+        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
+        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
+        void findAllByTemplate_WhenNotExistTemplate() {
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template unSavedTemplate = TemplateFixture.get(member, category);
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThatThrownBy(() -> sut.findAllByTemplateId(unSavedTemplate.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
+        }
+    }
+
+    @Nested
+    @DisplayName("템플릿 목록으로 템플릿 태그 조회")
+    class GetAllTemplateTagsByTemplates {
+
+        @Test
+        @DisplayName("성공: 템플릿 목록에 하나라도 해당하는 템플릿 태그 목록 반환")
+        void getAllTemplateTagsByTemplates() {
+            // given
+            Template template = createSavedTemplate();
+            Template secondTemplate = createSecondTemplate();
+            Tag tag1 = tagRepository.save(new Tag("tag1"));
+            Tag tag2 = tagRepository.save(new Tag("tag2"));
+            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
+            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(secondTemplate, tag2));
+
+            // when & then
+            assertThat(sut.getAllTemplateTagsByTemplates(List.of(template, secondTemplate)))
+                    .containsExactly(templateTag1, templateTag2);
+        }
+
+        @Test
+        @DisplayName("성공: 템플릿 목록에 전혀 해당하는 템플릿 태그 빈 목록 반환")
+        void getAllTemplateTagsByTemplates_WhenNotExistTemplateTag() {
+            // given
+            Template template = createSavedTemplate();
+            tagRepository.save(new Tag("tag1"));
+            tagRepository.save(new Tag("tag2"));
+
+            // when & then
+            assertThat(sut.getAllTemplateTagsByTemplates(List.of(template))).isEmpty();
+        }
+    }
+
+    @Nested
     @DisplayName("사용자 ID로 모든 태그 조회")
     class FindAllByMemberId {
 
@@ -186,28 +267,32 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 템플릿 목록에 해당하는 모든 태그 반환")
-        void findAllByTemplates() {
+        @DisplayName("성공: 해당 멤버의 모든 태그 반환")
+        void findAllByMemberIdSuccess() {
             // given
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
-            Template template1 = createSavedTemplate();
-            templateTagRepository.save(new TemplateTag(template1, tag1));
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(new Category("자바", member));
 
-            Template template2 = createSecondTemplate();
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
-            // when & then
-            List<Tag> actual = new ArrayList<>();
-            actual.addAll(sut.findAllByTemplate(template1));
-            actual.addAll(sut.findAllByTemplate(template2));
-            assertThat(actual).isEqualTo(List.of(tag1, tag2));
+            // when
+            FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
+
+            // then
+            assertThat(actual).isEqualTo(new FindAllTagsResponse(
+                    List.of(FindTagResponse.from(tag1), FindTagResponse.from(tag2)))
+            );
         }
 
         @Test
         @DisplayName("성공: 템플릿들이 중복된 태그를 가지는 경우 중복 제거 후 반환")
-        void findAllByTemplates_WhenDuplicatedTags() {
+        void findAllByMemberId_WhenDuplicatedTags() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
 
@@ -321,7 +406,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template, tag2));
 
             // when
-            sut.deleteByIds(List.of(template.getId()));
+            sut.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertAll(
@@ -338,7 +423,7 @@ class TagServiceTest extends ServiceTest {
             Template template = createSavedTemplate();
 
             // when
-            sut.deleteByIds(List.of(template.getId()));
+            sut.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();

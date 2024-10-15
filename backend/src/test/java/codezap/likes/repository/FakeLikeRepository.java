@@ -1,5 +1,7 @@
 package codezap.likes.repository;
 
+import java.util.List;
+
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
@@ -23,5 +25,9 @@ public class FakeLikeRepository implements LikesRepository {
     @Override
     public void deleteByMemberAndTemplate(Member member, Template template) {
 
+    }
+
+    @Override
+    public void deleteByTemplateIds(List<Long> templateIds) {
     }
 }

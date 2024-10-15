@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
@@ -12,6 +14,7 @@ import codezap.template.domain.Template;
 
 @SuppressWarnings("unused")
 public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaRepository<SourceCode, Long> {
+
     default SourceCode fetchById(Long id) {
         return findById(id).orElseThrow(
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
@@ -31,5 +34,7 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
 
     int countByTemplate(Template template);
 
-    void deleteByTemplateId(Long id);
+    @Modifying(clearAutomatically = true)
+    @Query("DELETE FROM SourceCode s WHERE s.template.id in :templateIds")
+    void deleteByTemplateIds(List<Long> templateIds);
 }

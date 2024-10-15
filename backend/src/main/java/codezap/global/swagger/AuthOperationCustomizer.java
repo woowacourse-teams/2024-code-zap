@@ -27,6 +27,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
  */
 @Component
 public class AuthOperationCustomizer implements OperationCustomizer {
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -90,7 +91,7 @@ public class AuthOperationCustomizer implements OperationCustomizer {
      */
     private void hideAuthInfoParameter(Operation operation) {
         if (operation.getParameters() != null) {
-            operation.getParameters().removeIf(parameter -> parameter.getName().equals("memberDto"));
+            operation.getParameters().removeIf(parameter -> parameter.getName().equals("member"));
         }
     }
 }

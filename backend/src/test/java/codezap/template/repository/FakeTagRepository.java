@@ -31,17 +31,6 @@ public class FakeTagRepository implements TagRepository {
     }
 
     @Override
-    public List<String> findNameByNamesIn(List<String> names) {
-        return names.stream()
-                .filter(this::existsByName)
-                .toList();
-    }
-
-    private boolean existsByName(String name) {
-        return tags.stream().anyMatch(tag -> Objects.equals(tag.getName(), name));
-    }
-
-    @Override
     public Tag fetchByName(String name) {
         return findByName(name).orElseThrow(
                 () -> new CodeZapException(HttpStatus.NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
@@ -50,6 +39,11 @@ public class FakeTagRepository implements TagRepository {
     @Override
     public Optional<Tag> findByName(String name) {
         return tags.stream().filter(tag -> Objects.equals(tag.getName(), name)).findFirst();
+    }
+
+    @Override
+    public List<Tag> findAllByNames(List<String> names) {
+        return List.of();
     }
 
     @Override
