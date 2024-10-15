@@ -35,7 +35,7 @@ jobs:
 
   deploy_develop:
     needs: build
-    environment: develop
+    environment: Develop
     runs-on: develop
     steps:
       - name: 체크아웃
@@ -59,4 +59,4 @@ jobs:
 
       - name: 배포
         working-directory: ${{ secrets.PROJECT_PATH }}
-        run: ${{ secrets.RUN_SERVER }}
+        run: ${{ vars.RUN_SERVER }}
