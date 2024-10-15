@@ -97,7 +97,9 @@ class TemplateControllerTest extends MockMvcTest {
                     Arguments.of(createRequestWithNoSourceCodes(), "소스 코드 최소 1개 입력해야 합니다."),
                     Arguments.of(createRequestWithNullCategoryId(), "카테고리 ID가 null 입니다."),
                     Arguments.of(createTemplateRequestWithNullTags(), "태그 목록이 null 입니다."),
-                    Arguments.of(createRequestWithLongTag(), "태그 명은 최대 30자까지 입력 가능합니다."));
+                    Arguments.of(createRequestWithLongTag(), "태그 명은 최대 30자까지 입력 가능합니다."),
+                    Arguments.of(createRequestWithNullVisibility(), "템플릿 공개 여부가 null 입니다.")
+                    );
         }
 
         private static CreateTemplateRequest createRequestWithInvalidTitle(String invalidTitle) {
@@ -200,6 +202,18 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.categoryId(),
                     List.of("a".repeat(31)),
                     validRequest.visibility());
+        }
+
+        private static CreateTemplateRequest createRequestWithNullVisibility() {
+            CreateTemplateRequest validRequest = createValidTemplateRequest();
+            return new CreateTemplateRequest(
+                    validRequest.title(),
+                    validRequest.description(),
+                    validRequest.sourceCodes(),
+                    validRequest.thumbnailOrdinal(),
+                    validRequest.categoryId(),
+                    validRequest.tags(),
+                    null);
         }
 
         @ParameterizedTest
