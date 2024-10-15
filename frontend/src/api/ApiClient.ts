@@ -47,7 +47,9 @@ class ApiClient {
         body: body ? JSON.stringify(body) : null,
       });
 
-      await this.handleError(response);
+      if (!response.ok) {
+        await this.handleError(response);
+      }
 
       if (response.headers.get('content-length') === '0') {
         return null as T;
@@ -64,17 +66,15 @@ class ApiClient {
   }
 
   private async handleError(response: Response) {
-    if (!response.ok) {
-      const errorBody = await response.json();
+    const errorBody = await response.json();
 
-      if (response.status === HTTP_STATUS.UNAUTHORIZED) {
-        localStorage.removeItem('name');
-        localStorage.removeItem('memberId');
-      }
-
-      // TODO: 에러코드에 따른 메시지 반환 함수 만들기
-      throw new ApiError('에러메시지입니다.', response.status, errorBody.errorCode, errorBody.detail);
+    if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      localStorage.removeItem('name');
+      localStorage.removeItem('memberId');
     }
+
+    // TODO: 에러코드에 따른 메시지 반환 함수 만들기
+    throw new ApiError('에러메시지입니다.', response.status, errorBody.errorCode, errorBody.detail);
   }
 }
 
