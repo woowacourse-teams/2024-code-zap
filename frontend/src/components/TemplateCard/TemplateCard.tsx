@@ -71,7 +71,7 @@ const TemplateCard = ({ template }: Props) => {
         </S.EllipsisTextWrapper>
       </Flex>
 
-      <SourceCodeViewer mode='thumbnailView' content={thumbnail.content} />
+      <SourceCodeViewer mode='thumbnailView' filename={thumbnail.filename} content={thumbnail.content} />
 
       <Flex justify='space-between' onClick={blockMovingToDetailPage}>
         <S.TagListContainer>
