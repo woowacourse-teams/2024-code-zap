@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
@@ -37,5 +38,5 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM SourceCode s WHERE s.template.id in :templateIds")
-    void deleteAllByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(@Param("templateIds") List<Long> templateIds);
 }

@@ -20,7 +20,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             JOIN TemplateTag tt ON t.id = tt.id.tagId
             WHERE tt.template = :template
             """)
-    List<Tag> findAllTagsByTemplate(Template template);
+    List<Tag> findAllTagsByTemplate(@Param("template") Template template);
 
     @Query("""
             SELECT tt, t
@@ -28,7 +28,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             JOIN FETCH tt.tag t
             WHERE tt.id.templateId = :templateId
             """)
-    List<TemplateTag> findAllByTemplateId(Long templateId);
+    List<TemplateTag> findAllByTemplateId(@Param("templateId") Long templateId);
 
     @Query("""
             SELECT tt, t
@@ -36,7 +36,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
             JOIN FETCH tt.tag t
             WHERE tt.id.templateId in :templateIds
             """)
-    List<TemplateTag> findAllByTemplateIdsIn(List<Long> templateIds);
+    List<TemplateTag> findAllByTemplateIdsIn(@Param("templateIds") List<Long> templateIds);
 
     @Query("""
             SELECT DISTINCT t
@@ -49,7 +49,7 @@ public interface TemplateTagJpaRepository extends TemplateTagRepository, JpaRepo
                 )
             )
             """)
-    List<Tag> findAllTagDistinctByMemberId(Long memberId);
+    List<Tag> findAllTagDistinctByMemberId(@Param("memberId") Long memberId);
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM TemplateTag t WHERE t.template.id in :templateIds")

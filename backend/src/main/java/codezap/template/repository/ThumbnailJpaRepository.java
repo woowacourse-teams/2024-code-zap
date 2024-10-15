@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
@@ -28,12 +29,12 @@ public interface ThumbnailJpaRepository extends
             join fetch t.sourceCode sc
             WHERE t.template = :template
             """)
-    Optional<Thumbnail> findByTemplate(Template template);
+    Optional<Thumbnail> findByTemplate(@Param("template") Template template);
 
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Thumbnail t WHERE t.template.id in :templateIds")
-    void deleteAllByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(@Param("templateIds") List<Long> templateIds);
 
     @Query("""
             SELECT t, sc
@@ -41,7 +42,7 @@ public interface ThumbnailJpaRepository extends
             join fetch t.sourceCode sc
             WHERE t.template.id IN :templateIds
             """)
-    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
+    List<Thumbnail> findAllByTemplateIn(@Param("templateIds") List<Long> templateIds);
 
     void deleteByTemplateId(Long id);
 
