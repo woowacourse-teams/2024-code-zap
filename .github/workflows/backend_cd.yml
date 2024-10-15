@@ -36,7 +36,9 @@ jobs:
   deploy_develop:
     needs: build
     environment: Develop
-    runs-on: develop
+    runs-on:
+      - develop
+      - spring
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
