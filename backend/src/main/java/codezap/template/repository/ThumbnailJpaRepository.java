@@ -33,7 +33,7 @@ public interface ThumbnailJpaRepository extends
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Thumbnail t WHERE t.template.id in :templateIds")
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(List<Long> templateIds);
 
     @Query("""
             SELECT t, sc

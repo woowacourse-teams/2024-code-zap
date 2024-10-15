@@ -41,6 +41,6 @@ public class ThumbnailService {
 
     @Transactional
     public void deleteAllByTemplateIds(List<Long> templateIds) {
-        thumbnailRepository.deleteByTemplateIds(templateIds);
+        thumbnailRepository.deleteAllByTemplateIds(templateIds);
     }
 }
