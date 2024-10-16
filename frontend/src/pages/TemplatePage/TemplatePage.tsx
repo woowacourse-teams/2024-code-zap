@@ -18,6 +18,7 @@ import {
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
+import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { formatRelativeTime } from '@/utils';
 
 import { useTemplate, useLike } from './hooks';
@@ -46,7 +47,7 @@ const TemplatePage = () => {
     handleDelete,
   } = useTemplate(Number(id));
 
-  const isPrivate = template?.visibility === 'PRIVATE';
+  const isPrivate = template?.visibility === VISIBILITY_PRIVATE;
 
   const { likesCount, isLiked, toggleLike } = useLike({
     templateId: Number(id),
@@ -112,7 +113,7 @@ const TemplatePage = () => {
                   <Flex gap='0.5rem'>
                     {isPrivate && (
                       <S.PrivateWrapper>
-                        <PrivateIcon width={14} color={theme.color.light.black} />
+                        <PrivateIcon width={14} />
                       </S.PrivateWrapper>
                     )}
                     <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>

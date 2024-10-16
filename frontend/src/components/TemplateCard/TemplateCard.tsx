@@ -1,6 +1,7 @@
 import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
+import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
@@ -14,7 +15,7 @@ interface Props {
 const TemplateCard = ({ template }: Props) => {
   const { title, description, thumbnail, tags, modifiedAt, member, visibility } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
-  const isPrivate = visibility === 'PRIVATE';
+  const isPrivate = visibility === VISIBILITY_PRIVATE;
 
   const blockMovingToDetailPage = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
