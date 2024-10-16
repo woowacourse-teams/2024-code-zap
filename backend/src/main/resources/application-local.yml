@@ -16,9 +16,6 @@ spring:
   flyway:
     enabled: false
     locations: classpath:db/migration
-    url: ${MYSQL_WRITER_URL}
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
   jpa:
     # open-in-view: false
     hibernate:
