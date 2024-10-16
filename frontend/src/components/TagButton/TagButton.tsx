@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import { XSignIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { TAG_COLORS, INPUT_TAG_COLOR } from '@/style/tagColors';
@@ -19,7 +17,7 @@ interface Props {
 const getTagColor = (id?: number) => (id ? TAG_COLORS[id % TAG_COLORS.length] : INPUT_TAG_COLOR);
 
 const TagButton = ({ id, name, isFocused = false, disabled = false, variant = 'default', onClick }: Props) => {
-  const { background, border } = useMemo(() => getTagColor(id), [id]);
+  const { background, border } = getTagColor(id);
 
   return (
     <S.TagButtonWrapper
