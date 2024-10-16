@@ -93,13 +93,13 @@ public class TemplateApplicationService {
             Member loginMember
     ) {
         Page<Template> templates = templateService.findAllBy(
-                memberId, keyword, categoryId, tagIds, getDefaultVisibility(memberId, loginMember), pageable
+                memberId, keyword, categoryId, tagIds, getVisibilityLevel(memberId, loginMember), pageable
         );
         return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
     @Nullable
-    private Visibility getDefaultVisibility(Long memberId, Member loginMember) {
+    private Visibility getVisibilityLevel(Long memberId, Member loginMember) {
         if (memberId == null || !loginMember.matchId(memberId)) {
             return Visibility.PUBLIC;
         }
