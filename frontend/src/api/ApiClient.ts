@@ -1,6 +1,28 @@
 import { ApiError } from './Error/ApiError';
 import { HTTP_STATUS } from './Error/statusCode';
 
+type HttpMethod =
+  | 'get'
+  | 'GET'
+  | 'delete'
+  | 'DELETE'
+  | 'head'
+  | 'HEAD'
+  | 'options'
+  | 'OPTIONS'
+  | 'post'
+  | 'POST'
+  | 'put'
+  | 'PUT'
+  | 'patch'
+  | 'PATCH'
+  | 'purge'
+  | 'PURGE'
+  | 'link'
+  | 'LINK'
+  | 'unlink'
+  | 'UNLINK';
+
 interface RequestParams {
   [key: string]: string | number | boolean;
 }
@@ -38,7 +60,7 @@ class ApiClient {
     return this.customFetch<T>('DELETE', `${this.baseUrl}${endpoint}`);
   }
 
-  private async customFetch<T>(method: string, url: string, body?: unknown) {
+  private async customFetch<T>(method: HttpMethod, url: string, body?: unknown) {
     try {
       const response = await fetch(url, {
         method,
