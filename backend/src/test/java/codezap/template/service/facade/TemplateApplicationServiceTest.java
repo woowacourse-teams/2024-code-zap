@@ -205,13 +205,8 @@ class TemplateApplicationServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
 
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
-
-            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
 
             // when & then
             assertAll(
@@ -305,13 +300,8 @@ class TemplateApplicationServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             Pageable pageable = Pageable.ofSize(5);
 
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
-
-            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
 
             // when
             var actual = sut.findAllBy(null, null, null, null, pageable, member);
@@ -330,13 +320,8 @@ class TemplateApplicationServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             Pageable pageable = Pageable.ofSize(5);
 
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
-
-            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
 
             // when
             var actual = sut.findAllBy(1L, null, null, null, pageable, member);
@@ -355,13 +340,8 @@ class TemplateApplicationServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             Pageable pageable = Pageable.ofSize(5);
 
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
-
-            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
 
             // when
             var actual = sut.findAllBy(1L, null, null, null, pageable, loginMember);
@@ -410,6 +390,20 @@ class TemplateApplicationServiceTest {
                 thumbnailRepository.save(new Thumbnail(template, sourceCode));
             }
         }
+    }
+
+    private Template savePrivateTemplate(Member member, Category category) {
+        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
+        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+        return privateTemplate;
+    }
+
+    private Template savePublicTemplate(Member member, Category category) {
+        var template = templateRepository.save(TemplateFixture.get(member, category));
+        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+        thumbnailRepository.save(new Thumbnail(template, sourceCode));
+        return template;
     }
 
     @Nested
@@ -533,4 +527,5 @@ class TemplateApplicationServiceTest {
             );
         }
     }
+
 }
