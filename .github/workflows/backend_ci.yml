@@ -23,10 +23,6 @@ jobs:
           mysql database: ${{ secrets.MYSQL_DATABASE }}
           mysql root password: ${{ secrets.MYSQL_PASSWORD }}
       
-      - name: 설정 파일 가져오기
-        working-directory: ./backend/src/main/resources
-        run: echo "${{ secrets.APPLICATION_YAML }}" > application-local.yml
-      
       - name: gradle 캐싱
         uses: gradle/actions/setup-gradle@v4
 
