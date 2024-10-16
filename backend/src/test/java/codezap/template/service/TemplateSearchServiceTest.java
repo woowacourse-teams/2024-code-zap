@@ -68,7 +68,7 @@ class TemplateSearchServiceTest {
     private Member member1, member2;
     private Category category1, category2;
     private Tag tag1, tag2;
-    private Template template1, template2, template3, template4;
+    private List<Template> templates;
 
     @Nested
     class FindAll {
@@ -85,10 +85,12 @@ class TemplateSearchServiceTest {
             tag1 = tagRepository.fetchById(1L);
             tag2 = tagRepository.fetchById(2L);
 
-            template1 = templateRepository.fetchById(1L);
-            template2 = templateRepository.fetchById(2L);
-            template3 = templateRepository.fetchById(3L);
-            template4 = templateRepository.fetchById(4L);
+            var template1 = templateRepository.fetchById(1L);
+            var template2 = templateRepository.fetchById(2L);
+            var template3 = templateRepository.fetchById(3L);
+            var template4 = templateRepository.fetchById(4L);
+
+            templates = List.of(template1, template2, template3, template4);
         }
 
         @Test
@@ -103,11 +105,9 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(2),
-                    () -> assertThat(actual.getContent())
-                            .allMatch(template -> template.getMember().getId().equals(member1.getId()))
-            );
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getMember().getId().equals(member1.getId()))
+                    .toArray(Template[]::new));
         }
 
         @Test
@@ -138,13 +138,10 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent())
-                            .allMatch(template ->
-                                    template.getTitle().contains(keyword) || template.getDescription()
-                                            .contains(keyword)),
-                    () -> assertThat(actual.getContent()).hasSize(4)
-            );
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getTitle().contains(keyword) || template.getDescription()
+                            .contains(keyword))
+                    .toArray(Template[]::new));
         }
 
         @Test
@@ -159,15 +156,13 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(2),
-                    () -> assertThat(actual.getContent())
-                            .allMatch(template -> template.getCategory().getId().equals(category1.getId()))
-            );
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getCategory().getId().equals(category1.getId()))
+                    .toArray(Template[]::new));
         }
 
         @Test
-        @DisplayName("검색 기능: 태그 ID 목록으로 템플릿 목록 조회, 모든 태그를 가진 템플릿만 조회 성공")
+        @DisplayName("검색 기능: 공개 범위로 템플릿 목록 조회 성공")
         void findAllSuccessByTagIds() {
             Long memberId = null;
             String keyword = null;
@@ -215,13 +210,14 @@ class TemplateSearchServiceTest {
             String keyword = null;
             Long categoryId = null;
             List<Long> tagIds = null;
-            Visibility visibility = Visibility.PRIVATE;
+            Visibility visibility = Visibility.PUBLIC;
             Pageable pageable = PageRequest.of(0, 10);
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).hasSize(1)
-                    .containsExactlyInAnyOrder(templateRepository.fetchById(4L));
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getVisibility().equals(visibility))
+                    .toArray(Template[]::new));
         }
 
         @Test
@@ -236,13 +232,10 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(2),
-                    () -> assertThat(actual.getContent())
-                            .allMatch(template -> template.getMember().getId().equals(member1.getId())
-                                    && (template.getTitle().contains(keyword)
-                                    || template.getDescription().contains(keyword)))
-            );
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getMember().getId().equals(member1.getId())
+                            && (template.getTitle().contains(keyword) || template.getDescription().contains(keyword)))
+                    .toArray(Template[]::new));
         }
 
         @Test
@@ -257,15 +250,14 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(1),
-                    () -> assertThat(actual.getContent().get(0).getMember().getId()).isEqualTo(member1.getId()),
-                    () -> assertThat(actual.getContent().get(0).getCategory().getId()).isEqualTo(category1.getId())
-            );
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getMember().getId().equals(member1.getId()) && template.getCategory()
+                            .getId().equals(category1.getId()))
+                    .toArray(Template[]::new));
         }
 
         @Test
-        @DisplayName("검색 기능: 회원 ID와 태그 ID 목록으로 템플릿 목록 조회 성공")
+        @DisplayName("검색 기능: 회원 ID와 공개 범위로 템플릿 목록 조회 성공")
         void findAllSuccessByMemberIdAndTagIds() {
             Long memberId = member1.getId();
             String keyword = null;
@@ -297,11 +289,10 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(1),
-                    () -> assertThat(actual.getContent())
-                            .containsExactlyInAnyOrder(templateRepository.fetchById(3L))
-            );
+            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+                    .filter(template -> template.getMember().getId().equals(member2.getId())
+                            && template.getVisibility().equals(visibility))
+                    .toArray(Template[]::new));
         }
 
         @Test
@@ -376,7 +367,7 @@ class TemplateSearchServiceTest {
         saveTwoCategory();
         saveTwoTags();
         saveFourTemplates();
-        saveTemplateTags();
+        saveTemplateTwoTags();
     }
 
     private void saveTwoMembers() {
@@ -395,10 +386,10 @@ class TemplateSearchServiceTest {
     }
 
     private void saveFourTemplates() {
-        template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-        template2 = templateRepository.save(TemplateFixture.get(member1, category2));
-        template3 = templateRepository.save(TemplateFixture.get(member2, category1));
-        template4 = templateRepository.save(TemplateFixture.getPrivate(member2, category2));
+        var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+        var template2 = templateRepository.save(TemplateFixture.get(member1, category2));
+        var template3 = templateRepository.save(TemplateFixture.get(member2, category1));
+        var template4 = templateRepository.save(TemplateFixture.getPrivate(member2, category2));
 
         SourceCode sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
         SourceCode sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
@@ -411,13 +402,17 @@ class TemplateSearchServiceTest {
         thumbnailRepository.save(new Thumbnail(template4, sourceCode4));
     }
 
-    private void saveTemplateTags() {
+    private void saveTemplateTwoTags() {
+        var template1 = templateRepository.fetchById(1L);
+
         templateTagRepository.save(new TemplateTag(template1, tag1));
         templateTagRepository.save(new TemplateTag(template1, tag2));
 
+        var template2 = templateRepository.fetchById(2L);
         templateTagRepository.save(new TemplateTag(template2, tag1));
         templateTagRepository.save(new TemplateTag(template2, tag2));
 
+        var template3 = templateRepository.fetchById(3L);
         templateTagRepository.save(new TemplateTag(template3, tag2));
     }
 
