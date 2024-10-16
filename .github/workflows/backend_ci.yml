@@ -39,3 +39,6 @@ jobs:
       - name: 테스트 코드 실행
         run: ./gradlew test
         working-directory: ./backend
+
+      - name: 환경변수 주입
+        run: ${{ secrets.APPLICATION_YML }}
