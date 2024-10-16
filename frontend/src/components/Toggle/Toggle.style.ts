@@ -40,7 +40,7 @@ export const ToggleSlider = styled.div<{
   left: 2px;
   transform: ${({ isRight }) => (isRight ? 'translateX(calc(100% - 4px))' : 'translateX(0)')};
 
-  width: calc(50%);
+  width: 50%;
   height: calc(100% - 4px);
 
   background-color: ${({ isRight, optionSliderColor: [leftColor, rightColor] }) =>
