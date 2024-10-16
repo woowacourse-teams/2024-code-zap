@@ -28,7 +28,7 @@ const TemporaryError = ({ error, resetErrorBoundary }: FallbackProps) => {
       <Button
         weight='bold'
         onClick={() => {
-          resetErrorBoundary && resetErrorBoundary();
+          resetErrorBoundary();
         }}
       >
         <Text.Medium color={theme.color.light.white}>재시도</Text.Medium>
