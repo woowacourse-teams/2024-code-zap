@@ -10,7 +10,7 @@ public class TemplateFixture {
         return new Template(member, "Template 1", "Description 1", category);
     }
 
-    public static Template get(Member member, Category category, Visibility visibility) {
-        return new Template(member, "Template 1", "Description 1", category, visibility);
+    public static Template getPrivate(Member member, Category category) {
+        return new Template(member, "Template 1", "Description 1", category, Visibility.PRIVATE);
     }
 }

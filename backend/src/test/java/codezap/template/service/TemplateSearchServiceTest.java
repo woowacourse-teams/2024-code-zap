@@ -400,7 +400,7 @@ class TemplateSearchServiceTest {
         template1 = templateRepository.save(TemplateFixture.get(member1, category1));
         template2 = templateRepository.save(TemplateFixture.get(member1, category2));
         template3 = templateRepository.save(TemplateFixture.get(member2, category1));
-        template4 = templateRepository.save(TemplateFixture.get(member2, category2, Visibility.PRIVATE));
+        template4 = templateRepository.save(TemplateFixture.getPrivate(member2, category2));
 
         SourceCode sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
         SourceCode sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));

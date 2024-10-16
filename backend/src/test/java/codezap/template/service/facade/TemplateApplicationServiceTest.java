@@ -26,7 +26,9 @@ import org.springframework.data.jpa.domain.Specification;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
@@ -93,7 +95,7 @@ class TemplateApplicationServiceTest {
             // given
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(new Category("Members", ownerMember));
+            var category = categoryRepository.save(CategoryFixture.get(ownerMember));
             var request = createTemplateRequest(category);
 
             // when & then
@@ -203,14 +205,12 @@ class TemplateApplicationServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
 
-            var template = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
 
-            var privateTemplate = templateRepository.save(
-                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
-            var privateSourceCode = sourceCodeRepository.save(
-                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
             thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
 
             // when & then
@@ -277,8 +277,8 @@ class TemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content", 1));
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
             // when & then
@@ -305,14 +305,12 @@ class TemplateApplicationServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             Pageable pageable = Pageable.ofSize(5);
 
-            var template = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
 
-            var privateTemplate = templateRepository.save(
-                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
-            var privateSourceCode = sourceCodeRepository.save(
-                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
             thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
 
             // when
@@ -332,14 +330,12 @@ class TemplateApplicationServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             Pageable pageable = Pageable.ofSize(5);
 
-            var template = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
 
-            var privateTemplate = templateRepository.save(
-                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
-            var privateSourceCode = sourceCodeRepository.save(
-                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
             thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
 
             // when
@@ -359,14 +355,12 @@ class TemplateApplicationServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             Pageable pageable = Pageable.ofSize(5);
 
-            var template = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
 
-            var privateTemplate = templateRepository.save(
-                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
-            var privateSourceCode = sourceCodeRepository.save(
-                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
             thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
 
             // when
@@ -428,9 +422,9 @@ class TemplateApplicationServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template, "filename1", "content1", 1));
-            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template, "filename2", "content2", 2));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
             var createRequest = List.of(new CreateSourceCodeRequest("filename3", "content3", 3));
@@ -465,13 +459,13 @@ class TemplateApplicationServiceTest {
         void updateTemplate_WhenNoAuthorization() {
             // given
             Member otherMember = memberRepository.save(MemberFixture.getFirstMember());
-            Category othersCategory = categoryRepository.save(new Category("Members", otherMember));
+            Category othersCategory = categoryRepository.save(CategoryFixture.get(otherMember));
 
             Member member = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(new Category("Members", member));
+            Category category = categoryRepository.save(CategoryFixture.get(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 
-            SourceCode sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
             UpdateSourceCodeRequest updateSourceCodeRequest = updateSourceCodeRequest(sourceCode);
 
@@ -511,11 +505,11 @@ class TemplateApplicationServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var template3 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode3 = sourceCodeRepository.save(new SourceCode(template3, "filename3", "content3", 3));
+            var sourceCode3 = sourceCodeRepository.save(SourceCodeFixture.get(template3, 1));
             likesRepository.save(new Likes(template1, member));
             likesRepository.save(new Likes(template2, member));
 
