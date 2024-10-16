@@ -23,8 +23,8 @@ export class ApiError extends Error {
     super(message);
 
     this.statusCode = statusCode;
-    this.errorCode = errorCode;
-    this.detail = detail;
+    this.errorCode = errorCode || '9999';
+    this.detail = detail || '정의되지 않은 detail입니다.';
     this.name = errorNameMap[statusCode] || 'APIError';
   }
 }
