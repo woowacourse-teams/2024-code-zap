@@ -4,7 +4,7 @@ import { FallbackProps } from 'react-error-boundary';
 import { Button, Flex, Text } from '@/components';
 import { theme } from '@/style/theme';
 
-const TempError = ({ error, resetErrorBoundary }: FallbackProps) => {
+const TemporaryError = ({ error, resetErrorBoundary }: FallbackProps) => {
   if (error.statusCode !== 500) {
     // statusCode가 500이 아니면 에러를 다시 던져 상위 에러 경계로 전파
     throw error;
@@ -37,4 +37,4 @@ const TempError = ({ error, resetErrorBoundary }: FallbackProps) => {
   );
 };
 
-export default TempError;
+export default TemporaryError;

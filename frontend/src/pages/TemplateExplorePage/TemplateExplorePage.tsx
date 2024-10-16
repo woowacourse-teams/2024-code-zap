@@ -13,7 +13,7 @@ import {
   LoadingBall,
   NoSearchResults,
   PagingButtons,
-  TempError,
+  TemporaryError,
   TemplateCard,
 } from '@/components';
 import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
@@ -66,7 +66,7 @@ const TemplateExplorePage = () => {
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary
-            FallbackComponent={(fallbackProps) => <TempError {...fallbackProps} />}
+            FallbackComponent={(fallbackProps) => <TemporaryError {...fallbackProps} />}
             onReset={reset}
             resetKeys={[keyword]}
           >

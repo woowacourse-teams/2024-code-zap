@@ -31,7 +31,7 @@ export { default as LoadingBall } from './LoadingBall/LoadingBall';
 export { default as LoadingFallback } from './LoadingFallback/LoadingFallback';
 
 // Error UI
-export { default as TempError } from './Error/TempError';
+export { default as TemporaryError } from './Error/TemporaryError';
 
 // ScreenReader
 export { default as ScreenReaderOnly } from './ScreenReaderOnly/ScreenReaderOnly';
