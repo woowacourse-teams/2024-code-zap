@@ -95,6 +95,7 @@ class TemplateControllerTest extends MockMvcTest {
                     Arguments.of(createRequestWithInvalidSourceCode("a".repeat(MAX_CONTENT_LENGTH + 1)), "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
                     Arguments.of(createRequestWithInvalidSourceCode("ㄱ".repeat(MAX_CONTENT_LENGTH / 3 + 1)), "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
                     Arguments.of(createRequestWithNoSourceCodes(), "소스 코드 최소 1개 입력해야 합니다."),
+                    Arguments.of(createRequestWithNullThumbnail(), "썸네일 순서가 null 입니다."),
                     Arguments.of(createRequestWithNullCategoryId(), "카테고리 ID가 null 입니다."),
                     Arguments.of(createTemplateRequestWithNullTags(), "태그 목록이 null 입니다."),
                     Arguments.of(createRequestWithLongTag(), "태그 명은 최대 30자까지 입력 가능합니다."),
@@ -176,6 +177,18 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     null,
+                    validRequest.tags(),
+                    validRequest.visibility());
+        }
+
+        private static CreateTemplateRequest createRequestWithNullThumbnail() {
+            CreateTemplateRequest validRequest = createValidTemplateRequest();
+            return new CreateTemplateRequest(
+                    validRequest.title(),
+                    validRequest.description(),
+                    validRequest.sourceCodes(),
+                    null,
+                    validRequest.categoryId(),
                     validRequest.tags(),
                     validRequest.visibility());
         }
