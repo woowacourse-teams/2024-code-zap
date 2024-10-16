@@ -22,14 +22,7 @@ jobs:
           mysql version: ${{ secrets.MYSQL_VERSION }}
           mysql database: ${{ secrets.MYSQL_DATABASE }}
           mysql root password: ${{ secrets.MYSQL_PASSWORD }}
-
-      - name: 환경 변수 등록
-        run: |
-          export MYSQL_WRITER_URL=${{ secrets.MYSQL_WRITER_URL }}
-          export MYSQL_READER_URL=${{ secrets.MYSQL_READER_URL }}
-          export MYSQL_USER=${{ secrets.MYSQL_USER }}
-          export MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
-
+          
       - name: gradle 캐싱
         uses: gradle/actions/setup-gradle@v4
 
@@ -40,5 +33,10 @@ jobs:
           distribution: temurin
 
       - name: 테스트 코드 실행
+        env:
+          MYSQL_WRITER_URL: ${{ secrets.MYSQL_WRITER_URL }}
+          MYSQL_READER_URL: ${{ secrets.MYSQL_READER_URL }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: ./gradlew test
         working-directory: ./backend
