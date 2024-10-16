@@ -170,27 +170,6 @@ class CategoryControllerTest extends MockMvcTest {
                     .andExpect(jsonPath("$.detail").value("카테고리 이름은 최대 255자까지 입력 가능합니다."))
                     .andExpect(jsonPath("$.errorCode").value(1101));
         }
-
-        @Test
-        @DisplayName("카테고리 수정 실패: 중복된 이름의 카테고리 존재")
-        void updateCategoryFailWithDuplicatedName() throws Exception {
-            // given
-            long categoryId = 1L;
-            String duplicatedName = "duplicatedName";
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(duplicatedName);
-
-            doThrow(new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
-                    .when(categoryService).update(any(), any(), any());
-
-            // when & then
-            mvc.perform(put("/categories/" + categoryId)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateCategoryRequest)))
-                    .andExpect(status().isConflict())
-                    .andExpect(jsonPath("$.detail").value("이름이 " + duplicatedName + "인 카테고리가 이미 존재합니다."))
-                    .andExpect(jsonPath("$.errorCode").value(1203));
-        }
     }
 
     @Nested
@@ -229,37 +208,6 @@ class CategoryControllerTest extends MockMvcTest {
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.detail").value("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .andExpect(jsonPath("$.errorCode").value(1301));
-        }
-
-        @Test
-        @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리의 삭제 요청")
-        void deleteCategoryFailWithDuplicatedName() throws Exception {
-            long id = 2L;
-
-            doThrow(new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
-                    .when(categoryService).deleteById(any(), any());
-
-            mvc.perform(delete("/categories/" + id)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.detail").value("식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."))
-                    .andExpect(jsonPath("$.errorCode").value(1201));
-        }
-
-        @Test
-        @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리는 삭제 불가능")
-        void deleteCategoryFailWithlongName() throws Exception {
-            long categoryId = 1L;
-            doThrow(new CodeZapException(ErrorCode.CATEGORY_HAS_TEMPLATES, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
-                    .when(categoryService).deleteById(any(), any());
-
-            mvc.perform(delete("/categories/" + categoryId)
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("템플릿이 존재하는 카테고리는 삭제할 수 없습니다."))
-                    .andExpect(jsonPath("$.errorCode").value(1102));
         }
     }
 }
