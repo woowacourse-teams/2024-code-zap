@@ -138,7 +138,7 @@ class CategoryControllerTest extends MockMvcTest {
         }
 
         @Test
-        @DisplayName("카테고리 수정 실패: 권한 없음")
+        @DisplayName("카테고리 수정 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
             long categoryId = 1L;
@@ -194,7 +194,7 @@ class CategoryControllerTest extends MockMvcTest {
         }
 
         @Test
-        @DisplayName("카테고리 삭제 실패: 권한 없음")
+        @DisplayName("카테고리 삭제 실패: 로그인 되지 않은 경우")
         void deleteCategoryFailWithUnauthorized() throws Exception {
             // given
             long categoryId = 1L;
