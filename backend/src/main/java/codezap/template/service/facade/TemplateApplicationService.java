@@ -100,7 +100,7 @@ public class TemplateApplicationService {
 
     @Nullable
     private Visibility getDefaultVisibility(Long memberId, Member loginMember) {
-        if (memberId == null || !memberId.equals(loginMember.getId())) {
+        if (memberId == null || !loginMember.matchId(memberId)) {
             return Visibility.PUBLIC;
         }
         return null;
