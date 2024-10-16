@@ -476,7 +476,7 @@ class TemplateApplicationServiceTest {
             // when & then
             assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
         private UpdateSourceCodeRequest updateSourceCodeRequest(SourceCode sourceCode) {
