@@ -1,9 +1,10 @@
 import { END_POINTS } from '@/routes';
 import { MemberInfo } from '@/types';
 import { TagListResponse } from '@/types/api';
+
 import { customFetch } from './customFetch';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL ?? '';
 
 export const TAG_API_URL = `${API_URL}${END_POINTS.TAGS}`;
 

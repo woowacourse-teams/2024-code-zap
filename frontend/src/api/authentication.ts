@@ -1,9 +1,11 @@
 import { END_POINTS } from '@/routes';
 import type { LoginRequest, SignupRequest } from '@/types';
 import { MemberInfo } from '@/types';
+
+import { apiClient } from './ApiClient';
 import { customFetch } from './customFetch';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL ?? '';
 
 export const SIGNUP_API_URL = `${API_URL}${END_POINTS.SIGNUP}`;
 export const LOGIN_API_URL = `${API_URL}${END_POINTS.LOGIN}`;
@@ -45,26 +47,7 @@ export const postLogout = async () => {
   return response;
 };
 
-export const getLoginState = async () => {
-  const url = `${LOGIN_STATE_API_URL}`;
-
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
-
-  if (response.status === 401) {
-    throw new Error('로그인을 해주세요.');
-  }
-
-  if (!response.ok) {
-    throw new Error('서버 에러가 발생했습니다.');
-  }
-
-  return {};
-};
+export const getLoginState = async () => apiClient.get(END_POINTS.LOGIN_CHECK);
 
 export const checkName = async (name: string) => {
   const params = new URLSearchParams({ name });
