@@ -82,7 +82,7 @@ class ApiClient {
       if (error instanceof ApiError) {
         throw error;
       } else {
-        throw new ApiError('일시적인 네트워크 장애입니다.', 500, '2000', 'fetch 네트워크 에러입니다.');
+        throw new ApiError('일시적인 네트워크 장애입니다.', 500, 2000, 'fetch 네트워크 에러입니다.');
       }
     }
   }

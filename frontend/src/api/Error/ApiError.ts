@@ -16,14 +16,14 @@ const errorNameMap: Record<number, string> = {
 
 export class ApiError extends Error {
   statusCode: number;
-  errorCode: string;
+  errorCode: number;
   detail: string;
 
-  constructor(message: string, statusCode: number, errorCode: string, detail: string) {
+  constructor(message: string, statusCode: number, errorCode: number, detail: string) {
     super(message);
 
     this.statusCode = statusCode;
-    this.errorCode = errorCode || '9999';
+    this.errorCode = errorCode || 9999;
     this.detail = detail || '정의되지 않은 detail입니다.';
     this.name = errorNameMap[statusCode] || 'APIError';
   }
