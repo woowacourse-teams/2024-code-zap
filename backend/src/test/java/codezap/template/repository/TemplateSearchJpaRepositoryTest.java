@@ -128,12 +128,10 @@ class TemplateSearchJpaRepositoryTest {
     @DisplayName("검색 테스트: 공개 범위로 템플릿 조회 성공")
     void testFindByVisibility() {
         Specification<Template> spec = new TemplateSpecification(null, null, null, null, Visibility.PRIVATE);
-        Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
+        Page<Template> actual = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
-        assertAll(
-                () -> assertThat(result.getContent()).hasSize(1),
-                () -> assertThat(result.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(4L))
-        );
+        assertThat(actual.getContent()).hasSize(1)
+                .containsExactlyInAnyOrder(templateRepository.fetchById(4L));
     }
 
     @Test
@@ -198,12 +196,10 @@ class TemplateSearchJpaRepositoryTest {
         Specification<Template> spec = new TemplateSpecification(
                 member1.getId(), null, null, null, Visibility.PUBLIC
         );
-        Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
+        Page<Template> actual = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
-        assertAll(
-                () -> assertThat(result.getContent()).hasSize(1),
-                () -> assertThat(result.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(3L))
-        );
+        assertThat(actual.getContent()).hasSize(1)
+                .containsExactlyInAnyOrder(templateRepository.fetchById(3L));
     }
 
     @Test

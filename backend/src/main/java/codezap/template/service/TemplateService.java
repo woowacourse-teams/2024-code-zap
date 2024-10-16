@@ -54,8 +54,7 @@ public class TemplateService {
             Pageable pageable
     ) {
         return templateRepository.findAll(
-                new TemplateSpecification(memberId, keyword, categoryId, tagIds, visibility),
-                pageable);
+                new TemplateSpecification(memberId, keyword, categoryId, tagIds, visibility), pageable);
     }
 
     @Transactional

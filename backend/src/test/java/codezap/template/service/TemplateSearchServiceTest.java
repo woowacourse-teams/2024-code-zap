@@ -220,10 +220,8 @@ class TemplateSearchServiceTest {
 
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertAll(
-                    () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(4L)),
-                    () -> assertThat(actual.getContent()).hasSize(1)
-            );
+            assertThat(actual.getContent()).hasSize(1)
+                    .containsExactlyInAnyOrder(templateRepository.fetchById(4L));
         }
 
         @Test
