@@ -298,7 +298,34 @@ class TemplateApplicationServiceTest {
         }
 
         @Test
-        @DisplayName("검색어, 카테고리ID, 태그ID로 템플릿 검색 성공: 사용자ID와 로그인 정보가 같을 경우 (private 템플릿 포함)")
+        @DisplayName("검색 성공: 사용자ID가 없을 경우 (private 템플릿 제외)")
+        void findAllByWithNotMemberId() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            Pageable pageable = Pageable.ofSize(5);
+
+            var template = templateRepository.save(new Template(member, "title1", "description", category));
+            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+
+            var privateTemplate = templateRepository.save(
+                    new Template(member, "title1", "description", category, Visibility.PRIVATE));
+            var privateSourceCode = sourceCodeRepository.save(
+                    new SourceCode(privateTemplate, "filename1", "content", 1));
+            thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+
+            // when
+            var actual = sut.findAllBy(null, null, null, null, pageable, member);
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactly(template.getId())
+                    .doesNotContain(privateTemplate.getId());
+        }
+
+        @Test
+        @DisplayName("검색 성공: 사용자ID와 로그인 정보가 같을 경우 (private 템플릿 포함)")
         void findAllByWithMemberIdSameLoginMember() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -324,7 +351,7 @@ class TemplateApplicationServiceTest {
         }
 
         @Test
-        @DisplayName("검색어, 카테고리ID, 태그ID로 템플릿 검색 성공: 사용자ID와 로그인 정보가 다를 경우 (private 템플릿 제외)")
+        @DisplayName("검색 성공: 사용자ID와 로그인 정보가 다를 경우 (private 템플릿 제외)")
         void findAllByWithMemberIdDifferentLoginMember() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
@@ -352,7 +379,7 @@ class TemplateApplicationServiceTest {
         }
 
         @Test
-        @DisplayName("좋아요 정보 조회 테스트")
+        @DisplayName("검색 성공: 좋아요 정보 조회")
         void findAllByIsLikedTest() {
             // given
             Member loginMember = memberRepository.save(MemberFixture.getFirstMember());

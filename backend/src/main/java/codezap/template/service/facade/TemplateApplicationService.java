@@ -2,6 +2,8 @@ package codezap.template.service.facade;
 
 import java.util.List;
 
+import jakarta.annotation.Nullable;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -96,11 +98,12 @@ public class TemplateApplicationService {
         return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
+    @Nullable
     private Visibility getDefaultVisibility(Long memberId, Member loginMember) {
-        if (memberId == null || memberId.equals(loginMember.getId())) {
-            return null;
+        if (memberId == null || !memberId.equals(loginMember.getId())) {
+            return Visibility.PUBLIC;
         }
-        return Visibility.PUBLIC;
+        return null;
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
