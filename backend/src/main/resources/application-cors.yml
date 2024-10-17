@@ -1,0 +1,3 @@
+cors:
+  allowed-origins: ${ALLOWED_ORIGINS}
+  allowed-origins-patterns: ${ALLOWED_ORIGINS_PATTERNS}

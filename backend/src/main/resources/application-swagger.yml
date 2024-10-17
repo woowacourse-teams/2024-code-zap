@@ -1,0 +1,8 @@
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    supportedSubmitMethods: get
+    display-request-duration: false

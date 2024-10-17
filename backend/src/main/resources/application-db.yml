@@ -1,10 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: local
-  output:
-    ansi:
-      enabled: always
+      on-profile: db
   datasource:
     write:
       jdbc-url: ${MYSQL_WRITER_URL}
@@ -17,16 +14,18 @@ spring:
       password: ${MYSQL_PASSWORD}
       driver-class-name: com.mysql.cj.jdbc.Driver
   flyway:
-    enabled: false
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 2
     locations: classpath:db/migration
+    url: ${MYSQL_WRITER_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
   jpa:
     # open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: codezap.template.repository.FullTextSearchMySQLDialect
   data.web.pageable.one-indexed-parameters: true
-
-cors:
-  allowed-origins: http://localhost:3000
