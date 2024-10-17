@@ -2,12 +2,14 @@ package codezap.global.exception;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,6 +17,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonMappingException.Reference;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,6 +51,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .toList();
         CodeZapException codeZapException =
                 new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", errorMessages));
+
+        return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
+                .body(codeZapException.toProblemDetail());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        String exceptionMessage = "잘못된 JSON 형식입니다.";
+        if (ex.getCause() instanceof JsonMappingException jsonMappingException) {
+            exceptionMessage = jsonMappingException.getPath().stream()
+                    .map(Reference::getFieldName)
+                    .collect(Collectors.joining(" ")) + " 필드의 형식이 잘못되었습니다.";
+        }
+
+        CodeZapException codeZapException =
+                new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", exceptionMessage));
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
                 .body(codeZapException.toProblemDetail());

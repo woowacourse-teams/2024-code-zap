@@ -144,11 +144,11 @@ public class TemplateApplicationService {
     }
 
     @Transactional
-    public void deleteByMemberAndIds(Member member, List<Long> ids) {
-        thumbnailService.deleteByTemplateIds(ids);
-        sourceCodeService.deleteByTemplateIds(ids);
-        tagService.deleteAllByTemplateIds(ids);
-        likesService.deleteAllByTemplateIds(ids);
-        templateService.deleteByMemberAndIds(member, ids);
+    public void deleteAllByMemberAndTemplateIds(Member member, List<Long> templateIds) {
+        thumbnailService.deleteAllByTemplateIds(templateIds);
+        sourceCodeService.deleteAllByTemplateIds(templateIds);
+        tagService.deleteAllByTemplateIds(templateIds);
+        likesService.deleteAllByTemplateIds(templateIds);
+        templateService.deleteByMemberAndIds(member, templateIds);
     }
 }

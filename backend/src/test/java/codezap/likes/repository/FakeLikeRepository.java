@@ -28,6 +28,6 @@ public class FakeLikeRepository implements LikesRepository {
     }
 
     @Override
-    public void deleteByTemplateIds(List<Long> templateIds) {
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
     }
 }

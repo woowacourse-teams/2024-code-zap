@@ -24,5 +24,5 @@ public interface TemplateTagRepository {
 
     void deleteAllByTemplateId(Long templateId);
 
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(List<Long> templateIds);
 }
