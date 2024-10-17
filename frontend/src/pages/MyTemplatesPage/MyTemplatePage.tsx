@@ -15,7 +15,7 @@ import {
   TemplateDeleteSelection,
   TemplateListSectionLoading,
 } from './components';
-import { useSelectAndDeleteTemplateList, useShowTemplateList } from './hooks';
+import { useSelectAndDeleteTemplateList, useFilteredTemplateList } from './hooks';
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {
@@ -38,7 +38,7 @@ const MyTemplatePage = () => {
     handleTagMenuClick,
     handleSearchSubmit,
     handlePageChange,
-  } = useShowTemplateList();
+  } = useFilteredTemplateList();
 
   const {
     isEditMode,

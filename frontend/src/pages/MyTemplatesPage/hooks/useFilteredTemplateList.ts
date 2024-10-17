@@ -8,7 +8,7 @@ import { scroll } from '@/utils';
 
 const FIRST_PAGE = 1;
 
-export const useShowTemplateList = () => {
+export const useFilteredTemplateList = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const { keyword, debouncedKeyword, handleKeywordChange } = useKeyword();

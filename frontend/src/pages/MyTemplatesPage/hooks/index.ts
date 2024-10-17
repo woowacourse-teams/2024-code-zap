@@ -1,2 +1,2 @@
-export { useShowTemplateList } from './useShowTemplateList';
+export { useFilteredTemplateList } from './useFilteredTemplateList';
 export { useSelectAndDeleteTemplateList } from './useSelectAndDeleteTemplateList';
