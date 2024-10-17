@@ -1,6 +1,6 @@
-import { useInput, useDebounce } from '../';
+import { useInput, useDebounce } from '..';
 
-export const useKeyword = () => {
+export const useSearchKeyword = () => {
   const [keyword, handleKeywordChange] = useInput('');
   const debouncedKeyword = useDebounce(keyword, 300);
 

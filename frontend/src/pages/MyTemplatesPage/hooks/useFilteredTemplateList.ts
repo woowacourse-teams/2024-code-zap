@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { DEFAULT_SORTING_OPTION } from '@/api';
 import { useDropdown } from '@/hooks';
-import { useKeyword } from '@/hooks/template';
+import { useSearchKeyword } from '@/hooks/template';
 import { useTemplateListQuery } from '@/queries/templates';
 import { scroll } from '@/utils';
 
@@ -11,7 +11,7 @@ const FIRST_PAGE = 1;
 export const useFilteredTemplateList = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-  const { keyword, debouncedKeyword, handleKeywordChange } = useKeyword();
+  const { keyword, debouncedKeyword, handleKeywordChange } = useSearchKeyword();
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
   const [page, setPage] = useState<number>(FIRST_PAGE);
 
