@@ -1,7 +1,6 @@
 package codezap.global.logger;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 import jakarta.servlet.FilterChain;
@@ -32,16 +31,12 @@ public class RequestResponseLogger extends OncePerRequestFilter {
         filterChain.doFilter(requestWrapper, responseWrapper);
         long duration = System.currentTimeMillis() - startTime;
 
-        log.info("[Request] {} {}, 헤더 값: {} \n 요청 바디: {}", request.getMethod(), request.getRequestURI(),
-                getHeaderAndValue(requestWrapper), getBodyAsUtf8String(requestWrapper.getContentAsByteArray()));
-        log.info("[Response] Status: {}, Duration: {}ms, 헤더 값: {} \n 응답 바디: {}", response.getStatus(), duration,
-                getHeaderAndValue(responseWrapper), getBodyAsUtf8String(responseWrapper.getContentAsByteArray()));
+        log.info("[Request] {} {}, 헤더 값: {} \n", request.getMethod(), request.getRequestURI(),
+                getHeaderAndValue(requestWrapper));
+        log.info("[Response] Status: {}, Duration: {}ms, 헤더 값: {} \n", response.getStatus(), duration,
+                getHeaderAndValue(responseWrapper));
 
         responseWrapper.copyBodyToResponse();
-    }
-
-    private String getBodyAsUtf8String(byte[] bytes) {
-        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     private String getHeaderAndValue(ContentCachingRequestWrapper requestWrapper) {
