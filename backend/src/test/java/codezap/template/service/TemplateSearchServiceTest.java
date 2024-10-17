@@ -22,6 +22,7 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
