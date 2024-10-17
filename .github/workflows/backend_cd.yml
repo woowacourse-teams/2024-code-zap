@@ -34,6 +34,7 @@ jobs:
           path: backend/build/libs/*.jar
 
   deploy_develop:
+    if: ${{ github.ref == 'refs/heads/dev/be' }}
     needs: build
     environment: Develop
     runs-on:
@@ -64,6 +65,7 @@ jobs:
         run: ${{ secrets.RUN_SERVER }}
 
   deploy_production:
+    if: ${{ github.ref == 'refs/heads/main' }}
     needs: build
     environment: Production
     strategy:
