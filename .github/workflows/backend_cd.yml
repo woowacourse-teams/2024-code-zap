@@ -62,3 +62,36 @@ jobs:
       - name: 배포
         working-directory: ${{ secrets.PROJECT_PATH }}
         run: ${{ secrets.RUN_SERVER }}
+
+  deploy_production:
+    needs: build
+    environment: Production
+    strategy:
+      matrix:
+        runners: [ prod_a, prod_b ]
+    runs-on:
+      - spring
+      - ${{ matrix.runners }}
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.PRIVATE_REPO_ACCESS }}
+
+      - name: Compose 설정 복사
+        run: ${{ secrets.RUN_COPY_COMPOSE }}
+
+      - name: Compose 환경변수 주입
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: ${{ secrets.ENV_VARIABLES }}
+
+      - name: Artifact 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: code-zap
+          path: ${{ secrets.SPRING_PATH }}
+
+      - name: 배포
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: ${{ secrets.RUN_SERVER }}
