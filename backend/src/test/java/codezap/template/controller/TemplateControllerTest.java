@@ -576,7 +576,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isNoContent());
 
-            verify(templateApplicationService, times(1)).deleteByMemberAndIds(any(), any());
+            verify(templateApplicationService, times(1)).deleteAllByMemberAndTemplateIds(any(), any());
         }
     }
 }
