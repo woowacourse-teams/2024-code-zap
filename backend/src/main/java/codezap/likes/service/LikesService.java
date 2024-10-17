@@ -42,6 +42,6 @@ public class LikesService {
 
     @Transactional
     public void deleteAllByTemplateIds(List<Long> templateIds) {
-        likesRepository.deleteByTemplateIds(templateIds);
+        likesRepository.deleteAllByTemplateIds(templateIds);
     }
 }

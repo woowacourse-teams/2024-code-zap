@@ -21,6 +21,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.global.auditing.JpaAuditingConfiguration;
+import codezap.global.rds.DataSourceConfig;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
@@ -28,7 +29,7 @@ import codezap.tag.repository.TagRepository;
 import codezap.template.domain.Template;
 
 @DataJpaTest
-@Import(JpaAuditingConfiguration.class)
+@Import({JpaAuditingConfiguration.class, DataSourceConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:search.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class TemplateSearchJpaRepositoryTest {

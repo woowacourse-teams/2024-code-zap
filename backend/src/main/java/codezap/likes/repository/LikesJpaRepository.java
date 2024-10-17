@@ -13,5 +13,5 @@ public interface LikesJpaRepository extends LikesRepository, JpaRepository<Likes
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Likes l WHERE l.template.id in :templateIds")
-    void deleteByTemplateIds(@Param(value = "templateIds") List<Long> templateIds);
+    void deleteAllByTemplateIds(@Param(value = "templateIds") List<Long> templateIds);
 }
