@@ -3,6 +3,7 @@ import { useRef } from 'react';
 
 import { TrashcanIcon } from '@/assets/images';
 import { SourceCode } from '@/components';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { getLanguageByFilename } from '@/utils';
 
 import * as S from './SourceCodeEditor.style';
@@ -67,7 +68,7 @@ const SourceCodeEditor = ({
         handleContentChange={handleContentChange}
       />
       <S.DeleteButton size='small' variant='text' onClick={handleDeleteSourceCode}>
-        <TrashcanIcon width={24} height={24} aria-label='템플릿 삭제' />
+        <TrashcanIcon width={ICON_SIZE.LARGE} height={ICON_SIZE.LARGE} aria-label='템플릿 삭제' />
       </S.DeleteButton>
     </S.SourceCodeEditorContainer>
   );

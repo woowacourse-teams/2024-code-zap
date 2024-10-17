@@ -8,6 +8,7 @@ import { Button, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { SourceCodes } from '@/types';
 import { getLanguageByFilename } from '@/utils';
@@ -39,14 +40,14 @@ const LandingPage = () => {
       <S.CardSection>
         <S.Card>
           <Flex align='center' gap='0.25rem'>
-            <CheckCircleIcon width={24} />
+            <CheckCircleIcon width={ICON_SIZE.LARGE} />
             <Text.Large color='black'>ZAP하게 저장</Text.Large>
           </Flex>
           <Text.Medium color={theme.color.light.secondary_600}>자주 쓰는 나의 코드를 간편하게 저장하세요</Text.Medium>
         </S.Card>
         <S.Card>
           <Flex align='center' gap='0.25rem'>
-            <CheckCircleIcon width={24} />
+            <CheckCircleIcon width={ICON_SIZE.LARGE} />
             <Text.Large color='black'>ZAP하게 관리</Text.Large>
           </Flex>
           <Text.Medium color={theme.color.light.secondary_600}>
@@ -55,7 +56,7 @@ const LandingPage = () => {
         </S.Card>
         <S.Card>
           <Flex align='center' gap='0.25rem'>
-            <CheckCircleIcon width={24} />
+            <CheckCircleIcon width={ICON_SIZE.LARGE} />
             <Text.Large color='black'>ZAP하게 검색</Text.Large>
           </Flex>
           <Text.Medium color={theme.color.light.secondary_600}>필요한 나의 코드를 빠르게 찾아 사용하세요</Text.Medium>

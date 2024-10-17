@@ -1,4 +1,4 @@
-import { Category, SourceCodes, Tag, TemplateListItem } from './template';
+import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from './template';
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
@@ -13,6 +13,7 @@ export interface TemplateUploadRequest {
   thumbnailOrdinal: number;
   categoryId: number;
   tags: string[];
+  visibility: TemplateVisibility;
 }
 
 export interface TemplateEditRequest {
@@ -23,6 +24,7 @@ export interface TemplateEditRequest {
   deleteSourceCodeIds: number[];
   categoryId: number;
   tags: string[];
+  visibility: TemplateVisibility;
 }
 
 export interface LikePostRequest {

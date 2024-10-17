@@ -7,6 +7,7 @@ import { useWindowWidth, useDebounce, useToggle, useDropdown, useInput, useCusto
 import { useAuth } from '@/hooks/authentication';
 import { useTemplateDeleteMutation, useTemplateCategoryTagQueries } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { scroll } from '@/utils';
 
@@ -201,7 +202,7 @@ const NewTemplateButton = () => {
 
   return (
     <S.NewTemplateButton onClick={() => navigate(END_POINTS.TEMPLATES_UPLOAD)}>
-      <PlusIcon width={24} height={24} aria-label='새 템플릿' />
+      <PlusIcon width={ICON_SIZE.LARGE} height={ICON_SIZE.LARGE} aria-label='새 템플릿' />
       <Text.Large color={theme.color.light.primary_500} weight='bold'>
         이곳을 눌러 새 템플릿을 추가해보세요 :)
       </Text.Large>

@@ -6,6 +6,7 @@ import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/categories';
 import { validateCategoryName } from '@/service/validates';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Category, CustomError } from '@/types';
 
@@ -317,12 +318,12 @@ const IconButtons = ({ onRestoreClick, onEditClick, onDeleteClick, restore, edit
     )}
     {edit && (
       <S.IconButtonWrapper onClick={onEditClick}>
-        <PencilIcon width={20} height={20} aria-label='카테고리 이름 변경' />
+        <PencilIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 이름 변경' />
       </S.IconButtonWrapper>
     )}
     {del && (
       <S.IconButtonWrapper onClick={onDeleteClick}>
-        <TrashcanIcon width={20} height={20} aria-label='카테고리 삭제' />
+        <TrashcanIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 삭제' />
       </S.IconButtonWrapper>
     )}
   </S.IconButtonContainer>

@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronIcon } from '@/assets/images';
 import { TagButton } from '@/components';
 import { useToggle, useWindowWidth } from '@/hooks';
+import { ICON_SIZE } from '@/style/styleConstants';
 import type { Tag } from '@/types';
 import { remToPx } from '@/utils';
 
@@ -90,7 +91,7 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
       </S.TagButtonsContainer>
       {showMoreButton && (
         <S.ShowMoreButton size={LINE_HEIGHT_REM} onClick={toggleTagBox} isExpanded={isTagBoxOpen}>
-          <ChevronIcon width={16} height={16} aria-label='태그 더보기' />
+          <ChevronIcon width={ICON_SIZE.SMALL} height={ICON_SIZE.SMALL} aria-label='태그 더보기' />
         </S.ShowMoreButton>
       )}
     </S.TagFilterMenuContainer>

@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import { EditorView } from '@uiw/react-codemirror';
 
 import { theme } from '@/style/theme';
 
@@ -88,8 +87,3 @@ export const NoWrapTextWrapper = styled.div`
 export const BlankDescription = styled.div`
   height: 1rem;
 `;
-
-export const CustomCodeMirrorTheme = EditorView.theme({
-  '.cm-activeLine': { backgroundColor: `transparent !important` },
-  '.cm-activeLineGutter': { backgroundColor: `transparent !important` },
-});
