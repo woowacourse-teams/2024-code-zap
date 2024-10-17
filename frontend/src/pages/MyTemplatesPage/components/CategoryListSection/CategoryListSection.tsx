@@ -1,7 +1,7 @@
-import { Flex } from '@/components';
 import { useCategoryListQuery } from '@/queries/categories';
 
 import { CategoryFilterMenu } from '..';
+import * as S from './CategoryListSection.style';
 
 interface Props {
   onSelectCategory: (selectedCategoryId: number) => void;
@@ -12,9 +12,9 @@ const CategoryListSection = ({ onSelectCategory }: Props) => {
   const categoryList = categoryData?.categories || [];
 
   return (
-    <Flex direction='column' gap='2.5rem' style={{ marginTop: '4.5rem' }}>
+    <S.CategoryListSectionContainer>
       <CategoryFilterMenu categoryList={categoryList} onSelectCategory={onSelectCategory} />
-    </Flex>
+    </S.CategoryListSectionContainer>
   );
 };
 
