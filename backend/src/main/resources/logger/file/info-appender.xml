@@ -3,7 +3,7 @@
 <included>
     <appender name="info-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>${LOG_FILE_PATH}/${DATE_FORMAT}/info.log</file>
+        <file>${LOG_FILE_PATH}/info.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
@@ -16,7 +16,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_FILE_PATH}/%d{yyyy-MM-dd}/info/info%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_FILE_PATH}/%d{yyyy-MM-dd}/info.log</fileNamePattern>
             <totalSizeCap>5GB</totalSizeCap>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
