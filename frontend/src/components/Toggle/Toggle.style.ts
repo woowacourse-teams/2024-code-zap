@@ -10,7 +10,7 @@ export const ToggleContainer = styled.div`
   overflow: hidden;
   display: flex;
 
-  width: 12rem;
+  max-width: 12rem;
   height: 2.375rem; /* Button medium size와 동일 */
 
   background-color: ${theme.color.light.secondary_100};
@@ -25,6 +25,8 @@ export const ToggleOption = styled.div<{ selected: boolean }>`
   gap: 1px;
   align-items: center;
   justify-content: center;
+
+  padding: 0 1rem;
 
   color: ${({ selected }) => (selected ? theme.color.light.white : theme.color.light.secondary_500)};
 
@@ -44,9 +46,7 @@ export const ToggleSlider = styled.div<{
   height: calc(100% - 4px);
 
   background-color: ${({ isRight, optionSliderColor: [leftColor, rightColor] }) =>
-    isRight
-      ? (rightColor ?? theme.color.light.triadic_secondary_800)
-      : (leftColor ?? theme.color.light.analogous_secondary_800)};
+    isRight ? (rightColor ?? theme.color.light.secondary_500) : (leftColor ?? theme.color.light.secondary_500)};
   border-radius: 18px;
 
   transition:

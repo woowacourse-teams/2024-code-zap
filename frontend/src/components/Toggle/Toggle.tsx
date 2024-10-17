@@ -5,6 +5,7 @@ import * as S from './Toggle.style';
 type ToggleOption<T extends string> = T;
 
 export interface ToggleProps<T extends string> {
+  showOptions?: boolean;
   options: [ToggleOption<T>, ToggleOption<T>];
   optionSliderColor?: [string | undefined, string | undefined];
   optionAdornments?: [ReactNode, ReactNode];
@@ -13,6 +14,7 @@ export interface ToggleProps<T extends string> {
 }
 
 const Toggle = <T extends string>({
+  showOptions = true,
   options,
   optionAdornments = [undefined, undefined],
   optionSliderColor = [undefined, undefined],
@@ -33,10 +35,10 @@ const Toggle = <T extends string>({
       <S.ToggleSlider isRight={selectedOption === rightOption} optionSliderColor={optionSliderColor} />
       <S.ToggleOption selected={selectedOption === leftOption}>
         {leftOptionAdornment ?? ''}
-        {leftOption}
+        {showOptions && leftOption}
       </S.ToggleOption>
       <S.ToggleOption selected={selectedOption === rightOption}>
-        {rightOption}
+        {showOptions && rightOption}
         {rightOptionAdornment ?? ''}
       </S.ToggleOption>
     </S.ToggleContainer>
