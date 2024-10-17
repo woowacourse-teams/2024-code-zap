@@ -1,12 +1,12 @@
 import { Button, Flex, Modal, Text } from '@/components';
 
-interface ConfirmDeleteModalProps {
+interface Props {
   isDeleteModalOpen: boolean;
   toggleDeleteModal: () => void;
   handleDelete: () => void;
 }
 
-const ConfirmDeleteModal = ({ isDeleteModalOpen, toggleDeleteModal, handleDelete }: ConfirmDeleteModalProps) => (
+const ConfirmDeleteModal = ({ isDeleteModalOpen, toggleDeleteModal, handleDelete }: Props) => (
   <Modal isOpen={isDeleteModalOpen} toggleModal={toggleDeleteModal} size='xsmall'>
     <Flex direction='column' justify='space-between' align='center' margin='1rem 0 0 0' gap='2rem'>
       <Flex direction='column' justify='center' align='center' gap='0.75rem'>
