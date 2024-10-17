@@ -9,8 +9,14 @@ export const useTagListQuery = () => {
     memberInfo: { memberId },
   } = useAuth();
 
-  return useSuspenseQuery<TagListResponse, Error>({
+  const result = useSuspenseQuery<TagListResponse, Error>({
     queryKey: [QUERY_KEY.TAG_LIST],
     queryFn: () => getTagList({ memberId }),
   });
+
+  if (result.error && !result.isFetching) {
+    throw result.error;
+  }
+
+  return result;
 };

@@ -9,8 +9,14 @@ export const useCategoryListQuery = () => {
     memberInfo: { memberId },
   } = useAuth();
 
-  return useSuspenseQuery<CategoryListResponse, Error>({
+  const result = useSuspenseQuery<CategoryListResponse, Error>({
     queryKey: [QUERY_KEY.CATEGORY_LIST],
     queryFn: () => getCategoryList({ memberId }),
   });
+
+  if (result.error && !result.isFetching) {
+    throw result.error;
+  }
+
+  return result;
 };
