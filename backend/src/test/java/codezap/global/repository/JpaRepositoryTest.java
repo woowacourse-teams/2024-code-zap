@@ -11,12 +11,13 @@ import org.springframework.context.annotation.Import;
 
 import codezap.global.DatabaseIsolation;
 import codezap.global.auditing.JpaAuditingConfiguration;
+import codezap.global.rds.DataSourceConfig;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @DataJpaTest
 @DatabaseIsolation
-@Import(JpaAuditingConfiguration.class)
+@Import({JpaAuditingConfiguration.class, DataSourceConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public @interface JpaRepositoryTest {
 }
