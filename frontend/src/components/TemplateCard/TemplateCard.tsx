@@ -2,6 +2,7 @@ import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
@@ -36,9 +37,9 @@ const TemplateCard = ({ template }: Props) => {
       <Flex width='100%' direction='column' gap='1rem'>
         <Flex width='100%' justify='space-between' gap='1rem'>
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
-            {isPrivate && <PrivateIcon width={14} color={theme.color.light.secondary_800} />}
+            {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_800} />}
             <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
-              <PersonIcon width={14} />
+              <PersonIcon width={ICON_SIZE.X_SMALL} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
                 <Text.Small
                   color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
@@ -48,7 +49,7 @@ const TemplateCard = ({ template }: Props) => {
               </S.EllipsisTextWrapper>
             </Flex>
             <Flex align='center' gap='0.25rem'>
-              <ClockIcon width={14} />
+              <ClockIcon width={ICON_SIZE.X_SMALL} />
               <S.NoWrapTextWrapper>
                 <Text.Small color={theme.color.light.primary_500}>{formatRelativeTime(modifiedAt)}</Text.Small>
               </S.NoWrapTextWrapper>

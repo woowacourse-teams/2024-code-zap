@@ -1,5 +1,6 @@
 import { LikeIcon } from '@/assets/images';
 import { Text } from '@/components';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { formatWithK } from '@/utils';
 
@@ -13,7 +14,7 @@ interface Props {
 
 const LikeButton = ({ likesCount, isLiked, onLikeButtonClick }: Props) => (
   <S.LikeButtonContainer isLiked={isLiked} onClick={onLikeButtonClick}>
-    <LikeIcon state={isLiked ? 'like' : 'unlike'} size={20} />
+    <LikeIcon state={isLiked ? 'like' : 'unlike'} size={ICON_SIZE.MEDIUM_LARGE} />
     <Text.Medium color={theme.color.light.secondary_800}>{formatWithK(likesCount)}</Text.Medium>
   </S.LikeButtonContainer>
 );

@@ -19,6 +19,7 @@ import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
 
 import { useTemplate, useLike } from './hooks';
@@ -113,7 +114,7 @@ const TemplatePage = () => {
                   <Flex gap='0.5rem'>
                     {isPrivate && (
                       <S.PrivateWrapper>
-                        <PrivateIcon width={14} />
+                        <PrivateIcon width={ICON_SIZE.X_SMALL} />
                       </S.PrivateWrapper>
                     )}
                     <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
@@ -125,7 +126,7 @@ const TemplatePage = () => {
 
                 <Flex gap='0.5rem' align='center'>
                   <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
-                    <PersonIcon width={14} />
+                    <PersonIcon width={ICON_SIZE.X_SMALL} />
                     <div
                       style={{
                         overflow: 'hidden',
@@ -142,7 +143,7 @@ const TemplatePage = () => {
                     </div>
                   </Flex>
                   <Flex align='center' gap='0.125rem'>
-                    <ClockIcon width={16} />
+                    <ClockIcon width={ICON_SIZE.SMALL} />
                     <Text.Small
                       color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
                     >

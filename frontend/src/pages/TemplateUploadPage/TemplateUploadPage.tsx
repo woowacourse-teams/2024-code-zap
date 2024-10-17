@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
 import { TemplateVisibility } from '@/types/template';
@@ -139,7 +140,7 @@ const TemplateUploadPage = () => {
           fullWidth
           onClick={addNewEmptySourceCode}
         >
-          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
+          <PlusIcon width={ICON_SIZE.X_SMALL} height={ICON_SIZE.X_SMALL} aria-label='소스코드 추가' />
         </Button>
 
         <TagInput {...tagProps} />
@@ -153,8 +154,8 @@ const TemplateUploadPage = () => {
             <Toggle
               options={[...TEMPLATE_VISIBILITY]}
               optionAdornments={[
-                <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={18} />,
-                <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={18} />,
+                <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
+                <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
               ]}
               selectedOption={visibility}
               switchOption={setVisibility}
