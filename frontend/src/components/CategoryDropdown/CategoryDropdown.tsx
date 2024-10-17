@@ -3,6 +3,8 @@ import { useInputWithValidate } from '@/hooks';
 import { validateCategoryName } from '@/service/validates';
 import { Category } from '@/types';
 
+import * as S from './CategoryDropdown.style';
+
 interface Props {
   options: Category[];
   isOpen: boolean;
@@ -53,7 +55,7 @@ const CategoryDropdown = ({
   };
 
   return (
-    <>
+    <S.CategoryDropdownContainer>
       <CategoryGuide isOpen={isOpen} categoryErrorMessage={categoryInputErrorMessage} />
       <Dropdown
         options={options}
@@ -72,7 +74,7 @@ const CategoryDropdown = ({
           />
         }
       />
-    </>
+    </S.CategoryDropdownContainer>
   );
 };
 
