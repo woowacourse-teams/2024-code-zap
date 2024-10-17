@@ -66,7 +66,7 @@ export const getTemplateList = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
+  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 
   const response = await customFetch<TemplateListResponse>({
     url,
@@ -83,7 +83,6 @@ export const getTemplateExplore = async ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
   size = PAGE_SIZE,
-  memberId,
   keyword,
 }: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
@@ -96,7 +95,7 @@ export const getTemplateExplore = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
+  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 
   const response = await customFetch<TemplateListResponse>({
     url,
@@ -109,9 +108,9 @@ export const getTemplateExplore = async ({
   throw new Error(response.detail);
 };
 
-export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
+export const getTemplate = async ({ id }: TemplateRequest) => {
   const response = await customFetch<Template>({
-    url: `${TEMPLATE_API_URL}/${id}${memberId ? '/login' : ''}`,
+    url: `${TEMPLATE_API_URL}/${id}`,
   });
 
   if ('sourceCodes' in response) {
