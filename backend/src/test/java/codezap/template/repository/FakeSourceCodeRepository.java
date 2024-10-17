@@ -97,7 +97,7 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
     }
 
     @Override
-    public void deleteByTemplateIds(List<Long> templateIds) {
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
         templateIds.forEach(id ->
                 sourceCodes.removeIf(sourceCode -> Objects.equals(sourceCode.getId(), id)));
     }

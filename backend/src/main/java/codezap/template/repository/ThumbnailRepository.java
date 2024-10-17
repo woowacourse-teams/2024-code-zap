@@ -18,5 +18,5 @@ public interface ThumbnailRepository {
 
     Thumbnail save(Thumbnail thumbnail);
 
-    void deleteByTemplateIds(List<Long> ids);
+    void deleteAllByTemplateIds(List<Long> ids);
 }
