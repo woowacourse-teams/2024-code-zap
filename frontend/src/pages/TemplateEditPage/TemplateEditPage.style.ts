@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+import { Button } from '@/components';
 import { theme } from '@/style/theme';
 
 export const TemplateEditContainer = styled.div`
@@ -22,16 +23,21 @@ export const MainContainer = styled.div`
   margin-top: 3rem;
 `;
 
+export const CategoryAndVisibilityContainer = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+`;
+
+export const CancelButton = styled(Button)`
+  background-color: white;
+`;
+
 export const ButtonGroup = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
   padding-top: 0.5rem;
-`;
-
-export const ToggleAndSaveButton = styled.div`
-  display: flex;
-  gap: 0.5rem;
 `;
 
 export const UnderlineInputWrapper = styled.div`

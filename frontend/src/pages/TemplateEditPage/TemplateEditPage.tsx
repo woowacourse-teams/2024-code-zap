@@ -103,7 +103,19 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   return (
     <S.TemplateEditContainer>
       <S.MainContainer>
-        <CategoryDropdown {...categoryProps} />
+        <S.CategoryAndVisibilityContainer>
+          <CategoryDropdown {...categoryProps} />
+          <Toggle
+            showOptions={false}
+            options={[...TEMPLATE_VISIBILITY]}
+            optionAdornments={[
+              <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
+              <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
+            ]}
+            selectedOption={visibility}
+            switchOption={setVisibility}
+          />
+        </S.CategoryAndVisibilityContainer>
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
@@ -146,29 +158,12 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
         <TagInput {...tagProps} />
 
         <S.ButtonGroup>
-          <Button size='medium' variant='outlined' onClick={handleCancelButton}>
+          <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
             취소
+          </S.CancelButton>
+          <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={sourceCodes.length === 0}>
+            저장
           </Button>
-          <S.ToggleAndSaveButton>
-            <Toggle
-              options={[...TEMPLATE_VISIBILITY]}
-              optionAdornments={[
-                <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
-                <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
-              ]}
-              selectedOption={visibility}
-              switchOption={setVisibility}
-            />
-
-            <Button
-              size='medium'
-              variant='contained'
-              onClick={handleSaveButtonClick}
-              disabled={sourceCodes.length === 0}
-            >
-              저장
-            </Button>
-          </S.ToggleAndSaveButton>
         </S.ButtonGroup>
 
         {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
