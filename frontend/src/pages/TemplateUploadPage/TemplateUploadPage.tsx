@@ -5,7 +5,6 @@ import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
-import { END_POINTS } from '@/routes';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
 
@@ -79,17 +78,7 @@ const TemplateUploadPage = () => {
       tags: tagProps.tags,
     };
 
-    await uploadTemplate(newTemplate, {
-      onSuccess: (res) => {
-        if (res?.status === 400 || res?.status === 404) {
-          failAlert('템플릿 생성에 실패했습니다. 다시 한 번 시도해주세요');
-
-          return;
-        }
-
-        navigate(END_POINTS.MY_TEMPLATES);
-      },
-    });
+    await uploadTemplate(newTemplate);
   };
 
   return (
