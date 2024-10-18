@@ -11,25 +11,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
 import codezap.auth.dto.LoginAndCredentialDto;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.provider.CredentialProvider;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.MemberRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-public class AuthServiceTest {
-
-    @Autowired
-    private MemberRepository memberRepository;
+public class AuthServiceTest extends ServiceTest {
 
     @Autowired
     private CredentialProvider credentialProvider;
@@ -77,7 +70,7 @@ public class AuthServiceTest {
 
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("로그인에 실패하였습니다. 아이디 또는 비밀번호를 확인해주세요.");
+                    .hasMessage("로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }
     }
 
@@ -107,7 +100,7 @@ public class AuthServiceTest {
 
             assertThatThrownBy(() -> authService.checkLogin(invalidCredential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    .hasMessageContaining("비밀번호가 일치하지 않습니다.");
         }
     }
 }

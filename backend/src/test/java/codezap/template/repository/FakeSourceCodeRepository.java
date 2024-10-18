@@ -6,9 +6,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.http.HttpStatus;
-
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 
@@ -28,7 +27,8 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
                 .filter(sourceCode -> Objects.equals(sourceCode.getId(), id))
                 .findFirst()
                 .orElseThrow(
-                        () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
+                        () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND,
+                                "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
     }
 
     @Override
@@ -42,7 +42,8 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
     public SourceCode fetchByTemplateAndOrdinal(Template template, int ordinal) {
         return findByTemplateAndOrdinal(template, ordinal)
                 .orElseThrow(
-                        () -> new CodeZapException(HttpStatus.NOT_FOUND, "템플릿에 " + ordinal + "번째 소스 코드가 존재하지 않습니다."));
+                        () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND,
+                                "템플릿에 " + ordinal + "번째 소스 코드가 존재하지 않습니다."));
     }
 
     @Override
@@ -96,7 +97,7 @@ public class FakeSourceCodeRepository implements SourceCodeRepository {
     }
 
     @Override
-    public void deleteByTemplateIds(List<Long> templateIds) {
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
         templateIds.forEach(id ->
                 sourceCodes.removeIf(sourceCode -> Objects.equals(sourceCode.getId(), id)));
     }

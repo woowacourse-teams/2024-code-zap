@@ -10,47 +10,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.likes.domain.Likes;
-import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.repository.TemplateRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-@Transactional
-class TemplateServiceTest {
-
-    @Autowired
-    private TemplateRepository templateRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-
-    @Autowired
-    private LikesRepository likesRepository;
+class TemplateServiceTest extends ServiceTest {
 
     @Autowired
     private TemplateService sut;
@@ -73,7 +52,8 @@ class TemplateServiceTest {
                     ),
                     1,
                     category.getId(),
-                    List.of("tag1", "tag2")
+                    List.of("tag1", "tag2"),
+                    Visibility.PUBLIC
             );
 
             var actual = sut.create(member, templateRequest, category);
@@ -82,7 +62,8 @@ class TemplateServiceTest {
                     () -> assertThat(actual.getTitle()).isEqualTo(templateRequest.title()),
                     () -> assertThat(actual.getMember()).isEqualTo(member),
                     () -> assertThat(actual.getCategory()).isEqualTo(category),
-                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description())
+                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description()),
+                    () -> assertThat(actual.getVisibility()).isEqualTo(templateRequest.visibility())
             );
 
         }
@@ -169,7 +150,7 @@ class TemplateServiceTest {
             likeTemplate(4L, 1L);
             likeTemplate(1L, 0L);
 
-            List<Template> templates = sut.findAllBy(null, "", null, null,
+            List<Template> templates = sut.findAllBy(null, "", null, null, null,
                             PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
                     .getContent();
 
@@ -227,7 +208,8 @@ class TemplateServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
 
             sut.update(member, template.getId(), updateTemplateRequest, category);
@@ -250,7 +232,8 @@ class TemplateServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
             var nonExistentID = 100L;
 
@@ -273,7 +256,8 @@ class TemplateServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
 
             assertThatThrownBy(() -> sut.update(otherMember, template.getId(), updateTemplateRequest, category))
@@ -295,7 +279,8 @@ class TemplateServiceTest {
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, PageRequest.of(0, 10));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
 
             assertThat(actual.getContent()).hasSize(1)
                     .containsExactly(template2);
@@ -312,7 +297,8 @@ class TemplateServiceTest {
             var template4 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, PageRequest.of(0, 10));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
 
             assertThat(actual.getContent()).hasSize(2)
                     .containsExactly(template2, template3);

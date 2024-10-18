@@ -11,10 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
-import org.springframework.http.HttpStatus;
-
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,7 +66,7 @@ public class Category extends BaseTimeEntity {
 
     public void validateAuthorization(Member member) {
         if (!getMember().equals(member)) {
-            throw new CodeZapException(HttpStatus.UNAUTHORIZED, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
     }
 

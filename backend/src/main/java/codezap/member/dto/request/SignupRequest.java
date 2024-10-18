@@ -15,7 +15,7 @@ public record SignupRequest(
         @Schema(description = "비밀번호. 영어와 숫자를 반드시 포함해야 합니다.", example = "password1234")
         @Pattern(regexp = "^(?=.*[a-zA-Z])(?=.*\\d).*$", message = "영어와 숫자를 포함해야합니다.")
         @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
-        @Size(min = 8, max = 255, message = "비밀번호는 8~16자 사이로 입력해주세요.")
+        @Size(min = 8, max = 16, message = "비밀번호는 8~16자 사이로 입력해주세요.")
         String password
 ) {
 }

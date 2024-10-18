@@ -1,5 +1,6 @@
 spring:
   profiles:
-    active:
-      - local
-      - db
+    group:
+      default: local
+      dev: db, actautor, swagger, cors
+      prod: db, actautor, swagger, cors

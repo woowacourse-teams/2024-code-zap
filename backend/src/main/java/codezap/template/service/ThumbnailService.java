@@ -40,7 +40,7 @@ public class ThumbnailService {
     }
 
     @Transactional
-    public void deleteByTemplateIds(List<Long> templateIds) {
-        thumbnailRepository.deleteByTemplateIds(templateIds);
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
+        thumbnailRepository.deleteAllByTemplateIds(templateIds);
     }
 }

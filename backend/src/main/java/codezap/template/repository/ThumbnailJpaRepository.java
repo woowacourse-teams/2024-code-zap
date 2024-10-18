@@ -6,9 +6,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.repository.query.Param;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 
@@ -18,7 +19,7 @@ public interface ThumbnailJpaRepository extends
 
     default Thumbnail fetchByTemplate(Template template) {
         return findByTemplate(template).orElseThrow(
-                () -> new CodeZapException(HttpStatus.NOT_FOUND,
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND,
                         "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
     }
 
@@ -28,12 +29,12 @@ public interface ThumbnailJpaRepository extends
             join fetch t.sourceCode sc
             WHERE t.template = :template
             """)
-    Optional<Thumbnail> findByTemplate(Template template);
+    Optional<Thumbnail> findByTemplate(@Param("template") Template template);
 
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM Thumbnail t WHERE t.template.id in :templateIds")
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(@Param("templateIds") List<Long> templateIds);
 
     @Query("""
             SELECT t, sc
@@ -41,7 +42,7 @@ public interface ThumbnailJpaRepository extends
             join fetch t.sourceCode sc
             WHERE t.template.id IN :templateIds
             """)
-    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
+    List<Thumbnail> findAllByTemplateIn(@Param("templateIds") List<Long> templateIds);
 
     void deleteByTemplateId(Long id);
 

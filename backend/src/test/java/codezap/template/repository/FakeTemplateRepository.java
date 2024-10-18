@@ -9,10 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 
 public class FakeTemplateRepository implements TemplateRepository {
 
@@ -29,7 +30,8 @@ public class FakeTemplateRepository implements TemplateRepository {
         return templates.stream()
                 .filter(template -> Objects.equals(template.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
+                .orElseThrow(() -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND,
+                        "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
     }
 
     @Override
@@ -66,7 +68,8 @@ public class FakeTemplateRepository implements TemplateRepository {
                 entity.getDescription(),
                 entity.getCategory(),
                 entity.getSourceCodes(),
-                0L
+                0L,
+                Visibility.PUBLIC
         );
         templates.removeIf(template -> Objects.equals(template.getId(), entity.getId()));
         templates.add(saved);

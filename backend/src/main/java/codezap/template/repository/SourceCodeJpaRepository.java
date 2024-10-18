@@ -6,9 +6,10 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.repository.query.Param;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 
@@ -17,7 +18,7 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
 
     default SourceCode fetchById(Long id) {
         return findById(id).orElseThrow(
-                () -> new CodeZapException(HttpStatus.NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
     }
 
     List<SourceCode> findAllByTemplate(Template template);
@@ -25,7 +26,8 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
     default SourceCode fetchByTemplateAndOrdinal(Template template, int ordinal) {
         return findByTemplateAndOrdinal(template, ordinal)
                 .orElseThrow(
-                        () -> new CodeZapException(HttpStatus.NOT_FOUND, "템플릿에 " + ordinal + "번째 소스 코드가 존재하지 않습니다."));
+                        () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND,
+                                "템플릿에 " + ordinal + "번째 소스 코드가 존재하지 않습니다."));
     }
 
     Optional<SourceCode> findByTemplateAndOrdinal(Template template, int ordinal);
@@ -36,5 +38,5 @@ public interface SourceCodeJpaRepository extends SourceCodeRepository, JpaReposi
 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM SourceCode s WHERE s.template.id in :templateIds")
-    void deleteByTemplateIds(List<Long> templateIds);
+    void deleteAllByTemplateIds(@Param("templateIds") List<Long> templateIds);
 }

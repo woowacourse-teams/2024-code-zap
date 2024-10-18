@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-@Profile("prod")
 @EnableJpaRepositories(basePackages = "codezap")
 public class DataSourceConfig {
 

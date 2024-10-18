@@ -24,6 +24,7 @@ import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
@@ -412,7 +413,9 @@ class SourceCodeServiceTest extends ServiceTest {
                     updateSourceCodes,
                     deleteSourceCodeIds,
                     categoryId,
-                    tags);
+                    tags,
+                    Visibility.PUBLIC
+            );
         }
     }
 
@@ -429,7 +432,7 @@ class SourceCodeServiceTest extends ServiceTest {
             sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
 
             // when
-            sourceCodeService.deleteByTemplateIds(List.of(template.getId()));
+            sourceCodeService.deleteAllByTemplateIds(List.of(template.getId()));
 
             // then
             assertThat(sourceCodeRepository.findAllByTemplate(template)).isEmpty();
@@ -447,7 +450,7 @@ class SourceCodeServiceTest extends ServiceTest {
             sourceCodeRepository.save(SourceCodeFixture.get(template2, 2));
 
             // when
-            sourceCodeService.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
+            sourceCodeService.deleteAllByTemplateIds(List.of(template1.getId(), template2.getId()));
 
             // then
             assertAll(
@@ -461,7 +464,7 @@ class SourceCodeServiceTest extends ServiceTest {
         void deleteByIds_WhenIdNotExist() {
             Template template = createSavedTemplate();
 
-            sourceCodeService.deleteByTemplateIds(List.of(template.getId()));
+            sourceCodeService.deleteAllByTemplateIds(List.of(template.getId()));
 
             assertThat(sourceCodeRepository.findAllByTemplate(template)).isEmpty();
         }

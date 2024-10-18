@@ -6,9 +6,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.http.HttpStatus;
-
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 
@@ -25,7 +24,7 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
     @Override
     public Thumbnail fetchByTemplate(Template template) {
         return findByTemplate(template).orElseThrow(
-                () -> new CodeZapException(HttpStatus.NOT_FOUND,
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND,
                         "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
     }
 
@@ -59,7 +58,7 @@ public class FakeThumbnailRepository implements ThumbnailRepository {
     }
 
     @Override
-    public void deleteByTemplateIds(List<Long> templateIds) {
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
         templateIds.forEach(id ->
                 thumbnails.removeIf(thumbnail -> Objects.equals(thumbnail.getId(), id)));
     }
