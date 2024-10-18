@@ -11,25 +11,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
 import codezap.auth.dto.LoginAndCredentialDto;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.provider.CredentialProvider;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.MemberRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-public class AuthServiceTest {
-
-    @Autowired
-    private MemberRepository memberRepository;
+public class AuthServiceTest extends ServiceTest {
 
     @Autowired
     private CredentialProvider credentialProvider;

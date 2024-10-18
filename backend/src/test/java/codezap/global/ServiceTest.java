@@ -2,6 +2,7 @@ package codezap.global;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.repository.CategoryRepository;
 import codezap.likes.repository.LikesRepository;
@@ -14,6 +15,7 @@ import codezap.template.repository.ThumbnailRepository;
 
 @SpringBootTest
 @DatabaseIsolation
+@Transactional
 public class ServiceTest {
 
     @Autowired

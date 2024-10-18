@@ -10,48 +10,26 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.likes.domain.Likes;
-import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.repository.TemplateRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-@Transactional
-class TemplateServiceTest {
-
-    @Autowired
-    private TemplateRepository templateRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-
-    @Autowired
-    private LikesRepository likesRepository;
+class TemplateServiceTest extends ServiceTest {
 
     @Autowired
     private TemplateService sut;
