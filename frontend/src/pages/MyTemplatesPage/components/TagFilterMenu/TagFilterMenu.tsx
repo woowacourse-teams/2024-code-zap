@@ -9,7 +9,7 @@ import { remToPx } from '@/utils';
 
 import * as S from './TagFilterMenu.style';
 
-const LINE_HEIGHT_REM = 1.875;
+const LINE_HEIGHT_REM = 2.25;
 
 interface Props {
   tagList: Tag[];
@@ -70,10 +70,23 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
     <S.TagFilterMenuContainer data-testid='tag-filter-menu'>
       <S.TagButtonsContainer ref={containerRef} height={height}>
         {selectedTags.map((tag) => (
-          <TagButton key={tag.id} name={tag.name} isFocused={true} onClick={() => handleButtonClick(tag.id)} />
+          <TagButton
+            key={tag.id}
+            id={tag.id}
+            name={tag.name}
+            isFocused={true}
+            variant='edit'
+            onClick={() => handleButtonClick(tag.id)}
+          />
         ))}
         {unselectedTags.map((tag) => (
-          <TagButton key={tag.id} name={tag.name} isFocused={false} onClick={() => handleButtonClick(tag.id)} />
+          <TagButton
+            key={tag.id}
+            id={tag.id}
+            name={tag.name}
+            isFocused={false}
+            onClick={() => handleButtonClick(tag.id)}
+          />
         ))}
       </S.TagButtonsContainer>
       {showMoreButton && (
