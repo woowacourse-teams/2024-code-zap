@@ -41,5 +41,5 @@ public interface SpringDocMemberController {
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1", errorCases = {
             @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 회원이 존재하지 않습니다.")
     })
-    ResponseEntity<FindMemberResponse> findMember(Long id);
+    ResponseEntity<FindMemberResponse> findMemberName(Long id);
 }

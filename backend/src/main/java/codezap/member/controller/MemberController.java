@@ -33,8 +33,8 @@ public class MemberController implements SpringDocMemberController {
         memberService.assertUniqueName(name);
     }
 
-    @GetMapping("/members/{id}")
-    public ResponseEntity<FindMemberResponse> findMember(@PathVariable Long id) {
+    @GetMapping("/members/{id}/name")
+    public ResponseEntity<FindMemberResponse> findMemberName(@PathVariable Long id) {
         return ResponseEntity.ok(memberService.findMember(id));
     }
 }
