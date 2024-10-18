@@ -2,6 +2,8 @@ package codezap.template.service.facade;
 
 import java.util.List;
 
+import jakarta.annotation.Nullable;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
@@ -75,7 +78,9 @@ public class TemplateApplicationService {
             List<Long> tagIds,
             Pageable pageable
     ) {
-        Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        Page<Template> templates = templateService.findAllBy(
+                memberId, keyword, categoryId, tagIds, Visibility.PUBLIC, pageable
+        );
         return makeResponse(templates, (template) -> false);
     }
 
@@ -87,8 +92,18 @@ public class TemplateApplicationService {
             Pageable pageable,
             Member loginMember
     ) {
-        Page<Template> templates = templateService.findAllBy(memberId, keyword, categoryId, tagIds, pageable);
+        Page<Template> templates = templateService.findAllBy(
+                memberId, keyword, categoryId, tagIds, getVisibilityLevel(memberId, loginMember), pageable
+        );
         return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
+    }
+
+    @Nullable
+    private Visibility getVisibilityLevel(Long memberId, Member loginMember) {
+        if (memberId == null || !loginMember.matchId(memberId)) {
+            return Visibility.PUBLIC;
+        }
+        return null;
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {

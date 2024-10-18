@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
+import codezap.template.domain.Visibility;
 
 public class TemplateSpecification implements Specification<Template> {
 
@@ -22,12 +23,20 @@ public class TemplateSpecification implements Specification<Template> {
     private final String keyword;
     private final Long categoryId;
     private final List<Long> tagIds;
+    private final Visibility visibility;
 
-    public TemplateSpecification(Long memberId, String keyword, Long categoryId, List<Long> tagIds) {
+    public TemplateSpecification(
+            Long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> tagIds,
+            Visibility visibility
+    ) {
         this.memberId = memberId;
         this.keyword = keyword;
         this.categoryId = categoryId;
         this.tagIds = tagIds;
+        this.visibility = visibility;
     }
 
     @Override
@@ -38,6 +47,7 @@ public class TemplateSpecification implements Specification<Template> {
         addCategoryPredicate(predicates, criteriaBuilder, root);
         addTagPredicate(predicates, criteriaBuilder, root, query);
         addKeywordPredicate(predicates, criteriaBuilder, root, query);
+        addVisibility(predicates, criteriaBuilder, root, query);
 
         if (query.getResultType().equals(Template.class)) {
             root.fetch("category", JoinType.LEFT);
@@ -99,5 +109,13 @@ public class TemplateSpecification implements Specification<Template> {
                         tagIds.size()));
 
         predicates.add(root.get("id").in(subquery));
+    }
+
+    private void addVisibility(
+            List<Predicate> predicates, CriteriaBuilder criteriaBuilder, Root<Template> root, CriteriaQuery<?> query
+    ) {
+        if (visibility != null) {
+            predicates.add(criteriaBuilder.equal(root.get("visibility"), visibility));
+        }
     }
 }

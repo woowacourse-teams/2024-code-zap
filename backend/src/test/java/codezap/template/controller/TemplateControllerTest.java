@@ -610,7 +610,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     1L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -640,7 +641,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -671,7 +673,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -701,7 +704,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -732,7 +736,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -763,7 +768,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -794,7 +800,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -825,7 +832,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -856,7 +864,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -883,7 +892,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     1L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -912,7 +922,8 @@ class TemplateControllerTest {
                     null,
                     List.of(1L),
                     1L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -943,7 +954,8 @@ class TemplateControllerTest {
                     ),
                     null,
                     1L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -974,7 +986,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     null,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -1005,7 +1018,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     1L,
-                    null
+                    null,
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -1039,7 +1053,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
 
             // when & then
@@ -1069,7 +1084,8 @@ class TemplateControllerTest {
                     ),
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
             Member secondMember = MemberFixture.getSecondMember();
 
