@@ -11,6 +11,7 @@ interface Props {
   sort?: SortingKey;
   page?: number;
   size?: number;
+  memberId?: number;
 }
 
 export const useTemplateListQuery = ({
@@ -20,10 +21,10 @@ export const useTemplateListQuery = ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
   size = PAGE_SIZE,
+  memberId: passedMemberId,
 }: Props) => {
-  const {
-    memberInfo: { memberId },
-  } = useAuth();
+  const { memberInfo } = useAuth();
+  const memberId = passedMemberId ?? memberInfo.memberId;
 
   return useQuery<TemplateListResponse, Error>({
     queryKey: [QUERY_KEY.TEMPLATE_LIST, keyword, categoryId, tagIds, sort, page, size, memberId],

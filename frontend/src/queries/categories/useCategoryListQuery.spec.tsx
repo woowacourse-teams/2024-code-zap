@@ -3,6 +3,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 
 import { AuthProvider } from '@/contexts';
 import { categories as mockCategories } from '@/mocks/categoryList.json';
+
 import { useCategoryListQuery } from './useCategoryListQuery';
 
 const queryClient = new QueryClient();
@@ -15,7 +16,7 @@ const queryWrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useTagListQuery', () => {
   it('카테고리 목록을 id 오름차순으로 조회할 수 있다.', async () => {
-    const { result } = renderHook(() => useCategoryListQuery(), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useCategoryListQuery({ memberId: 1 }), { wrapper: queryWrapper });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);

@@ -9,7 +9,6 @@ import type {
   CustomError,
   Category,
 } from '@/types';
-import { MemberInfo } from '@/types';
 
 import { customFetch } from './customFetch';
 
@@ -17,7 +16,7 @@ const API_URL = process.env.REACT_APP_API_URL ?? '';
 
 export const CATEGORY_API_URL = `${API_URL}${END_POINTS.CATEGORIES}`;
 
-export const getCategoryList = async ({ memberId }: Pick<MemberInfo, 'memberId'>) => {
+export const getCategoryList = async (memberId: number) => {
   const url = `${CATEGORY_API_URL}?memberId=${memberId}`;
 
   const response = await customFetch<CategoryListResponse>({

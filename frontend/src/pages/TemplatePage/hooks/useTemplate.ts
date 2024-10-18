@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 
 import { useCustomNavigate, useSelectList } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useTemplateDeleteMutation, useTemplateQuery } from '@/queries/templates';
 import { END_POINTS } from '@/routes';
 
 export const useTemplate = (id: number) => {
   const navigate = useCustomNavigate();
+
+  const {
+    memberInfo: { memberId },
+  } = useAuth();
 
   const { data: template } = useTemplateQuery(Number(id));
   const { mutateAsync: deleteTemplate } = useTemplateDeleteMutation([Number(id)]);
@@ -31,7 +36,7 @@ export const useTemplate = (id: number) => {
 
   const handleDelete = () => {
     deleteTemplate();
-    navigate(END_POINTS.MY_TEMPLATES);
+    navigate(END_POINTS.memberTemplates(memberId!));
   };
 
   const handleIsOpenList = (index: number) => () => {

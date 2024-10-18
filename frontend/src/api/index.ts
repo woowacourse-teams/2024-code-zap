@@ -27,3 +27,4 @@ export {
   checkName,
 } from './authentication';
 export { LIKE_API_URL, postLike, deleteLike } from './like';
+export { getMemberName } from './members';

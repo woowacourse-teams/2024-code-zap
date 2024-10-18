@@ -2,24 +2,33 @@ import { useCallback, useState } from 'react';
 
 import { DEFAULT_SORTING_OPTION } from '@/api';
 import { useDropdown } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useSearchKeyword } from '@/hooks/template';
 import { useTemplateListQuery } from '@/queries/templates';
 import { scroll } from '@/utils';
 
 const FIRST_PAGE = 1;
 
-export const useFilteredTemplateList = () => {
+interface Props {
+  memberId?: number;
+}
+
+export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | undefined>(undefined);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const { keyword, debouncedKeyword, handleKeywordChange } = useSearchKeyword();
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
   const [page, setPage] = useState<number>(FIRST_PAGE);
 
+  const { memberInfo } = useAuth();
+  const memberId = passedMemberId ?? memberInfo.memberId;
+
   const {
     data: templateData,
     isFetching: isTemplateListFetching,
     isLoading: isTemplateListLoading,
   } = useTemplateListQuery({
+    memberId,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
     keyword: debouncedKeyword,

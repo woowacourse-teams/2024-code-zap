@@ -74,3 +74,13 @@ export const DeleteButton = styled(Button)`
 export const PrivateWrapper = styled.div`
   flex-shrink: 0;
 `;
+
+export const AuthorInfoContainer = styled.div`
+  cursor: pointer;
+
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+
+  min-width: 0;
+`;

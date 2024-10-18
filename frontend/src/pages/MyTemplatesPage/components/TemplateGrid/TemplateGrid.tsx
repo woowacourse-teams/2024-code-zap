@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { TemplateCard } from '@/components';
+import { END_POINTS } from '@/routes/endPoints';
 import { TemplateListItem } from '@/types';
 
 import * as S from './TemplateGrid.style';
@@ -43,7 +44,7 @@ const TemplateGrid = ({ templateList, isEditMode, selectedList, setSelectedList,
             </S.NonInteractiveWrapper>
           </S.TemplateCardWrapper>
         ) : (
-          <Link to={`/templates/${template.id}`} key={template.id}>
+          <Link to={END_POINTS.template(template.id)} key={template.id}>
             <TemplateCard template={template} />
           </Link>
         ),

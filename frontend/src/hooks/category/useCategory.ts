@@ -3,8 +3,13 @@ import type { Category } from '@/types';
 
 import { useDropdown } from '../';
 
-export const useCategory = (initCategory?: Category) => {
-  const { data } = useCategoryListQuery();
+interface Props {
+  memberId: number;
+  initCategory?: Category;
+}
+
+export const useCategory = ({ memberId, initCategory }: Props) => {
+  const { data } = useCategoryListQuery({ memberId });
   const options = data?.categories || [];
 
   if (!initCategory) {
