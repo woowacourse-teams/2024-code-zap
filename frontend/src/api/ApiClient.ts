@@ -38,29 +38,29 @@ class ApiClient {
     this.credentials = credentials || 'same-origin';
   }
 
-  async get<T>(endpoint: string, params?: RequestParams): Promise<T> {
+  async get(endpoint: string, params?: RequestParams): Promise<Response> {
     const url = new URL(`${this.baseUrl}${endpoint}`);
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
     }
 
-    return this.customFetch<T>('GET', url.toString());
+    return this.customFetch('GET', url.toString());
   }
 
-  async post<T, U>(endpoint: string, body: U): Promise<T> {
-    return this.customFetch<T>('POST', `${this.baseUrl}${endpoint}`, body);
+  async post<T>(endpoint: string, body: T): Promise<Response> {
+    return this.customFetch('POST', `${this.baseUrl}${endpoint}`, body);
   }
 
-  async put<T, U>(endpoint: string, body: U): Promise<T> {
-    return this.customFetch<T>('PUT', `${this.baseUrl}${endpoint}`, body);
+  async put<T>(endpoint: string, body: T): Promise<Response> {
+    return this.customFetch('PUT', `${this.baseUrl}${endpoint}`, body);
   }
 
-  async delete<T>(endpoint: string): Promise<T> {
-    return this.customFetch<T>('DELETE', `${this.baseUrl}${endpoint}`);
+  async delete(endpoint: string): Promise<Response> {
+    return this.customFetch('DELETE', `${this.baseUrl}${endpoint}`);
   }
 
-  private async customFetch<T>(method: HttpMethod, url: string, body?: unknown) {
+  private async customFetch(method: HttpMethod, url: string, body?: unknown) {
     try {
       const response = await fetch(url, {
         method,
@@ -73,11 +73,7 @@ class ApiClient {
         await this.handleError(response);
       }
 
-      if (response.headers.get('content-length') === '0') {
-        return null as T;
-      }
-
-      return response.json() as Promise<T>;
+      return response;
     } catch (error) {
       if (error instanceof ApiError) {
         throw error;

@@ -6,7 +6,6 @@ import type {
   TemplateListResponse,
   TemplateUploadRequest,
   TemplateListRequest,
-  CustomError,
 } from '@/types';
 import { SortingOption } from '@/types';
 
@@ -86,7 +85,7 @@ export const getTemplateExplore = async ({
   size = PAGE_SIZE,
   memberId,
   keyword,
-}: TemplateListRequest) => {
+}: TemplateListRequest): Promise<TemplateListResponse> => {
   const queryParams = new URLSearchParams({
     sort,
     page: page.toString(),
@@ -97,11 +96,10 @@ export const getTemplateExplore = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const response = await apiClient.get<TemplateListResponse>(
-    `/templates${memberId ? '/login' : ''}?${queryParams.toString()}`,
-  );
+  const response = await apiClient.get(`/templates${memberId ? '/login' : ''}?${queryParams.toString()}`);
+  const data = response.json();
 
-  return response;
+  return data;
 };
 
 export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
@@ -116,7 +114,7 @@ export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
   throw new Error(response.detail);
 };
 
-export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void | CustomError> =>
+export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<Response> =>
   await apiClient.post('/templates', newTemplate);
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
