@@ -1,5 +1,5 @@
 import { useTheme } from '@emotion/react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import {
@@ -18,6 +18,7 @@ import {
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
+import { END_POINTS } from '@/routes';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
@@ -26,6 +27,7 @@ import { useTemplate, useLike } from './hooks';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const theme = useTheme();
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
@@ -64,6 +66,12 @@ const TemplatePage = () => {
     }
 
     toggleLike();
+  };
+
+  const handleAuthorClick = () => {
+    if (template?.member?.id) {
+      navigate(END_POINTS.memberTemplates(template.member.id));
+    }
   };
 
   if (!template) {
@@ -124,8 +132,8 @@ const TemplatePage = () => {
                   <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
                 </Flex>
 
-                <Flex gap='0.5rem' align='center'>
-                  <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
+                <Flex gap='0.5rem' align='center' justify='space-between'>
+                  <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
                     <PersonIcon width={ICON_SIZE.X_SMALL} />
                     <div
                       style={{
@@ -141,7 +149,7 @@ const TemplatePage = () => {
                         {template.member.name}
                       </Text.Small>
                     </div>
-                  </Flex>
+                  </S.AuthorInfoContainer>
                   <Flex align='center' gap='0.125rem'>
                     <ClockIcon width={ICON_SIZE.SMALL} />
                     <Text.Small
