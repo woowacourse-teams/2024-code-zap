@@ -1,7 +1,8 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { PAGE_SIZE, QUERY_KEY, DEFAULT_SORTING_OPTION, getTemplateExplore } from '@/api';
-import type { TemplateListResponse, SortingKey } from '@/types';
+import { ApiError } from '@/api/Error/ApiError';
+import type { SortingKey, TemplateListResponse } from '@/types';
 
 interface Props {
   sort?: SortingKey;
@@ -16,9 +17,10 @@ export const useTemplateExploreQuery = ({
   size = PAGE_SIZE,
   keyword,
 }: Props) =>
-  useQuery<TemplateListResponse, Error>({
+  useQuery<TemplateListResponse, ApiError>({
     queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, size, keyword],
     queryFn: () => getTemplateExplore({ sort, page, size, keyword }),
+
     throwOnError: true,
     placeholderData: keepPreviousData,
   });
