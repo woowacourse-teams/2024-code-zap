@@ -46,7 +46,7 @@ public record UpdateTemplateRequest(
 
         @Schema(description = "태그 목록")
         @NotNull(message = "태그 목록이 null 입니다.", groups = NotNullGroup.class)
-        List<String> tags
+        List<@Size(max = 30, message = "태그 명은 최대 30자까지 입력 가능합니다.", groups = SizeCheckGroup.class) String> tags
 ) implements ValidatedSourceCodesOrdinalRequest, ValidatedSourceCodesCountRequest {
     @Override
     public List<Integer> extractSourceCodesOrdinal() {

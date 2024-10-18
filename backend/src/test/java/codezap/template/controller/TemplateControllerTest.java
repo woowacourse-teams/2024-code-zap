@@ -213,7 +213,7 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.sourceCodes(),
                     validRequest.thumbnailOrdinal(),
                     validRequest.categoryId(),
-                    List.of("a".repeat(31)),
+                    List.of("ㄱ".repeat(31)),
                     validRequest.visibility());
         }
 
