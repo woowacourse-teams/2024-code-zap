@@ -71,6 +71,10 @@ export interface TemplateRequest {
   memberId?: number | undefined;
 }
 
+export interface GetMemberNameResponse {
+  name: string;
+}
+
 export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc' | 'likesCount,desc';
 
 export type SortingOption = { key: SortingKey; value: string };

@@ -2,7 +2,8 @@ export const END_POINTS = {
   HOME: '/',
 
   // member
-  MEMBER_TEMPLATES: '/members/:memberId/templates',
+  MEMBERS: '/members',
+  MEMBERS_TEMPLATES: '/members/:memberId/templates',
   memberTemplates: (memberId: number) => `/members/${memberId}/templates`,
 
   // templates

@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
+import { useMemberNameQuery } from '@/queries/members';
 
 import {
   TopBanner,
@@ -21,6 +22,10 @@ import * as S from './MyTemplatePage.style';
 const MyTemplatePage = () => {
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
+
+  const {
+    data: { name },
+  } = useMemberNameQuery({ memberId });
 
   const {
     templateList,
