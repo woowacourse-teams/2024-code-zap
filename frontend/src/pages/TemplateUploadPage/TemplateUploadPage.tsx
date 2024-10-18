@@ -25,7 +25,7 @@ const TemplateUploadPage = () => {
     memberInfo: { memberId },
   } = useAuth();
 
-  const categoryProps = useCategory();
+  const categoryProps = useCategory({ memberId: memberId! });
 
   const [title, handleTitleChange] = useInput('');
   const [description, handleDescriptionChange] = useInput('');

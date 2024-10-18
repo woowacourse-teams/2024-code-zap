@@ -4,7 +4,7 @@ import { CategoryFilterMenu } from '..';
 import * as S from './CategoryListSection.style';
 
 interface Props {
-  memberId?: number;
+  memberId: number;
   onSelectCategory: (selectedCategoryId: number) => void;
 }
 

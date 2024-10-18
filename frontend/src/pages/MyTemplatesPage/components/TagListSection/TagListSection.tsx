@@ -5,7 +5,7 @@ import { TagFilterMenu } from '../';
 interface Props {
   selectedTagIds: number[];
   handleTagMenuClick: (selectedTagIds: number[]) => void;
-  memberId?: number;
+  memberId: number;
 }
 
 const TagListSection = ({ selectedTagIds, handleTagMenuClick, memberId }: Props) => {
