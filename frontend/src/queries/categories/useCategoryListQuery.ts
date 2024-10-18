@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { QUERY_KEY, getCategoryList } from '@/api';
 import { useAuth } from '@/hooks/authentication/useAuth';
@@ -9,8 +9,14 @@ export const useCategoryListQuery = () => {
     memberInfo: { memberId },
   } = useAuth();
 
-  return useQuery<CategoryListResponse, Error>({
+  const result = useSuspenseQuery<CategoryListResponse, Error>({
     queryKey: [QUERY_KEY.CATEGORY_LIST],
     queryFn: () => getCategoryList({ memberId }),
   });
+
+  if (result.error && !result.isFetching) {
+    throw result.error;
+  }
+
+  return result;
 };
