@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 
+import { ToastProvider } from '@/contexts';
 import type { TemplateUploadRequest } from '@/types';
 
 import { useTemplateUploadMutation } from './useTemplateUploadMutation';
@@ -8,12 +10,18 @@ import { useTemplateUploadMutation } from './useTemplateUploadMutation';
 const queryClient = new QueryClient();
 
 const queryWrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  <MemoryRouter>
+    <ToastProvider>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </ToastProvider>
+  </MemoryRouter>
 );
 
 describe('useTemplateUploadMutation', () => {
   it('template을 생성할 수 있다.', async () => {
-    const { result } = renderHook(() => useTemplateUploadMutation(), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useTemplateUploadMutation(), {
+      wrapper: queryWrapper,
+    });
 
     const body: TemplateUploadRequest = {
       title: 'Upload Test',
