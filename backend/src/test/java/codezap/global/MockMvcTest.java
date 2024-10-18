@@ -19,6 +19,7 @@ import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
 import codezap.global.cors.CorsProperties;
+import codezap.likes.service.LikesService;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
 import codezap.tag.service.TagService;
@@ -45,6 +46,9 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected TagService tagService;
+
+    @MockBean
+    protected LikesService likesService;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
