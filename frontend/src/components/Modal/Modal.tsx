@@ -1,6 +1,9 @@
 import { HTMLAttributes, PropsWithChildren, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+import { usePressESC } from '@/hooks/usePressESC';
+import { useScrollDisable } from '@/hooks/useScrollDisable';
+
 import { theme } from '../../style/theme';
 import Heading from '../Heading/Heading';
 import * as S from './Modal.style';
@@ -14,6 +17,9 @@ export interface BaseProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const Base = ({ isOpen, toggleModal, size = 'small', children, ...props }: PropsWithChildren<BaseProps>) => {
+  usePressESC(isOpen, toggleModal);
+  useScrollDisable(isOpen);
+
   if (!isOpen) {
     return null;
   }

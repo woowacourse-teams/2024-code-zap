@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { templates } from '@/mocks/templateList.json';
+import { TemplateListItem } from '@/types';
 
 import TemplateGrid from './TemplateGrid';
 
@@ -8,7 +9,7 @@ const meta: Meta<typeof TemplateGrid> = {
   title: 'TemplateGrid',
   component: TemplateGrid,
   args: {
-    templateList: templates,
+    templateList: templates as TemplateListItem[],
   },
 };
 
