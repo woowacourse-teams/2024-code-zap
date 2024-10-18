@@ -33,7 +33,7 @@ public record CreateTemplateRequest(
 
         @Schema(description = "썸네일 순서", example = "1")
         @NotNull(message = "썸네일 순서가 null 입니다.", groups = NotNullGroup.class)
-        int thumbnailOrdinal,
+        Integer thumbnailOrdinal,
 
         @Schema(description = "카테고리 ID", example = "1")
         @NotNull(message = "카테고리 ID가 null 입니다.", groups = NotNullGroup.class)
