@@ -105,20 +105,9 @@ class MemberServiceTest {
         void findMember() {
             Member member = memberRepository.save(MemberFixture.memberFixture());
 
-            FindMemberResponse actual = memberService.findMember(member, member.getId());
+            FindMemberResponse actual = memberService.findMember(member.getId());
 
             assertThat(actual).isEqualTo(FindMemberResponse.from(member));
-        }
-
-        @Test
-        @DisplayName("회원 ID로 멤버 조회 실패: 본인 ID가 아닌 경우")
-        void findMember_Throw() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            Long otherId = member.getId() + 1;
-
-            assertThatThrownBy(() -> memberService.findMember(member, otherId))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("본인의 정보만 조회할 수 있습니다.");
         }
     }
 
