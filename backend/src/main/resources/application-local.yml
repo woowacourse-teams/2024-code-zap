@@ -2,5 +2,28 @@ spring:
   output:
     ansi:
       enabled: always
+  datasource:
+    write:
+      jdbc-url: ${MYSQL_WRITER_URL}
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    read:
+      jdbc-url: ${MYSQL_READER_URL}
+      username: ${MYSQL_USER}
+      password: ${MYSQL_PASSWORD}
+      driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: false
+    locations: classpath:db/migration
+  jpa:
+    # open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: codezap.template.repository.FullTextSearchMySQLDialect
+  data.web.pageable.one-indexed-parameters: true
+
 cors:
   allowed-origins: http://localhost:3000

@@ -182,7 +182,7 @@ public class SourceCodeRepositoryTest {
             sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
             sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
 
-            sut.deleteByTemplateIds(List.of(1L));
+            sut.deleteAllByTemplateIds(List.of(1L));
             var result = sut.findAllByTemplate(template1);
 
             assertThat(result).isEmpty();

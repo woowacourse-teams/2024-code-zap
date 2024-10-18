@@ -173,7 +173,7 @@ class LikesJpaRepositoryTest {
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
 
-            likesRepository.deleteByTemplateIds(List.of(template1.getId()));
+            likesRepository.deleteAllByTemplateIds(List.of(template1.getId()));
 
             assertAll(
                     () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
@@ -195,7 +195,7 @@ class LikesJpaRepositoryTest {
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
 
-            likesRepository.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
+            likesRepository.deleteAllByTemplateIds(List.of(template1.getId(), template2.getId()));
 
             assertAll(
                     () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),

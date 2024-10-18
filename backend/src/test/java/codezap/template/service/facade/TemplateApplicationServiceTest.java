@@ -510,7 +510,7 @@ class TemplateApplicationServiceTest {
             var deleteIds = List.of(template1.getId(), template2.getId());
 
             // when
-            sut.deleteByMemberAndIds(member, deleteIds);
+            sut.deleteAllByMemberAndTemplateIds(member, deleteIds);
 
             // then
             Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null, null);

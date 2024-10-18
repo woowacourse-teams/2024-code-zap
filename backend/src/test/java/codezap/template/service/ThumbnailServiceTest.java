@@ -166,7 +166,7 @@ class ThumbnailServiceTest {
             var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "Filename 2", "Content 2", 1));
             var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
-            sut.deleteByTemplateIds(List.of(template1.getId()));
+            sut.deleteAllByTemplateIds(List.of(template1.getId()));
             var actual = thumbnailRepository.findAll();
 
             assertThat(actual).hasSize(1)
@@ -186,7 +186,7 @@ class ThumbnailServiceTest {
             var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "Filename 2", "Content 2", 1));
             var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
-            sut.deleteByTemplateIds(List.of(template1.getId(), template2.getId()));
+            sut.deleteAllByTemplateIds(List.of(template1.getId(), template2.getId()));
             var actual = thumbnailRepository.findAll();
 
             assertThat(actual).doesNotContain(savedThumbnail1, savedThumbnail2);
@@ -202,7 +202,7 @@ class ThumbnailServiceTest {
             var savedThumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode));
             var nonExistentID = 100L;
 
-            sut.deleteByTemplateIds(List.of(nonExistentID));
+            sut.deleteAllByTemplateIds(List.of(nonExistentID));
             var actual = thumbnailRepository.findAll();
 
             assertThat(actual).hasSize(1)

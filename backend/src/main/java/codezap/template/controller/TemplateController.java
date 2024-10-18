@@ -109,7 +109,7 @@ public class TemplateController implements SpringDocTemplateController {
             @AuthenticationPrinciple Member member,
             @PathVariable List<Long> ids
     ) {
-        templateApplicationService.deleteByMemberAndIds(member, ids);
+        templateApplicationService.deleteAllByMemberAndTemplateIds(member, ids);
         return ResponseEntity.noContent().build();
     }
 }
