@@ -165,8 +165,10 @@ class LikesJpaRepositoryTest {
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
             Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            Template template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
+            Template template1 = templateRepository.save(
+                    new Template(member1, "Template 1", "Description 1", category1));
+            Template template2 = templateRepository.save(
+                    new Template(member1, "Template 2", "Description 2", category1));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
@@ -185,8 +187,10 @@ class LikesJpaRepositoryTest {
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
             Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            Template template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
+            Template template1 = templateRepository.save(
+                    new Template(member1, "Template 1", "Description 1", category1));
+            Template template2 = templateRepository.save(
+                    new Template(member1, "Template 2", "Description 2", category1));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));

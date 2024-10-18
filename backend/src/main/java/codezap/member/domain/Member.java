@@ -1,7 +1,5 @@
 package codezap.member.domain;
 
-import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +37,11 @@ public class Member extends BaseTimeEntity {
         this(null, name, password, salt);
     }
 
+    public boolean matchId(Long id) {
+        return this.id.equals(id);
+    }
+
     public boolean matchPassword(String password) {
-        return Objects.equals(this.password, password);
+        return this.password.equals(password);
     }
 }

@@ -62,7 +62,8 @@ class TemplateServiceTest extends ServiceTest {
                     () -> assertThat(actual.getTitle()).isEqualTo(templateRequest.title()),
                     () -> assertThat(actual.getMember()).isEqualTo(member),
                     () -> assertThat(actual.getCategory()).isEqualTo(category),
-                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description())
+                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description()),
+                    () -> assertThat(actual.getVisibility()).isEqualTo(templateRequest.visibility())
             );
 
         }
@@ -149,7 +150,7 @@ class TemplateServiceTest extends ServiceTest {
             likeTemplate(4L, 1L);
             likeTemplate(1L, 0L);
 
-            List<Template> templates = sut.findAllBy(null, "", null, null,
+            List<Template> templates = sut.findAllBy(null, "", null, null, null,
                             PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
                     .getContent();
 
@@ -207,7 +208,8 @@ class TemplateServiceTest extends ServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
 
             sut.update(member, template.getId(), updateTemplateRequest, category);
@@ -230,7 +232,8 @@ class TemplateServiceTest extends ServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
             var nonExistentID = 100L;
 
@@ -253,7 +256,8 @@ class TemplateServiceTest extends ServiceTest {
                     List.of(),
                     List.of(),
                     category.getId(),
-                    List.of()
+                    List.of(),
+                    Visibility.PUBLIC
             );
 
             assertThatThrownBy(() -> sut.update(otherMember, template.getId(), updateTemplateRequest, category))
@@ -275,7 +279,8 @@ class TemplateServiceTest extends ServiceTest {
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, PageRequest.of(0, 10));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
 
             assertThat(actual.getContent()).hasSize(1)
                     .containsExactly(template2);
@@ -292,7 +297,8 @@ class TemplateServiceTest extends ServiceTest {
             var template4 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, PageRequest.of(0, 10));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
 
             assertThat(actual.getContent()).hasSize(2)
                     .containsExactly(template2, template3);

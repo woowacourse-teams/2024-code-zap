@@ -13,6 +13,7 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
@@ -49,9 +50,11 @@ public class TemplateService {
             String keyword,
             Long categoryId,
             List<Long> tagIds,
+            Visibility visibility,
             Pageable pageable
     ) {
-        return templateRepository.findAll(new TemplateSpecification(memberId, keyword, categoryId, tagIds), pageable);
+        return templateRepository.findAll(
+                new TemplateSpecification(memberId, keyword, categoryId, tagIds, visibility), pageable);
     }
 
     @Transactional
@@ -63,7 +66,12 @@ public class TemplateService {
     ) {
         Template template = templateRepository.fetchById(templateId);
         template.validateAuthorization(member);
-        template.updateTemplate(updateTemplateRequest.title(), updateTemplateRequest.description(), category);
+        template.updateTemplate(
+                updateTemplateRequest.title(),
+                updateTemplateRequest.description(),
+                category,
+                updateTemplateRequest.visibility()
+        );
         return template;
     }
 
