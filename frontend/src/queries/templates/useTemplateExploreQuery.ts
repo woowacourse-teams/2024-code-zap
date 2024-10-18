@@ -4,8 +4,6 @@ import { PAGE_SIZE, QUERY_KEY, DEFAULT_SORTING_OPTION, getTemplateExplore } from
 import { ApiError } from '@/api/Error/ApiError';
 import type { SortingKey, TemplateListResponse } from '@/types';
 
-import { useAuth } from '../../hooks/authentication/useAuth';
-
 interface Props {
   sort?: SortingKey;
   page?: number;
@@ -18,15 +16,11 @@ export const useTemplateExploreQuery = ({
   page = 1,
   size = PAGE_SIZE,
   keyword,
-}: Props) => {
-  const {
-    memberInfo: { memberId },
-  } = useAuth();
+}: Props) =>
+  useQuery<TemplateListResponse, ApiError>({
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, size, keyword],
+    queryFn: () => getTemplateExplore({ sort, page, size, keyword }),
 
-  return useQuery<TemplateListResponse, ApiError>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, size, keyword, memberId],
-    queryFn: () => getTemplateExplore({ sort, page, size, keyword, memberId }),
     throwOnError: true,
     placeholderData: keepPreviousData,
   });
-};

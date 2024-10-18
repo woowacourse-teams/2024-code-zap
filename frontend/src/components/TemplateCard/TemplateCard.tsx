@@ -1,6 +1,8 @@
-import { ClockIcon, PersonIcon } from '@/assets/images';
+import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
+import { VISIBILITY_PRIVATE } from '@/service/constants';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
@@ -12,8 +14,9 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const { title, description, thumbnail, tags, modifiedAt, member } = template;
+  const { title, description, thumbnail, tags, modifiedAt, member, visibility } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
+  const isPrivate = visibility === VISIBILITY_PRIVATE;
 
   const blockMovingToDetailPage = (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent> | React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -34,8 +37,9 @@ const TemplateCard = ({ template }: Props) => {
       <Flex width='100%' direction='column' gap='1rem'>
         <Flex width='100%' justify='space-between' gap='1rem'>
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
+            {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_800} />}
             <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
-              <PersonIcon width={14} />
+              <PersonIcon width={ICON_SIZE.X_SMALL} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
                 <Text.Small
                   color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
@@ -45,7 +49,7 @@ const TemplateCard = ({ template }: Props) => {
               </S.EllipsisTextWrapper>
             </Flex>
             <Flex align='center' gap='0.25rem'>
-              <ClockIcon width={14} />
+              <ClockIcon width={ICON_SIZE.X_SMALL} />
               <S.NoWrapTextWrapper>
                 <Text.Small color={theme.color.light.primary_500}>{formatRelativeTime(modifiedAt)}</Text.Small>
               </S.NoWrapTextWrapper>
@@ -71,13 +75,13 @@ const TemplateCard = ({ template }: Props) => {
         </S.EllipsisTextWrapper>
       </Flex>
 
-      <SourceCodeViewer mode='thumbnailView' content={thumbnail.content} />
+      <SourceCodeViewer mode='thumbnailView' filename={thumbnail.filename} content={thumbnail.content} />
 
       <Flex justify='space-between' onClick={blockMovingToDetailPage}>
         <S.TagListContainer>
           {tags.map((tag: Tag) => (
             <Flex key={tag.id}>
-              <TagButton name={tag.name} disabled={true} />
+              <TagButton id={tag.id} name={tag.name} disabled={true} />
             </Flex>
           ))}
         </S.TagListContainer>
@@ -92,7 +96,7 @@ const TemplateCard = ({ template }: Props) => {
         {tags.length !== 0 && showAllTagList && (
           <S.AllTagListContainer>
             {tags.map((tag: Tag) => (
-              <TagButton key={tag.id} name={tag.name} disabled={true} />
+              <TagButton key={tag.id} id={tag.id} name={tag.name} disabled={true} />
             ))}
           </S.AllTagListContainer>
         )}

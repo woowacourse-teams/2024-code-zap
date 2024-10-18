@@ -1,12 +1,6 @@
-import {
-  Children,
-  HTMLAttributes,
-  InputHTMLAttributes,
-  isValidElement,
-  LabelHTMLAttributes,
-  PropsWithChildren,
-  ReactNode,
-} from 'react';
+import { HTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, PropsWithChildren } from 'react';
+
+import { getChildOfType, getChildrenWithoutTypes } from '@/utils';
 
 import * as S from './Input.style';
 
@@ -28,18 +22,6 @@ export interface AdornmentProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export interface HelperTextProps extends HTMLAttributes<HTMLSpanElement> {}
-
-const getChildOfType = (children: ReactNode, type: unknown) => {
-  const childrenArray = Children.toArray(children);
-
-  return childrenArray.find((child) => isValidElement(child) && child.type === type);
-};
-
-const getChildrenWithoutTypes = (children: ReactNode, types: unknown[]) => {
-  const childrenArray = Children.toArray(children);
-
-  return childrenArray.filter((child) => !(isValidElement(child) && types.includes(child.type)));
-};
 
 const TextField = ({ ...rests }: TextFieldProps) => <S.TextField {...rests} />;
 
