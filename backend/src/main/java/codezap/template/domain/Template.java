@@ -72,10 +72,11 @@ public class Template extends BaseTimeEntity {
         this.visibility = visibility;
     }
 
-    public void updateTemplate(String title, String description, Category category) {
+    public void updateTemplate(String title, String description, Category category, Visibility visibility) {
         this.title = title;
         this.description = description;
         this.category = category;
+        this.visibility = visibility;
     }
 
     public void validateAuthorization(Member member) {

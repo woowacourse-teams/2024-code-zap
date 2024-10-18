@@ -61,19 +61,6 @@ public class TemplateController implements SpringDocTemplateController {
         );
     }
 
-    @Deprecated
-    @GetMapping("/login")
-    public ResponseEntity<FindAllTemplatesResponse> findAllTemplatesWithMember(
-            @AuthenticationPrinciple Member member,
-            @RequestParam(required = false) Long memberId,
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) List<Long> tagIds,
-            @PageableDefault(size = 20) Pageable pageable
-    ) {
-        return findAllTemplates(member, memberId, keyword, categoryId, tagIds, pageable);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateResponse> findTemplateById(
             @AuthenticationPrinciple(required = false) Member member,
@@ -83,15 +70,6 @@ public class TemplateController implements SpringDocTemplateController {
             return ResponseEntity.ok(templateApplicationService.findById(id));
         }
         return ResponseEntity.ok(templateApplicationService.findById(id, member));
-    }
-
-    @Deprecated
-    @GetMapping("/{id}/login")
-    public ResponseEntity<FindTemplateResponse> findTemplateByIdWithMember(
-            @AuthenticationPrinciple Member member,
-            @PathVariable Long id
-    ) {
-        return findTemplateById(member, id);
     }
 
     @PostMapping("/{id}")

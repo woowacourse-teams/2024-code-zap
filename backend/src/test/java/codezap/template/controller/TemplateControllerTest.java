@@ -368,7 +368,8 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)),
                     List.of(1L),
                     1L,
-                    List.of("tag1", "tag3")
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
             );
         }
 
@@ -413,7 +414,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -426,7 +428,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -442,7 +445,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -458,7 +462,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -471,7 +476,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -484,7 +490,8 @@ class TemplateControllerTest extends MockMvcTest {
                     null,
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -497,7 +504,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     null,
                     validRequest.categoryId(),
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -510,7 +518,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     null,
-                    validRequest.tags()
+                    validRequest.tags(),
+                    Visibility.PUBLIC
             );
         }
 
@@ -523,7 +532,8 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.updateSourceCodes(),
                     validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
-                    null
+                    null,
+                    Visibility.PUBLIC
             );
         }
 
@@ -560,7 +570,9 @@ class TemplateControllerTest extends MockMvcTest {
                     updateSourceCodes,
                     List.of(1L),
                     2L,
-                    List.of("tag1", "tag3"));
+                    List.of("tag1", "tag3"),
+                    Visibility.PUBLIC
+            );
         }
     }
 

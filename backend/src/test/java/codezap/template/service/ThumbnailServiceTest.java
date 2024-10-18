@@ -103,7 +103,7 @@ class ThumbnailServiceTest extends ServiceTest {
 
             var actual = sut.getAllByTemplates(List.of(template1, template2));
 
-           assertThat(actual).containsExactlyInAnyOrder(thumbnail1, thumbnail2);
+            assertThat(actual).containsExactlyInAnyOrder(thumbnail1, thumbnail2);
         }
 
         @Test

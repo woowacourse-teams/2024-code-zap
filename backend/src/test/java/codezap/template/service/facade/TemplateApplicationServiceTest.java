@@ -22,7 +22,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import codezap.category.domain.Category;
+import codezap.category.repository.CategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
@@ -69,7 +72,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // given
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(new Category("Members", ownerMember));
+            var category = categoryRepository.save(CategoryFixture.get(ownerMember));
             var request = createTemplateRequest(category);
 
             // when & then
@@ -178,23 +181,28 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content", 1));
-            thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
+
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
 
             // when & then
-            assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
-                    .doesNotThrowAnyException();
+            assertAll(
+                    () -> assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable))
+                            .doesNotThrowAnyException(),
+                    () -> assertThat(sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable).templates())
+                            .extracting("id").doesNotContain(privateTemplate.getId())
+            );
+
         }
 
         static Stream<Arguments> findAllBy() {
             return Stream.of(
-                    Arguments.of(null, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(1L, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, 1L, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, null, Pageable.ofSize(2))
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(1L, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, 1L, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5))
             );
         }
 
@@ -241,8 +249,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content", 1));
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
             // when & then
@@ -252,17 +260,77 @@ class TemplateApplicationServiceTest extends ServiceTest {
 
         static Stream<Arguments> findAllBy() {
             return Stream.of(
-                    Arguments.of(null, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(1L, null, null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, 1L, null, Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(1)),
-                    Arguments.of(null, null, null, null, Pageable.ofSize(2))
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(1L, null, null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, "keyword", null, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, 1L, null, Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, List.of(1L, 2L), Pageable.ofSize(5)),
+                    Arguments.of(null, null, null, null, Pageable.ofSize(5))
             );
         }
 
         @Test
-        @DisplayName("좋아요 정보 조회 테스트")
+        @DisplayName("검색 성공: 사용자ID가 없을 경우 (private 템플릿 제외)")
+        void findAllByWithNotMemberId() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            Pageable pageable = Pageable.ofSize(5);
+
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
+
+            // when
+            var actual = sut.findAllBy(null, null, null, null, pageable, member);
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactly(template.getId())
+                    .doesNotContain(privateTemplate.getId());
+        }
+
+        @Test
+        @DisplayName("검색 성공: 사용자ID와 로그인 정보가 같을 경우 (private 템플릿 포함)")
+        void findAllByWithMemberIdSameLoginMember() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            Pageable pageable = Pageable.ofSize(5);
+
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
+
+            // when
+            var actual = sut.findAllBy(1L, null, null, null, pageable, member);
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactlyInAnyOrder(template.getId(), privateTemplate.getId());
+        }
+
+        @Test
+        @DisplayName("검색 성공: 사용자ID와 로그인 정보가 다를 경우 (private 템플릿 제외)")
+        void findAllByWithMemberIdDifferentLoginMember() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var loginMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            Pageable pageable = Pageable.ofSize(5);
+
+            var template = savePublicTemplate(member, category);
+            var privateTemplate = savePrivateTemplate(member, category);
+
+            // when
+            var actual = sut.findAllBy(1L, null, null, null, pageable, loginMember);
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactly(template.getId())
+                    .doesNotContain(privateTemplate.getId());
+        }
+
+        @Test
+        @DisplayName("검색 성공: 좋아요 정보 조회")
         void findAllByIsLikedTest() {
             // given
             Member loginMember = memberRepository.save(MemberFixture.getFirstMember());
@@ -301,6 +369,20 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
     }
 
+    private Template savePrivateTemplate(Member member, Category category) {
+        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
+        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+        return privateTemplate;
+    }
+
+    private Template savePublicTemplate(Member member, Category category) {
+        var template = templateRepository.save(TemplateFixture.get(member, category));
+        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+        thumbnailRepository.save(new Thumbnail(template, sourceCode));
+        return template;
+    }
+
     @Nested
     @DisplayName("템플릿 수정")
     class Update {
@@ -311,9 +393,9 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template = templateRepository.save(new Template(member, "title1", "description", category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template, "filename1", "content1", 1));
-            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template, "filename2", "content2", 2));
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
             var createRequest = List.of(new CreateSourceCodeRequest("filename3", "content3", 3));
@@ -328,7 +410,9 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     updateRequest,
                     deleteIds,
                     category.getId(),
-                    List.of());
+                    List.of(),
+                    Visibility.PUBLIC
+            );
 
             // when
             sut.update(member, template.getId(), request);
@@ -346,13 +430,13 @@ class TemplateApplicationServiceTest extends ServiceTest {
         void updateTemplate_WhenNoAuthorization() {
             // given
             Member otherMember = memberRepository.save(MemberFixture.getFirstMember());
-            Category othersCategory = categoryRepository.save(new Category("Members", otherMember));
+            Category othersCategory = categoryRepository.save(CategoryFixture.get(otherMember));
 
             Member member = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(new Category("Members", member));
+            Category category = categoryRepository.save(CategoryFixture.get(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 
-            SourceCode sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
             UpdateSourceCodeRequest updateSourceCodeRequest = updateSourceCodeRequest(sourceCode);
 
@@ -363,12 +447,13 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     List.of(updateSourceCodeRequest),
                     Collections.emptyList(),
                     othersCategory.getId(),
-                    Collections.emptyList());
+                    Collections.emptyList(),
+                    Visibility.PUBLIC);
 
             // when & then
             assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
+                    .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
         private UpdateSourceCodeRequest updateSourceCodeRequest(SourceCode sourceCode) {
@@ -391,11 +476,11 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var template3 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode3 = sourceCodeRepository.save(new SourceCode(template3, "filename3", "content3", 3));
+            var sourceCode3 = sourceCodeRepository.save(SourceCodeFixture.get(template3, 1));
             likesRepository.save(new Likes(template1, member));
             likesRepository.save(new Likes(template2, member));
 
@@ -405,7 +490,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             sut.deleteAllByMemberAndTemplateIds(member, deleteIds);
 
             // then
-            Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null);
+            Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null, null);
             var actualTemplatesLeft = templateRepository.findAll(spec, PageRequest.of(0, 10));
             var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
