@@ -8,12 +8,12 @@ import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
-import { END_POINTS } from '@/routes';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
 import { TemplateVisibility } from '@/types/template';
+import { getLanguageForAutoTag } from '@/utils';
 
 import * as S from './TemplateUploadPage.style';
 
@@ -92,17 +92,7 @@ const TemplateUploadPage = () => {
       visibility,
     };
 
-    await uploadTemplate(newTemplate, {
-      onSuccess: (res) => {
-        if (res?.status === 400 || res?.status === 404) {
-          failAlert('템플릿 생성에 실패했습니다. 다시 한 번 시도해주세요');
-
-          return;
-        }
-
-        navigate(END_POINTS.memberTemplates(memberId!));
-      },
-    });
+    await uploadTemplate(newTemplate);
   };
 
   return (
@@ -145,6 +135,7 @@ const TemplateUploadPage = () => {
             isValidContentChange={isValidContentChange}
             onChangeContent={(newContent) => handleContentChange(newContent, index)}
             onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
+            onBlurFilename={(newFilename) => tagProps.addTag(getLanguageForAutoTag(newFilename))}
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}
           />

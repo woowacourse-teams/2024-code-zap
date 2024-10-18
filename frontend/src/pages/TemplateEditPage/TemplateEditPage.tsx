@@ -13,6 +13,7 @@ import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
 import { TemplateVisibility } from '@/types/template';
+import { getLanguageForAutoTag } from '@/utils';
 
 import * as S from './TemplateEditPage.style';
 
@@ -144,6 +145,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
             isValidContentChange={isValidContentChange}
             onChangeContent={(newContent) => handleContentChange(newContent, index)}
             onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
+            onBlurFilename={(newFilename) => tagProps.addTag(getLanguageForAutoTag(newFilename))}
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}
           />
