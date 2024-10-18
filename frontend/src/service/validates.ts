@@ -75,19 +75,3 @@ export const validateTagLength = (tag: string) => {
 
   return '';
 };
-
-export const validateEmail = (email: string) => {
-  const emailRegex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-
-  const isValid = emailRegex.test(email);
-
-  if (!email.length) {
-    return '';
-  }
-
-  if (!isValid) {
-    return '이메일 형식이 잘못되었습니다.';
-  }
-
-  return '';
-};

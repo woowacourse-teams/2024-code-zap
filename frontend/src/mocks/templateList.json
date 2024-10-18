@@ -32,8 +32,7 @@
       ],
       "modifiedAt": "2024-07-01 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 2,
@@ -67,8 +66,7 @@
       ],
       "modifiedAt": "2024-07-11 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PRIVATE"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 3,
@@ -93,8 +91,7 @@
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-10 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PRIVATE"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 4,
@@ -122,8 +119,7 @@
       ],
       "modifiedAt": "2024-07-09 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 5,
@@ -148,8 +144,7 @@
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-08 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 6,
@@ -183,8 +178,7 @@
       ],
       "modifiedAt": "2024-07-07 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 7,
@@ -218,8 +212,7 @@
       ],
       "modifiedAt": "2024-07-06 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 8,
@@ -244,8 +237,7 @@
       "tags": [],
       "modifiedAt": "2024-07-05 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 9,
@@ -279,8 +271,7 @@
       ],
       "modifiedAt": "2024-07-04 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 10,
@@ -308,8 +299,7 @@
       ],
       "modifiedAt": "2024-07-03 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 11,
@@ -343,8 +333,7 @@
       ],
       "modifiedAt": "2024-07-02 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 12,
@@ -369,8 +358,7 @@
       "tags": [],
       "modifiedAt": "2024-07-01 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 13,
@@ -404,8 +392,7 @@
       ],
       "modifiedAt": "2024-07-11 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 14,
@@ -430,8 +417,7 @@
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-10 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 15,
@@ -465,8 +451,7 @@
       ],
       "modifiedAt": "2024-07-09 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 16,
@@ -494,8 +479,7 @@
       ],
       "modifiedAt": "2024-07-08 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 17,
@@ -523,8 +507,7 @@
       ],
       "modifiedAt": "2024-07-07 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 18,
@@ -559,8 +542,7 @@
       ],
       "modifiedAt": "2024-07-06 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 19,
@@ -585,8 +567,7 @@
       "tags": [{ "id": 1, "name": "Java" }],
       "modifiedAt": "2024-07-05 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 20,
@@ -614,8 +595,7 @@
       ],
       "modifiedAt": "2024-07-04 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 21,
@@ -640,8 +620,7 @@
       "tags": [],
       "modifiedAt": "2024-07-03 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 22,
@@ -669,8 +648,7 @@
       ],
       "modifiedAt": "2024-07-02 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 23,
@@ -695,8 +673,7 @@
       "tags": [],
       "modifiedAt": "2024-07-01 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 24,
@@ -724,8 +701,7 @@
       ],
       "modifiedAt": "2024-07-11 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 25,
@@ -753,8 +729,7 @@
       ],
       "modifiedAt": "2024-07-10 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 26,
@@ -782,8 +757,7 @@
       ],
       "modifiedAt": "2024-07-09 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 27,
@@ -811,8 +785,7 @@
       ],
       "modifiedAt": "2024-07-08 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 28,
@@ -837,8 +810,7 @@
       "tags": [{ "id": 7, "name": "Styling" }],
       "modifiedAt": "2024-07-07 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 29,
@@ -866,8 +838,7 @@
       ],
       "modifiedAt": "2024-07-06 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 30,
@@ -892,8 +863,7 @@
       "tags": [{ "id": 10, "name": "Python" }],
       "modifiedAt": "2024-07-05 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 31,
@@ -918,8 +888,7 @@
       "tags": [{ "id": 3, "name": "JavaScript" }],
       "modifiedAt": "2024-07-04 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 32,
@@ -947,8 +916,7 @@
       ],
       "modifiedAt": "2024-07-03 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     },
     {
       "id": 33,
@@ -973,8 +941,7 @@
       "tags": [],
       "modifiedAt": "2024-07-02 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 1, "name": "MemberID1" },
-      "visibility": "PUBLIC"
+      "member": { "id": 1, "name": "MemberID1" }
     },
     {
       "id": 34,
@@ -1002,8 +969,7 @@
       ],
       "modifiedAt": "2024-07-01 12:34",
       "createdAt": "2024-07-09 12:34",
-      "member": { "id": 2, "name": "MemberID2" },
-      "visibility": "PUBLIC"
+      "member": { "id": 2, "name": "MemberID2" }
     }
   ]
 }

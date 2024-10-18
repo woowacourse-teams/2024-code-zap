@@ -3,7 +3,6 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { PropsWithChildren } from 'react';
 
 import type { TemplateEditRequest } from '@/types';
-
 import { useTemplateEditMutation } from './useTemplateEditMutation';
 
 const queryClient = new QueryClient();
@@ -30,7 +29,6 @@ describe('useTemplateEditMutation', () => {
       deleteSourceCodeIds: [],
       categoryId: 1,
       tags: [],
-      visibility: 'PUBLIC',
     };
 
     await result.current.mutateAsync({ id: 2024, template });

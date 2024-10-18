@@ -21,6 +21,23 @@ export const MainContainer = styled.main`
   }
 `;
 
+export const TopBannerContainer = styled.div`
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 10.25rem;
+
+  white-space: nowrap;
+`;
+
+export const TopBannerTextWrapper = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-left: calc(12.5rem + clamp(1rem, calc(0.0888 * 100vw - 3.2618rem), 4.375rem));
+`;
+
 export const SearchInput = styled(Input)`
   box-shadow: inset 1px 2px 8px #00000030;
 `;
@@ -45,7 +62,20 @@ export const NewTemplateButton = styled.button`
   }
 `;
 
-export const TemplateListSectionWrapper = styled.div`
-  position: relative;
-  width: 100%;
+export const ScrollTopButton = styled.button`
+  cursor: pointer;
+
+  position: fixed;
+  right: 2rem;
+  bottom: 2rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0.75rem;
+
+  background-color: ${theme.color.light.primary_500};
+  border: none;
+  border-radius: 100%;
 `;

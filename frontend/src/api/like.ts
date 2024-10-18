@@ -5,7 +5,7 @@ import { LikeDeleteRequest, LikePostRequest } from '@/types';
 
 import { customFetch } from './customFetch';
 
-const API_URL = process.env.REACT_APP_API_URL ?? '';
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const LIKE_API_URL = `${API_URL}${END_POINTS.LIKES}`;
 

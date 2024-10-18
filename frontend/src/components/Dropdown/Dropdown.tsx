@@ -1,5 +1,4 @@
 import { ChevronIcon } from '@/assets/images';
-import { ICON_SIZE } from '@/style/styleConstants';
 
 import { theme } from '../../style/theme';
 import Text from '../Text/Text';
@@ -66,8 +65,8 @@ const SelectedButton = <T,>({ toggleDropdown, getOptionLabel, currentValue, isOp
   <S.SelectedButton onClick={toggleDropdown}>
     <Text.Small color={theme.color.light.black}>{getOptionLabel(currentValue)}</Text.Small>
     <ChevronIcon
-      width={ICON_SIZE.SMALL}
-      height={ICON_SIZE.SMALL}
+      width={16}
+      height={16}
       aria-label='정렬기준 펼침'
       css={{ transition: 'transform 0.3s ease', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
     />

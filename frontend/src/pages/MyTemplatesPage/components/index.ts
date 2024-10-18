@@ -2,13 +2,3 @@ export { default as CategoryEditModal } from './CategoryEditModal/CategoryEditMo
 export { default as CategoryFilterMenu } from './CategoryFilterMenu/CategoryFilterMenu';
 export { default as TagFilterMenu } from './TagFilterMenu/TagFilterMenu';
 export { default as TemplateGrid } from './TemplateGrid/TemplateGrid';
-export { default as TopBanner } from './TopBanner/TopBanner';
-export { default as ConfirmDeleteModal } from './ConfirmDeleteModal/ConfirmDeleteModal';
-export { default as NewTemplateButton } from './NewTemplateButton/NewTemplateButton';
-export { default as CategoryListSection } from './CategoryListSection/CategoryListSection';
-export { default as CategoryListSectionSkeleton } from './CategoryListSection/CategoryListSectionSkeleton';
-export { default as TagListSection } from './TagListSection/TagListSection';
-export { default as TagListSectionSkeleton } from './TagListSection/TagListSectionSkeleton';
-export { default as TemplateListSection } from './TemplateListSection/TemplateListSection';
-export { default as TemplateListSectionLoading } from './TemplateListSection/TemplateListSectionLoading';
-export { default as TemplateDeleteSelection } from './TemplateDeleteSelection/TemplateDeleteSelection';

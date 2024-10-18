@@ -3,7 +3,6 @@ import { useMemo, useState } from 'react';
 import { BooksIcon, Chevron2Icon, SettingIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { useToggle, useWindowWidth } from '@/hooks';
-import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
 
@@ -52,13 +51,13 @@ const CategoryFilterMenu = ({ categoryList, onSelectCategory }: CategoryMenuProp
     <>
       {windowWidth <= 768 && (
         <S.ToggleMenuButton onClick={toggleMenu} isMenuOpen={isMenuOpen}>
-          <BooksIcon width={ICON_SIZE.X_LARGE} height={ICON_SIZE.X_LARGE} aria-label='카테고리 메뉴 열기' />
-          <Chevron2Icon width={ICON_SIZE.LARGE} height={ICON_SIZE.LARGE} />
+          <BooksIcon width={32} height={32} aria-label='카테고리 메뉴 열기' />
+          <Chevron2Icon width={24} height={24} />
         </S.ToggleMenuButton>
       )}
       <S.CategoryContainer isMenuOpen={isMenuOpen}>
         <S.IconButtonWrapper onClick={toggleEditModal} isMenuOpen={isMenuOpen}>
-          <SettingIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 편집' />
+          <SettingIcon width={18} height={18} aria-label='카테고리 편집' />
         </S.IconButtonWrapper>
         <S.CategoryListContainer>
           <S.CategoryButtonContainer>

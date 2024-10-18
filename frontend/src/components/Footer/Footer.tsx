@@ -1,4 +1,4 @@
-import { ContactUs, Text } from '@/components';
+import { Text } from '@/components';
 import { useAuth } from '@/hooks/authentication';
 
 import * as S from './Footer.style';
@@ -19,8 +19,11 @@ const Footer = () => {
         </Text.Small>{' '}
         © All rights reserved.
       </Text.Small>
-      <S.ContactEmail>
-        <ContactUs />
+      <S.ContactEmail href='mailto:codezap2024@gmail.com'>
+        <Text.Small color='inherit' weight='bold'>
+          문의 :
+        </Text.Small>{' '}
+        <Text.Small color='inherit'>codezap2024@gmail.com</Text.Small>{' '}
       </S.ContactEmail>
     </S.FooterContainer>
   );
