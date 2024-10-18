@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
-import { Button, Flex, Heading, Text } from '@/components';
+import { Button, ContactUs, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useCustomNavigate, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
@@ -56,6 +56,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
           <S.NavContainer>
             {!isChecking && isLogin && <NavOption route={END_POINTS.MY_TEMPLATES} name='내 템플릿' />}
             <NavOption route={END_POINTS.TEMPLATES_EXPLORE} name='구경가기' />
+            <ContactUs />
           </S.NavContainer>
           <S.NavContainer>
             <S.MobileHiddenButton
@@ -91,24 +92,39 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   );
 };
 
-const Logo = () => (
-  <Link to={END_POINTS.HOME}>
-    <Flex align='center' gap='0.5rem'>
-      <CodeZapLogo aria-label='로고 버튼' />
-      <Heading.XSmall color={theme.color.light.primary_500}>코드잽</Heading.XSmall>
-    </Flex>
-  </Link>
-);
+const Logo = () => {
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
 
-const NavOption = ({ route, name }: { route: string; name: string }) => (
-  <Link to={route}>
-    <S.NavOptionButton>
-      <Text.Medium weight='bold' color={theme.color.light.secondary_800}>
-        {name}
-      </Text.Medium>
-    </S.NavOptionButton>
-  </Link>
-);
+  return (
+    <Link to={END_POINTS.HOME}>
+      <Flex align='center' gap='0.5rem'>
+        <CodeZapLogo aria-label='로고 버튼' />
+        <Heading.XSmall color={isLandingPage ? theme.color.light.primary_500 : theme.color.light.secondary_800}>
+          코드잽
+        </Heading.XSmall>
+      </Flex>
+    </Link>
+  );
+};
+
+const NavOption = ({ route, name }: { route: string; name: string }) => {
+  const location = useLocation();
+  const isCurrentPage = location.pathname === route;
+
+  return (
+    <Link to={route}>
+      <S.NavOptionButton>
+        <Text.Medium
+          weight='bold'
+          color={isCurrentPage ? theme.color.light.primary_500 : theme.color.light.secondary_800}
+        >
+          {name}
+        </Text.Medium>
+      </S.NavOptionButton>
+    </Link>
+  );
+};
 
 const LogoutButton = () => {
   const { mutateAsync } = useLogoutMutation();

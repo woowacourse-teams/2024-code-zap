@@ -50,7 +50,7 @@ test('템플릿 카드를 누르면 템플릿 제목, 설명, 작성자, 생성�
 }) => {
   await page.goto('/my-templates');
   // 템플릿 목록
-  await waitForSuccess({ page, apiUrl: '/templates/login?keyword' });
+  await waitForSuccess({ page, apiUrl: '/templates?keyword' });
 
   const templateCard = page.getByRole('link', { name: '상세조회테스트' });
 

@@ -4,11 +4,11 @@ import { theme } from '@/style/theme';
 
 export const TagFilterMenuContainer = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: flex-start;
 
   width: 100%;
-  padding: 1rem;
+  padding: 0.75rem 0.75rem 0 0.75rem;
 
   border: 1px solid ${theme.color.light.secondary_300};
   border-radius: 8px;
@@ -19,10 +19,11 @@ export const TagButtonsContainer = styled.div<{ height: string }>`
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  align-items: flex-start;
+  align-items: center;
 
   width: 100%;
   height: ${({ height }) => height};
+  margin-bottom: 0.75rem;
 
   transition: height 0.3s ease-in-out;
 `;

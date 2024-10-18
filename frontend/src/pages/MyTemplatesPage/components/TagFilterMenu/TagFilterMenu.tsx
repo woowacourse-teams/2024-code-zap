@@ -3,12 +3,13 @@ import { useState, useRef, useEffect } from 'react';
 import { ChevronIcon } from '@/assets/images';
 import { TagButton } from '@/components';
 import { useToggle, useWindowWidth } from '@/hooks';
+import { ICON_SIZE } from '@/style/styleConstants';
 import type { Tag } from '@/types';
 import { remToPx } from '@/utils';
 
 import * as S from './TagFilterMenu.style';
 
-const LINE_HEIGHT_REM = 1.875;
+const LINE_HEIGHT_REM = 2.25;
 
 interface Props {
   tagList: Tag[];
@@ -69,15 +70,28 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
     <S.TagFilterMenuContainer data-testid='tag-filter-menu'>
       <S.TagButtonsContainer ref={containerRef} height={height}>
         {selectedTags.map((tag) => (
-          <TagButton key={tag.id} name={tag.name} isFocused={true} onClick={() => handleButtonClick(tag.id)} />
+          <TagButton
+            key={tag.id}
+            id={tag.id}
+            name={tag.name}
+            isFocused={true}
+            variant='edit'
+            onClick={() => handleButtonClick(tag.id)}
+          />
         ))}
         {unselectedTags.map((tag) => (
-          <TagButton key={tag.id} name={tag.name} isFocused={false} onClick={() => handleButtonClick(tag.id)} />
+          <TagButton
+            key={tag.id}
+            id={tag.id}
+            name={tag.name}
+            isFocused={false}
+            onClick={() => handleButtonClick(tag.id)}
+          />
         ))}
       </S.TagButtonsContainer>
       {showMoreButton && (
         <S.ShowMoreButton size={LINE_HEIGHT_REM} onClick={toggleTagBox} isExpanded={isTagBoxOpen}>
-          <ChevronIcon width={16} height={16} aria-label='태그 더보기' />
+          <ChevronIcon width={ICON_SIZE.SMALL} height={ICON_SIZE.SMALL} aria-label='태그 더보기' />
         </S.ShowMoreButton>
       )}
     </S.TagFilterMenuContainer>

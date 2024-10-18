@@ -17,7 +17,7 @@ export const HeaderContainer = styled.nav`
   padding: 0 2rem;
 
   background: white;
-  border-bottom: 2px solid ${theme.color.light.secondary_200};
+  border-bottom: 1px solid ${theme.color.light.secondary_300};
 
   @media (max-width: 768px) {
     padding: 0 1rem;
