@@ -95,7 +95,7 @@ export const getTemplateExplore = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const response = await apiClient.get(`/templates?${queryParams.toString()}`);
+  const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);
   const data = response.json();
 
   return data;
@@ -114,7 +114,7 @@ export const getTemplate = async ({ id }: TemplateRequest) => {
 };
 
 export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<Response> =>
-  await apiClient.post('/templates', newTemplate);
+  await apiClient.post(`${END_POINTS.TEMPLATES_EXPLORE}`, newTemplate);
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({
