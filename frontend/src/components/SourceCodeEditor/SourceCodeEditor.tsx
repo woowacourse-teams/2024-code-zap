@@ -14,6 +14,7 @@ interface Props {
   content: string;
   onChangeFilename: (newFileName: string) => void;
   onChangeContent: (newContent: string) => void;
+  onBlurFilename: (newFileName: string) => void;
   isValidContentChange?: (newContent: string) => boolean;
   handleDeleteSourceCode: () => void;
   sourceCodeRef?: React.Ref<HTMLInputElement> | null;
@@ -24,6 +25,7 @@ const SourceCodeEditor = ({
   filenameAutoFocus = false,
   content,
   onChangeFilename,
+  onBlurFilename,
   onChangeContent,
   isValidContentChange = () => true,
   handleDeleteSourceCode,
@@ -53,11 +55,16 @@ const SourceCodeEditor = ({
     previousContentRef.current = value;
   };
 
+  const handleFilenameBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    onBlurFilename(e.target.value);
+  };
+
   return (
     <S.SourceCodeEditorContainer ref={sourceCodeRef}>
       <S.FilenameInput
         value={filename}
         onChange={handleFilenameChange}
+        onBlur={handleFilenameBlur}
         placeholder={'파일명.[확장자]'}
         autoFocus={filenameAutoFocus}
       />

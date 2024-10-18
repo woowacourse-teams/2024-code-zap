@@ -12,6 +12,7 @@ import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
 import { TemplateVisibility } from '@/types/template';
+import { getLanguageForAutoTag } from '@/utils';
 
 import * as S from './TemplateUploadPage.style';
 
@@ -129,6 +130,7 @@ const TemplateUploadPage = () => {
             isValidContentChange={isValidContentChange}
             onChangeContent={(newContent) => handleContentChange(newContent, index)}
             onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
+            onBlurFilename={(newFilename) => tagProps.addTag(getLanguageForAutoTag(newFilename))}
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}
           />
