@@ -1,15 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { templates } from '@/mocks/templateList.json';
-import { TemplateListItem } from '@/types';
-
 import TemplateCard from './TemplateCard';
 
 const meta: Meta<typeof TemplateCard> = {
   title: 'TemplateCard',
   component: TemplateCard,
   args: {
-    template: templates[0] as TemplateListItem,
+    template: templates[0],
   },
 };
 

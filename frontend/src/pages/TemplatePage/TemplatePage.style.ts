@@ -1,5 +1,6 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
+import { EditorView } from '@uiw/react-codemirror';
 
 import { Button } from '@/components';
 
@@ -71,6 +72,7 @@ export const DeleteButton = styled(Button)`
   padding: 0;
 `;
 
-export const PrivateWrapper = styled.div`
-  flex-shrink: 0;
-`;
+export const CustomCodeMirrorTheme = EditorView.theme({
+  '.cm-activeLine': { backgroundColor: `transparent !important` },
+  '.cm-activeLineGutter': { backgroundColor: `transparent !important` },
+});

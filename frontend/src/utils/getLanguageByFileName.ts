@@ -5,21 +5,6 @@ export const getLanguageByFilename = (filename: string) => {
   return language;
 };
 
-export const getLanguageForAutoTag = (filename: string) => {
-  const extension = getFileExtension(filename);
-  const language = getLanguageByExtension(extension);
-
-  if (extension === 'jsx' || extension === 'tsx') {
-    return 'react';
-  }
-
-  if (language === 'plaintext') {
-    return '';
-  }
-
-  return language;
-};
-
 const getFileExtension = (filename: string) => {
   if (filename.includes('.')) {
     const parts = filename.split('.');

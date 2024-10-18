@@ -1,8 +1,8 @@
-import { ChangeEvent, KeyboardEvent } from 'react';
+import { ChangeEvent, Dispatch, KeyboardEvent, SetStateAction } from 'react';
 
 import { Flex, Input, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
-import { useCustomContext } from '@/hooks';
+import { useCustomContext, useScreenReader } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
 import { theme } from '@/style/theme';
 
@@ -11,19 +11,28 @@ interface Props {
   handleValue: (e: ChangeEvent<HTMLInputElement>) => void;
   resetValue: () => void;
   tags: string[];
-  addTag: (newTag: string) => void;
-  deleteTag: (tag: string) => void;
+  setTags: Dispatch<SetStateAction<string[]>>;
 }
 
-const TagInput = ({ value, handleValue, resetValue, tags, addTag, deleteTag }: Props) => {
+const TagInput = ({ value, handleValue, resetValue, tags, setTags }: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
+  const { updateScreenReaderMessage } = useScreenReader();
 
   const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
-      addTag(value);
+      addTag();
       resetValue();
     }
+  };
+
+  const addTag = () => {
+    if (value === '' || tags.includes(value)) {
+      return;
+    }
+
+    setTags((prev) => [...prev, value]);
+    updateScreenReaderMessage(`${value} 태그 등록`);
   };
 
   const handleTagInput = (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +66,16 @@ const TagInput = ({ value, handleValue, resetValue, tags, addTag, deleteTag }: P
         </Flex>
       )}
       <Flex gap='0.25rem' css={{ flexWrap: 'wrap', width: '100%' }}>
-        {tags?.map((tag, idx) => <TagButton key={idx} variant='edit' name={tag} onClick={() => deleteTag(tag)} />)}
+        {tags?.map((tag, idx) => (
+          <TagButton
+            key={idx}
+            variant='edit'
+            name={tag}
+            onClick={() => {
+              setTags((prev) => prev.filter((el) => el !== tag));
+            }}
+          />
+        ))}
       </Flex>
       <Input size='large' variant='outlined'>
         <Input.TextField
@@ -66,7 +84,7 @@ const TagInput = ({ value, handleValue, resetValue, tags, addTag, deleteTag }: P
           onChange={handleTagInput}
           onKeyUp={handleSpaceBarAndEnterKeydown}
           onBlur={() => {
-            addTag(value);
+            addTag();
             resetValue();
           }}
         />

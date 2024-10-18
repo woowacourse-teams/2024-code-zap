@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@sentry/react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Layout } from '@/components';
+import { Layout, LoadingFallback } from '@/components';
 
 import RouteGuard from './RouteGuard';
 import { END_POINTS } from './endPoints';
@@ -46,7 +46,9 @@ const router = createBrowserRouter([
         element: (
           <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
             <ErrorBoundary fallback={<NotFoundPage />}>
-              <MyTemplatePage />
+              <Suspense fallback={<LoadingFallback />}>
+                <MyTemplatePage />
+              </Suspense>
             </ErrorBoundary>
           </RouteGuard>
         ),

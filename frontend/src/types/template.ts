@@ -1,5 +1,3 @@
-import { TEMPLATE_VISIBILITY } from '@/service/constants';
-
 export interface SourceCodes {
   id?: number;
   filename: string;
@@ -37,7 +35,6 @@ export interface Template {
     id: number;
     name: string;
   };
-  visibility: TemplateVisibility;
 }
 
 export interface TemplateListItem {
@@ -54,7 +51,4 @@ export interface TemplateListItem {
     id: number;
     name: string;
   };
-  visibility: TemplateVisibility;
 }
-
-export type TemplateVisibility = (typeof TEMPLATE_VISIBILITY)[number];

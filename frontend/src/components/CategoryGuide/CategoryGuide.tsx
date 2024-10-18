@@ -10,7 +10,7 @@ const CategoryGuide = ({ isOpen, categoryErrorMessage }: Props) => {
   const isError = categoryErrorMessage !== '';
 
   return (
-    <Guide isOpen={isOpen} aria-hidden={!isOpen}>
+    <Guide isOpen={isOpen} css={{ marginTop: '0.5rem', marginBottom: '-0.5rem' }} aria-hidden={!isOpen}>
       {isError ? (
         <Text.Small color={theme.color.light.analogous_primary_300}>{categoryErrorMessage}</Text.Small>
       ) : (
