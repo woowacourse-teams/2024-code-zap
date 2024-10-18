@@ -8,8 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on:
-      - ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: 체크아웃
         uses: actions/checkout@v4
@@ -30,46 +29,70 @@ jobs:
       - name: Artifact 업로드
         uses: actions/upload-artifact@v4
         with:
-          name: code-zap-jar
+          name: code-zap
           path: backend/build/libs/*.jar
 
   deploy_develop:
-    needs: build
     if: ${{ github.ref == 'refs/heads/dev/be' }}
+    needs: build
+    environment: Develop
     runs-on:
-      - self-hosted
-      - spring
       - develop
+      - spring
     steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.PRIVATE_REPO_ACCESS }}
+
+      - name: Compose 설정 복사
+        run: ${{ secrets.RUN_COPY_COMPOSE }}
+
+      - name: Compose 환경변수 주입
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: ${{ secrets.ENV_VARIABLES }}
+
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: code-zap-jar
-          path: ${{ secrets.SPRING_DIRECTORY }}
-      - name: 배포 스크립트 실행
-        run: |
-          cd ${{ secrets.SPRING_DIRECTORY }}
-          mv code-zap*.jar ${{ secrets.JAR_NAME }}
-          docker compose restart
+          name: code-zap
+          path: ${{ secrets.SPRING_PATH }}
+
+      - name: 배포
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: ${{ secrets.RUN_SERVER }}
 
   deploy_production:
-    needs: build
     if: ${{ github.ref == 'refs/heads/main' }}
+    needs: build
+    environment: Production
     strategy:
       matrix:
-        environment: [prod_a, prod_b]
+        runners: [ prod_a, prod_b ]
     runs-on:
-      - self-hosted
       - spring
-      - ${{ matrix.environment }}
+      - ${{ matrix.runners }}
     steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          token: ${{ secrets.PRIVATE_REPO_ACCESS }}
+
+      - name: Compose 설정 복사
+        run: ${{ secrets.RUN_COPY_COMPOSE }}
+
+      - name: Compose 환경변수 주입
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: ${{ secrets.ENV_VARIABLES }}
+
       - name: Artifact 다운로드
         uses: actions/download-artifact@v4
         with:
-          name: code-zap-jar
-          path: ${{ secrets.SPRING_DIRECTORY }}
-      - name: 배포 스크립트 실행
-        run: |
-          cd ${{ secrets.SPRING_DIRECTORY }}
-          mv code-zap*.jar ${{ secrets.JAR_NAME }}
-          docker compose restart
+          name: code-zap
+          path: ${{ secrets.SPRING_PATH }}
+
+      - name: 배포
+        working-directory: ${{ secrets.PROJECT_PATH }}
+        run: ${{ secrets.RUN_SERVER }}

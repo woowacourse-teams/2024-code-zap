@@ -10,19 +10,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
-import codezap.global.DatabaseIsolation;
 import codezap.global.ServiceTest;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 
-@SpringBootTest
-@DatabaseIsolation
 class LikesServiceTest extends ServiceTest {
 
     @Autowired

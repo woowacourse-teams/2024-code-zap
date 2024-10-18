@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
@@ -28,8 +27,6 @@ import codezap.tag.dto.response.FindTagResponse;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 
-
-@Transactional
 class TagServiceTest extends ServiceTest {
 
     @Autowired

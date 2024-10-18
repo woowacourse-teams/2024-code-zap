@@ -10,8 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import jakarta.transaction.Transactional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -30,12 +27,10 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.likes.domain.Likes;
-import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -45,30 +40,12 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
-import codezap.template.repository.SourceCodeRepository;
-import codezap.template.repository.TemplateRepository;
 import codezap.template.repository.TemplateSpecification;
-import codezap.template.repository.ThumbnailRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-@Transactional
-class TemplateApplicationServiceTest {
+class TemplateApplicationServiceTest extends ServiceTest {
 
     @Autowired
     TemplateApplicationService sut;
-    @Autowired
-    MemberRepository memberRepository;
-    @Autowired
-    TemplateRepository templateRepository;
-    @Autowired
-    SourceCodeRepository sourceCodeRepository;
-    @Autowired
-    CategoryRepository categoryRepository;
-    @Autowired
-    ThumbnailRepository thumbnailRepository;
-    @Autowired
-    LikesRepository likesRepository;
 
     @Nested
     @DisplayName("템플릿 생성")
@@ -193,7 +170,7 @@ class TemplateApplicationServiceTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 조회 성공 (private 템플릿 제외)")
+        @DisplayName("사용자ID, 검색어, 카테고리ID, 태그ID로 템플릿 조회 성공")
         void findAllBy(
                 Long memberId,
                 String keyword,
@@ -527,5 +504,4 @@ class TemplateApplicationServiceTest {
             );
         }
     }
-
 }
