@@ -5,10 +5,11 @@ import { TagFilterMenu } from '../';
 interface Props {
   selectedTagIds: number[];
   handleTagMenuClick: (selectedTagIds: number[]) => void;
+  memberId?: number;
 }
 
-const TagListSection = ({ selectedTagIds, handleTagMenuClick }: Props) => {
-  const { data: tagData } = useTagListQuery();
+const TagListSection = ({ selectedTagIds, handleTagMenuClick, memberId }: Props) => {
+  const { data: tagData } = useTagListQuery({ memberId });
   const tagList = tagData?.tags || [];
 
   return (

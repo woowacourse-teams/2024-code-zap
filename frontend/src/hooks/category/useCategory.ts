@@ -4,7 +4,7 @@ import type { Category } from '@/types';
 import { useDropdown } from '../';
 
 export const useCategory = (initCategory?: Category) => {
-  const { data } = useCategoryListQuery();
+  const { data } = useCategoryListQuery({});
   const options = data?.categories || [];
 
   if (!initCategory) {

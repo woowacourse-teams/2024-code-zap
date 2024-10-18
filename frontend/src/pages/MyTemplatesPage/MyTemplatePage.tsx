@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
-import { useAuth } from '@/hooks/authentication';
 
 import {
   TopBanner,
@@ -19,9 +19,8 @@ import { useSelectAndDeleteTemplateList, useFilteredTemplateList } from './hooks
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {
-  const {
-    memberInfo: { name },
-  } = useAuth();
+  const { memberId: routeMemberId } = useParams<{ memberId: string }>();
+  const memberId = Number(routeMemberId);
 
   const {
     templateList,
@@ -38,7 +37,7 @@ const MyTemplatePage = () => {
     handleTagMenuClick,
     handleSearchSubmit,
     handlePageChange,
-  } = useFilteredTemplateList();
+  } = useFilteredTemplateList({ memberId });
 
   const {
     isEditMode,
@@ -56,7 +55,7 @@ const MyTemplatePage = () => {
       <TopBanner name={name ?? ''} />
       <S.MainContainer>
         <Suspense fallback={<CategoryListSectionSkeleton />}>
-          <CategoryListSection onSelectCategory={handleCategoryMenuClick} />
+          <CategoryListSection memberId={memberId} onSelectCategory={handleCategoryMenuClick} />
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
@@ -91,7 +90,11 @@ const MyTemplatePage = () => {
           </Flex>
 
           <Suspense fallback={<TagListSectionSkeleton />}>
-            <TagListSection selectedTagIds={selectedTagIds} handleTagMenuClick={handleTagMenuClick} />
+            <TagListSection
+              memberId={memberId}
+              selectedTagIds={selectedTagIds}
+              handleTagMenuClick={handleTagMenuClick}
+            />
           </Suspense>
 
           <S.TemplateListSectionWrapper>
