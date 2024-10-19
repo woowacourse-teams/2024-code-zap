@@ -30,14 +30,17 @@ public class CategoryService {
         return CreateCategoryResponse.from(category);
     }
 
+    @Transactional(readOnly = true)
     public FindAllCategoriesResponse findAllByMemberId(Long memberId) {
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberIdOrderById(memberId));
     }
 
+    @Transactional(readOnly = true)
     public FindAllCategoriesResponse findAll() {
         return FindAllCategoriesResponse.from(categoryRepository.findAll());
     }
 
+    @Transactional(readOnly = true)
     public Category fetchById(Long id) {
         return categoryRepository.fetchById(id);
     }

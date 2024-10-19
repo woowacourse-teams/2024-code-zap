@@ -37,14 +37,17 @@ public class TemplateService {
         return templateRepository.save(template);
     }
 
+    @Transactional
     public Template getById(Long id) {
         return templateRepository.fetchById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Template> getByMemberId(Long memberId) {
         return templateRepository.findByMemberId(memberId);
     }
 
+    @Transactional(readOnly = true)
     public Page<Template> findAllBy(
             Long memberId,
             String keyword,

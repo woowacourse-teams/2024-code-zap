@@ -2,9 +2,8 @@ package codezap.likes.service;
 
 import java.util.List;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.likes.domain.Likes;
 import codezap.likes.repository.LikesRepository;
@@ -30,6 +29,7 @@ public class LikesService {
         likesRepository.save(likes);
     }
 
+    @Transactional(readOnly = true)
     public Boolean isLiked(Member member, Template template) {
         return likesRepository.existsByMemberAndTemplate(member, template);
     }

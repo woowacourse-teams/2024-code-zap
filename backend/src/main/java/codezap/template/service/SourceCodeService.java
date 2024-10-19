@@ -32,10 +32,12 @@ public class SourceCodeService {
         );
     }
 
+    @Transactional(readOnly = true)
     public SourceCode getByTemplateAndOrdinal(Template template, int ordinal) {
         return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
     }
 
+    @Transactional(readOnly = true)
     public List<SourceCode> findAllByTemplate(Template template) {
         return sourceCodeRepository.findAllByTemplate(template);
     }

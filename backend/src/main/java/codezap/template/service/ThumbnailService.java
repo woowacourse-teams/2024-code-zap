@@ -23,10 +23,12 @@ public class ThumbnailService {
         thumbnailRepository.save(new Thumbnail(template, thumbnail));
     }
 
+    @Transactional(readOnly = true)
     public Thumbnail getByTemplate(Template template) {
         return thumbnailRepository.fetchByTemplate(template);
     }
 
+    @Transactional(readOnly = true)
     public List<Thumbnail> getAllByTemplates(List<Template> templates) {
         List<Long> templateIds = templates.stream()
                 .map(Template::getId)
@@ -35,6 +37,7 @@ public class ThumbnailService {
         return thumbnailRepository.findAllByTemplateIn(templateIds);
     }
 
+    @Transactional(readOnly = true)
     public ExploreTemplatesResponse findAll() {
         return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
     }

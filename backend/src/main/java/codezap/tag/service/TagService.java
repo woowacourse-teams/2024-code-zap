@@ -42,21 +42,25 @@ public class TagService {
         }
     }
 
+    @Transactional(readOnly = true)
     public List<Tag> findAllByTemplate(Template template) {
         return templateTagRepository.findAllTagsByTemplate(template);
     }
 
+    @Transactional(readOnly = true)
     public List<Tag> findAllByTemplateId(Long templateId) {
         return templateTagRepository.findAllByTemplateId(templateId).stream()
                 .map(TemplateTag::getTag)
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<TemplateTag> getAllTemplateTagsByTemplates(List<Template> templates) {
         List<Long> templateIds = templates.stream().map(Template::getId).toList();
         return templateTagRepository.findAllByTemplateIdsIn(templateIds);
     }
 
+    @Transactional(readOnly = true)
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
         List<Tag> tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
         return new FindAllTagsResponse(tags.stream()
