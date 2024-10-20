@@ -6,6 +6,7 @@ export { default as TrashcanIcon } from './trashcan.svg';
 export { default as UserCircleIcon } from './userCircle.svg';
 export { default as ChevronIcon } from './chevron.svg';
 export { default as Chevron2Icon } from './chevron2.svg';
+export { default as ChevronUpCircleIcon } from './chevronUpCircle.svg';
 export { default as XCircleIcon } from './xCircle.svg';
 export { default as EyeIcon } from './eye.svg';
 export { default as ArrowUpIcon } from './arrowUp.svg';
