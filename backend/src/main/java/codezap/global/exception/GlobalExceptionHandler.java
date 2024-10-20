@@ -33,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
-        log.info("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
+        log.error("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
                 .body(codeZapException.toProblemDetail());
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request
     ) {
-        log.info("[MethodArgumentNotValidException] {}가 발생했습니다. \n", exception.getClass().getName(), exception);
+        log.error("[MethodArgumentNotValidException] {}가 발생했습니다. \n", exception.getClass().getName(), exception);
 
         BindingResult bindingResult = exception.getBindingResult();
         List<String> errorMessages = bindingResult.getAllErrors().stream()
