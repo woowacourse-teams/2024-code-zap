@@ -103,10 +103,8 @@ public class TemplateSpecification implements Specification<Template> {
         }
         Subquery<Long> subquery = query.subquery(Long.class);
         Root<TemplateTag> subRoot = subquery.from(TemplateTag.class);
-        subquery.select(subRoot.get("template").get("id")).where(subRoot.get("tag").get("id").in(tagIds))
-                .groupBy(subRoot.get("template").get("id"))
-                .having(criteriaBuilder.equal(criteriaBuilder.countDistinct(subRoot.get("tag").get("id")),
-                        tagIds.size()));
+        subquery.select(subRoot.get("template").get("id"))
+                .where(subRoot.get("tag").get("id").in(tagIds));
 
         predicates.add(root.get("id").in(subquery));
     }

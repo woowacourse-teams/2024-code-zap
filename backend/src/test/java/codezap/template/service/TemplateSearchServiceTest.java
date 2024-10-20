@@ -177,8 +177,9 @@ class TemplateSearchServiceTest {
                     () -> assertThat(actual.getContent())
                             .containsExactlyInAnyOrder(
                                     templateRepository.fetchById(1L),
-                                    templateRepository.fetchById(2L)),
-                    () -> assertThat(actual.getContent()).hasSize(2)
+                                    templateRepository.fetchById(2L),
+                                    templateRepository.fetchById(3L)),
+                    () -> assertThat(actual.getContent()).hasSize(3)
             );
         }
 
@@ -188,7 +189,7 @@ class TemplateSearchServiceTest {
             Long memberId = null;
             String keyword = null;
             Long categoryId = null;
-            List<Long> tagIds = List.of(tag2.getId());
+            List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
