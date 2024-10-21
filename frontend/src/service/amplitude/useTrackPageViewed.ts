@@ -10,7 +10,7 @@ interface Props {
 /**
  * browser, env를 제외한 eventProps를 제공해주세요
  */
-export const usePageViewed = ({ eventName, eventProps }: Props) => {
+export const useTrackPageViewed = ({ eventName, eventProps }: Props) => {
   const amplitudeService = new AmplitudeService();
 
   useEffect(() => {
