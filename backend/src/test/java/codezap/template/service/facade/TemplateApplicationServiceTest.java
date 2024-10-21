@@ -28,7 +28,6 @@ import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
@@ -370,20 +369,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
     }
 
-    private Template savePrivateTemplate(Member member, Category category) {
-        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
-        return privateTemplate;
-    }
-
-    private Template savePublicTemplate(Member member, Category category) {
-        var template = templateRepository.save(TemplateFixture.get(member, category));
-        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-        thumbnailRepository.save(new Thumbnail(template, sourceCode));
-        return template;
-    }
-
     @Nested
     @DisplayName("템플릿 수정")
     class Update {
@@ -511,8 +496,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
     class FindAllByLiked {
 
         @Test
-        @DisplayName("성공")
-        void findAllByLiked() {
+        @DisplayName("성공: 로그인 정보와 조회하려는 멤버 ID가 같을 경우")
+        void findAllByLikedSuccessSameMember() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
@@ -529,30 +514,76 @@ class TemplateApplicationServiceTest extends ServiceTest {
             FindAllTemplatesResponse actual = sut.findAllByLiked(member, member.getId(), PageRequest.of(0, 5));
 
             // then
-            assertThat(actual.templates()).extracting("id")
-                    .containsExactlyInAnyOrder(template1.getId(), template2.getId());
+            assertAll(
+                    () -> assertThat(actual.templates()).extracting("id")
+                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
+                    () -> assertThat(actual.templates()).extracting("isLiked")
+                            .containsExactlyInAnyOrder(true, true)
+            );
         }
 
         @Test
-        @DisplayName("실패: 로그인 정보와 조회하려는 멤버 id가 다를 경우")
-        void findAllByLikedFailNotSameMemberId() {
+        @DisplayName("성공: 로그인 정보와 조회하려는 멤버 ID가 다를 경우")
+        void findAllByLikedSuccessNotSameMemberId() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template1 = savePublicTemplate(member, category);
             var template2 = savePublicTemplate(member, category);
-            var template3 = savePublicTemplate(member, category);
 
             likesRepository.save(new Likes(template1, member));
             likesRepository.save(new Likes(template2, member));
-            likesRepository.save(new Likes(template3, otherMember));
+            likesRepository.save(new Likes(template2, otherMember));
 
             // when
-            assertThatThrownBy(() -> sut.findAllByLiked(member, otherMember.getId(), PageRequest.of(0, 5)))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("자신의 좋아요 템플릿 목록만 확인할 수 있습니다.")
-                    .extracting("errorCode").isEqualTo(ErrorCode.FORBIDDEN_ACCESS);
+            FindAllTemplatesResponse actual = sut.findAllByLiked(otherMember, member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.templates()).extracting("id")
+                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
+                    () -> assertThat(actual.templates()).extracting("isLiked")
+                            .containsExactlyInAnyOrder(true, false)
+            );
         }
+
+        @Test
+        @DisplayName("성공: 로그인하지 않은 경우")
+        void findAllByLikedSuccessNotLogin() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template1 = savePublicTemplate(member, category);
+            var template2 = savePublicTemplate(member, category);
+
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template2, member));
+
+            // when
+            FindAllTemplatesResponse actual = sut.findAllByLiked(member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.templates()).extracting("id")
+                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
+                    () -> assertThat(actual.templates()).extracting("isLiked")
+                            .containsExactlyInAnyOrder(false, false)
+            );
+        }
+    }
+
+    private Template savePrivateTemplate(Member member, Category category) {
+        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
+        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+        return privateTemplate;
+    }
+
+    private Template savePublicTemplate(Member member, Category category) {
+        var template = templateRepository.save(TemplateFixture.get(member, category));
+        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+        thumbnailRepository.save(new Thumbnail(template, sourceCode));
+        return template;
     }
 }

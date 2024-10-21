@@ -103,9 +103,6 @@ public interface SpringDocTemplateController {
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "좋아요한 템플릿 목록 조회", description = "회원이 좋아요한 템플릿 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 목록 조회 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/liked/1", errorCases = {
-            @ErrorCase(description = "로그인 정보와 ID 정보가 다른 경우", exampleMessage = "자신의 좋아요 템플릿 목록만 확인할 수 있습니다."),
-    })
     ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(Member member, Long memberId, Pageable pageable);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")

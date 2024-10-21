@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
@@ -110,11 +108,16 @@ public class TemplateApplicationService {
     }
 
     public FindAllTemplatesResponse findAllByLiked(Member loginMember, Long id, Pageable pageable) {
-        if (!loginMember.matchId(id)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "자신의 좋아요 템플릿 목록만 확인할 수 있습니다.");
-        }
         Page<Template> templates = likesService.findAllByMemberId(id, pageable);
-        return makeResponse(templates, (template) -> true);
+        if (loginMember.matchId(id)) {
+            return makeResponse(templates, (template) -> true);
+        }
+        return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
+    }
+
+    public FindAllTemplatesResponse findAllByLiked(Long id, Pageable pageable) {
+        Page<Template> templates = likesService.findAllByMemberId(id, pageable);
+        return makeResponse(templates, (template -> false));
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {

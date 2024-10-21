@@ -61,6 +61,18 @@ public class TemplateController implements SpringDocTemplateController {
         );
     }
 
+    @GetMapping("/liked/{memberId}")
+    public ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(
+            @AuthenticationPrinciple(required = false) Member member,
+            @PathVariable Long memberId,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        if (member == null) {
+            return ResponseEntity.ok(templateApplicationService.findAllByLiked(memberId, pageable));
+        }
+        return ResponseEntity.ok(templateApplicationService.findAllByLiked(member, memberId, pageable));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<FindTemplateResponse> findTemplateById(
             @AuthenticationPrinciple(required = false) Member member,
@@ -70,15 +82,6 @@ public class TemplateController implements SpringDocTemplateController {
             return ResponseEntity.ok(templateApplicationService.findById(id));
         }
         return ResponseEntity.ok(templateApplicationService.findById(id, member));
-    }
-
-    @GetMapping("/liked/{memberId}")
-    public ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(
-            @AuthenticationPrinciple Member member,
-            @PathVariable Long memberId,
-            @PageableDefault(size = 20) Pageable pageable
-    ) {
-        return ResponseEntity.ok(templateApplicationService.findAllByLiked(member, memberId, pageable));
     }
 
     @PostMapping("/{id}")
