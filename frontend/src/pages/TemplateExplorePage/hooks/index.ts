@@ -1,0 +1,1 @@
+export { useHotTopic } from './useHotTopic';
