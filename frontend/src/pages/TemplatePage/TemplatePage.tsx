@@ -126,7 +126,7 @@ const TemplatePage = () => {
 
                 <Flex gap='0.5rem' align='center'>
                   <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
-                    <PersonIcon width={ICON_SIZE.X_SMALL} />
+                    <PersonIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.primary_500} />
                     <div
                       style={{
                         overflow: 'hidden',
@@ -135,18 +135,12 @@ const TemplatePage = () => {
                         flex: 1,
                       }}
                     >
-                      <Text.Small
-                        color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                      >
-                        {template.member.name}
-                      </Text.Small>
+                      <Text.Small color={theme.color.light.primary_500}>{template.member.name}</Text.Small>
                     </div>
                   </Flex>
                   <Flex align='center' gap='0.125rem'>
-                    <ClockIcon width={ICON_SIZE.SMALL} />
-                    <Text.Small
-                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                    >
+                    <ClockIcon width={ICON_SIZE.SMALL} color={theme.color.light.secondary_600} />
+                    <Text.Small color={theme.color.light.secondary_600}>
                       {formatRelativeTime(template.modifiedAt)}
                     </Text.Small>
                     <Text.Small
