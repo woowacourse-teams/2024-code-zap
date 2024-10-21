@@ -37,7 +37,7 @@ public class TemplateService {
         return templateRepository.save(template);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Template getById(Long id) {
         return templateRepository.fetchById(id);
     }
