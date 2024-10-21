@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { useParams } from 'react-router-dom';
 
-import { ClockIcon, PersonIcon } from '@/assets/images';
+import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import {
   Button,
   Flex,
@@ -18,6 +18,8 @@ import {
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
+import { VISIBILITY_PRIVATE } from '@/service/constants';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
 
 import { useTemplate, useLike } from './hooks';
@@ -45,6 +47,8 @@ const TemplatePage = () => {
     handleSelectOption,
     handleDelete,
   } = useTemplate(Number(id));
+
+  const isPrivate = template?.visibility === VISIBILITY_PRIVATE;
 
   const { likesCount, isLiked, toggleLike } = useLike({
     templateId: Number(id),
@@ -107,15 +111,22 @@ const TemplatePage = () => {
                 </Flex>
 
                 <Flex align='center' justify='space-between' gap='1rem'>
-                  <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
-                    {template.title}
-                  </Heading.Large>
+                  <Flex gap='0.5rem'>
+                    {isPrivate && (
+                      <S.PrivateWrapper>
+                        <PrivateIcon width={ICON_SIZE.X_SMALL} />
+                      </S.PrivateWrapper>
+                    )}
+                    <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
+                      {template.title}
+                    </Heading.Large>
+                  </Flex>
                   <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
                 </Flex>
 
                 <Flex gap='0.5rem' align='center'>
                   <Flex align='center' gap='0.125rem' style={{ minWidth: 0, flex: '1' }}>
-                    <PersonIcon width={14} />
+                    <PersonIcon width={ICON_SIZE.X_SMALL} />
                     <div
                       style={{
                         overflow: 'hidden',
@@ -132,7 +143,7 @@ const TemplatePage = () => {
                     </div>
                   </Flex>
                   <Flex align='center' gap='0.125rem'>
-                    <ClockIcon width={16} />
+                    <ClockIcon width={ICON_SIZE.SMALL} />
                     <Text.Small
                       color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
                     >
@@ -148,7 +159,7 @@ const TemplatePage = () => {
 
                 <Flex gap='0.25rem' wrap='wrap'>
                   {template.tags.map((tag) => (
-                    <TagButton key={tag.id} name={tag.name} disabled></TagButton>
+                    <TagButton key={tag.id} id={tag.id} name={tag.name} disabled />
                   ))}
                 </Flex>
                 <div

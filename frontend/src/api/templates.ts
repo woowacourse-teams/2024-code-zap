@@ -6,13 +6,13 @@ import type {
   TemplateListResponse,
   TemplateUploadRequest,
   TemplateListRequest,
-  CustomError,
 } from '@/types';
 import { SortingOption } from '@/types';
 
+import { apiClient } from './ApiClient';
 import { customFetch } from './customFetch';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL ?? '';
 
 export const TEMPLATE_API_URL = `${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`;
 
@@ -66,7 +66,7 @@ export const getTemplateList = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
+  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
 
   const response = await customFetch<TemplateListResponse>({
     url,
@@ -83,9 +83,8 @@ export const getTemplateExplore = async ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,
   size = PAGE_SIZE,
-  memberId,
   keyword,
-}: TemplateListRequest) => {
+}: TemplateListRequest): Promise<TemplateListResponse> => {
   const queryParams = new URLSearchParams({
     sort,
     page: page.toString(),
@@ -96,22 +95,15 @@ export const getTemplateExplore = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const url = `${TEMPLATE_API_URL}${memberId ? '/login' : ''}?${queryParams.toString()}`;
+  const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);
+  const data = response.json();
 
-  const response = await customFetch<TemplateListResponse>({
-    url,
-  });
-
-  if ('templates' in response) {
-    return response;
-  }
-
-  throw new Error(response.detail);
+  return data;
 };
 
-export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
+export const getTemplate = async ({ id }: TemplateRequest) => {
   const response = await customFetch<Template>({
-    url: `${TEMPLATE_API_URL}/${id}${memberId ? '/login' : ''}`,
+    url: `${TEMPLATE_API_URL}/${id}`,
   });
 
   if ('sourceCodes' in response) {
@@ -121,12 +113,8 @@ export const getTemplate = async ({ id, memberId }: TemplateRequest) => {
   throw new Error(response.detail);
 };
 
-export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<void | CustomError> =>
-  await customFetch({
-    method: 'POST',
-    url: `${TEMPLATE_API_URL}`,
-    body: JSON.stringify(newTemplate),
-  });
+export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<Response> =>
+  await apiClient.post(`${END_POINTS.TEMPLATES_EXPLORE}`, newTemplate);
 
 export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
   await customFetch({

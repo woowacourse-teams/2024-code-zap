@@ -7,7 +7,7 @@ export { default as UserCircleIcon } from './userCircle.svg';
 export { default as ChevronIcon } from './chevron.svg';
 export { default as Chevron2Icon } from './chevron2.svg';
 export { default as ChevronUpCircleIcon } from './chevronUpCircle.svg';
-export { default as XCircleIcon } from './xCircle.svg';
+export { default as XSignIcon } from './xSign.svg';
 export { default as EyeIcon } from './eye.svg';
 export { default as ArrowUpIcon } from './arrowUp.svg';
 export { default as SettingIcon } from './setting.svg';
@@ -18,6 +18,8 @@ export { default as ClockIcon } from './clock.svg';
 export { default as BooksIcon } from './books.svg';
 export { default as CheckCircleIcon } from './checkCircle.svg';
 export { default as LikeIcon } from './like';
+export { default as PrivateIcon } from './private.svg';
+export { default as PublicIcon } from './public.svg';
 
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';

@@ -1,12 +1,18 @@
-import { PlusIcon } from '@/assets/images';
-import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput } from '@/components';
+import { useState } from 'react';
+
+import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
+import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput, Toggle } from '@/components';
 import { useInput, useSelectList } from '@/hooks';
 import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateEditMutation } from '@/queries/templates';
+import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
+import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
+import { TemplateVisibility } from '@/types/template';
+import { getLanguageForAutoTag } from '@/utils';
 
 import * as S from './TemplateEditPage.style';
 
@@ -33,6 +39,8 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
   const initTags = template.tags.map((tag) => tag.name);
   const tagProps = useTag(initTags);
+
+  const [visibility, setVisibility] = useState<TemplateVisibility>(DEFAULT_TEMPLATE_VISIBILITY);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
@@ -82,6 +90,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       deleteSourceCodeIds,
       categoryId: categoryProps.currentValue.id,
       tags: tagProps.tags,
+      visibility,
     };
 
     try {
@@ -95,7 +104,19 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   return (
     <S.TemplateEditContainer>
       <S.MainContainer>
-        <CategoryDropdown {...categoryProps} />
+        <S.CategoryAndVisibilityContainer>
+          <CategoryDropdown {...categoryProps} />
+          <Toggle
+            showOptions={false}
+            options={[...TEMPLATE_VISIBILITY]}
+            optionAdornments={[
+              <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
+              <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
+            ]}
+            selectedOption={visibility}
+            switchOption={setVisibility}
+          />
+        </S.CategoryAndVisibilityContainer>
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
@@ -120,6 +141,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
             isValidContentChange={isValidContentChange}
             onChangeContent={(newContent) => handleContentChange(newContent, index)}
             onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
+            onBlurFilename={(newFilename) => tagProps.addTag(getLanguageForAutoTag(newFilename))}
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}
           />
@@ -132,15 +154,15 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
           fullWidth
           onClick={addNewEmptySourceCode}
         >
-          <PlusIcon width={14} height={14} aria-label='소스코드 추가' />
+          <PlusIcon width={ICON_SIZE.X_SMALL} height={ICON_SIZE.X_SMALL} aria-label='소스코드 추가' />
         </Button>
 
         <TagInput {...tagProps} />
 
         <S.ButtonGroup>
-          <Button size='medium' variant='outlined' onClick={handleCancelButton}>
+          <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
             취소
-          </Button>
+          </S.CancelButton>
           <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={sourceCodes.length === 0}>
             저장
           </Button>
