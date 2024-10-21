@@ -2,7 +2,6 @@
 
 <included>
     <appender name="info-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-
         <file>${LOG_FILE_PATH}/info.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -12,7 +11,7 @@
         </filter>
 
         <encoder>
-            <pattern>[%cyan(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%blue(%replace(%logger{20}){'\\w\\.', ''})] %msg %n</pattern>
+            <pattern>[%level][%d{MM-dd HH:mm:ss}][%X{correlationId}][%logger{20}] %msg%n</pattern>
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -20,6 +19,5 @@
             <totalSizeCap>5GB</totalSizeCap>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
-
     </appender>
 </included>
