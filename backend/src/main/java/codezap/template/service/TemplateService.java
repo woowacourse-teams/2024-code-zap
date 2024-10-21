@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TemplateService {
 
     private final TemplateRepository templateRepository;

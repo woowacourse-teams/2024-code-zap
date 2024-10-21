@@ -2,9 +2,8 @@ package codezap.member.service;
 
 import java.util.Objects;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.auth.encryption.PasswordEncryptor;
 import codezap.auth.encryption.SaltGenerator;
@@ -20,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
