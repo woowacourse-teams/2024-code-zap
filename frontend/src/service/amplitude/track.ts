@@ -26,8 +26,18 @@ export const trackClickNewTemplate = () => {
   amplitudeService.customTrack('[Click] 새 템플릿 업로드 버튼');
 };
 
-export const trackClickTemplateSave = () => {
-  amplitudeService.customTrack('[Click] 템플릿 저장 버튼');
+interface TemplateUploadData {
+  templateTitle: string;
+  sourceCodeCount: number;
+  visibility: string;
+}
+
+export const trackClickTemplateSave = ({ templateTitle, sourceCodeCount, visibility }: TemplateUploadData) => {
+  amplitudeService.customTrack('[Click] 템플릿 저장 버튼', {
+    templateTitle,
+    sourceCodeCount,
+    visibility,
+  });
 };
 
 export const trackClickCopyClipBoard = () => {

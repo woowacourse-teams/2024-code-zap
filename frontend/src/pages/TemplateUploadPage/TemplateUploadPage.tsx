@@ -7,6 +7,7 @@ import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
+import { trackClickTemplateSave, usePageViewed } from '@/service/amplitude';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
@@ -17,6 +18,8 @@ import { getLanguageForAutoTag } from '@/utils';
 import * as S from './TemplateUploadPage.style';
 
 const TemplateUploadPage = () => {
+  usePageViewed({ eventName: '[Viewed] 템플릿 업로드 페이지' });
+
   const navigate = useCustomNavigate();
   const { failAlert } = useToast();
 
@@ -87,7 +90,15 @@ const TemplateUploadPage = () => {
       visibility,
     };
 
-    await uploadTemplate(newTemplate);
+    const response = await uploadTemplate(newTemplate);
+
+    if (response.ok) {
+      trackClickTemplateSave({
+        templateTitle: title,
+        sourceCodeCount: sourceCodes.length,
+        visibility,
+      });
+    }
   };
 
   return (
