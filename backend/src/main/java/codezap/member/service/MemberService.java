@@ -43,6 +43,12 @@ public class MemberService {
         }
     }
 
+    public void existsById(Long id) {
+        if (!memberRepository.existsById(id)) {
+            throw new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 멤버가 존재하지 않습니다.");
+        }
+    }
+
     public FindMemberResponse findMember(Member member, Long id) {
         checkSameMember(member, id);
         return FindMemberResponse.from(member);

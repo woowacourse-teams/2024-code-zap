@@ -14,6 +14,7 @@ import codezap.category.service.CategoryService;
 import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
+import codezap.member.service.MemberService;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
@@ -42,6 +43,7 @@ public class TemplateApplicationService {
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
+    private final MemberService memberService;
 
     @Transactional
     public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
@@ -107,17 +109,21 @@ public class TemplateApplicationService {
         return null;
     }
 
-    public FindAllTemplatesResponse findAllByLiked(Member loginMember, Long id, Pageable pageable) {
-        Page<Template> templates = likesService.findAllByMemberId(id, pageable);
-        if (loginMember.matchId(id)) {
+    public FindAllTemplatesResponse findAllByLiked(Member loginMember, Long memberId, Pageable pageable) {
+        Page<Template> templates = findLikedTemplatesByMember(memberId, pageable);
+        if (loginMember.matchId(memberId)) {
             return makeResponse(templates, (template) -> true);
         }
         return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
-    public FindAllTemplatesResponse findAllByLiked(Long id, Pageable pageable) {
-        Page<Template> templates = likesService.findAllByMemberId(id, pageable);
-        return makeResponse(templates, (template -> false));
+    public FindAllTemplatesResponse findAllByLiked(Long memberId, Pageable pageable) {
+        return makeResponse(findLikedTemplatesByMember(memberId, pageable), (template -> false));
+    }
+
+    private Page<Template> findLikedTemplatesByMember(Long memberId, Pageable pageable) {
+        memberService.existsById(memberId);
+        return likesService.findAllByMemberId(memberId, pageable);
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {

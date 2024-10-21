@@ -28,6 +28,7 @@ import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
@@ -570,6 +571,19 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     () -> assertThat(actual.templates()).extracting("isLiked")
                             .containsExactlyInAnyOrder(false, false)
             );
+        }
+
+        @Test
+        @DisplayName("실패: 존재하지 않는 회원 ID인 경우")
+        void findAllByLikedFailNotExists() {
+            // given
+            long notExistsId = 100L;
+
+            // when & then
+            assertThatThrownBy(() -> sut.findAllByLiked(notExistsId, PageRequest.of(0, 5)))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + notExistsId + "에 해당하는 멤버가 존재하지 않습니다.")
+                    .extracting("errorCode").isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
         }
     }
 
