@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
@@ -191,18 +192,11 @@ class LikesServiceTest extends ServiceTest {
             // given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Template template1 = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
-            Template template2 = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
-            Template template3 = templateRepository.save(TemplateFixture.get(
-                    member2,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category1 = categoryRepository.save(CategoryFixture.get(member1));
+            Category category2 = categoryRepository.save(CategoryFixture.get(member2));
+            Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template3 = templateRepository.save(TemplateFixture.get(member2, category2));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template2, member2));
             likesRepository.save(new Likes(template3, member1));
