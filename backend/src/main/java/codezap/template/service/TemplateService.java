@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TemplateService {
 
     private final TemplateRepository templateRepository;
@@ -37,17 +38,14 @@ public class TemplateService {
         return templateRepository.save(template);
     }
 
-    @Transactional(readOnly = true)
     public Template getById(Long id) {
         return templateRepository.fetchById(id);
     }
 
-    @Transactional(readOnly = true)
     public List<Template> getByMemberId(Long memberId) {
         return templateRepository.findByMemberId(memberId);
     }
 
-    @Transactional(readOnly = true)
     public Page<Template> findAllBy(
             Long memberId,
             String keyword,

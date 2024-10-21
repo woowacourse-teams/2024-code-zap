@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LikesService {
 
     private final TemplateRepository templateRepository;
@@ -29,7 +30,6 @@ public class LikesService {
         likesRepository.save(likes);
     }
 
-    @Transactional(readOnly = true)
     public Boolean isLiked(Member member, Template template) {
         return likesRepository.existsByMemberAndTemplate(member, template);
     }

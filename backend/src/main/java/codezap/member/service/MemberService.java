@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -36,7 +37,6 @@ public class MemberService {
         return member.getId();
     }
 
-    @Transactional(readOnly = true)
     public void assertUniqueName(String name) {
         if (memberRepository.existsByName(name)) {
             throw new CodeZapException(ErrorCode.DUPLICATE_ID, "아이디가 이미 존재합니다.");
@@ -54,7 +54,6 @@ public class MemberService {
         }
     }
 
-    @Transactional(readOnly = true)
     public Member getByTemplateId(Long templateId) {
         return memberRepository.fetchByTemplateId(templateId);
     }
