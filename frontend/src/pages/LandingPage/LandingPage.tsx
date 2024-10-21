@@ -27,8 +27,7 @@ const LandingPage = () => {
             {'"아, 그때 그 코드 어디에 썼더라..."'}
           </Heading.XSmall>
           <Flex direction='column' gap='1rem'>
-            <Text.Medium color='black'></Text.Medium>
-            더이상 코드를 찾느데 헤매지 마세요!
+            <Text.Medium color='black'>더 이상 코드를 찾느라 헤매지 마세요!</Text.Medium>
             <Text.Medium color='black'>코드잽에 자주 쓰는 코드를 템플릿으로 저장하고 빠르게 찾아요.</Text.Medium>
           </Flex>
         </S.TextContent>
