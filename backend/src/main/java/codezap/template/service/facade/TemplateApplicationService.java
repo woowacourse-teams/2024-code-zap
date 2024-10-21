@@ -33,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class TemplateApplicationService {
 
     private final TemplateService templateService;

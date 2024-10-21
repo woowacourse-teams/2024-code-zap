@@ -90,7 +90,7 @@ class TemplateSearchJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("검색 테스트: 태그 ID 목록으로 템플릿 조회, 모든 태그를 가진 템플릿만 조회 성공")
+    @DisplayName("검색 테스트: 태그 ID 목록으로 템플릿 조회, 태그 중 하나라도 가진 템플릿 전체 조회 성공")
     void testFindByTagIds() {
         Tag tag1 = tagRepository.fetchById(1L);
         Tag tag2 = tagRepository.fetchById(2L);
@@ -102,8 +102,9 @@ class TemplateSearchJpaRepositoryTest {
                 () -> assertThat(result.getContent())
                         .containsExactlyInAnyOrder(
                                 templateRepository.fetchById(1L),
-                                templateRepository.fetchById(2L)),
-                () -> assertThat(result.getContent()).hasSize(2)
+                                templateRepository.fetchById(2L),
+                                templateRepository.fetchById(3L)),
+                () -> assertThat(result.getContent()).hasSize(3)
         );
     }
 
