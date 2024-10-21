@@ -28,6 +28,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.MockMvcTest;
+import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
@@ -245,8 +246,8 @@ class TemplateControllerTest extends MockMvcTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
         }
-
     }
+
     @Nested
     class FindAllTemplatesSuccess {
 
@@ -589,6 +590,40 @@ class TemplateControllerTest extends MockMvcTest {
                     .andExpect(status().isNoContent());
 
             verify(templateApplicationService, times(1)).deleteAllByMemberAndTemplateIds(any(), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("좋아요한 템플릿 조회 테스트")
+    class FindTemplateByLiked {
+
+        @Test
+        @DisplayName("성공")
+        void findTemplateByLiked() throws Exception {
+            Member member = MemberFixture.getFirstMember();
+            FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse(member);
+
+            when(templateApplicationService.findAllByLiked(any(), any(), any())).thenReturn(
+                    new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+
+            mvc.perform(get("/templates/liked/" + member.getId())
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.templates.size()").value(1))
+                    .andExpect(jsonPath("$.totalPages").value(1))
+                    .andExpect(jsonPath("$.totalElements").value(1));
+
+            verify(templateApplicationService, times(1)).findAllByLiked(any(), any(), any());
+        }
+
+        private FindAllTemplateItemResponse getFindAllTemplateItemResponse(Member member) {
+            Template template = TemplateFixture.get(member, CategoryFixture.getFirstCategory());
+            return FindAllTemplateItemResponse.of(
+                    template,
+                    List.of(new Tag(1L, "tag1")),
+                    SourceCodeFixture.get(template, 1),
+                    true
+            );
         }
     }
 }

@@ -10,6 +10,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
@@ -201,6 +203,27 @@ class LikesJpaRepositoryTest {
                     () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
                     () -> assertThat(likesRepository.countByTemplate(template2)).isEqualTo(0)
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("회원이 좋아요한 템플릿 조회 테스트")
+    class FindAllByMemberId {
+
+        @Test
+        @DisplayName("성공")
+        void findAllByMemberId() {
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template1 = templateRepository.save(
+                    new Template(member1, "Template 1", "Description 1", category1));
+            Template template2 = templateRepository.save(
+                    new Template(member1, "Template 2", "Description 2", category1));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template2, member1));
+
+            Page<Template> actual = likesRepository.findAllByMemberId(member1.getId(), PageRequest.of(0, 5));
+            assertThat(actual).containsExactlyInAnyOrder(template1, template2);
         }
     }
 }

@@ -22,13 +22,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
@@ -40,6 +40,7 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.repository.TemplateSpecification;
 
 class TemplateApplicationServiceTest extends ServiceTest {
@@ -502,6 +503,56 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3),
                     () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("회원이 좋아요한 템플릿 목록 조회")
+    class FindAllByLiked {
+
+        @Test
+        @DisplayName("성공")
+        void findAllByLiked() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template1 = savePublicTemplate(member, category);
+            var template2 = savePublicTemplate(member, category);
+            var template3 = savePublicTemplate(member, category);
+
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template2, member));
+            likesRepository.save(new Likes(template3, otherMember));
+
+            // when
+            FindAllTemplatesResponse actual = sut.findAllByLiked(member, member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertThat(actual.templates()).extracting("id")
+                    .containsExactlyInAnyOrder(template1.getId(), template2.getId());
+        }
+
+        @Test
+        @DisplayName("실패: 로그인 정보와 조회하려는 멤버 id가 다를 경우")
+        void findAllByLikedFailNotSameMemberId() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template1 = savePublicTemplate(member, category);
+            var template2 = savePublicTemplate(member, category);
+            var template3 = savePublicTemplate(member, category);
+
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template2, member));
+            likesRepository.save(new Likes(template3, otherMember));
+
+            // when
+            assertThatThrownBy(() -> sut.findAllByLiked(member, otherMember.getId(), PageRequest.of(0, 5)))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("자신의 좋아요 템플릿 목록만 확인할 수 있습니다.")
+                    .extracting("errorCode").isEqualTo(ErrorCode.FORBIDDEN_ACCESS);
         }
     }
 }

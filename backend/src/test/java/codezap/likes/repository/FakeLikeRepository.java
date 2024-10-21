@@ -2,6 +2,9 @@ package codezap.likes.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
@@ -29,5 +32,10 @@ public class FakeLikeRepository implements LikesRepository {
 
     @Override
     public void deleteAllByTemplateIds(List<Long> templateIds) {
+    }
+
+    @Override
+    public Page<Template> findAllByMemberId(Long memberId, Pageable pageable) {
+        return null;
     }
 }
