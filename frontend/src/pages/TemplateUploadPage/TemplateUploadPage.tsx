@@ -11,7 +11,7 @@ import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/cons
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
-import { TemplateVisibility } from '@/types/template';
+import { SourceCodes, TemplateVisibility } from '@/types/template';
 import { getLanguageForAutoTag } from '@/utils';
 
 import * as S from './TemplateUploadPage.style';
@@ -77,10 +77,17 @@ const TemplateUploadPage = () => {
       return;
     }
 
+    const orderedSourceCodes = sourceCodes.map(
+      (sourceCode, index): SourceCodes => ({
+        ...sourceCode,
+        ordinal: index + 1,
+      }),
+    );
+
     const newTemplate: TemplateUploadRequest = {
       title,
       description,
-      sourceCodes,
+      sourceCodes: orderedSourceCodes,
       thumbnailOrdinal: 1,
       categoryId: categoryProps.currentValue.id,
       tags: tagProps.tags,
