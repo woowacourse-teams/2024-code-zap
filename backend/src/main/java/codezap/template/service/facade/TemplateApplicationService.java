@@ -109,6 +109,14 @@ public class TemplateApplicationService {
         return null;
     }
 
+    public FindAllTemplatesResponse findAllByLiked(Member loginMember, Long id, Pageable pageable) {
+        if (!loginMember.matchId(id)) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "자신의 좋아요 템플릿 목록만 확인할 수 있습니다.");
+        }
+        Page<Template> templates = likesService.findAllByMemberId(id, pageable);
+        return makeResponse(templates, (template) -> true);
+    }
+
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
         List<Template> templates = page.getContent();
         List<FindAllTemplateItemResponse> findAllTemplateByResponse =
@@ -149,14 +157,6 @@ public class TemplateApplicationService {
                 .findFirst()
                 .map(Thumbnail::getSourceCode)
                 .orElseGet(() -> thumbnailService.getByTemplate(template).getSourceCode());
-    }
-
-    public FindAllTemplatesResponse findAllByLiked(Member loginMember, Long id, Pageable pageable) {
-        if (!loginMember.matchId(id)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "자신의 좋아요 템플릿 목록만 확인할 수 있습니다.");
-        }
-        Page<Template> templates = likesService.findAllByMemberId(id, pageable);
-        return makeResponse(templates, (template) -> true);
     }
 
     @Transactional

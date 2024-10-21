@@ -72,13 +72,13 @@ public class TemplateController implements SpringDocTemplateController {
         return ResponseEntity.ok(templateApplicationService.findById(id, member));
     }
 
-    @GetMapping("/liked/{id}")
-    public ResponseEntity<FindAllTemplatesResponse> findTemplateByLiked(
+    @GetMapping("/liked/{memberId}")
+    public ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(
             @AuthenticationPrinciple Member member,
-            @PathVariable Long id,
+            @PathVariable Long memberId,
             @PageableDefault(size = 20) Pageable pageable
     ) {
-        return ResponseEntity.ok(templateApplicationService.findAllByLiked(member, id, pageable));
+        return ResponseEntity.ok(templateApplicationService.findAllByLiked(member, memberId, pageable));
     }
 
     @PostMapping("/{id}")
