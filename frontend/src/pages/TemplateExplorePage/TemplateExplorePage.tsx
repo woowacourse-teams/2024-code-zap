@@ -1,9 +1,9 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
 
-import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
+import { SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, SearchIcon } from '@/assets/images';
 import {
   Dropdown,
@@ -16,9 +16,10 @@ import {
   TemporaryError,
   TemplateCard,
 } from '@/components';
-import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
+import { useDebounce, useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
+import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
@@ -32,12 +33,20 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 const TemplateExplorePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
 
-  const [page, setPage] = useState<number>(1);
-  const [keyword, handleKeywordChange] = useInput('');
+  const { queryParams, updateQueryParams } = useQueryParams();
+
+  const [page, setPage] = useState<number>(queryParams.page);
+  const [keyword, handleKeywordChange] = useInput(queryParams.keyword);
+
+  const debouncedKeyword = useDebounce(keyword, 300);
+
+  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
 
   const { selectedTagIds, selectedHotTopic, selectTopic } = useHotTopic();
 
-  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
+  useEffect(() => {
+    updateQueryParams({ keyword: debouncedKeyword, sort: sortingOption.value, page });
+  }, [debouncedKeyword, sortingOption, page, updateQueryParams]);
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -84,7 +93,7 @@ const TemplateExplorePage = () => {
               page={page}
               setPage={setPage}
               sortingOption={sortingOption}
-              keyword={keyword}
+              keyword={debouncedKeyword}
               tagIds={selectedTagIds}
             />
           </ErrorBoundary>
@@ -117,8 +126,6 @@ const TemplateList = ({
   keyword: string;
   tagIds: number[];
 }) => {
-  const debouncedKeyword = useDebounce(keyword, 300);
-
   const {
     data: templateData,
     isPending,
@@ -127,7 +134,7 @@ const TemplateList = ({
   } = useTemplateExploreQuery({
     sort: sortingOption.key,
     page,
-    keyword: debouncedKeyword,
+    keyword,
     tagIds,
   });
   const templateList = templateData?.templates || [];
