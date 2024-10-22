@@ -8,6 +8,7 @@ import { Button, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
+import { useTrackPageViewed } from '@/service/amplitude';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { SourceCodes } from '@/types';
@@ -16,6 +17,8 @@ import { getLanguageByFilename } from '@/utils';
 import * as S from './LandingPage.style';
 
 const LandingPage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 랜딩 페이지' });
+
   const { isLogin } = useAuth();
 
   return (

@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
 import { useToggle } from '@/hooks';
+import { useTrackPageViewed } from '@/service/amplitude';
 
 import { useSignupForm } from './hooks';
 import * as S from './SignupPage.style';
 
 const SignupPage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 회원가입 페이지' });
+
   const [showPassword, handlePasswordToggle] = useToggle();
   const [showPasswordConfirm, handlePasswordConfirmToggle] = useToggle();
 

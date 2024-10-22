@@ -9,6 +9,7 @@ import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
 
 import { ScreenReaderOnly } from './components/index';
 import router from './routes/router';
+import { AmplitudeInitializer } from './service/amplitude';
 import GlobalStyles from './style/GlobalStyles';
 import { theme } from './style/theme';
 
@@ -46,13 +47,15 @@ enableMocking().then(() => {
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <AuthProvider>
-            <ToastProvider>
-              <HeaderProvider>
-                <GlobalStyles />
-                <RouterProvider router={router} />
-                <ScreenReaderOnly />
-              </HeaderProvider>
-            </ToastProvider>
+            <AmplitudeInitializer>
+              <ToastProvider>
+                <HeaderProvider>
+                  <GlobalStyles />
+                  <RouterProvider router={router} />
+                  <ScreenReaderOnly />
+                </HeaderProvider>
+              </ToastProvider>
+            </AmplitudeInitializer>
           </AuthProvider>
         </ThemeProvider>
       </QueryClientProvider>

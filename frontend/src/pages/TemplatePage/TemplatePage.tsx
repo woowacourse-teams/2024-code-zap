@@ -18,6 +18,8 @@ import {
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
+import { useTrackPageViewed } from '@/service/amplitude';
+import { trackLikeButton } from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
@@ -27,6 +29,8 @@ import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
+
+  useTrackPageViewed({ eventName: '[Viewed] 템플릿 조회 페이지', eventProps: { templateId: id } });
   const theme = useTheme();
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
 
@@ -64,6 +68,7 @@ const TemplatePage = () => {
     }
 
     toggleLike();
+    trackLikeButton({ isLiked, likesCount, templateId: id as string });
   };
 
   if (!template) {
