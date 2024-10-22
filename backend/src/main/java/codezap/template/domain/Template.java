@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Formula;
 
 import codezap.category.domain.Category;
@@ -57,6 +58,7 @@ public class Template extends BaseTimeEntity {
     private Long likesCount;
 
     @Column(nullable = false)
+    @ColumnDefault("'PUBLIC'")
     @Enumerated(EnumType.STRING)
     private Visibility visibility;
 
