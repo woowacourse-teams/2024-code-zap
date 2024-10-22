@@ -8,7 +8,7 @@ const API_URL = process.env.REACT_APP_API_URL;
 export const MEMBER_API_URL = `${API_URL}${END_POINTS.MEMBERS}`;
 
 export const getMemberName = async (memberId: number) => {
-  const url = `${MEMBER_API_URL}?memberId=${memberId}`;
+  const url = `${MEMBER_API_URL}/${memberId}/name`;
 
   const response = await customFetch<GetMemberNameResponse>({
     url,
