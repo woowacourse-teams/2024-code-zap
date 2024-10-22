@@ -8,6 +8,7 @@ import { Button, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
+import { useTrackPageViewed } from '@/service/amplitude';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { SourceCodes } from '@/types';
@@ -16,6 +17,8 @@ import { getLanguageByFilename } from '@/utils';
 import * as S from './LandingPage.style';
 
 const LandingPage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 랜딩 페이지' });
+
   const { isLogin } = useAuth();
 
   return (
@@ -27,8 +30,7 @@ const LandingPage = () => {
             {'"아, 그때 그 코드 어디에 썼더라..."'}
           </Heading.XSmall>
           <Flex direction='column' gap='1rem'>
-            <Text.Medium color='black'></Text.Medium>
-            더이상 코드를 찾느데 헤매지 마세요!
+            <Text.Medium color='black'>더 이상 코드를 찾느라 헤매지 마세요!</Text.Medium>
             <Text.Medium color='black'>코드잽에 자주 쓰는 코드를 템플릿으로 저장하고 빠르게 찾아요.</Text.Medium>
           </Flex>
         </S.TextContent>

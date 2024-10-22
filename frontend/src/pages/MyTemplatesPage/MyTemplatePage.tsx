@@ -6,6 +6,7 @@ import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
 import { useAuth } from '@/hooks/authentication';
 import { useMemberNameQuery } from '@/queries/members';
+import { useTrackPageViewed } from '@/service/amplitude';
 
 import {
   TopBanner,
@@ -21,13 +22,14 @@ import { useSelectAndDeleteTemplateList, useFilteredTemplateList } from './hooks
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 내 템플릿 페이지' });
+
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
 
   const {
     memberInfo: { memberId: currentMemberId },
   } = useAuth();
-
   const {
     data: { name },
   } = useMemberNameQuery({ memberId });

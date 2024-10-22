@@ -89,7 +89,7 @@ export const ModalContainer = styled.div<{ size: ModalSize }>`
 
 const sizes = {
   xsmall: css`
-    max-width: 17.5rem;
+    max-width: 18.5rem;
     min-height: 11.25rem;
   `,
   small: css`

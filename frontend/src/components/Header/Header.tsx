@@ -10,6 +10,7 @@ import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { END_POINTS } from '@/routes';
+import { trackClickNewTemplate } from '@/service/amplitude';
 
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
@@ -43,6 +44,8 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   }
 
   const handleTemplateUploadButton = () => {
+    trackClickNewTemplate();
+
     if (!isLogin) {
       failAlert('로그인을 해주세요.');
 

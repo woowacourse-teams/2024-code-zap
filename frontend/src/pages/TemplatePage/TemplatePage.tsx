@@ -19,6 +19,8 @@ import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
 import { END_POINTS } from '@/routes';
+import { useTrackPageViewed } from '@/service/amplitude';
+import { trackLikeButton } from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
@@ -29,6 +31,8 @@ import * as S from './TemplatePage.style';
 const TemplatePage = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+
+  useTrackPageViewed({ eventName: '[Viewed] 템플릿 조회 페이지', eventProps: { templateId: id } });
   const theme = useTheme();
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
 
@@ -66,6 +70,7 @@ const TemplatePage = () => {
     }
 
     toggleLike();
+    trackLikeButton({ isLiked, likesCount, templateId: id as string });
   };
 
   const handleAuthorClick = () => {
@@ -134,7 +139,8 @@ const TemplatePage = () => {
 
                 <Flex gap='0.5rem' align='center' justify='space-between'>
                   <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
-                    <PersonIcon width={ICON_SIZE.X_SMALL} />
+                    <PersonIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.primary_500} />
+
                     <div
                       style={{
                         overflow: 'hidden',
@@ -143,18 +149,12 @@ const TemplatePage = () => {
                         flex: 1,
                       }}
                     >
-                      <Text.Small
-                        color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                      >
-                        {template.member.name}
-                      </Text.Small>
+                      <Text.Small color={theme.color.light.primary_500}>{template.member.name}</Text.Small>
                     </div>
                   </S.AuthorInfoContainer>
                   <Flex align='center' gap='0.125rem'>
-                    <ClockIcon width={ICON_SIZE.SMALL} />
-                    <Text.Small
-                      color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                    >
+                    <ClockIcon width={ICON_SIZE.SMALL} color={theme.color.light.secondary_600} />
+                    <Text.Small color={theme.color.light.secondary_600}>
                       {formatRelativeTime(template.modifiedAt)}
                     </Text.Small>
                     <Text.Small
