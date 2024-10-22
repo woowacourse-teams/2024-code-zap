@@ -28,6 +28,11 @@ export const SearchInput = styled(Input)`
   box-shadow: inset 1px 2px 8px #00000030;
 `;
 
+export const TemplateListSectionWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
 export const ScrollTopButton = styled.button`
   cursor: pointer;
 

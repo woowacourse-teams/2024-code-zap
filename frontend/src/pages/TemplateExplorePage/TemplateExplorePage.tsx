@@ -23,6 +23,7 @@ import { scroll } from '@/utils';
 
 import { HotTopicCarousel } from './components';
 import { useHotTopic } from './hooks';
+import { TemplateListSectionLoading } from '../MyTemplatesPage/components';
 import * as S from './TemplateExplorePage.style';
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
@@ -115,7 +116,12 @@ const TemplateList = ({
 }) => {
   const debouncedKeyword = useDebounce(keyword, 300);
 
-  const { data: templateData, isPending } = useTemplateExploreQuery({
+  const {
+    data: templateData,
+    isPending,
+    isFetching,
+    isLoading,
+  } = useTemplateExploreQuery({
     sort: sortingOption.key,
     page,
     keyword: debouncedKeyword,
@@ -140,13 +146,18 @@ const TemplateList = ({
           <NoSearchResults />
         )
       ) : (
-        <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
-          {templateList.map((template) => (
-            <Link to={`/templates/${template.id}`} key={template.id}>
-              <TemplateCard template={template} />
-            </Link>
-          ))}
-        </S.TemplateExplorePageContainer>
+        <S.TemplateListSectionWrapper>
+          {isFetching && <TemplateListSectionLoading />}
+          {!isLoading && (
+            <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
+              {templateList.map((template) => (
+                <Link to={`/templates/${template.id}`} key={template.id}>
+                  <TemplateCard template={template} />
+                </Link>
+              ))}
+            </S.TemplateExplorePageContainer>
+          )}
+        </S.TemplateListSectionWrapper>
       )}
 
       {templateList.length !== 0 && (
