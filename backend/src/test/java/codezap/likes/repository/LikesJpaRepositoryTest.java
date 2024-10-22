@@ -207,17 +207,30 @@ class LikesJpaRepositoryTest {
     class FindAllByMemberId {
 
         @Test
-        @DisplayName("성공")
+        @DisplayName("성공: 다른 사람의 private은 제외, 내 private은 포함")
         void findAllByMemberId() {
-            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
-            likesRepository.save(new Likes(template1, member1));
-            likesRepository.save(new Likes(template2, member1));
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
 
-            Page<Template> actual = likesRepository.findAllByMemberId(member1.getId(), PageRequest.of(0, 5));
-            assertThat(actual).containsExactlyInAnyOrder(template1, template2);
+            Category category = categoryRepository.save(CategoryFixture.get(member));
+            Category otherCategory = categoryRepository.save(CategoryFixture.get(otherMember));
+
+            Template myPublicTemplate = templateRepository.save(TemplateFixture.get(member, category));
+            Template myPrivateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            Template otherPublicTemplate = templateRepository.save(TemplateFixture.get(otherMember, otherCategory));
+            Template otherPrivateTemplate = templateRepository.save(TemplateFixture.getPrivate(otherMember, otherCategory));
+
+            likesRepository.save(new Likes(myPublicTemplate, member));
+            likesRepository.save(new Likes(myPrivateTemplate, member));
+            likesRepository.save(new Likes(otherPublicTemplate, member));
+            likesRepository.save(new Likes(otherPrivateTemplate, member));
+
+            // when
+            Page<Template> actual = likesRepository.findAllByMemberId(member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertThat(actual).containsExactlyInAnyOrder(myPublicTemplate, myPrivateTemplate, otherPublicTemplate);
         }
     }
 }
