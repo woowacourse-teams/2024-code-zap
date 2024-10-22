@@ -5,7 +5,6 @@ on:
     branches:
       - main
       - dev/be
-      - infra/833-zdd
 
 jobs:
   build:
@@ -34,7 +33,7 @@ jobs:
           path: backend/build/libs/*.jar
 
   deploy_develop:
-    if: ${{ github.ref == 'refs/heads/dev/be' || github.ref == 'refs/heads/infra/833-zdd' }}
+    if: ${{ github.ref == 'refs/heads/dev/be' }}
     needs: build
     environment: Develop
     runs-on:
@@ -84,7 +83,10 @@ jobs:
           submodules: true
           token: ${{ secrets.PRIVATE_REPO_ACCESS }}
 
-      - name: Compose 설정 복사
+      - name: Working directory 초기화
+        run: ${{ secrets.INIT_WORK_DIR }}
+
+      - name: 배포 관련 설정 복사
         run: ${{ secrets.RUN_COPY_COMPOSE }}
 
       - name: Compose 환경변수 주입
