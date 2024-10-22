@@ -7,6 +7,7 @@ import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateEditMutation } from '@/queries/templates';
+import { useTrackPageViewed } from '@/service/amplitude';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
@@ -22,6 +23,8 @@ interface Props {
 }
 
 const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
+  useTrackPageViewed({ eventName: '[Viewed] 템플릿 편집 페이지' });
+
   const categoryProps = useCategory(template.category);
 
   const [title, handleTitleChange] = useInput(template.title);
@@ -79,6 +82,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       ...sourceCode,
       ordinal: index + 1,
     }));
+
     const createSourceCodes = orderedSourceCodes.filter((sourceCode) => !sourceCode.id);
     const updateSourceCodes = orderedSourceCodes.filter((sourceCode) => sourceCode.id);
 

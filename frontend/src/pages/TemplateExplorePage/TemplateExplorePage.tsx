@@ -18,6 +18,7 @@ import {
 } from '@/components';
 import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
+import { useTrackPageViewed } from '@/service/amplitude';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
@@ -26,6 +27,8 @@ import * as S from './TemplateExplorePage.style';
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
+
   const [page, setPage] = useState<number>(1);
   const [keyword, handleKeywordChange] = useInput('');
 

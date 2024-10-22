@@ -4,6 +4,7 @@ import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
 import { useAuth } from '@/hooks/authentication';
+import { useTrackPageViewed } from '@/service/amplitude';
 
 import {
   TopBanner,
@@ -19,6 +20,8 @@ import { useSelectAndDeleteTemplateList, useFilteredTemplateList } from './hooks
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 내 템플릿 페이지' });
+
   const {
     memberInfo: { name },
   } = useAuth();
