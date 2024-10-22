@@ -612,31 +612,10 @@ class TemplateControllerTest extends MockMvcTest {
             Member member = MemberFixture.getFirstMember();
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse(member);
 
-            when(templateApplicationService.findAllByLiked(any(), any(), any()))
-                    .thenReturn(new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
-
-            mvc.perform(get("/templates/like/" + member.getId())
-                            .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.totalPages").value(1))
-                    .andExpect(jsonPath("$.totalElements").value(1));
-        }
-
-        @Test
-        @DisplayName("성공: 로그인한 사용자가 없는 경우")
-        void findAllTemplatesSuccessWhenNoMember() throws Exception {
-            // given
-            Member member = MemberFixture.getFirstMember();
-            FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse(member);
-
-            when(credentialManager.hasCredential(any())).thenReturn(false);
-            when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findAllByLiked(any(), any()))
                     .thenReturn(new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
 
-            // when & then
-            mvc.perform(get("/templates/like/" + member.getId())
+            mvc.perform(get("/templates/like")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))

@@ -28,7 +28,6 @@ import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
@@ -512,7 +511,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             likesRepository.save(new Likes(template3, otherMember));
 
             // when
-            FindAllTemplatesResponse actual = sut.findAllByLiked(member, member.getId(), PageRequest.of(0, 5));
+            FindAllTemplatesResponse actual = sut.findAllByLiked(member.getId(), PageRequest.of(0, 5));
 
             // then
             assertAll(
@@ -521,69 +520,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     () -> assertThat(actual.templates()).extracting("isLiked")
                             .containsExactlyInAnyOrder(true, true)
             );
-        }
-
-        @Test
-        @DisplayName("성공: 로그인 정보와 조회하려는 멤버 ID가 다를 경우")
-        void findAllByLikedSuccessNotSameMemberId() {
-            // given
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = savePublicTemplate(member, category);
-            var template2 = savePublicTemplate(member, category);
-
-            likesRepository.save(new Likes(template1, member));
-            likesRepository.save(new Likes(template2, member));
-            likesRepository.save(new Likes(template2, otherMember));
-
-            // when
-            FindAllTemplatesResponse actual = sut.findAllByLiked(otherMember, member.getId(), PageRequest.of(0, 5));
-
-            // then
-            assertAll(
-                    () -> assertThat(actual.templates()).extracting("id")
-                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
-                    () -> assertThat(actual.templates()).extracting("isLiked")
-                            .containsExactlyInAnyOrder(true, false)
-            );
-        }
-
-        @Test
-        @DisplayName("성공: 로그인하지 않은 경우")
-        void findAllByLikedSuccessNotLogin() {
-            // given
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = savePublicTemplate(member, category);
-            var template2 = savePublicTemplate(member, category);
-
-            likesRepository.save(new Likes(template1, member));
-            likesRepository.save(new Likes(template2, member));
-
-            // when
-            FindAllTemplatesResponse actual = sut.findAllByLiked(member.getId(), PageRequest.of(0, 5));
-
-            // then
-            assertAll(
-                    () -> assertThat(actual.templates()).extracting("id")
-                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
-                    () -> assertThat(actual.templates()).extracting("isLiked")
-                            .containsExactlyInAnyOrder(false, false)
-            );
-        }
-
-        @Test
-        @DisplayName("실패: 존재하지 않는 회원 ID인 경우")
-        void findAllByLikedFailNotExists() {
-            // given
-            long notExistsId = 100L;
-
-            // when & then
-            assertThatThrownBy(() -> sut.findAllByLiked(notExistsId, PageRequest.of(0, 5)))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("식별자 " + notExistsId + "에 해당하는 멤버가 존재하지 않습니다.")
-                    .extracting("errorCode").isEqualTo(ErrorCode.RESOURCE_NOT_FOUND);
         }
     }
 

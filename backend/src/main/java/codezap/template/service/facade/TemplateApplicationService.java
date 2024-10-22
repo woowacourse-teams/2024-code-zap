@@ -109,21 +109,9 @@ public class TemplateApplicationService {
         return null;
     }
 
-    public FindAllTemplatesResponse findAllByLiked(Member loginMember, Long memberId, Pageable pageable) {
-        Page<Template> templates = findLikedTemplatesByMember(memberId, pageable);
-        if (loginMember.matchId(memberId)) {
-            return makeResponse(templates, (template) -> true);
-        }
-        return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
-    }
-
     public FindAllTemplatesResponse findAllByLiked(Long memberId, Pageable pageable) {
-        return makeResponse(findLikedTemplatesByMember(memberId, pageable), (template -> false));
-    }
-
-    private Page<Template> findLikedTemplatesByMember(Long memberId, Pageable pageable) {
-        memberService.existsById(memberId);
-        return likesService.findAllByMemberId(memberId, pageable);
+        Page<Template> likeTemplate = likesService.findAllByMemberId(memberId, pageable);
+        return makeResponse(likeTemplate, (template -> true));
     }
 
     private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
