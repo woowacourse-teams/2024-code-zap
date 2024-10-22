@@ -9,3 +9,7 @@ export const Form = styled.form`
   flex-direction: column;
   gap: 1.25rem;
 `;
+
+export const LoadingContainer = styled.div`
+  width: 4.5rem;
+`;
