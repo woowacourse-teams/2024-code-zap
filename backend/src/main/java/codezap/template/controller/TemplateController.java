@@ -62,7 +62,7 @@ public class TemplateController implements SpringDocTemplateController {
     }
 
     @GetMapping("/like")
-    public ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(
+    public ResponseEntity<FindAllTemplatesResponse> findLikedTemplate(
             @AuthenticationPrinciple Member member,
             @PageableDefault(size = 20) Pageable pageable
     ) {
