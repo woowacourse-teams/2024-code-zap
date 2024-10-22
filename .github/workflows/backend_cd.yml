@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev/be
+      - infra/833-zdd
 
 jobs:
   build:
