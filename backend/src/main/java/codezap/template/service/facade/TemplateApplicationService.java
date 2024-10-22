@@ -59,6 +59,7 @@ public class TemplateApplicationService {
 
     public FindTemplateResponse findById(Long id) {
         Template template = templateService.getById(id);
+        template.validateForbiddenPrivate();
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
         return FindTemplateResponse.of(template, sourceCodes, tags, false);
@@ -66,6 +67,9 @@ public class TemplateApplicationService {
 
     public FindTemplateResponse findById(Long id, Member loginMember) {
         Template template = templateService.getById(id);
+        if(!template.matchMember(loginMember)) {
+            template.validateForbiddenPrivate();
+        }
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
         boolean isLiked = likesService.isLiked(loginMember, template);

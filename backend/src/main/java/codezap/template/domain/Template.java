@@ -82,8 +82,18 @@ public class Template extends BaseTimeEntity {
     }
 
     public void validateAuthorization(Member member) {
-        if (!getMember().equals(member)) {
+        if (!matchMember(member)) {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
+        }
+    }
+
+    public boolean matchMember(Member member) {
+        return getMember().equals(member);
+    }
+
+    public void validateForbiddenPrivate() {
+        if (visibility == Visibility.PRIVATE) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
         }
     }
 }
