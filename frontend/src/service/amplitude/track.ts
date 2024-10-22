@@ -43,3 +43,17 @@ export const trackClickTemplateSave = ({ templateTitle, sourceCodeCount, visibil
 export const trackClickCopyClipBoard = () => {
   amplitudeService.customTrack('[Click] 클립보드 복사 버튼');
 };
+
+interface PagingButtonData {
+  page: number;
+  totalPages: number;
+  label: string;
+}
+
+export const trackMyTemplatePaging = ({ page, totalPages, label }: PagingButtonData) => {
+  amplitudeService.customTrack('[Click] 페이징 버튼', {
+    page,
+    totalPages,
+    label,
+  });
+};

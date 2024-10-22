@@ -14,6 +14,11 @@ const AmplitudeInitializer = ({ children }: React.PropsWithChildren) => {
   const prevName = useRef<string | undefined>(undefined);
 
   useEffect(() => {
+    // localhost, 개발 서버 환경일 때는 init X
+    if (process.env.APP_ENV === 'dev') {
+      return;
+    }
+
     // Amplitude가 처음 초기화될 때 (여러 번 init 되는 것을 방지)
     if (isAmplitudeInitialized.current === false) {
       if (name) {
