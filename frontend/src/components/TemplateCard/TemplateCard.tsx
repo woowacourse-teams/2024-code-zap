@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
+
 import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
+import { END_POINTS } from '@/routes';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
@@ -14,6 +17,7 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
+  const navigate = useNavigate();
   const { title, description, thumbnail, tags, modifiedAt, member, visibility } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
   const isPrivate = visibility === VISIBILITY_PRIVATE;
@@ -23,6 +27,10 @@ const TemplateCard = ({ template }: Props) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
+  };
+
+  const handleAuthorClick = () => {
+    navigate(END_POINTS.memberTemplates(member.id));
   };
 
   const handleAllTagList = (
@@ -37,21 +45,19 @@ const TemplateCard = ({ template }: Props) => {
       <Flex width='100%' direction='column' gap='1rem'>
         <Flex width='100%' justify='space-between' gap='1rem'>
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
-            {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_800} />}
-            <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
-              <PersonIcon width={ICON_SIZE.X_SMALL} />
+            {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />}
+
+            <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
+              <PersonIcon color={theme.color.light.primary_500} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
-                <Text.Small
-                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                >
-                  {member.name}
-                </Text.Small>
+                <Text.Small color={theme.color.light.primary_500}>{member.name}</Text.Small>
               </S.EllipsisTextWrapper>
-            </Flex>
+            </S.AuthorInfoContainer>
+
             <Flex align='center' gap='0.25rem'>
-              <ClockIcon width={ICON_SIZE.X_SMALL} />
+              <ClockIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />
               <S.NoWrapTextWrapper>
-                <Text.Small color={theme.color.light.primary_500}>{formatRelativeTime(modifiedAt)}</Text.Small>
+                <Text.Small color={theme.color.light.secondary_600}>{formatRelativeTime(modifiedAt)}</Text.Small>
               </S.NoWrapTextWrapper>
             </Flex>
           </Flex>

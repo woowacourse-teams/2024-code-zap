@@ -3,11 +3,13 @@ import { useState } from 'react';
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
 import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput, Toggle } from '@/components';
 import { useInput, useSelectList } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateEditMutation } from '@/queries/templates';
-import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
+import { useTrackPageViewed } from '@/service/amplitude';
+import { TEMPLATE_VISIBILITY } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
@@ -22,8 +24,12 @@ interface Props {
 }
 
 const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
-  const categoryProps = useCategory(template.category);
+  useTrackPageViewed({ eventName: '[Viewed] 템플릿 편집 페이지' });
 
+  const {
+    memberInfo: { memberId },
+  } = useAuth();
+  const categoryProps = useCategory({ memberId: memberId!, initCategory: template.category });
   const [title, handleTitleChange] = useInput(template.title);
   const [description, handleDescriptionChange] = useInput(template.description);
 
@@ -40,7 +46,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const initTags = template.tags.map((tag) => tag.name);
   const tagProps = useTag(initTags);
 
-  const [visibility, setVisibility] = useState<TemplateVisibility>(DEFAULT_TEMPLATE_VISIBILITY);
+  const [visibility, setVisibility] = useState<TemplateVisibility>(template.visibility);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
@@ -79,6 +85,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       ...sourceCode,
       ordinal: index + 1,
     }));
+
     const createSourceCodes = orderedSourceCodes.filter((sourceCode) => !sourceCode.id);
     const updateSourceCodes = orderedSourceCodes.filter((sourceCode) => sourceCode.id);
 

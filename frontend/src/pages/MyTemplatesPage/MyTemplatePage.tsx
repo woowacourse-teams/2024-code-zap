@@ -1,9 +1,12 @@
 import { Suspense } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
 import { useAuth } from '@/hooks/authentication';
+import { useMemberNameQuery } from '@/queries/members';
+import { useTrackPageViewed } from '@/service/amplitude';
 
 import {
   TopBanner,
@@ -19,9 +22,17 @@ import { useSelectAndDeleteTemplateList, useFilteredTemplateList } from './hooks
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 내 템플릿 페이지' });
+
+  const { memberId: routeMemberId } = useParams<{ memberId: string }>();
+  const memberId = Number(routeMemberId);
+
   const {
-    memberInfo: { name },
+    memberInfo: { memberId: currentMemberId },
   } = useAuth();
+  const {
+    data: { name },
+  } = useMemberNameQuery({ memberId });
 
   const {
     templateList,
@@ -38,7 +49,7 @@ const MyTemplatePage = () => {
     handleTagMenuClick,
     handleSearchSubmit,
     handlePageChange,
-  } = useFilteredTemplateList();
+  } = useFilteredTemplateList({ memberId });
 
   const {
     isEditMode,
@@ -56,20 +67,23 @@ const MyTemplatePage = () => {
       <TopBanner name={name ?? ''} />
       <S.MainContainer>
         <Suspense fallback={<CategoryListSectionSkeleton />}>
-          <CategoryListSection onSelectCategory={handleCategoryMenuClick} />
+          <CategoryListSection memberId={memberId} onSelectCategory={handleCategoryMenuClick} />
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
-          <TemplateDeleteSelection
-            isEditMode={isEditMode}
-            isDeleteModalOpen={isDeleteModalOpen}
-            selectedListLength={selectedList.length}
-            templateListLength={templateList.length}
-            toggleIsEditMode={toggleIsEditMode}
-            toggleDeleteModal={toggleDeleteModal}
-            handleAllSelected={handleAllSelected}
-            handleDelete={handleDelete}
-          />
+          {memberId === currentMemberId && (
+            <TemplateDeleteSelection
+              isEditMode={isEditMode}
+              isDeleteModalOpen={isDeleteModalOpen}
+              selectedListLength={selectedList.length}
+              templateListLength={templateList.length}
+              toggleIsEditMode={toggleIsEditMode}
+              toggleDeleteModal={toggleDeleteModal}
+              handleAllSelected={handleAllSelected}
+              handleDelete={handleDelete}
+            />
+          )}
+
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
@@ -91,7 +105,11 @@ const MyTemplatePage = () => {
           </Flex>
 
           <Suspense fallback={<TagListSectionSkeleton />}>
-            <TagListSection selectedTagIds={selectedTagIds} handleTagMenuClick={handleTagMenuClick} />
+            <TagListSection
+              memberId={memberId}
+              selectedTagIds={selectedTagIds}
+              handleTagMenuClick={handleTagMenuClick}
+            />
           </Suspense>
 
           <S.TemplateListSectionWrapper>

@@ -84,6 +84,7 @@ export const getTemplateExplore = async ({
   page = 1,
   size = PAGE_SIZE,
   keyword,
+  tagIds,
 }: TemplateListRequest): Promise<TemplateListResponse> => {
   const queryParams = new URLSearchParams({
     sort,
@@ -93,6 +94,10 @@ export const getTemplateExplore = async ({
 
   if (keyword) {
     queryParams.append('keyword', keyword);
+  }
+
+  if (tagIds?.length !== 0 && tagIds !== undefined) {
+    queryParams.append('tagIds', tagIds.toString());
   }
 
   const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);

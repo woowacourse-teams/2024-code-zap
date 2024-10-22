@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { BooksIcon, Chevron2Icon, SettingIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { useToggle, useWindowWidth } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
@@ -11,15 +12,20 @@ import { CategoryEditModal } from '../';
 import * as S from './CategoryFilterMenu.style';
 
 interface CategoryMenuProps {
+  memberId: number;
   categoryList: Category[];
   onSelectCategory: (selectedCategoryId: number) => void;
 }
 
-const CategoryFilterMenu = ({ categoryList, onSelectCategory }: CategoryMenuProps) => {
+const CategoryFilterMenu = ({ memberId, categoryList, onSelectCategory }: CategoryMenuProps) => {
   const [selectedId, setSelectedId] = useState<number>(0);
   const [isEditModalOpen, toggleEditModal] = useToggle();
   const [isMenuOpen, toggleMenu] = useToggle(false);
   const windowWidth = useWindowWidth();
+
+  const {
+    memberInfo: { memberId: currentMemberId },
+  } = useAuth();
 
   const handleCategorySelect = (id: number) => {
     setSelectedId(id);
@@ -57,9 +63,12 @@ const CategoryFilterMenu = ({ categoryList, onSelectCategory }: CategoryMenuProp
         </S.ToggleMenuButton>
       )}
       <S.CategoryContainer isMenuOpen={isMenuOpen}>
-        <S.IconButtonWrapper onClick={toggleEditModal} isMenuOpen={isMenuOpen}>
-          <SettingIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 편집' />
-        </S.IconButtonWrapper>
+        {memberId === currentMemberId && (
+          <S.IconButtonWrapper onClick={toggleEditModal} isMenuOpen={isMenuOpen}>
+            <SettingIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 편집' />
+          </S.IconButtonWrapper>
+        )}
+
         <S.CategoryListContainer>
           <S.CategoryButtonContainer>
             <CategoryButton name='전체보기' disabled={selectedId === 0} onClick={() => handleCategorySelect(0)} />

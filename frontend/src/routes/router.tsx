@@ -2,7 +2,7 @@ import { ErrorBoundary } from '@sentry/react';
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { Layout } from '@/components';
+import { Layout, LoadingBall } from '@/components';
 
 import RouteGuard from './RouteGuard';
 import { END_POINTS } from './endPoints';
@@ -17,7 +17,15 @@ const TemplateExplorePage = lazy(() => import('@/pages/TemplateExplorePage/Templ
 const MyTemplatePage = lazy(() => import('@/pages/MyTemplatesPage/MyTemplatePage'));
 
 const CustomSuspense = ({ children }: { children: JSX.Element }) => (
-  <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+  <Suspense
+    fallback={
+      <div style={{ height: '100vh' }}>
+        <LoadingBall />
+      </div>
+    }
+  >
+    {children}
+  </Suspense>
 );
 
 const router = createBrowserRouter([
@@ -42,7 +50,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.MY_TEMPLATES,
+        path: END_POINTS.MEMBERS_TEMPLATES,
         element: (
           <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
             <ErrorBoundary fallback={<NotFoundPage />}>

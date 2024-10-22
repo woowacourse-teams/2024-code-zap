@@ -14,6 +14,7 @@ export type {
   CategoryDeleteRequest,
   CategoryListResponse,
   TagListResponse,
+  GetMemberNameResponse,
 } from './api';
 export type { LoginRequest, SignupRequest, MemberInfo } from './authentication';
 

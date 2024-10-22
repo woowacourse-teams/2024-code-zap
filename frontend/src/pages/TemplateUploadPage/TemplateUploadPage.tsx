@@ -3,24 +3,32 @@ import { useState } from 'react';
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
 import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text, Toggle } from '@/components';
 import { useCustomNavigate, useInput, useSelectList } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
+import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
-import { TemplateVisibility } from '@/types/template';
+import { SourceCodes, TemplateVisibility } from '@/types/template';
 import { getLanguageForAutoTag } from '@/utils';
 
 import * as S from './TemplateUploadPage.style';
 
 const TemplateUploadPage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 템플릿 업로드 페이지' });
+
   const navigate = useCustomNavigate();
   const { failAlert } = useToast();
 
-  const categoryProps = useCategory();
+  const {
+    memberInfo: { memberId },
+  } = useAuth();
+
+  const categoryProps = useCategory({ memberId: memberId! });
 
   const [title, handleTitleChange] = useInput('');
   const [description, handleDescriptionChange] = useInput('');
@@ -77,17 +85,32 @@ const TemplateUploadPage = () => {
       return;
     }
 
+    const orderedSourceCodes = sourceCodes.map(
+      (sourceCode, index): SourceCodes => ({
+        ...sourceCode,
+        ordinal: index + 1,
+      }),
+    );
+
     const newTemplate: TemplateUploadRequest = {
       title,
       description,
-      sourceCodes,
+      sourceCodes: orderedSourceCodes,
       thumbnailOrdinal: 1,
       categoryId: categoryProps.currentValue.id,
       tags: tagProps.tags,
       visibility,
     };
 
-    await uploadTemplate(newTemplate);
+    const response = await uploadTemplate(newTemplate);
+
+    if (response.ok) {
+      trackClickTemplateSave({
+        templateTitle: title,
+        sourceCodeCount: sourceCodes.length,
+        visibility,
+      });
+    }
   };
 
   return (

@@ -10,25 +10,30 @@ import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { END_POINTS } from '@/routes';
+import { trackClickNewTemplate } from '@/service/amplitude';
 
 import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
-  const { isLogin, isChecking } = useAuth();
-  const [menuOpen, toggleMenu] = useToggle();
+  const {
+    isLogin,
+    isChecking,
+    memberInfo: { memberId },
+  } = useAuth();
+  const [isMenuOpen, toggleMenu] = useToggle();
   const { failAlert } = useCustomContext(ToastContext);
   const location = useLocation();
   const navigate = useCustomNavigate();
 
-  useScrollDisable(menuOpen);
-  usePressESC(menuOpen, toggleMenu);
+  useScrollDisable(isMenuOpen);
+  usePressESC(isMenuOpen, toggleMenu);
 
   useEffect(() => {
-    if (menuOpen) {
+    if (isMenuOpen) {
       toggleMenu();
     }
-  }, [location.pathname]);
+  }, [location.pathname, isMenuOpen]);
 
   if (isChecking) {
     return (
@@ -39,6 +44,8 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
   }
 
   const handleTemplateUploadButton = () => {
+    trackClickNewTemplate();
+
     if (!isLogin) {
       failAlert('로그인을 해주세요.');
 
@@ -52,9 +59,11 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
     <S.HeaderContainer ref={headerRef}>
       <S.HeaderContentContainer>
         <Logo />
-        <S.HeaderMenu menuOpen={menuOpen}>
+        <S.HeaderMenu menuOpen={isMenuOpen}>
           <S.NavContainer>
-            {!isChecking && isLogin && <NavOption route={END_POINTS.MY_TEMPLATES} name='내 템플릿' />}
+            {!isChecking && isLogin && memberId && (
+              <NavOption route={END_POINTS.memberTemplates(memberId)} name='내 템플릿' />
+            )}
             <NavOption route={END_POINTS.TEMPLATES_EXPLORE} name='구경가기' />
             <ContactUs />
           </S.NavContainer>
@@ -84,10 +93,10 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
           >
             <PlusIcon />새 템플릿
           </Button>
-          <HeaderMenuButton menuOpen={menuOpen} toggleMenu={toggleMenu} />
+          <HeaderMenuButton menuOpen={isMenuOpen} toggleMenu={toggleMenu} />
         </S.MobileMenuContainer>
       </S.HeaderContentContainer>
-      {menuOpen && <S.Dimmed menuOpen={menuOpen} onClick={toggleMenu} />}
+      {isMenuOpen && <S.Dimmed menuOpen={isMenuOpen} onClick={toggleMenu} />}
     </S.HeaderContainer>
   );
 };

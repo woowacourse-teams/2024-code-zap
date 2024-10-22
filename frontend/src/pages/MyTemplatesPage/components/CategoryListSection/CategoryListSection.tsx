@@ -4,16 +4,17 @@ import { CategoryFilterMenu } from '..';
 import * as S from './CategoryListSection.style';
 
 interface Props {
+  memberId: number;
   onSelectCategory: (selectedCategoryId: number) => void;
 }
 
-const CategoryListSection = ({ onSelectCategory }: Props) => {
-  const { data: categoryData } = useCategoryListQuery();
+const CategoryListSection = ({ onSelectCategory, memberId }: Props) => {
+  const { data: categoryData } = useCategoryListQuery({ memberId });
   const categoryList = categoryData?.categories || [];
 
   return (
     <S.CategoryListSectionContainer>
-      <CategoryFilterMenu categoryList={categoryList} onSelectCategory={onSelectCategory} />
+      <CategoryFilterMenu memberId={memberId} categoryList={categoryList} onSelectCategory={onSelectCategory} />
     </S.CategoryListSectionContainer>
   );
 };

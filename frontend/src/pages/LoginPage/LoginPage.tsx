@@ -4,11 +4,14 @@ import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { END_POINTS } from '@/routes';
+import { useTrackPageViewed } from '@/service/amplitude';
 
 import { useLoginForm } from './hooks';
 import * as S from './LoginPage.style';
 
 const LoginPage = () => {
+  useTrackPageViewed({ eventName: '[Viewed] 로그인 페이지' });
+
   const [showPassword, handlePasswordToggle] = useToggle();
   const { name, password, errors, handleNameChange, handlePasswordChange, isFormValid, handleSubmit } = useLoginForm();
 
