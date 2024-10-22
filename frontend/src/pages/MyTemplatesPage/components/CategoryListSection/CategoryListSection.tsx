@@ -14,7 +14,7 @@ const CategoryListSection = ({ onSelectCategory, memberId }: Props) => {
 
   return (
     <S.CategoryListSectionContainer>
-      <CategoryFilterMenu categoryList={categoryList} onSelectCategory={onSelectCategory} />
+      <CategoryFilterMenu memberId={memberId} categoryList={categoryList} onSelectCategory={onSelectCategory} />
     </S.CategoryListSectionContainer>
   );
 };
