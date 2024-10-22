@@ -4,7 +4,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
 
 import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, SearchIcon, ZapzapLogo } from '@/assets/images';
+import { ArrowUpIcon, SearchIcon } from '@/assets/images';
 import {
   Dropdown,
   Flex,
@@ -22,6 +22,9 @@ import { useTrackPageViewed } from '@/service/amplitude';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
+import { HotTopicCarousel } from './components';
+import { useHotTopic } from './hooks';
+import { TemplateListSectionLoading } from '../MyTemplatesPage/components';
 import * as S from './TemplateExplorePage.style';
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
@@ -31,6 +34,8 @@ const TemplateExplorePage = () => {
 
   const [page, setPage] = useState<number>(1);
   const [keyword, handleKeywordChange] = useInput('');
+
+  const { selectedTagIds, selectedHotTopic, selectTopic } = useHotTopic();
 
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
 
@@ -42,9 +47,11 @@ const TemplateExplorePage = () => {
 
   return (
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
-      <Flex justify='flex-start' align='center' gap='1rem'>
-        <ZapzapLogo width={50} height={50} />
-        <Heading.Medium color='black'>여러 템플릿을 구경해보세요:)</Heading.Medium>
+      <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
+        <Heading.Medium color='black'>
+          🔥 지금 인기있는 토픽 {selectedHotTopic && `- ${selectedHotTopic} 보는 중`}
+        </Heading.Medium>
+        <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
       </Flex>
 
       <Flex width='100%' gap='1rem'>
@@ -73,7 +80,13 @@ const TemplateExplorePage = () => {
             onReset={reset}
             resetKeys={[keyword]}
           >
-            <TemplateList page={page} setPage={setPage} sortingOption={sortingOption} keyword={keyword} />
+            <TemplateList
+              page={page}
+              setPage={setPage}
+              sortingOption={sortingOption}
+              keyword={keyword}
+              tagIds={selectedTagIds}
+            />
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
@@ -96,18 +109,26 @@ const TemplateList = ({
   setPage,
   sortingOption,
   keyword,
+  tagIds,
 }: {
   page: number;
   setPage: (page: number) => void;
   sortingOption: SortingOption;
   keyword: string;
+  tagIds: number[];
 }) => {
   const debouncedKeyword = useDebounce(keyword, 300);
 
-  const { data: templateData, isPending } = useTemplateExploreQuery({
+  const {
+    data: templateData,
+    isPending,
+    isFetching,
+    isLoading,
+  } = useTemplateExploreQuery({
     sort: sortingOption.key,
     page,
     keyword: debouncedKeyword,
+    tagIds,
   });
   const templateList = templateData?.templates || [];
   const totalPages = templateData?.totalPages || 0;
@@ -128,13 +149,18 @@ const TemplateList = ({
           <NoSearchResults />
         )
       ) : (
-        <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
-          {templateList.map((template) => (
-            <Link to={`/templates/${template.id}`} key={template.id}>
-              <TemplateCard template={template} />
-            </Link>
-          ))}
-        </S.TemplateExplorePageContainer>
+        <S.TemplateListSectionWrapper>
+          {isFetching && <TemplateListSectionLoading />}
+          {!isLoading && (
+            <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
+              {templateList.map((template) => (
+                <Link to={`/templates/${template.id}`} key={template.id}>
+                  <TemplateCard template={template} />
+                </Link>
+              ))}
+            </S.TemplateExplorePageContainer>
+          )}
+        </S.TemplateListSectionWrapper>
       )}
 
       {templateList.length !== 0 && (

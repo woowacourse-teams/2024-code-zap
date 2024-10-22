@@ -9,6 +9,7 @@ interface Props {
   page?: number;
   size?: number;
   keyword?: string;
+  tagIds?: number[];
 }
 
 export const useTemplateExploreQuery = ({
@@ -16,10 +17,11 @@ export const useTemplateExploreQuery = ({
   page = 1,
   size = PAGE_SIZE,
   keyword,
+  tagIds,
 }: Props) =>
   useQuery<TemplateListResponse, ApiError>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, size, keyword],
-    queryFn: () => getTemplateExplore({ sort, page, size, keyword }),
+    queryKey: [QUERY_KEY.TEMPLATE_LIST, sort, page, size, keyword, tagIds],
+    queryFn: () => getTemplateExplore({ sort, page, size, keyword, tagIds }),
 
     throwOnError: true,
     placeholderData: keepPreviousData,

@@ -6,3 +6,7 @@ export const ICON_SIZE = {
   LARGE: 24,
   X_LARGE: 32,
 } as const;
+
+export const BREAKING_POINT = {
+  MOBILE: 768,
+};
