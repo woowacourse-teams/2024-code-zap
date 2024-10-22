@@ -91,7 +91,7 @@ public class Template extends BaseTimeEntity {
         return getMember().equals(member);
     }
 
-    public void validateForbiddenPrivate() {
+    public void ensureNotPrivateTemplate() {
         if (visibility == Visibility.PRIVATE) {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
         }

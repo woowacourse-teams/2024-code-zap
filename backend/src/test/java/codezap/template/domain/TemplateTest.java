@@ -75,25 +75,25 @@ class TemplateTest {
 
     @Nested
     @DisplayName("Private 템플릿 확인")
-    class ValidateForbiddenPrivate {
+    class EnsureNotPrivateTemplate {
 
         @Test
         @DisplayName("성공")
-        void validateForbiddenPrivateSuccess() {
+        void ensureNotPrivateTemplateSuccess() {
             Member member = MemberFixture.getFirstMember();
             Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
 
-            assertThatCode(template::validateForbiddenPrivate)
+            assertThatCode(template::ensureNotPrivateTemplate)
                     .doesNotThrowAnyException();
         }
 
         @Test
         @DisplayName("성공: private 템플릿일 경우 예외 발생")
-        void validateForbiddenPrivateFail() {
+        void ensureNotPrivateTemplateFail() {
             Member member = MemberFixture.getFirstMember();
             Template template = TemplateFixture.getPrivate(member, Category.createDefaultCategory(member));
 
-            assertThatThrownBy(template::validateForbiddenPrivate)
+            assertThatThrownBy(template::ensureNotPrivateTemplate)
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 템플릿은 비공개 템플릿입니다.")
                     .extracting("errorCode").isEqualTo(ErrorCode.FORBIDDEN_ACCESS);
