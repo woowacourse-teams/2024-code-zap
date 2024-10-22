@@ -57,3 +57,19 @@ export const trackMyTemplatePaging = ({ page, totalPages, label }: PagingButtonD
     label,
   });
 };
+
+interface LickButtonData {
+  isLiked: boolean;
+  likesCount: number;
+  templateId: string;
+}
+
+export const trackLikeButton = ({ isLiked, likesCount, templateId }: LickButtonData) => {
+  const like = isLiked ? '좋아요 취소' : '좋아요';
+
+  amplitudeService.customTrack('[Click] 좋아요 버튼', {
+    like,
+    likesCount,
+    templateId,
+  });
+};

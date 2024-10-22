@@ -18,6 +18,7 @@ import {
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
+import { trackLikeButton } from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
@@ -64,6 +65,7 @@ const TemplatePage = () => {
     }
 
     toggleLike();
+    trackLikeButton({ isLiked, likesCount, templateId: id as string });
   };
 
   if (!template) {
