@@ -34,7 +34,7 @@ jobs:
           path: backend/build/libs/*.jar
 
   deploy_develop:
-    if: ${{ github.ref == 'refs/heads/dev/be' }}
+    if: ${{ github.ref == 'refs/heads/dev/be' || github.ref == 'refs/heads/infra/833-zdd' }}
     needs: build
     environment: Develop
     runs-on:
