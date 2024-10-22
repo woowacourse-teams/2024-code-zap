@@ -61,7 +61,7 @@ public class TemplateController implements SpringDocTemplateController {
         );
     }
 
-    @GetMapping("/liked/{memberId}")
+    @GetMapping("/like/{memberId}")
     public ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(
             @AuthenticationPrinciple(required = false) Member member,
             @PathVariable Long memberId,

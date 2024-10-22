@@ -615,7 +615,7 @@ class TemplateControllerTest extends MockMvcTest {
             when(templateApplicationService.findAllByLiked(any(), any(), any()))
                     .thenReturn(new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
 
-            mvc.perform(get("/templates/liked/" + member.getId())
+            mvc.perform(get("/templates/like/" + member.getId())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
@@ -636,7 +636,7 @@ class TemplateControllerTest extends MockMvcTest {
                     .thenReturn(new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
 
             // when & then
-            mvc.perform(get("/templates/liked/" + member.getId())
+            mvc.perform(get("/templates/like/" + member.getId())
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))

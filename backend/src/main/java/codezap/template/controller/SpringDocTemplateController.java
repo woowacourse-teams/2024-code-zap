@@ -103,7 +103,7 @@ public interface SpringDocTemplateController {
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "좋아요한 템플릿 목록 조회", description = "회원이 좋아요한 템플릿 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 목록 조회 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/liked/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/like/1", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
     })
     ResponseEntity<FindAllTemplatesResponse> findLikedTemplateLiked(Member member, Long memberId, Pageable pageable);
