@@ -43,15 +43,8 @@ public class MemberService {
         }
     }
 
-    public FindMemberResponse findMember(Member member, Long id) {
-        checkSameMember(member, id);
-        return FindMemberResponse.from(member);
-    }
-
-    private void checkSameMember(Member member, Long id) {
-        if (!Objects.equals(member.getId(), id)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "본인의 정보만 조회할 수 있습니다.");
-        }
+    public FindMemberResponse findMember(Long id) {
+        return FindMemberResponse.from(memberRepository.fetchById(id));
     }
 
     public Member getByTemplateId(Long templateId) {
