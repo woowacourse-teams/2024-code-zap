@@ -1,9 +1,9 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
 
-import { DEFAULT_SORTING_OPTION, SORTING_OPTIONS } from '@/api';
+import { SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, SearchIcon, ZapzapLogo } from '@/assets/images';
 import {
   Dropdown,
@@ -16,8 +16,9 @@ import {
   TemporaryError,
   TemplateCard,
 } from '@/components';
-import { useDebounce, useDropdown, useInput, useWindowWidth } from '@/hooks';
+import { useDebounce, useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
+import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
@@ -26,10 +27,17 @@ import * as S from './TemplateExplorePage.style';
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
-  const [page, setPage] = useState<number>(1);
-  const [keyword, handleKeywordChange] = useInput('');
+  const { queryParams, updateQueryParams } = useQueryParams();
 
-  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(DEFAULT_SORTING_OPTION);
+  const [page, setPage] = useState<number>(queryParams.page);
+  const [keyword, handleKeywordChange] = useInput(queryParams.keyword);
+  const debouncedKeyword = useDebounce(keyword, 300);
+
+  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
+
+  useEffect(() => {
+    updateQueryParams({ keyword: debouncedKeyword, sort: sortingOption.value, page });
+  }, [debouncedKeyword, sortingOption, page, updateQueryParams]);
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -70,7 +78,7 @@ const TemplateExplorePage = () => {
             onReset={reset}
             resetKeys={[keyword]}
           >
-            <TemplateList page={page} setPage={setPage} sortingOption={sortingOption} keyword={keyword} />
+            <TemplateList page={page} setPage={setPage} sortingOption={sortingOption} keyword={debouncedKeyword} />
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
@@ -99,12 +107,10 @@ const TemplateList = ({
   sortingOption: SortingOption;
   keyword: string;
 }) => {
-  const debouncedKeyword = useDebounce(keyword, 300);
-
   const { data: templateData, isPending } = useTemplateExploreQuery({
     sort: sortingOption.key,
     page,
-    keyword: debouncedKeyword,
+    keyword,
   });
   const templateList = templateData?.templates || [];
   const totalPages = templateData?.totalPages || 0;
