@@ -39,9 +39,9 @@ const TemplateCard = ({ template }: Props) => {
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
             {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />}
             <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
-              <PersonIcon color={theme.color.light.secondary_600} />
+              <PersonIcon color={theme.color.light.primary_500} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
-                <Text.Small color={theme.color.light.secondary_600}>{member.name}</Text.Small>
+                <Text.Small color={theme.color.light.primary_500}>{member.name}</Text.Small>
               </S.EllipsisTextWrapper>
             </Flex>
             <Flex align='center' gap='0.25rem'>
