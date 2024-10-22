@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
+import { useAuth } from '@/hooks/authentication';
 import { useMemberNameQuery } from '@/queries/members';
 
 import {
@@ -22,6 +23,10 @@ import * as S from './MyTemplatePage.style';
 const MyTemplatePage = () => {
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
+
+  const {
+    memberInfo: { memberId: currentMemberId },
+  } = useAuth();
 
   const {
     data: { name },
@@ -64,16 +69,19 @@ const MyTemplatePage = () => {
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
-          <TemplateDeleteSelection
-            isEditMode={isEditMode}
-            isDeleteModalOpen={isDeleteModalOpen}
-            selectedListLength={selectedList.length}
-            templateListLength={templateList.length}
-            toggleIsEditMode={toggleIsEditMode}
-            toggleDeleteModal={toggleDeleteModal}
-            handleAllSelected={handleAllSelected}
-            handleDelete={handleDelete}
-          />
+          {memberId === currentMemberId && (
+            <TemplateDeleteSelection
+              isEditMode={isEditMode}
+              isDeleteModalOpen={isDeleteModalOpen}
+              selectedListLength={selectedList.length}
+              templateListLength={templateList.length}
+              toggleIsEditMode={toggleIsEditMode}
+              toggleDeleteModal={toggleDeleteModal}
+              handleAllSelected={handleAllSelected}
+              handleDelete={handleDelete}
+            />
+          )}
+
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
