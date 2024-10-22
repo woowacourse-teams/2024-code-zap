@@ -33,7 +33,7 @@ public record CreateTemplateRequest(
 
         @Schema(description = "썸네일 순서", example = "1")
         @NotNull(message = "썸네일 순서가 null 입니다.", groups = NotNullGroup.class)
-        int thumbnailOrdinal,
+        Integer thumbnailOrdinal,
 
         @Schema(description = "카테고리 ID", example = "1")
         @NotNull(message = "카테고리 ID가 null 입니다.", groups = NotNullGroup.class)
@@ -41,9 +41,8 @@ public record CreateTemplateRequest(
 
         @Schema(description = "태그 목록")
         @NotNull(message = "태그 목록이 null 입니다.", groups = NotNullGroup.class)
-        @ByteLength(max = 30, message = "태그 명은 최대 30자까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         @Valid
-        List<String> tags,
+        List<@Size(max = 30, message = "태그 명은 최대 30자까지 입력 가능합니다.", groups = SizeCheckGroup.class) String> tags,
 
         @Schema(description = "템플릿 공개 여부", example = "PUBLIC")
         @NotNull(message = "템플릿 공개 여부가 null 입니다.", groups = NotNullGroup.class)

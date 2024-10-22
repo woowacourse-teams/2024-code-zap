@@ -9,34 +9,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.TemplateFixture;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
-import codezap.template.repository.TemplateRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-class MemberServiceTest {
-
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private TemplateRepository templateRepository;
+class MemberServiceTest extends ServiceTest {
 
     @Autowired
     private MemberService memberService;

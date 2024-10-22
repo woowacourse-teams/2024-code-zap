@@ -24,6 +24,7 @@ import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
@@ -412,7 +413,9 @@ class SourceCodeServiceTest extends ServiceTest {
                     updateSourceCodes,
                     deleteSourceCodeIds,
                     categoryId,
-                    tags);
+                    tags,
+                    Visibility.PUBLIC
+            );
         }
     }
 

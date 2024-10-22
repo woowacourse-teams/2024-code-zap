@@ -19,8 +19,10 @@ import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
 import codezap.global.cors.CorsProperties;
+import codezap.likes.service.LikesService;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
+import codezap.template.service.facade.TemplateApplicationService;
 import codezap.tag.service.TagService;
 
 @WebMvcTest(SpringExtension.class)
@@ -45,6 +47,12 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected TagService tagService;
+
+    @MockBean
+    protected LikesService likesService;
+
+    @MockBean
+    protected TemplateApplicationService templateApplicationService;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {

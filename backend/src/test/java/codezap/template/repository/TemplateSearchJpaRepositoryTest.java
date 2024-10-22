@@ -27,6 +27,7 @@ import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
 import codezap.tag.repository.TagRepository;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
 
 @DataJpaTest
 @Import({JpaAuditingConfiguration.class, DataSourceConfig.class})
@@ -47,7 +48,7 @@ class TemplateSearchJpaRepositoryTest {
     @DisplayName("검색 테스트: 회원 ID로 템플릿 조회 성공")
     void testFindByMemberId() {
         Member member1 = memberRepository.fetchById(1L);
-        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null, null);
+        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null, null, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -61,14 +62,14 @@ class TemplateSearchJpaRepositoryTest {
     @DisplayName("검색 테스트: 키워드로 템플릿 조회 성공")
     void testFindByKeyword() {
         String keyword = "Template";
-        Specification<Template> spec = new TemplateSpecification(null, keyword, null, null);
+        Specification<Template> spec = new TemplateSpecification(null, keyword, null, null, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
                 () -> assertThat(result.getContent())
                         .allMatch(template -> template.getTitle().contains(keyword)
                                 || template.getDescription().contains(keyword)),
-                () -> assertThat(result.getContent()).hasSize(3)
+                () -> assertThat(result.getContent()).hasSize(4)
         );
     }
 
@@ -76,8 +77,9 @@ class TemplateSearchJpaRepositoryTest {
     @DisplayName("검색 테스트: 카테고리 ID로 템플릿 조회 성공")
     void testFindByCategoryId() {
         Category category1 = categoryRepository.fetchById(1L);
-        Specification<Template> spec = new TemplateSpecification(null, null, category1.getId(),
-                null);
+        Specification<Template> spec = new TemplateSpecification(
+                null, null, category1.getId(), null, null
+        );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -88,29 +90,12 @@ class TemplateSearchJpaRepositoryTest {
     }
 
     @Test
-    @DisplayName("검색 테스트: 태그 ID 목록으로 템플릿 조회, 모든 태그를 가진 템플릿만 조회 성공")
+    @DisplayName("검색 테스트: 태그 ID 목록으로 템플릿 조회, 태그 중 하나라도 가진 템플릿 전체 조회 성공")
     void testFindByTagIds() {
         Tag tag1 = tagRepository.fetchById(1L);
         Tag tag2 = tagRepository.fetchById(2L);
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
-        Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
-        Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
-
-        assertAll(
-                () -> assertThat(result.getContent())
-                        .containsExactlyInAnyOrder(
-                                templateRepository.fetchById(1L),
-                                templateRepository.fetchById(2L)),
-                () -> assertThat(result.getContent()).hasSize(2)
-        );
-    }
-
-    @Test
-    @DisplayName("검색 테스트: 단일 태그 ID로 템플릿 조회 성공")
-    void testFindBySingleTagId() {
-        Tag tag2 = tagRepository.fetchById(2L);
-        List<Long> tagIds = List.of(tag2.getId());
-        Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds);
+        Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds, null);
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -124,12 +109,41 @@ class TemplateSearchJpaRepositoryTest {
     }
 
     @Test
+    @DisplayName("검색 테스트: 단일 태그 ID로 템플릿 조회 성공")
+    void testFindBySingleTagId() {
+        Tag tag2 = tagRepository.fetchById(2L);
+        List<Long> tagIds = List.of(tag2.getId());
+        Specification<Template> spec = new TemplateSpecification(null, null, null, tagIds, null);
+        Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
+
+        assertAll(
+                () -> assertThat(result.getContent())
+                        .containsExactlyInAnyOrder(
+                                templateRepository.fetchById(1L),
+                                templateRepository.fetchById(2L),
+                                templateRepository.fetchById(3L)),
+                () -> assertThat(result.getContent()).hasSize(3)
+        );
+    }
+
+    @Test
+    @DisplayName("검색 테스트: 공개 범위로 템플릿 조회 성공")
+    void testFindByVisibility() {
+        Specification<Template> spec = new TemplateSpecification(null, null, null, null, Visibility.PRIVATE);
+        Page<Template> actual = templateRepository.findAll(spec, PageRequest.of(0, 10));
+
+        assertThat(actual.getContent()).hasSize(1)
+                .containsExactlyInAnyOrder(templateRepository.fetchById(4L));
+    }
+
+    @Test
     @DisplayName("검색 테스트: 회원 ID와 키워드로 템플릿 조회 성공")
     void testFindByMemberIdAndKeyword() {
         Member member1 = memberRepository.fetchById(1L);
         String keyword = "Template";
-        Specification<Template> spec = new TemplateSpecification(member1.getId(), keyword, null,
-                null);
+        Specification<Template> spec = new TemplateSpecification(
+                member1.getId(), keyword, null, null, null
+        );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -146,8 +160,9 @@ class TemplateSearchJpaRepositoryTest {
     void testFindByMemberIdAndCategoryId() {
         Member member1 = memberRepository.fetchById(1L);
         Category category1 = categoryRepository.fetchById(1L);
-        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, category1.getId(),
-                null);
+        Specification<Template> spec = new TemplateSpecification(
+                member1.getId(), null, category1.getId(), null, null
+        );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -164,8 +179,9 @@ class TemplateSearchJpaRepositoryTest {
         Tag tag1 = tagRepository.fetchById(1L);
         Tag tag2 = tagRepository.fetchById(2L);
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
-        Specification<Template> spec = new TemplateSpecification(member1.getId(), null, null,
-                tagIds);
+        Specification<Template> spec = new TemplateSpecification(
+                member1.getId(), null, null, tagIds, null
+        );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -173,6 +189,19 @@ class TemplateSearchJpaRepositoryTest {
                 () -> assertThat(result.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(1L),
                         templateRepository.fetchById(2L))
         );
+    }
+
+    @Test
+    @DisplayName("검색 테스트: 회원 ID와 공개 범위로 템플릿 조회 성공")
+    void testFindByMemberIdAndVisibility() {
+        Member member1 = memberRepository.fetchById(2L);
+        Specification<Template> spec = new TemplateSpecification(
+                member1.getId(), null, null, null, Visibility.PUBLIC
+        );
+        Page<Template> actual = templateRepository.findAll(spec, PageRequest.of(0, 10));
+
+        assertThat(actual.getContent()).hasSize(1)
+                .containsExactlyInAnyOrder(templateRepository.fetchById(3L));
     }
 
     @Test
@@ -184,8 +213,9 @@ class TemplateSearchJpaRepositoryTest {
         Tag tag2 = tagRepository.fetchById(2L);
         String keyword = "Template";
         List<Long> tagIds = Arrays.asList(tag1.getId(), tag2.getId());
-        Specification<Template> spec = new TemplateSpecification(member1.getId(), keyword, category1.getId(),
-                tagIds);
+        Specification<Template> spec = new TemplateSpecification(
+                member1.getId(), keyword, category1.getId(), tagIds, Visibility.PUBLIC
+        );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertAll(
@@ -197,7 +227,9 @@ class TemplateSearchJpaRepositoryTest {
     @Test
     @DisplayName("검색 테스트: 검색 결과가 없는 경우 빈 리스트 반환 성공")
     void testFindWithNoResults() {
-        Specification<Template> spec = new TemplateSpecification(null, "NonexistentKeyword", null, null);
+        Specification<Template> spec = new TemplateSpecification(
+                null, "NonexistentKeyword", null, null, null
+        );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
         assertThat(result.getContent()).isEmpty();

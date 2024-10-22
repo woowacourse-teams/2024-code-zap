@@ -5,14 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import jakarta.transaction.Transactional;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -20,31 +17,16 @@ import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.dto.response.FindCategoryResponse;
-import codezap.category.repository.CategoryRepository;
-import codezap.global.DatabaseIsolation;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
-import codezap.template.repository.TemplateRepository;
 
-@SpringBootTest
-@DatabaseIsolation
-@Transactional
-class CategoryServiceTest {
+class CategoryServiceTest extends ServiceTest {
 
     @Autowired
     private CategoryService sut;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private TemplateRepository templateRepository;
-
-    @Autowired
-    private MemberRepository memberRepository;
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
