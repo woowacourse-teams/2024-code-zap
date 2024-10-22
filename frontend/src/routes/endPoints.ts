@@ -1,11 +1,16 @@
 export const END_POINTS = {
   HOME: '/',
 
+  // member
+  MEMBERS: '/members',
+  MEMBERS_TEMPLATES: '/members/:memberId/templates',
+  memberTemplates: (memberId: number) => `/members/${memberId}/templates`,
+
   // templates
-  MY_TEMPLATES: '/my-templates',
   TEMPLATES_EXPLORE: '/templates',
   TEMPLATE: '/templates/:id',
   TEMPLATES_UPLOAD: '/templates/upload',
+  template: (templateId: number) => `/templates/${templateId}`,
 
   // like
   LIKES: '/like',

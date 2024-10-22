@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
 import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text, Toggle } from '@/components';
 import { useCustomNavigate, useInput, useSelectList } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
@@ -23,7 +24,11 @@ const TemplateUploadPage = () => {
   const navigate = useCustomNavigate();
   const { failAlert } = useToast();
 
-  const categoryProps = useCategory();
+  const {
+    memberInfo: { memberId },
+  } = useAuth();
+
+  const categoryProps = useCategory({ memberId: memberId! });
 
   const [title, handleTitleChange] = useInput('');
   const [description, handleDescriptionChange] = useInput('');

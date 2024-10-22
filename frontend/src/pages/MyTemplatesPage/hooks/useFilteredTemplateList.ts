@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import { useDropdown, useQueryParams } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useSearchKeyword } from '@/hooks/template';
 import { useTemplateListQuery } from '@/queries/templates';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
@@ -8,19 +9,28 @@ import { scroll } from '@/utils';
 
 const FIRST_PAGE = 1;
 
-export const useFilteredTemplateList = () => {
+interface Props {
+  memberId?: number;
+}
+
+export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => {
   const { queryParams, updateQueryParams } = useQueryParams();
+
   const [selectedCategoryId, setSelectedCategoryId] = useState<number>(queryParams.category);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>(queryParams.tags);
   const { keyword, debouncedKeyword, handleKeywordChange } = useSearchKeyword(queryParams.keyword);
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
   const [page, setPage] = useState<number>(queryParams.page);
 
+  const { memberInfo } = useAuth();
+  const memberId = passedMemberId ?? memberInfo.memberId;
+
   const {
     data: templateData,
     isFetching: isTemplateListFetching,
     isLoading: isTemplateListLoading,
   } = useTemplateListQuery({
+    memberId,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
     keyword: debouncedKeyword,

@@ -24,7 +24,7 @@ export const useLoginMutation = () => {
         localStorage.setItem('memberId', String(res.memberId));
         handleMemberInfo(res);
         handleLoginState(true);
-        navigate(END_POINTS.MY_TEMPLATES);
+        navigate(END_POINTS.memberTemplates(res.memberId));
         successAlert('로그인 성공!');
       }
     },

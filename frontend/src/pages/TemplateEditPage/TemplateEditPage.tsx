@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
 import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput, Toggle } from '@/components';
 import { useInput, useSelectList } from '@/hooks';
+import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useToast } from '@/hooks/useToast';
@@ -25,8 +26,10 @@ interface Props {
 const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   useTrackPageViewed({ eventName: '[Viewed] 템플릿 편집 페이지' });
 
-  const categoryProps = useCategory(template.category);
-
+  const {
+    memberInfo: { memberId },
+  } = useAuth();
+  const categoryProps = useCategory({ memberId: memberId!, initCategory: template.category });
   const [title, handleTitleChange] = useInput(template.title);
   const [description, handleDescriptionChange] = useInput(template.description);
 
