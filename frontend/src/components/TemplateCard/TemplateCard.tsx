@@ -37,21 +37,17 @@ const TemplateCard = ({ template }: Props) => {
       <Flex width='100%' direction='column' gap='1rem'>
         <Flex width='100%' justify='space-between' gap='1rem'>
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
-            {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_800} />}
+            {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />}
             <Flex align='center' gap='0.25rem' style={{ minWidth: '0' }}>
-              <PersonIcon width={ICON_SIZE.X_SMALL} />
+              <PersonIcon color={theme.color.light.primary_500} />
               <S.EllipsisTextWrapper style={{ width: '100%' }}>
-                <Text.Small
-                  color={theme.mode === 'dark' ? theme.color.dark.primary_300 : theme.color.light.primary_500}
-                >
-                  {member.name}
-                </Text.Small>
+                <Text.Small color={theme.color.light.primary_500}>{member.name}</Text.Small>
               </S.EllipsisTextWrapper>
             </Flex>
             <Flex align='center' gap='0.25rem'>
-              <ClockIcon width={ICON_SIZE.X_SMALL} />
+              <ClockIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />
               <S.NoWrapTextWrapper>
-                <Text.Small color={theme.color.light.primary_500}>{formatRelativeTime(modifiedAt)}</Text.Small>
+                <Text.Small color={theme.color.light.secondary_600}>{formatRelativeTime(modifiedAt)}</Text.Small>
               </S.NoWrapTextWrapper>
             </Flex>
           </Flex>

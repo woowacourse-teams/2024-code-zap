@@ -2,6 +2,7 @@ import { ChevronIcon } from '@/assets/images';
 import { SourceCode, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { useToast } from '@/hooks/useToast';
+import { trackClickCopyClipBoard } from '@/service/amplitude/track';
 import { theme } from '@/style/theme';
 import { getLanguageByFilename } from '@/utils';
 
@@ -23,6 +24,7 @@ const SourceCodeViewer = ({ mode = 'detailView', filename = '', content, sourceC
   const copyCode = (content: string) => () => {
     navigator.clipboard.writeText(content);
     infoAlert('코드가 복사되었습니다!');
+    trackClickCopyClipBoard();
   };
 
   return (
