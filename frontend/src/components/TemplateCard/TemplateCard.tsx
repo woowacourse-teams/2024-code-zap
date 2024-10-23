@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
@@ -17,7 +17,6 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const navigate = useNavigate();
   const { title, description, thumbnail, tags, modifiedAt, member, visibility } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
   const isPrivate = visibility === VISIBILITY_PRIVATE;
@@ -27,10 +26,6 @@ const TemplateCard = ({ template }: Props) => {
   ) => {
     e.preventDefault();
     e.stopPropagation();
-  };
-
-  const handleAuthorClick = () => {
-    navigate(END_POINTS.memberTemplates(member.id));
   };
 
   const handleAllTagList = (
@@ -47,12 +42,14 @@ const TemplateCard = ({ template }: Props) => {
           <Flex gap='0.75rem' flex='1' style={{ minWidth: '0' }}>
             {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />}
 
-            <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
-              <PersonIcon color={theme.color.light.primary_500} />
-              <S.EllipsisTextWrapper style={{ width: '100%' }}>
-                <Text.Small color={theme.color.light.primary_500}>{member.name}</Text.Small>
-              </S.EllipsisTextWrapper>
-            </S.AuthorInfoContainer>
+            <Link to={END_POINTS.memberTemplates(member.id)}>
+              <S.AuthorInfoContainer>
+                <PersonIcon width={17} height={17} color={theme.color.light.primary_500} />
+                <S.EllipsisTextWrapper>
+                  <Text.Small color={theme.color.light.primary_500}>{member.name}</Text.Small>
+                </S.EllipsisTextWrapper>
+              </S.AuthorInfoContainer>
+            </Link>
 
             <Flex align='center' gap='0.25rem'>
               <ClockIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />
@@ -66,22 +63,26 @@ const TemplateCard = ({ template }: Props) => {
           </Flex>
         </Flex>
 
-        <S.EllipsisTextWrapper>
-          <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
-            {title}
-          </Text.XLarge>
-        </S.EllipsisTextWrapper>
+        <Link to={END_POINTS.template(template.id)}>
+          <S.EllipsisTextWrapper>
+            <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
+              {title}
+            </Text.XLarge>
+          </S.EllipsisTextWrapper>
 
-        <S.EllipsisTextWrapper>
-          {description ? (
-            <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
-          ) : (
-            <S.BlankDescription />
-          )}
-        </S.EllipsisTextWrapper>
+          <S.EllipsisTextWrapper>
+            {description ? (
+              <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
+            ) : (
+              <S.BlankDescription />
+            )}
+          </S.EllipsisTextWrapper>
+        </Link>
       </Flex>
 
-      <SourceCodeViewer mode='thumbnailView' filename={thumbnail.filename} content={thumbnail.content} />
+      <Link to={END_POINTS.template(template.id)}>
+        <SourceCodeViewer mode='thumbnailView' filename={thumbnail.filename} content={thumbnail.content} />
+      </Link>
 
       <Flex justify='space-between' onClick={blockMovingToDetailPage}>
         <S.TagListContainer>
