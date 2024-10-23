@@ -9,6 +9,8 @@ import org.springframework.web.method.HandlerMethod;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.examples.Example;
@@ -27,6 +29,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
  */
 @Component
 public class AuthOperationCustomizer implements OperationCustomizer {
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
@@ -55,14 +58,16 @@ public class AuthOperationCustomizer implements OperationCustomizer {
         Example noTokenCookieExample = new Example()
                 .externalValue("인증 쿠키 없음")
                 .description("쿠키는 있지만 Authorization 대한 담은 쿠키가 없는 경우")
-                .value(getExampleJsonString(ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,
-                        "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.")));
+                .value(getExampleJsonString(
+                        new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
+                                "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.").toProblemDetail()));
 
         Example noCookiesExample = new Example()
                 .externalValue("모든 쿠키 없음")
                 .description("쿠키 자체가 null인 경우")
-                .value(getExampleJsonString(ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED,
-                        "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.")));
+                .value(getExampleJsonString(
+                        new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
+                                "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.").toProblemDetail()));
 
         MediaType mediaType = new MediaType().schema(new Schema<>().$ref("#/components/schemas/Error"));
         mediaType.addExamples("인증 쿠키 없음", noTokenCookieExample);
@@ -90,7 +95,7 @@ public class AuthOperationCustomizer implements OperationCustomizer {
      */
     private void hideAuthInfoParameter(Operation operation) {
         if (operation.getParameters() != null) {
-            operation.getParameters().removeIf(parameter -> parameter.getName().equals("memberDto"));
+            operation.getParameters().removeIf(parameter -> parameter.getName().equals("member"));
         }
     }
 }

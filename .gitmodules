@@ -1,0 +1,8 @@
+[submodule "google-chrome-extension"]
+	path = google-chrome-extension
+	url = https://github.com/Jaymyong66/codezap-chrome-extension.git
+
+[submodule "backend/submodules/private"]
+	path = backend/submodules/private
+	url = https://github.com/codezap2024/2024-code-zap-private.git
+  	branch = main

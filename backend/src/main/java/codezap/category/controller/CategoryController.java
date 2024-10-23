@@ -21,7 +21,7 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.category.service.CategoryService;
 import codezap.global.validation.ValidationSequence;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,36 +33,31 @@ public class CategoryController implements SpringDocCategoryController {
 
     @PostMapping
     public ResponseEntity<CreateCategoryResponse> createCategory(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
-        CreateCategoryResponse response = categoryService.create(memberDto, createCategoryRequest);
-        return ResponseEntity.created(URI.create("/categories/" + response.id()))
-                .body(response);
+        CreateCategoryResponse createdCategory = categoryService.create(member, createCategoryRequest);
+        return ResponseEntity.created(URI.create("/categories/" + createdCategory.id())).body(createdCategory);
     }
 
     @GetMapping
-    public ResponseEntity<FindAllCategoriesResponse> getCategories(
-            @AuthenticationPrinciple MemberDto memberDto,
-            @RequestParam Long memberId
-    ) {
-        return ResponseEntity.ok(categoryService.findAllByMember(memberId));
+    public ResponseEntity<FindAllCategoriesResponse> getCategories(@RequestParam Long memberId) {
+        return ResponseEntity.ok(categoryService.findAllByMemberId(memberId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCategory(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
     ) {
-        categoryService.update(memberDto, id, updateCategoryRequest);
+        categoryService.update(member, id, updateCategoryRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id) {
-        categoryService.deleteById(memberDto, id);
-        return ResponseEntity.noContent()
-                .build();
+    public ResponseEntity<Void> deleteCategory(@AuthenticationPrinciple Member member, @PathVariable Long id) {
+        categoryService.deleteById(member, id);
+        return ResponseEntity.noContent().build();
     }
 }

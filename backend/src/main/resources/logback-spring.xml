@@ -7,11 +7,7 @@
         <include resource="logger/logback-spring-local.xml"/>
     </springProfile>
 
-    <springProfile name="dev-1">
-        <include resource="logger/logback-spring-dev.xml"/>
-    </springProfile>
-
-    <springProfile name="dev-2">
+    <springProfile name="dev">
         <include resource="logger/logback-spring-dev.xml"/>
     </springProfile>
 

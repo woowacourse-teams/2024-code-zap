@@ -1,7 +1,5 @@
 package codezap.template.domain;
 
-import java.util.Objects;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,6 +9,7 @@ import jakarta.persistence.OneToOne;
 import codezap.global.auditing.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +17,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Thumbnail extends BaseTimeEntity {
 
     @Id
@@ -39,20 +39,7 @@ public class Thumbnail extends BaseTimeEntity {
         this.sourceCode = sourceCode;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Thumbnail thumbnail = (Thumbnail) o;
-        return Objects.equals(getId(), thumbnail.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
+    public boolean hasTemplate(Template template) {
+        return this.template.equals(template);
     }
 }

@@ -18,7 +18,9 @@ jobs:
         PR_TITLE="${{ github.event.pull_request.title }}"
         PR_URL="${{ github.event.pull_request.html_url }}"
         REVIEWERS='${{ toJson(github.event.pull_request.requested_reviewers.*.login) }}'
+        LABELS='${{ toJson(github.event.pull_request.labels.*.name) }}'
         echo "REVIEWERS: $REVIEWERS"
+        echo "LABELS: $LABELS"
         
         parse_slack_ids() {
             echo "$SLACK_IDS" | jq -r 'to_entries | map("\(.key):\(.value)") | .[]'
@@ -41,6 +43,11 @@ jobs:
         
         if [ ! -z "$mentions" ]; then
           message="$mentions 님, 새로운 PR이 생성되었습니다: <$PR_URL|$PR_TITLE>"
+          
+          if echo "$LABELS" | jq -e 'contains(["zap"])' > /dev/null; then
+            message=":rotating_light: 긴급 PR입니다. 빠른 리뷰 부탁드립니다!:rotating_light:\n$message"
+          fi
+          
           curl -X POST -H 'Content-type: application/json' \
             --data "{\"text\":\"$message\"}" \
             "$SLACK_WEBHOOK_URL"
@@ -48,4 +55,3 @@ jobs:
         else
           echo "No reviewers to notify"
         fi
-

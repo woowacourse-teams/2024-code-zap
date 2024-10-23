@@ -1,36 +1,38 @@
 package codezap.category.domain;
 
-import java.util.Objects;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 import codezap.global.auditing.BaseTimeEntity;
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Getter
 @Table(
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "name_with_member",
-                        columnNames = {"member_id", "name"}
-                )
-        }
+        uniqueConstraints = @UniqueConstraint(
+                name = "name_with_member",
+                columnNames = {"member_id", "name"}
+        ),
+        indexes = @Index(name = "idx_member_id", columnList = "member_id")
 )
+@Getter
+@EqualsAndHashCode(of = "id", callSuper = false)
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
@@ -62,20 +64,13 @@ public class Category extends BaseTimeEntity {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+    public void validateAuthorization(Member member) {
+        if (!getMember().equals(member)) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Category category = (Category) o;
-        return Objects.equals(getId(), category.getId());
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
+    public boolean isDefault() {
+        return isDefault;
     }
 }

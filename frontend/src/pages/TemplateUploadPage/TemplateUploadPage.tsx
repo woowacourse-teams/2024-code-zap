@@ -77,6 +77,12 @@ const TemplateUploadPage = () => {
   };
 
   const handleSaveButtonClick = async () => {
+    if (categoryProps.isCategoryQueryFetching) {
+      failAlert('카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+
+      return;
+    }
+
     const errorMessage = validateTemplate();
 
     if (errorMessage) {

@@ -8,15 +8,15 @@ import codezap.template.domain.Thumbnail;
 
 public interface ThumbnailRepository {
 
-    Thumbnail fetchById(Long id);
-
     Thumbnail fetchByTemplate(Template template);
 
     Optional<Thumbnail> findByTemplate(Template template);
 
     List<Thumbnail> findAll();
 
+    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
+
     Thumbnail save(Thumbnail thumbnail);
 
-    void deleteByTemplateId(Long id);
+    void deleteAllByTemplateIds(List<Long> ids);
 }

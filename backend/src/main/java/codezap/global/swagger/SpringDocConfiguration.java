@@ -41,10 +41,13 @@ public class SpringDocConfiguration {
                         List.of(
                                 new Server()
                                         .url("https://api.code-zap.com")
-                                        .description("클라우드에 배포되어 있는 테스트 서버입니다."),
+                                        .description("운영 서버"),
+                                new Server()
+                                        .url("https://dev.code-zap.com")
+                                        .description("개발 서버"),
                                 new Server()
                                         .url("http://localhost:8080")
-                                        .description("BE 팀에서 사용할 로컬 환경 테스트를 위한 서버입니다.")
+                                        .description("로컬 서버")
                         )
                 )
                 .addSecurityItem(new SecurityRequirement().addList("쿠키 인증 토큰"));
