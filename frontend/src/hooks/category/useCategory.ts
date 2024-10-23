@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const useCategory = ({ memberId, initCategory }: Props) => {
-  const { data } = useCategoryListQuery({ memberId });
+  const { data, isFetching } = useCategoryListQuery({ memberId });
   const options = data?.categories || [];
 
   if (!initCategory) {
@@ -47,5 +47,6 @@ export const useCategory = ({ memberId, initCategory }: Props) => {
     createNewCategory,
     dropdownRef,
     isPending,
+    isCategoryQueryFetching: isFetching,
   };
 };
