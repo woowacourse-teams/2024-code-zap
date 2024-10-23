@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Button } from '@/components';
+import { theme } from '@/style/theme';
 
 export const MainContainer = styled.main`
   display: flex;
@@ -57,5 +58,14 @@ export const AuthorInfoContainer = styled.div`
   gap: 0.25rem;
   align-items: center;
 
+  box-sizing: border-box;
   min-width: 0;
+  height: 1.5rem;
+  padding: 3px 5px;
+
+  border-radius: 4px;
+
+  &:hover {
+    background-color: ${theme.color.light.primary_50};
+  }
 `;
