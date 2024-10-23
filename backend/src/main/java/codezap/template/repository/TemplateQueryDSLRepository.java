@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import codezap.template.domain.Template;
@@ -19,8 +20,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class TemplateQueryDSLRepository {
 
-    private final TemplateSearchExpressionProvider expressionProvider;
     private final JPAQueryFactory queryFactory;
+    private final TemplateSearchExpressionProvider expressionProvider;
 
     public Page<Template> findTemplates(
             Long memberId,
@@ -31,11 +32,11 @@ public class TemplateQueryDSLRepository {
             Pageable pageable
     ) {
         List<Template> content = getTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
-        long nextItemsCount = countNextTemplates(memberId, keyword, categoryId, tagIds, visibility);
-        return new PageImpl<>(content, pageable, nextItemsCount);
+        long count = count(memberId, keyword, categoryId, tagIds, visibility);
+        return new PageImpl<>(content, pageable, count);
     }
 
-    private long countNextTemplates(
+    private long count(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -45,14 +46,9 @@ public class TemplateQueryDSLRepository {
         return queryFactory
                 .select(template.count())
                 .from(template)
-                .where(
-                        expressionProvider.memberEquals(memberId),
-                        expressionProvider.filterCategory(categoryId),
-                        expressionProvider.hasAnyTags(tagIds),
-                        expressionProvider.filterVisibility(visibility),
-                        expressionProvider.matchesKeyword(keyword)
-                )
-                .fetchOne();
+                .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
+                .fetchOne()
+                .longValue();
     }
 
     private List<Template> getTemplates(
@@ -67,17 +63,27 @@ public class TemplateQueryDSLRepository {
                 .selectFrom(template)
                 .leftJoin(template.category).fetchJoin()
                 .leftJoin(template.member).fetchJoin()
-                .where(
-                        expressionProvider.memberEquals(memberId),
-                        expressionProvider.filterCategory(categoryId),
-                        expressionProvider.hasAnyTags(tagIds),
-                        expressionProvider.filterVisibility(visibility),
-                        expressionProvider.matchesKeyword(keyword)
-                )
+                .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
                 .orderBy(TemplateOrderSpecifierUtils.getOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private BooleanExpression[] matchesKeyword(
+            Long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> tagIds,
+            Visibility visibility
+    ) {
+        return new BooleanExpression[]{
+                expressionProvider.filterMember(memberId),
+                expressionProvider.filterCategory(categoryId),
+                expressionProvider.filterVisibility(visibility),
+                expressionProvider.hasAnyTags(tagIds),
+                expressionProvider.matchesKeyword(keyword)
+        };
     }
 }
 
