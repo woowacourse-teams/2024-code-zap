@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { Link, useParams } from 'react-router-dom';
 
-import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
+import { ClockIcon, PrivateIcon } from '@/assets/images';
 import {
   Button,
   Flex,
@@ -15,6 +15,7 @@ import {
   NonmemberAlerter,
   LoadingFallback,
 } from '@/components';
+import AuthorInfo from '@/components/AuthorInfo/AuthorInfo';
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
@@ -132,19 +133,7 @@ const TemplatePage = () => {
 
                 <Flex gap='0.5rem' align='center' justify='space-between'>
                   <Link to={END_POINTS.memberTemplates(template.member.id)}>
-                    <S.AuthorInfoContainer>
-                      <PersonIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.primary_500} />
-                      <div
-                        style={{
-                          overflow: 'hidden',
-                          textOverflow: 'ellipsis',
-                          whiteSpace: 'nowrap',
-                          flex: 1,
-                        }}
-                      >
-                        <Text.Small color={theme.color.light.primary_500}>{template.member.name}</Text.Small>
-                      </div>
-                    </S.AuthorInfoContainer>
+                    <AuthorInfo memberName={template.member.name} />
                   </Link>
 
                   <Flex align='center' gap='0.125rem'>

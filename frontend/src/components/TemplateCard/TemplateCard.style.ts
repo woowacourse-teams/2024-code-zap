@@ -85,22 +85,3 @@ export const NoWrapTextWrapper = styled.div`
 export const BlankDescription = styled.div`
   height: 1rem;
 `;
-
-export const AuthorInfoContainer = styled.div`
-  cursor: pointer;
-
-  display: flex;
-  gap: 0.25rem;
-  align-items: center;
-
-  box-sizing: border-box;
-  min-width: 0;
-  height: 100%;
-  padding: 3px 5px;
-
-  border-radius: 4px;
-
-  &:hover {
-    background-color: ${theme.color.light.primary_50};
-  }
-`;

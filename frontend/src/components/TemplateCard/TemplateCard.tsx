@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
+import { ClockIcon, PrivateIcon } from '@/assets/images';
 import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
 import { useToggle } from '@/hooks';
 import { END_POINTS } from '@/routes';
@@ -10,6 +10,7 @@ import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
+import AuthorInfo from '../AuthorInfo/AuthorInfo';
 import * as S from './TemplateCard.style';
 
 interface Props {
@@ -43,12 +44,7 @@ const TemplateCard = ({ template }: Props) => {
             {isPrivate && <PrivateIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />}
 
             <Link to={END_POINTS.memberTemplates(member.id)}>
-              <S.AuthorInfoContainer>
-                <PersonIcon width={17} height={17} color={theme.color.light.primary_500} />
-                <S.EllipsisTextWrapper>
-                  <Text.Small color={theme.color.light.primary_500}>{member.name}</Text.Small>
-                </S.EllipsisTextWrapper>
-              </S.AuthorInfoContainer>
+              <AuthorInfo memberName={member.name} />
             </Link>
 
             <Flex align='center' gap='0.25rem'>
