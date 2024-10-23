@@ -46,23 +46,6 @@ public class TemplateTagQueryDSLRepository {
                 .fetch();
     }
 
-//    @Query("""
-//            SELECT DISTINCT t
-//            FROM Tag t
-//            WHERE t.id IN (
-//                SELECT DISTINCT tt.id.tagId
-//                FROM TemplateTag tt
-//                WHERE tt.id.templateId IN (
-//                    SELECT te.id FROM Template te WHERE te.member.id = :memberId
-//                )
-//            )
-//            """)
-//    SELECT DISTINCT t
-//    FROM Tag t
-//    JOIN TemplateTag tt ON t.id = tt.id.tagId
-//    JOIN Template te ON tt.id.templateId = te.id
-//    WHERE te.member.id = :memberId
-
     public List<Tag> findAllTagDistinctByMemberId(Long memberId) {
         QTag tag = QTag.tag;
         QTemplateTag templateTag = QTemplateTag.templateTag;
