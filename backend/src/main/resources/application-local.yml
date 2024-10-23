@@ -23,9 +23,6 @@ spring:
     # open-in-view: false
     hibernate:
       ddl-auto: create
-    properties:
-      hibernate:
-        dialect: codezap.template.repository.FullTextSearchMySQLDialect
   data.web.pageable.one-indexed-parameters: true
 
 cors:
