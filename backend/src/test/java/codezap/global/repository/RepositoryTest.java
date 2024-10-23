@@ -17,12 +17,19 @@ import codezap.global.auditing.JpaAuditingConfiguration;
 import codezap.global.querydsl.QueryDSLConfig;
 import codezap.global.rds.DataSourceConfig;
 import codezap.template.repository.TemplateSearchExpressionProvider;
+import codezap.template.repository.strategy.FullTextSearchSearchStrategy;
+import codezap.template.repository.strategy.LikeSearchStrategy;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class), useDefaultFilters = false)
 @DatabaseIsolation
-@Import({JpaAuditingConfiguration.class, DataSourceConfig.class, QueryDSLConfig.class, TemplateSearchExpressionProvider.class})
+@Import({JpaAuditingConfiguration.class,
+        DataSourceConfig.class,
+        QueryDSLConfig.class,
+        TemplateSearchExpressionProvider.class,
+        LikeSearchStrategy.class,
+        FullTextSearchSearchStrategy.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public @interface RepositoryTest {
 }

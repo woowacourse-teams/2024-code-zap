@@ -32,9 +32,16 @@ import codezap.tag.domain.Tag;
 import codezap.tag.repository.TagRepository;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
+import codezap.template.repository.strategy.FullTextSearchSearchStrategy;
+import codezap.template.repository.strategy.LikeSearchStrategy;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class), useDefaultFilters = false)
-@Import({JpaAuditingConfiguration.class, DataSourceConfig.class, QueryDSLConfig.class, TemplateSearchExpressionProvider.class})
+@Import({JpaAuditingConfiguration.class,
+        DataSourceConfig.class,
+        QueryDSLConfig.class,
+        TemplateSearchExpressionProvider.class,
+        LikeSearchStrategy.class,
+        FullTextSearchSearchStrategy.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:search.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class TemplateSearchRepositoryTest {
