@@ -2,20 +2,42 @@ package codezap.category.repository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Repository;
+
 import codezap.category.domain.Category;
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
+import lombok.RequiredArgsConstructor;
 
-public interface CategoryRepository {
+@Repository
+@RequiredArgsConstructor
+public class CategoryRepository {
 
-    Category fetchById(Long id);
+    private final CategoryJpaRepository categoryJpaRepository;
 
-    List<Category> findAllByMemberIdOrderById(Long memberId);
+    public Category save(Category category) {
+        return categoryJpaRepository.save(category);
+    }
 
-    List<Category> findAll();
+    public Category fetchById(Long id) {
+        return categoryJpaRepository.findById(id).orElseThrow(
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 카테고리가 존재하지 않습니다."));
+    }
 
-    boolean existsByNameAndMember(String categoryName, Member member);
+    public List<Category> findAllByMemberIdOrderById(Long memberId) {
+        return categoryJpaRepository.findAllByMemberIdOrderById(memberId);
+    }
 
-    Category save(Category category);
+    public List<Category> findAll() {
+        return categoryJpaRepository.findAll();
+    }
 
-    void deleteById(Long id);
+    public boolean existsByNameAndMember(String categoryName, Member member) {
+        return categoryJpaRepository.existsByNameAndMember(categoryName, member);
+    }
+
+    public void deleteById(Long id) {
+        categoryJpaRepository.deleteById(id);
+    }
 }
