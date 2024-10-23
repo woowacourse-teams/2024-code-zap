@@ -20,7 +20,7 @@ import codezap.template.repository.TemplateSearchExpressionProvider;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@DataJpaTest
+@DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class), useDefaultFilters = false)
 @DatabaseIsolation
 @Import({JpaAuditingConfiguration.class, DataSourceConfig.class, QueryDSLConfig.class, TemplateSearchExpressionProvider.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
