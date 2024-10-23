@@ -76,7 +76,7 @@ public class Template extends BaseTimeEntity {
     }
 
     public boolean matchMember(Member member) {
-        return getMember().equals(member);
+        return this.member.equals(member);
     }
 
     public boolean isPrivate() {
