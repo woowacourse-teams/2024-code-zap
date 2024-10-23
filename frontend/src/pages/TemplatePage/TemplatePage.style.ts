@@ -1,25 +1,6 @@
-import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { Button } from '@/components';
-
-const expand = keyframes`
-  from {
-    max-height: 0;
-  }
-  to {
-    max-height: 1000rem;
-  }
-`;
-
-const collapse = keyframes`
-  from {
-    max-height: 1000rem;
-  }
-  to {
-    max-height: 0;
-  }
-`;
 
 export const MainContainer = styled.main`
   display: flex;
@@ -44,12 +25,6 @@ export const SidebarContainer = styled.aside`
     right: 0;
     align-self: flex-start;
   }
-`;
-
-export const SyntaxHighlighterWrapper = styled.div<{ isOpen: boolean }>`
-  overflow: hidden;
-  max-height: ${({ isOpen }) => (isOpen ? '1000rem' : '0')};
-  animation: ${({ isOpen }) => (!isOpen ? collapse : expand)} 0.7s ease-in-out forwards;
 `;
 
 export const NoScrollbarContainer = styled.div`

@@ -1,5 +1,5 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { Link } from 'react-router-dom';
 
@@ -28,6 +28,8 @@ import { useHotTopic } from './hooks';
 import { TemplateListSectionLoading } from '../MyTemplatesPage/components';
 import * as S from './TemplateExplorePage.style';
 
+const FIRST_PAGE = 1;
+
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
@@ -35,7 +37,12 @@ const TemplateExplorePage = () => {
 
   const { queryParams, updateQueryParams } = useQueryParams();
 
-  const [page, setPage] = useState<number>(queryParams.page);
+  const page = queryParams.page;
+
+  const handlePage = (page: number) => {
+    updateQueryParams({ page });
+  };
+
   const [keyword, handleKeywordChange] = useInput(queryParams.keyword);
 
   const debouncedKeyword = useDebounce(keyword, 300);
@@ -45,12 +52,24 @@ const TemplateExplorePage = () => {
   const { selectedTagIds, selectedHotTopic, selectTopic } = useHotTopic();
 
   useEffect(() => {
-    updateQueryParams({ keyword: debouncedKeyword, sort: sortingOption.value, page });
-  }, [debouncedKeyword, sortingOption, page, updateQueryParams]);
+    if (queryParams.sort === sortingOption.value) {
+      return;
+    }
+
+    updateQueryParams({ sort: sortingOption.value, page: FIRST_PAGE });
+  }, [queryParams.sort, sortingOption, updateQueryParams]);
+
+  useEffect(() => {
+    if (queryParams.keyword === debouncedKeyword) {
+      return;
+    }
+
+    updateQueryParams({ keyword: debouncedKeyword, page: FIRST_PAGE });
+  }, [queryParams.keyword, debouncedKeyword, updateQueryParams]);
 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      setPage(1);
+      handlePage(FIRST_PAGE);
     }
   };
 
@@ -58,7 +77,7 @@ const TemplateExplorePage = () => {
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
         <Heading.Medium color='black'>
-          🔥 지금 인기있는 토픽 {selectedHotTopic && `- ${selectedHotTopic} 보는 중`}
+          {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
         </Heading.Medium>
         <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
       </Flex>
@@ -91,7 +110,7 @@ const TemplateExplorePage = () => {
           >
             <TemplateList
               page={page}
-              setPage={setPage}
+              handlePage={handlePage}
               sortingOption={sortingOption}
               keyword={debouncedKeyword}
               tagIds={selectedTagIds}
@@ -115,13 +134,13 @@ export default TemplateExplorePage;
 
 const TemplateList = ({
   page,
-  setPage,
+  handlePage,
   sortingOption,
   keyword,
   tagIds,
 }: {
   page: number;
-  setPage: (page: number) => void;
+  handlePage: (page: number) => void;
   sortingOption: SortingOption;
   keyword: string;
   tagIds: number[];
@@ -144,7 +163,7 @@ const TemplateList = ({
 
   const handlePageChange = (page: number) => {
     scroll.top();
-    setPage(page);
+    handlePage(page);
   };
 
   return (
