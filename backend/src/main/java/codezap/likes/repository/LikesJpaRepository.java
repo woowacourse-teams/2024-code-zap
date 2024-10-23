@@ -18,5 +18,10 @@ public interface LikesJpaRepository extends LikesRepository, JpaRepository<Likes
     @Query("DELETE FROM Likes l WHERE l.template.id in :templateIds")
     void deleteAllByTemplateIds(@Param(value = "templateIds") List<Long> templateIds);
 
-    Page<Template> findAllByMemberId(Long memberId, Pageable pageable);
+    @Query("""
+            SELECT l.template
+            FROM Likes l
+            WHERE l.member.id = :memberId AND (l.template.member.id = :memberId OR l.template.visibility = 'PUBLIC')
+            """)
+    Page<Template> findAllByMemberId(@Param(value = "memberId") Long memberId, Pageable pageable);
 }

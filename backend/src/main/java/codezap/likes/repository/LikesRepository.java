@@ -23,10 +23,5 @@ public interface LikesRepository {
 
     void deleteAllByTemplateIds(List<Long> templateIds);
 
-    @Query("""
-            SELECT l.template
-            FROM Likes l
-            WHERE l.member.id = :memberId AND (l.template.member.id = :memberId OR l.template.visibility = 'PUBLIC')
-            """)
-    Page<Template> findAllByMemberId(@Param(value = "memberId") Long memberId, Pageable pageable);
+    Page<Template> findAllByMemberId(Long memberId, Pageable pageable);
 }
