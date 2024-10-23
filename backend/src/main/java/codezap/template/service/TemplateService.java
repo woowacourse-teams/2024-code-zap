@@ -66,7 +66,9 @@ public class TemplateService {
             Category category
     ) {
         Template template = templateRepository.fetchById(templateId);
-        template.validateAuthorization(member);
+        if (!template.matchMember(member)) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
+        }
         template.updateTemplate(
                 updateTemplateRequest.title(),
                 updateTemplateRequest.description(),
@@ -86,7 +88,9 @@ public class TemplateService {
 
     private void deleteById(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
-        template.validateAuthorization(member);
+        if (!template.matchMember(member)) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
+        }
         templateRepository.deleteById(id);
     }
 }
