@@ -33,7 +33,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
     if (isMenuOpen) {
       toggleMenu();
     }
-  }, [location.pathname, isMenuOpen]);
+  }, [location.pathname]);
 
   if (isChecking) {
     return (
