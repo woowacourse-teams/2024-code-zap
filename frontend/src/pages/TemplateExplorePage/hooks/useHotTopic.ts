@@ -1,23 +1,23 @@
-import { useState } from 'react';
+import { useQueryParams } from '@/hooks';
+import { getHotTopicContent } from '@/service/hotTopic';
 
 export const useHotTopic = () => {
-  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-  const [selectedHotTopic, setSelectedHotTopic] = useState('');
+  const { queryParams, updateQueryParams } = useQueryParams();
+  const selectedTagIds = queryParams.tags;
+  const selectedHotTopic = getHotTopicContent(selectedTagIds);
 
-  const selectTopic = ({ tagIds, content }: { tagIds: number[]; content: string }) => {
-    if (content === selectedHotTopic) {
+  const selectTopic = ({ tagIds, topic }: { tagIds: number[]; topic: string }) => {
+    if (topic === selectedHotTopic) {
       resetSelectedTopic();
 
       return;
     }
 
-    setSelectedTagIds([...tagIds]);
-    setSelectedHotTopic(content);
+    updateQueryParams({ tags: [...tagIds] });
   };
 
   const resetSelectedTopic = () => {
-    setSelectedTagIds([]);
-    setSelectedHotTopic('');
+    updateQueryParams({ tags: [] });
   };
 
   return { selectedTagIds, selectedHotTopic, selectTopic };

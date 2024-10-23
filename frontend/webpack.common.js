@@ -29,9 +29,9 @@ module.exports = {
             maxSize: 4 * 1024, // 4kb
           },
         },
-        generator: {
-          filename: `images/[name].[contenthash][ext]`,
-        },
+        // generator: {
+        //   filename: `images/[name].[contenthash][ext]`,
+        // },
       },
       {
         test: /\.svg$/i,

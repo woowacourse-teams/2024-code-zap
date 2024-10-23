@@ -62,7 +62,7 @@ export const CopyButton = styled(Button)`
 `;
 
 export const SourceCodeWrapper = styled.div<{ isOpen: boolean }>`
-  overflow: hidden;
+  overflow: scroll;
   max-height: ${({ isOpen }) => (isOpen ? '1000rem' : '0')};
   animation: ${({ isOpen }) => (!isOpen ? 'collapse' : 'expand')} 0.7s ease-in-out forwards;
 `;
