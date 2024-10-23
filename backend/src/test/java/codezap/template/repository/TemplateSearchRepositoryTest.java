@@ -36,7 +36,7 @@ import codezap.template.domain.Visibility;
 @Import({JpaAuditingConfiguration.class, DataSourceConfig.class, QueryDSLConfig.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:search.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
-class TemplateSearchJpaRepositoryTest {
+class TemplateSearchRepositoryTest {
 
     @Autowired
     private TemplateRepository templateRepository;

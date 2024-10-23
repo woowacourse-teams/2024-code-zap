@@ -12,11 +12,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.global.exception.CodeZapException;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.repository.RepositoryTest;
 import codezap.tag.domain.Tag;
 
-@JpaRepositoryTest
-class TagJpaRepositoryTest {
+@RepositoryTest
+class TagRepositoryTest {
 
     @Autowired
     private TagRepository tagRepository;
