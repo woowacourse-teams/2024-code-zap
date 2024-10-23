@@ -13,7 +13,7 @@ export const useCategory = ({ memberId, initCategory }: Props) => {
   const options = data?.categories || [];
 
   if (!initCategory) {
-    initCategory = { id: options[0]?.id, name: '카테고리' };
+    initCategory = { id: options[0]?.id, name: '카테고리 없음' };
   }
 
   const { isOpen, toggleDropdown, currentValue, handleCurrentValue, dropdownRef } = useDropdown<Category>(initCategory);
