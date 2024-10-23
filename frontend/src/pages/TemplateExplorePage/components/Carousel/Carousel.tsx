@@ -6,7 +6,7 @@ import { BREAKING_POINT } from '@/style/styleConstants';
 import * as S from './Carousel.style';
 
 interface CarouselItem {
-  id: number;
+  id: string;
   content: React.ReactNode;
 }
 
@@ -86,8 +86,8 @@ const Carousel = ({ items }: Props) => {
       </S.CarouselButton>
       <S.CarouselViewport>
         <S.CarouselList translateX={translateX} transitioning={isTransitioning}>
-          {displayItems.map((item) => (
-            <S.CarouselItem key={item.id}>{item.content}</S.CarouselItem>
+          {displayItems.map((item, idx) => (
+            <S.CarouselItem key={item.id + idx}>{item.content}</S.CarouselItem>
           ))}
         </S.CarouselList>
       </S.CarouselViewport>
