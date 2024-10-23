@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
@@ -17,6 +18,7 @@ import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 
+@Import(CategoryRepository.class)
 @JpaRepositoryTest
 public class CategoryRepositoryTest {
 
