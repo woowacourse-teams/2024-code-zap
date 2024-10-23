@@ -3,7 +3,7 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { Footer, Header } from '@/components';
+import { Footer, Header, ScrollTopButton } from '@/components';
 import { useHeaderHeight } from '@/hooks/useHeaderHeight';
 import { NotFoundPage } from '@/pages';
 
@@ -36,6 +36,7 @@ const Layout = () => {
           )}
         </QueryErrorResetBoundary>
       </S.Wrapper>
+      <ScrollTopButton />
       <Footer />
     </S.LayoutContainer>
   );

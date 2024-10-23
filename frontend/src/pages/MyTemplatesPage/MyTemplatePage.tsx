@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
-import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
+import { Flex, Input, PagingButtons, Dropdown } from '@/components';
 import { useAuth } from '@/hooks/authentication';
 import { useMemberNameQuery } from '@/queries/members';
 import { useTrackPageViewed } from '@/service/amplitude';
@@ -132,8 +132,6 @@ const MyTemplatePage = () => {
           )}
         </Flex>
       </S.MainContainer>
-
-      <ScrollTopButton />
     </S.MyTemplatePageContainer>
   );
 };

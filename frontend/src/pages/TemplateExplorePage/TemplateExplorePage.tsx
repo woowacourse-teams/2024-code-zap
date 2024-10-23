@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, SearchIcon } from '@/assets/images';
+import { SearchIcon } from '@/assets/images';
 import {
   Dropdown,
   Flex,
@@ -117,14 +117,6 @@ const TemplateExplorePage = () => {
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
-
-      <S.ScrollTopButton
-        onClick={() => {
-          scroll.top('smooth');
-        }}
-      >
-        <ArrowUpIcon aria-label='맨 위로' />
-      </S.ScrollTopButton>
     </Flex>
   );
 };
