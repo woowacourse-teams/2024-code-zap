@@ -16,13 +16,14 @@ interface Props {
 
 const Carousel = ({ items }: Props) => {
   const windowWidth = useWindowWidth();
+  const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const transitionTimer = useRef<NodeJS.Timeout | null>(null);
 
   const displayItems = [...items, ...items, ...items];
 
-  const ITEM_WIDTH = windowWidth < BREAKING_POINT.MOBILE ? 144 : 288; // CarouselItem 넓이
+  const ITEM_WIDTH = isMobile ? 144 : 288; // CarouselItem 넓이
   const ITEM_GAP = 16; // 1rem
   const MOVE_DISTANCE = ITEM_WIDTH + ITEM_GAP;
   const originalLength = items.length;
@@ -81,9 +82,7 @@ const Carousel = ({ items }: Props) => {
 
   return (
     <S.CarouselContainer>
-      <S.CarouselButton onClick={() => moveCarousel('prev')}>
-        <S.PrevIcon />
-      </S.CarouselButton>
+      {!isMobile && <S.PrevIcon onClick={() => moveCarousel('prev')} />}
       <S.CarouselViewport>
         <S.CarouselList translateX={translateX} transitioning={isTransitioning}>
           {displayItems.map((item, idx) => (
@@ -91,9 +90,7 @@ const Carousel = ({ items }: Props) => {
           ))}
         </S.CarouselList>
       </S.CarouselViewport>
-      <S.CarouselButton onClick={() => moveCarousel('next')}>
-        <S.NextIcon />
-      </S.CarouselButton>
+      {!isMobile && <S.NextIcon onClick={() => moveCarousel('next')} />}
     </S.CarouselContainer>
   );
 };
