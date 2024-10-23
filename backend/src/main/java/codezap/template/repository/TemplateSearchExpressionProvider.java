@@ -5,6 +5,7 @@ import static codezap.template.domain.QTemplate.template;
 import static codezap.template.domain.QTemplateTag.templateTag;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
@@ -26,20 +27,22 @@ public class TemplateSearchExpressionProvider {
     private static final int NO_MATCHED_SCORE = 0;
     private static final String WILD_CARD = "%";
 
-    public BooleanExpression memberEquals(Long memberId) {
-        if (memberId == null) {
-            return null;
-        }
-
-        return template.member.id.eq(memberId);
+    public BooleanExpression filterMember(Long memberId) {
+        return Optional.ofNullable(memberId)
+                .map(template.member.id::eq)
+                .orElse(null);
     }
 
     public BooleanExpression filterCategory(Long categoryId) {
-        if (categoryId == null) {
-            return null;
-        }
+        return Optional.ofNullable(categoryId)
+                .map(template.category.id::eq)
+                .orElse(null);
+    }
 
-        return template.category.id.eq(categoryId);
+    public BooleanExpression filterVisibility(Visibility visibility) {
+        return Optional.ofNullable(visibility)
+                .map(template.visibility::eq)
+                .orElse(null);
     }
 
     public BooleanExpression hasAnyTags(List<Long> tagIds) {
@@ -55,20 +58,15 @@ public class TemplateSearchExpressionProvider {
         );
     }
 
-    public BooleanExpression filterVisibility(Visibility visibility) {
-        if (visibility == null) {
-            return null;
-        }
-
-        return template.visibility.eq(visibility);
+    public BooleanExpression matchesKeyword(String keyword) {
+        return Optional.ofNullable(keyword)
+                .filter(k -> !k.isBlank())
+                .map(String::trim)
+                .map(this::createKeywordMatchExpression)
+                .orElse(null);
     }
 
-    public BooleanExpression matchesKeyword(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            return null;
-        }
-        String trimmedKeyword = keyword.trim();
-
+    private BooleanExpression createKeywordMatchExpression(String trimmedKeyword) {
         if (trimmedKeyword.length() < MINIMUM_KEYWORD_LENGTH) {
             return matchedKeywordUsingLike(trimmedKeyword);
         }
