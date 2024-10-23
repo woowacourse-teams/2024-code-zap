@@ -25,6 +25,7 @@ import codezap.category.repository.CategoryRepository;
 import codezap.global.auditing.JpaAuditingConfiguration;
 import codezap.global.querydsl.QueryDSLConfig;
 import codezap.global.rds.DataSourceConfig;
+import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
@@ -33,7 +34,7 @@ import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 
 @DataJpaTest(includeFilters = @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = Repository.class), useDefaultFilters = false)
-@Import({JpaAuditingConfiguration.class, DataSourceConfig.class, QueryDSLConfig.class})
+@Import({JpaAuditingConfiguration.class, DataSourceConfig.class, QueryDSLConfig.class, TemplateSearchExpressionProvider.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Sql(scripts = "classpath:search.sql", executionPhase = ExecutionPhase.BEFORE_TEST_CLASS)
 class TemplateSearchRepositoryTest {
