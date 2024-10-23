@@ -33,6 +33,7 @@ export const CarouselItem = styled.li`
 
   width: 18rem;
   height: 9rem;
+  margin: 0.25rem 0;
 
   @media (max-width: 768px) {
     width: 9rem;
