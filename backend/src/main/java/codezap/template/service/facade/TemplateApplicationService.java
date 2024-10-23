@@ -60,24 +60,29 @@ public class TemplateApplicationService {
     }
 
     public FindTemplateResponse findById(Long id) {
-        Template template = templateService.getById(id);
-        if (template.isPrivate()) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
-        }
-        List<Tag> tags = tagService.findAllByTemplate(template);
-        List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
-        return FindTemplateResponse.of(template, sourceCodes, tags, false);
+        return makeTemplateResponse(id, template -> false, template -> false);
     }
 
     public FindTemplateResponse findById(Long id, Member loginMember) {
+        return makeTemplateResponse(
+                id,
+                template -> template.matchMember(loginMember),
+                template -> likesService.isLiked(loginMember, template)
+        );
+    }
+
+    private FindTemplateResponse makeTemplateResponse(
+            Long id,
+            TemplateOwnershipChecker templateOwnershipChecker,
+            LikedChecker likedChecker
+    ) {
         Template template = templateService.getById(id);
-        if (!template.matchMember(loginMember) && template.isPrivate()) {
+        if (!templateOwnershipChecker.isOwner(template) && template.isPrivate()) {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
         }
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
-        boolean isLiked = likesService.isLiked(loginMember, template);
-        return FindTemplateResponse.of(template, sourceCodes, tags, isLiked);
+        return FindTemplateResponse.of(template, sourceCodes, tags, likedChecker.isLiked(template));
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -90,7 +95,7 @@ public class TemplateApplicationService {
         Page<Template> templates = templateService.findAllBy(
                 memberId, keyword, categoryId, tagIds, Visibility.PUBLIC, pageable
         );
-        return makeResponse(templates, (template) -> false);
+        return makeAllTemplatesResponse(templates, (template) -> false);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -104,7 +109,7 @@ public class TemplateApplicationService {
         Page<Template> templates = templateService.findAllBy(
                 memberId, keyword, categoryId, tagIds, getVisibilityLevel(memberId, loginMember), pageable
         );
-        return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
+        return makeAllTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
     @Nullable
@@ -115,7 +120,7 @@ public class TemplateApplicationService {
         return null;
     }
 
-    private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
+    private FindAllTemplatesResponse makeAllTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {
         List<Template> templates = page.getContent();
         List<FindAllTemplateItemResponse> findAllTemplateByResponse =
                 getFindAllTemplateItemResponses(templates, likedChecker);
