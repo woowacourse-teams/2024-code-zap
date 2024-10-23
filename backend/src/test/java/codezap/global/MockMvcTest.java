@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -18,29 +18,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
+import codezap.global.cors.CorsProperties;
+import codezap.likes.service.LikesService;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
-import codezap.template.service.TemplateService;
+import codezap.template.service.facade.TemplateApplicationService;
+import codezap.tag.service.TagService;
 
 @WebMvcTest(SpringExtension.class)
+@EnableConfigurationProperties(CorsProperties.class)
 public abstract class MockMvcTest {
 
-    @Autowired
     protected MockMvc mvc;
 
     protected ObjectMapper objectMapper;
 
     @MockBean
     protected CredentialProvider credentialProvider;
+
     @MockBean
     protected CredentialManager credentialManager;
 
     @MockBean
-    protected TemplateService templateService;
-    @MockBean
     protected CategoryService categoryService;
+
     @MockBean
     protected MemberService memberService;
+
+    @MockBean
+    protected TagService tagService;
+
+    @MockBean
+    protected LikesService likesService;
+
+    @MockBean
+    protected TemplateApplicationService templateApplicationService;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {

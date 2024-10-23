@@ -1,9 +1,11 @@
 package codezap.member.controller;
 
-import java.net.URI;
-
+import codezap.member.dto.request.SignupRequest;
+import codezap.member.dto.response.FindMemberResponse;
+import codezap.member.service.MemberService;
 import jakarta.validation.Valid;
-
+import java.net.URI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import codezap.auth.configuration.AuthenticationPrinciple;
-import codezap.member.dto.MemberDto;
-import codezap.member.dto.request.SignupRequest;
-import codezap.member.dto.response.FindMemberResponse;
-import codezap.member.service.MemberService;
-import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,13 +30,11 @@ public class MemberController implements SpringDocMemberController {
     @GetMapping("/check-name")
     @ResponseStatus(HttpStatus.OK)
     public void checkUniquename(@RequestParam String name) {
-        memberService.assertUniquename(name);
+        memberService.assertUniqueName(name);
     }
 
-    @GetMapping("/members/{id}")
-    public ResponseEntity<FindMemberResponse> findMember(
-            @AuthenticationPrinciple MemberDto memberDto, @PathVariable Long id
-    ) {
-        return ResponseEntity.ok(memberService.findMember(memberDto, id));
+    @GetMapping("/members/{id}/name")
+    public ResponseEntity<FindMemberResponse> findMemberName(@PathVariable Long id) {
+        return ResponseEntity.ok(memberService.findMember(id));
     }
 }

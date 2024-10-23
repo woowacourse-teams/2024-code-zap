@@ -3,7 +3,7 @@
 <included>
     <appender name="warn-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>${LOG_FILE_PATH}/${DATE_FORMAT}/warn/warn.log</file>
+        <file>${LOG_FILE_PATH}/warn.log</file>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>WARN</level>
@@ -15,9 +15,9 @@
             <pattern>[%red(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%red(%replace(%logger{20}){'\\w\\.', ''}:%line)] %msg %n</pattern>
         </encoder>
 
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_FILE_PATH}/%d{yyyy-MM-dd}/warn/warn%i.log</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATH}/%d{yyyy-MM-dd}/warn.log</fileNamePattern>
+            <totalSizeCap>5GB</totalSizeCap>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 

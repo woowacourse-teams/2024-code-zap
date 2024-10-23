@@ -7,323 +7,342 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
-import codezap.category.repository.FakeCategoryRepository;
 import codezap.fixture.CategoryFixture;
-import codezap.fixture.MemberDtoFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.TemplateFixture;
+import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
+import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
-import codezap.member.dto.MemberDto;
-import codezap.member.repository.FakeMemberRepository;
-import codezap.member.repository.MemberRepository;
-import codezap.template.domain.SourceCode;
-import codezap.template.domain.Tag;
 import codezap.template.domain.Template;
-import codezap.template.domain.TemplateTag;
-import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.repository.FakeSourceCodeRepository;
-import codezap.template.repository.FakeTagRepository;
-import codezap.template.repository.FakeTemplateRepository;
-import codezap.template.repository.FakeTemplateTagRepository;
-import codezap.template.repository.FakeThumbnailRepository;
-import codezap.template.repository.SourceCodeRepository;
-import codezap.template.repository.TagRepository;
-import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateTagRepository;
-import codezap.template.repository.ThumbnailRepository;
 
-class TemplateServiceTest {
+class TemplateServiceTest extends ServiceTest {
 
-    private final TemplateRepository templateRepository = new FakeTemplateRepository();
-    private final SourceCodeRepository sourceCodeRepository = new FakeSourceCodeRepository();
-    private final ThumbnailRepository thumbnailRepository = new FakeThumbnailRepository();
-    private final CategoryRepository categoryRepository = new FakeCategoryRepository(
-            List.of(CategoryFixture.getFirstCategory(), CategoryFixture.getSecondCategory())
-    );
-    private final TemplateTagRepository templateTagRepository = new FakeTemplateTagRepository();
-    private final TagRepository tagRepository = new FakeTagRepository();
+    @Autowired
+    private TemplateService sut;
 
-    private final MemberRepository memberRepository = new FakeMemberRepository(
-            List.of(MemberFixture.getFirstMember(), MemberFixture.getSecondMember())
-    );
-    private final TemplateService templateService = new TemplateService(
-            thumbnailRepository,
-            templateRepository,
-            sourceCodeRepository,
-            categoryRepository,
-            tagRepository,
-            templateTagRepository,
-            memberRepository);
+    @Nested
+    @DisplayName("템플릿 생성")
+    class CreateTemplate {
 
-    @Test
-    @DisplayName("템플릿 생성 성공")
-    void createTemplateSuccess() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        CreateTemplateRequest createTemplateRequest = makeTemplateRequest("title");
+        @Test
+        @DisplayName("템플릿 생성 성공")
+        void createTemplateSuccess() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var templateRequest = new CreateTemplateRequest(
+                    "title",
+                    "description",
+                    List.of(
+                            new CreateSourceCodeRequest("filename1", "content1", 1),
+                            new CreateSourceCodeRequest("filename2", "content2", 2)
+                    ),
+                    1,
+                    category.getId(),
+                    List.of("tag1", "tag2"),
+                    Visibility.PUBLIC
+            );
 
-        // when
-        Long id = templateService.createTemplate(memberDto, createTemplateRequest);
-        Template template = templateRepository.fetchById(id);
+            var actual = sut.create(member, templateRequest, category);
 
-        // then
-        assertAll(
-                () -> assertThat(templateRepository.findAll()).hasSize(1),
-                () -> assertThat(template.getTitle()).isEqualTo(createTemplateRequest.title()),
-                () -> assertThat(template.getCategory().getName()).isEqualTo("카테고리 없음")
-        );
+            assertAll(
+                    () -> assertThat(actual.getTitle()).isEqualTo(templateRequest.title()),
+                    () -> assertThat(actual.getMember()).isEqualTo(member),
+                    () -> assertThat(actual.getCategory()).isEqualTo(category),
+                    () -> assertThat(actual.getDescription()).isEqualTo(templateRequest.description()),
+                    () -> assertThat(actual.getVisibility()).isEqualTo(templateRequest.visibility())
+            );
+
+        }
     }
 
-    @Test
-    @DisplayName("템플릿 전체 조회 성공")
-    void findAllTemplatesSuccess() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        saveTemplate(makeTemplateRequest("title1"), new Category("category1", member), member);
-        saveTemplate(makeTemplateRequest("title2"), new Category("category2", member), member);
+    @Nested
+    @DisplayName("ID로 템플릿 단건 조회")
+    class GetById {
 
-        // when
-        FindAllTemplatesResponse allTemplates = templateService.findAllBy(
-                member.getId(), "", null, null, PageRequest.of(1, 10));
+        @Test
+        @DisplayName("템플릿 단건 조회 성공")
+        void getByIdSuccess() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template = templateRepository.save(TemplateFixture.get(member, category));
 
-        // then
-        assertThat(allTemplates.templates()).hasSize(2);
+            var actual = sut.getById(template.getId());
+
+            assertAll(
+                    () -> assertThat(actual.getTitle()).isEqualTo(template.getTitle()),
+                    () -> assertThat(actual.getMember()).isEqualTo(member),
+                    () -> assertThat(actual.getCategory()).isEqualTo(category),
+                    () -> assertThat(actual.getDescription()).isEqualTo(template.getDescription())
+            );
+        }
+
+        @Test
+        @DisplayName("템플릿 단건 조회 실패: 해당하는 ID의 템플릿이 없는 경우")
+        void getByIdFailWithWrongId() {
+            var nonExistentID = 100L;
+
+            assertThatThrownBy(() -> sut.getById(nonExistentID))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + nonExistentID + "에 해당하는 템플릿이 존재하지 않습니다.");
+        }
     }
 
-    @Test
-    @DisplayName("템플릿 단건 조회 성공")
-    void findOneTemplateSuccess() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
+    @Nested
+    @DisplayName("멤버 ID로 템플릿 조회")
+    class GetByMemberId {
 
-        // when
-        FindTemplateResponse foundTemplate = templateService.findByIdAndMember(memberDto, template.getId());
+        @Test
+        @DisplayName("멤버 id로 템플릿 조회 성공")
+        void getByMemberIdSuccess() {
+            var member1 = memberRepository.save(MemberFixture.getFirstMember());
+            var member2 = memberRepository.save(MemberFixture.getSecondMember());
+            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template3 = templateRepository.save(TemplateFixture.get(member2, category2));
 
-        // then
-        assertAll(
-                () -> assertThat(foundTemplate.title()).isEqualTo(template.getTitle()),
-                () -> assertThat(foundTemplate.sourceCodes()).hasSize(
-                        sourceCodeRepository.findAllByTemplate(template).size()),
-                () -> assertThat(foundTemplate.category().id()).isEqualTo(template.getCategory().getId()),
-                () -> assertThat(foundTemplate.tags()).hasSize(2)
-        );
+            var actual = sut.getByMemberId(member1.getId());
+
+            assertThat(actual).hasSize(2)
+                    .containsExactly(template1, template2)
+                    .doesNotContain(template3);
+        }
+
+        @Test
+        @DisplayName("멤버 ID로 템플릿 조회 성공: 해당하는 템플릿이 없는 경우 빈 목록 반환")
+        void getByMemberIdSuccessWithEmptyList() {
+            var memberId = 100L;
+
+            var actual = sut.getByMemberId(memberId);
+
+            assertThat(actual).isEmpty();
+        }
     }
 
-    @Test
-    @DisplayName("템플릿 단건 조회 실패: 권한 없음")
-    void findOneTemplateFailWithUnauthorized() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
+    @Nested
+    @DisplayName("정렬 기능 테스트")
+    class SortTest {
 
-        // when
-        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+        @Test
+        @DisplayName("좋아요 순 정렬 테스트")
+        void sortByLikesCount() {
+            saveMembers10();
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            saveTemplates5(category);
+            likeTemplate(3L, 10L);
+            likeTemplate(5L, 7L);
+            likeTemplate(2L, 5L);
+            likeTemplate(4L, 1L);
+            likeTemplate(1L, 0L);
 
-        // then
-        Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.findByIdAndMember(otherMemberDto, templateId))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
+            List<Template> templates = sut.findAllBy(null, "", null, null, null,
+                            PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
+                    .getContent();
+
+            assertThat(templates).containsExactly(
+                    templateRepository.fetchById(3L),
+                    templateRepository.fetchById(5L),
+                    templateRepository.fetchById(2L),
+                    templateRepository.fetchById(4L),
+                    templateRepository.fetchById(1L)
+            );
+        }
+
+        private void saveMembers10() {
+            for (int i = 0; i < 10; i++) {
+                memberRepository.save(new Member("name" + i, "password" + 1, "salt"));
+            }
+        }
+
+        private void saveTemplates5(Category category) {
+            for (int i = 0; i < 5; i++) {
+                templateRepository.save(new Template(
+                        memberRepository.fetchById(1L),
+                        "title" + i,
+                        "description",
+                        category
+                ));
+            }
+        }
+
+        private void likeTemplate(long templateId, long likesCount) {
+            for (long memberId = 1L; memberId <= likesCount; memberId++) {
+                likesRepository.save(new Likes(
+                        null,
+                        templateRepository.fetchById(templateId),
+                        memberRepository.fetchById(memberId)
+                ));
+            }
+        }
     }
 
-    @Test
-    @DisplayName("템플릿 수정 성공")
-    void updateTemplateSuccess() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
-        categoryRepository.save(new Category("category2", member));
+    @Nested
+    @DisplayName("템플릿 수정")
+    class UpdateTemplate {
 
-        // when
-        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(1L);
-        templateService.update(memberDto, template.getId(), updateTemplateRequest);
-        Template updateTemplate = templateRepository.fetchById(template.getId());
-        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
-        Thumbnail thumbnail = thumbnailRepository.fetchById(template.getId());
-        List<Tag> tags = templateTagRepository.findAllByTemplate(updateTemplate).stream()
-                .map(TemplateTag::getTag)
-                .toList();
+        @Test
+        @DisplayName("템플릿 수정 성공")
+        void updateTemplateSuccess() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var updateTemplateRequest = new UpdateTemplateRequest(
+                    "Update Title",
+                    "Update Description",
+                    List.of(),
+                    List.of(),
+                    List.of(),
+                    category.getId(),
+                    List.of(),
+                    Visibility.PUBLIC
+            );
 
-        // then
-        assertAll(
-                () -> assertThat(updateTemplate.getTitle()).isEqualTo("updateTitle"),
-                () -> assertThat(thumbnail.getSourceCode().getId()).isEqualTo(2L),
-                () -> assertThat(sourceCodes).hasSize(3),
-                () -> assertThat(updateTemplate.getCategory().getId()).isEqualTo(1L),
-                () -> assertThat(tags).hasSize(2),
-                () -> assertThat(tags.get(1).getName()).isEqualTo("tag3")
-        );
+            sut.update(member, template.getId(), updateTemplateRequest, category);
+
+            assertAll(
+                    () -> assertThat(template.getTitle()).isEqualTo(updateTemplateRequest.title()),
+                    () -> assertThat(template.getDescription()).isEqualTo(updateTemplateRequest.description())
+            );
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 해당하는 ID의 템플릿이 존재하지 않는 경우")
+        void updateTemplateFailWithWrongID() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var updateTemplateRequest = new UpdateTemplateRequest(
+                    "Update Title",
+                    "Update Description",
+                    List.of(),
+                    List.of(),
+                    List.of(),
+                    category.getId(),
+                    List.of(),
+                    Visibility.PUBLIC
+            );
+            var nonExistentID = 100L;
+
+            assertThatThrownBy(() -> sut.update(member, nonExistentID, updateTemplateRequest, category))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + nonExistentID + "에 해당하는 템플릿이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 실패: 템플릿을 수정할 권한이 없는 경우")
+        void updateTemplateFailWithWrongMember() {
+            var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template = templateRepository.save(TemplateFixture.get(ownerMember, category));
+            var updateTemplateRequest = new UpdateTemplateRequest(
+                    "Update Title",
+                    "Update Description",
+                    List.of(),
+                    List.of(),
+                    List.of(),
+                    category.getId(),
+                    List.of(),
+                    Visibility.PUBLIC
+            );
+
+            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), updateTemplateRequest, category))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
+        }
     }
 
-    @Test
-    @DisplayName("템플릿 수정 실패: 권한 없음")
-    void updateTemplateFailWithUnauthorized() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        Template template = saveTemplate(createdTemplate, new Category("category1", member), member);
-        categoryRepository.save(new Category("category2", member));
+    @Nested
+    @DisplayName("템플릿 삭제")
+    class DeleteTemplate {
 
-        // when
-        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
-        UpdateTemplateRequest updateTemplateRequest = makeUpdateTemplateRequest(2L);
+        @Test
+        @DisplayName("템플릿 삭제 성공: 1개 삭제")
+        void deleteTemplateSuccessWithOneTemplate() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
-        // then
-        Long templateId = template.getId();
-        assertThatThrownBy(() -> templateService.update(otherMemberDto, templateId, updateTemplateRequest))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
-    }
+            sut.deleteByMemberAndIds(member, List.of(template1.getId()));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
 
-    @Test
-    @DisplayName("템플릿 삭제 성공: 1개")
-    void deleteTemplateSuccess() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        saveTemplate(createdTemplate, new Category("category1", member), member);
+            assertThat(actual.getContent()).hasSize(1)
+                    .containsExactly(template2);
+        }
 
-        // when
-        templateService.deleteByIds(memberDto, List.of(1L));
+        @Test
+        @DisplayName("템플릿 삭제 성공: 여러개 삭제")
+        void deleteTemplateSuccessWithMultipleTemplate() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+            var template3 = templateRepository.save(TemplateFixture.get(member, category));
+            var template4 = templateRepository.save(TemplateFixture.get(member, category));
 
-        // then
-        assertAll(
-                () -> assertThat(templateRepository.findAll()).isEmpty(),
-                () -> assertThat(sourceCodeRepository.findAll()).isEmpty(),
-                () -> assertThat(thumbnailRepository.findAll()).isEmpty()
-        );
-    }
+            sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
+            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
 
-    @Test
-    @DisplayName("템플릿 삭제 성공: 2개")
-    void deleteTemplatesSuccess() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate1 = makeTemplateRequest("title1");
-        CreateTemplateRequest createdTemplate2 = makeTemplateRequest("title2");
-        saveTemplate(createdTemplate1, new Category("category1", member), member);
-        saveTemplate(createdTemplate2, new Category("category1", member), member);
+            assertThat(actual.getContent()).hasSize(2)
+                    .containsExactly(template2, template3);
+        }
 
-        // when
-        templateService.deleteByIds(memberDto, List.of(1L, 2L));
+        @Test
+        @DisplayName("템플릿 삭제 실패: 존재하지 않는 템플릿 삭제")
+        void deleteTemplateSuccessWithNonExistentTemplate() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            templateRepository.save(TemplateFixture.get(member, category));
+            Long nonExistentID = 100L;
 
-        // then
-        assertAll(
-                () -> assertThat(templateRepository.findAll()).isEmpty(),
-                () -> assertThat(sourceCodeRepository.findAll()).isEmpty(),
-                () -> assertThat(thumbnailRepository.findAll()).isEmpty()
-        );
-    }
+            assertThatThrownBy(() -> sut.deleteByMemberAndIds(member, List.of(nonExistentID)))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("식별자 " + nonExistentID + "에 해당하는 템플릿이 존재하지 않습니다.");
+        }
 
-    @Test
-    @DisplayName("템플릿 삭제 실패: 권한 없음")
-    void deleteTemplateFailWithUnauthorized() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate = makeTemplateRequest("title");
-        saveTemplate(createdTemplate, new Category("category1", member), member);
+        @Test
+        @DisplayName("템플릿 삭제 실패: 삭제할 권한이 없는 경우")
+        void deleteTemplateFailWithWrongMember() {
+            var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template = templateRepository.save(TemplateFixture.get(ownerMember, category));
 
-        // when
-        MemberDto otherMemberDto = MemberDtoFixture.getSecondMemberDto();
+            assertThatThrownBy(() -> sut.deleteByMemberAndIds(otherMember, List.of(template.getId())))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
 
-        // then
-        List<Long> ids = List.of(1L);
-        assertThatThrownBy(() -> templateService.deleteByIds(otherMemberDto, ids))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("해당 템플릿에 대한 권한이 없습니다.");
-    }
+        }
 
-    @Test
-    @DisplayName("템플릿 삭제 실패: 동일한 ID 2개가 들어왔을 때")
-    void deleteTemplatesFailWithSameTemplateId() {
-        // given
-        MemberDto memberDto = MemberDtoFixture.getFirstMemberDto();
-        Member member = memberRepository.fetchById(memberDto.id());
-        CreateTemplateRequest createdTemplate1 = makeTemplateRequest("title1");
-        CreateTemplateRequest createdTemplate2 = makeTemplateRequest("title2");
-        saveTemplate(createdTemplate1, new Category("category1", member), member);
-        saveTemplate(createdTemplate2, new Category("category1", member), member);
+        @Test
+        @DisplayName("템플릿 삭제 실패: 동일한 ID가 2개 들어있는 경우")
+        void deleteTemplateFailWithDuplicateID() {
+            var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template = templateRepository.save(TemplateFixture.get(ownerMember, category));
 
-        // when & then
-        List<Long> ids = List.of(1L, 1L);
-        assertThatThrownBy(() -> templateService.deleteByIds(memberDto, ids))
-                .isInstanceOf(CodeZapException.class)
-                .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
-    }
+            assertThatThrownBy(() -> sut.deleteByMemberAndIds(otherMember, List.of(template.getId(), template.getId())))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
 
-    private CreateTemplateRequest makeTemplateRequest(String title) {
-        return new CreateTemplateRequest(
-                title,
-                "description",
-                List.of(
-                        new CreateSourceCodeRequest("filename1", "content1", 1),
-                        new CreateSourceCodeRequest("filename2", "content2", 2)
-                ),
-                1,
-                1L,
-                List.of("tag1", "tag2")
-        );
-    }
-
-    private UpdateTemplateRequest makeUpdateTemplateRequest(Long categoryId) {
-        return new UpdateTemplateRequest(
-                "updateTitle",
-                "description",
-                List.of(
-                        new CreateSourceCodeRequest("filename3", "content3", 2),
-                        new CreateSourceCodeRequest("filename4", "content4", 3)
-                ),
-                List.of(
-                        new UpdateSourceCodeRequest(2L, "filename2", "content2", 1)
-                ),
-                List.of(1L),
-                categoryId,
-                List.of("tag1", "tag3")
-        );
-    }
-
-    private Template saveTemplate(CreateTemplateRequest createTemplateRequest, Category category, Member member) {
-        Category savedCategory = categoryRepository.save(category);
-        Template savedTemplate = templateRepository.save(
-                new Template(
-                        member,
-                        createTemplateRequest.title(),
-                        createTemplateRequest.description(),
-                        savedCategory
-                )
-        );
-        SourceCode savedFirstSourceCode = sourceCodeRepository.save(
-                new SourceCode(savedTemplate, "filename1", "content1", 1));
-        sourceCodeRepository.save(new SourceCode(savedTemplate, "filename2", "content2", 2));
-        thumbnailRepository.save(new Thumbnail(savedTemplate, savedFirstSourceCode));
-        createTemplateRequest.tags().stream()
-                .map(Tag::new)
-                .map(tagRepository::save)
-                .forEach(tag -> templateTagRepository.save(new TemplateTag(savedTemplate, tag)));
-
-        return savedTemplate;
+        }
     }
 }

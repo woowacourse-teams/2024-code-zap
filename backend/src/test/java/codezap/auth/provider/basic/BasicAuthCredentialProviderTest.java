@@ -2,6 +2,10 @@ package codezap.auth.provider.basic;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.nio.charset.StandardCharsets;
 
@@ -14,19 +18,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
+import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
-import codezap.member.repository.FakeMemberRepository;
 import codezap.member.repository.MemberRepository;
 
 class BasicAuthCredentialProviderTest {
 
-    private final MemberRepository memberRepository = new FakeMemberRepository();
-
+    private MemberRepository memberRepository;
     private BasicAuthCredentialProvider basicAuthCredentialProvider;
 
     @BeforeEach
     void setUp() {
+        memberRepository = mock(MemberRepository.class);
         basicAuthCredentialProvider = new BasicAuthCredentialProvider(memberRepository);
     }
 
@@ -36,20 +41,22 @@ class BasicAuthCredentialProviderTest {
         Member member = MemberFixture.memberFixture();
         String actualCredential = basicAuthCredentialProvider.createCredential(member);
 
-        String expectedCredential = HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(),
-                StandardCharsets.UTF_8);
+        String expectedCredential = HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8);
         assertEquals(actualCredential, expectedCredential);
     }
 
     @Nested
     @DisplayName("인증 정보로부터 회원 추출")
-    class extractMember {
+    class ExtractMember {
+
         @Test
         @DisplayName("회원 추출 성공")
         void extractMember() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            String credential = basicAuthCredentialProvider.createCredential(member);
+            Member member = MemberFixture.memberFixture();
 
+            when(memberRepository.fetchByName(any())).thenReturn(member);
+
+            String credential = basicAuthCredentialProvider.createCredential(member);
             assertEquals(member, basicAuthCredentialProvider.extractMember(credential));
         }
 
@@ -58,6 +65,9 @@ class BasicAuthCredentialProviderTest {
         void extractMemberThrowNotExistMember() {
             Member unsaverdMember = MemberFixture.memberFixture();
             String credential = basicAuthCredentialProvider.createCredential(unsaverdMember);
+
+            doThrow(new CodeZapException(ErrorCode.INVALID_REQUEST, "존재하지 않는 아이디 " + unsaverdMember.getName() + " 입니다."))
+                    .when(memberRepository).fetchByName(any());
 
             assertThatThrownBy(() -> basicAuthCredentialProvider.extractMember(credential))
                     .isInstanceOf(CodeZapException.class)
@@ -68,13 +78,14 @@ class BasicAuthCredentialProviderTest {
         @ValueSource(strings = {"wrongPassword", " "})
         @DisplayName("회원 추출 실패: 잘못된 비밀번호로 생성된 인증 값")
         void extractMemberThrow(String wrongPassword) {
-            Member savedMember = memberRepository.save(MemberFixture.memberFixture());
-            String wrongCredential = HttpHeaders.encodeBasicAuth(savedMember.getName(), wrongPassword,
-                    StandardCharsets.UTF_8);
+            Member savedMember = MemberFixture.memberFixture();
+            String wrongCredential = HttpHeaders.encodeBasicAuth(savedMember.getName(), wrongPassword, StandardCharsets.UTF_8);
+
+            when(memberRepository.fetchByName(any())).thenReturn(savedMember);
 
             assertThatThrownBy(() -> basicAuthCredentialProvider.extractMember(wrongCredential))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("아이디 또는 비밀번호가 일치하지 않습니다.");
+                    .hasMessage("비밀번호가 일치하지 않습니다.");
         }
     }
 }

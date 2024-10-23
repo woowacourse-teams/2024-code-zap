@@ -7,6 +7,7 @@ import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 
 public interface SourceCodeRepository {
+
     SourceCode fetchById(Long id);
 
     List<SourceCode> findAllByTemplate(Template template);
@@ -17,7 +18,7 @@ public interface SourceCodeRepository {
 
     List<SourceCode> findAllByTemplateAndOrdinal(Template template, int ordinal);
 
-    List<SourceCode> findAll();
+    int countByTemplate(Template template);
 
     SourceCode save(SourceCode sourceCode);
 
@@ -25,5 +26,5 @@ public interface SourceCodeRepository {
 
     void deleteById(Long id);
 
-    void deleteByTemplateId(Long id);
+    void deleteAllByTemplateIds(List<Long> templateIds);
 }

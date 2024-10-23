@@ -1,19 +1,16 @@
 package codezap.member.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
-import codezap.member.dto.MemberDto;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "회원 API", description = "회원 API")
 public interface SpringDocMemberController {
@@ -39,14 +36,10 @@ public interface SpringDocMemberController {
     })
     void checkUniquename(@RequestParam String name);
 
-    @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "회원 정보 조회", description = "회원의 정보(아이디일, 닉네임)을 조회합니다.")
+    @Operation(summary = "회원 정보 조회", description = "회원의 정보(아이디)를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공")
-    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/members/1", errorCases = {
-            @ErrorCase(description = "로그인된 회원이 조회하려는 회원이 아닌 경우", exampleMessage = "본인의 정보만 조회할 수 있습니다.")
-    })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1", errorCases = {
             @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 회원이 존재하지 않습니다.")
     })
-    ResponseEntity<FindMemberResponse> findMember(MemberDto memberDto, Long id);
+    ResponseEntity<FindMemberResponse> findMemberName(Long id);
 }

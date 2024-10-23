@@ -18,15 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.global.validation.ValidationSequence;
-import codezap.member.dto.MemberDto;
+import codezap.member.domain.Member;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.response.ExploreTemplatesResponse;
-import codezap.template.dto.response.FindAllTagsResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.service.TemplateApplicationService;
-import codezap.template.service.TemplateService;
+import codezap.template.service.facade.TemplateApplicationService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -34,71 +31,63 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/templates")
 public class TemplateController implements SpringDocTemplateController {
 
-    private final TemplateService templateService;
-    private final TemplateApplicationService applicationService;
+    private final TemplateApplicationService templateApplicationService;
 
     @PostMapping
     public ResponseEntity<Void> createTemplate(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateTemplateRequest createTemplateRequest
     ) {
-        Long createdTemplateId = templateService.createTemplate(memberDto, createTemplateRequest);
-        return ResponseEntity.created(URI.create("/templates/" + createdTemplateId))
-                .build();
+        Long createdTemplateId = templateApplicationService.create(member, createTemplateRequest);
+        return ResponseEntity.created(URI.create("/templates/" + createdTemplateId)).build();
     }
 
     @GetMapping
-    public ResponseEntity<FindAllTemplatesResponse> getTemplates(
-            @AuthenticationPrinciple MemberDto memberDto,
-            @RequestParam Long memberId,
-            @RequestParam String keyword,
+    public ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
+            @AuthenticationPrinciple(required = false) Member member,
+            @RequestParam(required = false) Long memberId,
+            @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) List<Long> tagIds,
-            @PageableDefault(size = 20, page = 1) Pageable pageable
+            @PageableDefault(size = 20) Pageable pageable
     ) {
-        FindAllTemplatesResponse response =
-                applicationService.findAllBy(memberDto, memberId, keyword, categoryId, tagIds, pageable);
-        return ResponseEntity.ok(response);
+        if (member == null) {
+            return ResponseEntity.ok(
+                    templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable)
+            );
+        }
+        return ResponseEntity.ok(
+                templateApplicationService.findAllBy(memberId, keyword, categoryId, tagIds, pageable, member)
+        );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FindTemplateResponse> getTemplateById(
-            @AuthenticationPrinciple MemberDto memberDto,
+    public ResponseEntity<FindTemplateResponse> findTemplateById(
+            @AuthenticationPrinciple(required = false) Member member,
             @PathVariable Long id
     ) {
-        return ResponseEntity.ok(templateService.findByIdAndMember(memberDto, id));
-    }
-
-    @GetMapping("/tags")
-    public ResponseEntity<FindAllTagsResponse> getTags(
-            @AuthenticationPrinciple MemberDto memberDto,
-            @RequestParam Long memberId
-    ) {
-        FindAllTagsResponse response = applicationService.findAllTagsByMemberId(memberDto, memberId);
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/explore")
-    public ResponseEntity<ExploreTemplatesResponse> explore() {
-        return ResponseEntity.ok(templateService.findAll());
+        if (member == null) {
+            return ResponseEntity.ok(templateApplicationService.findById(id));
+        }
+        return ResponseEntity.ok(templateApplicationService.findById(id, member));
     }
 
     @PostMapping("/{id}")
     public ResponseEntity<Void> updateTemplate(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @PathVariable Long id,
             @Validated(ValidationSequence.class) @RequestBody UpdateTemplateRequest updateTemplateRequest
     ) {
-        templateService.update(memberDto, id, updateTemplateRequest);
+        templateApplicationService.update(member, id, updateTemplateRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{ids}")
     public ResponseEntity<Void> deleteTemplates(
-            @AuthenticationPrinciple MemberDto memberDto,
+            @AuthenticationPrinciple Member member,
             @PathVariable List<Long> ids
     ) {
-        templateService.deleteByIds(memberDto, ids);
+        templateApplicationService.deleteAllByMemberAndTemplateIds(member, ids);
         return ResponseEntity.noContent().build();
     }
 }
