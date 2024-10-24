@@ -130,7 +130,7 @@ class TemplateSearchServiceTest {
         @DisplayName("검색 기능: 키워드로 템플릿 목록 조회 성공")
         void findAllSuccessByKeyword() {
             Long memberId = null;
-            String keyword = "Template";
+            String keyword = "안녕";
             Long categoryId = null;
             List<Long> tagIds = null;
             Visibility visibility = null;
@@ -139,8 +139,7 @@ class TemplateSearchServiceTest {
             Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
-                    .filter(template -> template.getTitle().contains(keyword) || template.getDescription()
-                            .contains(keyword))
+                    .filter(template -> template.getTitle().contains(keyword) || template.getDescription().contains(keyword))
                     .toArray(Template[]::new));
         }
 
@@ -300,7 +299,7 @@ class TemplateSearchServiceTest {
         @DisplayName("검색 기능: 모든 검색 기준으로 템플릿 목록 조회 성공")
         void findAllSuccessWithAllCriteria() {
             Long memberId = member1.getId();
-            String keyword = "Template";
+            String keyword = "안녕하세요";
             Long categoryId = category1.getId();
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
             Visibility visibility = Visibility.PUBLIC;
@@ -318,7 +317,7 @@ class TemplateSearchServiceTest {
         @DisplayName("검색 기능: 검색 결과가 없는 경우 빈 리스트 반환 성공")
         void findAllSuccessWithNoResults() {
             Long memberId = null;
-            String keyword = "NonExistentKeyword";
+            String keyword = "설명";
             Long categoryId = null;
             List<Long> tagIds = null;
             Visibility visibility = null;

@@ -228,7 +228,7 @@ class TemplateSearchJpaRepositoryTest {
     @DisplayName("검색 테스트: 검색 결과가 없는 경우 빈 리스트 반환 성공")
     void testFindWithNoResults() {
         Specification<Template> spec = new TemplateSpecification(
-                null, "NonexistentKeyword", null, null, null
+                null, "없지롱", null, null, null
         );
         Page<Template> result = templateRepository.findAll(spec, PageRequest.of(0, 10));
 
