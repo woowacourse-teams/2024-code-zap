@@ -60,19 +60,21 @@ const TemplateCard = ({ template }: Props) => {
         </Flex>
 
         <Link to={END_POINTS.template(template.id)}>
-          <S.EllipsisTextWrapper>
-            <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
-              {title}
-            </Text.XLarge>
-          </S.EllipsisTextWrapper>
+          <Flex direction='column' gap='0.5rem'>
+            <S.EllipsisTextWrapper>
+              <Text.XLarge color={theme.color.light.secondary_900} weight='bold'>
+                {title}
+              </Text.XLarge>
+            </S.EllipsisTextWrapper>
 
-          <S.EllipsisTextWrapper>
-            {description ? (
-              <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
-            ) : (
-              <S.BlankDescription />
-            )}
-          </S.EllipsisTextWrapper>
+            <S.EllipsisTextWrapper>
+              {description ? (
+                <Text.Medium color={theme.color.light.secondary_600}>{description}</Text.Medium>
+              ) : (
+                <S.BlankDescription />
+              )}
+            </S.EllipsisTextWrapper>
+          </Flex>
         </Link>
       </Flex>
 

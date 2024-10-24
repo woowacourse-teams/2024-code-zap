@@ -1,4 +1,4 @@
-import { NoSearchResults } from '@/components';
+import { NoResults } from '@/components';
 import { useWindowWidth } from '@/hooks';
 import { TemplateListItem } from '@/types';
 
@@ -18,7 +18,7 @@ const TemplateListSection = ({ templateList, isSearching, isEditMode, selectedLi
   const windowWidth = useWindowWidth();
 
   if (templateList.length === 0) {
-    return isSearching ? <NoSearchResults /> : <NewTemplateButton />;
+    return isSearching ? <NoResults>검색 결과가 없습니다.</NoResults> : <NewTemplateButton />;
   }
 
   return (

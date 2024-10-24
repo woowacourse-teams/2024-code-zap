@@ -1,7 +1,9 @@
 export { default as LandingPage } from './LandingPage/LandingPage';
 export { default as LoginPage } from './LoginPage/LoginPage';
 export { default as MyTemplatePage } from './MyTemplatesPage/MyTemplatePage';
+export { default as MyLikedTemplatePage } from './MyLikedTemplatePage/MyLikedTemplatePage';
 export { default as NotFoundPage } from './NotFoundPage/NotFoundPage';
+export { default as ForbiddenPage } from './ForbiddenPage/ForbiddenPage';
 export { default as SignupPage } from './SignupPage/SignupPage';
 export { default as TemplateEditPage } from './TemplateEditPage/TemplateEditPage';
 export { default as TemplatePage } from './TemplatePage/TemplatePage';

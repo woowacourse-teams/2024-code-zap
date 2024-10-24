@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const NoSearchResultsContainer = styled.div`
+export const NoResultsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

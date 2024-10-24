@@ -13,11 +13,11 @@ export const useHotTopic = () => {
       return;
     }
 
-    updateQueryParams({ tags: [...tagIds] });
+    updateQueryParams({ tags: [...tagIds], page: 1 });
   };
 
   const resetSelectedTopic = () => {
-    updateQueryParams({ tags: [] });
+    updateQueryParams({ tags: [], page: 1 });
   };
 
   return { selectedTagIds, selectedHotTopic, selectTopic };

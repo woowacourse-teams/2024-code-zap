@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
 
 import { ChevronIcon } from '@/assets/images';
-import { theme } from '@/style/theme';
 
 export const CarouselContainer = styled.div`
+  position: relative;
+
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -13,16 +14,26 @@ export const CarouselContainer = styled.div`
 `;
 
 export const CarouselViewport = styled.div`
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+
   position: relative;
-  overflow: hidden;
+
+  overflow-x: scroll;
+
   width: 100%;
+  padding-right: 1px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
-export const CarouselList = styled.ul<{ translateX: number; transitioning: boolean }>`
-  transform: translateX(${(props) => props.translateX}px);
+export const CarouselList = styled.ul`
   display: flex;
-  gap: 1rem;
-  transition: ${(props) => (props.transitioning ? 'transform 0.3s ease-in-out' : 'none')};
+  gap: 0.75rem;
+  width: max-content;
+  padding: 0.5rem;
 `;
 
 export const CarouselItem = styled.li`
@@ -31,33 +42,22 @@ export const CarouselItem = styled.li`
   align-items: center;
   justify-content: center;
 
-  width: 18rem;
+  width: 18.75rem;
   height: 9rem;
-  margin: 0.25rem 0;
 
   @media (max-width: 768px) {
     width: 9rem;
   }
 `;
 
-export const CarouselButton = styled.button`
-  cursor: pointer;
-
-  padding: 1rem;
-
-  background-color: white;
-  border: 1px solid ${theme.color.light.secondary_300};
-  border-radius: 8px;
-
-  &:hover {
-    background-color: ${theme.color.light.secondary_50};
-  }
-`;
-
 export const PrevIcon = styled(ChevronIcon)`
+  cursor: 'pointer';
   transform: rotate(90deg);
+  flex-shrink: 0;
 `;
 
 export const NextIcon = styled(ChevronIcon)`
+  cursor: 'pointer';
   transform: rotate(270deg);
+  flex-shrink: 0;
 `;

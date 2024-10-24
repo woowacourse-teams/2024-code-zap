@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
-import { Flex, Input, PagingButtons, Dropdown, ScrollTopButton } from '@/components';
+import { Flex, Input, PagingButtons, Dropdown } from '@/components';
 import { useAuth } from '@/hooks/authentication';
 import { useMemberNameQuery } from '@/queries/members';
 import { useTrackPageViewed } from '@/service/amplitude';
@@ -33,6 +33,8 @@ const MyTemplatePage = () => {
   const {
     data: { name },
   } = useMemberNameQuery({ memberId });
+
+  const isMine = memberId === currentMemberId;
 
   const {
     templateList,
@@ -71,7 +73,7 @@ const MyTemplatePage = () => {
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
-          {memberId === currentMemberId && (
+          {isMine && (
             <TemplateDeleteSelection
               isEditMode={isEditMode}
               isDeleteModalOpen={isDeleteModalOpen}
@@ -132,8 +134,6 @@ const MyTemplatePage = () => {
           )}
         </Flex>
       </S.MainContainer>
-
-      <ScrollTopButton />
     </S.MyTemplatePageContainer>
   );
 };

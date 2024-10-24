@@ -79,6 +79,23 @@ export const getTemplateList = async ({
   throw new Error(response.detail);
 };
 
+export const getLikedTemplateList = async ({
+  page = 1,
+  size = PAGE_SIZE,
+  sort = DEFAULT_SORTING_OPTION.key,
+}: TemplateListRequest) => {
+  const queryParams = new URLSearchParams({
+    sort,
+    page: page.toString(),
+    size: size.toString(),
+  });
+
+  const response = await apiClient.get(`${END_POINTS.LIKED_TEMPLATES}?${queryParams.toString()}`);
+  const data = response.json();
+
+  return data;
+};
+
 export const getTemplateExplore = async ({
   sort = DEFAULT_SORTING_OPTION.key,
   page = 1,

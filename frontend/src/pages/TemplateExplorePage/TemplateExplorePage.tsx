@@ -3,14 +3,14 @@ import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, SearchIcon } from '@/assets/images';
+import { SearchIcon } from '@/assets/images';
 import {
   Dropdown,
   Flex,
   Heading,
   Input,
   LoadingBall,
-  NoSearchResults,
+  NoResults,
   PagingButtons,
   TemporaryError,
   TemplateCard,
@@ -117,14 +117,6 @@ const TemplateExplorePage = () => {
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
-
-      <S.ScrollTopButton
-        onClick={() => {
-          scroll.top('smooth');
-        }}
-      >
-        <ArrowUpIcon aria-label='맨 위로' />
-      </S.ScrollTopButton>
     </Flex>
   );
 };
@@ -171,7 +163,7 @@ const TemplateList = ({
         isPending ? (
           <LoadingBall />
         ) : (
-          <NoSearchResults />
+          <NoResults>검색 결과가 없습니다.</NoResults>
         )
       ) : (
         <S.TemplateListSectionWrapper>

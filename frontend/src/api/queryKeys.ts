@@ -5,5 +5,6 @@ export const QUERY_KEY = {
   MEMBER_NAME: 'memberName',
   TAG_LIST: 'tagList',
   TEMPLATE: 'template',
+  LIKED_TEMPLATE: 'likedTemplate',
   TEMPLATE_LIST: 'templateList',
 };
