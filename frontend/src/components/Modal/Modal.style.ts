@@ -18,6 +18,12 @@ export const Base = styled.div`
 
   @media (max-width: 47.9375rem) {
     align-items: flex-end;
+    height: 100%;
+    min-height: 100vh;
+
+    @supports (-webkit-touch-callout: none) {
+      min-height: -webkit-fill-available;
+    }
   }
 `;
 
@@ -54,6 +60,13 @@ export const FooterContainer = styled.div`
   justify-content: space-between;
 
   padding: 1rem;
+
+  @media (max-width: 47.9375rem) {
+    position: sticky;
+    z-index: 1;
+    bottom: 0;
+    background-color: white;
+  }
 `;
 
 export const ModalContainer = styled.div<{ size: ModalSize }>`
@@ -76,14 +89,19 @@ export const ModalContainer = styled.div<{ size: ModalSize }>`
   }
 
   @media (max-width: 47.9375rem) {
+    position: sticky;
     bottom: 0;
     left: 0;
 
     overflow-y: auto;
 
     width: 100%;
+    max-height: calc(100% - 2rem);
+    margin-top: auto;
 
     border-radius: 1.5rem 1.5rem 0 0;
+
+    transition: max-height 0.3s ease-out;
   }
 `;
 
