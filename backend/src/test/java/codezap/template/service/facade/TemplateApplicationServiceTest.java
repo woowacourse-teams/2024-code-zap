@@ -40,6 +40,7 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.repository.TemplateSpecification;
 
 class TemplateApplicationServiceTest extends ServiceTest {
@@ -418,20 +419,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
     }
 
-    private Template savePrivateTemplate(Member member, Category category) {
-        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
-        return privateTemplate;
-    }
-
-    private Template savePublicTemplate(Member member, Category category) {
-        var template = templateRepository.save(TemplateFixture.get(member, category));
-        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-        thumbnailRepository.save(new Thumbnail(template, sourceCode));
-        return template;
-    }
-
     @Nested
     @DisplayName("템플릿 수정")
     class Update {
@@ -552,5 +539,51 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );
         }
+    }
+
+    @Nested
+    @DisplayName("회원이 좋아요한 템플릿 목록 조회")
+    class FindAllByLiked {
+
+        @Test
+        @DisplayName("성공: 로그인 정보와 조회하려는 멤버 ID가 같을 경우")
+        void findAllByLikedSuccessSameMember() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template1 = savePublicTemplate(member, category);
+            var template2 = savePublicTemplate(member, category);
+            var template3 = savePublicTemplate(member, category);
+
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template2, member));
+            likesRepository.save(new Likes(template3, otherMember));
+
+            // when
+            FindAllTemplatesResponse actual = sut.findAllByLiked(member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.templates()).extracting("id")
+                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
+                    () -> assertThat(actual.templates()).extracting("isLiked")
+                            .containsExactlyInAnyOrder(true, true)
+            );
+        }
+    }
+
+    private Template savePrivateTemplate(Member member, Category category) {
+        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
+        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+        return privateTemplate;
+    }
+
+    private Template savePublicTemplate(Member member, Category category) {
+        var template = templateRepository.save(TemplateFixture.get(member, category));
+        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+        thumbnailRepository.save(new Thumbnail(template, sourceCode));
+        return template;
     }
 }
