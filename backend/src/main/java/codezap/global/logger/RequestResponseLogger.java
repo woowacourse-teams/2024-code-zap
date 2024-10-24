@@ -1,7 +1,8 @@
 package codezap.global.logger;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
+import java.util.HashMap;
+import java.util.Map;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,12 +15,20 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.ContentCachingRequestWrapper;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @Order(2)
 public class RequestResponseLogger extends OncePerRequestFilter {
+
+    private static final int ERROR_CODE = 500;
+    private static final int WARN_CODE = 400;
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -31,29 +40,78 @@ public class RequestResponseLogger extends OncePerRequestFilter {
         filterChain.doFilter(requestWrapper, responseWrapper);
         long duration = System.currentTimeMillis() - startTime;
 
-        log.info("[Request] {} {}, 헤더 값: {} \n", request.getMethod(), request.getRequestURI(),
-                getHeaderAndValue(requestWrapper));
-        log.info("[Response] Status: {}, Duration: {}ms, 헤더 값: {} \n", response.getStatus(), duration,
-                getHeaderAndValue(responseWrapper));
+        logResponse(request, response, requestWrapper, duration, responseWrapper);
 
         responseWrapper.copyBodyToResponse();
     }
 
-    private String getHeaderAndValue(ContentCachingRequestWrapper requestWrapper) {
-        StringBuilder headerAndValue = new StringBuilder();
-        requestWrapper.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-            String headerValue = requestWrapper.getHeader(headerName);
-            headerAndValue.append(headerName).append(" : ").append(headerValue).append("\n");
-        });
-
-        return headerAndValue.toString();
+    private void logResponse(HttpServletRequest request, HttpServletResponse response,
+            ContentCachingRequestWrapper requestWrapper, long duration, ContentCachingResponseWrapper responseWrapper
+    ) {
+        int status = response.getStatus();
+        String requestMessage = String.format(
+                "[Request] %s %s, 헤더 값: %s",
+                request.getMethod(),
+                request.getRequestURI(),
+                getHeaderAsJson(requestWrapper));
+        String responseMessage = String.format(
+                "[Response] status: %d, duration: %dms, headers: %s",
+                status,
+                duration,
+                getHeaderAsJson(responseWrapper));
+        if (isError(status)) {
+            log.error(requestMessage);
+            log.error(requestMessage);
+        }
+        if (isWarn(status)) {
+            log.warn(requestMessage);
+            log.warn(responseMessage);
+        }
+        if (isInfo(status)) {
+            log.info(requestMessage);
+            log.info(responseMessage);
+        }
     }
 
-    private String getHeaderAndValue(ContentCachingResponseWrapper requestWrapper) {
-        return requestWrapper.getHeaderNames().stream().map(headerName -> {
+    private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
+        Map<String, String> headersMap = new HashMap<>();
+        requestWrapper.getHeaderNames().asIterator().forEachRemaining(headerName -> {
             String headerValue = requestWrapper.getHeader(headerName);
-            return headerName + " : " + headerValue;
-        }).collect(Collectors.joining("\n"));
+            headersMap.put(headerName, headerValue);
+        });
+
+        return convertMapToJson(headersMap);
+    }
+
+    private String getHeaderAsJson(ContentCachingResponseWrapper responseWrapper) {
+        Map<String, String> headersMap = new HashMap<>();
+        responseWrapper.getHeaderNames().forEach(headerName -> {
+            String headerValue = responseWrapper.getHeader(headerName);
+            headersMap.put(headerName, headerValue);
+        });
+
+        return convertMapToJson(headersMap);
+    }
+
+    private String convertMapToJson(Map<String, String> map) {
+        try {
+            return objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            log.error("헤더 정보를 JSON으로 변환하는 중 오류 발생", e);
+            return "{}";
+        }
+    }
+
+    private boolean isError(int status) {
+        return status >= ERROR_CODE;
+    }
+
+    private boolean isWarn(int status) {
+        return status >= WARN_CODE && status < ERROR_CODE;
+    }
+
+    private boolean isInfo(int status) {
+        return status < WARN_CODE;
     }
 
     @Override
