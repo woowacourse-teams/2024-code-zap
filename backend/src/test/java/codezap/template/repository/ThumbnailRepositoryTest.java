@@ -18,14 +18,14 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 
-@JpaRepositoryTest
+@RepositoryTest
 public class ThumbnailRepositoryTest {
 
     @Autowired

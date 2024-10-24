@@ -29,7 +29,7 @@ public class TemplateTag extends BaseTimeEntity {
     @AllArgsConstructor
     @Getter
     @EqualsAndHashCode
-    private static class TemplateTagId implements Serializable {
+    protected static class TemplateTagId implements Serializable {
         private Long templateId;
         private Long tagId;
     }

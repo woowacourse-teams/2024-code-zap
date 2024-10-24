@@ -12,7 +12,7 @@ import codezap.global.exception.ErrorCode;
 import codezap.tag.domain.Tag;
 
 @SuppressWarnings("unused")
-public interface TagJpaRepository extends TagRepository, JpaRepository<Tag, Long> {
+public interface TagJpaRepository extends JpaRepository<Tag, Long> {
 
     default Tag fetchById(Long id) {
         return findById(id).orElseThrow(
