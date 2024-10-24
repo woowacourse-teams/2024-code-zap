@@ -1,67 +1,3 @@
-// import { useState, useCallback } from 'react';
-
-// import { useWindowWidth } from '@/hooks';
-// import { BREAKING_POINT } from '@/style/styleConstants';
-
-// import * as S from './Carousel.style';
-
-// interface CarouselItem {
-//   id: string;
-//   content: React.ReactNode;
-// }
-
-// interface Props {
-//   items: CarouselItem[];
-// }
-
-// const Carousel = ({ items }: Props) => {
-//   const windowWidth = useWindowWidth();
-//   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const [isTransitioning, setIsTransitioning] = useState(false);
-
-//   const ITEM_WIDTH = isMobile ? 144 : 300; // CarouselItem 넓이
-//   const ITEM_GAP = 12; // 1rem
-//   const MOVE_DISTANCE = ITEM_WIDTH + 4 + ITEM_GAP; // 4는 마진 추가
-
-//   const translateX = -(currentIndex * MOVE_DISTANCE);
-//   //MAX_TRANSLATE_X 는 현재 하드코딩으로 맞춰 놓음
-//   const MAX_TRANSLATE_X = -((ITEM_WIDTH + 8) * (items.length - 4) + ITEM_GAP * items.length);
-
-//   const moveCarousel = useCallback(
-//     (direction: 'prev' | 'next') => {
-//       if (direction === 'prev' && currentIndex === 0) {
-//         return;
-//       }
-
-//       if (direction === 'next' && currentIndex === items.length - 3) {
-//         return;
-//       }
-
-//       const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
-
-//       setIsTransitioning(true);
-//       setCurrentIndex(newIndex);
-//     },
-//     [currentIndex, items.length],
-//   );
-
-//   return (
-//     <S.CarouselContainer>
-//       {!isMobile && <S.PrevIcon onClick={() => moveCarousel('prev')} />}
-//       <S.CarouselViewport>
-//         <S.CarouselList translateX={Math.max(translateX, MAX_TRANSLATE_X)} transitioning={isTransitioning}>
-//           {items.map((item) => (
-//             <S.CarouselItem key={item.id}>{item.content}</S.CarouselItem>
-//           ))}
-//         </S.CarouselList>
-//       </S.CarouselViewport>
-//       {!isMobile && <S.NextIcon onClick={() => moveCarousel('next')} />}
-//     </S.CarouselContainer>
-//   );
-// };
-
-// export default Carousel;
 import { useState, useCallback, useRef } from 'react';
 
 import { useWindowWidth } from '@/hooks';
@@ -85,10 +21,10 @@ const Carousel = ({ items }: Props) => {
   const viewportRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const ITEM_WIDTH = isMobile ? 144 : 300;
-  const ITEM_GAP = 12;
+  const ITEM_WIDTH = isMobile ? 144 : 300; // 각 아이템의 넓이
+  const ITEM_GAP = 12; //아이템 간의 간격
   const MOVE_DISTANCE = ITEM_WIDTH + ITEM_GAP;
-  const VISIBLE_ITEMS = isMobile ? 2 : 3;
+  const VISIBLE_ITEMS = isMobile ? 2 : 3; // 실제 온전하게 보이는 아이템의 개수
 
   const moveCarousel = useCallback(
     (direction: 'prev' | 'next') => {
