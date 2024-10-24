@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - dev/be
+      - fix/833-zdd
 
 jobs:
   build:
@@ -33,7 +34,7 @@ jobs:
           path: backend/build/libs/*.jar
 
   deploy_develop:
-    if: ${{ github.ref == 'refs/heads/dev/be' }}
+    if: ${{ github.ref == 'refs/heads/dev/be' || github.ref == 'refs/heads/fix/833-zdd' }}
     needs: build
     environment: Develop
     runs-on:
