@@ -1,6 +1,7 @@
 package codezap.member.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,13 +54,13 @@ class MemberControllerTest extends MockMvcTest {
 
     @Test
     @DisplayName("회원 조회 성공")
-    void findMemberSuccess() throws Exception {
+    void findMemberNameSuccess() throws Exception {
         Member member = MemberFixture.memberFixture();
         FindMemberResponse response = FindMemberResponse.from(member);
 
-        when(memberService.findMember(any(), any())).thenReturn(response);
+        when(memberService.findMember(anyLong())).thenReturn(response);
 
-        mvc.perform(get("/members/" + member.getId()))
+        mvc.perform(get("/members/" + member.getId() + "/name"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(member.getName()));

@@ -2,9 +2,8 @@ package codezap.likes.service;
 
 import java.util.List;
 
-import jakarta.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.likes.domain.Likes;
 import codezap.likes.repository.LikesRepository;
@@ -15,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class LikesService {
 
     private final TemplateRepository templateRepository;

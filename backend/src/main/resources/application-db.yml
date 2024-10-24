@@ -22,7 +22,7 @@ spring:
     user: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   jpa:
-    # open-in-view: false
+    open-in-view: false
     hibernate:
       ddl-auto: validate
     properties:

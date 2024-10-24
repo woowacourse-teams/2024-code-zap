@@ -1,6 +1,7 @@
 package codezap.auth.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import codezap.auth.dto.LoginAndCredentialDto;
 import codezap.auth.dto.request.LoginRequest;
@@ -15,11 +16,13 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AuthService {
 
     private final CredentialProvider credentialProvider;
     private final MemberRepository memberRepository;
     private final PasswordEncryptor passwordEncryptor;
+
 
     public LoginAndCredentialDto login(LoginRequest loginRequest) {
         Member member = getVerifiedMember(loginRequest.name(), loginRequest.password());

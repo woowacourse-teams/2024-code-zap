@@ -14,12 +14,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Formula;
 
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -57,6 +56,7 @@ public class Template extends BaseTimeEntity {
     private Long likesCount;
 
     @Column(nullable = false)
+    @ColumnDefault("'PUBLIC'")
     @Enumerated(EnumType.STRING)
     private Visibility visibility;
 
@@ -65,11 +65,7 @@ public class Template extends BaseTimeEntity {
     }
 
     public Template(Member member, String title, String description, Category category, Visibility visibility) {
-        this.member = member;
-        this.title = title;
-        this.description = description;
-        this.category = category;
-        this.visibility = visibility;
+        this(null, member, title, description, category, null, 0L, visibility);
     }
 
     public void updateTemplate(String title, String description, Category category, Visibility visibility) {
@@ -79,9 +75,11 @@ public class Template extends BaseTimeEntity {
         this.visibility = visibility;
     }
 
-    public void validateAuthorization(Member member) {
-        if (!getMember().equals(member)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
-        }
+    public boolean matchMember(Member member) {
+        return this.member.equals(member);
+    }
+
+    public boolean isPrivate() {
+        return visibility == Visibility.PRIVATE;
     }
 }
