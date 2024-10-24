@@ -5,7 +5,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { Layout, LoadingBall } from '@/components';
 
 import RouteGuard from './RouteGuard';
-import { END_POINTS } from './endPoints';
+import { ROUTE_END_POINT } from './endPoints';
 
 const LandingPage = lazy(() => import('@/pages/LandingPage/LandingPage'));
 const TemplatePage = lazy(() => import('@/pages/TemplatePage/TemplatePage'));
@@ -15,6 +15,7 @@ const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage/NotFoundPage'));
 const TemplateExplorePage = lazy(() => import('@/pages/TemplateExplorePage/TemplateExplorePage'));
 const MyTemplatePage = lazy(() => import('@/pages/MyTemplatesPage/MyTemplatePage'));
+const MyLikedTemplatePage = lazy(() => import('@/pages/MyLikedTemplatePage/MyLikedTemplatePage'));
 
 const CustomSuspense = ({ children }: { children: JSX.Element }) => (
   <Suspense
@@ -42,7 +43,7 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        path: END_POINTS.HOME,
+        path: ROUTE_END_POINT.HOME,
         element: (
           <CustomSuspense>
             <LandingPage />
@@ -50,9 +51,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.MEMBERS_TEMPLATES,
+        path: ROUTE_END_POINT.MEMBERS_TEMPLATES,
         element: (
-          <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
+          <RouteGuard isLoginRequired redirectTo={ROUTE_END_POINT.LOGIN}>
             <ErrorBoundary fallback={<NotFoundPage />}>
               <MyTemplatePage />
             </ErrorBoundary>
@@ -60,7 +61,17 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.TEMPLATES_EXPLORE,
+        path: ROUTE_END_POINT.MEMBERS_LIKED_TEMPLATES,
+        element: (
+          <RouteGuard isLoginRequired redirectTo={ROUTE_END_POINT.LOGIN}>
+            <ErrorBoundary fallback={<NotFoundPage />}>
+              <MyLikedTemplatePage />
+            </ErrorBoundary>
+          </RouteGuard>
+        ),
+      },
+      {
+        path: ROUTE_END_POINT.TEMPLATES_EXPLORE,
         element: (
           <CustomSuspense>
             <TemplateExplorePage />
@@ -68,7 +79,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.TEMPLATE,
+        path: ROUTE_END_POINT.TEMPLATE,
         element: (
           <CustomSuspense>
             <TemplatePage />
@@ -76,9 +87,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.TEMPLATES_UPLOAD,
+        path: ROUTE_END_POINT.TEMPLATES_UPLOAD,
         element: (
-          <RouteGuard isLoginRequired redirectTo={END_POINTS.LOGIN}>
+          <RouteGuard isLoginRequired redirectTo={ROUTE_END_POINT.LOGIN}>
             <CustomSuspense>
               <TemplateUploadPage />
             </CustomSuspense>
@@ -86,9 +97,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.SIGNUP,
+        path: ROUTE_END_POINT.SIGNUP,
         element: (
-          <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.HOME}>
+          <RouteGuard isLoginRequired={false} redirectTo={ROUTE_END_POINT.HOME}>
             <CustomSuspense>
               <SignupPage />
             </CustomSuspense>
@@ -96,9 +107,9 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: END_POINTS.LOGIN,
+        path: ROUTE_END_POINT.LOGIN,
         element: (
-          <RouteGuard isLoginRequired={false} redirectTo={END_POINTS.HOME}>
+          <RouteGuard isLoginRequired={false} redirectTo={ROUTE_END_POINT.HOME}>
             <CustomSuspense>
               <LoginPage />
             </CustomSuspense>

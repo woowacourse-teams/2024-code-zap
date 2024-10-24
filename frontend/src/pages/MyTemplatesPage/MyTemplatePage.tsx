@@ -34,6 +34,8 @@ const MyTemplatePage = () => {
     data: { name },
   } = useMemberNameQuery({ memberId });
 
+  const isMine = memberId === currentMemberId;
+
   const {
     templateList,
     isTemplateListFetching,
@@ -71,7 +73,7 @@ const MyTemplatePage = () => {
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
-          {memberId === currentMemberId && (
+          {isMine && (
             <TemplateDeleteSelection
               isEditMode={isEditMode}
               isDeleteModalOpen={isDeleteModalOpen}
