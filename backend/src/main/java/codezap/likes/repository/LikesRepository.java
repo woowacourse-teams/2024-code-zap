@@ -40,6 +40,6 @@ public class LikesRepository {
     }
 
     public Page<Template> findAllByMemberId(Long memberId, Pageable pageable) {
-        return likesQueryDslRepository.findAllByMemberId(memberId, pageable);
+        return likesJpaRepository.findAllByMemberId(memberId, pageable);
     }
 }
