@@ -19,6 +19,7 @@ import { useDebounce, useDropdown, useInput, useQueryParams, useWindowWidth } fr
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
+import { BREAKING_POINT } from '@/style/styleConstants';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
@@ -33,6 +34,9 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
+
+  const windowWidth = useWindowWidth();
+  const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
 
   const { queryParams, updateQueryParams } = useQueryParams();
 
@@ -75,9 +79,15 @@ const TemplateExplorePage = () => {
   return (
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
-        <Heading.Medium color='black'>
-          {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
-        </Heading.Medium>
+        {isMobile ? (
+          <Heading.XSmall color='black'>
+            {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
+          </Heading.XSmall>
+        ) : (
+          <Heading.Medium color='black'>
+            {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
+          </Heading.Medium>
+        )}
         <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
       </Flex>
 

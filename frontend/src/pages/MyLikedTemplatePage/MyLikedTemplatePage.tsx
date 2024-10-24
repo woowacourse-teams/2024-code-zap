@@ -7,6 +7,7 @@ import { ForbiddenPage } from '@/pages';
 import { useLikedTemplateListQuery } from '@/queries/templates/useLikedTemplateListQuery';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { useTrackPageViewed } from '@/service/amplitude';
+import { BREAKING_POINT } from '@/style/styleConstants';
 
 import { TemplateListSectionLoading } from '../MyTemplatesPage/components';
 import * as S from './MyLikedTemplatePage.style';
@@ -16,6 +17,7 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 const MyLikedTemplatePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 내가 좋아하는 템플릿 페이지' });
   const windowWidth = useWindowWidth();
+  const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
 
   const { memberId } = useParams<{ memberId: string }>();
   const routeMemberId = Number(memberId);
@@ -43,7 +45,11 @@ const MyLikedTemplatePage = () => {
   return (
     <>
       <S.PageTitle>
-        <Heading.Medium color='black'>내가 좋아요한 템플릿 목록입니다 :)</Heading.Medium>
+        {isMobile ? (
+          <Heading.XSmall color='black'>내가 좋아요한 템플릿 목록입니다 :)</Heading.XSmall>
+        ) : (
+          <Heading.Medium color='black'>내가 좋아요한 템플릿 목록입니다 :)</Heading.Medium>
+        )}
       </S.PageTitle>
       {templateList.length === 0 ? (
         isPending ? (

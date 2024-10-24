@@ -7,7 +7,7 @@ export const PageTitle = styled.div`
   width: 100%;
   padding: 5rem 1rem;
 
-  white-space: nowrap;
+  white-space: wrap;
 `;
 
 export const TemplateExplorePageContainer = styled.div<{ cols: number }>`
