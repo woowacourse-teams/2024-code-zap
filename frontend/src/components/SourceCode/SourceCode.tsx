@@ -45,7 +45,7 @@ const SourceCode = ({ mode = 'detailView', language, content, handleContentChang
       css={{
         width: '100%',
         fontSize: `${mode === 'detailView' && windowWidth <= 400 ? '0.65rem' : '1rem'}`,
-        minHeight: '160px',
+        minHeight: `${mode === 'thumbnailView' ? '160px' : undefined}`,
         backgroundColor: `rgba(0, 0, 0, 0.1)`,
         '.cm-scroller': {
           padding: '1rem 0',
