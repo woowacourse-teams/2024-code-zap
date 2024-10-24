@@ -131,6 +131,7 @@ const TemplateUploadPage = () => {
               <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
               <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
             ]}
+            optionSliderColor={[undefined, theme.color.light.triadic_primary_800]}
             selectedOption={visibility}
             switchOption={setVisibility}
           />
