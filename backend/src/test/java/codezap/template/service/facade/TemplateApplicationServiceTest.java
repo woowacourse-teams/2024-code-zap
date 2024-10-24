@@ -22,13 +22,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import codezap.category.domain.Category;
-import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
@@ -40,6 +40,7 @@ import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
+import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.repository.TemplateSpecification;
 
 class TemplateApplicationServiceTest extends ServiceTest {
@@ -120,6 +121,21 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     () -> assertThat(actual.isLiked()).isFalse()
             );
         }
+
+        @Test
+        @DisplayName("ID로 템플릿 조회 실패: 다른 사람의 private 템플릿 조회 불가")
+        void findByTemplateIdFailOtherPersonPrivateTemplate() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.getPrivate(member, category));
+
+            // when & then
+            assertThatThrownBy(() -> sut.findById(template.getId()))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 템플릿은 비공개 템플릿입니다.")
+                    .extracting("errorCode").isEqualTo(ErrorCode.FORBIDDEN_ACCESS);
+        }
     }
 
     @Nested
@@ -152,6 +168,40 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
+
+            // when
+            var actual = sut.findById(template.getId(), member);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.id()).isEqualTo(1L),
+                    () -> assertThat(actual.isLiked()).isFalse()
+            );
+        }
+
+        @Test
+        @DisplayName("ID로 템플릿 조회 실패: 다른 사람의 private 템플릿 조회 불가")
+        void findByTemplateIdFailOtherPersonPrivateTemplate() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.getPrivate(member, category));
+
+            // when & then
+            assertThatThrownBy(() -> sut.findById(template.getId(), otherMember))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("해당 템플릿은 비공개 템플릿입니다.")
+                    .extracting("errorCode").isEqualTo(ErrorCode.FORBIDDEN_ACCESS);
+        }
+
+        @Test
+        @DisplayName("ID로 템플릿 조회 성공: 내 private 템플릿 조회 가능")
+        void findByTemplateIdSuccessPrivateTemplate() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template = templateRepository.save(TemplateFixture.getPrivate(member, category));
 
             // when
             var actual = sut.findById(template.getId(), member);
@@ -369,20 +419,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
     }
 
-    private Template savePrivateTemplate(Member member, Category category) {
-        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
-        return privateTemplate;
-    }
-
-    private Template savePublicTemplate(Member member, Category category) {
-        var template = templateRepository.save(TemplateFixture.get(member, category));
-        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-        thumbnailRepository.save(new Thumbnail(template, sourceCode));
-        return template;
-    }
-
     @Nested
     @DisplayName("템플릿 수정")
     class Update {
@@ -503,5 +539,51 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );
         }
+    }
+
+    @Nested
+    @DisplayName("회원이 좋아요한 템플릿 목록 조회")
+    class FindAllByLiked {
+
+        @Test
+        @DisplayName("성공: 로그인 정보와 조회하려는 멤버 ID가 같을 경우")
+        void findAllByLikedSuccessSameMember() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+            var template1 = savePublicTemplate(member, category);
+            var template2 = savePublicTemplate(member, category);
+            var template3 = savePublicTemplate(member, category);
+
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template2, member));
+            likesRepository.save(new Likes(template3, otherMember));
+
+            // when
+            FindAllTemplatesResponse actual = sut.findAllByLiked(member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.templates()).extracting("id")
+                            .containsExactlyInAnyOrder(template1.getId(), template2.getId()),
+                    () -> assertThat(actual.templates()).extracting("isLiked")
+                            .containsExactlyInAnyOrder(true, true)
+            );
+        }
+    }
+
+    private Template savePrivateTemplate(Member member, Category category) {
+        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
+        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
+        return privateTemplate;
+    }
+
+    private Template savePublicTemplate(Member member, Category category) {
+        var template = templateRepository.save(TemplateFixture.get(member, category));
+        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+        thumbnailRepository.save(new Thumbnail(template, sourceCode));
+        return template;
     }
 }

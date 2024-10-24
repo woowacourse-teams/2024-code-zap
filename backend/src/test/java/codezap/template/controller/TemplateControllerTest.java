@@ -1,6 +1,7 @@
 package codezap.template.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,6 +29,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.MockMvcTest;
+import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
@@ -100,7 +102,7 @@ class TemplateControllerTest extends MockMvcTest {
                     Arguments.of(createTemplateRequestWithNullTags(), "태그 목록이 null 입니다."),
                     Arguments.of(createRequestWithLongTag(), "태그 명은 최대 30자까지 입력 가능합니다."),
                     Arguments.of(createRequestWithNullVisibility(), "템플릿 공개 여부가 null 입니다.")
-                    );
+            );
         }
 
         private static CreateTemplateRequest createRequestWithInvalidTitle(String invalidTitle) {
@@ -245,8 +247,8 @@ class TemplateControllerTest extends MockMvcTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
         }
-
     }
+
     @Nested
     class FindAllTemplatesSuccess {
 
@@ -256,7 +258,7 @@ class TemplateControllerTest extends MockMvcTest {
             // given
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
 
-            when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
+            when(templateApplicationService.findAllBy(any(), any(), any(), any(), any(), any())).thenReturn(
                     new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
 
             // when & then
@@ -275,6 +277,7 @@ class TemplateControllerTest extends MockMvcTest {
             // given
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
 
+            when(credentialManager.hasCredential(any())).thenReturn(false);
             when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
                     new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
@@ -314,7 +317,7 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(new Tag(1L, "tag1")),
                     true);
 
-            when(templateApplicationService.findById(1L)).thenReturn(findTemplateResponse);
+            when(templateApplicationService.findById(anyLong(), any())).thenReturn(findTemplateResponse);
 
             // when & then
             mvc.perform(get("/templates/1")
@@ -334,6 +337,7 @@ class TemplateControllerTest extends MockMvcTest {
                     List.of(new Tag(1L, "tag1")),
                     true);
 
+            when(credentialManager.hasCredential(any())).thenReturn(false);
             when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findById(1L)).thenReturn(findTemplateResponse);
 
@@ -389,16 +393,22 @@ class TemplateControllerTest extends MockMvcTest {
         private static Stream<Arguments> invalidUpdateTemplateData() {
             return Stream.of(
                     Arguments.of(createUpdateRequestWithInvalidTitle(""), "템플릿명이 비어 있거나 공백입니다."),
-                    Arguments.of(createUpdateRequestWithInvalidTitle("a".repeat(MAX_LENGTH + 1)), "템플릿명은 최대 255자까지 입력 가능합니다."),
+                    Arguments.of(createUpdateRequestWithInvalidTitle("a".repeat(MAX_LENGTH + 1)),
+                            "템플릿명은 최대 255자까지 입력 가능합니다."),
                     Arguments.of(createUpdateRequestWithInvalidDescription(null), "템플릿 설명이 null 입니다."),
-                    Arguments.of(createUpdateRequestWithInvalidDescription("a".repeat(MAX_CONTENT_LENGTH + 1)), "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."),
+                    Arguments.of(createUpdateRequestWithInvalidDescription("a".repeat(MAX_CONTENT_LENGTH + 1)),
+                            "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다."),
                     Arguments.of(createUpdateRequestWithInvalidFileName(""), "파일명이 비어 있거나 공백입니다."),
-                    Arguments.of(createUpdateRequestWithInvalidFileName("a".repeat(MAX_LENGTH + 1)), "파일명은 최대 255자까지 입력 가능합니다."),
+                    Arguments.of(createUpdateRequestWithInvalidFileName("a".repeat(MAX_LENGTH + 1)),
+                            "파일명은 최대 255자까지 입력 가능합니다."),
                     Arguments.of(createUpdateRequestWithInvalidSourceCode(""), "소스 코드가 비어 있거나 공백입니다."),
-                    Arguments.of(createUpdateRequestWithInvalidSourceCode("a".repeat(MAX_CONTENT_LENGTH + 1)), "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
-                    Arguments.of(createUpdateRequestWithInvalidSourceCode("ㄱ".repeat(MAX_CONTENT_LENGTH / 3 + 1)), "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
+                    Arguments.of(createUpdateRequestWithInvalidSourceCode("a".repeat(MAX_CONTENT_LENGTH + 1)),
+                            "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
+                    Arguments.of(createUpdateRequestWithInvalidSourceCode("ㄱ".repeat(MAX_CONTENT_LENGTH / 3 + 1)),
+                            "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
                     Arguments.of(createUpdateRequestWithNullCreateSourceCodes(), "추가하는 소스 코드 목록이 null 입니다."),
-                    Arguments.of(createUpdateRequestWithNullUpdateSourceCodes(), "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록이 null 입니다."),
+                    Arguments.of(createUpdateRequestWithNullUpdateSourceCodes(),
+                            "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록이 null 입니다."),
                     Arguments.of(createUpdateRequestWithNullDeleteSourceCodeIds(), "삭제하는 소스 코드 ID 목록이 null 입니다."),
                     Arguments.of(createUpdateRequestWithNullCategoryId(), "카테고리 ID가 null 입니다."),
                     Arguments.of(createUpdateRequestWithNullTags(), "태그 목록이 null 입니다.")
@@ -589,6 +599,38 @@ class TemplateControllerTest extends MockMvcTest {
                     .andExpect(status().isNoContent());
 
             verify(templateApplicationService, times(1)).deleteAllByMemberAndTemplateIds(any(), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("좋아요한 템플릿 조회 테스트")
+    class FindTemplateByLiked {
+
+        @Test
+        @DisplayName("성공: 로그인한 사용자가 있는 경우")
+        void findTemplateByLiked() throws Exception {
+            Member member = MemberFixture.getFirstMember();
+            FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse(member);
+
+            when(templateApplicationService.findAllByLiked(any(), any()))
+                    .thenReturn(new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+
+            mvc.perform(get("/templates/like")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.templates.size()").value(1))
+                    .andExpect(jsonPath("$.totalPages").value(1))
+                    .andExpect(jsonPath("$.totalElements").value(1));
+        }
+
+        private FindAllTemplateItemResponse getFindAllTemplateItemResponse(Member member) {
+            Template template = TemplateFixture.get(member, CategoryFixture.getFirstCategory());
+            return FindAllTemplateItemResponse.of(
+                    template,
+                    List.of(new Tag(1L, "tag1")),
+                    SourceCodeFixture.get(template, 1),
+                    true
+            );
         }
     }
 }

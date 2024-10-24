@@ -11,9 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
+import codezap.member.service.MemberService;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
@@ -42,6 +45,7 @@ public class TemplateApplicationService {
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
+    private final MemberService memberService;
 
     @Transactional
     public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
@@ -58,18 +62,29 @@ public class TemplateApplicationService {
     }
 
     public FindTemplateResponse findById(Long id) {
-        Template template = templateService.getById(id);
-        List<Tag> tags = tagService.findAllByTemplate(template);
-        List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
-        return FindTemplateResponse.of(template, sourceCodes, tags, false);
+        return makeTemplateResponse(id, template -> false, template -> false);
     }
 
     public FindTemplateResponse findById(Long id, Member loginMember) {
+        return makeTemplateResponse(
+                id,
+                template -> template.matchMember(loginMember),
+                template -> likesService.isLiked(loginMember, template)
+        );
+    }
+
+    private FindTemplateResponse makeTemplateResponse(
+            Long id,
+            TemplateOwnershipChecker templateOwnershipChecker,
+            LikedChecker likedChecker
+    ) {
         Template template = templateService.getById(id);
+        if (!templateOwnershipChecker.isOwner(template) && template.isPrivate()) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
+        }
         List<Tag> tags = tagService.findAllByTemplate(template);
         List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
-        boolean isLiked = likesService.isLiked(loginMember, template);
-        return FindTemplateResponse.of(template, sourceCodes, tags, isLiked);
+        return FindTemplateResponse.of(template, sourceCodes, tags, likedChecker.isLiked(template));
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -82,7 +97,7 @@ public class TemplateApplicationService {
         Page<Template> templates = templateService.findAllBy(
                 memberId, keyword, categoryId, tagIds, Visibility.PUBLIC, pageable
         );
-        return makeResponse(templates, (template) -> false);
+        return makeAllTemplatesResponse(templates, (template) -> false);
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -96,7 +111,7 @@ public class TemplateApplicationService {
         Page<Template> templates = templateService.findAllBy(
                 memberId, keyword, categoryId, tagIds, getVisibilityLevel(memberId, loginMember), pageable
         );
-        return makeResponse(templates, (template -> likesService.isLiked(loginMember, template)));
+        return makeAllTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
     }
 
     @Nullable
@@ -107,7 +122,12 @@ public class TemplateApplicationService {
         return null;
     }
 
-    private FindAllTemplatesResponse makeResponse(Page<Template> page, LikedChecker likedChecker) {
+    public FindAllTemplatesResponse findAllByLiked(Long memberId, Pageable pageable) {
+        Page<Template> likeTemplate = likesService.findAllByMemberId(memberId, pageable);
+        return makeAllTemplatesResponse(likeTemplate, (template -> true));
+    }
+
+    private FindAllTemplatesResponse makeAllTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {
         List<Template> templates = page.getContent();
         List<FindAllTemplateItemResponse> findAllTemplateByResponse =
                 getFindAllTemplateItemResponses(templates, likedChecker);
