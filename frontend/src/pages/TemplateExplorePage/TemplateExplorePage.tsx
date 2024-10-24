@@ -10,7 +10,7 @@ import {
   Heading,
   Input,
   LoadingBall,
-  NoSearchResults,
+  NoResults,
   PagingButtons,
   TemporaryError,
   TemplateCard,
@@ -163,7 +163,7 @@ const TemplateList = ({
         isPending ? (
           <LoadingBall />
         ) : (
-          <NoSearchResults />
+          <NoResults>검색 결과가 없습니다.</NoResults>
         )
       ) : (
         <S.TemplateListSectionWrapper>
