@@ -39,8 +39,15 @@ const SourceCode = ({ mode = 'detailView', language, content, handleContentChang
       height={mode === 'thumbnailView' ? '10rem' : '100%'}
       minHeight={mode === 'edit' ? '10rem' : undefined}
       maxHeight={mode === 'edit' ? '40rem' : undefined}
-      style={{ width: '100%', fontSize: '1rem' }}
       css={{
+        width: '100%',
+        fontSize: '1rem',
+        '@media (max-width: 430px)': {
+          fontSize: '0.65rem',
+          '.cm-scroller': {
+            padding: '0px !important',
+          },
+        },
         minHeight: '160px',
         backgroundColor: `rgba(0, 0, 0, 0.1)`,
         '.cm-scroller': {
