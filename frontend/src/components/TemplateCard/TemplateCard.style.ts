@@ -85,3 +85,13 @@ export const NoWrapTextWrapper = styled.div`
 export const BlankDescription = styled.div`
   height: 1rem;
 `;
+
+export const TimeContainer = styled.div`
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+`;

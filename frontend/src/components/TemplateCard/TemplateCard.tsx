@@ -47,12 +47,12 @@ const TemplateCard = ({ template }: Props) => {
               <AuthorInfo memberName={member.name} />
             </Link>
 
-            <Flex align='center' gap='0.25rem'>
+            <S.TimeContainer>
               <ClockIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.secondary_600} />
               <S.NoWrapTextWrapper>
                 <Text.Small color={theme.color.light.secondary_600}>{formatRelativeTime(modifiedAt)}</Text.Small>
               </S.NoWrapTextWrapper>
-            </Flex>
+            </S.TimeContainer>
           </Flex>
           <Flex align='center' justify='flex-end' flex='0 0 auto'>
             <LikeCounter likesCount={template.likesCount} isLiked={template.isLiked} />

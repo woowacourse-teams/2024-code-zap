@@ -29,4 +29,12 @@ export const EllipsisTextWrapper = styled.span`
 
   text-overflow: ellipsis;
   white-space: nowrap;
+
+  @media (max-width: 1376px) {
+    max-width: 15.625rem;
+  }
+
+  @media (max-width: 768px) {
+    max-width: 8.125rem;
+  }
 `;
