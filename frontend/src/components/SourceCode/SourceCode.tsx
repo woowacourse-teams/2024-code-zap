@@ -41,6 +41,8 @@ const SourceCode = ({ mode = 'detailView', language, content, handleContentChang
       maxHeight={mode === 'edit' ? '40rem' : undefined}
       style={{ width: '100%', fontSize: '1rem' }}
       css={{
+        minHeight: '160px',
+        backgroundColor: `rgba(0, 0, 0, 0.1)`,
         '.cm-scroller': {
           padding: '1rem 0',
           overflowY: 'auto',
