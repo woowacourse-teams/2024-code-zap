@@ -1,7 +1,6 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Link } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { ArrowUpIcon, SearchIcon } from '@/assets/images';
@@ -180,9 +179,7 @@ const TemplateList = ({
           {!isLoading && (
             <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
               {templateList.map((template) => (
-                <Link to={`/templates/${template.id}`} key={template.id}>
-                  <TemplateCard template={template} />
-                </Link>
+                <TemplateCard key={template.id} template={template} />
               ))}
             </S.TemplateExplorePageContainer>
           )}
