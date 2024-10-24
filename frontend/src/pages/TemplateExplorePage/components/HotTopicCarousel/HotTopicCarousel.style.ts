@@ -33,14 +33,14 @@ export const Topic = styled.button<{ background: string; border: string; isSelec
     bottom: 0;
     left: 0;
 
-    background-color: rgba(0, 0, 0, 0);
+    background-color: rgba(255, 255, 255, 0);
     border-radius: 12px;
 
     transition: background-color 0.3s;
   }
 
   &:hover::after {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
   }
 `;
 
