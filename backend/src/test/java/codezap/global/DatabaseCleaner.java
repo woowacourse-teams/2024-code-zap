@@ -33,7 +33,7 @@ public class DatabaseCleaner extends AbstractTestExecutionListener {
 
     private void createIfNotExistFullTextIndex(JdbcTemplate jdbcTemplate) {
         if (!indexExists(jdbcTemplate, "template", "idx_template_fulltext")) {
-            jdbcTemplate.execute("ALTER TABLE template ADD FULLTEXT INDEX idx_template_fulltext (title, description)");
+            jdbcTemplate.execute("ALTER TABLE template ADD FULLTEXT INDEX idx_template_fulltext (title, description) WITH PARSER ngram");
         }
         if (!indexExists(jdbcTemplate, "source_code", "idx_source_code_fulltext")) {
             jdbcTemplate.execute("ALTER TABLE source_code ADD FULLTEXT INDEX idx_source_code_fulltext (content, filename)");
