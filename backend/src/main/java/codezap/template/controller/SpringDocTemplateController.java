@@ -111,6 +111,9 @@ public interface SpringDocTemplateController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
             @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "다른 사람의 private 템플릿인 경우", exampleMessage = "해당 템플릿은 비공개 템플릿입니다."),
+    })
     ResponseEntity<FindTemplateResponse> findTemplateById(Member member, Long id);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
