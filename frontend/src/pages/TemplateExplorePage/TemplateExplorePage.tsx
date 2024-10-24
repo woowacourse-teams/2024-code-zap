@@ -1,17 +1,16 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import { Link } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
-import { ArrowUpIcon, SearchIcon } from '@/assets/images';
+import { SearchIcon } from '@/assets/images';
 import {
   Dropdown,
   Flex,
   Heading,
   Input,
   LoadingBall,
-  NoSearchResults,
+  NoResults,
   PagingButtons,
   TemporaryError,
   TemplateCard,
@@ -20,6 +19,7 @@ import { useDebounce, useDropdown, useInput, useQueryParams, useWindowWidth } fr
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
+import { BREAKING_POINT } from '@/style/styleConstants';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
@@ -34,6 +34,9 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
+
+  const windowWidth = useWindowWidth();
+  const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
 
   const { queryParams, updateQueryParams } = useQueryParams();
 
@@ -76,9 +79,15 @@ const TemplateExplorePage = () => {
   return (
     <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
-        <Heading.Medium color='black'>
-          {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
-        </Heading.Medium>
+        {isMobile ? (
+          <Heading.XSmall color='black'>
+            {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
+          </Heading.XSmall>
+        ) : (
+          <Heading.Medium color='black'>
+            {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
+          </Heading.Medium>
+        )}
         <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
       </Flex>
 
@@ -118,14 +127,6 @@ const TemplateExplorePage = () => {
           </ErrorBoundary>
         )}
       </QueryErrorResetBoundary>
-
-      <S.ScrollTopButton
-        onClick={() => {
-          scroll.top('smooth');
-        }}
-      >
-        <ArrowUpIcon aria-label='맨 위로' />
-      </S.ScrollTopButton>
     </Flex>
   );
 };
@@ -172,7 +173,7 @@ const TemplateList = ({
         isPending ? (
           <LoadingBall />
         ) : (
-          <NoSearchResults />
+          <NoResults>검색 결과가 없습니다.</NoResults>
         )
       ) : (
         <S.TemplateListSectionWrapper>
@@ -180,9 +181,7 @@ const TemplateList = ({
           {!isLoading && (
             <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
               {templateList.map((template) => (
-                <Link to={`/templates/${template.id}`} key={template.id}>
-                  <TemplateCard template={template} />
-                </Link>
+                <TemplateCard key={template.id} template={template} />
               ))}
             </S.TemplateExplorePageContainer>
           )}

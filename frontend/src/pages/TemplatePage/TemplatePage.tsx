@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
-import { ClockIcon, PersonIcon, PrivateIcon } from '@/assets/images';
+import { ClockIcon, PrivateIcon } from '@/assets/images';
 import {
   Button,
   Flex,
@@ -15,6 +15,7 @@ import {
   NonmemberAlerter,
   LoadingFallback,
 } from '@/components';
+import AuthorInfo from '@/components/AuthorInfo/AuthorInfo';
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { TemplateEditPage } from '@/pages';
@@ -29,7 +30,6 @@ import { useTemplate, useLike } from './hooks';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   useTrackPageViewed({ eventName: '[Viewed] 템플릿 조회 페이지', eventProps: { templateId: id } });
@@ -71,12 +71,6 @@ const TemplatePage = () => {
 
     toggleLike();
     trackLikeButton({ isLiked, likesCount, templateId: id as string });
-  };
-
-  const handleAuthorClick = () => {
-    if (template?.member?.id) {
-      navigate(END_POINTS.memberTemplates(template.member.id));
-    }
   };
 
   if (!template) {
@@ -138,20 +132,10 @@ const TemplatePage = () => {
                 </Flex>
 
                 <Flex gap='0.5rem' align='center' justify='space-between'>
-                  <S.AuthorInfoContainer onClick={handleAuthorClick} style={{ cursor: 'pointer' }}>
-                    <PersonIcon width={ICON_SIZE.X_SMALL} color={theme.color.light.primary_500} />
+                  <Link to={END_POINTS.memberTemplates(template.member.id)}>
+                    <AuthorInfo memberName={template.member.name} />
+                  </Link>
 
-                    <div
-                      style={{
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                        flex: 1,
-                      }}
-                    >
-                      <Text.Small color={theme.color.light.primary_500}>{template.member.name}</Text.Small>
-                    </div>
-                  </S.AuthorInfoContainer>
                   <Flex align='center' gap='0.125rem'>
                     <ClockIcon width={ICON_SIZE.SMALL} color={theme.color.light.secondary_600} />
                     <Text.Small color={theme.color.light.secondary_600}>

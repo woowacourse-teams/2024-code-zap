@@ -4,6 +4,8 @@ import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import ReactCodeMirror, { EditorView, ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { useRef } from 'react';
 
+import { useWindowWidth } from '@/hooks';
+
 import * as S from './SourceCode.style';
 
 export type SourceCodeMode = 'edit' | 'detailView' | 'thumbnailView';
@@ -17,6 +19,7 @@ interface Props {
 
 const SourceCode = ({ mode = 'detailView', language, content, handleContentChange }: Props) => {
   const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
+  const windowWidth = useWindowWidth();
 
   const focusCodeMirror = () => {
     if (!codeMirrorRef.current) {
@@ -39,8 +42,11 @@ const SourceCode = ({ mode = 'detailView', language, content, handleContentChang
       height={mode === 'thumbnailView' ? '10rem' : '100%'}
       minHeight={mode === 'edit' ? '10rem' : undefined}
       maxHeight={mode === 'edit' ? '40rem' : undefined}
-      style={{ width: '100%', fontSize: '1rem' }}
       css={{
+        width: '100%',
+        fontSize: `${mode === 'detailView' && windowWidth <= 400 ? '0.65rem' : '1rem'}`,
+        minHeight: '160px',
+        backgroundColor: `rgba(0, 0, 0, 0.1)`,
         '.cm-scroller': {
           padding: '1rem 0',
           overflowY: 'auto',

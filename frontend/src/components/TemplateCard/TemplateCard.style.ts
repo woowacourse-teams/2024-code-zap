@@ -3,8 +3,6 @@ import styled from '@emotion/styled';
 import { theme } from '@/style/theme';
 
 export const TemplateCardContainer = styled.div`
-  cursor: pointer;
-
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -88,12 +86,12 @@ export const BlankDescription = styled.div`
   height: 1rem;
 `;
 
-export const AuthorInfoContainer = styled.div`
-  cursor: pointer;
-
+export const TimeContainer = styled.div`
   display: flex;
   gap: 0.25rem;
   align-items: center;
 
-  min-width: 0;
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;

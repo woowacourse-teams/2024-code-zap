@@ -1,6 +1,14 @@
 import styled from '@emotion/styled';
 
-import { Input } from '@/components';
+export const PageTitle = styled.div`
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  padding: 5rem 1rem;
+
+  white-space: wrap;
+`;
 
 export const TemplateExplorePageContainer = styled.div<{ cols: number }>`
   display: grid;
@@ -21,10 +29,6 @@ export const MainContainer = styled.main`
   @media (max-width: 768px) {
     gap: 0;
   }
-`;
-
-export const SearchInput = styled(Input)`
-  box-shadow: inset 1px 2px 8px #00000030;
 `;
 
 export const TemplateListSectionWrapper = styled.div`

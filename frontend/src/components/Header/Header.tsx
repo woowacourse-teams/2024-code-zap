@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/authentication/useAuth';
 import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
-import { END_POINTS } from '@/routes';
+import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { trackClickNewTemplate } from '@/service/amplitude';
 
 import { theme } from '../../style/theme';
@@ -52,7 +52,7 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
       return;
     }
 
-    navigate(END_POINTS.TEMPLATES_UPLOAD);
+    navigate(ROUTE_END_POINT.TEMPLATES_UPLOAD);
   };
 
   return (
@@ -62,9 +62,13 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
         <S.HeaderMenu menuOpen={isMenuOpen}>
           <S.NavContainer>
             {!isChecking && isLogin && memberId && (
-              <NavOption route={END_POINTS.memberTemplates(memberId)} name='내 템플릿' />
+              <>
+                <NavOption route={ROUTE_END_POINT.memberTemplates(memberId)} name='내 템플릿' />
+                <NavOption route={ROUTE_END_POINT.memberLikedTemplates(memberId)} name={`좋아요한 템플릿`} />
+              </>
             )}
-            <NavOption route={END_POINTS.TEMPLATES_EXPLORE} name='구경가기' />
+            <NavOption route={ROUTE_END_POINT.TEMPLATES_EXPLORE} name='구경가기' />
+
             <ContactUs />
           </S.NavContainer>
           <S.NavContainer>
@@ -106,7 +110,7 @@ const Logo = () => {
   const isLandingPage = location.pathname === '/';
 
   return (
-    <Link to={END_POINTS.HOME}>
+    <Link to={ROUTE_END_POINT.HOME}>
       <Flex align='center' gap='0.5rem'>
         <CodeZapLogo aria-label='로고 버튼' />
         <Heading.XSmall color={isLandingPage ? theme.color.light.primary_500 : theme.color.light.secondary_800}>
@@ -150,7 +154,7 @@ const LogoutButton = () => {
 };
 
 const LoginButton = () => (
-  <Link to={END_POINTS.LOGIN}>
+  <Link to={ROUTE_END_POINT.LOGIN}>
     <Button variant='text' size='medium' weight='bold' hoverStyle='none'>
       로그인
     </Button>
