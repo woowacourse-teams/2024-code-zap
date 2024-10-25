@@ -1,22 +1,29 @@
+import { captureException } from '@sentry/react';
+
+import { ApiError } from '@/api/Error/ApiError';
 import { TigerLogo } from '@/assets/images';
-import { Button, Flex, Heading, Text } from '@/components';
+import { Button, Flex, Text } from '@/components';
 import { useCustomNavigate } from '@/hooks';
+import { useTrackPageViewed } from '@/service/amplitude';
 import { theme } from '@/style/theme';
 
 interface props {
   resetError?: () => void;
+  error?: ApiError;
 }
 
-const ForbiddenPage = ({ resetError }: props) => {
+const ForbiddenPage = ({ resetError, error }: props) => {
   const navigate = useCustomNavigate();
+
+  captureException(error);
+  useTrackPageViewed({ eventName: '[Viewed] 403 Forbidden 페이지' });
 
   return (
     <Flex direction='column' gap='3rem' margin='2rem 0 0 0' justify='center' align='center'>
       <TigerLogo aria-label='호랑이 로고' />
-      <Heading.XLarge color={theme.color.light.primary_500}>403 ERROR</Heading.XLarge>
       <Flex direction='column' gap='2rem' align='center'>
         <Text.XLarge color={theme.color.light.primary_500} weight='bold'>
-          죄송합니다. 해당 페이지에 접근할 수 있는 권한이 없습니다.
+          해당 페이지에 접근할 수 있는 권한이 없습니다.
         </Text.XLarge>
         <Flex direction='column' justify='center' align='center' gap='1rem'>
           <Text.Medium color={theme.color.light.secondary_600} weight='bold'>
