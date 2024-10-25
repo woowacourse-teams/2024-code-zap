@@ -1,7 +1,7 @@
 import { useTheme } from '@emotion/react';
 import { Link, useParams } from 'react-router-dom';
 
-import { ClockIcon, PrivateIcon } from '@/assets/images';
+import { ClockIcon, PrivateIcon, ShareIcon } from '@/assets/images';
 import {
   Button,
   Flex,
@@ -18,10 +18,11 @@ import {
 import AuthorInfo from '@/components/AuthorInfo/AuthorInfo';
 import { useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
+import { useToast } from '@/hooks/useToast';
 import { TemplateEditPage } from '@/pages';
 import { END_POINTS } from '@/routes';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { trackLikeButton } from '@/service/amplitude/track';
+import { trackClickTemplateShare, trackLikeButton } from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { formatRelativeTime } from '@/utils';
@@ -33,6 +34,9 @@ const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
 
   useTrackPageViewed({ eventName: '[Viewed] 템플릿 조회 페이지', eventProps: { templateId: id } });
+
+  const { infoAlert } = useToast();
+
   const theme = useTheme();
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
 
@@ -73,6 +77,14 @@ const TemplatePage = () => {
     trackLikeButton({ isLiked, likesCount, templateId: id as string });
   };
 
+  const handleShareButtonClick = () => {
+    const currentUrl = window.location.href;
+
+    navigator.clipboard.writeText(currentUrl);
+    infoAlert('붙여넣기로 링크를 공유해보세요');
+    trackClickTemplateShare();
+  };
+
   if (!template) {
     return <LoadingFallback />;
   }
@@ -96,25 +108,24 @@ const TemplatePage = () => {
               }}
             >
               <Flex direction='column' gap='0.75rem' width='100%'>
-                <Flex justify='space-between'>
+                <Flex justify='space-between' align='center'>
                   <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
-                  {template.member.name === name && (
-                    <Flex width='5.5rem' justify='space-around'>
-                      <S.EditButton
-                        size='small'
-                        variant='text'
-                        onClick={() => {
-                          handleEditButtonClick();
-                        }}
-                        style={{ width: '2rem' }}
-                      >
-                        <Text.Small color={theme.color.light.secondary_700}>편집</Text.Small>
-                      </S.EditButton>
-                      <S.DeleteButton size='small' variant='text' onClick={toggleModal} style={{ width: '2rem' }}>
-                        <Text.Small color={theme.color.light.secondary_700}>삭제</Text.Small>
-                      </S.DeleteButton>
-                    </Flex>
-                  )}
+                  <Flex gap='0.5rem' justify='flex-end' align='flex-end'>
+                    {template.member.name === name && (
+                      <>
+                        <S.EditButton size='small' variant='text' onClick={handleEditButtonClick}>
+                          <Text.Medium color={theme.color.light.secondary_700}>편집</Text.Medium>
+                        </S.EditButton>
+                        <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
+                          <Text.Medium color={theme.color.light.secondary_700}>삭제</Text.Medium>
+                        </S.DeleteButton>
+                      </>
+                    )}
+                    <S.ShareButton size='small' variant='text' onClick={handleShareButtonClick}>
+                      <Text.Medium color={theme.color.light.secondary_700}>공유</Text.Medium>
+                      <ShareIcon width={ICON_SIZE.SMALL} color={theme.color.light.secondary_700} />
+                    </S.ShareButton>
+                  </Flex>
                 </Flex>
 
                 <Flex align='center' justify='space-between' gap='1rem'>

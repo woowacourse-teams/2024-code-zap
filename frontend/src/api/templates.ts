@@ -123,16 +123,11 @@ export const getTemplateExplore = async ({
   return data;
 };
 
-export const getTemplate = async ({ id }: TemplateRequest) => {
-  const response = await customFetch<Template>({
-    url: `${TEMPLATE_API_URL}/${id}`,
-  });
+export const getTemplate = async ({ id }: TemplateRequest): Promise<Template> => {
+  const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}/${id}`);
+  const data = response.json();
 
-  if ('sourceCodes' in response) {
-    return response;
-  }
-
-  throw new Error(response.detail);
+  return data;
 };
 
 export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<Response> =>

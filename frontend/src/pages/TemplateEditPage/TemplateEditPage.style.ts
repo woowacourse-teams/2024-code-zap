@@ -34,10 +34,16 @@ export const CancelButton = styled(Button)`
 `;
 
 export const ButtonGroup = styled.div`
+  position: sticky;
+  bottom: 0;
+
   display: flex;
-  justify-content: space-between;
+  gap: 0.5rem;
+  justify-content: flex-end;
+
   width: 100%;
   padding-top: 0.5rem;
+  padding-bottom: 1rem;
 `;
 
 export const UnderlineInputWrapper = styled.div`

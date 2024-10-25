@@ -44,6 +44,10 @@ export const trackClickCopyClipBoard = () => {
   amplitudeService.customTrack('[Click] 클립보드 복사 버튼');
 };
 
+export const trackClickTemplateShare = () => {
+  amplitudeService.customTrack('[Click] 공유 버튼');
+};
+
 interface PagingButtonData {
   page: number;
   totalPages: number;

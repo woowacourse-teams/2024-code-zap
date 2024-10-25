@@ -7,4 +7,6 @@ export const useTemplateQuery = (id: number): UseQueryResult<Template, Error> =>
   useQuery<Template, Error>({
     queryKey: [QUERY_KEY.TEMPLATE, id],
     queryFn: () => getTemplate({ id }),
+    throwOnError: true,
+    retry: false,
   });
