@@ -3,9 +3,11 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import { ApiError } from '@/api/Error/ApiError';
+import { HTTP_STATUS } from '@/api/Error/statusCode';
 import { Footer, Header, ScrollTopButton } from '@/components';
 import { useHeaderHeight } from '@/hooks/useHeaderHeight';
-import { NotFoundPage } from '@/pages';
+import { ForbiddenPage, NotFoundPage } from '@/pages';
 
 import * as S from './Layout.style';
 
@@ -27,7 +29,17 @@ const Layout = () => {
         <QueryErrorResetBoundary>
           {({ reset }) => (
             <ErrorBoundary
-              fallback={(fallbackProps) => <NotFoundPage {...fallbackProps} />}
+              fallback={(fallbackProps) => {
+                const error = fallbackProps.error;
+
+                if (error instanceof ApiError) {
+                  if (error.statusCode === HTTP_STATUS.FORBIDDEN) {
+                    return <ForbiddenPage resetError={fallbackProps.resetError} error={error} />;
+                  }
+                }
+
+                return <NotFoundPage {...fallbackProps} />;
+              }}
               onReset={reset}
               key={location.pathname}
             >
