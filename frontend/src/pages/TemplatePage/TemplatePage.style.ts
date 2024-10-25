@@ -46,6 +46,10 @@ export const DeleteButton = styled(Button)`
   padding: 0;
 `;
 
+export const ShareButton = styled(Button)`
+  padding: 0;
+`;
+
 export const PrivateWrapper = styled.div`
   flex-shrink: 0;
 `;
