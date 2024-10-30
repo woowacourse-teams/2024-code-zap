@@ -2,6 +2,10 @@ import type { Preview } from '@storybook/react';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import GlobalStyles from '../src/style/GlobalStyles';
+import { AuthProvider, ToastProvider } from '../src/contexts';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const preview: Preview = {
   parameters: {
@@ -15,19 +19,16 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <>
-        <GlobalStyles />
-        <MemoryRouter>
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ border: '2px solid black', borderRadius: '8px', padding: '2rem', background: 'white' }}>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <ToastProvider>
+            <GlobalStyles />
+            <MemoryRouter>
               <Story />
-            </div>
-            <div style={{ border: '2px solid black', borderRadius: '8px', padding: '2rem', background: 'black' }}>
-              <Story />
-            </div>
-          </div>
-        </MemoryRouter>
-      </>
+            </MemoryRouter>
+          </ToastProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     ),
   ],
 };
