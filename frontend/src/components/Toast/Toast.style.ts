@@ -1,6 +1,8 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { theme } from '@/style/theme';
+
 const slideIn = keyframes`
   from {
     transform: translateY(20px) translateX(-50%);
@@ -37,7 +39,7 @@ export const BaseToast = styled.div<{ visible: boolean; type: 'success' | 'fail'
   font-size: 16px;
   color: white;
 
-  background-color: ${({ theme, type }) => {
+  background-color: ${({ type }) => {
     switch (type) {
       case 'success':
         return theme.color.light.complementary_300;
