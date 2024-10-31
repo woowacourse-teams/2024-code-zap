@@ -157,6 +157,8 @@ JWT와 리프레시 토큰으로 로그인 기능을 구현해야 하는 순간,
 
 <br>
 
+## 서버 구성도
+![image](https://github.com/user-attachments/assets/f1c980e5-915b-49ee-93aa-a8c11db33169)
 
 
 ## 위키 목록
