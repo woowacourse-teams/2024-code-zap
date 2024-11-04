@@ -15,7 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.DynamicUpdate;
 
 import codezap.category.domain.Category;
 import codezap.global.auditing.BaseTimeEntity;
@@ -27,6 +27,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
@@ -52,7 +53,8 @@ public class Template extends BaseTimeEntity {
     @OneToMany(mappedBy = "template")
     private List<SourceCode> sourceCodes = new ArrayList<>();
 
-    @Formula("(select count(*) from likes where likes.template_id = id)")
+    @Column
+    @ColumnDefault("0")
     private Long likesCount;
 
     @Column(nullable = false)
@@ -81,5 +83,16 @@ public class Template extends BaseTimeEntity {
 
     public boolean isPrivate() {
         return visibility == Visibility.PRIVATE;
+    }
+
+    public void updateLike() {
+        this.likesCount++;
+    }
+
+    public void cancelLike() {
+        if (this.likesCount <= 0) {
+            throw new IllegalStateException("좋아요가 0보다 작을 수 없습니다.");
+        }
+        this.likesCount--;
     }
 }
