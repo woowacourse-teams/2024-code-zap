@@ -21,7 +21,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
-import codezap.likes.domain.Likes;
+import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
@@ -33,6 +33,9 @@ class TemplateServiceTest extends ServiceTest {
 
     @Autowired
     private TemplateService sut;
+
+    @Autowired
+    private LikesService likesService;
 
     @Nested
     @DisplayName("템플릿 생성")
@@ -182,11 +185,7 @@ class TemplateServiceTest extends ServiceTest {
 
         private void likeTemplate(long templateId, long likesCount) {
             for (long memberId = 1L; memberId <= likesCount; memberId++) {
-                likesRepository.save(new Likes(
-                        null,
-                        templateRepository.fetchById(templateId),
-                        memberRepository.fetchById(memberId)
-                ));
+                likesService.like(memberRepository.fetchById(memberId), templateId);
             }
         }
     }

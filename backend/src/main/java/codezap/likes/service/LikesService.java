@@ -28,8 +28,9 @@ public class LikesService {
         if (isLiked(member, template)) {
             return;
         }
-        Likes likes = new Likes(null, template, member);
-        likesRepository.save(likes);
+
+        likesRepository.save(new Likes(template, member));
+        template.updateLike();
     }
 
     public Boolean isLiked(Member member, Template template) {
@@ -44,6 +45,7 @@ public class LikesService {
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
         likesRepository.deleteByMemberAndTemplate(member, template);
+        template.cancelLike();
     }
 
     @Transactional
