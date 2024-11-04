@@ -34,6 +34,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Template extends BaseTimeEntity {
 
+    private static final Long LIKES_COUNT_DEFAULT = 0L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -90,8 +92,8 @@ public class Template extends BaseTimeEntity {
     }
 
     public void cancelLike() {
-        if (this.likesCount <= 0) {
-            throw new IllegalStateException("좋아요가 0보다 작을 수 없습니다.");
+        if (this.likesCount <= LIKES_COUNT_DEFAULT) {
+            return;
         }
         this.likesCount--;
     }
