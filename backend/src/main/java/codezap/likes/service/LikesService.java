@@ -1,5 +1,8 @@
 package codezap.likes.service;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -25,7 +28,7 @@ public class LikesService {
     @Transactional
     public void like(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
-        if (isLiked(member, template)) {
+        if (TRUE.equals(isLiked(member, template))) {
             return;
         }
 
@@ -44,6 +47,10 @@ public class LikesService {
     @Transactional
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
+        if (FALSE.equals(isLiked(member, template))) {
+            return;
+        }
+
         likesRepository.deleteByMemberAndTemplate(member, template);
         template.cancelLike();
     }

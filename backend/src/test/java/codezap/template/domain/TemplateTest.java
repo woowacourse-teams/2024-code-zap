@@ -97,16 +97,16 @@ class TemplateTest {
 
             assertThat(template.getLikesCount()).isEqualTo(1L);
         }
+
         @Test
-        @DisplayName("좋아요 취소 실패: 이미 count가 0인 경우")
+        @DisplayName("좋아요 취소 성공: 이미 count가 0인 경우도 성공")
         void cancelLikeWhenLikeAlreadyFail() {
             Member member = MemberFixture.getFirstMember();
             Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
 
-            assertThatThrownBy(() -> template.cancelLike())
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage("좋아요가 0보다 작을 수 없습니다.");
-        }
+            template.cancelLike();
 
+            assertThat(template.getLikesCount()).isZero();
+        }
     }
 }
