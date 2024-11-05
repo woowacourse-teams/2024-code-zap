@@ -47,7 +47,7 @@ public class LikesService {
     @Transactional
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
-        if (isLiked(member, template)) {
+        if (!isLiked(member, template)) {
             return;
         }
 

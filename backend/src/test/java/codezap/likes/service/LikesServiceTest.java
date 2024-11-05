@@ -1,7 +1,6 @@
 package codezap.likes.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -80,7 +79,7 @@ class LikesServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("성공: 본인의 좋아요만 취소 가능")
-        void multipleCancelLikes() {
+        void cancelMyLikes() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
             Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
