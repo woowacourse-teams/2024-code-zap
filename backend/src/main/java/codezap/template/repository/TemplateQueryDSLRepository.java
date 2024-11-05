@@ -37,20 +37,6 @@ public class TemplateQueryDSLRepository {
         return new PageImpl<>(content, pageable, count);
     }
 
-    private long count(
-            Long memberId,
-            String keyword,
-            Long categoryId,
-            List<Long> tagIds,
-            Visibility visibility
-    ) {
-        return Objects.requireNonNull(queryFactory
-                .select(template.count())
-                .from(template)
-                .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
-                .fetchOne());
-    }
-
     private List<Template> getTemplates(
             Long memberId,
             String keyword,
@@ -68,6 +54,20 @@ public class TemplateQueryDSLRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private long count(
+            Long memberId,
+            String keyword,
+            Long categoryId,
+            List<Long> tagIds,
+            Visibility visibility
+    ) {
+        return Objects.requireNonNull(queryFactory
+                .select(template.count())
+                .from(template)
+                .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
+                .fetchOne());
     }
 
     private BooleanExpression[] matchesKeyword(
