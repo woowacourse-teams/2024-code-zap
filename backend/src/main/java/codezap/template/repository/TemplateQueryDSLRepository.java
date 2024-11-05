@@ -3,6 +3,7 @@ package codezap.template.repository;
 import static codezap.template.domain.QTemplate.template;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -43,12 +44,11 @@ public class TemplateQueryDSLRepository {
             List<Long> tagIds,
             Visibility visibility
     ) {
-        return queryFactory
+        return Objects.requireNonNull(queryFactory
                 .select(template.count())
                 .from(template)
                 .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
-                .fetchOne()
-                .longValue();
+                .fetchOne());
     }
 
     private List<Template> getTemplates(
