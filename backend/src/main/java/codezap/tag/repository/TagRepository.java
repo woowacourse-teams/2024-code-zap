@@ -21,11 +21,6 @@ public class TagRepository {
                 () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 태그가 존재하지 않습니다."));
     }
 
-    public Tag fetchByName(String name) {
-        return tagJpaRepository.findByName(name)
-                .orElseThrow(() -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
-    }
-
     public Optional<Tag> findByName(String name) {
         return tagJpaRepository.findByName(name);
     }

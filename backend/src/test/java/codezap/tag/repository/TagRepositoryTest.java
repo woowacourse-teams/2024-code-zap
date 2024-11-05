@@ -47,44 +47,6 @@ class TagRepositoryTest {
     }
 
     @Nested
-    @DisplayName("태그명으로 태그 조회(fetch)")
-    class FetchByName {
-
-        @Test
-        @DisplayName("태그명으로 태그 조회 성공 : 태그명으로 태그를 조회할 수 있다.")
-        void fetchByNameSuccess() {
-            Tag tag = tagRepository.save(new Tag("tag"));
-
-            Tag actual = tagRepository.fetchByName(tag.getName());
-
-            assertThat(actual).isEqualTo(tag);
-        }
-
-        @Test
-        @DisplayName("태그명으로 태그 조회 성공 : 대소문자 구분")
-        void findByNameSuccessCaseSensitive() {
-            Tag lowerCaseTag = tagRepository.save(new Tag("java"));
-            Tag upperCaseTag = tagRepository.save(new Tag("Java"));
-
-            var actual1 = tagRepository.fetchByName("java");
-            var actual2 = tagRepository.fetchByName("Java");
-
-            assertThat(actual1).isEqualTo(lowerCaseTag);
-            assertThat(actual2).isEqualTo(upperCaseTag);
-        }
-
-        @Test
-        @DisplayName("태그명으로 태그 조회 실패 : 존재하지 않는 태그명인 경우 에러가 발생한다.")
-        void fetchByNameFailByNotExistsId() {
-            String notExistTagName = "태그";
-
-            assertThatThrownBy(() -> tagRepository.fetchByName(notExistTagName))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + notExistTagName + "인 태그는 존재하지 않습니다.");
-        }
-    }
-
-    @Nested
     @DisplayName("태그명으로 태그 조회(find)")
     class FindByName {
 

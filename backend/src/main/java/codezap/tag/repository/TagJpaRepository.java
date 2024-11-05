@@ -19,11 +19,6 @@ public interface TagJpaRepository extends JpaRepository<Tag, Long> {
                 () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 태그가 존재하지 않습니다."));
     }
 
-    default Tag fetchByName(String name) {
-        return findByName(name).orElseThrow(
-                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "이름이 " + name + "인 태그는 존재하지 않습니다."));
-    }
-
     @Query(value = "SELECT * FROM tag WHERE tag.name = BINARY :name", nativeQuery = true)
     Optional<Tag> findByName(@Param("name") String name);
 
