@@ -2,18 +2,17 @@ package codezap.likes.repository;
 
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LikesRepository {
 
     private final LikesJpaRepository likesJpaRepository;

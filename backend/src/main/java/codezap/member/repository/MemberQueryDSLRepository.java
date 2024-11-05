@@ -4,7 +4,6 @@ import static codezap.template.domain.QTemplate.template;
 
 import java.util.Optional;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 
@@ -19,7 +18,7 @@ public class MemberQueryDSLRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public Optional<Member> findByTemplateId(@Param("templateId") Long templateId) {
+    public Optional<Member> findByTemplateId(Long templateId) {
         return Optional.ofNullable(queryFactory.select(template.member)
                 .from(template)
                 .where(template.id.eq(templateId))

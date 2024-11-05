@@ -5,10 +5,10 @@ import org.springframework.stereotype.Repository;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberRepository {
 
     private final MemberJpaRepository memberJpaRepository;
