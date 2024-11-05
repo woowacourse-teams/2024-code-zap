@@ -28,7 +28,7 @@ public class LikesService {
     @Transactional
     public void like(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
-        if (TRUE.equals(isLiked(member, template))) {
+        if (isLiked(member, template)) {
             return;
         }
 
@@ -36,7 +36,7 @@ public class LikesService {
         template.updateLike();
     }
 
-    public Boolean isLiked(Member member, Template template) {
+    public boolean isLiked(Member member, Template template) {
         return likesRepository.existsByMemberAndTemplate(member, template);
     }
 
@@ -47,7 +47,7 @@ public class LikesService {
     @Transactional
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
-        if (FALSE.equals(isLiked(member, template))) {
+        if (isLiked(member, template)) {
             return;
         }
 
