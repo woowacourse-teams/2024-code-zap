@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 
-@SuppressWarnings("unused")
 public interface SourceCodeJpaRepository extends JpaRepository<SourceCode, Long> {
 
     List<SourceCode> findAllByTemplate(Template template);

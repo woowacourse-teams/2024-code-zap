@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.tag.domain.Tag;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository

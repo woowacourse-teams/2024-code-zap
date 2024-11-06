@@ -10,7 +10,6 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository

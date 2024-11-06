@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import codezap.template.domain.QSourceCode;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository

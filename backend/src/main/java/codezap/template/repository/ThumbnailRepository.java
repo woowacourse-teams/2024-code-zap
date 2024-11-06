@@ -9,7 +9,6 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository
@@ -22,10 +21,6 @@ public class ThumbnailRepository {
     public Thumbnail fetchByTemplate(Template template) {
         return thumbnailQueryDSLRepository.findByTemplate(template).orElseThrow(
                 () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
-    }
-
-    public Optional<Thumbnail> findByTemplate(Template template) {
-        return thumbnailQueryDSLRepository.findByTemplate(template);
     }
 
     public List<Thumbnail> findAll() {

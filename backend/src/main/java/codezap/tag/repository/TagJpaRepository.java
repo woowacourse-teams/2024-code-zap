@@ -7,11 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.tag.domain.Tag;
 
-@SuppressWarnings("unused")
 public interface TagJpaRepository extends JpaRepository<Tag, Long> {
 
     @Query(value = "SELECT * FROM tag WHERE tag.name = BINARY :name", nativeQuery = true)

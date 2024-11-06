@@ -7,7 +7,6 @@ import org.springframework.stereotype.Repository;
 import codezap.tag.domain.Tag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository

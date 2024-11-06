@@ -1,6 +1,5 @@
 package codezap.template.repository;
 
-import static codezap.template.domain.QSourceCode.sourceCode;
 import static codezap.template.domain.QTemplate.template;
 import static codezap.template.domain.QTemplateTag.templateTag;
 

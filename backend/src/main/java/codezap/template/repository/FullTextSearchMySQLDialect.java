@@ -1,16 +1,16 @@
-package codezap.template.repository;	
+package codezap.template.repository;
 
-import java.util.List;	
+import java.util.List;
 
-import org.hibernate.boot.model.FunctionContributions;	
-import org.hibernate.dialect.MySQLDialect;	
-import org.hibernate.query.ReturnableType;	
-import org.hibernate.query.sqm.function.NamedSqmFunctionDescriptor;	
-import org.hibernate.query.sqm.function.SqmFunctionRegistry;	
-import org.hibernate.query.sqm.produce.function.StandardArgumentsValidators;	
-import org.hibernate.sql.ast.SqlAstNodeRenderingMode;	
-import org.hibernate.sql.ast.SqlAstTranslator;	
-import org.hibernate.sql.ast.spi.SqlAppender;	
+import org.hibernate.boot.model.FunctionContributions;
+import org.hibernate.dialect.MySQLDialect;
+import org.hibernate.query.ReturnableType;
+import org.hibernate.query.sqm.function.NamedSqmFunctionDescriptor;
+import org.hibernate.query.sqm.function.SqmFunctionRegistry;
+import org.hibernate.query.sqm.produce.function.StandardArgumentsValidators;
+import org.hibernate.sql.ast.SqlAstNodeRenderingMode;
+import org.hibernate.sql.ast.SqlAstTranslator;
+import org.hibernate.sql.ast.spi.SqlAppender;
 import org.hibernate.sql.ast.tree.SqlAstNode;	
 
 public class FullTextSearchMySQLDialect extends MySQLDialect {	

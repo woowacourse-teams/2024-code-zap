@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import codezap.member.domain.Member;

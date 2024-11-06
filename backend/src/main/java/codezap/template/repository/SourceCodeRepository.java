@@ -1,7 +1,6 @@
 package codezap.template.repository;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +8,6 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository

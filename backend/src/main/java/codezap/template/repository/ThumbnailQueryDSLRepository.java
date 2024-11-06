@@ -11,7 +11,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import codezap.template.domain.QThumbnail;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Repository
