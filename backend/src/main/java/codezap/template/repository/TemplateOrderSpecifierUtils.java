@@ -21,36 +21,36 @@ import lombok.NoArgsConstructor;
 public class TemplateOrderSpecifierUtils {
 
     private static final String TEMPLATE = "template";
-    private static final String LIKES_COUNT_PROPERTIES = "likesCount";
-    private static final String CREATED_AT_PROPERTIES = "createdAt";
-    private static final String MODIFIED_AT_PROPERTIES = "modifiedAt";
-
-    private static final Map<String, Path<?>> TEMPLATE_ORDER_FIELDS = Map.of(
-            LIKES_COUNT_PROPERTIES, template.likesCount,
-            CREATED_AT_PROPERTIES, template.createdAt,
-            MODIFIED_AT_PROPERTIES, template.modifiedAt
+    private static final PathBuilder<Template> TEMPLATE_PATH = new PathBuilder<>(Template.class, TEMPLATE);
+    private static final Map<String, Path<?>> ORDER_FIELDS = Map.of(
+            "likesCount", template.likesCount,
+            "createdAt", template.createdAt,
+            "modifiedAt", template.modifiedAt
     );
 
     public static OrderSpecifier<?>[] getOrderSpecifier(Sort sort) {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
-        PathBuilder<Template> entityPath = new PathBuilder<>(Template.class, TEMPLATE);
-        sort.forEach(order -> addOrder(order, orders, entityPath));
+        sort.forEach(order -> addOrder(order, orders));
 
         return orders.toArray(new OrderSpecifier[0]);
     }
 
-    private static void addOrder(Sort.Order order, List<OrderSpecifier<?>> orders, PathBuilder<Template> entityPath) {
-        Order direction = order.isAscending() ? Order.ASC : Order.DESC;
-        orders.add(getPropertyOrderSpecifier(order.getProperty(), direction, entityPath));
+    private static void addOrder(Sort.Order order, List<OrderSpecifier<?>> orders) {
+        Order direction = getOrder(order);
+        orders.add(createOrderSpecifier(order.getProperty(), direction));
     }
 
-    private static OrderSpecifier getPropertyOrderSpecifier(String property, Order direction, PathBuilder<Template> entityPath) {
-        Path<?> path = TEMPLATE_ORDER_FIELDS.get(property);
-
-        if (path != null) {
-            return new OrderSpecifier(direction, path);
+    private static Order getOrder(Sort.Order order) {
+        if (order.isAscending()) {
+            return Order.ASC;
         }
+        return Order.DESC;
+    }
 
-        return new OrderSpecifier(direction, entityPath.get(property));
+    private static OrderSpecifier createOrderSpecifier(String property, Order direction) {
+        if (ORDER_FIELDS.containsKey(property)) {
+            return new OrderSpecifier(direction, ORDER_FIELDS.get(property));
+        }
+        return new OrderSpecifier(direction, TEMPLATE_PATH.get(property));
     }
 }
