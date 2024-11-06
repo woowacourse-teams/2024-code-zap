@@ -4,24 +4,41 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
+import lombok.RequiredArgsConstructor;
 
-public interface LikesRepository {
+@Repository
+@RequiredArgsConstructor
+public class LikesRepository {
 
-    Likes save(Likes likes);
+    private final LikesJpaRepository likesJpaRepository;
+    private final LikesQueryDslRepository likesQueryDslRepository;
 
-    boolean existsByMemberAndTemplate(Member member, Template template);
+    public Likes save(Likes likes) {
+        return likesJpaRepository.save(likes);
+    }
 
-    long countByTemplate(Template template);
+    public boolean existsByMemberAndTemplate(Member member, Template template) {
+        return likesJpaRepository.existsByMemberAndTemplate(member, template);
+    }
 
-    void deleteByMemberAndTemplate(Member member, Template template);
+    public long countByTemplate(Template template) {
+        return likesJpaRepository.countByTemplate(template);
+    }
 
-    void deleteAllByTemplateIds(List<Long> templateIds);
+    public void deleteByMemberAndTemplate(Member member, Template template) {
+        likesJpaRepository.deleteByMemberAndTemplate(member, template);
+    }
 
-    Page<Template> findAllByMemberId(Long memberId, Pageable pageable);
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
+        likesQueryDslRepository.deleteAllByTemplateIds(templateIds);
+    }
+
+    public Page<Template> findAllByMemberId(Long memberId, Pageable pageable) {
+        return likesJpaRepository.findAllByMemberId(memberId, pageable);
+    }
 }

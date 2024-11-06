@@ -17,7 +17,6 @@ import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateSpecification;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -54,8 +53,7 @@ public class TemplateService {
             Visibility visibility,
             Pageable pageable
     ) {
-        return templateRepository.findAll(
-                new TemplateSpecification(memberId, keyword, categoryId, tagIds, visibility), pageable);
+        return templateRepository.findAll(memberId, keyword, categoryId, tagIds, visibility, pageable);
     }
 
     @Transactional

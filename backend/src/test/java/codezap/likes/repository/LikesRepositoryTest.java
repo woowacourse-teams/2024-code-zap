@@ -18,15 +18,15 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.repository.RepositoryTest;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 import codezap.template.repository.TemplateRepository;
 
-@JpaRepositoryTest
-class LikesJpaRepositoryTest {
+@RepositoryTest
+class LikesRepositoryTest {
 
     @Autowired
     private LikesRepository likesRepository;

@@ -19,7 +19,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
@@ -41,7 +40,6 @@ import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
-import codezap.template.repository.TemplateSpecification;
 
 class TemplateApplicationServiceTest extends ServiceTest {
 
@@ -526,8 +524,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             sut.deleteAllByMemberAndTemplateIds(member, deleteIds);
 
             // then
-            Specification<Template> spec = new TemplateSpecification(member.getId(), null, null, null, null);
-            var actualTemplatesLeft = templateRepository.findAll(spec, PageRequest.of(0, 10));
+            var actualTemplatesLeft = templateRepository.findAll(member.getId(), null, null, null, null, PageRequest.of(0, 10));
             var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));
