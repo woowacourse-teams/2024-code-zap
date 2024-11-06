@@ -9,9 +9,10 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import codezap.template.domain.QSourceCode;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SourceCodeQueryDSLRepository {
 
     private final JPAQueryFactory queryFactory;

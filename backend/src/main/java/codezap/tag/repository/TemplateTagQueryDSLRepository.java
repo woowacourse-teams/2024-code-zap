@@ -17,9 +17,10 @@ import codezap.template.domain.QTemplateTag;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TemplateTagQueryDSLRepository {
 
     private final JPAQueryFactory queryFactory;

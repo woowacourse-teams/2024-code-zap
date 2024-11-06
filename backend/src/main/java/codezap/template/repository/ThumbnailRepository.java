@@ -10,9 +10,10 @@ import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ThumbnailRepository {
 
     private final ThumbnailJpaRepository thumbnailJpaRepository;

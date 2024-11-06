@@ -11,9 +11,10 @@ import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TemplateRepository {
 
     private final TemplateJpaRepository templateJpaRepository;

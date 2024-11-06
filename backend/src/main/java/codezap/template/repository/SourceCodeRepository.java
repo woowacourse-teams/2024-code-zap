@@ -10,9 +10,10 @@ import codezap.global.exception.ErrorCode;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SourceCodeRepository {
 
     private final SourceCodeJpaRepository sourceCodeJpaRepository;
