@@ -72,11 +72,11 @@ class TemplateTest {
 
     @Test
     @DisplayName("좋아요 갱신 성공")
-    void updateLike() {
+    void increaseLike() {
         Member member = MemberFixture.getFirstMember();
         Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
 
-        template.updateLike();
+        template.increaseLike();
 
         assertThat(template.getLikesCount()).isEqualTo(1L);
     }
@@ -90,8 +90,8 @@ class TemplateTest {
         void cancelLike() {
             Member member = MemberFixture.getFirstMember();
             Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
-            template.updateLike();
-            template.updateLike();
+            template.increaseLike();
+            template.increaseLike();
 
             template.cancelLike();
 

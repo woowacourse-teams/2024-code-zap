@@ -1,8 +1,5 @@
 package codezap.likes.service;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -33,7 +30,7 @@ public class LikesService {
         }
 
         likesRepository.save(new Likes(template, member));
-        template.updateLike();
+        template.increaseLike();
     }
 
     public boolean isLiked(Member member, Template template) {

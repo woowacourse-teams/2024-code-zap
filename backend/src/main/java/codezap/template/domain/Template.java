@@ -87,7 +87,7 @@ public class Template extends BaseTimeEntity {
         return visibility == Visibility.PRIVATE;
     }
 
-    public void updateLike() {
+    public void increaseLike() {
         this.likesCount++;
     }
 
