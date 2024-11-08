@@ -33,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleCodeZapException(CodeZapException codeZapException) {
-        log.warn("[CodeZapException] {}가 발생했습니다.", codeZapException.getClass().getName(), codeZapException);
+        log.warn("[CodeZapException] {}: {}", codeZapException.getClass().getName(), codeZapException.getMessage());
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
                 .body(codeZapException.toProblemDetail());
@@ -43,7 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatusCode status, WebRequest request
     ) {
-        log.warn("[MethodArgumentNotValidException] {}가 발생했습니다. \n", exception.getClass().getName(), exception);
+        log.warn("[MethodArgumentNotValidException] {}: {}", exception.getClass().getName(), exception.getMessage());
 
         BindingResult bindingResult = exception.getBindingResult();
         List<String> errorMessages = bindingResult.getAllErrors().stream()
@@ -76,7 +76,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleException(Exception exception) {
-        log.error("[Exception] 예상치 못한 오류 {} 가 발생했습니다.", exception.getClass().getName(), exception);
+        log.error("[Exception] 예상치 못한 오류 {} 가 발생했습니다. \n", exception.getClass().getName(), exception);
         CodeZapException codeZapException =
                 new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "서버에서 예상치 못한 오류가 발생하였습니다.");
         return ResponseEntity.internalServerError()

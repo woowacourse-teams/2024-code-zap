@@ -59,18 +59,10 @@ public class RequestResponseLogger extends OncePerRequestFilter {
                 status,
                 duration,
                 getHeaderAsJson(responseWrapper));
-        if (isError(status)) {
-            log.error(requestMessage);
-            log.error(requestMessage);
-        }
-        if (isWarn(status)) {
-            log.warn(requestMessage);
-            log.warn(responseMessage);
-        }
-        if (isInfo(status)) {
-            log.info(requestMessage);
-            log.info(responseMessage);
-        }
+
+        logError(status, requestMessage, responseMessage);
+        logWarn(status, requestMessage, responseMessage);
+        logInfo(status, requestMessage, responseMessage);
     }
 
     private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
@@ -102,16 +94,28 @@ public class RequestResponseLogger extends OncePerRequestFilter {
         }
     }
 
-    private boolean isError(int status) {
-        return status >= ERROR_CODE;
+    private void logError(int status, String requestMessage, String responseMessage) {
+        boolean isError = status >= ERROR_CODE;
+        if (isError) {
+            log.error(requestMessage);
+            log.error(responseMessage);
+        }
     }
 
-    private boolean isWarn(int status) {
-        return status >= WARN_CODE && status < ERROR_CODE;
+    private void logWarn(int status, String requestMessage, String responseMessage) {
+        boolean isWarn =  status >= WARN_CODE && status < ERROR_CODE;
+        if (isWarn) {
+            log.warn(requestMessage);
+            log.warn(responseMessage);
+        }
     }
 
-    private boolean isInfo(int status) {
-        return status < WARN_CODE;
+    private void logInfo(int status, String requestMessage, String responseMessage) {
+        boolean isInfo = status < WARN_CODE;
+        if (isInfo) {
+            log.info(requestMessage);
+            log.info(responseMessage);
+        }
     }
 
     @Override
