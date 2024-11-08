@@ -10,7 +10,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
+import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
@@ -176,6 +179,33 @@ class LikesServiceTest extends ServiceTest {
                     () -> assertThat(likesRepository.countByTemplate(template1)).isEqualTo(0),
                     () -> assertThat(likesRepository.countByTemplate(template2)).isEqualTo(0)
             );
+        }
+    }
+
+    @Nested
+    @DisplayName("좋아요한 템플릿 조회")
+    class FindAllByMemberId {
+
+        @Test
+        @DisplayName("성공")
+        void findAllByMemberId() {
+            // given
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Category category1 = categoryRepository.save(CategoryFixture.get(member1));
+            Category category2 = categoryRepository.save(CategoryFixture.get(member2));
+            Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template3 = templateRepository.save(TemplateFixture.get(member2, category2));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template2, member2));
+            likesRepository.save(new Likes(template3, member1));
+
+            // when
+            Page<Template> actual = likesService.findAllByMemberId(member1.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertThat(actual).containsExactlyInAnyOrder(template1, template3);
         }
     }
 }

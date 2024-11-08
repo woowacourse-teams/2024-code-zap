@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
-import codezap.global.repository.JpaRepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.MemberRepository;

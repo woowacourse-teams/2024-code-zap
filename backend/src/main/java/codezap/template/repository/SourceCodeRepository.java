@@ -1,30 +1,57 @@
 package codezap.template.repository;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
+import lombok.RequiredArgsConstructor;
 
-public interface SourceCodeRepository {
+@Repository
+@RequiredArgsConstructor
+public class SourceCodeRepository {
 
-    SourceCode fetchById(Long id);
+    private final SourceCodeJpaRepository sourceCodeJpaRepository;
+    private final SourceCodeQueryDSLRepository sourceCodeQueryDSLRepository;
 
-    List<SourceCode> findAllByTemplate(Template template);
+    public SourceCode fetchById(Long id) {
+        return sourceCodeJpaRepository.findById(id).orElseThrow(
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 소스 코드가 존재하지 않습니다."));
+    }
 
-    SourceCode fetchByTemplateAndOrdinal(Template template, int ordinal);
+    public SourceCode fetchByTemplateAndOrdinal(Template template, int ordinal) {
+        return sourceCodeJpaRepository.findByTemplateAndOrdinal(template, ordinal)
+                .orElseThrow(() -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "템플릿에 " + ordinal + "번째 소스 코드가 존재하지 않습니다."));
+    }
 
-    Optional<SourceCode> findByTemplateAndOrdinal(Template template, int ordinal);
+    public List<SourceCode> findAllByTemplate(Template template) {
+        return sourceCodeJpaRepository.findAllByTemplate(template);
+    }
 
-    List<SourceCode> findAllByTemplateAndOrdinal(Template template, int ordinal);
+    public List<SourceCode> findAllByTemplateAndOrdinal(Template template, int ordinal) {
+        return sourceCodeJpaRepository.findAllByTemplateAndOrdinal(template, ordinal);
+    }
 
-    int countByTemplate(Template template);
+    public int countByTemplate(Template template) {
+        return sourceCodeJpaRepository.countByTemplate(template);
+    }
 
-    SourceCode save(SourceCode sourceCode);
+    public SourceCode save(SourceCode sourceCode) {
+        return sourceCodeJpaRepository.save(sourceCode);
+    }
 
-    <S extends SourceCode> List<S> saveAll(Iterable<S> entities);
+    public List<SourceCode> saveAll(Iterable<SourceCode> entities) {
+        return sourceCodeJpaRepository.saveAll(entities);
+    }
 
-    void deleteById(Long id);
+    public void deleteById(Long id) {
+        sourceCodeJpaRepository.deleteById(id);
+    }
 
-    void deleteAllByTemplateIds(List<Long> templateIds);
+    public void deleteAllByTemplateIds(List<Long> templateIds) {
+        sourceCodeQueryDSLRepository.deleteAllByTemplateIds(templateIds);
+    }
 }

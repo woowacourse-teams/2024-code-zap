@@ -13,11 +13,11 @@ import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 
-@JpaRepositoryTest
+@RepositoryTest
 public class CategoryRepositoryTest {
 
     @Autowired
