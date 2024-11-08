@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
@@ -18,6 +17,7 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
+import codezap.global.pagination.FixedPage;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
@@ -202,10 +202,10 @@ class LikesServiceTest extends ServiceTest {
             likesRepository.save(new Likes(template3, member1));
 
             // when
-            Page<Template> actual = likesService.findAllByMemberId(member1.getId(), PageRequest.of(0, 5));
+            FixedPage<Template> actual = templateRepository.findAllLikedByMemberId(member1.getId(), PageRequest.of(0, 5));
 
             // then
-            assertThat(actual).containsExactlyInAnyOrder(template1, template3);
+            assertThat(actual.contents()).containsExactlyInAnyOrder(template1, template3);
         }
     }
 }

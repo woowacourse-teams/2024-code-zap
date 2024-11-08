@@ -1,18 +1,17 @@
 package codezap.template.repository;
 
-import static codezap.template.domain.QTemplate.template;
-
 import java.util.List;
-import java.util.Objects;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import codezap.global.pagination.FixedPage;
+import codezap.global.pagination.FixedPageCounter;
+import codezap.likes.domain.QLikes;
+import codezap.template.domain.QTemplate;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import lombok.RequiredArgsConstructor;
@@ -87,6 +86,36 @@ public class TemplateQueryDSLRepository {
                 expressionProvider.hasAnyTags(tagIds),
                 expressionProvider.matchesKeyword(keyword)
         };
+    }
+
+    public FixedPage<Template> findAllLikedByMemberId(Long memberId, Pageable pageable) {
+        List<Template> content = queryFactory
+                .select(QLikes.likes.template)
+                .from(QLikes.likes)
+                .where(isLikedTemplateByMember(memberId))
+                .orderBy(TemplateOrderSpecifierUtils.getOrderSpecifier(pageable.getSort()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return new FixedPage<>(content, countNextFixedPage(memberId, pageable));
+    }
+
+    private int countNextFixedPage(Long memberId, Pageable pageable) {
+        return fixedPageCounter.countNextFixedPage(
+                queryFactory,
+                QLikes.likes,
+                pageable,
+                isLikedTemplateByMember(memberId)
+        );
+    }
+
+    private static BooleanExpression isLikedTemplateByMember(Long memberId) {
+        BooleanExpression isLikedByMemberId = QLikes.likes.member.id.eq(memberId);
+        BooleanExpression isLikedTemplateByMemberId = QLikes.likes.template.member.id.eq(memberId);
+        BooleanExpression isTemplatePublic = QLikes.likes.template.visibility.eq(Visibility.PUBLIC);
+
+        return isLikedByMemberId.and(isLikedTemplateByMemberId.or(isTemplatePublic));
     }
 }
 

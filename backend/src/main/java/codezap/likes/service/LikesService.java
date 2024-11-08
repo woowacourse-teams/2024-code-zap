@@ -2,11 +2,11 @@ package codezap.likes.service;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import codezap.global.pagination.FixedPage;
 import codezap.likes.domain.Likes;
 import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
@@ -36,8 +36,8 @@ public class LikesService {
         return likesRepository.existsByMemberAndTemplate(member, template);
     }
 
-    public Page<Template> findAllByMemberId(Long memberId, Pageable pageable) {
-        return likesRepository.findAllByMemberId(memberId, pageable);
+    public FixedPage<Template> findAllByMemberId(Long memberId, Pageable pageable) {
+        return templateRepository.findAllLikedByMemberId(memberId, pageable);
     }
 
     @Transactional
