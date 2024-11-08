@@ -4,7 +4,6 @@ import java.util.List;
 
 import jakarta.annotation.Nullable;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +12,10 @@ import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import codezap.global.pagination.FixedPage;
 import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
-import codezap.member.service.MemberService;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
@@ -45,7 +44,6 @@ public class TemplateApplicationService {
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
-    private final MemberService memberService;
 
     @Transactional
     public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
@@ -94,7 +92,7 @@ public class TemplateApplicationService {
             List<Long> tagIds,
             Pageable pageable
     ) {
-        Page<Template> templates = templateService.findAllBy(
+        FixedPage<Template> templates = templateService.findAllBy(
                 memberId, keyword, categoryId, tagIds, Visibility.PUBLIC, pageable
         );
         return makeAllTemplatesResponse(templates, (template) -> false);
@@ -108,7 +106,7 @@ public class TemplateApplicationService {
             Pageable pageable,
             Member loginMember
     ) {
-        Page<Template> templates = templateService.findAllBy(
+        FixedPage<Template> templates = templateService.findAllBy(
                 memberId, keyword, categoryId, tagIds, getVisibilityLevel(memberId, loginMember), pageable
         );
         return makeAllTemplatesResponse(templates, (template -> likesService.isLiked(loginMember, template)));
@@ -123,18 +121,17 @@ public class TemplateApplicationService {
     }
 
     public FindAllTemplatesResponse findAllByLiked(Long memberId, Pageable pageable) {
-        Page<Template> likeTemplate = likesService.findAllByMemberId(memberId, pageable);
+        FixedPage<Template> likeTemplate = likesService.findAllByMemberId(memberId, pageable);
         return makeAllTemplatesResponse(likeTemplate, (template -> true));
     }
 
-    private FindAllTemplatesResponse makeAllTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {
-        List<Template> templates = page.getContent();
+    private FindAllTemplatesResponse makeAllTemplatesResponse(FixedPage<Template> page, LikedChecker likedChecker) {
+        List<Template> templates = page.contents();
         List<FindAllTemplateItemResponse> findAllTemplateByResponse =
                 getFindAllTemplateItemResponses(templates, likedChecker);
 
         return new FindAllTemplatesResponse(
-                page.getTotalPages(),
-                page.getTotalElements(),
+                page.nextPages(),
                 findAllTemplateByResponse);
     }
 

@@ -23,8 +23,9 @@ public class TemplateQueryDSLRepository {
 
     private final JPAQueryFactory queryFactory;
     private final TemplateSearchExpressionProvider expressionProvider;
+    private final FixedPageCounter fixedPageCounter;
 
-    public Page<Template> findTemplates(
+    public FixedPage<Template> findTemplates(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -33,8 +34,8 @@ public class TemplateQueryDSLRepository {
             Pageable pageable
     ) {
         List<Template> content = getTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
-        long count = count(memberId, keyword, categoryId, tagIds, visibility);
-        return new PageImpl<>(content, pageable, count);
+        int nextFixedPage = countNextFixedPage(pageable, memberId, keyword, categoryId, tagIds, visibility);
+        return new FixedPage<>(content, nextFixedPage);
     }
 
     private List<Template> getTemplates(
@@ -46,9 +47,9 @@ public class TemplateQueryDSLRepository {
             Pageable pageable
     ) {
         return queryFactory
-                .selectFrom(template)
-                .leftJoin(template.category).fetchJoin()
-                .leftJoin(template.member).fetchJoin()
+                .selectFrom(QTemplate.template)
+                .leftJoin(QTemplate.template.category).fetchJoin()
+                .leftJoin(QTemplate.template.member).fetchJoin()
                 .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
                 .orderBy(TemplateOrderSpecifierUtils.getOrderSpecifier(pageable.getSort()))
                 .offset(pageable.getOffset())
@@ -56,18 +57,20 @@ public class TemplateQueryDSLRepository {
                 .fetch();
     }
 
-    private long count(
+    private int countNextFixedPage(
+            Pageable pageable,
             Long memberId,
             String keyword,
             Long categoryId,
             List<Long> tagIds,
             Visibility visibility
     ) {
-        return Objects.requireNonNull(queryFactory
-                .select(template.count())
-                .from(template)
-                .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
-                .fetchOne());
+        return fixedPageCounter.countNextFixedPage(
+                queryFactory,
+                QTemplate.template,
+                pageable,
+                matchesKeyword(memberId, keyword, categoryId, tagIds, visibility)
+        );
     }
 
     private BooleanExpression[] matchesKeyword(

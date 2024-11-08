@@ -530,8 +530,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));
 
             assertAll(
-                    () -> assertThat(actualTemplatesLeft).containsExactly(template3),
-                    () -> assertThat(actualTemplatesLeft).doesNotContain(template1, template2),
+                    () -> assertThat(actualTemplatesLeft.contents()).containsExactly(template3),
+                    () -> assertThat(actualTemplatesLeft.contents()).doesNotContain(template1, template2),
                     () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3),
                     () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
             );

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -21,6 +20,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
+import codezap.global.pagination.FixedPage;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
@@ -152,7 +152,7 @@ class TemplateServiceTest extends ServiceTest {
 
             List<Template> templates = sut.findAllBy(null, "", null, null, null,
                             PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
-                    .getContent();
+                    .contents();
 
             assertThat(templates).containsExactly(
                     templateRepository.fetchById(3L),
@@ -279,10 +279,10 @@ class TemplateServiceTest extends ServiceTest {
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+            FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
                     PageRequest.of(0, 10));
 
-            assertThat(actual.getContent()).hasSize(1)
+            assertThat(actual.contents()).hasSize(1)
                     .containsExactly(template2);
         }
 
@@ -297,10 +297,10 @@ class TemplateServiceTest extends ServiceTest {
             var template4 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+            FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
                     PageRequest.of(0, 10));
 
-            assertThat(actual.getContent()).hasSize(2)
+            assertThat(actual.contents()).hasSize(2)
                     .containsExactly(template2, template3);
         }
 

@@ -3,7 +3,6 @@ package codezap.template.service;
 import java.util.HashSet;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import codezap.global.pagination.FixedPage;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
@@ -45,7 +45,7 @@ public class TemplateService {
         return templateRepository.findByMemberId(memberId);
     }
 
-    public Page<Template> findAllBy(
+    public FixedPage<Template> findAllBy(
             Long memberId,
             String keyword,
             Long categoryId,

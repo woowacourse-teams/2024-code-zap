@@ -28,7 +28,7 @@ public class TemplateRepository {
         return templateJpaRepository.findByMemberId(id);
     }
 
-    public Page<Template> findAll(
+    public FixedPage<Template> findAll(
             Long memberId, String keyword, Long categoryId, List<Long> tagIds, Visibility visibility, Pageable pageable
     ) {
         return templateQueryDSLRepository.findTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
