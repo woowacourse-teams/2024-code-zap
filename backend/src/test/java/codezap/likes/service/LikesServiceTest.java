@@ -1,7 +1,6 @@
 package codezap.likes.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -69,11 +68,9 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공")
         void success() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
-            likesRepository.save(new Likes(null, template, member));
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+            likesService.like(member, template.getId());
 
             likesService.cancelLike(member, template.getId());
 
@@ -81,18 +78,17 @@ class LikesServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 여러번 좋아요를 취소해도 정상 동작으로 판단")
-        void multipleLikes() {
+        @DisplayName("성공: 본인의 좋아요만 취소 가능")
+        void cancelMyLikes() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
+            likesService.like(otherMember, template.getId());
             likesService.cancelLike(member, template.getId());
 
-            assertThatCode(() -> likesService.cancelLike(member, template.getId()))
-                    .doesNotThrowAnyException();
+            assertThat(likesRepository.countByTemplate(template)).isEqualTo(1L);
         }
     }
 
@@ -109,7 +105,7 @@ class LikesServiceTest extends ServiceTest {
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
 
-            likesRepository.save(new Likes(null, template, member));
+            likesRepository.save(new Likes(template, member));
 
             assertThat(likesService.isLiked(member, template)).isTrue();
         }
