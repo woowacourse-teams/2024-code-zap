@@ -18,7 +18,7 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
@@ -26,8 +26,8 @@ import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 import codezap.template.repository.TemplateRepository;
 
-@JpaRepositoryTest
-class TemplateTagJpaRepositoryTest {
+@RepositoryTest
+class TemplateTagRepositoryTest {
 
     @Autowired
     private TemplateRepository templateRepository;

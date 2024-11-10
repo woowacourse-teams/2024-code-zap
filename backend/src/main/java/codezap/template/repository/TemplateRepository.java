@@ -4,21 +4,45 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Repository;
 
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
+import codezap.template.domain.Visibility;
+import lombok.RequiredArgsConstructor;
 
-public interface TemplateRepository {
+@Repository
+@RequiredArgsConstructor
+public class TemplateRepository {
 
-    Template fetchById(Long id);
+    private final TemplateJpaRepository templateJpaRepository;
+    private final TemplateQueryDSLRepository templateQueryDSLRepository;
 
-    List<Template> findByMemberId(Long id);
+    public Template fetchById(Long id) {
+        return templateJpaRepository.findById(id).orElseThrow(
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
+    }
 
-    Page<Template> findAll(Specification<Template> specification, Pageable pageable);
+    public List<Template> findByMemberId(Long id) {
+        return templateJpaRepository.findByMemberId(id);
+    }
 
-    boolean existsByCategoryId(Long categoryId);
+    public Page<Template> findAll(
+            Long memberId, String keyword, Long categoryId, List<Long> tagIds, Visibility visibility, Pageable pageable
+    ) {
+        return templateQueryDSLRepository.findTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
+    }
 
-    Template save(Template template);
+    public boolean existsByCategoryId(Long categoryId) {
+        return templateJpaRepository.existsByCategoryId(categoryId);
+    }
 
-    void deleteById(Long id);
+    public Template save(Template template) {
+        return templateJpaRepository.save(template);
+    }
+
+    public void deleteById(Long id) {
+        templateJpaRepository.deleteById(id);
+    }
 }
