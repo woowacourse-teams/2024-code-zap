@@ -16,6 +16,7 @@ import codezap.global.exception.ErrorCode;
 import codezap.likes.service.LikedChecker;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
+import codezap.member.service.MemberService;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
@@ -44,6 +45,7 @@ public class TemplateApplicationService {
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
+    private final MemberService memberService;
 
     @Transactional
     public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
@@ -118,6 +120,11 @@ public class TemplateApplicationService {
             return Visibility.PUBLIC;
         }
         return null;
+    }
+
+    public FindAllTemplatesResponse findAllByLiked(Long memberId, Pageable pageable) {
+        Page<Template> likeTemplate = likesService.findAllByMemberId(memberId, pageable);
+        return makeAllTemplatesResponse(likeTemplate, (template -> true));
     }
 
     private FindAllTemplatesResponse makeAllTemplatesResponse(Page<Template> page, LikedChecker likedChecker) {

@@ -2,6 +2,8 @@ package codezap.likes.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,18 +28,28 @@ public class LikesService {
         if (isLiked(member, template)) {
             return;
         }
-        Likes likes = new Likes(null, template, member);
-        likesRepository.save(likes);
+
+        likesRepository.save(new Likes(template, member));
+        template.increaseLike();
     }
 
-    public Boolean isLiked(Member member, Template template) {
+    public boolean isLiked(Member member, Template template) {
         return likesRepository.existsByMemberAndTemplate(member, template);
+    }
+
+    public Page<Template> findAllByMemberId(Long memberId, Pageable pageable) {
+        return likesRepository.findAllByMemberId(memberId, pageable);
     }
 
     @Transactional
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);
+        if (!isLiked(member, template)) {
+            return;
+        }
+
         likesRepository.deleteByMemberAndTemplate(member, template);
+        template.cancelLike();
     }
 
     @Transactional

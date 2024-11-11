@@ -1,11 +1,9 @@
 package codezap.member.controller;
 
-import codezap.member.dto.request.SignupRequest;
-import codezap.member.dto.response.FindMemberResponse;
-import codezap.member.service.MemberService;
-import jakarta.validation.Valid;
 import java.net.URI;
-import lombok.RequiredArgsConstructor;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import codezap.member.dto.request.SignupRequest;
+import codezap.member.dto.response.FindMemberResponse;
+import codezap.member.service.MemberService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor

@@ -15,13 +15,13 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 
-@JpaRepositoryTest
-class TemplateJpaRepositoryTest {
+@RepositoryTest
+class TemplateRepositoryTest {
 
     @Autowired
     private TemplateRepository templateRepository;
