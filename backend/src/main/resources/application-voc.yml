@@ -1,0 +1,6 @@
+voc:
+  http:
+    client:
+      base-url: "localhost:8080"
+      connect-timeout: 5s
+      read-timeout: 5s
