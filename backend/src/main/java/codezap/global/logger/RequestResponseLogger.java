@@ -1,6 +1,7 @@
 package codezap.global.logger;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,28 +61,24 @@ public class RequestResponseLogger extends OncePerRequestFilter {
                 duration,
                 getHeaderAsJson(responseWrapper));
 
-        logError(status, requestMessage, responseMessage);
-        logWarn(status, requestMessage, responseMessage);
-        logInfo(status, requestMessage, responseMessage);
+        logByStatus(status, requestMessage, responseMessage);
     }
 
     private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
         Map<String, String> headersMap = new HashMap<>();
-        requestWrapper.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-            String headerValue = requestWrapper.getHeader(headerName);
-            headersMap.put(headerName, headerValue);
-        });
-
+        Enumeration<String> headerNames = requestWrapper.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            headersMap.put(headerName, requestWrapper.getHeader(headerName));
+        }
         return convertMapToJson(headersMap);
     }
 
     private String getHeaderAsJson(ContentCachingResponseWrapper responseWrapper) {
         Map<String, String> headersMap = new HashMap<>();
-        responseWrapper.getHeaderNames().forEach(headerName -> {
-            String headerValue = responseWrapper.getHeader(headerName);
-            headersMap.put(headerName, headerValue);
-        });
-
+        for (String headerName : responseWrapper.getHeaderNames()) {
+            headersMap.put(headerName, responseWrapper.getHeader(headerName));
+        }
         return convertMapToJson(headersMap);
     }
 
@@ -94,28 +91,19 @@ public class RequestResponseLogger extends OncePerRequestFilter {
         }
     }
 
-    private void logError(int status, String requestMessage, String responseMessage) {
-        boolean isError = status >= ERROR_CODE;
-        if (isError) {
+    private void logByStatus(int status, String requestMessage, String responseMessage) {
+        if (status >= ERROR_CODE) {
             log.error(requestMessage);
             log.error(responseMessage);
+            return;
         }
-    }
-
-    private void logWarn(int status, String requestMessage, String responseMessage) {
-        boolean isWarn =  status >= WARN_CODE && status < ERROR_CODE;
-        if (isWarn) {
+        if (status >= WARN_CODE) {
             log.warn(requestMessage);
             log.warn(responseMessage);
+            return;
         }
-    }
-
-    private void logInfo(int status, String requestMessage, String responseMessage) {
-        boolean isInfo = status < WARN_CODE;
-        if (isInfo) {
-            log.info(requestMessage);
-            log.info(responseMessage);
-        }
+        log.info(requestMessage);
+        log.info(responseMessage);
     }
 
     @Override
