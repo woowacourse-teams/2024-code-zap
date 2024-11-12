@@ -33,7 +33,7 @@ public class TemplateQueryDSLRepository {
             Pageable pageable
     ) {
         List<Template> content = getTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
-        int nextFixedPage = countNextFixedPage(pageable, memberId, keyword, categoryId, tagIds, visibility);
+        int nextFixedPage = countNextFixedPage(memberId, keyword, categoryId, tagIds, visibility, pageable);
         return new FixedPage<>(content, nextFixedPage);
     }
 
@@ -57,12 +57,12 @@ public class TemplateQueryDSLRepository {
     }
 
     private int countNextFixedPage(
-            Pageable pageable,
             Long memberId,
             String keyword,
             Long categoryId,
             List<Long> tagIds,
-            Visibility visibility
+            Visibility visibility,
+            Pageable pageable
     ) {
         return fixedPageCounter.countNextFixedPage(
                 queryFactory,
