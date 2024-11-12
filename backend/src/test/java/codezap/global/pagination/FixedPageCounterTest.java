@@ -52,4 +52,19 @@ class FixedPageCounterTest {
 
         assertThat(nextFixedPage).isEqualTo(5);
     }
+
+    @Test
+    @DisplayName("데이터가 최대 페이지보다 적을 경우, 1페이지 반환")
+    void countNextFixedPage_WithPageSize1() {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        QTemplate template = QTemplate.template;
+
+        int nextFixedPage = fixedPageCounter.countNextFixedPage(
+                queryFactory,
+                template,
+                pageRequest
+        );
+
+        assertThat(nextFixedPage).isEqualTo(1);
+    }
 }
