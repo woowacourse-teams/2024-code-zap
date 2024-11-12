@@ -39,7 +39,7 @@ class FixedPageCounterTest {
     }
 
     @Test
-    @DisplayName("페이지가 10개까지 있어도, 최대 5페이지까지만 카운팅")
+    @DisplayName("페이지가 7개까지 있어도, 최대 5페이지까지만 카운팅")
     void countNextFixedPage_WithPageSize10() {
         PageRequest pageRequest = PageRequest.of(0, 1);
         QTemplate template = QTemplate.template;
