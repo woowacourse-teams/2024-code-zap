@@ -6,28 +6,25 @@ import * as S from './PagingButtons.style';
 
 interface Props {
   currentPage: number;
-  totalPages: number;
+  maxPages: number;
   onPageChange: (page: number) => void;
 }
 
-const PagingButtons = ({ currentPage, totalPages, onPageChange }: Props) => {
+const PagingButtons = ({ currentPage, maxPages, onPageChange }: Props) => {
   const getPageNumbers = () => {
-    const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
-    const endPage = Math.min(totalPages, startPage + 4);
+    const startPage = Math.max(1, Math.min(currentPage - 2, currentPage + maxPages - 5));
+    const endPage = Math.min(currentPage + maxPages - 1, startPage + 4);
 
     return Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
   };
 
   const handlePagingClick = (page: number, label: string) => {
-    trackMyTemplatePaging({ page, totalPages, label });
+    trackMyTemplatePaging({ page, label });
     onPageChange(page);
   };
 
   return (
     <S.PagingContainer>
-      <PagingButton page={1} disabled={currentPage === 1} onClick={handlePagingClick} label='<<' />
-      <PagingButton page={currentPage - 1} disabled={currentPage === 1} onClick={handlePagingClick} label='<' />
-
       {getPageNumbers().map((page) => (
         <PagingButton
           key={page}
@@ -37,14 +34,6 @@ const PagingButtons = ({ currentPage, totalPages, onPageChange }: Props) => {
           label={String(page)}
         />
       ))}
-
-      <PagingButton
-        page={currentPage + 1}
-        disabled={currentPage === totalPages}
-        onClick={handlePagingClick}
-        label='>'
-      />
-      <PagingButton page={totalPages} disabled={currentPage === totalPages} onClick={handlePagingClick} label='>>' />
     </S.PagingContainer>
   );
 };

@@ -39,7 +39,7 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
   });
 
   const templateList = templateData?.templates || [];
-  const totalPages = templateData?.totalPages || 0;
+  const maxPages = templateData?.maxPages || 0;
 
   useEffect(() => {
     if (queryParams.sort === sortingOption.value) {
@@ -87,7 +87,7 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
     templateList,
     isTemplateListFetching,
     isTemplateListLoading,
-    totalPages,
+    maxPages,
     dropdownProps,
     keyword,
     page,
