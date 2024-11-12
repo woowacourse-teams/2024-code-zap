@@ -117,9 +117,9 @@ class VocRequestTest {
         }
 
         static Stream<String> content_length_fail() {
-            var contentLengthUnder20 = "code zap";
-            var contentLengthOver10_000 = "z".repeat(10_001);
-            return Stream.of(contentLengthUnder20, contentLengthOver10_000);
+            var contentLength19 = "z".repeat(19);
+            var contentLength10_001 = "z".repeat(10_001);
+            return Stream.of(contentLength19, contentLength10_001);
         }
 
         @Test
