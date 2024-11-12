@@ -99,19 +99,6 @@ class VocRequestTest {
             return Stream.of(contentLength20, contentLength10_000);
         }
 
-        @Test
-        @DisplayName("문의 내용이 없는 경우 예외 발생")
-        void content_null_fail() {
-            var request = new VocRequest(null, null);
-
-            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
-
-            assertThat(constraintViolations).hasSize(1)
-                    .first()
-                    .extracting(ConstraintViolation::getMessage)
-                    .isEqualTo("문의 내용은 비어있을 수 없습니다.");
-        }
-
         @ParameterizedTest
         @MethodSource
         @DisplayName("문의 내용이 20자 미만, 10,000자 초과일 경우 예외 발생")
@@ -133,6 +120,19 @@ class VocRequestTest {
             var contentLengthUnder20 = "code zap";
             var contentLengthOver10_000 = "z".repeat(10_001);
             return Stream.of(contentLengthUnder20, contentLengthOver10_000);
+        }
+
+        @Test
+        @DisplayName("문의 내용이 null인 경우 예외 발생")
+        void content_null_fail() {
+            var request = new VocRequest(null, null);
+
+            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+
+            assertThat(constraintViolations).hasSize(1)
+                    .first()
+                    .extracting(ConstraintViolation::getMessage)
+                    .isEqualTo("문의 내용은 비어있을 수 없습니다.");
         }
     }
 
