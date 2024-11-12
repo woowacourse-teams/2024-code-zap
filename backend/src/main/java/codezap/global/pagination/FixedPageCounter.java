@@ -1,7 +1,5 @@
 package codezap.global.pagination;
 
-import java.util.Objects;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -21,12 +19,12 @@ public class FixedPageCounter {
             BooleanExpression... conditions
     ) {
         int maximumElementsCount = pageable.getPageSize() * MAXIMUM_PAGE;
-        long nextFixedElementCounts = Objects.requireNonNull(queryFactory
-                        .selectFrom(entityPath)
-                        .where(conditions)
-                        .offset(pageable.getOffset())
-                        .limit(maximumElementsCount)
-                        .fetch())
+        long nextFixedElementCounts = queryFactory
+                .selectFrom(entityPath)
+                .where(conditions)
+                .offset(pageable.getOffset())
+                .limit(maximumElementsCount)
+                .fetch()
                 .size();
 
         return (int) Math.ceil((double) nextFixedElementCounts / pageable.getPageSize());
