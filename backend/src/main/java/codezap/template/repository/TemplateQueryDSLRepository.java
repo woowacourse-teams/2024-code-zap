@@ -33,7 +33,7 @@ public class TemplateQueryDSLRepository {
             Pageable pageable
     ) {
         List<Template> content = getTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
-        int nextFixedPage = countNextFixedPage(memberId, keyword, categoryId, tagIds, visibility, pageable);
+        int nextFixedPage = countMaxPageOfTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
         return new FixedPage<>(content, nextFixedPage);
     }
 
@@ -56,7 +56,7 @@ public class TemplateQueryDSLRepository {
                 .fetch();
     }
 
-    private int countNextFixedPage(
+    private int countMaxPageOfTemplates(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -98,10 +98,10 @@ public class TemplateQueryDSLRepository {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return new FixedPage<>(content, countNextFixedPage(memberId, pageable));
+        return new FixedPage<>(content, countMaxPageOfLikeTemplates(memberId, pageable));
     }
 
-    private int countNextFixedPage(Long memberId, Pageable pageable) {
+    private int countMaxPageOfLikeTemplates(Long memberId, Pageable pageable) {
         return fixedPageCounter.countNextFixedPage(
                 queryFactory,
                 QLikes.likes,
