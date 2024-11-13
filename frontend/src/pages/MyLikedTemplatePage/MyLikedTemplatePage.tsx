@@ -36,7 +36,7 @@ const MyLikedTemplatePage = () => {
 
   const { data: templateData, isLoading, isPending, isFetching } = useLikedTemplateListQuery({ page });
   const templateList = templateData?.templates || [];
-  const maxPages = templateData?.maxPages || 0;
+  const paginationSizes = templateData?.paginationSizes || 0;
 
   if (!isMine) {
     return <ForbiddenPage />;
@@ -74,7 +74,7 @@ const MyLikedTemplatePage = () => {
 
       {templateList.length !== 0 && (
         <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-          <PagingButtons currentPage={page} maxPages={maxPages} onPageChange={handlePageChange} />
+          <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
         </Flex>
       )}
     </>

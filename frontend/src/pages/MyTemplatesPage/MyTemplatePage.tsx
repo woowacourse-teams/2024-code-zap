@@ -40,7 +40,7 @@ const MyTemplatePage = () => {
     templateList,
     isTemplateListFetching,
     isTemplateListLoading,
-    maxPages,
+    paginationSizes,
     dropdownProps,
     keyword,
     page,
@@ -129,7 +129,7 @@ const MyTemplatePage = () => {
 
           {templateList.length !== 0 && (
             <Flex justify='center' gap='0.5rem' margin='1rem 0'>
-              <PagingButtons currentPage={page} maxPages={maxPages} onPageChange={handlePageChange} />
+              <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
             </Flex>
           )}
         </Flex>
