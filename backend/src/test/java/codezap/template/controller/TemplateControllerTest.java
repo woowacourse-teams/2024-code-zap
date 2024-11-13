@@ -267,7 +267,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.nextPages").value(1));
+                    .andExpect(jsonPath("$.maxPages").value(1));
         }
 
         @Test
@@ -287,7 +287,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.nextPages").value(1));
+                    .andExpect(jsonPath("$.maxPages").value(1));
         }
 
         private FindAllTemplateItemResponse getFindAllTemplateItemResponse() {
@@ -617,7 +617,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.nextPages").value(1));
+                    .andExpect(jsonPath("$.maxPages").value(1));
         }
 
         private FindAllTemplateItemResponse getFindAllTemplateItemResponse(Member member) {
