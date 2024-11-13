@@ -56,6 +56,10 @@ public class TemplateService {
         return templateRepository.findAll(memberId, keyword, categoryId, tagIds, visibility, pageable);
     }
 
+    public FixedPage<Template> findAllByMemberId(Long memberId, Pageable pageable) {
+        return templateRepository.findAllLikedByMemberId(memberId, pageable);
+    }
+
     @Transactional
     public Template update(
             Member member,

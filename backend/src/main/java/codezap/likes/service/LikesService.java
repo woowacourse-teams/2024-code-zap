@@ -37,10 +37,6 @@ public class LikesService {
         return likesRepository.existsByMemberAndTemplate(member, template);
     }
 
-    public FixedPage<Template> findAllByMemberId(Long memberId, Pageable pageable) {
-        return templateRepository.findAllLikedByMemberId(memberId, pageable);
-    }
-
     @Transactional
     public void cancelLike(Member member, long templateId) {
         Template template = templateRepository.fetchById(templateId);

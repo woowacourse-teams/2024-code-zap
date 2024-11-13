@@ -121,7 +121,7 @@ public class TemplateApplicationService {
     }
 
     public FindAllTemplatesResponse findAllByLiked(Long memberId, Pageable pageable) {
-        FixedPage<Template> likeTemplate = likesService.findAllByMemberId(memberId, pageable);
+        FixedPage<Template> likeTemplate = templateService.findAllByMemberId(memberId, pageable);
         return makeAllTemplatesResponse(likeTemplate, (template -> true));
     }
 
