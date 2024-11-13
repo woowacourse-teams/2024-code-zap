@@ -45,8 +45,7 @@ public class TemplateQueryDSLRepository {
             Visibility visibility,
             Pageable pageable
     ) {
-        return queryFactory
-                .selectFrom(QTemplate.template)
+        return queryFactory.selectFrom(QTemplate.template)
                 .leftJoin(QTemplate.template.category).fetchJoin()
                 .leftJoin(QTemplate.template.member).fetchJoin()
                 .where(matchesKeyword(memberId, keyword, categoryId, tagIds, visibility))
@@ -89,8 +88,7 @@ public class TemplateQueryDSLRepository {
     }
 
     public FixedPage<Template> findAllLikedByMemberId(Long memberId, Pageable pageable) {
-        List<Template> content = queryFactory
-                .select(QLikes.likes.template)
+        List<Template> content = queryFactory.select(QLikes.likes.template)
                 .from(QLikes.likes)
                 .where(isLikedTemplateByMember(memberId))
                 .orderBy(TemplateOrderSpecifierUtils.getOrderSpecifier(pageable.getSort()))
