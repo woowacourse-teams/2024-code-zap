@@ -1,4 +1,4 @@
-import { ViewUpdate } from '@codemirror/view';
+import { type ViewUpdate } from '@uiw/react-codemirror';
 import { useRef } from 'react';
 
 import { TrashcanIcon } from '@/assets/images';

@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Button } from '@/components';
+import { theme } from '@/style/theme';
 
 export const SourceCodeViewerContainer = styled.div`
   overflow: hidden;
@@ -17,7 +18,7 @@ export const FilenameContainer = styled.div`
   height: 3rem;
   padding: 1rem 1.5rem;
 
-  background: ${({ theme }) => theme.color.light.tertiary_600};
+  background: ${theme.color.light.tertiary_600};
 `;
 
 export const ToggleButton = styled.button`
