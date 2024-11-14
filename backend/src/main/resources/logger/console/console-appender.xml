@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<included>
+<configuration>
     <appender name="console-appender" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>[%highlight(%level)][%d{MM-dd HH:mm:ss}][%magenta(%8X{correlationId})][%highlight(%replace(%logger{20}){'\\w\\.', ''})] %msg %n</pattern>
+            <pattern>[%level][%d{MM-dd HH:mm:ss}][%X{correlationId}][%logger{20}] %msg%n</pattern>
         </layout>
     </appender>
-</included>
+
+    <root level="INFO">
+        <appender-ref ref="console-appender" />
+    </root>
+</configuration>
