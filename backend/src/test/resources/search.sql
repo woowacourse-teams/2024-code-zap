@@ -15,6 +15,9 @@ VALUES (1, '2024-09-27 08:43:08.752936', '2024-09-27 08:43:08.752936', '몰리',
 INSERT INTO member (id, created_at, modified_at, name, password, salt)
 VALUES (2, '2024-09-27 08:43:08.757482', '2024-09-27 08:43:08.757482', '몰리2', 'password1234', 'salt2');
 
+INSERT INTO member (id, created_at, modified_at, name, password, salt)
+VALUES (3, '2024-09-27 08:43:08.757482', '2024-09-27 08:43:08.757482', '몰리3', 'password1234', 'salt2');
+
 -- Category 삽입
 INSERT INTO category (id, created_at, is_default, member_id, modified_at, name)
 VALUES (1, '2024-09-27 08:43:08.760511', false, 1, '2024-09-27 08:43:08.760511', 'Category 1');
@@ -41,6 +44,16 @@ VALUES (3, 1, '2024-09-27 08:43:08.790778', 'Description 1', 2, '2024-09-27 08:4
 
 INSERT INTO template (id, category_id, created_at, description, member_id, modified_at, title, visibility)
 VALUES (4, 2, '2024-09-27 08:43:08.790780', 'Description 1', 2, '2024-09-27 08:43:08.790780', 'Template 1', 'PRIVATE');
+
+INSERT INTO template (id, category_id, created_at, description, member_id, modified_at, title, visibility)
+VALUES (5, 2, '2024-09-27 08:43:08.790780', 'Description 1', 3, '2024-09-27 08:43:08.790780', '템플릿1', 'PUBLIC');
+
+INSERT INTO template (id, category_id, created_at, description, member_id, modified_at, title, visibility)
+VALUES (6, 2, '2024-09-27 08:43:08.790780', 'Description 1', 3, '2024-09-27 08:43:08.790780', '템플릿2', 'PUBLIC');
+
+INSERT INTO template (id, category_id, created_at, description, member_id, modified_at, title, visibility)
+VALUES (7, 2, '2024-09-27 08:43:08.790780', 'Description 1', 3, '2024-09-27 08:43:08.790780', '템플릿3', 'PUBLIC');
+
 
 -- Source Code 삽입
 INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
@@ -90,7 +103,7 @@ WHERE table_name = 'template'
   AND index_name = 'idx_template_fulltext';
 
 -- 없다면 전문 검색 인덱스 생성
-SET @createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_template_fulltext ON template (title, description);', 'SELECT 1');
+SET @createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_template_fulltext ON template (title, description) with parser ngram;', 'SELECT 1');
 PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;

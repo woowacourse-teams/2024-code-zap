@@ -5,10 +5,8 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record FindAllTemplatesResponse(
-        @Schema(description = "전체 페이지 개수", example = "1")
-        int totalPages,
-        @Schema(description = "총 템플릿 개수", example = "134")
-        long totalElements,
+        @Schema(description = "최대 페이지 개수, 최대 5개입니다.", example = "1")
+        int paginationSizes,
         @Schema(description = "템플릿 목록")
         List<FindAllTemplateItemResponse> templates
 ) {

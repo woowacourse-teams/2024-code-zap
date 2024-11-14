@@ -2,8 +2,6 @@ package codezap.likes.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import codezap.likes.domain.Likes;
@@ -36,9 +34,5 @@ public class LikesRepository {
 
     public void deleteAllByTemplateIds(List<Long> templateIds) {
         likesQueryDslRepository.deleteAllByTemplateIds(templateIds);
-    }
-
-    public Page<Template> findAllByMemberId(Long memberId, Pageable pageable) {
-        return likesJpaRepository.findAllByMemberId(memberId, pageable);
     }
 }

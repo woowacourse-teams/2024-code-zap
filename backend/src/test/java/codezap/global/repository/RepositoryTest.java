@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import codezap.global.DatabaseIsolation;
 import codezap.global.auditing.JpaAuditingConfiguration;
+import codezap.global.pagination.FixedPageCounter;
 import codezap.global.querydsl.QueryDSLConfig;
 import codezap.global.rds.DataSourceConfig;
 import codezap.template.repository.TemplateSearchExpressionProvider;
@@ -29,7 +30,9 @@ import codezap.template.repository.strategy.LikeSearchStrategy;
         QueryDSLConfig.class,
         TemplateSearchExpressionProvider.class,
         LikeSearchStrategy.class,
-        FullTextSearchSearchStrategy.class})
+        FullTextSearchSearchStrategy.class,
+        FixedPageCounter.class
+})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public @interface RepositoryTest {
 }

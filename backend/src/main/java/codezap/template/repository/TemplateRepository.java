@@ -2,12 +2,12 @@ package codezap.template.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import codezap.global.pagination.FixedPage;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +28,14 @@ public class TemplateRepository {
         return templateJpaRepository.findByMemberId(id);
     }
 
-    public Page<Template> findAll(
+    public FixedPage<Template> findAll(
             Long memberId, String keyword, Long categoryId, List<Long> tagIds, Visibility visibility, Pageable pageable
     ) {
         return templateQueryDSLRepository.findTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
+    }
+
+    public FixedPage<Template> findAllLikedByMemberId(Long memberId, Pageable pageable) {
+        return templateQueryDSLRepository.findAllLikedByMemberId(memberId, pageable);
     }
 
     public boolean existsByCategoryId(Long categoryId) {

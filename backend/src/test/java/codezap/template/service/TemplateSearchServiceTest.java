@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -23,6 +22,7 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.exception.CodeZapException;
+import codezap.global.pagination.FixedPage;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
@@ -103,9 +103,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getMember().getId().equals(member1.getId()))
                     .toArray(Template[]::new));
         }
@@ -136,9 +136,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getTitle().contains(keyword) || template.getDescription().contains(keyword))
                     .toArray(Template[]::new));
         }
@@ -153,9 +153,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getCategory().getId().equals(category1.getId()))
                     .toArray(Template[]::new));
         }
@@ -170,15 +170,15 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
-                    () -> assertThat(actual.getContent())
+                    () -> assertThat(actual.contents())
                             .containsExactlyInAnyOrder(
                                     templateRepository.fetchById(1L),
                                     templateRepository.fetchById(2L),
                                     templateRepository.fetchById(3L)),
-                    () -> assertThat(actual.getContent()).hasSize(3)
+                    () -> assertThat(actual.contents()).hasSize(3)
             );
         }
 
@@ -192,14 +192,14 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
-                    () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(
+                    () -> assertThat(actual.contents()).containsExactlyInAnyOrder(
                             templateRepository.fetchById(1L),
                             templateRepository.fetchById(2L),
                             templateRepository.fetchById(3L)),
-                    () -> assertThat(actual.getContent()).hasSize(3)
+                    () -> assertThat(actual.contents()).hasSize(3)
             );
         }
 
@@ -213,9 +213,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = Visibility.PUBLIC;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getVisibility().equals(visibility))
                     .toArray(Template[]::new));
         }
@@ -230,9 +230,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getMember().getId().equals(member1.getId())
                             && (template.getTitle().contains(keyword) || template.getDescription().contains(keyword)))
                     .toArray(Template[]::new));
@@ -248,9 +248,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getMember().getId().equals(member1.getId()) && template.getCategory()
                             .getId().equals(category1.getId()))
                     .toArray(Template[]::new));
@@ -266,11 +266,11 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(2),
-                    () -> assertThat(actual.getContent())
+                    () -> assertThat(actual.contents()).hasSize(2),
+                    () -> assertThat(actual.contents())
                             .containsExactlyInAnyOrder(
                                     templateRepository.fetchById(1L),
                                     templateRepository.fetchById(2L))
@@ -287,9 +287,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = Visibility.PUBLIC;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).containsExactlyInAnyOrder(templates.stream()
+            assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getMember().getId().equals(member2.getId())
                             && template.getVisibility().equals(visibility))
                     .toArray(Template[]::new));
@@ -305,11 +305,11 @@ class TemplateSearchServiceTest {
             Visibility visibility = Visibility.PUBLIC;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(1),
-                    () -> assertThat(actual.getContent()).containsExactlyInAnyOrder(templateRepository.fetchById(1L))
+                    () -> assertThat(actual.contents()).hasSize(1),
+                    () -> assertThat(actual.contents()).containsExactlyInAnyOrder(templateRepository.fetchById(1L))
             );
         }
 
@@ -323,9 +323,9 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(0, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
-            assertThat(actual.getContent()).isEmpty();
+            assertThat(actual.contents()).isEmpty();
         }
     }
 
@@ -352,14 +352,13 @@ class TemplateSearchServiceTest {
             Visibility visibility = null;
             Pageable pageable = PageRequest.of(1, 10);
 
-            Page<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
+            FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
-                    () -> assertThat(actual.getContent()).hasSize(5),
-                    () -> assertThat(actual.getContent().get(0).getId()).isEqualTo(11L)
+                    () -> assertThat(actual.contents()).hasSize(5),
+                    () -> assertThat(actual.contents().get(0).getId()).isEqualTo(11L)
             );
         }
-
     }
 
     private void saveInitialData() {

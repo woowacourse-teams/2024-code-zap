@@ -10,7 +10,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -21,6 +20,8 @@ import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
+import codezap.global.pagination.FixedPage;
+import codezap.likes.domain.Likes;
 import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
@@ -155,7 +156,7 @@ class TemplateServiceTest extends ServiceTest {
 
             List<Template> templates = sut.findAllBy(null, "", null, null, null,
                             PageRequest.of(0, 10, Sort.by(Direction.DESC, "likesCount")))
-                    .getContent();
+                    .contents();
 
             assertThat(templates).containsExactly(
                     templateRepository.fetchById(3L),
@@ -187,6 +188,34 @@ class TemplateServiceTest extends ServiceTest {
             for (long memberId = 1L; memberId <= likesCount; memberId++) {
                 likesService.like(memberRepository.fetchById(memberId), templateId);
             }
+        }
+    }
+
+
+    @Nested
+    @DisplayName("좋아요한 템플릿 조회")
+    class FindAllByMemberId {
+
+        @Test
+        @DisplayName("성공")
+        void findAllByMemberId() {
+            // given
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            Category category1 = categoryRepository.save(CategoryFixture.get(member1));
+            Category category2 = categoryRepository.save(CategoryFixture.get(member2));
+            Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template3 = templateRepository.save(TemplateFixture.get(member2, category2));
+            likesRepository.save(new Likes(template1, member1));
+            likesRepository.save(new Likes(template2, member2));
+            likesRepository.save(new Likes(template3, member1));
+
+            // when
+            FixedPage<Template> actual = templateRepository.findAllLikedByMemberId(member1.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertThat(actual.contents()).containsExactlyInAnyOrder(template1, template3);
         }
     }
 
@@ -278,10 +307,10 @@ class TemplateServiceTest extends ServiceTest {
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+            FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
                     PageRequest.of(0, 10));
 
-            assertThat(actual.getContent()).hasSize(1)
+            assertThat(actual.contents()).hasSize(1)
                     .containsExactly(template2);
         }
 
@@ -296,10 +325,10 @@ class TemplateServiceTest extends ServiceTest {
             var template4 = templateRepository.save(TemplateFixture.get(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
-            Page<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
+            FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
                     PageRequest.of(0, 10));
 
-            assertThat(actual.getContent()).hasSize(2)
+            assertThat(actual.contents()).hasSize(2)
                     .containsExactly(template2, template3);
         }
 
