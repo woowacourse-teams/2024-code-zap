@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
-import { Flex, Input, PagingButtons, Dropdown } from '@/components';
+import { Flex, Input, PagingButtons, Dropdown, Heading } from '@/components';
 import { useAuth } from '@/hooks/authentication';
 import { useMemberNameQuery } from '@/queries/members';
 import { useTrackPageViewed } from '@/service/amplitude';
@@ -43,6 +43,7 @@ const MyTemplatePage = () => {
     totalPages,
     dropdownProps,
     keyword,
+    searchKeyword,
     page,
     sortingOption,
     selectedTagIds,
@@ -86,6 +87,8 @@ const MyTemplatePage = () => {
             />
           )}
 
+          <Heading.XSmall color='black'>{searchKeyword ? `'${searchKeyword}' 검색 결과` : ''}</Heading.XSmall>
+
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
@@ -119,7 +122,7 @@ const MyTemplatePage = () => {
             {!isTemplateListLoading && (
               <TemplateListSection
                 templateList={templateList}
-                isSearching={keyword !== ''}
+                isSearching={keyword !== '' || keyword !== searchKeyword}
                 isEditMode={isEditMode}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}

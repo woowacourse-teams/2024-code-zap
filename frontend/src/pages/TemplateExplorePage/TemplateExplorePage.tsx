@@ -15,7 +15,7 @@ import {
   TemporaryError,
   TemplateCard,
 } from '@/components';
-import { useDebounce, useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
+import { useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
@@ -48,8 +48,6 @@ const TemplateExplorePage = () => {
 
   const [keyword, handleKeywordChange] = useInput(queryParams.keyword);
 
-  const debouncedKeyword = useDebounce(keyword, 300);
-
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
 
   const { selectedTagIds, selectedHotTopic, selectTopic } = useHotTopic();
@@ -62,22 +60,15 @@ const TemplateExplorePage = () => {
     updateQueryParams({ sort: sortingOption.value, page: FIRST_PAGE });
   }, [queryParams.sort, sortingOption, updateQueryParams]);
 
-  useEffect(() => {
-    if (queryParams.keyword === debouncedKeyword) {
-      return;
-    }
-
-    updateQueryParams({ keyword: debouncedKeyword, page: FIRST_PAGE });
-  }, [queryParams.keyword, debouncedKeyword, updateQueryParams]);
-
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handlePage(FIRST_PAGE);
+      updateQueryParams({ keyword, page: FIRST_PAGE });
     }
   };
 
   return (
-    <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
+    <Flex direction='column' gap='1.5rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
         {isMobile ? (
           <Heading.XSmall color='black'>
@@ -90,6 +81,8 @@ const TemplateExplorePage = () => {
         )}
         <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
       </Flex>
+
+      <Heading.XSmall color='black'>{queryParams.keyword ? `'${queryParams.keyword}' 검색 결과` : ''}</Heading.XSmall>
 
       <Flex width='100%' gap='1rem'>
         <S.SearchInput size='medium' variant='text'>
@@ -121,7 +114,7 @@ const TemplateExplorePage = () => {
               page={page}
               handlePage={handlePage}
               sortingOption={sortingOption}
-              keyword={debouncedKeyword}
+              keyword={queryParams.keyword}
               tagIds={selectedTagIds}
             />
           </ErrorBoundary>
