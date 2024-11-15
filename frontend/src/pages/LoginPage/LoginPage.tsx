@@ -8,6 +8,7 @@ import { useTrackPageViewed } from '@/service/amplitude';
 
 import { useLoginForm } from './hooks';
 import * as S from './LoginPage.style';
+import { theme } from '@/style/theme';
 
 const LoginPage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 로그인 페이지' });
@@ -21,7 +22,7 @@ const LoginPage = () => {
         <S.LoginPageContainer direction='column' justify='center' align='center' gap='3.5rem' width='27.5rem'>
           <Flex direction='column' justify='center' align='center' gap='1rem'>
             <ZapzapLogo width={100} height={100} />
-            <S.ResponsiveHeading color='#F79037'>환영하잽</S.ResponsiveHeading>
+            <S.ResponsiveHeading color={theme.color.light.primary_800}>환영하잽</S.ResponsiveHeading>
           </Flex>
 
           <S.LoginForm
@@ -61,7 +62,7 @@ const LoginPage = () => {
               로그인
             </Button>
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
-              <Text.XSmall color='#6B7079'>계정이 없으신가요?</Text.XSmall>
+              <Text.XSmall color={theme.color.light.secondary_600}>계정이 없으신가요?</Text.XSmall>
 
               <Link to={END_POINTS.SIGNUP}>
                 <Button variant='text' size='small'>
