@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
-import { Flex, Input, PagingButtons, Dropdown } from '@/components';
+import { Flex, Input, PagingButtons, Dropdown, Heading } from '@/components';
 import { useAuth } from '@/hooks/authentication';
 import { useMemberNameQuery } from '@/queries/members';
 import { useTrackPageViewed } from '@/service/amplitude';
@@ -42,7 +42,8 @@ const MyTemplatePage = () => {
     isTemplateListLoading,
     paginationSizes,
     dropdownProps,
-    keyword,
+    inputKeyword,
+    searchedKeyword,
     page,
     sortingOption,
     selectedTagIds,
@@ -86,6 +87,10 @@ const MyTemplatePage = () => {
             />
           )}
 
+          <S.SearchKeywordPlaceholder>
+            <Heading.XSmall color='black'>{searchedKeyword ? `'${searchedKeyword}' 검색 결과` : ''}</Heading.XSmall>
+          </S.SearchKeywordPlaceholder>
+
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>
               <Input.Adornment>
@@ -93,7 +98,7 @@ const MyTemplatePage = () => {
               </Input.Adornment>
               <Input.TextField
                 placeholder='검색'
-                value={keyword}
+                value={inputKeyword}
                 onChange={handleKeywordChange}
                 onKeyDown={handleSearchSubmit}
               />
@@ -119,7 +124,7 @@ const MyTemplatePage = () => {
             {!isTemplateListLoading && (
               <TemplateListSection
                 templateList={templateList}
-                isSearching={keyword !== ''}
+                isSearching={inputKeyword !== '' || inputKeyword !== searchedKeyword}
                 isEditMode={isEditMode}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
