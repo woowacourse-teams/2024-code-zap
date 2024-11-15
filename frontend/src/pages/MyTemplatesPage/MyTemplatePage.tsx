@@ -87,7 +87,9 @@ const MyTemplatePage = () => {
             />
           )}
 
-          <Heading.XSmall color='black'>{searchKeyword ? `'${searchKeyword}' 검색 결과` : ''}</Heading.XSmall>
+          <S.SearchKeywordPlaceholder>
+            <Heading.XSmall color='black'>{searchKeyword ? `'${searchKeyword}' 검색 결과` : ''}</Heading.XSmall>
+          </S.SearchKeywordPlaceholder>
 
           <Flex width='100%' gap='1rem'>
             <S.SearchInput size='medium' variant='text'>

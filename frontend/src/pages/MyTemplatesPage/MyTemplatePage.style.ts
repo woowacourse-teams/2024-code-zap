@@ -21,6 +21,10 @@ export const MainContainer = styled.main`
   }
 `;
 
+export const SearchKeywordPlaceholder = styled.div`
+  height: 1.5rem;
+`;
+
 export const SearchInput = styled(Input)`
   box-shadow: inset 1px 2px 8px #00000030;
 `;
