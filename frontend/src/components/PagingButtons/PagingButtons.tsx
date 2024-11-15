@@ -25,6 +25,7 @@ const PagingButtons = ({ currentPage, paginationSizes, onPageChange }: Props) =>
 
   return (
     <S.PagingContainer>
+      <PagingButton page={currentPage - 1} disabled={currentPage === 1} onClick={handlePagingClick} label='<' />
       {getPageNumbers().map((page) => (
         <PagingButton
           key={page}
@@ -34,6 +35,7 @@ const PagingButtons = ({ currentPage, paginationSizes, onPageChange }: Props) =>
           label={String(page)}
         />
       ))}
+      <PagingButton page={currentPage + 1} disabled={paginationSizes === 1} onClick={handlePagingClick} label='>' />
     </S.PagingContainer>
   );
 };
@@ -48,7 +50,9 @@ interface PagingButtonProps {
 
 const PagingButton = ({ page, isActive, disabled, onClick, label }: PagingButtonProps) => (
   <S.PagingButton isActive={isActive} disabled={disabled || isActive} onClick={() => onClick(page ?? 1, label)}>
-    <Text.Small color={isActive ? theme.color.light.white : theme.color.light.secondary_500}>{label}</Text.Small>
+    {!disabled && (
+      <Text.Small color={isActive ? theme.color.light.white : theme.color.light.secondary_500}>{label}</Text.Small>
+    )}
   </S.PagingButton>
 );
 
