@@ -61,8 +61,7 @@ export const templateHandlers = [
         break;
     }
 
-    const totalElements = filteredTemplates.length;
-    const totalPages = Math.ceil(totalElements / size);
+    const paginationSizes = Math.min(Math.ceil(filteredTemplates.length / size - page + 1), 5);
     const startIndex = (page - 1) * size;
     const endIndex = startIndex + size;
     const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
@@ -71,8 +70,7 @@ export const templateHandlers = [
     return HttpResponse.json({
       status: 200,
       templates: paginatedTemplates,
-      totalPages,
-      totalElements,
+      paginationSizes,
       numberOfElements,
     });
   }),
