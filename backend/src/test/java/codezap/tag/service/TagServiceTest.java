@@ -69,7 +69,7 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 저장하려는 태그에 중복이 있는 경우 하나만")
+        @DisplayName("성공: 저장하려는 태그에 중복이 있는 경우 하나만 생성")
         void createTags_WhenDuplicatedTemplateTag() {
             // given
             Template template = createSavedTemplate();
