@@ -42,8 +42,8 @@ const MyTemplatePage = () => {
     isTemplateListLoading,
     paginationSizes,
     dropdownProps,
-    keyword,
-    searchKeyword,
+    inputKeyword,
+    searchedKeyword,
     page,
     sortingOption,
     selectedTagIds,
@@ -88,7 +88,7 @@ const MyTemplatePage = () => {
           )}
 
           <S.SearchKeywordPlaceholder>
-            <Heading.XSmall color='black'>{searchKeyword ? `'${searchKeyword}' 검색 결과` : ''}</Heading.XSmall>
+            <Heading.XSmall color='black'>{searchedKeyword ? `'${searchedKeyword}' 검색 결과` : ''}</Heading.XSmall>
           </S.SearchKeywordPlaceholder>
 
           <Flex width='100%' gap='1rem'>
@@ -98,7 +98,7 @@ const MyTemplatePage = () => {
               </Input.Adornment>
               <Input.TextField
                 placeholder='검색'
-                value={keyword}
+                value={inputKeyword}
                 onChange={handleKeywordChange}
                 onKeyDown={handleSearchSubmit}
               />
@@ -124,7 +124,7 @@ const MyTemplatePage = () => {
             {!isTemplateListLoading && (
               <TemplateListSection
                 templateList={templateList}
-                isSearching={keyword !== '' || keyword !== searchKeyword}
+                isSearching={inputKeyword !== '' || inputKeyword !== searchedKeyword}
                 isEditMode={isEditMode}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}

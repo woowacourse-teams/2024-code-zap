@@ -46,7 +46,7 @@ const TemplateExplorePage = () => {
     updateQueryParams({ page });
   };
 
-  const [keyword, handleKeywordChange] = useInput(queryParams.keyword);
+  const [inputKeyword, handleInputKeywordChange] = useInput(queryParams.keyword);
 
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
 
@@ -63,7 +63,7 @@ const TemplateExplorePage = () => {
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handlePage(FIRST_PAGE);
-      updateQueryParams({ keyword, page: FIRST_PAGE });
+      updateQueryParams({ keyword: inputKeyword, page: FIRST_PAGE });
     }
   };
 
@@ -93,8 +93,8 @@ const TemplateExplorePage = () => {
           </Input.Adornment>
           <Input.TextField
             placeholder='검색'
-            value={keyword}
-            onChange={handleKeywordChange}
+            value={inputKeyword}
+            onChange={handleInputKeywordChange}
             onKeyDown={handleSearchSubmit}
           />
         </S.SearchInput>
@@ -110,7 +110,7 @@ const TemplateExplorePage = () => {
           <ErrorBoundary
             FallbackComponent={(fallbackProps) => <TemporaryError {...fallbackProps} />}
             onReset={reset}
-            resetKeys={[keyword]}
+            resetKeys={[inputKeyword]}
           >
             <TemplateList
               page={page}
