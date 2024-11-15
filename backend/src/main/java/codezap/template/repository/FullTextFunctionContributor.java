@@ -8,7 +8,7 @@ import org.hibernate.boot.model.FunctionContributor;
 public class FullTextFunctionContributor implements FunctionContributor {
 
     private static final String FUNCTION_NAME = "fulltext_match";
-    private static final String MATCH_AGAINST_FUNCTION = "match(?1, ?2) against(?3)";
+    private static final String MATCH_AGAINST_FUNCTION = "match(?1, ?2) against(?3 in boolean mode)";
 
     @Override
     public void contributeFunctions(FunctionContributions functionContributions) {
