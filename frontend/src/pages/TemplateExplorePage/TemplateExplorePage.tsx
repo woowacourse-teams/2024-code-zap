@@ -153,7 +153,7 @@ const TemplateList = ({
     tagIds,
   });
   const templateList = templateData?.templates || [];
-  const totalPages = templateData?.totalPages || 0;
+  const paginationSizes = templateData?.paginationSizes || 0;
 
   const windowWidth = useWindowWidth();
 
@@ -185,7 +185,7 @@ const TemplateList = ({
 
       {templateList.length !== 0 && (
         <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-          <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+          <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
         </Flex>
       )}
     </>

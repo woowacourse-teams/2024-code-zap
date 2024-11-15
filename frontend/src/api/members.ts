@@ -3,7 +3,7 @@ import { GetMemberNameResponse } from '@/types';
 
 import { customFetch } from './customFetch';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
 
 export const MEMBER_API_URL = `${API_URL}${END_POINTS.MEMBERS}`;
 

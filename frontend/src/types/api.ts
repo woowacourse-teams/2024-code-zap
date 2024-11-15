@@ -2,8 +2,7 @@ import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
-  totalPages: number;
-  totalElements: number;
+  paginationSizes: number;
 }
 
 export interface TemplateUploadRequest {

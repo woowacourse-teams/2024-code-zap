@@ -6,7 +6,7 @@ const meta: Meta<typeof PagingButtons> = {
   title: 'PagingButtons',
   component: PagingButtons,
   args: {
-    totalPages: 6,
+    paginationSizes: 5,
     onPageChange: () => {},
   },
 };
