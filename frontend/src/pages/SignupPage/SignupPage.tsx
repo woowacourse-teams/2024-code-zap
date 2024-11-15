@@ -7,6 +7,7 @@ import { useTrackPageViewed } from '@/service/amplitude';
 
 import { useSignupForm } from './hooks';
 import * as S from './SignupPage.style';
+import { theme } from '@/style/theme';
 
 const SignupPage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 회원가입 페이지' });
@@ -33,7 +34,7 @@ const SignupPage = () => {
         <S.SignupPageContainer direction='column' justify='center' align='center' width='27.5rem' gap='3.5rem'>
           <Flex direction='column' justify='center' align='center' gap='1rem'>
             <ZapzapLogo width={100} height={100} />
-            <S.ResponsiveHeading color='#F79037'>환영하잽</S.ResponsiveHeading>
+            <S.ResponsiveHeading color={theme.color.light.primary_800}>환영하잽</S.ResponsiveHeading>
           </Flex>
 
           <S.SignupForm
@@ -89,7 +90,7 @@ const SignupPage = () => {
             </Button>
 
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
-              <Text.XSmall color='#6B7079'>이미 계정이 있으신가요?</Text.XSmall>
+              <Text.XSmall color={theme.color.light.secondary_600}>이미 계정이 있으신가요?</Text.XSmall>
               <Link to={'/login'}>
                 <Button variant='text' size='small'>
                   로그인
