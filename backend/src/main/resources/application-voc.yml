@@ -1,6 +1,6 @@
 voc:
   http:
     client:
-      base-url: "localhost:8080"
+      base-url: ${VOC_SPREADSHEET_API_BASE_URL}  # http client 테스트를 위한 url.
       connect-timeout: 5s
       read-timeout: 5s
