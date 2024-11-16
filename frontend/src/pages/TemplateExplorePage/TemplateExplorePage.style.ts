@@ -31,3 +31,7 @@ export const TemplateListSectionWrapper = styled.div`
   position: relative;
   width: 100%;
 `;
+
+export const SearchKeywordPlaceholder = styled.div`
+  height: 1.5rem;
+`;

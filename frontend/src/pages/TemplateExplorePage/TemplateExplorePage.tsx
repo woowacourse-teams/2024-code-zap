@@ -15,7 +15,7 @@ import {
   TemporaryError,
   TemplateCard,
 } from '@/components';
-import { useDebounce, useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
+import { useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
@@ -46,9 +46,7 @@ const TemplateExplorePage = () => {
     updateQueryParams({ page });
   };
 
-  const [keyword, handleKeywordChange] = useInput(queryParams.keyword);
-
-  const debouncedKeyword = useDebounce(keyword, 300);
+  const [inputKeyword, handleInputKeywordChange] = useInput(queryParams.keyword);
 
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
 
@@ -62,22 +60,15 @@ const TemplateExplorePage = () => {
     updateQueryParams({ sort: sortingOption.value, page: FIRST_PAGE });
   }, [queryParams.sort, sortingOption, updateQueryParams]);
 
-  useEffect(() => {
-    if (queryParams.keyword === debouncedKeyword) {
-      return;
-    }
-
-    updateQueryParams({ keyword: debouncedKeyword, page: FIRST_PAGE });
-  }, [queryParams.keyword, debouncedKeyword, updateQueryParams]);
-
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handlePage(FIRST_PAGE);
+      updateQueryParams({ keyword: inputKeyword, page: FIRST_PAGE });
     }
   };
 
   return (
-    <Flex direction='column' gap='4rem' align='flex-start' css={{ paddingTop: '5rem' }}>
+    <Flex direction='column' gap='1.5rem' align='flex-start' css={{ paddingTop: '5rem' }}>
       <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
         {isMobile ? (
           <Heading.XSmall color='black'>
@@ -91,6 +82,10 @@ const TemplateExplorePage = () => {
         <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
       </Flex>
 
+      <S.SearchKeywordPlaceholder>
+        <Heading.XSmall color='black'>{queryParams.keyword ? `'${queryParams.keyword}' 검색 결과` : ''}</Heading.XSmall>
+      </S.SearchKeywordPlaceholder>
+
       <Flex width='100%' gap='1rem'>
         <S.SearchInput size='medium' variant='text'>
           <Input.Adornment>
@@ -98,8 +93,8 @@ const TemplateExplorePage = () => {
           </Input.Adornment>
           <Input.TextField
             placeholder='검색'
-            value={keyword}
-            onChange={handleKeywordChange}
+            value={inputKeyword}
+            onChange={handleInputKeywordChange}
             onKeyDown={handleSearchSubmit}
           />
         </S.SearchInput>
@@ -115,13 +110,13 @@ const TemplateExplorePage = () => {
           <ErrorBoundary
             FallbackComponent={(fallbackProps) => <TemporaryError {...fallbackProps} />}
             onReset={reset}
-            resetKeys={[keyword]}
+            resetKeys={[inputKeyword]}
           >
             <TemplateList
               page={page}
               handlePage={handlePage}
               sortingOption={sortingOption}
-              keyword={debouncedKeyword}
+              keyword={queryParams.keyword}
               tagIds={selectedTagIds}
             />
           </ErrorBoundary>
@@ -158,7 +153,7 @@ const TemplateList = ({
     tagIds,
   });
   const templateList = templateData?.templates || [];
-  const totalPages = templateData?.totalPages || 0;
+  const paginationSizes = templateData?.paginationSizes || 0;
 
   const windowWidth = useWindowWidth();
 
@@ -190,7 +185,7 @@ const TemplateList = ({
 
       {templateList.length !== 0 && (
         <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-          <PagingButtons currentPage={page} totalPages={totalPages} onPageChange={handlePageChange} />
+          <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
         </Flex>
       )}
     </>

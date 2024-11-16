@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 import { theme } from '@/style/theme';
+
 import type { OptionProps } from './SelectList';
 
 export const SelectListContainer = styled.div`

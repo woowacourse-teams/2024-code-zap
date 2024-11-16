@@ -1,7 +1,6 @@
-import { ViewUpdate } from '@codemirror/view';
 import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
-import ReactCodeMirror, { EditorView, ReactCodeMirrorRef } from '@uiw/react-codemirror';
+import ReactCodeMirror, { EditorView, ReactCodeMirrorRef, type ViewUpdate } from '@uiw/react-codemirror';
 import { useRef } from 'react';
 
 import { useWindowWidth } from '@/hooks';

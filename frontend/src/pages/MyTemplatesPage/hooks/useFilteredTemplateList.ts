@@ -1,8 +1,7 @@
 import { useCallback, useEffect } from 'react';
 
-import { useDropdown, useQueryParams } from '@/hooks';
+import { useDropdown, useInput, useQueryParams } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useSearchKeyword } from '@/hooks/template';
 import { useTemplateListQuery } from '@/queries/templates';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
 import { scroll } from '@/utils';
@@ -20,7 +19,7 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
   const selectedTagIds = queryParams.tags;
   const page = queryParams.page;
   const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
-  const { keyword, debouncedKeyword, handleKeywordChange } = useSearchKeyword(queryParams.keyword);
+  const [inputKeyword, handleInputKeywordChange] = useInput(queryParams.keyword);
 
   const { memberInfo } = useAuth();
   const memberId = passedMemberId ?? memberInfo.memberId;
@@ -33,13 +32,13 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
     memberId,
     categoryId: selectedCategoryId,
     tagIds: selectedTagIds,
-    keyword: debouncedKeyword,
+    keyword: queryParams.keyword,
     sort: sortingOption.key,
     page,
   });
 
   const templateList = templateData?.templates || [];
-  const totalPages = templateData?.totalPages || 0;
+  const paginationSizes = templateData?.paginationSizes || 0;
 
   useEffect(() => {
     if (queryParams.sort === sortingOption.value) {
@@ -48,14 +47,6 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
 
     updateQueryParams({ sort: sortingOption.value, page: FIRST_PAGE });
   }, [queryParams.sort, sortingOption, updateQueryParams]);
-
-  useEffect(() => {
-    if (queryParams.keyword === debouncedKeyword) {
-      return;
-    }
-
-    updateQueryParams({ keyword: debouncedKeyword, page: FIRST_PAGE });
-  }, [queryParams.keyword, debouncedKeyword, updateQueryParams]);
 
   const handlePageChange = (page: number) => {
     scroll.top('smooth');
@@ -80,6 +71,8 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
   const handleSearchSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       updateQueryParams({ page: FIRST_PAGE });
+
+      updateQueryParams({ keyword: inputKeyword, page: FIRST_PAGE });
     }
   };
 
@@ -87,13 +80,14 @@ export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => 
     templateList,
     isTemplateListFetching,
     isTemplateListLoading,
-    totalPages,
+    paginationSizes,
     dropdownProps,
-    keyword,
+    inputKeyword,
+    searchedKeyword: queryParams.keyword,
     page,
     sortingOption,
     selectedTagIds,
-    handleKeywordChange,
+    handleKeywordChange: handleInputKeywordChange,
     handleCategoryMenuClick,
     handleTagMenuClick,
     handleSearchSubmit,

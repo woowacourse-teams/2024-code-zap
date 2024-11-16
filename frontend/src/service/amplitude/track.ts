@@ -50,14 +50,12 @@ export const trackClickTemplateShare = () => {
 
 interface PagingButtonData {
   page: number;
-  totalPages: number;
   label: string;
 }
 
-export const trackMyTemplatePaging = ({ page, totalPages, label }: PagingButtonData) => {
+export const trackMyTemplatePaging = ({ page, label }: PagingButtonData) => {
   amplitudeService.customTrack('[Click] 페이징 버튼', {
     page,
-    totalPages,
     label,
   });
 };

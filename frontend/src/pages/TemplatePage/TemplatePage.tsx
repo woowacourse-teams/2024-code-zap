@@ -1,4 +1,3 @@
-import { useTheme } from '@emotion/react';
 import { Link, useParams } from 'react-router-dom';
 
 import { ClockIcon, PrivateIcon, ShareIcon } from '@/assets/images';
@@ -25,6 +24,7 @@ import { useTrackPageViewed } from '@/service/amplitude';
 import { trackClickTemplateShare, trackLikeButton } from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
+import { theme } from '@/style/theme';
 import { formatRelativeTime } from '@/utils';
 
 import { useTemplate, useLike } from './hooks';
@@ -37,7 +37,6 @@ const TemplatePage = () => {
 
   const { infoAlert } = useToast();
 
-  const theme = useTheme();
   const [isNonmemberAlerterOpen, toggleNonmemberAlerter] = useToggle();
 
   const {
