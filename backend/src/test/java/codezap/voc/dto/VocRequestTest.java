@@ -24,6 +24,8 @@ class VocRequestTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
+    private VocRequest sut;
+
     @BeforeAll
     static void setUp() {
         validatorFactory = Validation.buildDefaultValidatorFactory();
@@ -36,27 +38,28 @@ class VocRequestTest {
     }
 
     @Test
+    @DisplayName("해피 케이스")
     void success() {
         var content = "lorem ipsum dolor sit amet consectetur adipiscing elit fugiat cupiditat";
         var email = "codezap2024@gmail.com";
-        var request = new VocRequest(content, email);
+        sut = new VocRequest(content, email);
 
-        Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+        Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(sut);
 
         assertThat(constraintViolations).isEmpty();
     }
 
     @Nested
     @DisplayName("이메일 검증")
-    class Email {
+    class EmailFieldTest {
 
         @Test
         @DisplayName("이메일이 null인 경우에도 정상 동작")
         void email_null_success() {
             var content = "lorem ipsum dolor sit amet consectetur adipiscing elit fugiat cupiditat";
-            var request = new VocRequest(content, null);
+            sut = new VocRequest(content, null);
 
-            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(sut);
 
             assertThat(constraintViolations).isEmpty();
         }
@@ -66,9 +69,9 @@ class VocRequestTest {
         @DisplayName("이메일 형식에 맞지 않는 경우 예외 발생")
         void email_format_fail(String email) {
             var content = "lorem ipsum dolor sit amet consectetur adipiscing elit fugiat cupiditat";
-            var request = new VocRequest(content, email);
+            sut = new VocRequest(content, email);
 
-            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(sut);
 
             assertThat(constraintViolations).hasSize(1)
                     .first()
@@ -77,18 +80,17 @@ class VocRequestTest {
         }
     }
 
-
     @Nested
     @DisplayName("문의 내용 검증")
-    class Content {
+    class ContentFieldTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("문의 내용 길이 임계값 검증 성공: 최솟값 20자, 최댓값 10,000자")
+        @DisplayName("문의 내용 길이 임계값 검증 성공: 최소 20자, 최대 10,000자")
         void content_length_success(String content) {
-            var request = new VocRequest(content, null);
+            sut = new VocRequest(content, null);
 
-            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(sut);
 
             assertThat(constraintViolations).isEmpty();
         }
@@ -101,15 +103,12 @@ class VocRequestTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("문의 내용이 20자 미만, 10,000자 초과일 경우 예외 발생")
+        @DisplayName("문의 내용 길이 임계값 검증 실패: 문의 내용 20자 미만, 10,000자 초과")
         void content_length_fail(String content) {
-            // given
-            var request = new VocRequest(content, null);
+            sut = new VocRequest(content, null);
 
-            // when
-            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(sut);
 
-            // then
             assertThat(constraintViolations).hasSize(1)
                     .first()
                     .extracting(ConstraintViolation::getMessage)
@@ -125,9 +124,9 @@ class VocRequestTest {
         @Test
         @DisplayName("문의 내용이 null인 경우 예외 발생")
         void content_null_fail() {
-            var request = new VocRequest(null, null);
+            sut = new VocRequest(null, null);
 
-            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(request);
+            Set<ConstraintViolation<VocRequest>> constraintViolations = validator.validate(sut);
 
             assertThat(constraintViolations).hasSize(1)
                     .first()
@@ -135,5 +134,4 @@ class VocRequestTest {
                     .isEqualTo("문의 내용은 비어있을 수 없습니다.");
         }
     }
-
 }
