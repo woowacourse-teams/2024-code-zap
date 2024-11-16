@@ -68,4 +68,44 @@ class TemplateTest {
             assertThat(actual).isFalse();
         }
     }
+
+    @Test
+    @DisplayName("좋아요 갱신 성공")
+    void increaseLike() {
+        Member member = MemberFixture.getFirstMember();
+        Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
+
+        template.increaseLike();
+
+        assertThat(template.getLikesCount()).isEqualTo(1L);
+    }
+
+    @Nested
+    @DisplayName("좋아요 취소")
+    class CancelLike {
+
+        @Test
+        @DisplayName("좋아요 취소 성공")
+        void cancelLike() {
+            Member member = MemberFixture.getFirstMember();
+            Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
+            template.increaseLike();
+            template.increaseLike();
+
+            template.cancelLike();
+
+            assertThat(template.getLikesCount()).isEqualTo(1L);
+        }
+
+        @Test
+        @DisplayName("좋아요 취소 성공: 이미 count가 0인 경우도 성공")
+        void cancelLikeWhenLikeAlreadyFail() {
+            Member member = MemberFixture.getFirstMember();
+            Template template = TemplateFixture.get(member, Category.createDefaultCategory(member));
+
+            template.cancelLike();
+
+            assertThat(template.getLikesCount()).isZero();
+        }
+    }
 }

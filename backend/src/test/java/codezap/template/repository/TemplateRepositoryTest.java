@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
@@ -15,13 +16,16 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
-import codezap.global.repository.JpaRepositoryTest;
+import codezap.global.pagination.FixedPage;
+import codezap.global.repository.RepositoryTest;
+import codezap.likes.domain.Likes;
+import codezap.likes.repository.LikesRepository;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.Template;
 
-@JpaRepositoryTest
-class TemplateJpaRepositoryTest {
+@RepositoryTest
+class TemplateRepositoryTest {
 
     @Autowired
     private TemplateRepository templateRepository;
@@ -29,6 +33,8 @@ class TemplateJpaRepositoryTest {
     private MemberRepository memberRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private LikesRepository likesRepository;
 
     @Test
     @DisplayName("카테고리 id로 템플릿 존재 여부 확인 ")
@@ -89,6 +95,38 @@ class TemplateJpaRepositoryTest {
         void findByMemberIdWhenNotExistsMember() {
             Long notSavedId = 1L;
             assertThat(templateRepository.findByMemberId(notSavedId)).isEmpty();
+        }
+    }
+
+    @Nested
+    @DisplayName("회원이 좋아요한 템플릿 조회 테스트")
+    class FindAllByMemberId {
+
+        @Test
+        @DisplayName("성공: 다른 사람의 private은 제외, 내 private은 포함")
+        void findAllByMemberId() {
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
+
+            Category category = categoryRepository.save(CategoryFixture.get(member));
+            Category otherCategory = categoryRepository.save(CategoryFixture.get(otherMember));
+
+            Template myPublicTemplate = templateRepository.save(TemplateFixture.get(member, category));
+            Template myPrivateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            Template otherPublicTemplate = templateRepository.save(TemplateFixture.get(otherMember, otherCategory));
+            Template otherPrivateTemplate = templateRepository.save(TemplateFixture.getPrivate(otherMember, otherCategory));
+
+            likesRepository.save(new Likes(myPublicTemplate, member));
+            likesRepository.save(new Likes(myPrivateTemplate, member));
+            likesRepository.save(new Likes(otherPublicTemplate, member));
+            likesRepository.save(new Likes(otherPrivateTemplate, member));
+
+            // when
+            FixedPage<Template> actual = templateRepository.findAllLikedByMemberId(member.getId(), PageRequest.of(0, 5));
+
+            // then
+            assertThat(actual.contents()).containsExactlyInAnyOrder(myPublicTemplate, myPrivateTemplate, otherPublicTemplate);
         }
     }
 }

@@ -259,7 +259,7 @@ class TemplateControllerTest extends MockMvcTest {
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
 
             when(templateApplicationService.findAllBy(any(), any(), any(), any(), any(), any())).thenReturn(
-                    new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+                    new FindAllTemplatesResponse(1, List.of(findAllTemplateItemResponse)));
 
             // when & then
             mvc.perform(get("/templates")
@@ -267,8 +267,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.totalPages").value(1))
-                    .andExpect(jsonPath("$.totalElements").value(1));
+                    .andExpect(jsonPath("$.paginationSizes").value(1));
         }
 
         @Test
@@ -280,7 +279,7 @@ class TemplateControllerTest extends MockMvcTest {
             when(credentialManager.hasCredential(any())).thenReturn(false);
             when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
-                    new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+                    new FindAllTemplatesResponse(1, List.of(findAllTemplateItemResponse)));
 
             // when & then
             mvc.perform(get("/templates")
@@ -288,8 +287,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.totalPages").value(1))
-                    .andExpect(jsonPath("$.totalElements").value(1));
+                    .andExpect(jsonPath("$.paginationSizes").value(1));
         }
 
         private FindAllTemplateItemResponse getFindAllTemplateItemResponse() {
@@ -613,14 +611,13 @@ class TemplateControllerTest extends MockMvcTest {
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse(member);
 
             when(templateApplicationService.findAllByLiked(any(), any()))
-                    .thenReturn(new FindAllTemplatesResponse(1, 1, List.of(findAllTemplateItemResponse)));
+                    .thenReturn(new FindAllTemplatesResponse(1, List.of(findAllTemplateItemResponse)));
 
             mvc.perform(get("/templates/like")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.templates.size()").value(1))
-                    .andExpect(jsonPath("$.totalPages").value(1))
-                    .andExpect(jsonPath("$.totalElements").value(1));
+                    .andExpect(jsonPath("$.paginationSizes").value(1));
         }
 
         private FindAllTemplateItemResponse getFindAllTemplateItemResponse(Member member) {

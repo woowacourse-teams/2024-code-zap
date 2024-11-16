@@ -3,20 +3,39 @@ package codezap.template.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
+import lombok.RequiredArgsConstructor;
 
-public interface ThumbnailRepository {
+@Repository
+@RequiredArgsConstructor
+public class ThumbnailRepository {
 
-    Thumbnail fetchByTemplate(Template template);
+    private final ThumbnailJpaRepository thumbnailJpaRepository;
+    private final ThumbnailQueryDSLRepository thumbnailQueryDSLRepository;
 
-    Optional<Thumbnail> findByTemplate(Template template);
+    public Thumbnail fetchByTemplate(Template template) {
+        return thumbnailQueryDSLRepository.findByTemplate(template).orElseThrow(
+                () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자가 " + template.getId() + "인 템플릿에 해당하는 썸네일이 없습니다."));
+    }
 
-    List<Thumbnail> findAll();
+    public List<Thumbnail> findAll() {
+        return thumbnailJpaRepository.findAll();
+    }
 
-    List<Thumbnail> findAllByTemplateIn(List<Long> templateIds);
+    public List<Thumbnail> findAllByTemplateIn(List<Long> templateIds) {
+        return thumbnailQueryDSLRepository.findAllByTemplateIn(templateIds);
+    }
 
-    Thumbnail save(Thumbnail thumbnail);
+    public Thumbnail save(Thumbnail thumbnail) {
+        return thumbnailJpaRepository.save(thumbnail);
+    }
 
-    void deleteAllByTemplateIds(List<Long> ids);
+    public void deleteAllByTemplateIds(List<Long> ids) {
+        thumbnailQueryDSLRepository.deleteAllByTemplateIds(ids);
+    }
 }

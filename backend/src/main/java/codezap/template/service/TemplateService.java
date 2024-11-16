@@ -3,7 +3,6 @@ package codezap.template.service;
 import java.util.HashSet;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.category.domain.Category;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import codezap.global.pagination.FixedPage;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.TemplateSpecification;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -46,7 +45,7 @@ public class TemplateService {
         return templateRepository.findByMemberId(memberId);
     }
 
-    public Page<Template> findAllBy(
+    public FixedPage<Template> findAllBy(
             Long memberId,
             String keyword,
             Long categoryId,
@@ -54,8 +53,11 @@ public class TemplateService {
             Visibility visibility,
             Pageable pageable
     ) {
-        return templateRepository.findAll(
-                new TemplateSpecification(memberId, keyword, categoryId, tagIds, visibility), pageable);
+        return templateRepository.findAll(memberId, keyword, categoryId, tagIds, visibility, pageable);
+    }
+
+    public FixedPage<Template> findAllByMemberId(Long memberId, Pageable pageable) {
+        return templateRepository.findAllLikedByMemberId(memberId, pageable);
     }
 
     @Transactional
