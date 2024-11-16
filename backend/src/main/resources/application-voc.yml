@@ -1,6 +1,6 @@
 voc:
   http:
     client:
-      base-url: ${VOC_SPREADSHEET_API_BASE_URL}  # http client 테스트를 위한 url.
+      base-url: ${VOC_SPREADSHEET_API_BASE_URL}   # TODO: CI, develop, production 환경변수 추가
       connect-timeout: 5s
       read-timeout: 5s
