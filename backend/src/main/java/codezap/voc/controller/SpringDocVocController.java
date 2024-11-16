@@ -13,7 +13,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public interface SpringDocVocController {
 
     @Operation(summary = "문의하기")
-    @ApiResponse(responseCode = "200")
+    @ApiResponse(responseCode = "201", description = "VOC 스프레드시트 데이터 추가 성공")
     @ApiErrorResponse(
             status = HttpStatus.BAD_REQUEST,
             instance = "/contact",
