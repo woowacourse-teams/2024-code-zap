@@ -21,7 +21,7 @@ public record VocRequest(
 
         @Nullable
         @Schema(description = "사용자 db id(선택)", example = "1")
-        @Min(1)
+        @Min(value = 1, message = "1 이상이어야 합니다.")
         Long memberId,
 
         @Nullable
