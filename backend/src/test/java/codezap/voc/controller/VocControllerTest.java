@@ -26,7 +26,7 @@ import codezap.voc.dto.VocRequest;
 import codezap.voc.service.VocService;
 
 @WebMvcTest(VocController.class)
-@EnableConfigurationProperties({CorsProperties.class, VocProperties.class})
+@EnableConfigurationProperties(CorsProperties.class)
 class VocControllerTest {
 
     @Autowired
