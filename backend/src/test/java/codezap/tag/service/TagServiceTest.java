@@ -69,6 +69,23 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("성공: 저장하려는 태그에 중복이 있는 경우 하나만 생성")
+        void createTags_WhenDuplicatedTemplateTag() {
+            // given
+            Template template = createSavedTemplate();
+            String tagName = "tag1";
+            List<String> tagNames = Arrays.asList(tagName, tagName);
+
+            // when
+            sut.createTags(template, tagNames);
+
+            // then
+            List<String> savedTemplateTagNames = getSavedTemplateTagNames(template);
+            assertThat(savedTemplateTagNames).hasSize(1)
+                    .containsExactly(tagName);
+        }
+
+        @Test
         @DisplayName("성공: 이미 있는 태그이지만 이 템플릿의 태그가 아닌 경우 템플릿 태그만 추가")
         void createTags_WhenExistTagContains() {
             // given
