@@ -45,7 +45,7 @@ class VocRequestTest {
 
     @ParameterizedTest
     @MethodSource
-    @DisplayName("해피 케이스: memberId와 name은 optional")
+    @DisplayName("해피 케이스: email, memberId, name은 optional")
     void success(String message, String email, Long memberId, String name) {
         sut = new VocRequest(message, email, memberId, name);
 
@@ -58,7 +58,8 @@ class VocRequestTest {
         return Stream.of(
                 Arguments.of(message, email, memberId, name),
                 Arguments.of(message, email, memberId, null),
-                Arguments.of(message, email, null, null));
+                Arguments.of(message, email, null, null),
+                Arguments.of(message, null, null, null));
     }
 
     @Nested
@@ -69,7 +70,7 @@ class VocRequestTest {
         @MethodSource
         @DisplayName("문의 내용 길이 임계값 검증: 20글자부터 10,000글자까지 정상 동작")
         void message_length_success(String message) {
-            sut = new VocRequest(message, null);
+            sut = new VocRequest(message);
 
             var constraintViolations = validator.validate(sut);
 
@@ -86,7 +87,7 @@ class VocRequestTest {
         @MethodSource
         @DisplayName("문의 내용 길이 임계값 검증: 19자 이하, 10,001글자 이상에서 예외 발생")
         void message_length_fail(String message) {
-            sut = new VocRequest(message, null);
+            sut = new VocRequest(message);
 
             var constraintViolations = validator.validate(sut);
 
@@ -105,7 +106,7 @@ class VocRequestTest {
         @Test
         @DisplayName("문의 내용이 null인 경우 예외 발생")
         void message_null_fail() {
-            sut = new VocRequest(null, null);
+            sut = new VocRequest(null);
 
             var constraintViolations = validator.validate(sut);
 
@@ -119,16 +120,6 @@ class VocRequestTest {
     @Nested
     @DisplayName("이메일 검증")
     class EmailTest {
-
-        @Test
-        @DisplayName("이메일이 null인 경우에도 정상 동작")
-        void email_null_success() {
-            sut = new VocRequest(message, null);
-
-            var constraintViolations = validator.validate(sut);
-
-            assertThat(constraintViolations).isEmpty();
-        }
 
         @ParameterizedTest
         @ValueSource(strings = {"", "codezap", "@gmail.com", ".com"})

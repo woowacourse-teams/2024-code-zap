@@ -29,6 +29,10 @@ public record VocRequest(
         @Size(max = 255, message = "아이디는 255자 이하로 입력해주세요.")
         String name
 ) {
+    public VocRequest(String message) {
+        this(message, null);
+    }
+
     public VocRequest(String message, String email) {
         this(message, email, null, null);
     }
