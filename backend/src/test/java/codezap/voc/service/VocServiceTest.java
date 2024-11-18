@@ -87,7 +87,7 @@ class VocServiceTest {
     // ResponseErrorHandler가 동작하지 않아요. 그래서 테스트에 자꾸 실패해요. 어떻게 동작시킬까요?
     @ParameterizedTest
     @MethodSource
-    @DisplayName("defaultStatusHandler 테스트: 40x, 50x 에러 발생")
+    @DisplayName("외부 API에서 40x, 50x 상태 코드를 응답할 경우 예외 발생")
     void defaultStatusHandler(HttpStatusCode statusCode) throws JsonProcessingException {
         // given
         var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
