@@ -12,12 +12,10 @@ import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @EnableConfigurationProperties(VocProperties.class)
 @RequiredArgsConstructor
-@Slf4j
 public class VocConfiguration {
 
     private final VocProperties properties;
