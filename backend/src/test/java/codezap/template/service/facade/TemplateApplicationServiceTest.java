@@ -485,7 +485,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     Visibility.PUBLIC);
 
             // when & then
-            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
+            assertThatThrownBy(() -> sut.update(member, template.getId(), request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
