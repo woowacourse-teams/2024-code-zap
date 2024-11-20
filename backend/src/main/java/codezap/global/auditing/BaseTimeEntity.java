@@ -52,7 +52,6 @@ public class BaseTimeEntity {
         lastKnownModifiedAt = modifiedAt;
     }
 
-
     public void markModified() {
         isModified = true;
     }
