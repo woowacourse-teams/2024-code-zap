@@ -3,20 +3,21 @@ package codezap.likes.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.EntityManager;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
-import codezap.global.pagination.FixedPage;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
 import codezap.template.domain.Template;
@@ -25,6 +26,9 @@ class LikesServiceTest extends ServiceTest {
 
     @Autowired
     private LikesService likesService;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Nested
     @DisplayName("좋아요")
@@ -38,10 +42,15 @@ class LikesServiceTest extends ServiceTest {
                     member,
                     categoryRepository.save(CategoryFixture.getFirstCategory())
             ));
+            LocalDateTime modifiedAtBeforeLike = template.getModifiedAt();
 
             likesService.like(member, template.getId());
+            entityManager.flush();
 
-            assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isTrue();
+            assertAll(
+                    () -> assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isTrue(),
+                    () -> assertThat(template.getModifiedAt()).isEqualTo(modifiedAtBeforeLike)
+            );
         }
 
         @Test
@@ -71,10 +80,15 @@ class LikesServiceTest extends ServiceTest {
             Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
             Template template = templateRepository.save(TemplateFixture.get(member, category));
             likesService.like(member, template.getId());
+            LocalDateTime modifiedAtBeforeLike = template.getModifiedAt();
 
             likesService.cancelLike(member, template.getId());
+            entityManager.flush();
 
-            assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isFalse();
+            assertAll(
+                    () -> assertThat(likesRepository.existsByMemberAndTemplate(member, template)).isFalse(),
+                    () -> assertThat(template.getModifiedAt()).isEqualTo(modifiedAtBeforeLike)
+            );
         }
 
         @Test

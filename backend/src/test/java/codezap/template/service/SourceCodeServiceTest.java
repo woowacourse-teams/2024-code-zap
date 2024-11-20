@@ -207,6 +207,7 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode newSourceCode = sourceCodeRepository.fetchByTemplateAndOrdinal(template, 3);
 
             assertAll(
+                    () -> assertThat(template.isModified()).isTrue(),
                     () -> assertThat(sourceCodeRepository.countByTemplate(template)).isEqualTo(3),
                     () -> assertThat(updatedSourceCode1.getFilename()).isEqualTo("변경된 제목1"),
                     () -> assertThat(updatedSourceCode1.getOrdinal()).isEqualTo(1),
