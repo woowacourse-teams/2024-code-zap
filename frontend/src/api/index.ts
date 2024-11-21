@@ -1,5 +1,5 @@
 export { getCategoryList, postCategory, deleteCategory } from './categories';
-export { TAG_API_URL, getTagList } from './tags';
+export { getTagList } from './tags';
 export { customFetch } from './customFetch';
 export { QUERY_KEY } from './queryKeys';
 export {

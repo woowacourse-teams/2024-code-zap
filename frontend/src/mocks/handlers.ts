@@ -7,7 +7,6 @@ import {
   LOGIN_STATE_API_URL,
   LOGOUT_API_URL,
   SIGNUP_API_URL,
-  TAG_API_URL,
   LIKE_API_URL,
 } from '@/api';
 import { API_URL } from '@/api/config';
@@ -191,7 +190,7 @@ const categoryHandlers = [
   }),
 ];
 
-const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];
+const tagHandlers = [http.get(`${API_URL}${END_POINTS.TAGS}`, () => HttpResponse.json(mockTagList))];
 
 const likeHandlers = [
   http.post(`${LIKE_API_URL}/:templateId`, (req) => {
