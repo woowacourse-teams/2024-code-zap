@@ -27,7 +27,7 @@ interface RequestParams {
   [key: string]: string | number | boolean;
 }
 
-class ApiClient {
+export class ApiClient {
   baseUrl: string;
   headers: HeadersInit;
   credentials: RequestCredentials;
@@ -95,13 +95,3 @@ class ApiClient {
     throw new ApiError('에러메시지입니다.', response.status, errorBody.errorCode, errorBody.detail);
   }
 }
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
-
-const httpHeader = {
-  'Content-Type': 'application/json',
-};
-
-const httpCredentials = 'include';
-
-export const apiClient = new ApiClient(API_URL, httpHeader, httpCredentials);

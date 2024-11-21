@@ -9,7 +9,7 @@ import type {
 } from '@/types';
 import { SortingOption } from '@/types';
 
-import { apiClient } from './ApiClient';
+import { apiClient } from './config';
 import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
