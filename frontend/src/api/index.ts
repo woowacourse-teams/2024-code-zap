@@ -1,6 +1,5 @@
 export { getCategoryList, postCategory, deleteCategory } from './categories';
 export { getTagList } from './tags';
-export { customFetch } from './customFetch';
 export { QUERY_KEY } from './queryKeys';
 export {
   PAGE_SIZE,
@@ -13,17 +12,6 @@ export {
   editTemplate,
   deleteTemplate,
 } from './templates';
-export {
-  CHECK_NAME_API_URL,
-  LOGIN_API_URL,
-  LOGIN_STATE_API_URL,
-  SIGNUP_API_URL,
-  LOGOUT_API_URL,
-  postSignup,
-  postLogin,
-  postLogout,
-  getLoginState,
-  checkName,
-} from './authentication';
+export { postSignup, postLogin, postLogout, getLoginState, checkName } from './authentication';
 export { postLike, deleteLike } from './like';
 export { getMemberName } from './members';
