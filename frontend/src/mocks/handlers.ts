@@ -11,7 +11,6 @@ import {
   LIKE_API_URL,
 } from '@/api';
 import { API_URL } from '@/api/config';
-import { MEMBER_API_URL } from '@/api/members';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
 
@@ -242,7 +241,7 @@ const likeHandlers = [
   }),
 ];
 
-const memberHandlers = [http.get(`${MEMBER_API_URL}/:id/name`, () => HttpResponse.json({ name: 'll' }))];
+const memberHandlers = [http.get(`${API_URL}${END_POINTS.MEMBERS}/:id/name`, () => HttpResponse.json({ name: 'll' }))];
 
 export const handlers = [
   ...tagHandlers,
