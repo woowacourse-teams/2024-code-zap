@@ -1,13 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
-import {
-  TEMPLATE_API_URL,
-  CHECK_NAME_API_URL,
-  LOGIN_API_URL,
-  LOGIN_STATE_API_URL,
-  LOGOUT_API_URL,
-  SIGNUP_API_URL,
-} from '@/api';
+import { CHECK_NAME_API_URL, LOGIN_API_URL, LOGIN_STATE_API_URL, LOGOUT_API_URL, SIGNUP_API_URL } from '@/api';
 import { API_URL } from '@/api/config';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
@@ -17,7 +10,7 @@ import mockTagList from './tagList.json';
 import mockTemplateList from './templateList.json';
 
 export const templateHandlers = [
-  http.get(`${TEMPLATE_API_URL}`, (req) => {
+  http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, (req) => {
     const url = new URL(req.request.url);
     const keyword = url.searchParams.get('keyword');
     const categoryId = url.searchParams.get('categoryId');
@@ -73,7 +66,7 @@ export const templateHandlers = [
       numberOfElements,
     });
   }),
-  http.get(`${TEMPLATE_API_URL}/:id`, (req) => {
+  http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, (req) => {
     const { id } = req.params;
 
     const template = mockTemplateList.templates.find((template) => template.id.toString() === id);
@@ -84,9 +77,9 @@ export const templateHandlers = [
       return HttpResponse.json({ status: 404, message: 'Template not found' });
     }
   }),
-  http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
-  http.post(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 200 })),
-  http.delete(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 204 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 200 })),
+  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 204 })),
 ];
 
 const authenticationHandler = [
