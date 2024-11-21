@@ -1,7 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
 import {
-  CATEGORY_API_URL,
   TEMPLATE_API_URL,
   CHECK_NAME_API_URL,
   LOGIN_API_URL,
@@ -11,6 +10,8 @@ import {
   TAG_API_URL,
   LIKE_API_URL,
 } from '@/api';
+import { API_URL } from '@/api/config';
+import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
 
 import mockCategoryList from './categoryList.json';
@@ -146,8 +147,8 @@ const authenticationHandler = [
 ];
 
 const categoryHandlers = [
-  http.get(`${CATEGORY_API_URL}`, () => HttpResponse.json(mockCategoryList)),
-  http.post(`${CATEGORY_API_URL}`, async (req) => {
+  http.get(`${API_URL}${END_POINTS.CATEGORIES}`, () => HttpResponse.json(mockCategoryList)),
+  http.post(`${API_URL}${END_POINTS.CATEGORIES}`, async (req) => {
     const newCategory = await req.request.json();
 
     if (typeof newCategory === 'object' && newCategory !== null) {
@@ -161,7 +162,7 @@ const categoryHandlers = [
 
     return HttpResponse.json({ status: 400, message: 'Invalid category data' });
   }),
-  http.put(`${CATEGORY_API_URL}/:id`, async (req) => {
+  http.put(`${API_URL}${END_POINTS.CATEGORIES}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
@@ -174,7 +175,7 @@ const categoryHandlers = [
       return HttpResponse.json({ status: 404, message: 'Category not found or invalid data' });
     }
   }),
-  http.delete(`${CATEGORY_API_URL}/:id`, (req) => {
+  http.delete(`${API_URL}${END_POINTS.CATEGORIES}/:id`, (req) => {
     const { id } = req.params;
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
 

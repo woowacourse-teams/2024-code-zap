@@ -3,10 +3,6 @@ import type { CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest 
 
 import { apiClient } from './config';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
-
-export const CATEGORY_API_URL = `${API_URL}${END_POINTS.CATEGORIES}`;
-
 export const getCategoryList = async (memberId: number) => {
   const queryParams = new URLSearchParams({
     memberId: memberId.toString(),
