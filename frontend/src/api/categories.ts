@@ -1,10 +1,7 @@
-import { HttpResponse } from 'msw';
-
 import { END_POINTS } from '@/routes';
-import type { CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest, CustomError } from '@/types';
+import type { CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
 
 import { apiClient } from './config';
-import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
 
@@ -28,15 +25,5 @@ export const postCategory = async (newCategory: CategoryUploadRequest) => {
 export const editCategory = async ({ id, name }: CategoryEditRequest) =>
   await apiClient.put(`${END_POINTS.CATEGORIES}/${id}`, { name });
 
-export const deleteCategory = async ({ id }: CategoryDeleteRequest) => {
-  const response = await customFetch<HttpResponse>({
-    method: 'DELETE',
-    url: `${CATEGORY_API_URL}/${id}`,
-  });
-
-  if (typeof response === 'object' && response !== null && 'status' in response) {
-    throw response as CustomError;
-  }
-
-  return response;
-};
+export const deleteCategory = async ({ id }: CategoryDeleteRequest) =>
+  await apiClient.delete(`${END_POINTS.CATEGORIES}/${id}`);
