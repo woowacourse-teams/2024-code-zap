@@ -7,7 +7,6 @@ import {
   LOGIN_STATE_API_URL,
   LOGOUT_API_URL,
   SIGNUP_API_URL,
-  LIKE_API_URL,
 } from '@/api';
 import { API_URL } from '@/api/config';
 import { END_POINTS } from '@/routes';
@@ -193,7 +192,7 @@ const categoryHandlers = [
 const tagHandlers = [http.get(`${API_URL}${END_POINTS.TAGS}`, () => HttpResponse.json(mockTagList))];
 
 const likeHandlers = [
-  http.post(`${LIKE_API_URL}/:templateId`, (req) => {
+  http.post(`${API_URL}${END_POINTS.LIKES}/:templateId`, (req) => {
     const { templateId } = req.params;
     const template = mockTemplateList.templates.find((temp) => temp.id.toString() === templateId);
 
@@ -216,7 +215,7 @@ const likeHandlers = [
     });
   }),
 
-  http.delete(`${LIKE_API_URL}/:templateId`, (req) => {
+  http.delete(`${API_URL}${END_POINTS.LIKES}/:templateId`, (req) => {
     const { templateId } = req.params;
     const template = mockTemplateList.templates.find((temp) => temp.id.toString() === templateId);
 
