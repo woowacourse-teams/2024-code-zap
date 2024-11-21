@@ -1,6 +1,5 @@
 import { END_POINTS } from '@/routes';
 import type { LoginRequest, SignupRequest } from '@/types';
-import { MemberInfo } from '@/types';
 
 import { apiClient } from './config';
 import { customFetch } from './customFetch';
@@ -13,29 +12,12 @@ export const LOGOUT_API_URL = `${API_URL}${END_POINTS.LOGOUT}`;
 export const LOGIN_STATE_API_URL = `${API_URL}${END_POINTS.LOGIN_CHECK}`;
 export const CHECK_NAME_API_URL = `${API_URL}${END_POINTS.CHECK_NAME}`;
 
-export const postSignup = async (signupInfo: SignupRequest) =>
-  await customFetch({
-    method: 'POST',
-    url: `${SIGNUP_API_URL}`,
-    body: JSON.stringify(signupInfo),
-  });
+export const postSignup = async (signupInfo: SignupRequest) => await apiClient.post(`${END_POINTS.SIGNUP}`, signupInfo);
 
-export const postLogin = async (loginInfo: LoginRequest): Promise<MemberInfo> => {
-  const response = await customFetch<MemberInfo>({
-    method: 'POST',
-    url: `${LOGIN_API_URL}`,
-    body: JSON.stringify(loginInfo),
-  });
+export const postLogin = async (loginInfo: LoginRequest) => {
+  const response = await apiClient.post(`${END_POINTS.LOGIN}`, loginInfo);
 
-  if ('memberId' in response) {
-    return response;
-  }
-
-  if (response.status >= 400) {
-    return { memberId: undefined, name: undefined };
-  }
-
-  throw new Error(response.detail);
+  return await response.json();
 };
 
 export const postLogout = async () => {
