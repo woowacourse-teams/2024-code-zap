@@ -16,7 +16,8 @@ describe('useTemplateEditMutation', () => {
   it('templates울 수정할 수 있다.', async () => {
     const { result } = renderHook(() => useTemplateEditMutation(2024), { wrapper: queryWrapper });
 
-    const template: TemplateEditRequest = {
+    const editedTemplate: TemplateEditRequest = {
+      id: 2024,
       title: 'editTemplate',
       description: '',
       createSourceCodes: [],
@@ -33,7 +34,7 @@ describe('useTemplateEditMutation', () => {
       visibility: 'PUBLIC',
     };
 
-    await result.current.mutateAsync({ id: 2024, template });
+    await result.current.mutateAsync(editedTemplate);
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
