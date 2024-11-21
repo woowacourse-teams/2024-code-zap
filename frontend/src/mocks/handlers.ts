@@ -1,6 +1,5 @@
 import { HttpResponse, http } from 'msw';
 
-import { CHECK_NAME_API_URL, LOGIN_API_URL, LOGIN_STATE_API_URL, LOGOUT_API_URL, SIGNUP_API_URL } from '@/api';
 import { API_URL } from '@/api/config';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
@@ -83,9 +82,9 @@ export const templateHandlers = [
 ];
 
 const authenticationHandler = [
-  http.post(`${SIGNUP_API_URL}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.SIGNUP}`, async () => HttpResponse.json({ status: 201 })),
   http.post(
-    `${LOGIN_API_URL}`,
+    `${API_URL}${END_POINTS.LOGIN}`,
     () =>
       new HttpResponse(JSON.stringify({ memberId: 1, name: 'jay' }), {
         status: 200,
@@ -96,7 +95,7 @@ const authenticationHandler = [
       }),
   ),
   http.post(
-    `${LOGOUT_API_URL}`,
+    `${API_URL}${END_POINTS.LOGOUT}`,
     () =>
       new HttpResponse(null, {
         status: 204,
@@ -104,7 +103,7 @@ const authenticationHandler = [
       }),
   ),
   http.get(
-    `${CHECK_NAME_API_URL}`,
+    `${API_URL}${END_POINTS.CHECK_NAME}`,
     () =>
       new HttpResponse(
         JSON.stringify({
@@ -119,7 +118,7 @@ const authenticationHandler = [
       ),
   ),
   http.get(
-    `${LOGIN_STATE_API_URL}`,
+    `${API_URL}${END_POINTS.LOGIN_CHECK}`,
     () =>
       new HttpResponse(
         JSON.stringify({
