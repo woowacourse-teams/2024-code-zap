@@ -25,22 +25,6 @@ export const getLoginState = async () => apiClient.get(END_POINTS.LOGIN_CHECK);
 
 export const checkName = async (name: string) => {
   const params = new URLSearchParams({ name });
-  const url = `${CHECK_NAME_API_URL}?${params}`;
 
-  const response = await fetch(url, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
-
-  if (response.status === 409) {
-    throw new Error('중복된 아이디입니다.');
-  }
-
-  if (!response.ok) {
-    throw new Error('서버 에러가 발생했습니다.');
-  }
-
-  return {};
+  await apiClient.get(`${END_POINTS.CHECK_NAME}?${params.toString()}`);
 };
