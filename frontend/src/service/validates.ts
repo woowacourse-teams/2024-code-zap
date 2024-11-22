@@ -1,4 +1,4 @@
-import { getByteSize } from '../utils/getByteSize';
+import { getByteSize } from '@/utils';
 
 export const validateName = (name: string) => {
   const MAX_LENGTH = 255;
