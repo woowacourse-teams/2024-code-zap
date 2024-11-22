@@ -5,13 +5,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 
+import { ScreenReaderOnly } from '@/components';
 import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
-
-import { ScreenReaderOnly } from './components/index';
-import router from './routes/router';
-import { AmplitudeInitializer } from './service/amplitude';
-import GlobalStyles from './style/GlobalStyles';
-import { theme } from './style/theme';
+import router from '@/routes/router';
+import { AmplitudeInitializer } from '@/service/amplitude';
+import GlobalStyles from '@/style/GlobalStyles';
+import { theme } from '@/style/theme';
 
 const queryClient = new QueryClient();
 
