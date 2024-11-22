@@ -11,8 +11,8 @@ import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { trackClickNewTemplate } from '@/service/amplitude';
+import { theme } from '@/style/theme';
 
-import { theme } from '../../style/theme';
 import * as S from './Header.style';
 
 const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {

@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import { theme } from '@/style/theme';
+
 import * as S from './Heading.style';
 
 type As = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'p' | 'span';

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
+import { Button, Input, LoadingBall, Modal, Text, Textarea } from '@/components';
 import { useInput, useInputWithValidate, useToggle } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useToast } from '@/hooks/useToast';
 import { validateEmail } from '@/service/validates';
 import { theme } from '@/style/theme';
 
-import { Button, Input, LoadingBall, Modal, Text, Textarea } from '..';
 import * as S from './ContactUs.style';
 
 const ContactUs = () => {
