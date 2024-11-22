@@ -1,28 +1,7 @@
-import { HttpResponse } from 'msw';
-
 import { END_POINTS } from '@/routes';
-import { LikeDeleteRequest, LikePostRequest } from '@/types';
 
-import { customFetch } from './customFetch';
+import { apiClient } from './config';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
+export const postLike = async (templateId: number) => await apiClient.post(`${END_POINTS.LIKES}/${templateId}`, {});
 
-export const LIKE_API_URL = `${API_URL}${END_POINTS.LIKES}`;
-
-export const postLike = async ({ templateId }: LikePostRequest) => {
-  const response = await customFetch<HttpResponse>({
-    method: 'POST',
-    url: `${LIKE_API_URL}/${templateId}`,
-  });
-
-  return response;
-};
-
-export const deleteLike = async ({ templateId }: LikeDeleteRequest) => {
-  const response = await customFetch<HttpResponse>({
-    method: 'DELETE',
-    url: `${LIKE_API_URL}/${templateId}`,
-  });
-
-  return response;
-};
+export const deleteLike = async (templateId: number) => await apiClient.delete(`${END_POINTS.LIKES}/${templateId}`);

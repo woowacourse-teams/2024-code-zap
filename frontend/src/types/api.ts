@@ -16,6 +16,7 @@ export interface TemplateUploadRequest {
 }
 
 export interface TemplateEditRequest {
+  id: number;
   title: string;
   description: string;
   createSourceCodes: SourceCodes[];

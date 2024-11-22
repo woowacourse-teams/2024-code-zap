@@ -90,6 +90,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
     const updateSourceCodes = orderedSourceCodes.filter((sourceCode) => sourceCode.id);
 
     const templateUpdate: TemplateEditRequest = {
+      id: template.id,
       title,
       description,
       createSourceCodes,
@@ -101,7 +102,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
     };
 
     try {
-      await updateTemplate({ id: template.id, template: templateUpdate });
+      await updateTemplate(templateUpdate);
       toggleEditButton();
     } catch (error) {
       console.error('Failed to update template:', error);
