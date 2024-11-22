@@ -1,6 +1,6 @@
 import { HttpResponse, http } from 'msw';
 
-import { API_URL } from '@/api/config';
+import { API_URL } from '@/api';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
 
