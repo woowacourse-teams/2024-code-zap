@@ -1,1 +1,1 @@
-export { useSignupForm } from './useSignupForm';
+export { useSignupForm } from '@/pages/SignupPage/hooks/useSignupForm';

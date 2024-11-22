@@ -4,12 +4,12 @@ import { Flex, Heading, LoadingBall, NoResults, PagingButtons, TemplateCard } fr
 import { useQueryParams, useWindowWidth } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { ForbiddenPage } from '@/pages';
+import { TemplateListSectionLoading } from '@/pages/MyTemplatesPage/components';
 import { useLikedTemplateListQuery } from '@/queries/templates/useLikedTemplateListQuery';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { BREAKING_POINT } from '@/style/styleConstants';
 
-import { TemplateListSectionLoading } from '../MyTemplatesPage/components';
 import * as S from './MyLikedTemplatePage.style';
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);

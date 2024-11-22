@@ -16,6 +16,9 @@ import {
   TemplateCard,
 } from '@/components';
 import { useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
+import { TemplateListSectionLoading } from '@/pages/MyTemplatesPage/components';
+import { HotTopicCarousel } from '@/pages/TemplateExplorePage/components';
+import { useHotTopic } from '@/pages/TemplateExplorePage/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { getSortingOptionByValue } from '@/service/getSortingOptionByValue';
@@ -23,9 +26,6 @@ import { BREAKING_POINT } from '@/style/styleConstants';
 import { SortingOption } from '@/types';
 import { scroll } from '@/utils';
 
-import { HotTopicCarousel } from './components';
-import { useHotTopic } from './hooks';
-import { TemplateListSectionLoading } from '../MyTemplatesPage/components';
 import * as S from './TemplateExplorePage.style';
 
 const FIRST_PAGE = 1;

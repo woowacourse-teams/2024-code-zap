@@ -2,6 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { ClockIcon, PrivateIcon, ShareIcon } from '@/assets/images';
 import {
+  AuthorInfo,
   Button,
   Flex,
   Heading,
@@ -14,11 +15,10 @@ import {
   NonmemberAlerter,
   LoadingFallback,
 } from '@/components';
-import AuthorInfo from '@/components/AuthorInfo/AuthorInfo';
-import { useToggle } from '@/hooks';
+import { useToggle, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { useToast } from '@/hooks/useToast';
 import { TemplateEditPage } from '@/pages';
+import { useLike, useTemplate } from '@/pages/TemplatePage/hooks';
 import { END_POINTS } from '@/routes';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { trackClickTemplateShare, trackLikeButton } from '@/service/amplitude/track';
@@ -27,7 +27,6 @@ import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { formatRelativeTime } from '@/utils';
 
-import { useTemplate, useLike } from './hooks';
 import * as S from './TemplatePage.style';
 
 const TemplatePage = () => {
