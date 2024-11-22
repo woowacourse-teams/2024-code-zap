@@ -11,11 +11,10 @@ import {
   TAG_API_URL,
   LIKE_API_URL,
 } from '@/api';
+import mockCategoryList from '@/mocks/categoryList.json';
+import mockTagList from '@/mocks/tagList.json';
+import mockTemplateList from '@/mocks/templateList.json';
 import { Category } from '@/types';
-
-import mockCategoryList from './categoryList.json';
-import mockTagList from './tagList.json';
-import mockTemplateList from './templateList.json';
 
 export const templateHandlers = [
   http.get(`${TEMPLATE_API_URL}`, (req) => {
