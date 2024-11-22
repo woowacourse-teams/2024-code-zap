@@ -1,5 +1,4 @@
 import { AuthContext } from '@/contexts';
-
-import { useCustomContext } from '../useCustomContext';
+import { useCustomContext } from '@/hooks';
 
 export const useAuth = () => useCustomContext(AuthContext);
