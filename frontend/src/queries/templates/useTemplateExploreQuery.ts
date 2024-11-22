@@ -1,7 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
-import { PAGE_SIZE, QUERY_KEY, DEFAULT_SORTING_OPTION, getTemplateExplore } from '@/api';
-import { ApiError } from '@/api/Error/ApiError';
+import { ApiError, PAGE_SIZE, QUERY_KEY, DEFAULT_SORTING_OPTION, getTemplateExplore } from '@/api';
 import type { SortingKey, TemplateListResponse } from '@/types';
 
 interface Props {

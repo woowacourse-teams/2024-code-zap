@@ -1,10 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 
-import { QUERY_KEY, postTemplate } from '@/api';
-import { ApiError } from '@/api/Error/ApiError';
-import { HTTP_STATUS } from '@/api/Error/statusCode';
-import { useToast } from '@/hooks/useToast';
+import { QUERY_KEY, postTemplate, ApiError, HTTP_STATUS } from '@/api';
+import { useToast } from '@/hooks';
 
 export const useTemplateUploadMutation = () => {
   const queryClient = useQueryClient();

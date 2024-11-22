@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { postLogin } from '@/api/authentication';
+import { postLogin } from '@/api';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useCustomNavigate } from '@/hooks';
 import { useAuth } from '@/hooks/authentication/useAuth';
