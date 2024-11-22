@@ -1,5 +1,6 @@
 import { HttpResponse } from 'msw';
 
+import { customFetch } from '@/api';
 import { END_POINTS } from '@/routes';
 import type {
   CategoryListResponse,
@@ -9,8 +10,6 @@ import type {
   CustomError,
   Category,
 } from '@/types';
-
-import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
 

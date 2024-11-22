@@ -1,3 +1,4 @@
+import { apiClient, customFetch } from '@/api';
 import { END_POINTS } from '@/routes';
 import type {
   Template,
@@ -8,9 +9,6 @@ import type {
   TemplateListRequest,
 } from '@/types';
 import { SortingOption } from '@/types';
-
-import { apiClient } from './ApiClient';
-import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
 

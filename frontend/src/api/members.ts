@@ -1,7 +1,6 @@
+import { customFetch } from '@/api/customFetch';
 import { END_POINTS } from '@/routes';
 import { GetMemberNameResponse } from '@/types';
-
-import { customFetch } from './customFetch';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
 
