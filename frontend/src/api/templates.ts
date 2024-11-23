@@ -1,18 +1,7 @@
-import { apiClient, customFetch } from '@/api';
+import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
-import type {
-  Template,
-  TemplateRequest,
-  TemplateEditRequest,
-  TemplateListResponse,
-  TemplateUploadRequest,
-  TemplateListRequest,
-} from '@/types';
+import type { TemplateRequest, TemplateEditRequest, TemplateUploadRequest, TemplateListRequest } from '@/types';
 import { SortingOption } from '@/types';
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
-
-export const TEMPLATE_API_URL = `${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`;
 
 export const PAGE_SIZE = 20;
 
@@ -64,17 +53,9 @@ export const getTemplateList = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const url = `${TEMPLATE_API_URL}?${queryParams.toString()}`;
+  const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);
 
-  const response = await customFetch<TemplateListResponse>({
-    url,
-  });
-
-  if ('templates' in response) {
-    return response;
-  }
-
-  throw new Error(response.detail);
+  return await response.json();
 };
 
 export const getLikedTemplateList = async ({
@@ -89,9 +70,8 @@ export const getLikedTemplateList = async ({
   });
 
   const response = await apiClient.get(`${END_POINTS.LIKED_TEMPLATES}?${queryParams.toString()}`);
-  const data = response.json();
 
-  return data;
+  return await response.json();
 };
 
 export const getTemplateExplore = async ({
@@ -100,7 +80,7 @@ export const getTemplateExplore = async ({
   size = PAGE_SIZE,
   keyword,
   tagIds,
-}: TemplateListRequest): Promise<TemplateListResponse> => {
+}: TemplateListRequest) => {
   const queryParams = new URLSearchParams({
     sort,
     page: page.toString(),
@@ -116,32 +96,21 @@ export const getTemplateExplore = async ({
   }
 
   const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);
-  const data = response.json();
 
-  return data;
+  return await response.json();
 };
 
-export const getTemplate = async ({ id }: TemplateRequest): Promise<Template> => {
+export const getTemplate = async ({ id }: TemplateRequest) => {
   const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}/${id}`);
-  const data = response.json();
 
-  return data;
+  return await response.json();
 };
 
-export const postTemplate = async (newTemplate: TemplateUploadRequest): Promise<Response> =>
+export const postTemplate = async (newTemplate: TemplateUploadRequest) =>
   await apiClient.post(`${END_POINTS.TEMPLATES_EXPLORE}`, newTemplate);
 
-export const editTemplate = async ({ id, template }: { id: number; template: TemplateEditRequest }): Promise<void> => {
-  await customFetch({
-    method: 'POST',
-    url: `${TEMPLATE_API_URL}/${id}`,
-    body: JSON.stringify(template),
-  });
-};
+export const editTemplate = async (template: TemplateEditRequest) =>
+  await apiClient.post(`${END_POINTS.TEMPLATES_EXPLORE}/${template.id}`, template);
 
-export const deleteTemplate = async (idList: number[]): Promise<void> => {
-  await customFetch({
-    method: 'DELETE',
-    url: `${TEMPLATE_API_URL}/${idList.join(',')}`,
-  });
-};
+export const deleteTemplate = async (idList: number[]) =>
+  await apiClient.delete(`${END_POINTS.TEMPLATES_EXPLORE}/${idList.join(',')}`);

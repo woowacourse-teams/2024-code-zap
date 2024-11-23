@@ -1,21 +1,12 @@
-import { customFetch } from '@/api/customFetch';
 import { END_POINTS } from '@/routes';
-import { TagListResponse } from '@/types/api';
 
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
-
-export const TAG_API_URL = `${API_URL}${END_POINTS.TAGS}`;
+import { apiClient } from './config';
 
 export const getTagList = async (memberId: number) => {
-  const url = `${TAG_API_URL}?memberId=${memberId}`;
-
-  const response = await customFetch<TagListResponse>({
-    url,
+  const queryParams = new URLSearchParams({
+    memberId: memberId.toString(),
   });
+  const response = await apiClient.get(`${END_POINTS.TAGS}?${queryParams.toString()}`);
 
-  if ('tags' in response) {
-    return response;
-  }
-
-  throw new Error(response.detail);
+  return await response.json();
 };

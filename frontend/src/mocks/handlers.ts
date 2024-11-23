@@ -1,23 +1,15 @@
 import { HttpResponse, http } from 'msw';
 
-import {
-  CATEGORY_API_URL,
-  TEMPLATE_API_URL,
-  CHECK_NAME_API_URL,
-  LOGIN_API_URL,
-  LOGIN_STATE_API_URL,
-  LOGOUT_API_URL,
-  SIGNUP_API_URL,
-  TAG_API_URL,
-  LIKE_API_URL,
-} from '@/api';
-import mockCategoryList from '@/mocks/categoryList.json';
-import mockTagList from '@/mocks/tagList.json';
-import mockTemplateList from '@/mocks/templateList.json';
+import { API_URL } from '@/api';
+import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
 
+import mockCategoryList from './categoryList.json';
+import mockTagList from './tagList.json';
+import mockTemplateList from './templateList.json';
+
 export const templateHandlers = [
-  http.get(`${TEMPLATE_API_URL}`, (req) => {
+  http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, (req) => {
     const url = new URL(req.request.url);
     const keyword = url.searchParams.get('keyword');
     const categoryId = url.searchParams.get('categoryId');
@@ -73,7 +65,7 @@ export const templateHandlers = [
       numberOfElements,
     });
   }),
-  http.get(`${TEMPLATE_API_URL}/:id`, (req) => {
+  http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, (req) => {
     const { id } = req.params;
 
     const template = mockTemplateList.templates.find((template) => template.id.toString() === id);
@@ -84,15 +76,15 @@ export const templateHandlers = [
       return HttpResponse.json({ status: 404, message: 'Template not found' });
     }
   }),
-  http.post(`${TEMPLATE_API_URL}`, async () => HttpResponse.json({ status: 201 })),
-  http.post(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 200 })),
-  http.delete(`${TEMPLATE_API_URL}/:id`, async () => HttpResponse.json({ status: 204 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 200 })),
+  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 204 })),
 ];
 
 const authenticationHandler = [
-  http.post(`${SIGNUP_API_URL}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.SIGNUP}`, async () => HttpResponse.json({ status: 201 })),
   http.post(
-    `${LOGIN_API_URL}`,
+    `${API_URL}${END_POINTS.LOGIN}`,
     () =>
       new HttpResponse(JSON.stringify({ memberId: 1, name: 'jay' }), {
         status: 200,
@@ -103,7 +95,7 @@ const authenticationHandler = [
       }),
   ),
   http.post(
-    `${LOGOUT_API_URL}`,
+    `${API_URL}${END_POINTS.LOGOUT}`,
     () =>
       new HttpResponse(null, {
         status: 204,
@@ -111,7 +103,7 @@ const authenticationHandler = [
       }),
   ),
   http.get(
-    `${CHECK_NAME_API_URL}`,
+    `${API_URL}${END_POINTS.CHECK_NAME}`,
     () =>
       new HttpResponse(
         JSON.stringify({
@@ -126,7 +118,7 @@ const authenticationHandler = [
       ),
   ),
   http.get(
-    `${LOGIN_STATE_API_URL}`,
+    `${API_URL}${END_POINTS.LOGIN_CHECK}`,
     () =>
       new HttpResponse(
         JSON.stringify({
@@ -145,8 +137,8 @@ const authenticationHandler = [
 ];
 
 const categoryHandlers = [
-  http.get(`${CATEGORY_API_URL}`, () => HttpResponse.json(mockCategoryList)),
-  http.post(`${CATEGORY_API_URL}`, async (req) => {
+  http.get(`${API_URL}${END_POINTS.CATEGORIES}`, () => HttpResponse.json(mockCategoryList)),
+  http.post(`${API_URL}${END_POINTS.CATEGORIES}`, async (req) => {
     const newCategory = await req.request.json();
 
     if (typeof newCategory === 'object' && newCategory !== null) {
@@ -160,7 +152,7 @@ const categoryHandlers = [
 
     return HttpResponse.json({ status: 400, message: 'Invalid category data' });
   }),
-  http.put(`${CATEGORY_API_URL}/:id`, async (req) => {
+  http.put(`${API_URL}${END_POINTS.CATEGORIES}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
@@ -173,7 +165,7 @@ const categoryHandlers = [
       return HttpResponse.json({ status: 404, message: 'Category not found or invalid data' });
     }
   }),
-  http.delete(`${CATEGORY_API_URL}/:id`, (req) => {
+  http.delete(`${API_URL}${END_POINTS.CATEGORIES}/:id`, (req) => {
     const { id } = req.params;
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
 
@@ -189,10 +181,10 @@ const categoryHandlers = [
   }),
 ];
 
-const tagHandlers = [http.get(`${TAG_API_URL}`, () => HttpResponse.json(mockTagList))];
+const tagHandlers = [http.get(`${API_URL}${END_POINTS.TAGS}`, () => HttpResponse.json(mockTagList))];
 
 const likeHandlers = [
-  http.post(`${LIKE_API_URL}/:templateId`, (req) => {
+  http.post(`${API_URL}${END_POINTS.LIKES}/:templateId`, (req) => {
     const { templateId } = req.params;
     const template = mockTemplateList.templates.find((temp) => temp.id.toString() === templateId);
 
@@ -215,7 +207,7 @@ const likeHandlers = [
     });
   }),
 
-  http.delete(`${LIKE_API_URL}/:templateId`, (req) => {
+  http.delete(`${API_URL}${END_POINTS.LIKES}/:templateId`, (req) => {
     const { templateId } = req.params;
     const template = mockTemplateList.templates.find((temp) => temp.id.toString() === templateId);
 
@@ -239,10 +231,13 @@ const likeHandlers = [
   }),
 ];
 
+const memberHandlers = [http.get(`${API_URL}${END_POINTS.MEMBERS}/:id/name`, () => HttpResponse.json({ name: 'll' }))];
+
 export const handlers = [
   ...tagHandlers,
   ...templateHandlers,
   ...categoryHandlers,
   ...authenticationHandler,
   ...likeHandlers,
+  ...memberHandlers,
 ];
