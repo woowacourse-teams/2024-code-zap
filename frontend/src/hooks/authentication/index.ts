@@ -1,1 +1,1 @@
-export { useAuth } from '@/hooks/authentication/useAuth';
+export { useAuth } from './useAuth';
