@@ -20,7 +20,7 @@ public class VocResponseErrorHandler implements ResponseErrorHandler {
             return statusCode.isError();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
-            throw new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "문의하기 요청에 실패했습니다.");
+            throw new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "스프레드시트 API 요청에 실패했습니다.");
         }
     }
 
@@ -28,11 +28,10 @@ public class VocResponseErrorHandler implements ResponseErrorHandler {
     public void handleError(ClientHttpResponse response) {
         try {
             HttpStatusCode statusCode = response.getStatusCode();
-            String statusText = response.getStatusText();
-            log.error("{} {}", statusCode, statusText);
+            log.error("{}", statusCode);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
-        throw new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "문의하기 요청에 실패했습니다.");
+        throw new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "스프레드시트 API 요청에 실패했습니다.");
     }
 }
