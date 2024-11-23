@@ -1,6 +1,4 @@
-import { ApiError } from './Error/ApiError';
-import { getErrorMessage } from './Error/getErrorMessage';
-import { HTTP_STATUS } from './Error/statusCode';
+import { ApiError, getErrorMessage, HTTP_STATUS } from '@/api/Error';
 
 type HttpMethod =
   | 'get'
