@@ -1,4 +1,4 @@
-import { HTTP_STATUS } from '@/api/Error';
+import { HTTP_STATUS } from './statusCode';
 
 /**
  * statusCode: response의 status
