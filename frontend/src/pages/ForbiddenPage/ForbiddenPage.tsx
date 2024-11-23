@@ -1,6 +1,6 @@
 import { captureException } from '@sentry/react';
 
-import { ApiError } from '@/api';
+import { ApiError } from '@/api/Error';
 import { TigerLogo } from '@/assets/images';
 import { Button, Flex, Text } from '@/components';
 import { useCustomNavigate } from '@/hooks';
