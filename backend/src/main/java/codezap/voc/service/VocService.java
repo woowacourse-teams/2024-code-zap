@@ -17,6 +17,7 @@ public class VocService {
     public void contact(VocRequest request) {
         restClient.post()
                 .body(request)
-                .retrieve();
+                .retrieve()
+                .toBodilessEntity();
     }
 }
