@@ -7,7 +7,7 @@ import { RouterProvider } from 'react-router-dom';
 
 import { ScreenReaderOnly } from '@/components';
 import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
-import router from '@/routes/router';
+import { router } from '@/routes';
 import { AmplitudeInitializer } from '@/service/amplitude';
 import GlobalStyles from '@/style/GlobalStyles';
 import { theme } from '@/style/theme';
