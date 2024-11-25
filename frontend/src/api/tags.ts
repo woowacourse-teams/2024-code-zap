@@ -1,6 +1,5 @@
+import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
-
-import { apiClient } from './config';
 
 export const getTagList = async (memberId: number) => {
   const queryParams = new URLSearchParams({

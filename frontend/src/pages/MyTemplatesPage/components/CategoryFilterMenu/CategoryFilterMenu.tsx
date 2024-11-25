@@ -4,11 +4,11 @@ import { BooksIcon, Chevron2Icon, SettingIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { useToggle, useWindowWidth } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
+import { CategoryEditModal } from '@/pages/MyTemplatesPage/components';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';
 
-import { CategoryEditModal } from '../';
 import * as S from './CategoryFilterMenu.style';
 
 interface CategoryMenuProps {

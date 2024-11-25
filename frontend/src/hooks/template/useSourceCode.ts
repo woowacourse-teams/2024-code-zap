@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 
+import { useToast } from '@/hooks';
 import { validateFilename, validateSourceCode } from '@/service';
 import { SourceCodes } from '@/types';
-
-import { useToast } from '../useToast';
 
 export const useSourceCode = (initSourceCode: SourceCodes[]) => {
   const [sourceCodes, setSourceCodes] = useState([...initSourceCode]);

@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
 import { useToggle } from '@/hooks';
+import { useLoginForm } from '@/pages/LoginPage/hooks';
 import { END_POINTS } from '@/routes';
 import { useTrackPageViewed } from '@/service/amplitude';
-
-import { useLoginForm } from './hooks';
-import * as S from './LoginPage.style';
 import { theme } from '@/style/theme';
+
+import * as S from './LoginPage.style';
 
 const LoginPage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 로그인 페이지' });

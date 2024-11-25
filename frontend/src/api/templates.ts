@@ -1,8 +1,7 @@
+import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
 import type { TemplateRequest, TemplateEditRequest, TemplateUploadRequest, TemplateListRequest } from '@/types';
 import { SortingOption } from '@/types';
-
-import { apiClient } from './config';
 
 export const PAGE_SIZE = 20;
 

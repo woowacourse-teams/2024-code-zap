@@ -1,7 +1,7 @@
 import { Theme } from '@emotion/react';
 
-import { dark, light } from './color';
-import { fontSize, fontWeight } from './font';
+import { dark, light } from '@/style/color';
+import { fontSize, fontWeight } from '@/style/font';
 
 export const theme: Theme = {
   mode: 'light',

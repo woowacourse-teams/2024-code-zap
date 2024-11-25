@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
 import { Button, Flex, Input, Text } from '@/components';
 import { useToggle } from '@/hooks';
+import { useSignupForm } from '@/pages/SignupPage/hooks';
 import { useTrackPageViewed } from '@/service/amplitude';
-
-import { useSignupForm } from './hooks';
-import * as S from './SignupPage.style';
 import { theme } from '@/style/theme';
+
+import * as S from './SignupPage.style';
 
 const SignupPage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 회원가입 페이지' });

@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import type { BaseProps, TextFieldProps } from '@/components/Input/Input';
 import { theme } from '@/style/theme';
-
-import type { BaseProps, TextFieldProps } from './Input';
 
 const sizes = {
   small: css`

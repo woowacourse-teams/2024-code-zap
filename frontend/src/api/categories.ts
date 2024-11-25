@@ -1,7 +1,6 @@
+import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
 import type { CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
-
-import { apiClient } from './config';
 
 export const getCategoryList = async (memberId: number) => {
   const queryParams = new URLSearchParams({

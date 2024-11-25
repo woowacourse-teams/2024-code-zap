@@ -2,11 +2,10 @@ import { useState } from 'react';
 
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
 import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text, Toggle } from '@/components';
-import { useCustomNavigate, useInput, useSelectList } from '@/hooks';
+import { useCustomNavigate, useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
-import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';

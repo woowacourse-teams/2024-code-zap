@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 
 import { SearchIcon } from '@/assets/images';
+
 import Input from './Input';
 
 const meta: Meta<typeof Input> = {

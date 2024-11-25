@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { postSignup } from '@/api/authentication';
+import { postSignup } from '@/api';
 import { ToastContext } from '@/contexts';
 import { useCustomContext, useCustomNavigate } from '@/hooks';
 import { END_POINTS } from '@/routes';

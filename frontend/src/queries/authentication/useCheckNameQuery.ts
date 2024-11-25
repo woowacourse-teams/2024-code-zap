@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
-import { QUERY_KEY } from '@/api';
-import { checkName } from '@/api/authentication';
+import { QUERY_KEY, checkName } from '@/api';
 
 export const useCheckNameQuery = (name: string): UseQueryResult =>
   useQuery({

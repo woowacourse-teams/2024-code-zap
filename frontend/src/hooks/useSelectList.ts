@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { useScrollToTargetElement } from './useScrollToTargetElement';
+import { useScrollToTargetElement } from '@/hooks';
 
 export const useSelectList = () => {
   const scrollTo = useScrollToTargetElement();

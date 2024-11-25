@@ -1,7 +1,6 @@
+import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
 import type { LoginRequest, SignupRequest } from '@/types';
-
-import { apiClient } from './config';
 
 export const postSignup = async (signupInfo: SignupRequest) => await apiClient.post(END_POINTS.SIGNUP, signupInfo);
 

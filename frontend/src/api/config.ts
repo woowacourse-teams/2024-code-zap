@@ -1,4 +1,4 @@
-import { ApiClient } from './ApiClient';
+import { ApiClient } from '@/api/ApiClient';
 
 export const API_URL = process.env.REACT_APP_API_URL ?? 'https://default-url.com';
 

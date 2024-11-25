@@ -1,7 +1,6 @@
+import { useDropdown } from '@/hooks';
 import { useCategoryListQuery, useCategoryUploadMutation } from '@/queries/categories';
 import type { Category } from '@/types';
-
-import { useDropdown } from '../';
 
 interface Props {
   memberId: number;

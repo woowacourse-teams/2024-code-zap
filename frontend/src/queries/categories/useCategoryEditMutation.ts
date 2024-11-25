@@ -1,7 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { editCategory } from '@/api/categories';
-import { QUERY_KEY } from '@/api/queryKeys';
+import { QUERY_KEY, editCategory } from '@/api';
 
 export const useCategoryEditMutation = () => {
   const queryClient = useQueryClient();

@@ -3,9 +3,8 @@ import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import { Layout, LoadingBall } from '@/components';
-
-import RouteGuard from './RouteGuard';
-import { ROUTE_END_POINT } from './endPoints';
+import RouteGuard from '@/routes/RouteGuard';
+import { ROUTE_END_POINT } from '@/routes/endPoints';
 
 const LandingPage = lazy(() => import('@/pages/LandingPage/LandingPage'));
 const TemplatePage = lazy(() => import('@/pages/TemplatePage/TemplatePage'));

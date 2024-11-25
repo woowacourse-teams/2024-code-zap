@@ -1,4 +1,4 @@
-import { useHeaderHeight } from './useHeaderHeight';
+import { useHeaderHeight } from '@/hooks';
 
 export const useScrollToTargetElement = () => {
   const { headerHeight } = useHeaderHeight();
