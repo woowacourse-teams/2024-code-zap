@@ -18,6 +18,8 @@ import { useSourceCode, useTag } from '@/hooks/template';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
 import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY, convertToKorVisibility } from '@/service/constants';
+import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
+import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
@@ -117,7 +119,7 @@ const TemplateUploadPage = () => {
       return false;
     }
 
-    const errorMessage = validateTemplate();
+    const errorMessage = validateTemplate(title, sourceCodes);
 
     if (errorMessage) {
       failAlert(errorMessage);
@@ -127,22 +129,6 @@ const TemplateUploadPage = () => {
 
     return true;
   };
-
-  const validateTemplate = () => {
-    if (!title) {
-      return '제목을 입력해주세요';
-    }
-
-    if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
-      return '소스코드 내용을 입력해주세요';
-    }
-
-    return '';
-  };
-
-  const isFilenameEmpty = (filename: string) => !filename.trim();
-
-  const generateUniqueFilename = () => `file_${Math.random().toString(36).substring(2, 10)}.txt`;
 
   const generateProcessedSourceCodes = (): SourceCodes[] =>
     sourceCodes.map((sourceCode, index): SourceCodes => {

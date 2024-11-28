@@ -18,6 +18,8 @@ import { useTag, useSourceCode } from '@/hooks/template';
 import { useTemplateEditMutation } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { TEMPLATE_VISIBILITY, convertToKorVisibility } from '@/service/constants';
+import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
+import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
@@ -77,9 +79,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       return;
     }
 
-    if (validateTemplate()) {
-      failAlert(validateTemplate());
-
+    if (!canSaveTemplate()) {
       return;
     }
 
@@ -111,21 +111,17 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
     }
   };
 
-  const validateTemplate = () => {
-    if (!title) {
-      return '제목을 입력해주세요';
+  const canSaveTemplate = () => {
+    const errorMessage = validateTemplate(title, sourceCodes);
+
+    if (errorMessage) {
+      failAlert(errorMessage);
+
+      return false;
     }
 
-    if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
-      return '소스코드 내용을 입력해주세요';
-    }
-
-    return '';
+    return true;
   };
-
-  const isFilenameEmpty = (filename: string) => !filename.trim();
-
-  const generateUniqueFilename = () => `file_${Math.random().toString(36).substring(2, 10)}.txt`;
 
   const generateProcessedSourceCodes = () => {
     const processSourceCodes = sourceCodes.map((sourceCode, index) => {
