@@ -6,10 +6,10 @@ import { tagHandlers } from '@/mocks/handlers/tag';
 import { templateHandlers } from '@/mocks/handlers/template';
 
 export const handlers = [
+  ...likeHandlers,
   ...tagHandlers,
   ...templateHandlers,
   ...categoryHandlers,
   ...authenticationHandler,
-  ...likeHandlers,
   ...memberHandlers,
 ];
