@@ -2,7 +2,6 @@ package codezap.voc.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.global.cors.CorsProperties;
-import codezap.voc.config.VocProperties;
 import codezap.voc.dto.VocRequest;
 import codezap.voc.service.VocService;
 
@@ -47,7 +45,7 @@ class VocControllerTest {
     @Test
     void contact() throws Exception {
         // given
-        doNothing().when(vocService).contact(any(VocRequest.class));
+        doNothing().when(vocService).create(any(VocRequest.class));
 
         var request = new VocRequest("lorem ipsum dolor sit amet consectetur adipiscing elit", null);
 

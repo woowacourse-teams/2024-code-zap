@@ -14,7 +14,7 @@ public class VocService {
         restClient = builder.build();
     }
 
-    public void contact(VocRequest request) {
+    public void create(VocRequest request) {
         restClient.post()
                 .body(request)
                 .retrieve()

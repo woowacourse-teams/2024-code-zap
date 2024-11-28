@@ -68,7 +68,7 @@ class VocServiceTest {
     @ParameterizedTest
     @MethodSource
     @DisplayName("문의하기 성공")
-    void contact_success(HttpStatusCode statusCode) throws JsonProcessingException {
+    void create_success(HttpStatusCode statusCode) throws JsonProcessingException {
         // given
         var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
         var email = "codezap@gmail.com";
@@ -81,20 +81,20 @@ class VocServiceTest {
                 .andRespond(withStatus(statusCode));
 
         // when
-        sut.contact(requestBody);
+        sut.create(requestBody);
 
         // then
         mockServer.verify();
     }
 
-    static Stream<HttpStatus> contact_success() {
+    static Stream<HttpStatus> create_success() {
         return Arrays.stream(HttpStatus.values()).filter(status -> !status.isError());
     }
 
     @ParameterizedTest
     @MethodSource
     @DisplayName("외부 API에서 40x, 50x 상태 코드를 응답할 경우 예외 발생")
-    void contact_status_code_exception(HttpStatusCode statusCode) throws JsonProcessingException {
+    void create_status_code_exception(HttpStatusCode statusCode) throws JsonProcessingException {
         // given
         var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
         var email = "codezap@gmail.com";
@@ -107,21 +107,21 @@ class VocServiceTest {
                 .andRespond(withStatus(statusCode));
 
         // when & then
-        assertThatCode(() -> sut.contact(requestBody))
+        assertThatCode(() -> sut.create(requestBody))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("스프레드시트 API 요청에 실패했습니다.");
 
         mockServer.verify();
     }
 
-    static Stream<HttpStatus> contact_status_code_exception() {
+    static Stream<HttpStatus> create_status_code_exception() {
         return Arrays.stream(HttpStatus.values()).filter(HttpStatus::isError);
     }
 
     @Disabled
     @Test
     @DisplayName("실제 API URL을 입력하여 구글 sheets API 테스트")
-    void contact_real_api() {
+    void create_real_api() {
         var baseUrl = "여기에 실제 url 입력. 커밋하지 않게 주의.";
         var interceptor = loggingInterceptor();
         var restClientBuilder = RestClient.builder()
@@ -133,7 +133,7 @@ class VocServiceTest {
         var email = "codezap@gmail.com";
         var requestBody = new VocRequest(message, email);
 
-        sut.contact(requestBody);
+        sut.create(requestBody);
     }
 
     private ClientHttpRequestInterceptor loggingInterceptor() {
