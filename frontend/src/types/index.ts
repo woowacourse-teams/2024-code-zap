@@ -18,4 +18,4 @@ export type {
 } from './api';
 export type { LoginRequest, SignupRequest, MemberInfo } from './authentication';
 
-export type { CustomError } from './fetch';
+export type { ErrorBody } from './fetch';
