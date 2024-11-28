@@ -3,10 +3,9 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { ApiError } from '@/api/Error/ApiError';
-import { HTTP_STATUS } from '@/api/Error/statusCode';
+import { ApiError, HTTP_STATUS } from '@/api/Error';
 import { Footer, Header, ScrollTopButton } from '@/components';
-import { useHeaderHeight } from '@/hooks/useHeaderHeight';
+import { useHeaderHeight } from '@/hooks';
 import { ForbiddenPage, NotFoundPage } from '@/pages';
 
 import * as S from './Layout.style';

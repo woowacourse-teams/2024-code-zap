@@ -1,9 +1,9 @@
 import { PropsWithChildren } from 'react';
 
 import { ZapzapCuriousLogo } from '@/assets/images';
+import { Text } from '@/components';
 import { theme } from '@/style/theme';
 
-import { Text } from '..';
 import * as S from './NoResults.style';
 
 const NoResults = ({ children }: PropsWithChildren) => (

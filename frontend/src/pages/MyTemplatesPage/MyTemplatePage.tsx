@@ -5,20 +5,20 @@ import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, Heading } from '@/components';
 import { useAuth } from '@/hooks/authentication';
-import { useMemberNameQuery } from '@/queries/members';
-import { useTrackPageViewed } from '@/service/amplitude';
-
 import {
-  TopBanner,
   CategoryListSection,
   CategoryListSectionSkeleton,
   TagListSection,
   TagListSectionSkeleton,
-  TemplateListSection,
   TemplateDeleteSelection,
+  TemplateListSection,
   TemplateListSectionLoading,
-} from './components';
-import { useSelectAndDeleteTemplateList, useFilteredTemplateList } from './hooks';
+  TopBanner,
+} from '@/pages/MyTemplatesPage/components';
+import { useFilteredTemplateList, useSelectAndDeleteTemplateList } from '@/pages/MyTemplatesPage/hooks';
+import { useMemberNameQuery } from '@/queries/members';
+import { useTrackPageViewed } from '@/service/amplitude';
+
 import * as S from './MyTemplatePage.style';
 
 const MyTemplatePage = () => {

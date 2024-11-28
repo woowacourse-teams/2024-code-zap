@@ -1,11 +1,11 @@
 import { HTMLAttributes, PropsWithChildren, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 
+import { Heading } from '@/components';
 import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
+import { theme } from '@/style/theme';
 
-import { theme } from '../../style/theme';
-import Heading from '../Heading/Heading';
 import * as S from './Modal.style';
 
 export type ModalSize = 'xsmall' | 'small' | 'medium' | 'large';

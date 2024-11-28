@@ -1,4 +1,5 @@
-import LoadingBall from '../LoadingBall/LoadingBall';
+import { LoadingBall } from '@/components';
+
 import * as S from './LoadingFallback.style';
 
 const LoadingFallback = () => (

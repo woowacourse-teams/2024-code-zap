@@ -1,6 +1,6 @@
+import { CategoryFilterMenu } from '@/pages/MyTemplatesPage/components';
 import { useCategoryListQuery } from '@/queries/categories';
 
-import { CategoryFilterMenu } from '..';
 import * as S from './CategoryListSection.style';
 
 interface Props {

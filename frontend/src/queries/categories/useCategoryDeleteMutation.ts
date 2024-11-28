@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { ApiError } from '@/api/Error/ApiError';
-import { deleteCategory } from '@/api/categories';
-import { QUERY_KEY } from '@/api/queryKeys';
+import { QUERY_KEY, deleteCategory } from '@/api';
+import { ApiError } from '@/api/Error';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { Category } from '@/types';

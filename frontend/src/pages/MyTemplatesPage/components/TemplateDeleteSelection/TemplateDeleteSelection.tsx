@@ -1,6 +1,5 @@
 import { Button, Flex } from '@/components';
-
-import { ConfirmDeleteModal } from '../';
+import { ConfirmDeleteModal } from '@/pages/MyTemplatesPage/components';
 
 interface Props {
   isEditMode: boolean;

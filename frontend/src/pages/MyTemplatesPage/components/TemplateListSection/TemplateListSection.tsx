@@ -1,8 +1,7 @@
 import { NoResults } from '@/components';
 import { useWindowWidth } from '@/hooks';
+import { NewTemplateButton, TemplateGrid } from '@/pages/MyTemplatesPage/components';
 import { TemplateListItem } from '@/types';
-
-import { NewTemplateButton, TemplateGrid } from '../';
 
 interface Props {
   templateList: TemplateListItem[];
