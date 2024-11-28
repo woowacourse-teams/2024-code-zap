@@ -21,7 +21,7 @@ public class VocConfiguration {
     private final VocProperties properties;
 
     @Bean
-    public RestClient.Builder restClientBuilder() {
+    public RestClient.Builder vocRestClientBuilder() {
         return RestClient.builder()
                 .baseUrl(properties.getBaseUrl())
                 .defaultHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
