@@ -1,4 +1,4 @@
-import { HttpResponse, http } from 'msw';
+import { http } from 'msw';
 
 import { API_URL } from '@/api';
 import mockTemplateList from '@/mocks/fixtures/templateList.json';
@@ -55,11 +55,13 @@ export const templateHandlers = [
     const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
     const numberOfElements = paginatedTemplates.length;
 
-    return HttpResponse.json({
+    return mockResponse({
       status: 200,
-      templates: paginatedTemplates,
-      paginationSizes,
-      numberOfElements,
+      body: {
+        templates: paginatedTemplates,
+        paginationSizes,
+        numberOfElements,
+      },
     });
   }),
 
@@ -82,7 +84,9 @@ export const templateHandlers = [
     });
   }),
 
-  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => HttpResponse.json({ status: 201 })),
-  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 200 })),
-  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 204 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => mockResponse({ status: 201 })),
+
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
+
+  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 204 })),
 ];

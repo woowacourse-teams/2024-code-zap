@@ -1,12 +1,14 @@
-import { HttpResponse, http } from 'msw';
+import { http } from 'msw';
 
 import { API_URL } from '@/api';
 import mockCategoryList from '@/mocks/fixtures/categoryList.json';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
+import { mockResponse } from '@/utils/mockResponse';
 
 export const categoryHandlers = [
-  http.get(`${API_URL}${END_POINTS.CATEGORIES}`, () => HttpResponse.json(mockCategoryList)),
+  http.get(`${API_URL}${END_POINTS.CATEGORIES}`, () => mockResponse({ status: 200, body: { mockCategoryList } })),
+
   http.post(`${API_URL}${END_POINTS.CATEGORIES}`, async (req) => {
     const newCategory = await req.request.json();
 
@@ -16,11 +18,17 @@ export const categoryHandlers = [
 
       mockCategoryList.categories.push(category);
 
-      return HttpResponse.json({ status: 201, category });
+      return mockResponse({ status: 201, body: { category } });
     }
 
-    return HttpResponse.json({ status: 400, message: 'Invalid category data' });
+    return mockResponse({
+      status: 400,
+      body: {
+        message: 'Invalid category data',
+      },
+    });
   }),
+
   http.put(`${API_URL}${END_POINTS.CATEGORIES}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
@@ -29,11 +37,22 @@ export const categoryHandlers = [
     if (categoryIndex !== -1 && typeof updatedCategory === 'object' && updatedCategory !== null) {
       mockCategoryList.categories[categoryIndex] = { id: parseInt(id as string), ...updatedCategory } as Category;
 
-      return HttpResponse.json({ status: 200, category: mockCategoryList.categories[categoryIndex] });
-    } else {
-      return HttpResponse.json({ status: 404, message: 'Category not found or invalid data' });
+      return mockResponse({
+        status: 200,
+        body: {
+          category: mockCategoryList.categories[categoryIndex],
+        },
+      });
     }
+
+    return mockResponse({
+      status: 404,
+      body: {
+        message: 'Category not found or invalid data',
+      },
+    });
   }),
+
   http.delete(`${API_URL}${END_POINTS.CATEGORIES}/:id`, (req) => {
     const { id } = req.params;
     const categoryIndex = mockCategoryList.categories.findIndex((cat) => cat.id.toString() === id);
@@ -41,11 +60,16 @@ export const categoryHandlers = [
     if (categoryIndex !== -1) {
       mockCategoryList.categories.splice(categoryIndex, 1);
 
-      return new HttpResponse(null, {
+      return mockResponse({
         status: 204,
       });
-    } else {
-      return HttpResponse.json({ status: 404, message: 'Category not found' });
     }
+
+    return mockResponse({
+      status: 404,
+      body: {
+        message: 'Category not found',
+      },
+    });
   }),
 ];
