@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { AuthProvider } from '@/contexts';
-import { categories as mockCategories } from '@/mocks/categoryList.json';
+import mockCategories from '@/mocks/fixtures/categoryList.json';
 
 import { useCategoryListQuery } from './useCategoryListQuery';
 

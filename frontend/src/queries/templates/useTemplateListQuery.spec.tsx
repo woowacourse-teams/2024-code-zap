@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
+import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '@/api';
 import { AuthProvider } from '@/contexts';
-import { templates as mockTemplates } from '@/mocks/templateList.json';
-import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '../../api/templates';
+import mockTemplates from '@/mocks/fixtures/templateList.json';
+
 import { useTemplateListQuery } from './useTemplateListQuery';
 
 const queryClient = new QueryClient();
@@ -16,6 +17,7 @@ const queryWrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useTemplateListQuery', () => {
   it('템플릿 리스트를 조회할 수 있다.', async () => {
+    const templates = mockTemplates.templates;
     const { result } = renderHook(
       () =>
         useTemplateListQuery({
@@ -32,7 +34,7 @@ describe('useTemplateListQuery', () => {
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
       expect(result.current.data?.templates.length).toBe(20);
-      expect(result.current.data?.templates[0]).toEqual(mockTemplates[0]);
+      expect(result.current.data?.templates[0]).toEqual(templates[0]);
     });
   });
   it('키워드로 템플릿 리스트를 필터링할 수 있다.', async () => {

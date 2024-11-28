@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
 import { AuthProvider } from '@/contexts';
-import { tags as mockTags } from '@/mocks/tagList.json';
+import mockTags from '@/mocks/fixtures/tagList.json';
 
 import { useTagListQuery } from './useTagListQuery';
 
