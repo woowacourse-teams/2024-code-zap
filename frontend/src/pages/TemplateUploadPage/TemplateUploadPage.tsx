@@ -10,6 +10,7 @@ import {
   SourceCodeEditor,
   TagInput,
   Text,
+  Textarea,
 } from '@/components';
 import { useCustomNavigate, useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -160,13 +161,15 @@ const TemplateUploadPage = () => {
           </Input>
         </S.UnderlineInputWrapper>
 
-        <Input size='large' variant='text'>
-          <Input.TextField
+        <Textarea size='medium' variant='text'>
+          <Textarea.TextField
             placeholder='이 템플릿을 언제 다시 쓸 것 같나요?'
+            minRows={1}
+            maxRows={5}
             value={description}
             onChange={handleDescriptionChange}
           />
-        </Input>
+        </Textarea>
 
         {sourceCodes.map((sourceCode, index) => (
           <SourceCodeEditor
