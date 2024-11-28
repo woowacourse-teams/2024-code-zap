@@ -88,5 +88,5 @@ export const templateHandlers = [
 
   http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
 
-  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 204 })),
+  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
 ];
