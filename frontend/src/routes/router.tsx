@@ -1,4 +1,3 @@
-import { ErrorBoundary } from '@sentry/react';
 import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -6,6 +5,7 @@ import { Layout } from '@/components';
 import RouteGuard from '@/routes/RouteGuard';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 
+/* eslint-disable react-refresh/only-export-components */
 const LandingPage = lazy(() => import('@/pages/LandingPage/LandingPage'));
 const TemplatePage = lazy(() => import('@/pages/TemplatePage/TemplatePage'));
 const TemplateUploadPage = lazy(() => import('@/pages/TemplateUploadPage/TemplateUploadPage'));
@@ -26,19 +26,13 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_END_POINT.MEMBERS_TEMPLATES,
-        element: (
-          <ErrorBoundary fallback={<NotFoundPage />}>
-            <MyTemplatePage />
-          </ErrorBoundary>
-        ),
+        element: <MyTemplatePage />,
       },
       {
         path: ROUTE_END_POINT.MEMBERS_LIKED_TEMPLATES,
         element: (
           <RouteGuard isLoginRequired redirectTo={ROUTE_END_POINT.LOGIN}>
-            <ErrorBoundary fallback={<NotFoundPage />}>
-              <MyLikedTemplatePage />
-            </ErrorBoundary>
+            <MyLikedTemplatePage />
           </RouteGuard>
         ),
       },
