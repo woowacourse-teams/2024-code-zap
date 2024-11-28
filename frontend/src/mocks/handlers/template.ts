@@ -3,6 +3,7 @@ import { HttpResponse, http } from 'msw';
 import { API_URL } from '@/api';
 import mockTemplateList from '@/mocks/fixtures/templateList.json';
 import { END_POINTS } from '@/routes';
+import { mockResponse } from '@/utils/mockResponse';
 
 export const templateHandlers = [
   http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, (req) => {
@@ -61,17 +62,26 @@ export const templateHandlers = [
       numberOfElements,
     });
   }),
+
   http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, (req) => {
     const { id } = req.params;
 
     const template = mockTemplateList.templates.find((template) => template.id.toString() === id);
 
     if (template) {
-      return HttpResponse.json(template);
-    } else {
-      return HttpResponse.json({ status: 404, message: 'Template not found' });
+      return mockResponse({ status: 200, body: template });
     }
+
+    return mockResponse({
+      status: 404,
+      errorBody: {
+        errorCode: 404,
+        instance: END_POINTS.TEMPLATES_EXPLORE,
+        detail: 'Template not found',
+      },
+    });
   }),
+
   http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => HttpResponse.json({ status: 201 })),
   http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 200 })),
   http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => HttpResponse.json({ status: 204 })),
