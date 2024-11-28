@@ -1,15 +1,16 @@
 package codezap.voc.service;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +24,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
@@ -30,30 +32,30 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import codezap.global.exception.CodeZapException;
-import codezap.voc.config.VocClientHttpRequestInterceptor;
+import codezap.voc.config.VocConfiguration;
 import codezap.voc.config.VocProperties;
-import codezap.voc.config.VocResponseErrorHandler;
 import codezap.voc.dto.VocRequest;
 
 class VocServiceTest {
 
     private VocService sut;
 
-    private VocProperties properties;
-
     private MockRestServiceServer mockServer;
+
+    private RestClient.Builder builder;
+
+    private VocConfiguration config;
+
+    private VocProperties properties;
 
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        properties = new VocProperties("http://localhost", Duration.ofSeconds(5), Duration.ofSeconds(5));
-        var builder = RestClient.builder()
-                .baseUrl(properties.getBaseUrl())
-                .defaultHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
-                .defaultStatusHandler(new VocResponseErrorHandler())
-                .requestInterceptor(new VocClientHttpRequestInterceptor());
+        properties = new VocProperties("http://localhost", Duration.ofNanos(1L), Duration.ofNanos(1L));
+        config = new VocConfiguration(properties);
+        builder = config.vocRestClientBuilder();
         mockServer = MockRestServiceServer.bindTo(builder).build();
         sut = new VocService(builder);
     }
@@ -63,68 +65,84 @@ class VocServiceTest {
         mockServer.reset();
     }
 
-    @Test
+    @ParameterizedTest
+    @MethodSource
     @DisplayName("문의하기 성공")
-    void contact_success() throws JsonProcessingException {
+    void contact_success(HttpStatusCode statusCode) throws JsonProcessingException {
         // given
         var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
         var email = "codezap@gmail.com";
-        var request = new VocRequest(message, email);
+        var requestBody = new VocRequest(message, email);
 
         mockServer.expect(requestTo(properties.getBaseUrl()))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(request)))
-                .andRespond(withStatus(HttpStatus.CREATED));
+                .andExpect(content().string(objectMapper.writeValueAsString(requestBody)))
+                .andRespond(withStatus(statusCode));
 
         // when
-        sut.contact(request);
+        sut.contact(requestBody);
 
         // then
         mockServer.verify();
     }
 
-    // ResponseErrorHandler가 동작하지 않아요. 그래서 테스트에 자꾸 실패해요. 어떻게 동작시킬까요?
+    static Stream<HttpStatus> contact_success() {
+        return Arrays.stream(HttpStatus.values()).filter(status -> !status.isError());
+    }
+
     @ParameterizedTest
     @MethodSource
     @DisplayName("외부 API에서 40x, 50x 상태 코드를 응답할 경우 예외 발생")
-    void defaultStatusHandler(HttpStatusCode statusCode) throws JsonProcessingException {
+    void contact_status_code_exception(HttpStatusCode statusCode) throws JsonProcessingException {
         // given
         var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
         var email = "codezap@gmail.com";
-        var request = new VocRequest(message, email);
+        var requestBody = new VocRequest(message, email);
 
         mockServer.expect(requestTo(properties.getBaseUrl()))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(objectMapper.writeValueAsString(request)))
+                .andExpect(content().string(objectMapper.writeValueAsString(requestBody)))
                 .andRespond(withStatus(statusCode));
 
         // when & then
-        assertThatCode(() -> sut.contact(request))
+        assertThatCode(() -> sut.contact(requestBody))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("스프레드시트 API 요청에 실패했습니다.");
 
         mockServer.verify();
     }
 
-    static Stream<HttpStatus> defaultStatusHandler() {
+    static Stream<HttpStatus> contact_status_code_exception() {
         return Arrays.stream(HttpStatus.values()).filter(HttpStatus::isError);
     }
 
     @Disabled
     @Test
-    @DisplayName("실제 경로를 입력하여 구글 sheets API 테스트")
+    @DisplayName("실제 API URL을 입력하여 구글 sheets API 테스트")
     void contact_real_api() {
-        var baseUrl = "여기에 실제 경로 입력. 커밋하지 않게 주의.";
-
-        var restClientBuilder = RestClient.builder().baseUrl(baseUrl);
+        var baseUrl = "여기에 실제 url 입력. 커밋하지 않게 주의.";
+        var interceptor = loggingInterceptor();
+        var restClientBuilder = RestClient.builder()
+                .baseUrl(baseUrl)
+                .requestInterceptor(interceptor);
         var sut = new VocService(restClientBuilder);
 
         var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
         var email = "codezap@gmail.com";
-        var request = new VocRequest(message, email);
+        var requestBody = new VocRequest(message, email);
 
-        sut.contact(request);
+        sut.contact(requestBody);
+    }
+
+    private ClientHttpRequestInterceptor loggingInterceptor() {
+        return (request, body, execution) -> {
+            var response = execution.execute(request, body);
+            var message = new StringJoiner("\n");
+            response.getHeaders().forEach((k, v) -> message.add(k + ": " + v.toString()));
+            System.out.println(message);
+            return response;
+        };
     }
 }

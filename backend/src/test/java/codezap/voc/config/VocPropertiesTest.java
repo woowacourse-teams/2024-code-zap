@@ -20,7 +20,7 @@ class VocPropertiesTest {
     @DisplayName("yml 파일로부터 http client 관련 설정 값을 가져오는지 확인")
     void getAllowedOrigins() {
         assertAll(
-                () -> assertThat(sut.getBaseUrl()).isEqualTo("localhost:8080"),
+                () -> assertThat(sut.getBaseUrl()).isEqualTo("http://localhost:8080"),
                 () -> assertThat(sut.getConnectTimeout()).isEqualTo(Duration.ofSeconds(5L)),
                 () -> assertThat(sut.getReadTimeout()).isEqualTo(Duration.ofSeconds(5L))
         );
