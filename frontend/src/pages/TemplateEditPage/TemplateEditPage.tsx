@@ -1,7 +1,17 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
-import { Button, Input, SelectList, SourceCodeEditor, Text, CategoryDropdown, TagInput, Toggle } from '@/components';
+import {
+  Button,
+  Input,
+  SelectList,
+  SourceCodeEditor,
+  Text,
+  CategoryDropdown,
+  TagInput,
+  LoadingBall,
+  Toggle,
+} from '@/components';
 import { useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
@@ -46,6 +56,8 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const tagProps = useTag(initTags);
 
   const [visibility, setVisibility] = useState<TemplateVisibility>(template.visibility);
+  const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
@@ -53,40 +65,25 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
   const { failAlert } = useToast();
 
-  const validateTemplate = () => {
-    if (!title) {
-      return '제목을 입력해주세요';
-    }
-
-    if (sourceCodes.filter(({ filename }) => !filename || filename.trim() === '').length) {
-      return '파일명을 입력해주세요';
-    }
-
-    if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
-      return '소스코드 내용을 입력해주세요';
-    }
-
-    return '';
-  };
-
   const handleCancelButton = () => {
     toggleEditButton();
   };
 
   const handleSaveButtonClick = async () => {
+    if (isSavingRef.current) {
+      return;
+    }
+
     if (validateTemplate()) {
       failAlert(validateTemplate());
 
       return;
     }
 
-    const orderedSourceCodes = sourceCodes.map((sourceCode, index) => ({
-      ...sourceCode,
-      ordinal: index + 1,
-    }));
+    isSavingRef.current = true;
+    setIsSaving(true);
 
-    const createSourceCodes = orderedSourceCodes.filter((sourceCode) => !sourceCode.id);
-    const updateSourceCodes = orderedSourceCodes.filter((sourceCode) => sourceCode.id);
+    const { createSourceCodes, updateSourceCodes } = generateProcessedSourceCodes();
 
     const templateUpdate: TemplateEditRequest = {
       id: template.id,
@@ -105,7 +102,43 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       toggleEditButton();
     } catch (error) {
       console.error('Failed to update template:', error);
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
+  };
+
+  const validateTemplate = () => {
+    if (!title) {
+      return '제목을 입력해주세요';
+    }
+
+    if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
+      return '소스코드 내용을 입력해주세요';
+    }
+
+    return '';
+  };
+
+  const isFilenameEmpty = (filename: string) => !filename.trim();
+
+  const generateUniqueFilename = () => `file_${Math.random().toString(36).substring(2, 10)}.txt`;
+
+  const generateProcessedSourceCodes = () => {
+    const processSourceCodes = sourceCodes.map((sourceCode, index) => {
+      const { filename } = sourceCode;
+
+      return {
+        ...sourceCode,
+        ordinal: index + 1,
+        filename: isFilenameEmpty(filename) ? generateUniqueFilename() : filename,
+      };
+    });
+
+    const createSourceCodes = processSourceCodes.filter((sourceCode) => !sourceCode.id);
+    const updateSourceCodes = processSourceCodes.filter((sourceCode) => sourceCode.id);
+
+    return { createSourceCodes, updateSourceCodes };
   };
 
   return (
@@ -167,14 +200,23 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
         <TagInput {...tagProps} />
 
-        <S.ButtonGroup>
-          <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
-            취소
-          </S.CancelButton>
-          <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={sourceCodes.length === 0}>
-            저장
-          </Button>
-        </S.ButtonGroup>
+        {isSaving ? (
+          <LoadingBall />
+        ) : (
+          <S.ButtonGroup>
+            <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
+              취소
+            </S.CancelButton>
+            <Button
+              size='medium'
+              variant='contained'
+              onClick={handleSaveButtonClick}
+              disabled={sourceCodes.length === 0}
+            >
+              저장
+            </Button>
+          </S.ButtonGroup>
+        )}
 
         {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
       </S.MainContainer>

@@ -1,7 +1,17 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
-import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text, Toggle } from '@/components';
+import {
+  Button,
+  CategoryDropdown,
+  Input,
+  LoadingBall,
+  SelectList,
+  SourceCodeEditor,
+  TagInput,
+  Text,
+  Toggle,
+} from '@/components';
 import { useCustomNavigate, useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
@@ -50,18 +60,74 @@ const TemplateUploadPage = () => {
   const tagProps = useTag([]);
 
   const [visibility, setVisibility] = useState<TemplateVisibility>(DEFAULT_TEMPLATE_VISIBILITY);
+  const [isSaving, setIsSaving] = useState(false);
+  const isSavingRef = useRef(false);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
   const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
 
+  const handleCancelButton = () => {
+    navigate(-1);
+  };
+
+  const handleSaveButtonClick = async () => {
+    if (isSavingRef.current) {
+      return;
+    }
+
+    if (!canSaveTemplate()) {
+      return;
+    }
+
+    isSavingRef.current = true;
+    setIsSaving(true);
+
+    try {
+      const processedSourceCodes = generateProcessedSourceCodes();
+
+      const newTemplate: TemplateUploadRequest = {
+        title,
+        description,
+        sourceCodes: processedSourceCodes,
+        thumbnailOrdinal: 1,
+        categoryId: categoryProps.currentValue.id,
+        tags: tagProps.tags,
+        visibility,
+      };
+
+      const response = await uploadTemplate(newTemplate);
+
+      if (response.ok) {
+        trackTemplateSaveSuccess();
+      }
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
+    }
+  };
+
+  const canSaveTemplate = (): boolean => {
+    if (categoryProps.isCategoryQueryFetching) {
+      failAlert('카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+
+      return false;
+    }
+
+    const errorMessage = validateTemplate();
+
+    if (errorMessage) {
+      failAlert(errorMessage);
+
+      return false;
+    }
+
+    return true;
+  };
+
   const validateTemplate = () => {
     if (!title) {
       return '제목을 입력해주세요';
-    }
-
-    if (sourceCodes.filter(({ filename }) => !filename || filename.trim() === '').length) {
-      return '파일명을 입력해주세요';
     }
 
     if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
@@ -71,51 +137,27 @@ const TemplateUploadPage = () => {
     return '';
   };
 
-  const handleCancelButton = () => {
-    navigate(-1);
-  };
+  const isFilenameEmpty = (filename: string) => !filename.trim();
 
-  const handleSaveButtonClick = async () => {
-    if (categoryProps.isCategoryQueryFetching) {
-      failAlert('카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+  const generateUniqueFilename = () => `file_${Math.random().toString(36).substring(2, 10)}.txt`;
 
-      return;
-    }
+  const generateProcessedSourceCodes = (): SourceCodes[] =>
+    sourceCodes.map((sourceCode, index): SourceCodes => {
+      const { filename } = sourceCode;
 
-    const errorMessage = validateTemplate();
-
-    if (errorMessage) {
-      failAlert(errorMessage);
-
-      return;
-    }
-
-    const orderedSourceCodes = sourceCodes.map(
-      (sourceCode, index): SourceCodes => ({
+      return {
         ...sourceCode,
         ordinal: index + 1,
-      }),
-    );
+        filename: isFilenameEmpty(filename) ? generateUniqueFilename() : filename,
+      };
+    });
 
-    const newTemplate: TemplateUploadRequest = {
-      title,
-      description,
-      sourceCodes: orderedSourceCodes,
-      thumbnailOrdinal: 1,
-      categoryId: categoryProps.currentValue.id,
-      tags: tagProps.tags,
+  const trackTemplateSaveSuccess = () => {
+    trackClickTemplateSave({
+      templateTitle: title,
+      sourceCodeCount: sourceCodes.length,
       visibility,
-    };
-
-    const response = await uploadTemplate(newTemplate);
-
-    if (response.ok) {
-      trackClickTemplateSave({
-        templateTitle: title,
-        sourceCodeCount: sourceCodes.length,
-        visibility,
-      });
-    }
+    });
   };
 
   return (
@@ -177,14 +219,23 @@ const TemplateUploadPage = () => {
 
         <TagInput {...tagProps} />
 
-        <S.ButtonGroup>
-          <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
-            취소
-          </S.CancelButton>
-          <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={sourceCodes.length === 0}>
-            저장
-          </Button>
-        </S.ButtonGroup>
+        {isSaving ? (
+          <LoadingBall />
+        ) : (
+          <S.ButtonGroup>
+            <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
+              취소
+            </S.CancelButton>
+            <Button
+              size='medium'
+              variant='contained'
+              onClick={handleSaveButtonClick}
+              disabled={sourceCodes.length === 0}
+            >
+              저장
+            </Button>
+          </S.ButtonGroup>
+        )}
 
         {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
       </S.MainContainer>
