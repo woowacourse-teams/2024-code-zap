@@ -6,11 +6,12 @@ interface Props<T> {
   status: number;
   body?: T;
   errorBody?: ErrorBody;
+  headers?: HeadersInit;
 }
 
-export const mockResponse = <T>({ status, body, errorBody }: Props<T>) => {
+export const mockResponse = <T>({ status, body, errorBody, headers }: Props<T>) => {
   if (status >= 200 && status <= 299) {
-    return HttpResponse.json({ ...body }, { status });
+    return HttpResponse.json({ ...body }, { status, headers });
   }
 
   if (status >= 400 && status <= 499) {
