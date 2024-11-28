@@ -20,7 +20,7 @@ public class VocController implements SpringDocVocController {
 
     @PostMapping("/contact")
     @ResponseStatus(HttpStatus.CREATED)
-    public void contact(@Valid @RequestBody VocRequest request) {
+    public void create(@Valid @RequestBody VocRequest request) {
         vocService.create(request);
     }
 }

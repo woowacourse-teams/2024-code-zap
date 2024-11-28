@@ -23,5 +23,5 @@ public interface SpringDocVocController {
                     @ErrorCase(description = "문의 내용이 10,000 글자를 초과한 경우.", exampleMessage = "문의 내용은 최대 10,000 글자까지 입력할 수 있습니다.")
             }
     )
-    void contact(VocRequest request);
+    void create(VocRequest request);
 }

@@ -43,7 +43,7 @@ class VocControllerTest {
     private CredentialManager credentialManager;
 
     @Test
-    void contact() throws Exception {
+    void create() throws Exception {
         // given
         doNothing().when(vocService).create(any(VocRequest.class));
 
