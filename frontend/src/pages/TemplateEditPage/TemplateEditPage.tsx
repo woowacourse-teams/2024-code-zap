@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
+import { PlusIcon } from '@/assets/images';
 import {
   Button,
   Input,
@@ -10,7 +10,6 @@ import {
   CategoryDropdown,
   TagInput,
   LoadingBall,
-  Toggle,
 } from '@/components';
 import { useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -18,7 +17,7 @@ import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useTemplateEditMutation } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { TEMPLATE_VISIBILITY } from '@/service/constants';
+import { TEMPLATE_VISIBILITY, convertToKorVisibility } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
@@ -64,6 +63,10 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const { mutateAsync: updateTemplate, error } = useTemplateEditMutation(template.id);
 
   const { failAlert } = useToast();
+
+  const handleVisibility = (visibility: TemplateVisibility) => () => {
+    setVisibility(visibility);
+  };
 
   const handleCancelButton = () => {
     toggleEditButton();
@@ -144,20 +147,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   return (
     <S.TemplateEditContainer>
       <S.MainContainer>
-        <S.CategoryAndVisibilityContainer>
-          <CategoryDropdown {...categoryProps} />
-          <Toggle
-            showOptions={false}
-            options={[...TEMPLATE_VISIBILITY]}
-            optionAdornments={[
-              <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
-              <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
-            ]}
-            optionSliderColor={[undefined, theme.color.light.triadic_primary_800]}
-            selectedOption={visibility}
-            switchOption={setVisibility}
-          />
-        </S.CategoryAndVisibilityContainer>
+        <CategoryDropdown {...categoryProps} />
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
@@ -199,6 +189,15 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
         </Button>
 
         <TagInput {...tagProps} />
+
+        <S.VisibilityContainer>
+          {TEMPLATE_VISIBILITY.map((el) => (
+            <S.VisibilityButton key={el} onClick={handleVisibility(el)}>
+              <S.Radio isSelected={visibility === el} />
+              <Text.Medium color={theme.color.light.secondary_800}>{convertToKorVisibility[el]}</Text.Medium>
+            </S.VisibilityButton>
+          ))}
+        </S.VisibilityContainer>
 
         {isSaving ? (
           <LoadingBall />

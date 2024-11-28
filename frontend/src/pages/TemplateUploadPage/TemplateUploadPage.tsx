@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
+import { PlusIcon } from '@/assets/images';
 import {
   Button,
   CategoryDropdown,
@@ -10,7 +10,6 @@ import {
   SourceCodeEditor,
   TagInput,
   Text,
-  Toggle,
 } from '@/components';
 import { useCustomNavigate, useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -18,7 +17,7 @@ import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
-import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
+import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY, convertToKorVisibility } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
@@ -66,6 +65,10 @@ const TemplateUploadPage = () => {
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
   const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
+
+  const handleVisibility = (visibility: TemplateVisibility) => () => {
+    setVisibility(visibility);
+  };
 
   const handleCancelButton = () => {
     navigate(-1);
@@ -163,20 +166,7 @@ const TemplateUploadPage = () => {
   return (
     <S.TemplateEditContainer>
       <S.MainContainer>
-        <S.CategoryAndVisibilityContainer>
-          <CategoryDropdown {...categoryProps} />
-          <Toggle
-            showOptions={false}
-            options={[...TEMPLATE_VISIBILITY]}
-            optionAdornments={[
-              <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
-              <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
-            ]}
-            optionSliderColor={[undefined, theme.color.light.triadic_primary_800]}
-            selectedOption={visibility}
-            switchOption={setVisibility}
-          />
-        </S.CategoryAndVisibilityContainer>
+        <CategoryDropdown {...categoryProps} />
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
@@ -218,6 +208,15 @@ const TemplateUploadPage = () => {
         </Button>
 
         <TagInput {...tagProps} />
+
+        <S.VisibilityContainer>
+          {TEMPLATE_VISIBILITY.map((el) => (
+            <S.VisibilityButton key={el} onClick={handleVisibility(el)}>
+              <S.Radio isSelected={visibility === el} />
+              <Text.Medium color={theme.color.light.secondary_800}>{convertToKorVisibility[el]}</Text.Medium>
+            </S.VisibilityButton>
+          ))}
+        </S.VisibilityContainer>
 
         {isSaving ? (
           <LoadingBall />
