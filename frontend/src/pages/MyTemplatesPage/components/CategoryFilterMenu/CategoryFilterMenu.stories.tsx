@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { categories } from '@/mocks/categoryList.json';
+import { categories } from '@/mocks/fixtures/categoryList.json';
 
 import CategoryFilterMenu from './CategoryFilterMenu';
 
