@@ -35,7 +35,7 @@ class LikesServiceTest extends ServiceTest {
     class LikesTest {
 
         @Test
-        @DisplayName("성공")
+        @DisplayName("성공: 템플릿 수정 시간은 변경되지 않는다.")
         void success() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Template template = templateRepository.save(TemplateFixture.get(

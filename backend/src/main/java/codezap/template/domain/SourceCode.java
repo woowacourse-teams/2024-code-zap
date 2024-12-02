@@ -58,7 +58,6 @@ public class SourceCode extends BaseTimeEntity {
     }
 
     public void updateSourceCode(String filename, String content, Integer ordinal) {
-        markModified();
         template.markModifiedSourceCodes();
         this.filename = filename;
         this.content = content;

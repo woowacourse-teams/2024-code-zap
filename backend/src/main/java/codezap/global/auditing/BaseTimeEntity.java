@@ -34,7 +34,7 @@ public class BaseTimeEntity {
     private LocalDateTime lastKnownModifiedAt;
 
     @Transient
-    private boolean isModified = false;
+    private boolean isModified = true;
 
     @PreUpdate
     private void preUpdate() {
@@ -42,7 +42,7 @@ public class BaseTimeEntity {
             modifiedAt = lastKnownModifiedAt;
             return;
         }
-        isModified = false;
+        isModified = true;
     }
 
     @PostLoad
@@ -50,6 +50,10 @@ public class BaseTimeEntity {
     @PostUpdate
     private void postLoad() {
         lastKnownModifiedAt = modifiedAt;
+    }
+
+    public void markUnModified() {
+        isModified = false;
     }
 
     public void markModified() {

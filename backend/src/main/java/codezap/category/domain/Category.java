@@ -61,7 +61,6 @@ public class Category extends BaseTimeEntity {
     }
 
     public void updateName(String name) {
-        markModified();
         this.name = name;
     }
 
