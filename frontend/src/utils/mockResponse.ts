@@ -14,19 +14,10 @@ export const mockResponse = <T>({ status, body, errorBody, headers }: Props<T>) 
     return HttpResponse.json({ ...body }, { status, headers });
   }
 
-  if (status >= 400 && status <= 499) {
+  if (status >= 400 && status <= 599) {
     return HttpResponse.json(
       {
         ...errorBody,
-      },
-      { status },
-    );
-  }
-
-  if (status >= 500 && status <= 599) {
-    return HttpResponse.json(
-      {
-        errorBody,
       },
       { status },
     );
