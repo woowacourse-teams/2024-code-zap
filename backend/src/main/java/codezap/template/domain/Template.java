@@ -91,10 +91,12 @@ public class Template extends BaseTimeEntity {
     }
 
     public void increaseLike() {
+        markUnModified();
         this.likesCount++;
     }
 
     public void cancelLike() {
+        markUnModified();
         if (this.likesCount <= LIKES_COUNT_DEFAULT) {
             return;
         }
