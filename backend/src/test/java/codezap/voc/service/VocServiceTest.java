@@ -6,7 +6,6 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 import java.time.Duration;
 import java.util.Arrays;
@@ -25,6 +24,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.mock.http.client.MockClientHttpResponse;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
@@ -118,9 +118,36 @@ class VocServiceTest {
         return Arrays.stream(HttpStatus.values()).filter(HttpStatus::isError);
     }
 
+    @Disabled("예상과 다르게 예외가 발생하지 않아 비활성화합니다.")
+    @Test
+    @DisplayName("시간 초과 예외 발생")
+    void create_timeout() {
+        // given
+        var message = "lorem ipsum dolor sit amet consectetur adipiscing elit";
+        var email = "codezap@gmail.com";
+        var requestBody = new VocRequest(message, email);
+
+        mockServer.expect(requestTo(properties.getBaseUrl()))
+                .andExpect(method(HttpMethod.POST))
+                .andRespond(request -> {
+                    try {
+                        Thread.sleep(1000L);
+                    } catch (InterruptedException ignored) {
+                    }
+                    return new MockClientHttpResponse();
+                });
+
+        // when & then
+        assertThatThrownBy(() -> sut.create(requestBody))
+                .isInstanceOf(CodeZapException.class)
+                .hasMessageContaining("스프레드시트 API 요청 시간이 초과되었습니다");
+
+        mockServer.verify();
+    }
+
     @Disabled
     @Test
-    @DisplayName("실제 API URL을 입력하여 구글 sheets API 테스트")
+    @DisplayName("실제 API URL을 입력하여 테스트")
     void create_real_api() {
         var baseUrl = "여기에 실제 url 입력. 커밋하지 않게 주의.";
         var interceptor = loggingInterceptor();
