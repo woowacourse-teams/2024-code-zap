@@ -25,3 +25,6 @@ src/test/resources/application.yml
 ### compose ###
 docker/app/*.jar
 docker/.env
+
+### QueryDSL ###
+**/src/main/generated
