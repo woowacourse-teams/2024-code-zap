@@ -3,6 +3,9 @@ package codezap.template.repository.strategy;
 import static codezap.template.domain.QSourceCode.sourceCode;
 import static codezap.template.domain.QTemplate.template;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -35,13 +38,9 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
 
     private String parseKeyword(String trimmedKeyword) {
         String[] parsedKeywords = trimmedKeyword.split(" ");
-        StringBuilder keywordBuilder = new StringBuilder();
-        for(String keyword : parsedKeywords) {
-            keywordBuilder.append("+");
-            keywordBuilder.append(keyword);
-            keywordBuilder.append(" ");
-        }
-        return keywordBuilder.toString();
+        return Arrays.stream(parsedKeywords)
+                .map(keyword -> "+" + keyword)
+                .collect(Collectors.joining(" "));
     }
 
     private NumberExpression<Double> getMatchedAccuracy(Object... args) {
