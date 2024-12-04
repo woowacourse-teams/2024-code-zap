@@ -23,26 +23,6 @@ export const MainContainer = styled.div`
   margin-top: 3rem;
 `;
 
-export const VisibilityContainer = styled.div`
-  display: flex;
-  gap: 2rem;
-`;
-
-export const VisibilityButton = styled.button`
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
-`;
-
-export const Radio = styled.div<{ isSelected: boolean }>`
-  width: 1rem;
-  height: 1rem;
-  background-color: ${({ theme, isSelected }) =>
-    isSelected ? theme.color.light.primary_500 : theme.color.light.secondary_200};
-  border-radius: 100%;
-`;
-
 export const CancelButton = styled(Button)`
   background-color: white;
 `;

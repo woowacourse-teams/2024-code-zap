@@ -11,6 +11,7 @@ import {
   TagInput,
   LoadingBall,
   Textarea,
+  Radio,
 } from '@/components';
 import { useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -189,14 +190,12 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
         <TagInput {...tagProps} />
 
-        <S.VisibilityContainer>
-          {TEMPLATE_VISIBILITY.map((el) => (
-            <S.VisibilityButton key={el} onClick={handleVisibility(el)}>
-              <S.Radio isSelected={visibility === el} />
-              <Text.Medium color={theme.color.light.secondary_800}>{convertToKorVisibility[el]}</Text.Medium>
-            </S.VisibilityButton>
-          ))}
-        </S.VisibilityContainer>
+        <Radio
+          options={[...TEMPLATE_VISIBILITY]}
+          currentValue={visibility}
+          handleCurrentValue={handleVisibility}
+          getOptionLabel={(option: TemplateVisibility) => convertToKorVisibility[option]}
+        />
 
         {isSaving ? (
           <LoadingBall />
