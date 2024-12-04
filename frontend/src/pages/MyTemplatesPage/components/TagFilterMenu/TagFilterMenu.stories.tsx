@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { tags } from '@/mocks/tagList.json';
+import { tags } from '@/mocks/fixtures/tagList.json';
 
 import TagFilterMenu from './TagFilterMenu';
 
