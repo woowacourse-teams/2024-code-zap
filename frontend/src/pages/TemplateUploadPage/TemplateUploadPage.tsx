@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { PlusIcon } from '@/assets/images';
 import {
@@ -63,12 +63,10 @@ const TemplateUploadPage = () => {
   const tagProps = useTag([]);
 
   const [visibility, setVisibility] = useState<TemplateVisibility>(DEFAULT_TEMPLATE_VISIBILITY);
-  const [isSaving, setIsSaving] = useState(false);
-  const isSavingRef = useRef(false);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
-  const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
+  const { mutateAsync: uploadTemplate, isPending, error } = useTemplateUploadMutation();
 
   const handleVisibility = (visibility: TemplateVisibility) => {
     setVisibility(visibility);
@@ -79,38 +77,26 @@ const TemplateUploadPage = () => {
   };
 
   const handleSaveButtonClick = async () => {
-    if (isSavingRef.current) {
-      return;
-    }
-
     if (!canSaveTemplate()) {
       return;
     }
 
-    isSavingRef.current = true;
-    setIsSaving(true);
+    const processedSourceCodes = generateProcessedSourceCodes();
 
-    try {
-      const processedSourceCodes = generateProcessedSourceCodes();
+    const newTemplate: TemplateUploadRequest = {
+      title,
+      description,
+      sourceCodes: processedSourceCodes,
+      thumbnailOrdinal: 1,
+      categoryId: categoryProps.currentValue.id,
+      tags: tagProps.tags,
+      visibility,
+    };
 
-      const newTemplate: TemplateUploadRequest = {
-        title,
-        description,
-        sourceCodes: processedSourceCodes,
-        thumbnailOrdinal: 1,
-        categoryId: categoryProps.currentValue.id,
-        tags: tagProps.tags,
-        visibility,
-      };
+    const response = await uploadTemplate(newTemplate);
 
-      const response = await uploadTemplate(newTemplate);
-
-      if (response.ok) {
-        trackTemplateSaveSuccess();
-      }
-    } finally {
-      isSavingRef.current = false;
-      setIsSaving(false);
+    if (response.ok) {
+      trackTemplateSaveSuccess();
     }
   };
 
@@ -206,7 +192,7 @@ const TemplateUploadPage = () => {
           getOptionLabel={(option: TemplateVisibility) => convertToKorVisibility[option]}
         />
 
-        {isSaving ? (
+        {isPending ? (
           <LoadingBall />
         ) : (
           <S.ButtonGroup>

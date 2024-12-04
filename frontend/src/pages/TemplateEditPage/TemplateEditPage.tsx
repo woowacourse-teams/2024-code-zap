@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 import { PlusIcon } from '@/assets/images';
 import {
@@ -59,12 +59,10 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const tagProps = useTag(initTags);
 
   const [visibility, setVisibility] = useState<TemplateVisibility>(template.visibility);
-  const [isSaving, setIsSaving] = useState(false);
-  const isSavingRef = useRef(false);
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
-  const { mutateAsync: updateTemplate, error } = useTemplateEditMutation(template.id);
+  const { mutateAsync: updateTemplate, isPending, error } = useTemplateEditMutation(template.id);
 
   const { failAlert } = useToast();
 
@@ -77,16 +75,9 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   };
 
   const handleSaveButtonClick = async () => {
-    if (isSavingRef.current) {
-      return;
-    }
-
     if (!canSaveTemplate()) {
       return;
     }
-
-    isSavingRef.current = true;
-    setIsSaving(true);
 
     const { createSourceCodes, updateSourceCodes } = generateProcessedSourceCodes();
 
@@ -107,9 +98,6 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       toggleEditButton();
     } catch (error) {
       console.error('Failed to update template:', error);
-    } finally {
-      isSavingRef.current = false;
-      setIsSaving(false);
     }
   };
 
@@ -197,7 +185,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
           getOptionLabel={(option: TemplateVisibility) => convertToKorVisibility[option]}
         />
 
-        {isSaving ? (
+        {isPending ? (
           <LoadingBall />
         ) : (
           <S.ButtonGroup>
