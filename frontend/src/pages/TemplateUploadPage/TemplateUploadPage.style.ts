@@ -23,12 +23,6 @@ export const MainContainer = styled.div`
   margin-top: 3rem;
 `;
 
-export const CategoryAndVisibilityContainer = styled.div`
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-`;
-
 export const CancelButton = styled(Button)`
   background-color: white;
 `;

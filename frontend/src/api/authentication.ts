@@ -12,10 +12,10 @@ export const postLogin = async (loginInfo: LoginRequest) => {
 
 export const postLogout = async () => await apiClient.post(END_POINTS.LOGOUT, {});
 
-export const getLoginState = async () => apiClient.get(END_POINTS.LOGIN_CHECK);
+export const getLoginState = async () => await apiClient.get(END_POINTS.LOGIN_CHECK);
 
 export const checkName = async (name: string) => {
   const params = new URLSearchParams({ name });
 
-  await apiClient.get(`${END_POINTS.CHECK_NAME}?${params.toString()}`);
+  return await apiClient.get(`${END_POINTS.CHECK_NAME}?${params.toString()}`);
 };
