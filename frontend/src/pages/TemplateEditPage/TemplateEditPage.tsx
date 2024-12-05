@@ -93,12 +93,8 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       visibility,
     };
 
-    try {
-      await updateTemplate(templateUpdate);
-      toggleEditButton();
-    } catch (error) {
-      console.error('Failed to update template:', error);
-    }
+    await updateTemplate(templateUpdate);
+    toggleEditButton();
   };
 
   const canSaveTemplate = () => {
