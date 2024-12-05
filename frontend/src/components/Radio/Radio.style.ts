@@ -6,6 +6,8 @@ export const RadioContainer = styled.div`
 `;
 
 export const RadioOption = styled.button`
+  cursor: pointer;
+
   display: flex;
   gap: 1rem;
   align-items: center;

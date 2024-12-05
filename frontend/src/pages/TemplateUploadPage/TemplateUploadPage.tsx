@@ -19,7 +19,7 @@ import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
-import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY, convertToKorVisibility } from '@/service/constants';
+import { DEFAULT_TEMPLATE_VISIBILITY, VISIBILITY_OPTIONS } from '@/service/constants';
 import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
 import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
@@ -67,10 +67,6 @@ const TemplateUploadPage = () => {
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
   const { mutateAsync: uploadTemplate, isPending, error } = useTemplateUploadMutation();
-
-  const handleVisibility = (visibility: TemplateVisibility) => {
-    setVisibility(visibility);
-  };
 
   const handleCancelButton = () => {
     navigate(-1);
@@ -185,12 +181,7 @@ const TemplateUploadPage = () => {
 
         <TagInput {...tagProps} />
 
-        <Radio
-          options={[...TEMPLATE_VISIBILITY]}
-          currentValue={visibility}
-          handleCurrentValue={handleVisibility}
-          getOptionLabel={(option: TemplateVisibility) => convertToKorVisibility[option]}
-        />
+        <Radio options={VISIBILITY_OPTIONS} currentValue={visibility} handleCurrentValue={setVisibility} />
 
         {isPending ? (
           <LoadingBall />

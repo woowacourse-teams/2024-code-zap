@@ -19,7 +19,7 @@ import { useCategory } from '@/hooks/category';
 import { useTag, useSourceCode } from '@/hooks/template';
 import { useTemplateEditMutation } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { TEMPLATE_VISIBILITY, convertToKorVisibility } from '@/service/constants';
+import { VISIBILITY_OPTIONS } from '@/service/constants';
 import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
 import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
@@ -65,10 +65,6 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const { mutateAsync: updateTemplate, isPending, error } = useTemplateEditMutation(template.id);
 
   const { failAlert } = useToast();
-
-  const handleVisibility = (visibility: TemplateVisibility) => () => {
-    setVisibility(visibility);
-  };
 
   const handleCancelButton = () => {
     toggleEditButton();
@@ -174,12 +170,7 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
         <TagInput {...tagProps} />
 
-        <Radio
-          options={[...TEMPLATE_VISIBILITY]}
-          currentValue={visibility}
-          handleCurrentValue={handleVisibility}
-          getOptionLabel={(option: TemplateVisibility) => convertToKorVisibility[option]}
-        />
+        <Radio options={VISIBILITY_OPTIONS} currentValue={visibility} handleCurrentValue={setVisibility} />
 
         {isPending ? (
           <LoadingBall />

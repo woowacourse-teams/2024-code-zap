@@ -14,16 +14,9 @@ type Story = StoryObj<typeof Radio>;
 
 export const Default: Story = {
   render: () => {
-    const options = ['코', '드', '잽'];
-    const [currentValue, setCurrentValue] = useState(options[0]);
+    const options = { 코: '코', 드: '드', 잽: '잽' };
+    const [currentValue, setCurrentValue] = useState('코');
 
-    return (
-      <Radio
-        options={options}
-        currentValue={currentValue}
-        getOptionLabel={(option: string) => option}
-        handleCurrentValue={setCurrentValue}
-      />
-    );
+    return <Radio options={options} currentValue={currentValue} handleCurrentValue={setCurrentValue} />;
   },
 };

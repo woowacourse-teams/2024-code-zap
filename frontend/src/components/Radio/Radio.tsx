@@ -3,19 +3,18 @@ import { theme } from '@/style/theme';
 
 import * as S from './Radio.style';
 
-interface Props<T> {
-  options: T[];
+interface Props<T extends string> {
+  options: Record<T, T | string | number>;
   currentValue: T;
-  getOptionLabel: (option: T) => string;
   handleCurrentValue: (value: T) => void;
 }
 
-const Radio = <T,>({ options, currentValue, getOptionLabel, handleCurrentValue }: Props<T>) => (
+const Radio = <T extends string>({ options, currentValue, handleCurrentValue }: Props<T>) => (
   <S.RadioContainer>
-    {options.map((option) => (
-      <S.RadioOption key={getOptionLabel(option)} onClick={() => handleCurrentValue(option)}>
-        <S.RadioCircle isSelected={currentValue === option} />
-        <Text.Medium color={theme.color.light.secondary_800}>{getOptionLabel(option)}</Text.Medium>
+    {Object.keys(options).map((optionKey) => (
+      <S.RadioOption key={optionKey} onClick={() => handleCurrentValue(optionKey as T)}>
+        <S.RadioCircle isSelected={currentValue === optionKey} />
+        <Text.Medium color={theme.color.light.secondary_800}>{options[optionKey as T]}</Text.Medium>
       </S.RadioOption>
     ))}
   </S.RadioContainer>
