@@ -1,4 +1,4 @@
-package codezap.auth.manager.header;
+package codezap.auth.manager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -18,7 +18,7 @@ import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 
-class AuthorizationHeaderCredentialManagerTest {
+class AuthorizationCredentialManagerTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
@@ -41,9 +41,8 @@ class AuthorizationHeaderCredentialManagerTest {
         @DisplayName("회원 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
             Member member = MemberFixture.getFirstMember();
-            String credential = credentialProvider.createCredential(member);
-            HeaderCredential headerCredential = new HeaderCredential(credentialProvider.getType(), credential);
-            request.addHeader(HttpHeaders.AUTHORIZATION, headerCredential.toAuthorizationHeader());
+            Credential credential = credentialProvider.createCredential(member);
+            request.addHeader(HttpHeaders.AUTHORIZATION, credential.toAuthorizationHeader());
 
             assertEquals(authorizationHeaderCredentialManager.getMember(request), member);
         }
@@ -61,12 +60,11 @@ class AuthorizationHeaderCredentialManagerTest {
     @DisplayName("인증 정보 헤더에 추가 성공")
     void setCredential_SetsCredentialCookie() {
         Member member = MemberFixture.getFirstMember();
-        String credential = credentialProvider.createCredential(MemberFixture.getFirstMember());
-        HeaderCredential headerCredential = new HeaderCredential(credentialProvider.getType(), credential);
+        Credential credential = credentialProvider.createCredential(MemberFixture.getFirstMember());
 
         authorizationHeaderCredentialManager.setCredential(response, member);
 
         String header = response.getHeader(HttpHeaders.AUTHORIZATION);
-        assertThat(header).isEqualTo(headerCredential.toAuthorizationHeader());
+        assertThat(header).isEqualTo(credential.toAuthorizationHeader());
     }
 }

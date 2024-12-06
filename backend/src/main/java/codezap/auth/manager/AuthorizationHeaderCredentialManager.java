@@ -1,11 +1,10 @@
-package codezap.auth.manager.header;
+package codezap.auth.manager;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
 
-import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
@@ -22,9 +21,9 @@ public class AuthorizationHeaderCredentialManager implements CredentialManager {
         String authorizationHeaderValue = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         checkHeaderExist(authorizationHeaderValue);
 
-        HeaderCredential headerCredential = HeaderCredential.from(authorizationHeaderValue);
-        checkAuthorizationType(headerCredential.type());
-        return credentialProvider.extractMember(headerCredential.value());
+        Credential credential = Credential.from(authorizationHeaderValue);
+        checkAuthorizationType(credential.type());
+        return credentialProvider.extractMember(credential);
     }
 
     private void checkHeaderExist(String authorizationHeaderValue) {
@@ -47,8 +46,8 @@ public class AuthorizationHeaderCredentialManager implements CredentialManager {
 
     @Override
     public void setCredential(HttpServletResponse httpServletResponse, Member member) {
-        HeaderCredential headerCredential = new HeaderCredential(credentialProvider.getType(), credentialProvider.createCredential(member));
-        httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, headerCredential.toAuthorizationHeader());
+        Credential credential = credentialProvider.createCredential(member);
+        httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, credential.toAuthorizationHeader());
     }
 
     @Override

@@ -30,7 +30,7 @@ public class CookieCredentialManager implements CredentialManager {
         checkCookieExist(cookies);
 
         Cookie credentialCookie = extractTokenCookie(cookies);
-        String credential = credentialCookie.getValue();
+        Credential credential = Credential.basic(credentialCookie.getValue());
         return credentialProvider.extractMember(credential);
     }
 
@@ -60,8 +60,8 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public void setCredential(HttpServletResponse httpServletResponse, Member member) {
-        String token = credentialProvider.createCredential(member);
-        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, token)
+        Credential credential = credentialProvider.createCredential(member);
+        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
                 .maxAge(-1)
                 .path("/")
                 .sameSite("None")

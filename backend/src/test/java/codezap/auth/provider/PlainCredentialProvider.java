@@ -1,5 +1,6 @@
 package codezap.auth.provider;
 
+import codezap.auth.manager.Credential;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -15,15 +16,17 @@ public class PlainCredentialProvider implements CredentialProvider {
     private static final String DELIMITER = URLEncoder.encode(";", StandardCharsets.UTF_8);
 
     @Override
-    public String createCredential(Member member) {
-        return Stream.of(Long.toString(member.getId()), member.getName(), member.getPassword(), member.getSalt())
+    public Credential createCredential(Member member) {
+        String credentialValue = Stream.of(Long.toString(member.getId()), member.getName(), member.getPassword(),
+                        member.getSalt())
                 .map(value -> URLEncoder.encode(value, StandardCharsets.UTF_8))
                 .collect(Collectors.joining(DELIMITER));
+        return new Credential(getType(), credentialValue);
     }
 
     @Override
-    public Member extractMember(String credential) {
-        List<String> memberInfo = Arrays.stream(credential.split(DELIMITER))
+    public Member extractMember(Credential credential) {
+        List<String> memberInfo = Arrays.stream(credential.value().split(DELIMITER))
                 .map(value -> URLDecoder.decode(value, StandardCharsets.UTF_8))
                 .toList();
         return new Member(
@@ -36,6 +39,6 @@ public class PlainCredentialProvider implements CredentialProvider {
 
     @Override
     public String getType() {
-        return "stub";
+        return "Plain";
     }
 }

@@ -43,8 +43,8 @@ class CookieCredentialManagerTest {
         @DisplayName("회원 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
             Member member = MemberFixture.getFirstMember();
-            String credential = credentialProvider.createCredential(member);
-            request.setCookies(new Cookie("credential", credential));
+            Credential credential = credentialProvider.createCredential(member);
+            request.setCookies(new Cookie("credential", credential.value()));
 
             assertEquals(cookieCredentialManager.getMember(request), member);
         }
@@ -78,7 +78,7 @@ class CookieCredentialManagerTest {
         Cookie cookie = response.getCookie("credential");
         assertAll(
                 () -> assertThat(cookie).isNotNull(),
-                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(credentialProvider.createCredential(member)),
+                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(credentialProvider.createCredential(member).value()),
                 () -> assertThat(Objects.requireNonNull(cookie).getMaxAge()).isEqualTo(-1),
                 () -> assertThat(Objects.requireNonNull(cookie).getPath()).isEqualTo("/"),
                 () -> assertThat(Objects.requireNonNull(cookie).isHttpOnly()).isTrue(),

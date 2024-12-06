@@ -1,5 +1,6 @@
 package codezap.auth.provider.basic;
 
+import codezap.auth.manager.Credential;
 import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,13 +22,14 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
     private final MemberRepository memberRepository;
 
     @Override
-    public String createCredential(Member member) {
-        return HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8);
+    public Credential createCredential(Member member) {
+        String credentialValue = HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8);
+        return Credential.basic(credentialValue);
     }
 
     @Override
-    public Member extractMember(String credential) {
-        String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
+    public Member extractMember(Credential credential) {
+        String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential.value());
         Member member = memberRepository.fetchByName(nameAndPassword[0]);
         checkMatchPassword(member, nameAndPassword[1]);
         return member;

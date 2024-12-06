@@ -1,7 +1,6 @@
 package codezap.global;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -62,6 +61,6 @@ public abstract class MockMvcTest {
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
         when(credentialManager.getMember(any())).thenReturn(MemberFixture.memberFixture());
-        when(credentialProvider.extractMember(anyString())).thenReturn(MemberFixture.memberFixture());
+        when(credentialProvider.extractMember(any())).thenReturn(MemberFixture.memberFixture());
     }
 }
