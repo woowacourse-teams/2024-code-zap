@@ -25,15 +25,6 @@ public class CookieCredentialManager implements CredentialManager {
     private final CredentialProvider credentialProvider;
 
     @Override
-    public String getCredential(final HttpServletRequest httpServletRequest) {
-        Cookie[] cookies = httpServletRequest.getCookies();
-        checkCookieExist(cookies);
-
-        Cookie credentialCookie = extractTokenCookie(cookies);
-        return credentialCookie.getValue();
-    }
-
-    @Override
     public Member getMember(HttpServletRequest httpServletRequest) {
         Cookie[] cookies = httpServletRequest.getCookies();
         checkCookieExist(cookies);

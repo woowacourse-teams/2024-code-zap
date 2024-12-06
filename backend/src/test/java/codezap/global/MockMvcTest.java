@@ -61,7 +61,7 @@ public abstract class MockMvcTest {
         objectMapper = new ObjectMapper();
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
-        when(credentialManager.getCredential(any())).thenReturn("mock-credential");
+        when(credentialManager.getMember(any())).thenReturn(MemberFixture.memberFixture());
         when(credentialProvider.extractMember(anyString())).thenReturn(MemberFixture.memberFixture());
     }
 }

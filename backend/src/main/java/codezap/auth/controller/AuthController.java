@@ -39,8 +39,7 @@ public class AuthController implements SpringDocAuthController {
     @GetMapping("/login/check")
     @ResponseStatus(HttpStatus.OK)
     public void checkLogin(HttpServletRequest httpServletRequest) {
-        String credential = credentialManager.getCredential(httpServletRequest);
-        authService.checkLogin(credential);
+        credentialManager.getMember(httpServletRequest);
     }
 
     @PostMapping("/logout")
