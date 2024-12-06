@@ -19,8 +19,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import codezap.global.exception.CodeZapException;
-
 class CookieCredentialManagerTest {
 
     private MockHttpServletRequest request;
@@ -36,33 +34,35 @@ class CookieCredentialManagerTest {
         cookieCredentialManager = new CookieCredentialManager(credentialProvider);
     }
 
+
     @Nested
-    @DisplayName("인증 정보 반환")
-    class GetCredential {
+    @DisplayName("요청에서 회원 반환")
+    class GetMember {
 
         @Test
-        @DisplayName("인증 정보 반환 성공")
+        @DisplayName("회원 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
-            String credential = "test-token";
+            Member member = MemberFixture.getFirstMember();
+            String credential = credentialProvider.createCredential(member);
             request.setCookies(new Cookie("credential", credential));
 
-            assertEquals(cookieCredentialManager.getCredential(request), credential);
+            assertEquals(cookieCredentialManager.getMember(request), member);
         }
 
         @Test
-        @DisplayName("인증 정보 반환 실패: 쿠키 없음")
+        @DisplayName("회원 반환 실패: 쿠키 없음")
         void getCredential_WithNoCookies_ThrowsException() {
-            assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
+            assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
 
         @Test
-        @DisplayName("인증 정보 반환 실패: 인증 정보에 대한 쿠키 없음")
+        @DisplayName("회원 반환 실패: 인증 정보에 대한 쿠키 없음")
         void getCredential_WithNoCredentialCookie_ThrowsException() {
             request.setCookies(new Cookie("other-cookie", "some-value"));
 
-            assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
+            assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
