@@ -12,6 +12,10 @@
         <appender-ref ref="console-appender"/>
     </logger>
 
+    <logger name="codezap" level="INFO">
+        <appender-ref ref="info-appender"/>
+    </logger>
+
     <root level="WARN">
         <appender-ref ref="warn-appender"/>
         <appender-ref ref="error-appender"/>
