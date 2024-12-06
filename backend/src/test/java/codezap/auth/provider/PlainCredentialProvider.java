@@ -33,4 +33,9 @@ public class PlainCredentialProvider implements CredentialProvider {
                 memberInfo.get(3)
         );
     }
+
+    @Override
+    public String getType() {
+        return "stub";
+    }
 }

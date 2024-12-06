@@ -7,4 +7,6 @@ public interface CredentialProvider {
     String createCredential(Member member);
 
     Member extractMember(String credential);
+
+    String getType();
 }
