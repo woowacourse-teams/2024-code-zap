@@ -8,10 +8,10 @@ import static com.codezap.message.PrintMessage.SUCCESS_TEMPLATE_UPLOAD;
 import static com.codezap.message.PrintMessage.SUCCESS_TEMPLATE_UPLOAD_MESSAGE;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 
-import com.codezap.client.CodeZapClient;
 import com.codezap.dto.request.TemplateCreateRequest;
 import com.codezap.exception.ErrorType;
 import com.codezap.exception.PluginException;
@@ -64,13 +64,12 @@ public class CreateTemplateAction extends AnAction {
     }
 
     private String findContents(VirtualFile virtualFile, Editor editor) {
-        if (editor != null) {
-            String selectedText = editor.getSelectionModel().getSelectedText();
-            if (selectedText != null) {
-                return selectedText;
-            }
-        }
+        return Optional.ofNullable(editor)
+                .map(e -> e.getSelectionModel().getSelectedText())
+                .orElseGet(() -> readFileContents(virtualFile));
+    }
 
+    private String readFileContents(VirtualFile virtualFile) {
         try {
             return new String(virtualFile.contentsToByteArray());
         } catch (IOException ex) {
