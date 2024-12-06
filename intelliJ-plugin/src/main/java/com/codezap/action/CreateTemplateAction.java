@@ -34,7 +34,7 @@ public class CreateTemplateAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent event) {
-        if (!CodeZapClient.existsCookie() && !loginService.login()) {
+        if (!loginService.login()) {
             return;
         }
 
