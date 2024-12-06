@@ -1,6 +1,7 @@
 package codezap.voc.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
@@ -23,5 +24,5 @@ public interface SpringDocVocController {
                     @ErrorCase(description = "문의 내용이 10,000 글자를 초과한 경우.", exampleMessage = "문의 내용은 최대 10,000 글자까지 입력할 수 있습니다.")
             }
     )
-    void create(VocRequest request);
+    ResponseEntity<Void> create(VocRequest request);
 }
