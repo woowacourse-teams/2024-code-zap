@@ -1,31 +1,23 @@
 package codezap.auth.service;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 
-import codezap.auth.dto.LoginAndCredentialDto;
+import codezap.auth.dto.LoginAndMemberDto;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
-import codezap.auth.provider.CredentialProvider;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
 
 public class AuthServiceTest extends ServiceTest {
-
-    @Autowired
-    private CredentialProvider credentialProvider;
 
     @Autowired
     private AuthService authService;
@@ -40,11 +32,11 @@ public class AuthServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             LoginRequest loginRequest = new LoginRequest(member.getName(), MemberFixture.getFixturePlainPassword());
 
-            LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
+            LoginAndMemberDto loginAndMemberDto = authService.login(loginRequest);
 
             assertAll(
-                    () -> assertEquals(loginAndCredentialDto.loginResponse(), LoginResponse.from(member)),
-                    () -> assertEquals(loginAndCredentialDto.credential(), credentialProvider.createCredential(member))
+                    () -> assertEquals(loginAndMemberDto.loginResponse(), LoginResponse.from(member)),
+                    () -> assertEquals(loginAndMemberDto.member(), member)
             );
         }
 

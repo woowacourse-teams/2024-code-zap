@@ -156,8 +156,7 @@ class AuthArgumentResolverTest {
 
         private void setCredentialCookie(MockHttpServletRequest request, Member member) {
             MockHttpServletResponse mockResponse = new MockHttpServletResponse();
-            String credential = credentialProvider.createCredential(member);
-            credentialManager.setCredential(mockResponse, credential);
+            credentialManager.setCredential(mockResponse, member);
             request.setCookies(mockResponse.getCookies());
         }
     }
