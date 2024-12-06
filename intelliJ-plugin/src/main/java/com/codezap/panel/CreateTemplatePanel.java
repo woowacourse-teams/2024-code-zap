@@ -34,9 +34,30 @@ public class CreateTemplatePanel {
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints constraints = new GridBagConstraints();
 
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = JBUI.insetsRight(5);
+        addTitleField(panel, constraints, fileName);
+        addCategoryComboBox(panel, constraints, findAllCategoriesResponse);
+        addFileNameField(panel, constraints, fileName);
+        addContentArea(panel, constraints, content);
+        addPrivacyCheckbox(panel, constraints);
 
+        int option = JOptionPane.showConfirmDialog(
+                null, panel, "템플릿 생성", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (option == JOptionPane.CANCEL_OPTION) {
+            throw new PluginException(ErrorType.CANCEL_TAP);
+        }
+
+        long categoryId = findAllCategoriesResponse.getId((String) ((ComboBox) panel.getComponent(1)).getSelectedItem());
+        return makeTemplateCreateRequest(
+                ((JTextField) panel.getComponent(1)).getText(),
+                fileName,
+                content,
+                categoryId,
+                ((JCheckBox) panel.getComponent(4)).isSelected()
+        );
+    }
+
+    private static void addTitleField(JPanel panel, GridBagConstraints constraints, String fileName) {
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 0.2;
@@ -46,7 +67,9 @@ public class CreateTemplatePanel {
         constraints.weightx = 0.8;
         JTextField titleField = new JTextField(fileName, 20);
         panel.add(titleField, constraints);
+    }
 
+    private static void addCategoryComboBox(JPanel panel, GridBagConstraints constraints, FindAllCategoriesResponse findAllCategoriesResponse) {
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.weightx = 0.8;
@@ -56,7 +79,9 @@ public class CreateTemplatePanel {
                         .toArray(String[]::new)
         );
         panel.add(categoryComboBox, constraints);
+    }
 
+    private static void addFileNameField(JPanel panel, GridBagConstraints constraints, String fileName) {
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.weightx = 0.8;
@@ -67,7 +92,9 @@ public class CreateTemplatePanel {
         JTextField fileNameField = new JTextField(fileName, 20);
         fileNameField.setEditable(false);
         panel.add(fileNameField, constraints);
+    }
 
+    private static void addContentArea(JPanel panel, GridBagConstraints constraints, String content) {
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.weightx = 0.2;
@@ -84,23 +111,15 @@ public class CreateTemplatePanel {
         contentArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JBScrollPane(contentArea);
         panel.add(scrollPane, constraints);
+    }
 
+    private static void addPrivacyCheckbox(JPanel panel, GridBagConstraints constraints) {
         constraints.gridx = 1;
         constraints.gridy = 4;
         constraints.weightx = 0.5;
         constraints.weighty = 0.0;
         JCheckBox isPrivateCheckBox = new JCheckBox("비공개");
         panel.add(isPrivateCheckBox, constraints);
-
-        int option = JOptionPane.showConfirmDialog(
-                null, panel, "템플릿 생성", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (option == JOptionPane.CANCEL_OPTION) {
-            throw new PluginException(ErrorType.CANCEL_TAP);
-        }
-
-        long categoryId = findAllCategoriesResponse.getId((String) categoryComboBox.getSelectedItem());
-        return makeTemplateCreateRequest(titleField.getText(), fileName, content, categoryId, isPrivateCheckBox.isSelected());
     }
 
     private static TemplateCreateRequest makeTemplateCreateRequest(
