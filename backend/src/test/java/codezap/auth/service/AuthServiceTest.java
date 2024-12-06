@@ -73,34 +73,4 @@ public class AuthServiceTest extends ServiceTest {
                     .hasMessage("로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }
     }
-
-    @Nested
-    @DisplayName("로그인 상태 확인 테스트")
-    class CheckLoginTest {
-
-        @Test
-        @DisplayName("성공")
-        void checkLogin() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            String basicAuthCredentials = credentialProvider.createCredential(member);
-
-            assertThatCode(() -> authService.checkLogin(basicAuthCredentials))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("실패: 잘못된 크레덴셜")
-        void checkLogin_WithInvalidCredential_ThrowsException() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            String invalidCredential = HttpHeaders.encodeBasicAuth(
-                    member.getName(),
-                    member.getPassword() + "wrong",
-                    StandardCharsets.UTF_8
-            );
-
-            assertThatThrownBy(() -> authService.checkLogin(invalidCredential))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("비밀번호가 일치하지 않습니다.");
-        }
-    }
 }

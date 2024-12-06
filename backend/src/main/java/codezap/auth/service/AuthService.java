@@ -43,8 +43,4 @@ public class AuthService {
             throw new CodeZapException(ErrorCode.UNAUTHORIZED_PASSWORD, "로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }
     }
-
-    public void checkLogin(String credential) {
-        credentialProvider.extractMember(credential);
-    }
 }
