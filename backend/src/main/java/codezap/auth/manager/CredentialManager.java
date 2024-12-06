@@ -10,7 +10,7 @@ public interface CredentialManager {
 
     boolean hasCredential(HttpServletRequest httpServletRequest);
 
-    void setCredential(HttpServletResponse httpServletResponse, String credential);
+    void setCredential(HttpServletResponse httpServletResponse, Member member);
 
     void removeCredential(HttpServletResponse httpServletResponse);
 }

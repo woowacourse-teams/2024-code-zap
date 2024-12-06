@@ -59,7 +59,8 @@ public class CookieCredentialManager implements CredentialManager {
     }
 
     @Override
-    public void setCredential(HttpServletResponse httpServletResponse, String token) {
+    public void setCredential(HttpServletResponse httpServletResponse, Member member) {
+        String token = credentialProvider.createCredential(member);
         ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, token)
                 .maxAge(-1)
                 .path("/")

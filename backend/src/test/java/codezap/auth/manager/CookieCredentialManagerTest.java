@@ -71,14 +71,14 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에 추가 성공")
     void setCredential_SetsCredentialCookie() {
-        String token = "test-token";
+        Member member = MemberFixture.getFirstMember();
 
-        cookieCredentialManager.setCredential(response, token);
+        cookieCredentialManager.setCredential(response, member);
 
         Cookie cookie = response.getCookie("credential");
         assertAll(
                 () -> assertThat(cookie).isNotNull(),
-                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(token),
+                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(credentialProvider.createCredential(member)),
                 () -> assertThat(Objects.requireNonNull(cookie).getMaxAge()).isEqualTo(-1),
                 () -> assertThat(Objects.requireNonNull(cookie).getPath()).isEqualTo("/"),
                 () -> assertThat(Objects.requireNonNull(cookie).isHttpOnly()).isTrue(),
@@ -89,7 +89,7 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에서 제거 성공")
     void removeCredential_RemovesCredentialCookie() {
-        cookieCredentialManager.setCredential(response, "test-token");
+        cookieCredentialManager.setCredential(response, MemberFixture.getFirstMember());
 
         cookieCredentialManager.removeCredential(response);
 
