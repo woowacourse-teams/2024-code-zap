@@ -1,11 +1,14 @@
 package codezap.auth.manager;
 
+import codezap.auth.provider.CredentialProvider;
+import codezap.member.domain.Member;
 import java.util.Arrays;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -14,9 +17,12 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 
 @Component
+@RequiredArgsConstructor
 public class CookieCredentialManager implements CredentialManager {
 
     private static final String CREDENTIAL_COOKIE_NAME = "credential";
+
+    private final CredentialProvider credentialProvider;
 
     @Override
     public String getCredential(final HttpServletRequest httpServletRequest) {
@@ -25,6 +31,16 @@ public class CookieCredentialManager implements CredentialManager {
 
         Cookie credentialCookie = extractTokenCookie(cookies);
         return credentialCookie.getValue();
+    }
+
+    @Override
+    public Member getMember(HttpServletRequest httpServletRequest) {
+        Cookie[] cookies = httpServletRequest.getCookies();
+        checkCookieExist(cookies);
+
+        Cookie credentialCookie = extractTokenCookie(cookies);
+        String credential = credentialCookie.getValue();
+        return credentialProvider.extractMember(credential);
     }
 
     private void checkCookieExist(final Cookie[] cookies) {

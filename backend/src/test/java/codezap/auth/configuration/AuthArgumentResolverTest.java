@@ -25,10 +25,9 @@ import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 
 class AuthArgumentResolverTest {
-    private final CredentialManager credentialManager = new CookieCredentialManager();
     private final CredentialProvider credentialProvider = new PlainCredentialProvider();
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager,
-            credentialProvider);
+    private final CredentialManager credentialManager = new CookieCredentialManager(credentialProvider);
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")

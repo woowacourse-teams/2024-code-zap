@@ -5,10 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Objects;
-
+import codezap.auth.provider.CredentialProvider;
+import codezap.auth.provider.PlainCredentialProvider;
+import codezap.fixture.MemberFixture;
+import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
 import jakarta.servlet.http.Cookie;
-
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -23,12 +26,14 @@ class CookieCredentialManagerTest {
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     private CookieCredentialManager cookieCredentialManager;
+    private CredentialProvider credentialProvider;
 
     @BeforeEach
     void setUp() {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        cookieCredentialManager = new CookieCredentialManager();
+        credentialProvider = new PlainCredentialProvider();
+        cookieCredentialManager = new CookieCredentialManager(credentialProvider);
     }
 
     @Nested
