@@ -33,7 +33,7 @@ public class MethodExecutionTimeAspect {
         String methodName = joinPoint.getSignature()
                 .getName();
 
-        log.info("{}.{} 실행 {}ms", className, methodName, executionTimeMillis);
+        log.debug("{}.{} 실행 {}ms", className, methodName, executionTimeMillis);
 
         return result;
     }
