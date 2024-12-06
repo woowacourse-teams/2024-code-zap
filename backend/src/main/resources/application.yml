@@ -2,5 +2,5 @@ spring:
   profiles:
     group:
       default: local, voc
-      dev: db, actuator, swagger, cors
-      prod: db, actuator, swagger, cors
+      dev: db, actuator, swagger, cors, voc
+      prod: db, actuator, swagger, cors, voc
