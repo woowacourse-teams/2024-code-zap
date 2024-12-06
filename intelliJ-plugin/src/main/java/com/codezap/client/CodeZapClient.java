@@ -1,5 +1,8 @@
 package com.codezap.client;
 
+import static com.codezap.message.PrintMessage.SERVER_ERROR_MESSAGE;
+import static com.codezap.message.ApiEndpoints.BASE_URL;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +23,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CodeZapClient {
 
-    private static final String CODE_ZAP_LOGIN_URL = "https://api.code-zap.com";
     private static final String HEADER_SET_COOKIE = "Set-Cookie";
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String HEADER_ACCEPT = "Accept";
@@ -33,7 +35,7 @@ public class CodeZapClient {
 
     public static HttpURLConnection getHttpURLConnection(String api, HttpMethod httpMethod, Object requestBody)
             throws IOException {
-        URL url = new URL(CODE_ZAP_LOGIN_URL + api);
+        URL url = new URL(BASE_URL.getURL() + api);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod(httpMethod.name());
         connection.setRequestProperty(HEADER_CONTENT_TYPE, APPLICATION_JSON_UTF_8);
@@ -81,7 +83,7 @@ public class CodeZapClient {
                 return matcher.group(1).replace("\\n", "\n");
             }
         }
-        throw new PluginException("서버 에러가 발생했습니다.\n 다시 시도해주세요.", ErrorType.SERVER_ERROR);
+        throw new PluginException(SERVER_ERROR_MESSAGE.getMessage(), ErrorType.SERVER_ERROR);
     }
 
     public static synchronized void setCookie(HttpURLConnection connection) {

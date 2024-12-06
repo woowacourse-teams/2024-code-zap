@@ -1,5 +1,12 @@
 package com.codezap.action;
 
+import static com.codezap.message.PrintMessage.FAIL_TEMPLATE_UPLOAD;
+import static com.codezap.message.PrintMessage.NEED_FILE_SELECT;
+import static com.codezap.message.PrintMessage.NEED_FILE_SELECT_MESSAGE;
+import static com.codezap.message.PrintMessage.SERVER_ERROR_MESSAGE;
+import static com.codezap.message.PrintMessage.SUCCESS_TEMPLATE_UPLOAD;
+import static com.codezap.message.PrintMessage.SUCCESS_TEMPLATE_UPLOAD_MESSAGE;
+
 import java.io.IOException;
 
 import org.jetbrains.annotations.NotNull;
@@ -21,14 +28,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 public class CreateTemplateAction extends AnAction {
 
-    private static final String NEED_FILE_SELECT_MESSAGE =
-            "파일을 선택한 상태에서 실행해 주세요.\n" + "1. 프로젝트 창에서 파일 선택 또는\n" + "2. 에디터에서 파일을 연 상태로 실행";
-    private static final String NEED_FILE_SELECT = "파일 선택 필수";
-    private static final String SUCCESS_TEMPLATE_UPLOAD = "템플릿 생성 완료";
-    private static final String SUCCESS_TEMPLATE_UPLOAD_MESSAGE = "정상적으로 템플릿이 생성되었습니다.";
-    private static final String FAIL_TEMPLATE_UPLOAD = "템플릿 생성 실패";
-    public static final String SERVER_ERROR_MESSAGE = "서버의 문제로 템플릿 생성에 실패하였습니다.\n 다시 시도해주세요.";
-
     private final LoginService loginService = new LoginService();
     private final TemplateService templateService = new TemplateService();
     private final CategoryService categoryService = new CategoryService();
@@ -41,7 +40,7 @@ public class CreateTemplateAction extends AnAction {
 
         VirtualFile virtualFile = event.getData(CommonDataKeys.VIRTUAL_FILE);
         if (virtualFile == null) {
-            Messages.showWarningDialog(NEED_FILE_SELECT_MESSAGE, NEED_FILE_SELECT);
+            Messages.showWarningDialog(NEED_FILE_SELECT_MESSAGE.getMessage(), NEED_FILE_SELECT.getMessage());
             return;
         }
 
@@ -53,12 +52,13 @@ public class CreateTemplateAction extends AnAction {
                     fileName, content, categoryService.getCategories(loginService.getMemberId()));
 
             templateService.createTemplate(request);
-            Messages.showInfoMessage(SUCCESS_TEMPLATE_UPLOAD_MESSAGE, SUCCESS_TEMPLATE_UPLOAD);
+            Messages.showInfoMessage(SUCCESS_TEMPLATE_UPLOAD_MESSAGE.getMessage(),
+                    SUCCESS_TEMPLATE_UPLOAD.getMessage());
         } catch (IOException ignored) {
-            Messages.showInfoMessage(SERVER_ERROR_MESSAGE, FAIL_TEMPLATE_UPLOAD);
+            Messages.showInfoMessage(SERVER_ERROR_MESSAGE.getMessage(), FAIL_TEMPLATE_UPLOAD.getMessage());
         } catch (PluginException e) {
             if (!e.matchErrorType(ErrorType.CANCEL_TAP)) {
-                Messages.showInfoMessage(e.getMessage(), FAIL_TEMPLATE_UPLOAD);
+                Messages.showInfoMessage(e.getMessage(), FAIL_TEMPLATE_UPLOAD.getMessage());
             }
         }
     }

@@ -1,5 +1,7 @@
 package com.codezap.service;
 
+import static com.codezap.message.ApiEndpoints.CATEGORIES_URL;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -14,12 +16,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class CategoryService {
 
-    private static final String CATEGORIES_URL = "/categories?memberId=";
-
     public FindAllCategoriesResponse getCategories(long memberId) throws IOException {
         HttpURLConnection connection = null;
         try {
-            connection = CodeZapClient.getHttpURLConnection(CATEGORIES_URL + memberId, HttpMethod.GET, null);
+            connection = CodeZapClient.getHttpURLConnection(CATEGORIES_URL.getURL() + memberId, HttpMethod.GET, null);
 
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
