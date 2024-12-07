@@ -23,8 +23,7 @@ class VocControllerTest extends MockMvcTest {
         mvc.perform(post("/contact")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(status().isOk());
     }
 
     // TODO: dto가 없어서 실패하는 테스트
@@ -32,7 +31,6 @@ class VocControllerTest extends MockMvcTest {
     @DisplayName("문의하기 요청 실패 : 요청 본문 없음")
     void create_error() throws Exception {
         mvc.perform(post("/contact"))
-                .andExpect(status().isBadRequest())
-                .andDo(print());
+                .andExpect(status().isBadRequest());
     }
 }
