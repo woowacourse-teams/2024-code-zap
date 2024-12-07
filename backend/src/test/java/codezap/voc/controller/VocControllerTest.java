@@ -1,58 +1,38 @@
 package codezap.voc.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import codezap.auth.manager.CredentialManager;
-import codezap.auth.provider.CredentialProvider;
-import codezap.global.cors.CorsProperties;
+import codezap.global.MockMvcTest;
 import codezap.voc.dto.VocRequest;
-import codezap.voc.service.VocService;
 
-@WebMvcTest(VocController.class)
-@EnableConfigurationProperties(CorsProperties.class)
-class VocControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
-    private VocService vocService;
-
-    @MockBean
-    private CredentialProvider credentialProvider;
-
-    @MockBean
-    private CredentialManager credentialManager;
+@Import(VocController.class)
+class VocControllerTest extends MockMvcTest {
 
     @Test
+    @DisplayName("문의하기 요청 성공")
     void create() throws Exception {
-        // given
-        doNothing().when(vocService).create(any(VocRequest.class));
-
         var request = new VocRequest("lorem ipsum dolor sit amet consectetur adipiscing elit", null);
 
-        // when & then
         mvc.perform(post("/contact")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    // TODO: dto가 없어서 실패하는 테스트
+    @Test
+    @DisplayName("문의하기 요청 실패 : 요청 본문 없음")
+    void create_error() throws Exception {
+        mvc.perform(post("/contact"))
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 }
