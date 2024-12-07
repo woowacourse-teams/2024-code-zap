@@ -26,7 +26,6 @@ class VocControllerTest extends MockMvcTest {
                 .andExpect(status().isOk());
     }
 
-    // TODO: dto가 없어서 실패하는 테스트
     @Test
     @DisplayName("문의하기 요청 실패 : 요청 본문 없음")
     void create_error() throws Exception {
