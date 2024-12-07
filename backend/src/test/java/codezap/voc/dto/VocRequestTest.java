@@ -45,7 +45,7 @@ class VocRequestTest {
 
     @ParameterizedTest
     @MethodSource
-    @DisplayName("해피 케이스: email, memberId, name은 optional")
+    @DisplayName("성공: email, memberId, name은 optional")
     void success(String message, String email, Long memberId, String name) {
         sut = new VocRequest(message, email, memberId, name);
 
@@ -68,7 +68,7 @@ class VocRequestTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("문의 내용 길이 임계값 검증: 20글자부터 10,000글자까지 정상 동작")
+        @DisplayName("성공: 문의 내용 길이 20글자부터 10,000글자")
         void message_length_success(String message) {
             sut = new VocRequest(message);
 
@@ -85,7 +85,7 @@ class VocRequestTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("문의 내용 길이 임계값 검증: 19자 이하, 10,001글자 이상에서 예외 발생")
+        @DisplayName("실패: 문의 내용 길이 19자 이하, 10,001글자 이상")
         void message_length_fail(String message) {
             sut = new VocRequest(message);
 
@@ -104,7 +104,7 @@ class VocRequestTest {
         }
 
         @Test
-        @DisplayName("문의 내용이 null인 경우 예외 발생")
+        @DisplayName("실패: 문의 내용이 null인 경우")
         void message_null_fail() {
             sut = new VocRequest(null);
 
@@ -123,7 +123,7 @@ class VocRequestTest {
 
         @ParameterizedTest
         @ValueSource(strings = {"", "codezap", "@gmail.com", ".com"})
-        @DisplayName("이메일 형식에 맞지 않는 경우 예외 발생")
+        @DisplayName("실패: 이메일 형식에 맞지 않는 경우")
         void email_format_fail(String email) {
             sut = new VocRequest(message, email);
 
@@ -141,7 +141,7 @@ class VocRequestTest {
     class MemberIdTest {
 
         @Test
-        @DisplayName("memberId가 0인 경우 예외 발생")
+        @DisplayName("실패: memberId가 0인 경우 예외 발생")
         void memberId_fail() {
             memberId = 0L;
             sut = new VocRequest(message, email, memberId, name);
@@ -160,7 +160,7 @@ class VocRequestTest {
     class NameTest {
 
         @Test
-        @DisplayName("사용자 이름이 길이 임계값 검증: 255글자까지 성공")
+        @DisplayName("성공: 사용자 이름 길이 255글자")
         void name_success() {
             name = RandomStringUtils.randomAlphanumeric(255);
             sut = new VocRequest(message, email, memberId, name);
@@ -171,7 +171,7 @@ class VocRequestTest {
         }
 
         @Test
-        @DisplayName("사용자 이름이 길이 임계값 검증: 256글자부터 예외 발생")
+        @DisplayName("실패: 사용자 이름 길이 256글자부터 예외 발생")
         void name_fail() {
             name = RandomStringUtils.randomAlphanumeric(256);
             sut = new VocRequest(message, email, memberId, name);
