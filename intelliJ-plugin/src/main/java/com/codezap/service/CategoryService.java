@@ -1,6 +1,7 @@
 package com.codezap.service;
 
 import static com.codezap.message.ApiEndpoints.CATEGORIES_URL;
+import static com.codezap.message.PrintMessage.PLUGIN_ERROR_MESSAGE;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -11,12 +12,13 @@ import com.codezap.client.CodeZapClient;
 import com.codezap.client.HttpMethod;
 import com.codezap.dto.response.FindAllCategoriesResponse;
 import com.codezap.dto.response.FindCategoryResponse;
+import com.codezap.exception.ErrorType;
 import com.codezap.exception.PluginException;
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class CategoryService {
 
-    public FindAllCategoriesResponse getCategories(long memberId) throws IOException {
+    public FindAllCategoriesResponse getCategories(long memberId) {
         HttpURLConnection connection = null;
         try {
             connection = CodeZapClient.getHttpURLConnection(CATEGORIES_URL.getURL() + memberId, HttpMethod.GET, null);
@@ -26,6 +28,8 @@ public class CategoryService {
                 throw new PluginException(CodeZapClient.getErrorMessage(connection), responseCode);
             }
             return CodeZapClient.makeResponse(connection, (this::makeCategoriesResponse));
+        } catch (IOException e) {
+            throw new PluginException(PLUGIN_ERROR_MESSAGE.getMessage(), ErrorType.SERVER_ERROR);
         } finally {
             if (connection != null) {
                 connection.disconnect();

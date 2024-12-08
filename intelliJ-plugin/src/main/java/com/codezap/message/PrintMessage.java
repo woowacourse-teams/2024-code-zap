@@ -10,6 +10,7 @@ public enum PrintMessage {
     FAIL_LOGIN("로그인 실패"),
     WELCOME_MESSAGE("님 만나서 반가워요"),
     SERVER_ERROR_MESSAGE("서버의 문제로 실패하였습니다.\n 다시 시도해주세요."),
+    PLUGIN_ERROR_MESSAGE("플러그인에서 문제가 발생했습니다.\n 다시 시도해주세요."),
     ;
 
     private final String message;

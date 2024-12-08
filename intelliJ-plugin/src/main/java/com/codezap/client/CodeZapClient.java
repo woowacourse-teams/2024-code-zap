@@ -1,7 +1,8 @@
 package com.codezap.client;
 
-import static com.codezap.message.PrintMessage.SERVER_ERROR_MESSAGE;
 import static com.codezap.message.ApiEndpoints.BASE_URL;
+import static com.codezap.message.PrintMessage.PLUGIN_ERROR_MESSAGE;
+import static com.codezap.message.PrintMessage.SERVER_ERROR_MESSAGE;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,19 +34,22 @@ public class CodeZapClient {
 
     private CodeZapClient() {}
 
-    public static HttpURLConnection getHttpURLConnection(String api, HttpMethod httpMethod, Object requestBody)
-            throws IOException {
-        URL url = new URL(BASE_URL.getURL() + api);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(httpMethod.name());
-        connection.setRequestProperty(HEADER_CONTENT_TYPE, APPLICATION_JSON_UTF_8);
-        connection.setRequestProperty(HEADER_ACCEPT, APPLICATION_JSON_UTF_8);
-        connection.setRequestProperty(HEADER_COOKIE, cookie);
+    public static HttpURLConnection getHttpURLConnection(String api, HttpMethod httpMethod, Object requestBody) {
+        try {
+            URL url = new URL(BASE_URL.getURL() + api);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod(httpMethod.name());
+            connection.setRequestProperty(HEADER_CONTENT_TYPE, APPLICATION_JSON_UTF_8);
+            connection.setRequestProperty(HEADER_ACCEPT, APPLICATION_JSON_UTF_8);
+            connection.setRequestProperty(HEADER_COOKIE, cookie);
 
-        if (requestBody != null) {
-            setRequestBody(requestBody, connection);
+            if (requestBody != null) {
+                setRequestBody(requestBody, connection);
+            }
+            return connection;
+        } catch (IOException e) {
+            throw new PluginException(PLUGIN_ERROR_MESSAGE.getMessage(), ErrorType.SERVER_ERROR);
         }
-        return connection;
     }
 
     private static void setRequestBody(Object requestBody, HttpURLConnection connection) throws IOException {
@@ -58,21 +62,25 @@ public class CodeZapClient {
         }
     }
 
-    public static <T> T makeResponse(HttpURLConnection connection, MakeResponse<T> makeResponse) throws IOException {
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
+    public static <T> T makeResponse(HttpURLConnection connection, MakeResponse<T> makeResponse) {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode jsonResponse = objectMapper.readTree(response.toString());
-        return makeResponse.make(jsonResponse);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonResponse = objectMapper.readTree(response.toString());
+            return makeResponse.make(jsonResponse);
+        } catch (IOException e) {
+            throw new PluginException(PLUGIN_ERROR_MESSAGE.getMessage(), ErrorType.SERVER_ERROR);
+        }
     }
 
-    public static String getErrorMessage(HttpURLConnection connection) throws IOException {
+    public static String getErrorMessage(HttpURLConnection connection) {
         try (InputStream errorStream = connection.getErrorStream()) {
             String errorMessage = new BufferedReader(new InputStreamReader(errorStream))
                     .lines()
@@ -82,6 +90,8 @@ public class CodeZapClient {
             if (matcher.find()) {
                 return matcher.group(1).replace("\\n", "\n");
             }
+        } catch (IOException e) {
+            throw new PluginException(PLUGIN_ERROR_MESSAGE.getMessage(), ErrorType.SERVER_ERROR);
         }
         throw new PluginException(SERVER_ERROR_MESSAGE.getMessage(), ErrorType.SERVER_ERROR);
     }
