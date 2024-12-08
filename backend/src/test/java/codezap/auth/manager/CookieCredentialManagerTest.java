@@ -5,10 +5,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Objects;
-
+import codezap.auth.provider.CredentialProvider;
+import codezap.auth.provider.PlainCredentialProvider;
+import codezap.fixture.MemberFixture;
+import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
 import jakarta.servlet.http.Cookie;
-
+import java.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -16,48 +19,50 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import codezap.global.exception.CodeZapException;
-
 class CookieCredentialManagerTest {
 
     private MockHttpServletRequest request;
     private MockHttpServletResponse response;
     private CookieCredentialManager cookieCredentialManager;
+    private CredentialProvider credentialProvider;
 
     @BeforeEach
     void setUp() {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
-        cookieCredentialManager = new CookieCredentialManager();
+        credentialProvider = new PlainCredentialProvider();
+        cookieCredentialManager = new CookieCredentialManager(credentialProvider);
     }
 
+
     @Nested
-    @DisplayName("인증 정보 반환")
-    class GetCredential {
+    @DisplayName("요청에서 회원 반환")
+    class GetMember {
 
         @Test
-        @DisplayName("인증 정보 반환 성공")
+        @DisplayName("회원 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
-            String credential = "test-token";
-            request.setCookies(new Cookie("credential", credential));
+            Member member = MemberFixture.getFirstMember();
+            Credential credential = credentialProvider.createCredential(member);
+            request.setCookies(new Cookie("credential", credential.value()));
 
-            assertEquals(cookieCredentialManager.getCredential(request), credential);
+            assertEquals(cookieCredentialManager.getMember(request), member);
         }
 
         @Test
-        @DisplayName("인증 정보 반환 실패: 쿠키 없음")
+        @DisplayName("회원 반환 실패: 쿠키 없음")
         void getCredential_WithNoCookies_ThrowsException() {
-            assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
+            assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
 
         @Test
-        @DisplayName("인증 정보 반환 실패: 인증 정보에 대한 쿠키 없음")
+        @DisplayName("회원 반환 실패: 인증 정보에 대한 쿠키 없음")
         void getCredential_WithNoCredentialCookie_ThrowsException() {
             request.setCookies(new Cookie("other-cookie", "some-value"));
 
-            assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
+            assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
@@ -66,14 +71,14 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에 추가 성공")
     void setCredential_SetsCredentialCookie() {
-        String token = "test-token";
+        Member member = MemberFixture.getFirstMember();
 
-        cookieCredentialManager.setCredential(response, token);
+        cookieCredentialManager.setCredential(response, member);
 
         Cookie cookie = response.getCookie("credential");
         assertAll(
                 () -> assertThat(cookie).isNotNull(),
-                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(token),
+                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(credentialProvider.createCredential(member).value()),
                 () -> assertThat(Objects.requireNonNull(cookie).getMaxAge()).isEqualTo(-1),
                 () -> assertThat(Objects.requireNonNull(cookie).getPath()).isEqualTo("/"),
                 () -> assertThat(Objects.requireNonNull(cookie).isHttpOnly()).isTrue(),
@@ -84,11 +89,11 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에서 제거 성공")
     void removeCredential_RemovesCredentialCookie() {
-        cookieCredentialManager.setCredential(response, "test-token");
+        cookieCredentialManager.setCredential(response, MemberFixture.getFirstMember());
 
         cookieCredentialManager.removeCredential(response);
 
-        assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
+        assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
     }

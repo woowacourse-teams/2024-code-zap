@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import codezap.auth.dto.LoginAndCredentialDto;
+import codezap.auth.dto.LoginAndMemberDto;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.manager.CredentialManager;
@@ -31,16 +31,15 @@ public class AuthController implements SpringDocAuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse httpServletResponse
     ) {
-        LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
-        credentialManager.setCredential(httpServletResponse, loginAndCredentialDto.credential());
-        return ResponseEntity.ok(loginAndCredentialDto.loginResponse());
+        LoginAndMemberDto loginAndMemberDto = authService.login(loginRequest);
+        credentialManager.setCredential(httpServletResponse, loginAndMemberDto.member());
+        return ResponseEntity.ok(loginAndMemberDto.loginResponse());
     }
 
     @GetMapping("/login/check")
     @ResponseStatus(HttpStatus.OK)
     public void checkLogin(HttpServletRequest httpServletRequest) {
-        String credential = credentialManager.getCredential(httpServletRequest);
-        authService.checkLogin(credential);
+        credentialManager.getMember(httpServletRequest);
     }
 
     @PostMapping("/logout")
