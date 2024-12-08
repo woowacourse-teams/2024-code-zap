@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 import com.codezap.dto.request.TemplateCreateRequest;
+import com.codezap.dto.response.FindAllCategoriesResponse;
 import com.codezap.exception.ErrorType;
 import com.codezap.exception.PluginException;
 import com.codezap.panel.CreateTemplatePanel;
@@ -47,11 +48,12 @@ public class CreateTemplateAction extends AnAction {
         try {
             String fileName = virtualFile.getName();
             String content = findContents(virtualFile, event.getData(CommonDataKeys.EDITOR));
-
-            TemplateCreateRequest request = CreateTemplatePanel.inputCreateTemplate(
-                    fileName, content, categoryService.getCategories(loginService.getMemberId()));
+            FindAllCategoriesResponse categoriesResponse = categoryService.getCategories(loginService.getMemberId());
+            TemplateCreateRequest request =
+                    CreateTemplatePanel.inputCreateTemplate(fileName, content, categoriesResponse);
 
             templateService.createTemplate(request);
+
             Messages.showInfoMessage(SUCCESS_TEMPLATE_UPLOAD_MESSAGE.getMessage(),
                     SUCCESS_TEMPLATE_UPLOAD.getMessage());
         } catch (IOException ignored) {
