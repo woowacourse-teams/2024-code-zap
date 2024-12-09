@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Order(1)
 public class MDCFilter implements Filter {
 
-    private final String CORRELATION_ID = "correlationId";
+    private static final String CORRELATION_ID = "correlationId";
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)

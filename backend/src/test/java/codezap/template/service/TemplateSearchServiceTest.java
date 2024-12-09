@@ -299,7 +299,7 @@ class TemplateSearchServiceTest {
         @DisplayName("검색 기능: 모든 검색 기준으로 템플릿 목록 조회 성공")
         void findAllSuccessWithAllCriteria() {
             Long memberId = member1.getId();
-            String keyword = "안녕하세요";
+            String keyword = "안녕";
             Long categoryId = category1.getId();
             List<Long> tagIds = List.of(tag1.getId(), tag2.getId());
             Visibility visibility = Visibility.PUBLIC;

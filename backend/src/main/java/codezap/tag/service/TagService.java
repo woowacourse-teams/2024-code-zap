@@ -1,6 +1,5 @@
 package codezap.tag.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -25,22 +24,34 @@ public class TagService {
 
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
-        List<Tag> existingTags = new ArrayList<>(tagRepository.findAllByNames(tagNames));
-        List<String> existNames = existingTags.stream()
+        List<Tag> existTags = tagRepository.findAllByNames(tagNames);
+        List<String> existNames = getExistTagNames(existTags);
+
+        List<Tag> newTags = getOnlyNewTags(existNames, tagNames);
+        List<Tag> savedNewTags = tagRepository.saveAll(newTags);
+        existTags.addAll(savedNewTags);
+        saveTemplateTags(template, existTags);
+    }
+
+    private List<String> getExistTagNames(List<Tag> existTags) {
+        return existTags.stream()
                 .map(Tag::getName)
                 .toList();
+    }
 
-        List<Tag> newTags = tagRepository.saveAll(
-                tagNames.stream()
-                        .filter(name -> !existNames.contains(name))
-                        .map(Tag::new)
-                        .toList()
-        );
-        existingTags.addAll(newTags);
+    private List<Tag> getOnlyNewTags(List<String> existNames, List<String> tagNames) {
+        return tagNames.stream()
+                .distinct()
+                .filter(name -> !existNames.contains(name))
+                .map(Tag::new)
+                .toList();
+    }
 
-        for (Tag existingTag : existingTags) {
-            templateTagRepository.save(new TemplateTag(template, existingTag));
-        }
+    private void saveTemplateTags(Template template, List<Tag> tags) {
+        List<TemplateTag> templateTags = tags.stream()
+                .map(tag -> new TemplateTag(template, tag))
+                .toList();
+        templateTagRepository.saveAll(templateTags);
     }
 
     public List<Tag> findAllByTemplate(Template template) {

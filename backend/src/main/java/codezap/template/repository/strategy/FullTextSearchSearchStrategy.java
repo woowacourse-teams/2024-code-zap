@@ -3,6 +3,9 @@ package codezap.template.repository.strategy;
 import static codezap.template.domain.QSourceCode.sourceCode;
 import static codezap.template.domain.QTemplate.template;
 
+import java.util.Arrays;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -21,8 +24,9 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
 
     @Override
     public BooleanExpression matchedKeyword(String trimmedKeyword) {
-        NumberExpression<Double> titleScore = getMatchedAccuracy(template.title, template.description, trimmedKeyword);
-        NumberExpression<Double> sourceCodeScore = getMatchedAccuracy(sourceCode.filename, sourceCode.content, trimmedKeyword);
+        String parsedKeyword = parseKeyword(trimmedKeyword);
+        NumberExpression<Double> titleScore = getMatchedAccuracy(template.title, template.description, parsedKeyword);
+        NumberExpression<Double> sourceCodeScore = getMatchedAccuracy(sourceCode.filename, sourceCode.content, parsedKeyword);
         return titleScore.gt(NO_MATCHED_SCORE).or(
                 template.id.in(JPAExpressions
                         .select(sourceCode.template.id)
@@ -30,6 +34,13 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
                         .where(sourceCodeScore.gt(NO_MATCHED_SCORE))
                 )
         );
+    }
+
+    private String parseKeyword(String trimmedKeyword) {
+        String[] parsedKeywords = trimmedKeyword.split(" ");
+        return Arrays.stream(parsedKeywords)
+                .map(keyword -> "+" + keyword)
+                .collect(Collectors.joining(" "));
     }
 
     private NumberExpression<Double> getMatchedAccuracy(Object... args) {

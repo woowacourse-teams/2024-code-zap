@@ -13,17 +13,13 @@ import com.querydsl.jpa.JPAExpressions;
 
 import codezap.template.domain.Visibility;
 import codezap.template.repository.strategy.FullTextSearchSearchStrategy;
-import codezap.template.repository.strategy.LikeSearchStrategy;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class TemplateSearchExpressionProvider {
 
-    private final LikeSearchStrategy likeSearchStrategy;
     private final FullTextSearchSearchStrategy fullTextSearchStrategy;
-
-    private static final int MINIMUM_KEYWORD_LENGTH = 3;
 
     public BooleanExpression filterMember(Long memberId) {
         return Optional.ofNullable(memberId)
@@ -60,15 +56,7 @@ public class TemplateSearchExpressionProvider {
         return Optional.ofNullable(keyword)
                 .filter(k -> !k.isBlank())
                 .map(String::trim)
-                .map(this::createKeywordMatchExpression)
+                .map(fullTextSearchStrategy::matchedKeyword)
                 .orElse(null);
-    }
-
-    private BooleanExpression createKeywordMatchExpression(String trimmedKeyword) {
-        if (trimmedKeyword.length() < MINIMUM_KEYWORD_LENGTH) {
-            return likeSearchStrategy.matchedKeyword(trimmedKeyword);
-        }
-
-        return fullTextSearchStrategy.matchedKeyword(trimmedKeyword);
     }
 }

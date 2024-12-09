@@ -3,6 +3,6 @@ springdoc:
   default-produces-media-type: application/json
   swagger-ui:
     path: /swagger-ui.html
-    enabled: true
+    enabled: ${SWAGGER_ENABLED}
     supportedSubmitMethods: get
     display-request-duration: false

@@ -19,7 +19,6 @@ import codezap.global.querydsl.QueryDSLConfig;
 import codezap.global.rds.DataSourceConfig;
 import codezap.template.repository.TemplateSearchExpressionProvider;
 import codezap.template.repository.strategy.FullTextSearchSearchStrategy;
-import codezap.template.repository.strategy.LikeSearchStrategy;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -29,7 +28,6 @@ import codezap.template.repository.strategy.LikeSearchStrategy;
         DataSourceConfig.class,
         QueryDSLConfig.class,
         TemplateSearchExpressionProvider.class,
-        LikeSearchStrategy.class,
         FullTextSearchSearchStrategy.class,
         FixedPageCounter.class
 })
