@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { templates } from '@/mocks/templateList.json';
+import { templates } from '@/mocks/fixtures/templateList.json';
 import { TemplateListItem } from '@/types';
 
 import TemplateCard from './TemplateCard';

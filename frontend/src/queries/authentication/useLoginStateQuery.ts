@@ -1,7 +1,6 @@
 import { UseQueryResult, useQuery } from '@tanstack/react-query';
 
-import { QUERY_KEY } from '@/api';
-import { getLoginState } from '@/api/authentication';
+import { QUERY_KEY, getLoginState } from '@/api';
 
 export const useLoginStateQuery = (): UseQueryResult =>
   useQuery({

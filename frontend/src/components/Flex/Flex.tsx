@@ -1,6 +1,6 @@
 import { HTMLAttributes, PropsWithChildren } from 'react';
 
-import * as S from './style';
+import * as S from './Flex.style';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';

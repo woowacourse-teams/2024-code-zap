@@ -1,58 +1,24 @@
-import { HttpResponse } from 'msw';
-
+import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
-import type {
-  CategoryListResponse,
-  CategoryUploadRequest,
-  CategoryEditRequest,
-  CategoryDeleteRequest,
-  CustomError,
-  Category,
-} from '@/types';
-
-import { customFetch } from './customFetch';
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
-
-export const CATEGORY_API_URL = `${API_URL}${END_POINTS.CATEGORIES}`;
+import type { CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
 
 export const getCategoryList = async (memberId: number) => {
-  const url = `${CATEGORY_API_URL}?memberId=${memberId}`;
-
-  const response = await customFetch<CategoryListResponse>({
-    url,
+  const queryParams = new URLSearchParams({
+    memberId: memberId.toString(),
   });
+  const response = await apiClient.get(`${END_POINTS.CATEGORIES}?${queryParams.toString()}`);
 
-  if ('categories' in response) {
-    return response;
-  }
-
-  throw new Error(response.detail);
+  return await response.json();
 };
 
-export const postCategory = async (newCategory: CategoryUploadRequest): Promise<Category | CustomError> =>
-  await customFetch({
-    method: 'POST',
-    url: `${CATEGORY_API_URL}`,
-    body: JSON.stringify(newCategory),
-  });
+export const postCategory = async (newCategory: CategoryUploadRequest) => {
+  const response = await apiClient.post(`${END_POINTS.CATEGORIES}`, newCategory);
+
+  return await response.json();
+};
 
 export const editCategory = async ({ id, name }: CategoryEditRequest) =>
-  await customFetch({
-    method: 'PUT',
-    url: `${CATEGORY_API_URL}/${id}`,
-    body: JSON.stringify({ name }),
-  });
+  await apiClient.put(`${END_POINTS.CATEGORIES}/${id}`, { name });
 
-export const deleteCategory = async ({ id }: CategoryDeleteRequest) => {
-  const response = await customFetch<HttpResponse>({
-    method: 'DELETE',
-    url: `${CATEGORY_API_URL}/${id}`,
-  });
-
-  if (typeof response === 'object' && response !== null && 'status' in response) {
-    throw response as CustomError;
-  }
-
-  return response;
-};
+export const deleteCategory = async ({ id }: CategoryDeleteRequest) =>
+  await apiClient.delete(`${END_POINTS.CATEGORIES}/${id}`);

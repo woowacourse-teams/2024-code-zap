@@ -1,9 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
+import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '@/api';
 import { AuthProvider } from '@/contexts';
-import { templates as mockTemplates } from '@/mocks/templateList.json';
-import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '../../api/templates';
+import { templates as mockTemplates } from '@/mocks/fixtures/templateList.json';
+
 import { useTemplateListQuery } from './useTemplateListQuery';
 
 const queryClient = new QueryClient();

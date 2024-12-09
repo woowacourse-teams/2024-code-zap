@@ -4,5 +4,5 @@ import { postLike } from '@/api';
 
 export const useLikeMutation = () =>
   useMutation({
-    mutationFn: (templateId: number) => postLike({ templateId }),
+    mutationFn: (templateId: number) => postLike(templateId),
   });

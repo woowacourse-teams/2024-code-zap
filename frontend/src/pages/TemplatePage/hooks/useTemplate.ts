@@ -18,7 +18,7 @@ export const useTemplate = (id: number) => {
 
   const [isEdit, setIsEdit] = useState(false);
 
-  const [isOpenList, setIsOpenList] = useState<boolean[]>(template?.sourceCodes.map(() => true) || []);
+  const [isOpenList, setIsOpenList] = useState<boolean[]>(template?.sourceCodes?.map(() => true) || []);
 
   useEffect(() => {
     if (template && template?.sourceCodes.length > 0) {
@@ -40,7 +40,7 @@ export const useTemplate = (id: number) => {
   };
 
   const handleIsOpenList = (index: number) => () => {
-    setIsOpenList((prev) => prev.map((isOpen, idx) => (index === idx ? !isOpen : isOpen)));
+    setIsOpenList((prev) => prev?.map((isOpen, idx) => (index === idx ? !isOpen : isOpen)));
   };
 
   return {

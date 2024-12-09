@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { ClockIcon, PrivateIcon } from '@/assets/images';
-import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer } from '@/components';
+import { Button, Flex, LikeCounter, TagButton, Text, SourceCodeViewer, AuthorInfo } from '@/components';
 import { useToggle } from '@/hooks';
 import { END_POINTS } from '@/routes';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
@@ -10,7 +10,6 @@ import { theme } from '@/style/theme';
 import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
 
-import AuthorInfo from '../AuthorInfo/AuthorInfo';
 import * as S from './TemplateCard.style';
 
 interface Props {

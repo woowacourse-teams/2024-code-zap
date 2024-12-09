@@ -8,7 +8,7 @@ import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMu
 import { validateCategoryName } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
-import type { Category, CustomError } from '@/types';
+import type { Category, ErrorBody } from '@/types';
 
 import * as S from './CategoryEditModal.style';
 
@@ -125,7 +125,7 @@ const CategoryEditModal = ({
       resetState();
       toggleModal();
     } catch (error) {
-      console.error((error as CustomError).detail);
+      console.error((error as ErrorBody).detail);
     }
   };
 

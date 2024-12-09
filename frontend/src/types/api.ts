@@ -1,4 +1,4 @@
-import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from './template';
+import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from '@/types';
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
@@ -16,6 +16,7 @@ export interface TemplateUploadRequest {
 }
 
 export interface TemplateEditRequest {
+  id: number;
   title: string;
   description: string;
   createSourceCodes: SourceCodes[];

@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
+import { Button } from '@/components';
 import { theme } from '@/style/theme';
-
-import Button from '../Button/Button';
 
 export const HeaderContainer = styled.nav`
   position: fixed;

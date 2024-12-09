@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 
-import { postLogout } from '@/api/authentication';
+import { postLogout } from '@/api';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';

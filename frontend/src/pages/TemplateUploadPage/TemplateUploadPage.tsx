@@ -1,15 +1,27 @@
 import { useState } from 'react';
 
-import { PlusIcon, PrivateIcon, PublicIcon } from '@/assets/images';
-import { Button, CategoryDropdown, Input, SelectList, SourceCodeEditor, TagInput, Text, Toggle } from '@/components';
-import { useCustomNavigate, useInput, useSelectList } from '@/hooks';
+import { PlusIcon } from '@/assets/images';
+import {
+  Button,
+  CategoryDropdown,
+  Input,
+  LoadingBall,
+  Radio,
+  SelectList,
+  SourceCodeEditor,
+  TagInput,
+  Text,
+  Textarea,
+} from '@/components';
+import { useCustomNavigate, useInput, useSelectList, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
-import { useToast } from '@/hooks/useToast';
 import { useTemplateUploadMutation } from '@/queries/templates';
 import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
-import { DEFAULT_TEMPLATE_VISIBILITY, TEMPLATE_VISIBILITY } from '@/service/constants';
+import { DEFAULT_TEMPLATE_VISIBILITY, VISIBILITY_OPTIONS } from '@/service/constants';
+import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
+import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
@@ -54,54 +66,23 @@ const TemplateUploadPage = () => {
 
   const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
 
-  const { mutateAsync: uploadTemplate, error } = useTemplateUploadMutation();
-
-  const validateTemplate = () => {
-    if (!title) {
-      return '제목을 입력해주세요';
-    }
-
-    if (sourceCodes.filter(({ filename }) => !filename || filename.trim() === '').length) {
-      return '파일명을 입력해주세요';
-    }
-
-    if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
-      return '소스코드 내용을 입력해주세요';
-    }
-
-    return '';
-  };
+  const { mutateAsync: uploadTemplate, isPending, error } = useTemplateUploadMutation();
 
   const handleCancelButton = () => {
     navigate(-1);
   };
 
   const handleSaveButtonClick = async () => {
-    if (categoryProps.isCategoryQueryFetching) {
-      failAlert('카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
-
+    if (!canSaveTemplate()) {
       return;
     }
 
-    const errorMessage = validateTemplate();
-
-    if (errorMessage) {
-      failAlert(errorMessage);
-
-      return;
-    }
-
-    const orderedSourceCodes = sourceCodes.map(
-      (sourceCode, index): SourceCodes => ({
-        ...sourceCode,
-        ordinal: index + 1,
-      }),
-    );
+    const processedSourceCodes = generateProcessedSourceCodes();
 
     const newTemplate: TemplateUploadRequest = {
       title,
       description,
-      sourceCodes: orderedSourceCodes,
+      sourceCodes: processedSourceCodes,
       thumbnailOrdinal: 1,
       categoryId: categoryProps.currentValue.id,
       tags: tagProps.tags,
@@ -111,31 +92,51 @@ const TemplateUploadPage = () => {
     const response = await uploadTemplate(newTemplate);
 
     if (response.ok) {
-      trackClickTemplateSave({
-        templateTitle: title,
-        sourceCodeCount: sourceCodes.length,
-        visibility,
-      });
+      trackTemplateSaveSuccess();
     }
+  };
+
+  const canSaveTemplate = (): boolean => {
+    if (categoryProps.isCategoryQueryFetching) {
+      failAlert('카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+
+      return false;
+    }
+
+    const errorMessage = validateTemplate(title, sourceCodes);
+
+    if (errorMessage) {
+      failAlert(errorMessage);
+
+      return false;
+    }
+
+    return true;
+  };
+
+  const generateProcessedSourceCodes = (): SourceCodes[] =>
+    sourceCodes.map((sourceCode, index): SourceCodes => {
+      const { filename } = sourceCode;
+
+      return {
+        ...sourceCode,
+        ordinal: index + 1,
+        filename: isFilenameEmpty(filename) ? generateUniqueFilename() : filename,
+      };
+    });
+
+  const trackTemplateSaveSuccess = () => {
+    trackClickTemplateSave({
+      templateTitle: title,
+      sourceCodeCount: sourceCodes.length,
+      visibility,
+    });
   };
 
   return (
     <S.TemplateEditContainer>
       <S.MainContainer>
-        <S.CategoryAndVisibilityContainer>
-          <CategoryDropdown {...categoryProps} />
-          <Toggle
-            showOptions={false}
-            options={[...TEMPLATE_VISIBILITY]}
-            optionAdornments={[
-              <PrivateIcon key={TEMPLATE_VISIBILITY[1]} width={ICON_SIZE.MEDIUM_SMALL} />,
-              <PublicIcon key={TEMPLATE_VISIBILITY[0]} width={ICON_SIZE.MEDIUM_SMALL} />,
-            ]}
-            optionSliderColor={[undefined, theme.color.light.triadic_primary_800]}
-            selectedOption={visibility}
-            switchOption={setVisibility}
-          />
-        </S.CategoryAndVisibilityContainer>
+        <CategoryDropdown {...categoryProps} />
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
@@ -143,13 +144,15 @@ const TemplateUploadPage = () => {
           </Input>
         </S.UnderlineInputWrapper>
 
-        <Input size='large' variant='text'>
-          <Input.TextField
+        <Textarea size='medium' variant='text'>
+          <Textarea.TextField
             placeholder='이 템플릿을 언제 다시 쓸 것 같나요?'
+            minRows={1}
+            maxRows={5}
             value={description}
             onChange={handleDescriptionChange}
           />
-        </Input>
+        </Textarea>
 
         {sourceCodes.map((sourceCode, index) => (
           <SourceCodeEditor
@@ -178,14 +181,25 @@ const TemplateUploadPage = () => {
 
         <TagInput {...tagProps} />
 
-        <S.ButtonGroup>
-          <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
-            취소
-          </S.CancelButton>
-          <Button size='medium' variant='contained' onClick={handleSaveButtonClick} disabled={sourceCodes.length === 0}>
-            저장
-          </Button>
-        </S.ButtonGroup>
+        <Radio options={VISIBILITY_OPTIONS} currentValue={visibility} handleCurrentValue={setVisibility} />
+
+        {isPending ? (
+          <LoadingBall />
+        ) : (
+          <S.ButtonGroup>
+            <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
+              취소
+            </S.CancelButton>
+            <Button
+              size='medium'
+              variant='contained'
+              onClick={handleSaveButtonClick}
+              disabled={sourceCodes.length === 0}
+            >
+              저장
+            </Button>
+          </S.ButtonGroup>
+        )}
 
         {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
       </S.MainContainer>

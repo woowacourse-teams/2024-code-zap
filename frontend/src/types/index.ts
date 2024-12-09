@@ -1,4 +1,4 @@
-export type { SourceCodes, Tag, Category, Template, TemplateListItem } from './template';
+export type { SourceCodes, Tag, Category, Template, TemplateListItem, TemplateVisibility } from './template';
 export type {
   SortingKey,
   SortingOption,
@@ -18,4 +18,4 @@ export type {
 } from './api';
 export type { LoginRequest, SignupRequest, MemberInfo } from './authentication';
 
-export type { CustomError } from './fetch';
+export type { ErrorBody } from './fetch';

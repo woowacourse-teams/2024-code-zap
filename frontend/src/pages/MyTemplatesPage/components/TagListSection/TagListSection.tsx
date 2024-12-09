@@ -1,6 +1,5 @@
+import { TagFilterMenu } from '@/pages/MyTemplatesPage/components';
 import { useTagListQuery } from '@/queries/tags';
-
-import { TagFilterMenu } from '../';
 
 interface Props {
   selectedTagIds: number[];

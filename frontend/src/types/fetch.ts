@@ -1,7 +1,5 @@
-export interface CustomError {
-  type: string;
-  title: string;
-  status: number;
+export interface ErrorBody {
+  errorCode: number;
   detail: string;
   instance: string;
 }

@@ -1,4 +1,4 @@
-import { TEMPLATE_VISIBILITY } from '@/service/constants';
+import { VISIBILITY_OPTIONS } from '@/service/constants';
 
 export interface SourceCodes {
   id?: number;
@@ -57,4 +57,4 @@ export interface TemplateListItem {
   visibility: TemplateVisibility;
 }
 
-export type TemplateVisibility = (typeof TEMPLATE_VISIBILITY)[number];
+export type TemplateVisibility = keyof typeof VISIBILITY_OPTIONS;

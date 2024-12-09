@@ -29,6 +29,8 @@ export { default as Textarea } from './Textarea/Textarea';
 export { default as ContactUs } from './ContactUs/ContactUs';
 export { default as Toggle } from './Toggle/Toggle';
 export { default as ScrollTopButton } from './ScrollTopButton/ScrollTopButton';
+export { default as AuthorInfo } from './AuthorInfo/AuthorInfo';
+export { default as Radio } from './Radio/Radio';
 
 // Skeleton UI
 export { default as LoadingBall } from './LoadingBall/LoadingBall';

@@ -1,5 +1,4 @@
 import { ToastContext } from '@/contexts';
-
-import { useCustomContext } from './useCustomContext';
+import { useCustomContext } from '@/hooks';
 
 export const useToast = () => useCustomContext(ToastContext);

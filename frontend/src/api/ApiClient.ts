@@ -1,5 +1,4 @@
-import { ApiError } from './Error/ApiError';
-import { HTTP_STATUS } from './Error/statusCode';
+import { ApiError, getErrorMessage, HTTP_STATUS } from '@/api/Error';
 
 type HttpMethod =
   | 'get'
@@ -27,7 +26,7 @@ interface RequestParams {
   [key: string]: string | number | boolean;
 }
 
-class ApiClient {
+export class ApiClient {
   baseUrl: string;
   headers: HeadersInit;
   credentials: RequestCredentials;
@@ -84,24 +83,13 @@ class ApiClient {
   }
 
   private async handleError(response: Response) {
-    const errorBody = await response.json();
+    const { errorCode, instance, detail } = await response.json();
 
     if (response.status === HTTP_STATUS.UNAUTHORIZED) {
       localStorage.removeItem('name');
       localStorage.removeItem('memberId');
     }
 
-    // TODO: 에러코드에 따른 메시지 반환 함수 만들기
-    throw new ApiError('에러메시지입니다.', response.status, errorBody.errorCode, errorBody.detail);
+    throw new ApiError(getErrorMessage(errorCode, instance), response.status, errorCode, detail);
   }
 }
-
-const API_URL = process.env.REACT_APP_API_URL || 'https://default-url.com';
-
-const httpHeader = {
-  'Content-Type': 'application/json',
-};
-
-const httpCredentials = 'include';
-
-export const apiClient = new ApiClient(API_URL, httpHeader, httpCredentials);

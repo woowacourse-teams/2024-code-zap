@@ -1,4 +1,5 @@
-import { getByteSize } from '../utils/getByteSize';
+import { SourceCodes } from '@/types';
+import { getByteSize } from '@/utils';
 
 export const validateName = (name: string) => {
   const MAX_LENGTH = 255;
@@ -87,6 +88,18 @@ export const validateEmail = (email: string) => {
 
   if (!isValid) {
     return '이메일 형식이 잘못되었습니다.';
+  }
+
+  return '';
+};
+
+export const validateTemplate = (title: string, sourceCodes: SourceCodes[]) => {
+  if (!title) {
+    return '제목을 입력해주세요';
+  }
+
+  if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
+    return '소스코드 내용을 입력해주세요';
   }
 
   return '';

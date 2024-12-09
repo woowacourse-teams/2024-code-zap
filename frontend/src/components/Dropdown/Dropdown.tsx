@@ -1,8 +1,8 @@
 import { ChevronIcon } from '@/assets/images';
+import { Text } from '@/components';
 import { ICON_SIZE } from '@/style/styleConstants';
+import { theme } from '@/style/theme';
 
-import { theme } from '../../style/theme';
-import Text from '../Text/Text';
 import * as S from './Dropdown.style';
 
 interface Props<T> {
