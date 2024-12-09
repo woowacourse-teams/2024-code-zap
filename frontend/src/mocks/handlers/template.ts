@@ -37,12 +37,12 @@ export const templateHandlers = [
     }
 
     switch (sort) {
-      case 'modifiedAt,asc':
-        filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
+      case 'createdAt,asc':
+        filteredTemplates.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
         break;
 
-      case 'modifiedAt,desc':
-        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+      case 'createdAt,desc':
+        filteredTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
 
       default:
