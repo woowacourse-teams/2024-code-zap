@@ -1,9 +1,18 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.codezap.codezap-plugin</id>
-    <name>codezap-upload</name>
-
+    <id>com.codezap.plugin</id>
+    <name>codezapUpload</name>
+    <version>1.0.0</version>
     <vendor email="codezap2024@gmail.com" url="https://www.code-zap.com">CodeZap</vendor>
+    <description>
+        This plugin helps you easily upload your code to the CodeZap service from IntelliJ IDEA.
+
+        It provides the following main features:
+        1. Open the file you want to upload or select the desired code block.
+        2. Upload the code directly to CodeZap via the right-click menu or the Generate shortcut.
+
+        With this plugin, you can quickly and easily save and share your code with CodeZap!
+    </description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
