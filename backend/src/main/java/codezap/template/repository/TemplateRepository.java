@@ -24,10 +24,6 @@ public class TemplateRepository {
                 () -> new CodeZapException(ErrorCode.RESOURCE_NOT_FOUND, "식별자 " + id + "에 해당하는 템플릿이 존재하지 않습니다."));
     }
 
-    public List<Template> findByMemberId(Long id) {
-        return templateJpaRepository.findByMemberId(id);
-    }
-
     public FixedPage<Template> findAll(
             Long memberId, String keyword, Long categoryId, List<Long> tagIds, Visibility visibility, Pageable pageable
     ) {

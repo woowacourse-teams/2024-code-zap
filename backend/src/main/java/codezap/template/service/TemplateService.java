@@ -41,10 +41,6 @@ public class TemplateService {
         return templateRepository.fetchById(id);
     }
 
-    public List<Template> getByMemberId(Long memberId) {
-        return templateRepository.findByMemberId(memberId);
-    }
-
     public FixedPage<Template> findAllBy(
             Long memberId,
             String keyword,

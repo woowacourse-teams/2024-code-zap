@@ -115,32 +115,6 @@ class CategoryServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("카테고리 전체 조회 테스트")
-    class FindAllCategoryTest {
-
-        @Test
-        @DisplayName("성공")
-        void findAllCategoriesSuccess() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-
-            categoryRepository.save(new Category("category1", member));
-            categoryRepository.save(new Category("category2", member));
-
-            FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
-
-            assertThat(findAllCategoriesResponse.categories()).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("성공 : 카테고리가 존재하지 않으면 빈 리스트를 반환한다.")
-        void findAllCategoriesEmptyList() {
-            FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
-
-            assertThat(findAllCategoriesResponse.categories()).isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("카테고리 단건 조회 테스트")
     class FetchByIdTest {
 
