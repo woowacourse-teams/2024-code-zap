@@ -277,7 +277,6 @@ class TemplateControllerTest extends MockMvcTest {
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
 
             when(credentialManager.hasCredential(any())).thenReturn(false);
-            when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findAllBy(any(), any(), any(), any(), any())).thenReturn(
                     new FindAllTemplatesResponse(1, List.of(findAllTemplateItemResponse)));
 
@@ -336,7 +335,6 @@ class TemplateControllerTest extends MockMvcTest {
                     true);
 
             when(credentialManager.hasCredential(any())).thenReturn(false);
-            when(credentialManager.getCredential(any())).thenReturn(null);
             when(templateApplicationService.findById(1L)).thenReturn(findTemplateResponse);
 
             // when & then

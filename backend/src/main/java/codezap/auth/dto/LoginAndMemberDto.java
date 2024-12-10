@@ -1,9 +1,10 @@
 package codezap.auth.dto;
 
 import codezap.auth.dto.response.LoginResponse;
+import codezap.member.domain.Member;
 
-public record LoginAndCredentialDto(
+public record LoginAndMemberDto(
         LoginResponse loginResponse,
-        String credential
+        Member member
 ) {
 }
