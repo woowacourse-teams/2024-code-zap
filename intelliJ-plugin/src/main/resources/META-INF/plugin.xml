@@ -2,7 +2,7 @@
 <idea-plugin>
     <id>com.codezap.plugin</id>
     <name>codezapUpload</name>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <vendor email="codezap2024@gmail.com" url="https://www.code-zap.com">CodeZap</vendor>
     <description>
         This plugin helps you easily upload your code to the CodeZap service from IntelliJ IDEA.
