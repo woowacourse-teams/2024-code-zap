@@ -73,9 +73,6 @@ public class Template extends BaseTimeEntity {
     }
 
     public void updateTemplate(String title, String description, Category category, Visibility visibility) {
-        if (this.title.equals(title) && this.description.equals(description)) {
-            markUnModified();
-        }
         this.title = title;
         this.description = description;
         this.category = category;
@@ -101,9 +98,5 @@ public class Template extends BaseTimeEntity {
             return;
         }
         this.likesCount--;
-    }
-
-    public void markModifiedSourceCodes() {
-        markModified();
     }
 }

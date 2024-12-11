@@ -55,8 +55,4 @@ public class BaseTimeEntity {
     public void markUnModified() {
         isModified = false;
     }
-
-    public void markModified() {
-        isModified = true;
-    }
 }

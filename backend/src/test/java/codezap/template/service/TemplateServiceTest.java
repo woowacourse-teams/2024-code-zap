@@ -254,31 +254,7 @@ class TemplateServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("템플릿 수정 성공 : 일부 데이터가 수정됬을 경우 modifiedAt 변경되지 않음")
-        void updateTemplateVisibilitySuccessNotChangeModifiedAt() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var otherCategory = categoryRepository.save(CategoryFixture.get(member));
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var beforeModifiedAt = template.getModifiedAt();
-            var request = new UpdateTemplateRequest(
-                    template.getTitle(),
-                    template.getDescription(),
-                    List.of(),
-                    List.of(),
-                    List.of(),
-                    otherCategory.getId(),
-                    List.of(),
-                    Visibility.PRIVATE
-            );
-            sut.update(member, template.getId(), request, category);
-            entityManager.flush();
-
-            assertThat(template.getModifiedAt()).isEqualTo(beforeModifiedAt);
-        }
-
-        @Test
-        @DisplayName("템플릿 수정 성공 : 일부 데이터가 수정됬을 경우 modifiedAt 변경")
+        @DisplayName("템플릿 수정 성공 : 데이터가 수정됬을 경우 modifiedAt 변경")
         void updateTemplateSuccessChangeModifiedAt() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
