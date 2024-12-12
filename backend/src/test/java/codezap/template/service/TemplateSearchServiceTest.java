@@ -161,7 +161,7 @@ class TemplateSearchServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 공개 범위로 템플릿 목록 조회 성공")
+        @DisplayName("검색 기능: 복수 태그 ID로 템플릿 목록 조회 성공")
         void findAllSuccessByTagIds() {
             Long memberId = null;
             String keyword = null;
