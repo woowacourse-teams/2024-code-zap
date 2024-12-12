@@ -130,7 +130,7 @@ class TemplateSearchServiceTest {
 
         @ParameterizedTest
         @DisplayName("검색 기능: 키워드로 템플릿 목록 조회 성공")
-        @ValueSource(strings = {"안녕", "+안녕", "안+녕", " 안녕"})
+        @ValueSource(strings = {"안녕", "+안녕", "안+녕", " 안녕", "안녕+", "안녕-", "-안녕"})
         void findAllSuccessByKeyword(String keyword) {
             Long memberId = null;
             Long categoryId = null;
