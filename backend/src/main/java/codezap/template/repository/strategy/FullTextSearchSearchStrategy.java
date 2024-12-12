@@ -39,6 +39,8 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
     private String parseKeyword(String trimmedKeyword) {
         String[] parsedKeywords = trimmedKeyword.split(" ");
         return Arrays.stream(parsedKeywords)
+                .map(keyword -> keyword.replaceAll("[^a-zA-Z0-9가-힣]", ""))
+                .filter(keyword -> !keyword.isEmpty())
                 .map(keyword -> "+" + keyword)
                 .collect(Collectors.joining(" "));
     }
