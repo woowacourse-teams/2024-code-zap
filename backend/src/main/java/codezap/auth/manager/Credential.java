@@ -23,6 +23,6 @@ public record Credential(String type, String value) {
     }
 
     public String toAuthorizationHeader() {
-        return type() + DELIMITER + value();
+        return type + DELIMITER + value;
     }
 }
