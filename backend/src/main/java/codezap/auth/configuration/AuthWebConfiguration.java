@@ -7,13 +7,11 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import codezap.auth.manager.CredentialManager;
-import codezap.auth.provider.CredentialProvider;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
 public class AuthWebConfiguration implements WebMvcConfigurer {
-
 
     private final CredentialManager credentialManager;
 
