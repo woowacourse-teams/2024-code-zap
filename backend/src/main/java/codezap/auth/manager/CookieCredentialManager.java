@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
@@ -64,7 +65,7 @@ public class CookieCredentialManager implements CredentialManager {
         ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
                 .maxAge(-1)
                 .path("/")
-                .sameSite("None")
+                .sameSite(SameSite.NONE.attributeValue())
                 .secure(true)
                 .httpOnly(true)
                 .build();
