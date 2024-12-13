@@ -3,7 +3,6 @@ package codezap.auth.manager;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
@@ -46,7 +45,8 @@ class CookieCredentialManagerTest {
             Credential credential = credentialProvider.createCredential(member);
             request.setCookies(new Cookie("credential", credential.value()));
 
-            assertEquals(cookieCredentialManager.getMember(request), member);
+            assertThat(cookieCredentialManager.getMember(request))
+                    .isEqualTo(member);
         }
 
         @Test
@@ -78,7 +78,8 @@ class CookieCredentialManagerTest {
         Cookie cookie = response.getCookie("credential");
         assertAll(
                 () -> assertThat(cookie).isNotNull(),
-                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(credentialProvider.createCredential(member).value()),
+                () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(
+                        credentialProvider.createCredential(member).value()),
                 () -> assertThat(Objects.requireNonNull(cookie).getMaxAge()).isEqualTo(-1),
                 () -> assertThat(Objects.requireNonNull(cookie).getPath()).isEqualTo("/"),
                 () -> assertThat(Objects.requireNonNull(cookie).isHttpOnly()).isTrue(),

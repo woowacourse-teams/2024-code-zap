@@ -2,8 +2,12 @@ package codezap.auth.manager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import codezap.auth.provider.CredentialProvider;
+import codezap.auth.provider.PlainCredentialProvider;
+import codezap.fixture.MemberFixture;
+import codezap.global.exception.CodeZapException;
+import codezap.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -11,12 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-
-import codezap.auth.provider.CredentialProvider;
-import codezap.auth.provider.PlainCredentialProvider;
-import codezap.fixture.MemberFixture;
-import codezap.global.exception.CodeZapException;
-import codezap.member.domain.Member;
 
 class AuthorizationHeaderCredentialManagerTest {
 
@@ -44,7 +42,8 @@ class AuthorizationHeaderCredentialManagerTest {
             Credential credential = credentialProvider.createCredential(member);
             request.addHeader(HttpHeaders.AUTHORIZATION, credential.toAuthorizationHeader());
 
-            assertEquals(authorizationHeaderCredentialManager.getMember(request), member);
+            assertThat(authorizationHeaderCredentialManager.getMember(request))
+                    .isEqualTo(member);
         }
 
         @Test
