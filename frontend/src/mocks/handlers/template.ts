@@ -45,6 +45,14 @@ export const templateHandlers = [
         filteredTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
 
+      case 'modifiedAt,desc':
+        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+        break;
+
+      case 'likesCount,desc':
+        filteredTemplates.sort((a, b) => new Date(b.likesCount).getTime() - new Date(a.likesCount).getTime());
+        break;
+
       default:
         break;
     }
