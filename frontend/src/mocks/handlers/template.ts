@@ -50,7 +50,7 @@ export const templateHandlers = [
         break;
 
       case 'likesCount,desc':
-        filteredTemplates.sort((a, b) => new Date(b.likesCount).getTime() - new Date(a.likesCount).getTime());
+        filteredTemplates.sort((a, b) => b.likesCount - a.likesCount);
         break;
 
       default:
