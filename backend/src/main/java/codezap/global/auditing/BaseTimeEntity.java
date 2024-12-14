@@ -5,11 +5,6 @@ import java.time.LocalDateTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PostLoad;
-import jakarta.persistence.PostPersist;
-import jakarta.persistence.PostUpdate;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.Transient;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -20,39 +15,13 @@ import lombok.Getter;
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
-public class BaseTimeEntity {
+public abstract class BaseTimeEntity {
 
     @CreatedDate
     @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
+    protected LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = false)
-    private LocalDateTime modifiedAt;
-
-    @Transient
-    private LocalDateTime lastKnownModifiedAt;
-
-    @Transient
-    private boolean isModified = true;
-
-    @PreUpdate
-    private void preUpdate() {
-        if (!isModified && lastKnownModifiedAt != null) {
-            modifiedAt = lastKnownModifiedAt;
-            return;
-        }
-        isModified = true;
-    }
-
-    @PostLoad
-    @PostPersist
-    @PostUpdate
-    private void postLoad() {
-        lastKnownModifiedAt = modifiedAt;
-    }
-
-    public void markUnModified() {
-        isModified = false;
-    }
+    protected LocalDateTime modifiedAt;
 }
