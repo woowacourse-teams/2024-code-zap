@@ -254,7 +254,7 @@ class TemplateServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("템플릿 수정 성공 : 데이터가 수정됬을 경우 modifiedAt 변경")
+        @DisplayName("템플릿 수정 성공 : 데이터가 수정됐을 경우 modifiedAt 변경")
         void updateTemplateSuccessChangeModifiedAt() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getFirstCategory());
