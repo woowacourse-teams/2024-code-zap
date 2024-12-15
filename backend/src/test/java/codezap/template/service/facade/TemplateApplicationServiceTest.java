@@ -6,9 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+
+import jakarta.persistence.EntityManager;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -479,12 +482,13 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     List.of(),
                     Visibility.PUBLIC
             );
+            LocalDateTime beforeModifiedAt = template.getModifiedAt();
 
             // when
             sut.update(member, template.getId(), updateTemplateRequest);
 
             // then
-            assertThat(template.isModified()).isTrue();
+            assertThat(template.getModifiedAt()).isNotEqualTo(beforeModifiedAt);
         }
 
         @Test

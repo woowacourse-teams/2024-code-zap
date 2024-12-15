@@ -9,22 +9,19 @@ import jakarta.persistence.PostUpdate;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Transient;
 
-import lombok.Getter;
-
-@Getter
 @MappedSuperclass
-public abstract class SkipModifiedAtUpdateBaseTimeEntity extends BaseTimeEntity {
+public abstract class SkipModifiedAtBaseTimeEntity extends BaseTimeEntity {
 
     @Transient
-    protected LocalDateTime lastKnownModifiedAt;
+    private LocalDateTime lastModifiedAt;
 
     @Transient
     protected boolean isModified = true;
 
     @PreUpdate
     private void preUpdate() {
-        if (!isModified && lastKnownModifiedAt != null) {
-            modifiedAt = lastKnownModifiedAt;
+        if (!isModified && lastModifiedAt != null) {
+            modifiedAt = lastModifiedAt;
             return;
         }
         isModified = true;
@@ -34,7 +31,7 @@ public abstract class SkipModifiedAtUpdateBaseTimeEntity extends BaseTimeEntity 
     @PostPersist
     @PostUpdate
     private void postLoad() {
-        lastKnownModifiedAt = modifiedAt;
+        lastModifiedAt = modifiedAt;
     }
 
     public void markUnModified() {
