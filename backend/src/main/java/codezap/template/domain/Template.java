@@ -1,5 +1,6 @@
 package codezap.template.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,7 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     }
 
     public void updateTemplate(String title, String description, Category category, Visibility visibility) {
+        this.modifiedAt = LocalDateTime.now();
         this.title = title;
         this.description = description;
         this.category = category;

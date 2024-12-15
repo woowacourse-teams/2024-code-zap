@@ -16,7 +16,7 @@ public abstract class SkipModifiedAtBaseTimeEntity extends BaseTimeEntity {
     private LocalDateTime lastModifiedAt;
 
     @Transient
-    protected boolean isModified = true;
+    private boolean isModified = true;
 
     @PreUpdate
     private void preUpdate() {
