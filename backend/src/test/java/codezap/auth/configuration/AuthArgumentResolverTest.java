@@ -3,6 +3,7 @@ package codezap.auth.configuration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import codezap.auth.dto.LoginMember;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
@@ -156,7 +157,7 @@ class AuthArgumentResolverTest {
 
         private void setCredentialCookie(MockHttpServletRequest request, Member member) {
             MockHttpServletResponse mockResponse = new MockHttpServletResponse();
-            credentialManager.setCredential(mockResponse, member);
+            credentialManager.setCredential(mockResponse, LoginMember.from(member));
             request.setCookies(mockResponse.getCookies());
         }
     }

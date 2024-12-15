@@ -1,21 +1,18 @@
 package codezap.auth.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import codezap.auth.dto.LoginAndMemberDto;
+import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
-import codezap.auth.dto.response.LoginResponse;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuthServiceTest extends ServiceTest {
 
@@ -32,12 +29,7 @@ public class AuthServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             LoginRequest loginRequest = new LoginRequest(member.getName(), MemberFixture.getFixturePlainPassword());
 
-            LoginAndMemberDto loginAndMemberDto = authService.login(loginRequest);
-
-            assertAll(
-                    () -> assertEquals(loginAndMemberDto.loginResponse(), LoginResponse.from(member)),
-                    () -> assertEquals(loginAndMemberDto.member(), member)
-            );
+            assertThat(authService.login2(loginRequest)).isEqualTo(LoginMember.from(member));
         }
 
         @Test
@@ -48,7 +40,7 @@ public class AuthServiceTest extends ServiceTest {
 
             LoginRequest loginRequest = new LoginRequest(wrongname, member.getPassword());
 
-            assertThatThrownBy(() -> authService.login(loginRequest))
+            assertThatThrownBy(() -> authService.login2(loginRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("존재하지 않는 아이디 " + wrongname + " 입니다.");
         }
@@ -60,7 +52,7 @@ public class AuthServiceTest extends ServiceTest {
 
             LoginRequest loginRequest = new LoginRequest(member.getName(), member.getPassword() + "wrong");
 
-            assertThatThrownBy(() -> authService.login(loginRequest))
+            assertThatThrownBy(() -> authService.login2(loginRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }

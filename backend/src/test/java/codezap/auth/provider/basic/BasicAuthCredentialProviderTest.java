@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import codezap.auth.dto.LoginMember;
 import codezap.auth.manager.Credential;
 import java.nio.charset.StandardCharsets;
 
@@ -38,11 +39,15 @@ class BasicAuthCredentialProviderTest {
     @Test
     @DisplayName("BasicAuth 인증 정보 생성 성공")
     void createCredential() {
+        //given
         Member member = MemberFixture.memberFixture();
-        Credential actualCredential = basicAuthCredentialProvider.createCredential(member);
+        Credential expected = Credential.basic(HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8));
 
-        Credential expectedCredential = Credential.basic(HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8));
-        assertEquals(actualCredential, expectedCredential);
+        //when
+        Credential actual = basicAuthCredentialProvider.createCredential(LoginMember.from(member));
+
+        //then
+        assertEquals(actual, expected);
     }
 
     @Nested
@@ -52,19 +57,21 @@ class BasicAuthCredentialProviderTest {
         @Test
         @DisplayName("회원 추출 성공")
         void extractMember() {
+            //given
             Member member = MemberFixture.memberFixture();
-
             when(memberRepository.fetchByName(any())).thenReturn(member);
+            Credential credential = basicAuthCredentialProvider.createCredential(LoginMember.from(member));
 
-            Credential credential = basicAuthCredentialProvider.createCredential(member);
+            //when & then
             assertEquals(member, basicAuthCredentialProvider.extractMember(credential));
         }
 
         @Test
         @DisplayName("회원 추출 실패: 존재하지 않는 회원")
         void extractMemberThrowNotExistMember() {
+            //given
             Member unsaverdMember = MemberFixture.memberFixture();
-            Credential credential = basicAuthCredentialProvider.createCredential(unsaverdMember);
+            Credential credential = basicAuthCredentialProvider.createCredential(LoginMember.from(unsaverdMember));
 
             doThrow(new CodeZapException(ErrorCode.INVALID_REQUEST, "존재하지 않는 아이디 " + unsaverdMember.getName() + " 입니다."))
                     .when(memberRepository).fetchByName(any());

@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import codezap.auth.dto.LoginMember;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
 import codezap.fixture.MemberFixture;
@@ -41,10 +42,12 @@ class CookieCredentialManagerTest {
         @Test
         @DisplayName("회원 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
+            //given
             Member member = MemberFixture.getFirstMember();
-            Credential credential = credentialProvider.createCredential(member);
+            Credential credential = credentialProvider.createCredential(LoginMember.from(member));
             request.setCookies(new Cookie("credential", credential.value()));
 
+            //when & then
             assertThat(cookieCredentialManager.getMember(request))
                     .isEqualTo(member);
         }
@@ -71,15 +74,18 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에 추가 성공")
     void setCredential_SetsCredentialCookie() {
+        //given
         Member member = MemberFixture.getFirstMember();
 
-        cookieCredentialManager.setCredential(response, member);
+        //when
+        cookieCredentialManager.setCredential(response, LoginMember.from(member));
 
+        //then
         Cookie cookie = response.getCookie("credential");
         assertAll(
                 () -> assertThat(cookie).isNotNull(),
                 () -> assertThat(Objects.requireNonNull(cookie).getValue()).isEqualTo(
-                        credentialProvider.createCredential(member).value()),
+                        credentialProvider.createCredential(LoginMember.from(member)).value()),
                 () -> assertThat(Objects.requireNonNull(cookie).getMaxAge()).isEqualTo(-1),
                 () -> assertThat(Objects.requireNonNull(cookie).getPath()).isEqualTo("/"),
                 () -> assertThat(Objects.requireNonNull(cookie).isHttpOnly()).isTrue(),
@@ -90,7 +96,7 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에서 제거 성공")
     void removeCredential_RemovesCredentialCookie() {
-        cookieCredentialManager.setCredential(response, MemberFixture.getFirstMember());
+        cookieCredentialManager.setCredential(response, LoginMember.from(MemberFixture.getFirstMember()));
 
         cookieCredentialManager.removeCredential(response);
 

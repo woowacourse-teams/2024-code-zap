@@ -2,7 +2,9 @@ package codezap.auth.manager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import codezap.auth.dto.LoginMember;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
 import codezap.fixture.MemberFixture;
@@ -38,12 +40,19 @@ class AuthorizationHeaderCredentialManagerTest {
         @Test
         @DisplayName("회원 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
-            Member member = MemberFixture.getFirstMember();
-            Credential credential = credentialProvider.createCredential(member);
+            //given
+            LoginMember loginMember = LoginMember.from(MemberFixture.getFirstMember());
+            Credential credential = credentialProvider.createCredential(loginMember);
             request.addHeader(HttpHeaders.AUTHORIZATION, credential.toAuthorizationHeader());
 
-            assertThat(authorizationHeaderCredentialManager.getMember(request))
-                    .isEqualTo(member);
+            //when & then
+            Member member = authorizationHeaderCredentialManager.getMember(request);
+            assertAll(
+                    () -> assertThat(member.getId()).isEqualTo(loginMember.id()),
+                    () -> assertThat(member.getName()).isEqualTo(loginMember.name()),
+                    () -> assertThat(member.getPassword()).isEqualTo(loginMember.password()),
+                    () -> assertThat(member.getSalt()).isEqualTo(loginMember.salt())
+            );
         }
 
         @Test
@@ -58,11 +67,14 @@ class AuthorizationHeaderCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 헤더에 추가 성공")
     void setCredential_SetsCredentialCookie() {
+        //given
         Member member = MemberFixture.getFirstMember();
-        Credential credential = credentialProvider.createCredential(MemberFixture.getFirstMember());
+        Credential credential = credentialProvider.createCredential(LoginMember.from(member));
 
-        authorizationHeaderCredentialManager.setCredential(response, member);
+        //when
+        authorizationHeaderCredentialManager.setCredential(response, LoginMember.from(member));
 
+        //then
         String header = response.getHeader(HttpHeaders.AUTHORIZATION);
         assertThat(header).isEqualTo(credential.toAuthorizationHeader());
     }

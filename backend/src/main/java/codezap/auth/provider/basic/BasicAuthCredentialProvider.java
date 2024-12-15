@@ -1,5 +1,6 @@
 package codezap.auth.provider.basic;
 
+import codezap.auth.dto.LoginMember;
 import codezap.auth.manager.Credential;
 import java.nio.charset.StandardCharsets;
 
@@ -22,8 +23,8 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
     private final MemberRepository memberRepository;
 
     @Override
-    public Credential createCredential(Member member) {
-        String credentialValue = HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8);
+    public Credential createCredential(LoginMember loginMember) {
+        String credentialValue = HttpHeaders.encodeBasicAuth(loginMember.name(), loginMember.password(), StandardCharsets.UTF_8);
         return Credential.basic(credentialValue);
     }
 

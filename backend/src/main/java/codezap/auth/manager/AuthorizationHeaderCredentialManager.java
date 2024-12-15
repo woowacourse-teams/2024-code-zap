@@ -1,5 +1,6 @@
 package codezap.auth.manager;
 
+import codezap.auth.dto.LoginMember;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -45,8 +46,8 @@ public class AuthorizationHeaderCredentialManager implements CredentialManager {
     }
 
     @Override
-    public void setCredential(HttpServletResponse httpServletResponse, Member member) {
-        Credential credential = credentialProvider.createCredential(member);
+    public void setCredential(HttpServletResponse httpServletResponse, LoginMember loginMember) {
+        Credential credential = credentialProvider.createCredential(loginMember);
         httpServletResponse.setHeader(HttpHeaders.AUTHORIZATION, credential.toAuthorizationHeader());
     }
 

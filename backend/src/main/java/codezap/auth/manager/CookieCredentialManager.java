@@ -1,5 +1,6 @@
 package codezap.auth.manager;
 
+import codezap.auth.dto.LoginMember;
 import codezap.auth.provider.CredentialProvider;
 import codezap.member.domain.Member;
 import java.util.Arrays;
@@ -60,8 +61,8 @@ public class CookieCredentialManager implements CredentialManager {
     }
 
     @Override
-    public void setCredential(HttpServletResponse httpServletResponse, Member member) {
-        Credential credential = credentialProvider.createCredential(member);
+    public void setCredential(HttpServletResponse httpServletResponse, LoginMember loginMember) {
+        Credential credential = credentialProvider.createCredential(loginMember);
         ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
                 .maxAge(-1)
                 .path("/")

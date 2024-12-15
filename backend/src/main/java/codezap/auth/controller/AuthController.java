@@ -1,6 +1,6 @@
 package codezap.auth.controller;
 
-import codezap.auth.dto.LoginAndMemberDto;
+import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.manager.CredentialManager;
@@ -27,9 +27,9 @@ public class AuthController implements SpringDocAuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse httpServletResponse
     ) {
-        LoginAndMemberDto loginAndMemberDto = authService.login(loginRequest);
-        credentialManager.setCredential(httpServletResponse, loginAndMemberDto.member());
-        return ResponseEntity.ok(loginAndMemberDto.loginResponse());
+        LoginMember loginMember = authService.login2(loginRequest);
+        credentialManager.setCredential(httpServletResponse, loginMember);
+        return ResponseEntity.ok(LoginResponse.from(loginMember));
     }
 
     @GetMapping("/login/check")
