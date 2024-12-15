@@ -1,7 +1,6 @@
 package codezap.auth.manager;
 
 import codezap.auth.dto.Credential;
-import codezap.auth.provider.CredentialProvider;
 import java.util.Arrays;
 
 import jakarta.servlet.http.Cookie;
