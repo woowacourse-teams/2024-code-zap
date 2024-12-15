@@ -1,7 +1,7 @@
 package codezap.auth.provider;
 
 import codezap.auth.dto.LoginMember;
-import codezap.auth.manager.Credential;
+import codezap.auth.dto.Credential;
 import codezap.member.domain.Member;
 
 public interface CredentialProvider {

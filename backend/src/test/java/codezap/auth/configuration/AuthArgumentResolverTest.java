@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import codezap.auth.dto.LoginMember;
+import codezap.auth.dto.Credential;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +28,8 @@ import codezap.member.domain.Member;
 
 class AuthArgumentResolverTest {
     private final CredentialProvider credentialProvider = new PlainCredentialProvider();
-    private final CredentialManager credentialManager = new CookieCredentialManager(credentialProvider);
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager);
+    private final CredentialManager credentialManager = new CookieCredentialManager();
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager, credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")
@@ -157,7 +158,8 @@ class AuthArgumentResolverTest {
 
         private void setCredentialCookie(MockHttpServletRequest request, Member member) {
             MockHttpServletResponse mockResponse = new MockHttpServletResponse();
-            credentialManager.setCredential(mockResponse, LoginMember.from(member));
+            Credential credential = credentialProvider.createCredential(LoginMember.from(member));
+            credentialManager.setCredential(mockResponse, credential);
             request.setCookies(mockResponse.getCookies());
         }
     }

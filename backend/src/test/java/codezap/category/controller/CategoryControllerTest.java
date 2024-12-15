@@ -68,7 +68,7 @@ class CategoryControllerTest extends MockMvcTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getMember(any());
+                    .when(credentialManager).getCredential(any());
 
             // when & then
             mvc.perform(post("/categories")
@@ -145,7 +145,7 @@ class CategoryControllerTest extends MockMvcTest {
             UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getMember(any());
+                    .when(credentialManager).getCredential(any());
 
             // when & then
             mvc.perform(put("/categories/" + categoryId)
@@ -199,7 +199,7 @@ class CategoryControllerTest extends MockMvcTest {
             // given
             long categoryId = 1L;
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getMember(any());
+                    .when(credentialManager).getCredential(any());
 
             // when & then
             mvc.perform(delete("/categories/" + categoryId)

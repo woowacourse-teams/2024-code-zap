@@ -3,7 +3,9 @@ package codezap.auth.controller;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
+import codezap.auth.dto.Credential;
 import codezap.auth.manager.CredentialManager;
+import codezap.auth.provider.CredentialProvider;
 import codezap.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController implements SpringDocAuthController {
 
     private final CredentialManager credentialManager;
+    private final CredentialProvider credentialProvider;
     private final AuthService authService;
 
     @PostMapping("/login")
@@ -27,14 +30,16 @@ public class AuthController implements SpringDocAuthController {
             @Valid @RequestBody LoginRequest loginRequest,
             HttpServletResponse httpServletResponse
     ) {
-        LoginMember loginMember = authService.login2(loginRequest);
-        credentialManager.setCredential(httpServletResponse, loginMember);
+        LoginMember loginMember = authService.login(loginRequest);
+        Credential credential = credentialProvider.createCredential(loginMember);
+        credentialManager.setCredential(httpServletResponse, credential);
         return ResponseEntity.ok(LoginResponse.from(loginMember));
     }
 
     @GetMapping("/login/check")
     public ResponseEntity<Void> checkLogin(HttpServletRequest httpServletRequest) {
-        credentialManager.getMember(httpServletRequest);
+        Credential credential = credentialManager.getCredential(httpServletRequest);
+        credentialProvider.extractMember(credential);
         return ResponseEntity.ok().build();
     }
 

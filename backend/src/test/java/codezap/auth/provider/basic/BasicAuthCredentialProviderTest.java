@@ -8,7 +8,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import codezap.auth.dto.LoginMember;
-import codezap.auth.manager.Credential;
+import codezap.auth.dto.Credential;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;

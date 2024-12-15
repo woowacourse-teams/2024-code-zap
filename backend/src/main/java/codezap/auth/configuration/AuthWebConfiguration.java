@@ -1,5 +1,6 @@
 package codezap.auth.configuration;
 
+import codezap.auth.provider.CredentialProvider;
 import java.util.List;
 
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 public class AuthWebConfiguration implements WebMvcConfigurer {
 
     private final CredentialManager credentialManager;
+    private final CredentialProvider credentialProvider;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthArgumentResolver(credentialManager));
+        resolvers.add(new AuthArgumentResolver(credentialManager, credentialProvider));
     }
 }

@@ -3,6 +3,7 @@ package codezap.auth.manager;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import codezap.auth.dto.Credential;
 import codezap.global.exception.CodeZapException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

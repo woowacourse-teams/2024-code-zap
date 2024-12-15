@@ -29,7 +29,7 @@ public class AuthServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             LoginRequest loginRequest = new LoginRequest(member.getName(), MemberFixture.getFixturePlainPassword());
 
-            assertThat(authService.login2(loginRequest)).isEqualTo(LoginMember.from(member));
+            assertThat(authService.login(loginRequest)).isEqualTo(LoginMember.from(member));
         }
 
         @Test
@@ -40,7 +40,7 @@ public class AuthServiceTest extends ServiceTest {
 
             LoginRequest loginRequest = new LoginRequest(wrongname, member.getPassword());
 
-            assertThatThrownBy(() -> authService.login2(loginRequest))
+            assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("존재하지 않는 아이디 " + wrongname + " 입니다.");
         }
@@ -52,7 +52,7 @@ public class AuthServiceTest extends ServiceTest {
 
             LoginRequest loginRequest = new LoginRequest(member.getName(), member.getPassword() + "wrong");
 
-            assertThatThrownBy(() -> authService.login2(loginRequest))
+            assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }

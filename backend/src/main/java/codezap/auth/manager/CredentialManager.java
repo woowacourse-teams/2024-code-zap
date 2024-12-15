@@ -1,17 +1,16 @@
 package codezap.auth.manager;
 
-import codezap.auth.dto.LoginMember;
-import codezap.member.domain.Member;
+import codezap.auth.dto.Credential;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface CredentialManager {
 
-    Member getMember(HttpServletRequest httpServletRequest);
+    Credential getCredential(HttpServletRequest httpServletRequest);
 
     boolean hasCredential(HttpServletRequest httpServletRequest);
 
-    void setCredential(HttpServletResponse httpServletResponse, LoginMember loginMember);
+    void setCredential(HttpServletResponse httpServletResponse, Credential credential);
 
     void removeCredential(HttpServletResponse httpServletResponse);
 }

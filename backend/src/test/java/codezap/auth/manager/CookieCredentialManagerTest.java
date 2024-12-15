@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import codezap.auth.dto.Credential;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
@@ -31,31 +32,32 @@ class CookieCredentialManagerTest {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         credentialProvider = new PlainCredentialProvider();
-        cookieCredentialManager = new CookieCredentialManager(credentialProvider);
+        cookieCredentialManager = new CookieCredentialManager();
     }
 
-
     @Nested
-    @DisplayName("요청에서 회원 반환")
-    class GetMember {
+    @DisplayName("요청에서 인증 정보 반환")
+    class GetCredential {
 
         @Test
-        @DisplayName("회원 반환 성공")
+        @DisplayName("인증 정보 반환 성공")
         void getCredential_WithValidCookie_ReturnsCredential() {
             //given
-            Member member = MemberFixture.getFirstMember();
-            Credential credential = credentialProvider.createCredential(LoginMember.from(member));
-            request.setCookies(new Cookie("credential", credential.value()));
+            String credentialValue = "credentialValue";
+            request.setCookies(new Cookie("credential", credentialValue));
 
             //when & then
-            assertThat(cookieCredentialManager.getMember(request))
-                    .isEqualTo(member);
+            Credential extractedCredential = cookieCredentialManager.getCredential(request);
+            assertAll(
+                    () -> assertThat(extractedCredential.type()).isEqualTo("Basic"),
+                    () -> assertThat(extractedCredential.value()).isEqualTo(credentialValue)
+            );
         }
 
         @Test
         @DisplayName("회원 반환 실패: 쿠키 없음")
         void getCredential_WithNoCookies_ThrowsException() {
-            assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
+            assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
@@ -65,7 +67,7 @@ class CookieCredentialManagerTest {
         void getCredential_WithNoCredentialCookie_ThrowsException() {
             request.setCookies(new Cookie("other-cookie", "some-value"));
 
-            assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
+            assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
@@ -78,7 +80,8 @@ class CookieCredentialManagerTest {
         Member member = MemberFixture.getFirstMember();
 
         //when
-        cookieCredentialManager.setCredential(response, LoginMember.from(member));
+        Credential credential = credentialProvider.createCredential(LoginMember.from(member));
+        cookieCredentialManager.setCredential(response, credential);
 
         //then
         Cookie cookie = response.getCookie("credential");
@@ -96,11 +99,13 @@ class CookieCredentialManagerTest {
     @Test
     @DisplayName("인증 정보 쿠키에서 제거 성공")
     void removeCredential_RemovesCredentialCookie() {
-        cookieCredentialManager.setCredential(response, LoginMember.from(MemberFixture.getFirstMember()));
+        LoginMember loginMember = LoginMember.from(MemberFixture.getFirstMember());
+        Credential credential = credentialProvider.createCredential(loginMember);
+        cookieCredentialManager.setCredential(response, credential);
 
         cookieCredentialManager.removeCredential(response);
 
-        assertThatThrownBy(() -> cookieCredentialManager.getMember(request))
+        assertThatThrownBy(() -> cookieCredentialManager.getCredential(request))
                 .isInstanceOf(CodeZapException.class)
                 .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
     }

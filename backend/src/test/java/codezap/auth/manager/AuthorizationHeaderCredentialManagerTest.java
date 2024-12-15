@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import codezap.auth.dto.Credential;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
@@ -30,7 +31,7 @@ class AuthorizationHeaderCredentialManagerTest {
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
         credentialProvider = new PlainCredentialProvider();
-        authorizationHeaderCredentialManager = new AuthorizationHeaderCredentialManager(credentialProvider);
+        authorizationHeaderCredentialManager = new AuthorizationHeaderCredentialManager();
     }
 
     @Nested
@@ -46,7 +47,8 @@ class AuthorizationHeaderCredentialManagerTest {
             request.addHeader(HttpHeaders.AUTHORIZATION, credential.toAuthorizationHeader());
 
             //when & then
-            Member member = authorizationHeaderCredentialManager.getMember(request);
+            Credential extractedCredential = authorizationHeaderCredentialManager.getCredential(request);
+            Member member = credentialProvider.extractMember(extractedCredential);
             assertAll(
                     () -> assertThat(member.getId()).isEqualTo(loginMember.id()),
                     () -> assertThat(member.getName()).isEqualTo(loginMember.name()),
@@ -58,7 +60,7 @@ class AuthorizationHeaderCredentialManagerTest {
         @Test
         @DisplayName("회원 반환 실패: 헤더 없음")
         void getCredential_WithNoCookies_ThrowsException() {
-            assertThatThrownBy(() -> authorizationHeaderCredentialManager.getMember(request))
+            assertThatThrownBy(() -> authorizationHeaderCredentialManager.getCredential(request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("헤더가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
         }
@@ -72,7 +74,7 @@ class AuthorizationHeaderCredentialManagerTest {
         Credential credential = credentialProvider.createCredential(LoginMember.from(member));
 
         //when
-        authorizationHeaderCredentialManager.setCredential(response, LoginMember.from(member));
+        authorizationHeaderCredentialManager.setCredential(response, credential);
 
         //then
         String header = response.getHeader(HttpHeaders.AUTHORIZATION);

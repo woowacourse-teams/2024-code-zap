@@ -19,7 +19,7 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncryptor passwordEncryptor;
 
-    public LoginMember login2(LoginRequest loginRequest) {
+    public LoginMember login(LoginRequest loginRequest) {
         Member member = memberRepository.fetchByName(loginRequest.name());
         validateCorrectPassword(member, loginRequest.password());
         return LoginMember.from(member);

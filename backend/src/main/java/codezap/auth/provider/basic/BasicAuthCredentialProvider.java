@@ -1,7 +1,7 @@
 package codezap.auth.provider.basic;
 
 import codezap.auth.dto.LoginMember;
-import codezap.auth.manager.Credential;
+import codezap.auth.dto.Credential;
 import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.HttpServletRequest;

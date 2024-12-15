@@ -1,4 +1,4 @@
-package codezap.auth.manager;
+package codezap.auth.dto;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;

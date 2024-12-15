@@ -1,6 +1,8 @@
 package codezap.auth.configuration;
 
+import codezap.auth.dto.Credential;
 import codezap.auth.manager.CredentialManager;
+import codezap.auth.provider.CredentialProvider;
 import codezap.member.domain.Member;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final CredentialManager credentialManager;
+    private final CredentialProvider credentialProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -33,6 +36,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         if (!parameterAnnotation.required() && !credentialManager.hasCredential(request)) {
             return null;
         }
-        return credentialManager.getMember(request);
+        Credential credential = credentialManager.getCredential(request);
+        return credentialProvider.extractMember(credential);
     }
 }
