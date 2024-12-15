@@ -34,7 +34,7 @@ public abstract class SkipModifiedAtBaseTimeEntity extends BaseTimeEntity {
         lastModifiedAt = modifiedAt;
     }
 
-    public void markUnModified() {
+    public void skipModifiedAtUpdate() {
         isModified = false;
     }
 }

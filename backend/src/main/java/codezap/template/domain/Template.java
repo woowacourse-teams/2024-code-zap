@@ -90,12 +90,12 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     }
 
     public void increaseLike() {
-        markUnModified();
+        skipModifiedAtUpdate();
         this.likesCount++;
     }
 
     public void cancelLike() {
-        markUnModified();
+        skipModifiedAtUpdate();
         if (this.likesCount <= LIKES_COUNT_DEFAULT) {
             return;
         }
