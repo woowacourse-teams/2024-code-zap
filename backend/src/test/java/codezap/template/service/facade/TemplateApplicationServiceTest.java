@@ -6,9 +6,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
+
+import jakarta.persistence.EntityManager;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -460,6 +463,35 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("성공: 소스코드만 변경 시에도 수정 시간 변경")
+        void updateSourceCodesChangeModifiedAt() {
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+            SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+            UpdateSourceCodeRequest updateRequest1 = updateSourceCodeRequest(sourceCode);
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    template.getTitle(),
+                    template.getDescription(),
+                    List.of(),
+                    List.of(updateRequest1),
+                    List.of(),
+                    template.getCategory().getId(),
+                    List.of(),
+                    Visibility.PUBLIC
+            );
+            LocalDateTime beforeModifiedAt = template.getModifiedAt();
+
+            // when
+            sut.update(member, template.getId(), updateTemplateRequest);
+
+            // then
+            assertThat(template.getModifiedAt()).isNotEqualTo(beforeModifiedAt);
+        }
+
+        @Test
         @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
         void updateTemplate_WhenNoAuthorization() {
             // given
@@ -485,7 +517,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     Visibility.PUBLIC);
 
             // when & then
-            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
+            assertThatThrownBy(() -> sut.update(member, template.getId(), request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
@@ -524,7 +556,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             sut.deleteAllByMemberAndTemplateIds(member, deleteIds);
 
             // then
-            var actualTemplatesLeft = templateRepository.findAll(member.getId(), null, null, null, null, PageRequest.of(0, 10));
+            var actualTemplatesLeft = templateRepository.findAll(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
             var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));

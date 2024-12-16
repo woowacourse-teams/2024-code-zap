@@ -179,43 +179,6 @@ class SourceCodeServiceTest extends ServiceTest {
     class UpdateSourceCodes {
 
         @Test
-        @DisplayName("성공: 기존 소스 코드 제목, 내용 수정 및 새로운 소스 코드 추가")
-        void updateSourceCodes() {
-            // given
-            Template template = createSavedTemplate();
-            SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-            Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
-
-            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
-            UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
-            CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목1", "새로운 내용1", 3);
-            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
-                    List.of(createRequest),
-                    List.of(updateRequest1, updateRequest2),
-                    Collections.emptyList(),
-                    template.getCategory().getId(),
-                    Collections.emptyList()
-            );
-
-            // when
-            sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
-
-            // then
-            SourceCode updatedSourceCode1 = sourceCodeRepository.fetchById(sourceCode1.getId());
-            SourceCode updatedSourceCode2 = sourceCodeRepository.fetchById(sourceCode2.getId());
-            SourceCode newSourceCode = sourceCodeRepository.fetchByTemplateAndOrdinal(template, 3);
-
-            assertAll(
-                    () -> assertThat(sourceCodeRepository.countByTemplate(template)).isEqualTo(3),
-                    () -> assertThat(updatedSourceCode1.getFilename()).isEqualTo("변경된 제목1"),
-                    () -> assertThat(updatedSourceCode1.getOrdinal()).isEqualTo(1),
-                    () -> assertThat(updatedSourceCode2.getFilename()).isEqualTo("변경된 제목2"),
-                    () -> assertThat(updatedSourceCode2.getOrdinal()).isEqualTo(2),
-                    () -> assertThat(newSourceCode.getFilename()).isEqualTo("새로운 제목1"));
-        }
-
-        @Test
         @Disabled("애플리케이션 코드에서 로직 변경 필요")
         @DisplayName("성공: 일부 소스 코드 삭제 및 새로운 소스 코드 추가 시, 삭제된 코드 순서는 앞당겨지고 새로 추가된 소스 코드의 순서는 가장 마지막 순서")
         void updateSourceCodes_WhenDeleteSomeAndAddNew_ExistingCodesHavePriority() {

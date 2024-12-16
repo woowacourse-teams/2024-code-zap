@@ -1,5 +1,6 @@
 package codezap.template.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +19,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
 import codezap.category.domain.Category;
-import codezap.global.auditing.BaseTimeEntity;
+import codezap.global.auditing.SkipModifiedAtBaseTimeEntity;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class Template extends BaseTimeEntity {
+public class Template extends SkipModifiedAtBaseTimeEntity {
 
     private static final Long LIKES_COUNT_DEFAULT = 0L;
 
@@ -73,6 +74,7 @@ public class Template extends BaseTimeEntity {
     }
 
     public void updateTemplate(String title, String description, Category category, Visibility visibility) {
+        this.modifiedAt = LocalDateTime.now();
         this.title = title;
         this.description = description;
         this.category = category;
@@ -88,10 +90,12 @@ public class Template extends BaseTimeEntity {
     }
 
     public void increaseLike() {
+        skipModifiedAtUpdate();
         this.likesCount++;
     }
 
     public void cancelLike() {
+        skipModifiedAtUpdate();
         if (this.likesCount <= LIKES_COUNT_DEFAULT) {
             return;
         }
