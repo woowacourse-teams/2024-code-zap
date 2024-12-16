@@ -64,8 +64,9 @@ public class Category extends BaseTimeEntity {
         return new Category(null, member, DEFAULT_CATEGORY_NAME, true, 1);
     }
 
-    public void updateName(String name) {
+    public void update(String name, long ordinal) {
         this.name = name;
+        this.ordinal = ordinal;
     }
 
     public void validateAuthorization(Member member) {

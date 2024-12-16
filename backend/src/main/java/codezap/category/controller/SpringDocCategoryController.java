@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import codezap.category.dto.request.CreateCategoryRequest;
-import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.swagger.error.ApiErrorResponse;
@@ -61,7 +61,7 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories/1", errorCases = {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
-    ResponseEntity<Void> updateCategory(Member member, Long id, UpdateCategoryRequest updateCategoryRequest);
+    ResponseEntity<Void> updateCategory(Member member, UpdateAllCategoriesRequest request);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
