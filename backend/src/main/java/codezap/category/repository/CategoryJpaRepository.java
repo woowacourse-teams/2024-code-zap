@@ -12,4 +12,6 @@ public interface CategoryJpaRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByMemberIdOrderById(Long memberId);
 
     boolean existsByNameAndMember(String categoryName, Member member);
+
+    long countByMember(Member member);
 }
