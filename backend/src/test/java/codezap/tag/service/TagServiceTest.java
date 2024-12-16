@@ -288,7 +288,7 @@ class TagServiceTest extends ServiceTest {
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(new Category("자바", member));
+            Category category = categoryRepository.save(new Category("자바", member, 1));
 
             Template template1 = templateRepository.save(TemplateFixture.get(member, category));
             templateTagRepository.save(new TemplateTag(template1, tag1));

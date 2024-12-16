@@ -40,4 +40,8 @@ public class CategoryRepository {
     public void deleteById(Long id) {
         categoryJpaRepository.deleteById(id);
     }
+
+    public long countByMember(Member member) {
+        return categoryJpaRepository.countByMember(member);
+    }
 }

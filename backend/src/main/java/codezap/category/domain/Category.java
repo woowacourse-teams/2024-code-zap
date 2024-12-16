@@ -50,14 +50,18 @@ public class Category extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isDefault;
 
-    public Category(String name, Member member) {
+    @Column(nullable = false)
+    private long ordinal;
+
+    public Category(String name, Member member, long ordinal) {
         this.name = name;
         this.member = member;
         this.isDefault = false;
+        this.ordinal = ordinal;
     }
 
     public static Category createDefaultCategory(Member member) {
-        return new Category(null, member, DEFAULT_CATEGORY_NAME, true);
+        return new Category(null, member, DEFAULT_CATEGORY_NAME, true, 1);
     }
 
     public void updateName(String name) {

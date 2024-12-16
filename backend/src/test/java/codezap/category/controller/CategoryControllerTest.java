@@ -102,7 +102,7 @@ class CategoryControllerTest extends MockMvcTest {
     void findAllCategoriesSuccess() throws Exception {
         // given
         Member member = MemberFixture.memberFixture();
-        List<Category> categories = List.of(new Category("category1", member), new Category("category1", member));
+        List<Category> categories = List.of(new Category("category1", member, 1), new Category("category1", member, 2));
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
         when(categoryService.findAllByMemberId(any())).thenReturn(findAllCategoriesResponse);
