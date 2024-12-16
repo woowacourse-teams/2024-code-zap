@@ -26,7 +26,7 @@ public class AuthServiceTest extends ServiceTest {
         @Test
         @DisplayName("로그인 성공")
         void login() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
             LoginRequest loginRequest = new LoginRequest(member.getName(), MemberFixture.getFixturePlainPassword());
 
             assertThat(authService.login(loginRequest)).isEqualTo(LoginMember.from(member));
@@ -35,7 +35,7 @@ public class AuthServiceTest extends ServiceTest {
         @Test
         @DisplayName("로그인 실패: 아이디 오류")
         void login_WithInvalidname_ThrowsException() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
             String wrongname = "wrong" + member.getName();
 
             LoginRequest loginRequest = new LoginRequest(wrongname, member.getPassword());
@@ -48,7 +48,7 @@ public class AuthServiceTest extends ServiceTest {
         @Test
         @DisplayName("로그인 실패: 비밀번호 오류")
         void login_WithInvalidPassword_ThrowsException() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
 
             LoginRequest loginRequest = new LoginRequest(member.getName(), member.getPassword() + "wrong");
 
