@@ -24,6 +24,7 @@ import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
 import codezap.template.service.facade.TemplateApplicationService;
 import codezap.tag.service.TagService;
+import codezap.voc.service.VocService;
 
 @WebMvcTest(SpringExtension.class)
 @EnableConfigurationProperties(CorsProperties.class)
@@ -50,6 +51,9 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected LikesService likesService;
+
+    @MockBean
+    private VocService vocService;
 
     @MockBean
     protected TemplateApplicationService templateApplicationService;
