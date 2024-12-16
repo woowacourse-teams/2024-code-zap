@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -24,6 +23,7 @@ import org.springframework.http.MediaType;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
@@ -126,14 +126,14 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 성공")
         void updateCategorySuccess() throws Exception {
             // given
-            long categoryId = 1L;
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("updateCategory");
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "updateCategory", 1L);
+            UpdateAllCategoriesRequest request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
 
             // when & then
-            mvc.perform(put("/categories/" + categoryId)
+            mvc.perform(post("/categories")
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateCategoryRequest)))
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isOk());
         }
 
@@ -141,31 +141,31 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
-            long categoryId = 1L;
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH));
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1L);
+            UpdateAllCategoriesRequest request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialManager).getCredential(any());
 
             // when & then
-            mvc.perform(put("/categories/" + categoryId)
+            mvc.perform(post("/categories")
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateCategoryRequest)))
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isUnauthorized());
         }
 
         @Test
         @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
-        void updateCategoryFailWithlongName() throws Exception {
+        void updateCategoryFailWithLongName() throws Exception {
             // given
-            long categoryId = 1L;
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest("a".repeat(MAX_LENGTH + 1));
+            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH + 1), 1L);
+            UpdateAllCategoriesRequest request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
 
             // when & then
-            mvc.perform(put("/categories/" + categoryId)
+            mvc.perform(post("/categories")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(updateCategoryRequest)))
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("카테고리 이름은 최대 15자까지 입력 가능합니다."))
                     .andExpect(jsonPath("$.errorCode").value(1101));

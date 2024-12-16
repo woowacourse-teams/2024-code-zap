@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
@@ -45,11 +46,17 @@ public class CategoryService {
     }
 
     @Transactional
-    public void update(Member member, Long id, UpdateCategoryRequest updateCategoryRequest) {
-        validateDuplicatedCategory(updateCategoryRequest.name(), member);
-        Category category = categoryRepository.fetchById(id);
+    public void updateAll(Member member, UpdateAllCategoriesRequest requests) {
+        for (UpdateCategoryRequest request : requests.categories()) {
+            update(member, request);
+        }
+    }
+
+    private void update(Member member, UpdateCategoryRequest request) {
+        validateDuplicatedCategory(request.name(), member);
+        Category category = categoryRepository.fetchById(request.id());
         category.validateAuthorization(member);
-        category.updateName(updateCategoryRequest.name());
+        category.update(request.name(), request.ordinal());
     }
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
