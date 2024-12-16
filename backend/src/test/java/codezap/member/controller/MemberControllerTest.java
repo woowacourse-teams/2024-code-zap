@@ -17,11 +17,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
+import codezap.fixture.MemberFixture;
 import codezap.global.MockMvcTest;
 import codezap.member.domain.Member;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
-import codezap.member.fixture.MemberFixture;
 
 @Import(MemberController.class)
 class MemberControllerTest extends MockMvcTest {
@@ -55,7 +55,7 @@ class MemberControllerTest extends MockMvcTest {
     @Test
     @DisplayName("회원 조회 성공")
     void findMemberNameSuccess() throws Exception {
-        Member member = MemberFixture.memberFixture();
+        Member member = MemberFixture.getFirstMember();
         FindMemberResponse response = FindMemberResponse.from(member);
 
         when(memberService.findMember(anyLong())).thenReturn(response);

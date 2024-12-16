@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import codezap.member.fixture.MemberFixture;
+import codezap.fixture.MemberFixture;
 
 class MemberTest {
 
@@ -18,14 +18,14 @@ class MemberTest {
         @Test
         @DisplayName("성공: 비밀번호 일치 true 반환")
         void matchPassword() {
-            Member member = MemberFixture.memberFixture();
+            Member member = MemberFixture.getFirstMember();
             assertTrue(member.matchPassword(member.getPassword()));
         }
 
         @Test
         @DisplayName("성공: 비밀번호 불일치 false 반환")
         void matchPassword_Fail_NotSamePassword() {
-            Member member = MemberFixture.memberFixture();
+            Member member = MemberFixture.getFirstMember();
             assertFalse(member.matchPassword(member.getPassword() + "wrong"));
         }
     }
@@ -37,14 +37,14 @@ class MemberTest {
         @Test
         @DisplayName("성공: 아이디 일치 true 반환")
         void matchId() {
-            Member member = MemberFixture.memberFixture();
+            Member member = MemberFixture.getFirstMember();
             assertTrue(member.matchId(member.getId()));
         }
 
         @Test
         @DisplayName("성공: 아이디 불일치 false 반환")
         void matchId_Fail_NotSamePassword() {
-            Member member = MemberFixture.memberFixture();
+            Member member = MemberFixture.getFirstMember();
             assertFalse(member.matchId(100L));
         }
     }

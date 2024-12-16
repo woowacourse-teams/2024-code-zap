@@ -27,11 +27,11 @@ import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
+import codezap.fixture.MemberFixture;
 import codezap.global.MockMvcTest;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
-import codezap.member.fixture.MemberFixture;
 
 @Import(CategoryController.class)
 class CategoryControllerTest extends MockMvcTest {
@@ -50,7 +50,7 @@ class CategoryControllerTest extends MockMvcTest {
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
 
             when(categoryService.create(
-                    MemberFixture.memberFixture(), createCategoryRequest))
+                    MemberFixture.getFirstMember(), createCategoryRequest))
                     .thenReturn(new CreateCategoryResponse(1L, "category"));
 
             // when & then
@@ -101,7 +101,7 @@ class CategoryControllerTest extends MockMvcTest {
     @DisplayName("카테고리 전체 조회 성공")
     void findAllCategoriesSuccess() throws Exception {
         // given
-        Member member = MemberFixture.memberFixture();
+        Member member = MemberFixture.getFirstMember();
         List<Category> categories = List.of(new Category("category1", member, 1), new Category("category1", member, 2));
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
@@ -190,7 +190,7 @@ class CategoryControllerTest extends MockMvcTest {
 
             // then
             verify(categoryService, times(1))
-                    .deleteById(MemberFixture.memberFixture(), categoryId);
+                    .deleteById(MemberFixture.getFirstMember(), categoryId);
         }
 
         @Test

@@ -1,10 +1,9 @@
 package codezap.global;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-import codezap.auth.dto.LoginMember;
-import codezap.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -19,9 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
+import codezap.fixture.MemberFixture;
 import codezap.global.cors.CorsProperties;
 import codezap.likes.service.LikesService;
-import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
 import codezap.template.service.facade.TemplateApplicationService;
 import codezap.tag.service.TagService;
@@ -66,8 +65,7 @@ public abstract class MockMvcTest {
         objectMapper = new ObjectMapper();
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
-        Member member = MemberFixture.memberFixture();
-        //when(credentialManager.getCredential(any())).thenReturn(credentialProvider.createCredential(LoginMember.from(member)));
-        when(credentialProvider.extractMember(any())).thenReturn(member);
+        when(credentialManager.getCredential(any())).thenReturn("mock-credential");
+        when(credentialProvider.extractMember(anyString())).thenReturn(MemberFixture.getFirstMember());
     }
 }
