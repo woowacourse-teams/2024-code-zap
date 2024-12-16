@@ -69,6 +69,24 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("카테고리 생성 성공: 멤버별 마지막 순서로 생성")
+        void createCategorySuccessWithLastOrdinalByMember() {
+            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
+            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
+            categoryRepository.save(new Category("category1", member1, 1));
+            categoryRepository.save(new Category("category2", member1, 2));
+            categoryRepository.save(new Category("category3", member2, 1));
+
+            String categoryName = "category4";
+            CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
+
+            CreateCategoryResponse response = sut.create(member1, request);
+
+            Category savedCategory = categoryRepository.fetchById(response.id());
+            assertThat(savedCategory.getOrdinal()).isEqualTo(3L);
+        }
+
+        @Test
         @DisplayName("카테고리 생성 실패: 동일한 멤버, 중복된 이름의 카테고리 이름 생성")
         void createCategoryFailWithSameMemberAndDuplicateName() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
