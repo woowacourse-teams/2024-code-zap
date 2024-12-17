@@ -1,0 +1,27 @@
+{
+  "name": "design-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-storybook": "storybook build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@storybook/addon-essentials": "^8.2.1",
+    "@storybook/addon-interactions": "^8.2.1",
+    "@storybook/addon-links": "^8.2.1",
+    "@storybook/addon-onboarding": "^8.2.1",
+    "@storybook/addon-webpack5-compiler-swc": "^1.0.4",
+    "@storybook/blocks": "^8.2.1",
+    "@storybook/react": "^8.2.1",
+    "@storybook/react-webpack5": "^8.2.1",
+    "@storybook/test": "^8.2.1",
+    "storybook": "^8.2.1",
+    "swc-loader": "^0.2.6"
+  }
+}
