@@ -1,5 +1,8 @@
 package codezap.category.service;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +72,10 @@ public class CategoryService {
 
     @Transactional
     public void deleteCategories(Member member, DeleteAllCategoriesRequest request) {
-        for (DeleteCategoryRequest categoryRequest : request.categories()) {
+        List<DeleteCategoryRequest> sortedCategoryRequests = request.categories().stream()
+                .sorted(Comparator.comparing(DeleteCategoryRequest::ordinal).reversed())
+                .toList();
+        for (DeleteCategoryRequest categoryRequest : sortedCategoryRequests) {
             delete(member, categoryRequest);
         }
     }
