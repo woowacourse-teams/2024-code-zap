@@ -5,6 +5,7 @@ import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.member.domain.Member;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
@@ -32,8 +33,9 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             WebDataBinderFactory binderFactory
     ) {
         AuthenticationPrinciple parameterAnnotation = parameter.getParameterAnnotation(AuthenticationPrinciple.class);
+        boolean supported = Objects.nonNull(parameterAnnotation);
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        if (!parameterAnnotation.required() && !credentialManager.hasCredential(request)) {
+        if (supported && !parameterAnnotation.required() && !credentialManager.hasCredential(request)) {
             return null;
         }
         Credential credential = credentialManager.getCredential(request);
