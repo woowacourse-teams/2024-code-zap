@@ -2,7 +2,6 @@ import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import {
   Dropdown,
@@ -16,6 +15,7 @@ import {
   TemplateCard,
 } from '@/components';
 import { useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
+import { SORTING_OPTIONS } from '@/models/templates';
 import { TemplateListSectionLoading } from '@/pages/MyTemplatesPage/components';
 import { HotTopicCarousel } from '@/pages/TemplateExplorePage/components';
 import { useHotTopic } from '@/pages/TemplateExplorePage/hooks';
@@ -100,7 +100,7 @@ const TemplateExplorePage = () => {
         </S.SearchInput>
         <Dropdown
           {...dropdownProps}
-          options={SORTING_OPTIONS}
+          options={[...SORTING_OPTIONS]}
           currentValue={sortingOption}
           getOptionLabel={(option) => option.value}
         />

@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-import { DEFAULT_SORTING_OPTION } from '@/api';
+import { DEFAULT_SORTING_OPTION } from '@/models/templates';
 
 interface FilterState {
   category: number;

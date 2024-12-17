@@ -1,3 +1,4 @@
+import { SORTING_OPTIONS } from '@/models/templates';
 import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from '@/types';
 
 export interface TemplateListResponse {
@@ -75,6 +76,6 @@ export interface GetMemberNameResponse {
   name: string;
 }
 
-export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc' | 'likesCount,desc';
+export type SortingKey = (typeof SORTING_OPTIONS)[number]['key'];
 
 export type SortingOption = { key: SortingKey; value: string };

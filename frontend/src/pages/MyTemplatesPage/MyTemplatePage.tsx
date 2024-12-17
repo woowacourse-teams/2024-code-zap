@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { SORTING_OPTIONS } from '@/api';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, Heading } from '@/components';
 import { useAuth } from '@/hooks/authentication';
+import { SORTING_OPTIONS } from '@/models/templates';
 import {
   CategoryListSection,
   CategoryListSectionSkeleton,
@@ -105,7 +105,7 @@ const MyTemplatePage = () => {
             </S.SearchInput>
             <Dropdown
               {...dropdownProps}
-              options={SORTING_OPTIONS}
+              options={[...SORTING_OPTIONS]}
               currentValue={sortingOption}
               getOptionLabel={(option) => option.value}
             />

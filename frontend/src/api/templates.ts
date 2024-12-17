@@ -1,26 +1,7 @@
 import { apiClient } from '@/api/config';
+import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '@/models/templates';
 import { END_POINTS } from '@/routes';
 import type { TemplateRequest, TemplateEditRequest, TemplateUploadRequest, TemplateListRequest } from '@/types';
-import { SortingOption } from '@/types';
-
-export const PAGE_SIZE = 20;
-
-export const SORTING_OPTIONS: SortingOption[] = [
-  {
-    key: 'modifiedAt,desc',
-    value: '최근 순',
-  },
-  {
-    key: 'modifiedAt,asc',
-    value: '오래된 순',
-  },
-  {
-    key: 'likesCount,desc',
-    value: '좋아요 순',
-  },
-];
-
-export const DEFAULT_SORTING_OPTION = SORTING_OPTIONS[0];
 
 export const getTemplateList = async ({
   keyword,
