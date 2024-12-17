@@ -126,6 +126,7 @@ const MyTemplatePage = () => {
                 templateList={templateList}
                 isSearching={inputKeyword !== '' || inputKeyword !== searchedKeyword}
                 isEditMode={isEditMode}
+                isMine={isMine}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
               />
