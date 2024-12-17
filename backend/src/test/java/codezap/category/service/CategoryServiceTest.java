@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,6 +34,9 @@ class CategoryServiceTest extends ServiceTest {
 
     @Autowired
     private CategoryService sut;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
@@ -60,7 +65,7 @@ class CategoryServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
             String duplicatedCategoryName = "category";
-            categoryRepository.save(new Category(duplicatedCategoryName, member, 1));
+            categoryRepository.save(new Category(duplicatedCategoryName, member, 1L));
 
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
             CreateCategoryResponse createCategoryResponse = sut.create(otherMember, createCategoryRequest);
@@ -78,9 +83,9 @@ class CategoryServiceTest extends ServiceTest {
         void createCategorySuccessWithLastOrdinalByMember() {
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            categoryRepository.save(new Category("category1", member1, 1));
-            categoryRepository.save(new Category("category2", member1, 2));
-            categoryRepository.save(new Category("category3", member2, 1));
+            categoryRepository.save(new Category("category1", member1, 1L));
+            categoryRepository.save(new Category("category2", member1, 2L));
+            categoryRepository.save(new Category("category3", member2, 1L));
 
             String categoryName = "category4";
             CreateCategoryRequest request = new CreateCategoryRequest(categoryName);
@@ -96,7 +101,7 @@ class CategoryServiceTest extends ServiceTest {
         void createCategoryFailWithSameMemberAndDuplicateName() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             String duplicatedCategoryName = "category";
-            categoryRepository.save(new Category(duplicatedCategoryName, member, 1));
+            categoryRepository.save(new Category(duplicatedCategoryName, member, 1L));
 
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName);
 
@@ -114,10 +119,10 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("성공")
         void success() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category1 = categoryRepository.save(new Category("category1", member, 1));
-            Category category2 = categoryRepository.save(new Category("category2", member, 2));
+            Category category1 = categoryRepository.save(new Category("category1", member, 1L));
+            Category category2 = categoryRepository.save(new Category("category2", member, 2L));
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
-            Category category3 = categoryRepository.save(new Category("notMyCategory", otherMember, 1));
+            Category category3 = categoryRepository.save(new Category("notMyCategory", otherMember, 1L));
 
             FindAllCategoriesResponse categoryByMember = sut.findAllByMemberId(member.getId());
 
@@ -146,8 +151,8 @@ class CategoryServiceTest extends ServiceTest {
         void findAllCategoriesSuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
 
-            categoryRepository.save(new Category("category1", member, 1));
-            categoryRepository.save(new Category("category2", member, 2));
+            categoryRepository.save(new Category("category1", member, 1L));
+            categoryRepository.save(new Category("category2", member, 2L));
 
             FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
 
@@ -171,7 +176,7 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("성공")
         void success() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category savedCategory = categoryRepository.save(new Category("categoryName", member, 1));
+            Category savedCategory = categoryRepository.save(new Category("categoryName", member, 1L));
 
             Category actual = sut.fetchById(savedCategory.getId());
 
@@ -222,7 +227,7 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("카테고리 수정 실패: 권한 없음")
         void updateCategoryFailWithUnauthorized() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category savedCategory = categoryRepository.save(new Category("category1", member, 1));
+            Category savedCategory = categoryRepository.save(new Category("category1", member, 1L));
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
             UpdateCategoryRequest request = new UpdateCategoryRequest(1L, "updateName", 1L);
 
@@ -278,7 +283,7 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("카테고리 삭제 성공")
         void deleteCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category savedCategory = categoryRepository.save(new Category("category1", member, 1));
+            Category savedCategory = categoryRepository.save(new Category("category1", member, 1L));
             int beforeDeleteSize = categoryRepository.findAllByMemberIdOrderById(member.getId()).size();
             var categoryRequest = new DeleteCategoryRequest(savedCategory.getId(), savedCategory.getOrdinal());
             var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
@@ -295,11 +300,37 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("카테고리 삭제 성공: 뒷 순서 카테고리 순서 재정렬")
+        void deleteCategorySuccessWithReorderOrdinal() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category1 = categoryRepository.save(new Category("category1", member, 1L));
+            Category category2 = categoryRepository.save(new Category("category2", member, 2L));
+            Category category3 = categoryRepository.save(new Category("category3", member, 3L));
+            Category category4 = categoryRepository.save(new Category("category4", member, 4L));
+            Category category5 = categoryRepository.save(new Category("category5", member, 5L));
+            var categoryRequest1 = new DeleteCategoryRequest(category2.getId(), category2.getOrdinal());
+            var categoryRequest2 = new DeleteCategoryRequest(category4.getId(), category4.getOrdinal());
+            var request = new DeleteAllCategoriesRequest(List.of(categoryRequest1, categoryRequest2));
+
+            sut.deleteCategories(member, request);
+
+            entityManager.refresh(category1);
+            entityManager.refresh(category3);
+            entityManager.refresh(category5);
+
+            assertAll(
+                    () -> assertThat(categoryRepository.fetchById(category1.getId()).getOrdinal()).isEqualTo(1L),
+                    () -> assertThat(categoryRepository.fetchById(category3.getId()).getOrdinal()).isEqualTo(2L),
+                    () -> assertThat(categoryRepository.fetchById(category5.getId()).getOrdinal()).isEqualTo(3L)
+            );
+        }
+
+        @Test
         @DisplayName("카테고리 삭제 실패: 권한 없음")
         void deleteCategoryFailWithUnauthorized() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
-            Category savedCategory = categoryRepository.save(new Category("category1", member, 1));
+            Category savedCategory = categoryRepository.save(new Category("category1", member, 1L));
             var categoryRequest = new DeleteCategoryRequest(savedCategory.getId(), savedCategory.getOrdinal());
             var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
 
@@ -325,7 +356,7 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("카테고리 아이디로 카테고리 삭제 실패 : 해당 카테고리에 속한 템플릿이 존재하면 삭제할 수 없음")
         void deleteByIdFailExistsTemplate() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(new Category("카테고리 1", member, 1));
+            Category category = categoryRepository.save(new Category("카테고리 1", member, 1L));
             templateRepository.save(new Template(member, "title", "desciption", category));
             var categoryRequest = new DeleteCategoryRequest(category.getId(), category.getOrdinal());
             var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
