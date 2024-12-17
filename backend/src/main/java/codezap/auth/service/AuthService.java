@@ -23,20 +23,14 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncryptor passwordEncryptor;
 
-
-    public LoginAndCredentialDto login(LoginRequest loginRequest) {
-        Member member = getVerifiedMember(loginRequest.name(), loginRequest.password());
+    public LoginAndCredentialDto login(LoginRequest request) {
+        Member member = memberRepository.fetchByName(request.name());
+        validatePassword(member, request.password());
         String credential = credentialProvider.createCredential(member);
         return new LoginAndCredentialDto(LoginResponse.from(member), credential);
     }
 
-    private Member getVerifiedMember(String name, String password) {
-        Member member = memberRepository.fetchByName(name);
-        validateCorrectPassword(member, password);
-        return member;
-    }
-
-    private void validateCorrectPassword(Member member, String password) {
+    private void validatePassword(Member member, String password) {
         String salt = member.getSalt();
         String encryptedPassword = passwordEncryptor.encrypt(password, salt);
         if (!member.matchPassword(encryptedPassword)) {
