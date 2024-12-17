@@ -60,14 +60,9 @@ public class CategoryService {
     private void update(Member member, UpdateCategoryRequest request) {
         validateDuplicatedCategory(request.name(), member);
         Category category = categoryRepository.fetchById(request.id());
+        validateDefaultCategory(category);
         category.validateAuthorization(member);
         category.update(request.name(), request.ordinal());
-    }
-
-    private void validateDuplicatedCategory(String categoryName, Member member) {
-        if (categoryRepository.existsByNameAndMember(categoryName, member)) {
-            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
-        }
     }
 
     @Transactional
@@ -85,13 +80,27 @@ public class CategoryService {
         Category category = categoryRepository.fetchById(id);
         category.validateAuthorization(member);
 
+        validateHasTemplate(id);
+        validateDefaultCategory(category);
+        categoryRepository.deleteById(id);
+        categoryRepository.shiftOrdinal(member, request.ordinal());
+    }
+
+    private void validateDuplicatedCategory(String categoryName, Member member) {
+        if (categoryRepository.existsByNameAndMember(categoryName, member)) {
+            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
+        }
+    }
+
+    private void validateDefaultCategory(Category category) {
+        if(category.isDefault()) {
+            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 수정 및 삭제할 수 없습니다.");
+        }
+    }
+
+    private void validateHasTemplate(Long id) {
         if (templateRepository.existsByCategoryId(id)) {
             throw new CodeZapException(ErrorCode.CATEGORY_HAS_TEMPLATES, "템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
-        if (category.isDefault()) {
-            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 삭제할 수 없습니다.");
-        }
-        categoryRepository.deleteById(id);
-        categoryRepository.shiftOrdinal(member, request.ordinal());
     }
 }
