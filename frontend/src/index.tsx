@@ -31,13 +31,13 @@ Sentry.init({
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 const enableMocking = async () => {
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.APP_ENV !== 'msw') {
     return;
   }
 
-  // const { worker } = await import('./mocks/browser');
+  const { worker } = await import('@/mocks/settings/browser');
 
-  // await worker.start();
+  await worker.start();
 };
 
 enableMocking().then(() => {

@@ -4,6 +4,9 @@ const Dotenv = require('dotenv-webpack');
 
 const common = require('./webpack.common.js');
 
+const apiEnv = process.env.APP_ENV || 'development';
+const envFilePath = `.env.${apiEnv}`;
+
 module.exports = () => {
   return merge(common, {
     mode: 'development',
@@ -14,7 +17,7 @@ module.exports = () => {
     plugins: [
       new HotModuleReplacementPlugin(),
       new Dotenv({
-        path: './.env.development',
+        path: `./${envFilePath}`,
       }),
     ],
     module: {
