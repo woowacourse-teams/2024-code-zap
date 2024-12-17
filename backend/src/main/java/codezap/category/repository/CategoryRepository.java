@@ -49,4 +49,8 @@ public class CategoryRepository {
     public void shiftOrdinal(Member member, Long ordinal) {
         categoryQueryDslRepository.shiftOrdinal(member, ordinal);
     }
+
+    public boolean existsDuplicateOrdinalsByMember(Member member) {
+        return categoryQueryDslRepository.existsDuplicateOrdinalsByMember(member);
+    }
 }

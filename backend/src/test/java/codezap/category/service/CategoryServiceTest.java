@@ -205,20 +205,20 @@ class CategoryServiceTest extends ServiceTest {
             String updateCategoryName = "updateName1";
             String notUpdateCategoryName = "category2";
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category savedCategory1 = categoryRepository.save(new Category("category1", member, 1L));
-            Category savedCategory2 = categoryRepository.save(new Category(notUpdateCategoryName, member, 2L));
-            UpdateCategoryRequest request1 = new UpdateCategoryRequest(1L, updateCategoryName, 2L);
-            UpdateCategoryRequest request2 = new UpdateCategoryRequest(2L, notUpdateCategoryName, 1L);
+            Category category1 = categoryRepository.save(new Category("category1", member, 1L));
+            Category category2 = categoryRepository.save(new Category(notUpdateCategoryName, member, 2L));
+            UpdateCategoryRequest request1 = new UpdateCategoryRequest(category1.getId(), updateCategoryName, category1.getOrdinal());
+            UpdateCategoryRequest request2 = new UpdateCategoryRequest(category2.getId(), notUpdateCategoryName, category2.getOrdinal());
 
             sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request1, request2)));
 
             assertAll(
-                    () -> assertThat(categoryRepository.fetchById(savedCategory1.getId()).getName()).isEqualTo(
+                    () -> assertThat(categoryRepository.fetchById(category1.getId()).getName()).isEqualTo(
                             updateCategoryName),
-                    () -> assertThat(categoryRepository.fetchById(savedCategory1.getId()).getOrdinal()).isEqualTo(2L),
-                    () -> assertThat(categoryRepository.fetchById(savedCategory2.getId()).getName()).isEqualTo(
+                    () -> assertThat(categoryRepository.fetchById(category1.getId()).getOrdinal()).isEqualTo(2L),
+                    () -> assertThat(categoryRepository.fetchById(category2.getId()).getName()).isEqualTo(
                             notUpdateCategoryName),
-                    () -> assertThat(categoryRepository.fetchById(savedCategory2.getId()).getOrdinal()).isEqualTo(1L)
+                    () -> assertThat(categoryRepository.fetchById(category2.getId()).getOrdinal()).isEqualTo(1L)
             );
 
         }
@@ -227,9 +227,9 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("카테고리 수정 실패: 권한 없음")
         void updateCategoryFailWithUnauthorized() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category savedCategory = categoryRepository.save(new Category("category1", member, 1L));
+            Category category = categoryRepository.save(new Category("category1", member, 1L));
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
-            UpdateCategoryRequest request = new UpdateCategoryRequest(1L, "updateName", 1L);
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), "updateName", category.getOrdinal());
 
             assertThatThrownBy(
                     () -> sut.updateCategories(otherMember, new UpdateAllCategoriesRequest(List.of(request))))
@@ -243,7 +243,7 @@ class CategoryServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category1 = categoryRepository.save(new Category("category1", member, 1L));
             Category category2 = categoryRepository.save(new Category("category2", member, 2L));
-            UpdateCategoryRequest request = new UpdateCategoryRequest(2L, category1.getName(), 2L);
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category2.getId(), category1.getName(), category2.getOrdinal());
 
             assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
@@ -255,7 +255,7 @@ class CategoryServiceTest extends ServiceTest {
         void notChangedCategoryName() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("category", member, 1L));
-            UpdateCategoryRequest request = new UpdateCategoryRequest(1L, category.getName(), 1L);
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), category.getName(), category.getOrdinal());
 
             assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
@@ -272,6 +272,21 @@ class CategoryServiceTest extends ServiceTest {
             assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notSavedId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 수정 실패: 중복된 순서")
+        void duplicatedCategoryOrdinal() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category1 = categoryRepository.save(new Category("category1", member, 1L));
+            Category category2 = categoryRepository.save(new Category("category2", member, 2L));
+            Category category3 = categoryRepository.save(new Category("category3", member, 3L));
+            UpdateCategoryRequest request1 = new UpdateCategoryRequest(category2.getId(), "newCategory2", 2L);
+            UpdateCategoryRequest request2 = new UpdateCategoryRequest(category3.getId(), "newCategory3", 1L);
+
+            assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request1, request2))))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("템플릿 순서가 중복됩니다.");
         }
     }
 
@@ -376,7 +391,7 @@ class CategoryServiceTest extends ServiceTest {
 
             assertThatThrownBy(() -> sut.deleteCategories(member, request))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("기본 카테고리는 삭제할 수 없습니다.");
+                    .hasMessage("기본 카테고리는 수정 및 삭제할 수 없습니다.");
         }
     }
 }

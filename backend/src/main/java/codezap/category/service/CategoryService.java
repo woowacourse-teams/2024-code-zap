@@ -55,6 +55,7 @@ public class CategoryService {
         for (UpdateCategoryRequest categoryRequest : request.categories()) {
             update(member, categoryRequest);
         }
+        validateOrdinal(member);
     }
 
     private void update(Member member, UpdateCategoryRequest request) {
@@ -84,6 +85,12 @@ public class CategoryService {
         validateDefaultCategory(category);
         categoryRepository.deleteById(id);
         categoryRepository.shiftOrdinal(member, request.ordinal());
+    }
+
+    private void validateOrdinal(Member member) {
+        if (categoryRepository.existsDuplicateOrdinalsByMember(member)) {
+            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "템플릿 순서가 중복됩니다.");
+        }
     }
 
     private void validateDuplicatedCategory(String categoryName, Member member) {
