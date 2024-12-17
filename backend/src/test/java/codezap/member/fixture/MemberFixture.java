@@ -3,6 +3,7 @@ package codezap.member.fixture;
 import codezap.auth.encryption.PasswordEncryptor;
 import codezap.auth.encryption.SHA2PasswordEncryptor;
 import codezap.member.domain.Member;
+import codezap.member.domain.Role;
 
 public class MemberFixture {
 
@@ -14,7 +15,8 @@ public class MemberFixture {
                 1L,
                 "몰리",
                 encrypted,
-                "salt"
+                "salt",
+                Role.MEMBER
         );
     }
 
