@@ -92,7 +92,7 @@ export const templateHandlers = [
     });
   }),
 
-  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => mockResponse({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => mockResponse({ status: 201, headers: { 'Location': '/templates/1' } })),
 
   http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
 
