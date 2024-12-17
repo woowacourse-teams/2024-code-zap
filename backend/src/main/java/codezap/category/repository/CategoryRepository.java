@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class CategoryRepository {
 
     private final CategoryJpaRepository categoryJpaRepository;
+    private final CategoryQueryDslRepository categoryQueryDslRepository;
 
     public Category save(Category category) {
         return categoryJpaRepository.save(category);
@@ -43,5 +44,9 @@ public class CategoryRepository {
 
     public long countByMember(Member member) {
         return categoryJpaRepository.countByMember(member);
+    }
+
+    public void shiftOrdinal(Member member, Long ordinal) {
+        categoryQueryDslRepository.shiftOrdinal(member, ordinal);
     }
 }

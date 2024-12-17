@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.DeleteAllCategoriesRequest;
+import codezap.category.dto.request.DeleteCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
@@ -203,7 +205,7 @@ class CategoryServiceTest extends ServiceTest {
             UpdateCategoryRequest request1 = new UpdateCategoryRequest(1L, updateCategoryName, 2L);
             UpdateCategoryRequest request2 = new UpdateCategoryRequest(2L, notUpdateCategoryName, 1L);
 
-            sut.updateAll(member, new UpdateAllCategoriesRequest(List.of(request1, request2)));
+            sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request1, request2)));
 
             assertAll(
                     () -> assertThat(categoryRepository.fetchById(savedCategory1.getId()).getName()).isEqualTo(
@@ -224,7 +226,8 @@ class CategoryServiceTest extends ServiceTest {
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
             UpdateCategoryRequest request = new UpdateCategoryRequest(1L, "updateName", 1L);
 
-            assertThatThrownBy(() -> sut.updateAll(otherMember, new UpdateAllCategoriesRequest(List.of(request))))
+            assertThatThrownBy(
+                    () -> sut.updateCategories(otherMember, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
@@ -237,7 +240,7 @@ class CategoryServiceTest extends ServiceTest {
             Category category2 = categoryRepository.save(new Category("category2", member, 2L));
             UpdateCategoryRequest request = new UpdateCategoryRequest(2L, category1.getName(), 2L);
 
-            assertThatThrownBy(() -> sut.updateAll(member, new UpdateAllCategoriesRequest(List.of(request))))
+            assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + category1.getName() + "인 카테고리가 이미 존재합니다.");
         }
@@ -249,7 +252,7 @@ class CategoryServiceTest extends ServiceTest {
             Category category = categoryRepository.save(new Category("category", member, 1L));
             UpdateCategoryRequest request = new UpdateCategoryRequest(1L, category.getName(), 1L);
 
-            assertThatThrownBy(() -> sut.updateAll(member, new UpdateAllCategoriesRequest(List.of(request))))
+            assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("이름이 " + category.getName() + "인 카테고리가 이미 존재합니다.");
         }
@@ -261,7 +264,7 @@ class CategoryServiceTest extends ServiceTest {
             long notSavedId = 100L;
             UpdateCategoryRequest request = new UpdateCategoryRequest(notSavedId, "categoryName", 1L);
 
-            assertThatThrownBy(() -> sut.updateAll(member, new UpdateAllCategoriesRequest(List.of(request))))
+            assertThatThrownBy(() -> sut.updateCategories(member, new UpdateAllCategoriesRequest(List.of(request))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notSavedId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
@@ -277,8 +280,10 @@ class CategoryServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category savedCategory = categoryRepository.save(new Category("category1", member, 1));
             int beforeDeleteSize = categoryRepository.findAllByMemberIdOrderById(member.getId()).size();
+            var categoryRequest = new DeleteCategoryRequest(savedCategory.getId(), savedCategory.getOrdinal());
+            var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
 
-            sut.deleteById(member, savedCategory.getId());
+            sut.deleteCategories(member, request);
 
             assertAll(
                     () -> assertThat(categoryRepository.findAllByMemberIdOrderById(member.getId()))
@@ -295,8 +300,10 @@ class CategoryServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
             Category savedCategory = categoryRepository.save(new Category("category1", member, 1));
+            var categoryRequest = new DeleteCategoryRequest(savedCategory.getId(), savedCategory.getOrdinal());
+            var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
 
-            assertThatCode(() -> sut.deleteById(otherMember, savedCategory.getId()))
+            assertThatCode(() -> sut.deleteCategories(otherMember, request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
@@ -305,10 +312,11 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리는 삭제할 수 없음")
         void deleteCategoryFailWithNotExistCategory() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-
             long notSavedCategoryId = 100L;
+            var categoryRequest = new DeleteCategoryRequest(notSavedCategoryId, 1L);
+            var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
 
-            assertThatCode(() -> sut.deleteById(member, notSavedCategoryId))
+            assertThatCode(() -> sut.deleteCategories(member, request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
@@ -319,8 +327,10 @@ class CategoryServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("카테고리 1", member, 1));
             templateRepository.save(new Template(member, "title", "desciption", category));
+            var categoryRequest = new DeleteCategoryRequest(category.getId(), category.getOrdinal());
+            var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
 
-            assertThatThrownBy(() -> sut.deleteById(member, category.getId()))
+            assertThatThrownBy(() -> sut.deleteCategories(member, request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("템플릿이 존재하는 카테고리는 삭제할 수 없습니다.");
         }
@@ -330,8 +340,10 @@ class CategoryServiceTest extends ServiceTest {
         void deleteByIdFailDefaultCategory() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category defaultCategory = categoryRepository.save(Category.createDefaultCategory(member));
+            var categoryRequest = new DeleteCategoryRequest(defaultCategory.getId(), defaultCategory.getOrdinal());
+            var request = new DeleteAllCategoriesRequest(List.of(categoryRequest));
 
-            assertThatThrownBy(() -> sut.deleteById(member, defaultCategory.getId()))
+            assertThatThrownBy(() -> sut.deleteCategories(member, request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("기본 카테고리는 삭제할 수 없습니다.");
         }

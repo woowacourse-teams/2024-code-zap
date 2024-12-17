@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,6 +24,8 @@ import org.springframework.http.MediaType;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.DeleteAllCategoriesRequest;
+import codezap.category.dto.request.DeleteCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
@@ -126,11 +129,11 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 성공")
         void updateCategorySuccess() throws Exception {
             // given
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "updateCategory", 1L);
-            UpdateAllCategoriesRequest request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "updateCategory", 1L);
+            var request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
 
             // when & then
-            mvc.perform(post("/categories")
+            mvc.perform(put("/categories")
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
@@ -141,14 +144,14 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1L);
-            UpdateAllCategoriesRequest request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1L);
+            var request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialManager).getCredential(any());
 
             // when & then
-            mvc.perform(post("/categories")
+            mvc.perform(put("/categories")
                             .accept(MediaType.APPLICATION_JSON)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
@@ -159,11 +162,11 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
         void updateCategoryFailWithLongName() throws Exception {
             // given
-            UpdateCategoryRequest updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH + 1), 1L);
-            UpdateAllCategoriesRequest request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH + 1), 1L);
+            var request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
 
             // when & then
-            mvc.perform(post("/categories")
+            mvc.perform(put("/categories")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
@@ -180,31 +183,35 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 삭제 성공")
         void deleteCategorySuccess() throws Exception {
             // given
-            long categoryId = 1L;
+            var deleteCategoryRequest = new DeleteCategoryRequest(1L, 1L);
+            var request = new DeleteAllCategoriesRequest(List.of(deleteCategoryRequest));
 
             // when
-            mvc.perform(delete("/categories/" + categoryId)
+            mvc.perform(delete("/categories")
                             .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isNoContent());
 
             // then
             verify(categoryService, times(1))
-                    .deleteById(MemberFixture.getFirstMember(), categoryId);
+                    .deleteCategories(MemberFixture.getFirstMember(), request);
         }
 
         @Test
         @DisplayName("카테고리 삭제 실패: 로그인 되지 않은 경우")
         void deleteCategoryFailWithUnauthorized() throws Exception {
             // given
-            long categoryId = 1L;
+            var deleteCategoryRequest = new DeleteCategoryRequest(1L, 1L);
+            var request = new DeleteAllCategoriesRequest(List.of(deleteCategoryRequest));
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialManager).getCredential(any());
 
             // when & then
-            mvc.perform(delete("/categories/" + categoryId)
+            mvc.perform(delete("/categories")
                             .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.detail").value("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .andExpect(jsonPath("$.errorCode").value(1301));

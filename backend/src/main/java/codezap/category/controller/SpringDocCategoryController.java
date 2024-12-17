@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.DeleteAllCategoriesRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
@@ -78,5 +79,5 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우",
                     exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
-    ResponseEntity<Void> deleteCategory(Member member, Long id);
+    ResponseEntity<Void> deleteCategory(Member member, DeleteAllCategoriesRequest request);
 }

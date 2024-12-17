@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.request.DeleteAllCategoriesRequest;
+import codezap.category.dto.request.DeleteCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
@@ -46,9 +48,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateAll(Member member, UpdateAllCategoriesRequest requests) {
-        for (UpdateCategoryRequest request : requests.categories()) {
-            update(member, request);
+    public void updateCategories(Member member, UpdateAllCategoriesRequest request) {
+        for (UpdateCategoryRequest categoryRequest : request.categories()) {
+            update(member, categoryRequest);
         }
     }
 
@@ -66,7 +68,14 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteById(Member member, Long id) {
+    public void deleteCategories(Member member, DeleteAllCategoriesRequest request) {
+        for (DeleteCategoryRequest categoryRequest : request.categories()) {
+            delete(member, categoryRequest);
+        }
+    }
+
+    private void delete(Member member, DeleteCategoryRequest request) {
+        Long id = request.id();
         Category category = categoryRepository.fetchById(id);
         category.validateAuthorization(member);
 
@@ -77,5 +86,6 @@ public class CategoryService {
             throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 삭제할 수 없습니다.");
         }
         categoryRepository.deleteById(id);
+        categoryRepository.shiftOrdinal(member, request.ordinal());
     }
 }
