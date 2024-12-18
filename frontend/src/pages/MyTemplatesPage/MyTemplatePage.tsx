@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
+import { SORTING_OPTIONS } from '@/models/templates';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, Heading } from '@/components';
 import { useAuth } from '@/hooks/authentication';
-import { SORTING_OPTIONS } from '@/models/templates';
 import {
   CategoryListSection,
   CategoryListSectionSkeleton,
@@ -126,6 +126,7 @@ const MyTemplatePage = () => {
                 templateList={templateList}
                 isSearching={inputKeyword !== '' || inputKeyword !== searchedKeyword}
                 isEditMode={isEditMode}
+                isMine={isMine}
                 selectedList={selectedList}
                 setSelectedList={setSelectedList}
               />

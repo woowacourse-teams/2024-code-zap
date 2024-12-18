@@ -1,10 +1,12 @@
 import { http } from 'msw';
 
 import { API_URL } from '@/api';
-import { categories as mockCategoryList } from '@/mocks/fixtures/categoryList.json';
+import  categories from '@/mocks/fixtures/categoryList.json';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
 import { mockResponse } from '@/utils/mockResponse';
+
+const mockCategoryList = [...categories.categories];
 
 export const categoryHandlers = [
   http.get(`${API_URL}${END_POINTS.CATEGORIES}`, () =>
