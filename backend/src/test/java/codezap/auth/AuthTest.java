@@ -33,23 +33,8 @@ class AuthTest extends MvcTest {
 
             @BeforeEach
             void successLogin() throws Exception {
-                signup();
-
-                var loginRequest = new LoginRequest(name, password);
-                loginResult = mvc.perform(post("/login")
-                                .accept(MediaType.APPLICATION_JSON)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(loginRequest)))
-                        .andReturn();
-            }
-
-            private void signup() throws Exception {
-                SignupRequest signupRequest = new SignupRequest(name, password);
-
-                mvc.perform(post("/signup")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(signupRequest)));
+                signup(name, password);
+                loginResult = requestLogin(name, password);
             }
 
             @Test
@@ -71,6 +56,21 @@ class AuthTest extends MvcTest {
 
         }
 
+        private MvcResult requestLogin(String name, String password) throws Exception {
+            return mvc.perform(post("/login")
+                            .accept(MediaType.APPLICATION_JSON)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(new LoginRequest(name, password))))
+                    .andReturn();
+        }
 
+        private void signup(String name, String password) throws Exception {
+            SignupRequest signupRequest = new SignupRequest(name, password);
+
+            mvc.perform(post("/signup")
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(signupRequest)));
+        }
     }
 }
