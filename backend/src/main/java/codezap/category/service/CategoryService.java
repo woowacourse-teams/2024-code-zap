@@ -89,7 +89,7 @@ public class CategoryService {
 
     private void validateOrdinal(Member member) {
         if (categoryRepository.existsDuplicateOrdinalsByMember(member)) {
-            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "템플릿 순서가 중복됩니다.");
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "템플릿 순서가 중복됩니다.");
         }
     }
 
