@@ -36,6 +36,7 @@ import lombok.NoArgsConstructor;
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
+    private static final long DEFAULT_CATEGORY_ORDINAL = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,7 +62,7 @@ public class Category extends BaseTimeEntity {
     }
 
     public static Category createDefaultCategory(Member member) {
-        return new Category(null, member, DEFAULT_CATEGORY_NAME, true, 1);
+        return new Category(null, member, DEFAULT_CATEGORY_NAME, true, DEFAULT_CATEGORY_ORDINAL);
     }
 
     public void update(String name, long ordinal) {
