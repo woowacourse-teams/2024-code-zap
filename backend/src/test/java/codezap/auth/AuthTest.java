@@ -1,7 +1,8 @@
 package codezap.auth;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import codezap.auth.dto.request.LoginRequest;
 import codezap.global.MvcTest;
@@ -23,7 +24,7 @@ class AuthTest extends MvcTest {
     class Login {
 
         @Nested
-        @DisplayName("로그인에 성공하면")
+        @DisplayName("로그인에 성공:")
         class Success {
 
             private final String name = "name";
@@ -38,20 +39,27 @@ class AuthTest extends MvcTest {
             }
 
             @Test
-            @DisplayName("인증 정보에 대한 cookie 값이 들어간다.")
-            void responseCookie() {
-                //when & then
-                Cookie cookie = loginResult.getResponse().getCookie("credential");
-                assertThat(cookie).isNotNull();
+            @DisplayName("정상적인 인증 쿠키 반환")
+            void responseCookie() throws Exception {
+                //when
+                Cookie[] cookies = loginResult.getResponse().getCookies();
+
+                //then
+                mvc.perform(get("/login/check")
+                                .cookie(cookies))
+                        .andExpect(status().isOk());
             }
 
             @Test
-            @DisplayName("인증 정보에 대한 Authorization 헤더 값이 들어간다.")
-            void responseHeader() {
+            @DisplayName("정상적인 인증 헤더 반환")
+            void responseHeader() throws Exception {
                 //when & then
                 MockHttpServletResponse response = loginResult.getResponse();
                 String authorizationHeader = response.getHeader(HttpHeaders.AUTHORIZATION);
-                assertThat(authorizationHeader).contains("Basic ");
+
+                mvc.perform(get("/login/check")
+                                .header(HttpHeaders.AUTHORIZATION, authorizationHeader))
+                        .andExpect(status().isOk());
             }
 
         }
