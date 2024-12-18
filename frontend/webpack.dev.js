@@ -4,7 +4,7 @@ const Dotenv = require('dotenv-webpack');
 
 const common = require('./webpack.common.js');
 
-const apiEnv = process.env.APP_ENV || 'development';
+const apiEnv = process.env.APP_ENV ?? 'development';
 const envFilePath = `.env.${apiEnv}`;
 
 module.exports = () => {
