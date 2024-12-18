@@ -1,31 +1,20 @@
 package codezap.auth.service;
 
-import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.nio.charset.StandardCharsets;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-
-import codezap.auth.dto.LoginAndCredentialDto;
+import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
-import codezap.auth.dto.response.LoginResponse;
-import codezap.auth.provider.CredentialProvider;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.fixture.MemberFixture;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuthServiceTest extends ServiceTest {
-
-    @Autowired
-    private CredentialProvider credentialProvider;
 
     @Autowired
     private AuthService authService;
@@ -40,12 +29,7 @@ public class AuthServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.memberFixture());
             LoginRequest loginRequest = new LoginRequest(member.getName(), MemberFixture.getFixturePlainPassword());
 
-            LoginAndCredentialDto loginAndCredentialDto = authService.login(loginRequest);
-
-            assertAll(
-                    () -> assertEquals(loginAndCredentialDto.loginResponse(), LoginResponse.from(member)),
-                    () -> assertEquals(loginAndCredentialDto.credential(), credentialProvider.createCredential(member))
-            );
+            assertThat(authService.login(loginRequest)).isEqualTo(LoginMember.from(member));
         }
 
         @Test
@@ -71,36 +55,6 @@ public class AuthServiceTest extends ServiceTest {
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
-        }
-    }
-
-    @Nested
-    @DisplayName("로그인 상태 확인 테스트")
-    class CheckLoginTest {
-
-        @Test
-        @DisplayName("성공")
-        void checkLogin() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            String basicAuthCredentials = credentialProvider.createCredential(member);
-
-            assertThatCode(() -> authService.checkLogin(basicAuthCredentials))
-                    .doesNotThrowAnyException();
-        }
-
-        @Test
-        @DisplayName("실패: 잘못된 크레덴셜")
-        void checkLogin_WithInvalidCredential_ThrowsException() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
-            String invalidCredential = HttpHeaders.encodeBasicAuth(
-                    member.getName(),
-                    member.getPassword() + "wrong",
-                    StandardCharsets.UTF_8
-            );
-
-            assertThatThrownBy(() -> authService.checkLogin(invalidCredential))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessageContaining("비밀번호가 일치하지 않습니다.");
         }
     }
 }

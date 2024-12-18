@@ -1,12 +1,12 @@
 package codezap.auth.dto.response;
 
-import codezap.member.domain.Member;
+import codezap.auth.dto.LoginMember;
 
 public record LoginResponse(
-        Long memberId,
+        long memberId,
         String name
 ) {
-    public static LoginResponse from(Member member) {
-        return new LoginResponse(member.getId(), member.getName());
+    public static LoginResponse from(LoginMember loginMember) {
+        return new LoginResponse(loginMember.id(), loginMember.name());
     }
 }
