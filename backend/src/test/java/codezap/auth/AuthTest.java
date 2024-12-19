@@ -89,7 +89,7 @@ class AuthTest extends MvcTest {
                 String password = "password123!";
                 signup(name, password);
 
-                requestLogin(name, password)
+                requestLogin(name, "wrongPassword123!")
                         .andExpect(status().isUnauthorized())
                         .andExpect(jsonPath("$.detail").value("로그인에 실패하였습니다. 비밀번호를 확인해주세요."));
             }
