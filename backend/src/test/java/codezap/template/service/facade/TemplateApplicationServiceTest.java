@@ -110,7 +110,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // Then
             List<Tag> tags = tagRepository.findAllByNames(List.of("Spring"));
             assertThat(tags).hasSize(1);
-            System.out.println(templateRepository.findByMemberId(member2.getId()));
         }
 
         private static CreateTemplateRequest createTemplateRequest(Category category) {
