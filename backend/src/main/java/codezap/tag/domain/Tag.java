@@ -27,7 +27,7 @@ public class Tag extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false,unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_bin")
     private String name;
 
     public Tag(String name) {
