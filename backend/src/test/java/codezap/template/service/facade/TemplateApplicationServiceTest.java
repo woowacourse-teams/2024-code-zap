@@ -109,7 +109,11 @@ class TemplateApplicationServiceTest extends ServiceTest {
 
             // Then
             List<Tag> tags = tagRepository.findAllByNames(List.of("Spring"));
-            assertThat(tags).hasSize(1);
+            assertAll(
+                    () -> assertThat(tags).hasSize(1),
+                    () -> assertThat(templateRepository.findByMemberId(member.getId())).isNotEmpty(),
+                    () -> assertThat(templateRepository.findByMemberId(member2.getId())).isNotEmpty()
+            );
         }
 
         private static CreateTemplateRequest createTemplateRequest(Category category) {
@@ -118,7 +122,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var sourceCodeRequest = new CreateSourceCodeRequest("filename1", "content1", 1);
             var sourceCodes = List.of(sourceCodeRequest);
             int thumbnailOrdinal = 1;
-            List<String> tags = List.of();
+            List<String> tags = List.of("Spring");
             return new CreateTemplateRequest(
                     title,
                     description,
