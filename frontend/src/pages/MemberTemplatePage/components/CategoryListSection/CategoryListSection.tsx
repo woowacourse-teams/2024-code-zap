@@ -1,4 +1,4 @@
-import { CategoryFilterMenu } from '@/pages/MyTemplatesPage/components';
+import { CategoryFilterMenu } from '@/pages/MemberTemplatePage/components';
 import { useCategoryListQuery } from '@/queries/categories';
 
 import * as S from './CategoryListSection.style';

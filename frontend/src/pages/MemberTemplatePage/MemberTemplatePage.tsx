@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { SORTING_OPTIONS } from '@/models/templates';
 import { SearchIcon } from '@/assets/images';
 import { Flex, Input, PagingButtons, Dropdown, Heading } from '@/components';
 import { useAuth } from '@/hooks/authentication';
+import { SORTING_OPTIONS } from '@/models/templates';
 import {
   CategoryListSection,
   CategoryListSectionSkeleton,
@@ -14,18 +14,18 @@ import {
   TemplateListSection,
   TemplateListSectionLoading,
   TopBanner,
-} from '@/pages/MyTemplatesPage/components';
-import { useFilteredTemplateList, useSelectAndDeleteTemplateList } from '@/pages/MyTemplatesPage/hooks';
+} from '@/pages/MemberTemplatePage/components';
+import { useFilteredTemplateList, useSelectAndDeleteTemplateList } from '@/pages/MemberTemplatePage/hooks';
 import { useMemberNameQuery } from '@/queries/members';
 import { useTrackPageViewed } from '@/service/amplitude';
 
-import * as S from './MyTemplatePage.style';
+import * as S from './MemberTemplatePage.style';
 
-const MyTemplatePage = () => {
-  useTrackPageViewed({ eventName: '[Viewed] 내 템플릿 페이지' });
-
+const MemberTemplatePage = () => {
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
+
+  useTrackPageViewed({ eventName: `[Viewed] 맴버 (ID:${memberId}) 템플릿 페이지` });
 
   const {
     memberInfo: { memberId: currentMemberId },
@@ -66,7 +66,7 @@ const MyTemplatePage = () => {
   } = useSelectAndDeleteTemplateList({ templateList });
 
   return (
-    <S.MyTemplatePageContainer>
+    <S.MemberTemplatePageContainer>
       <TopBanner name={name ?? ''} />
       <S.MainContainer>
         <Suspense fallback={<CategoryListSectionSkeleton />}>
@@ -140,8 +140,8 @@ const MyTemplatePage = () => {
           )}
         </Flex>
       </S.MainContainer>
-    </S.MyTemplatePageContainer>
+    </S.MemberTemplatePageContainer>
   );
 };
 
-export default MyTemplatePage;
+export default MemberTemplatePage;

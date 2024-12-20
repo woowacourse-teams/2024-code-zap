@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { Input } from '@/components';
 import { theme } from '@/style/theme';
 
-export const MyTemplatePageContainer = styled.div`
+export const MemberTemplatePageContainer = styled.div`
   display: flex;
   flex-direction: column;
 `;

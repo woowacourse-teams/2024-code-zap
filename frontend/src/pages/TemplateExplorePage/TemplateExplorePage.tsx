@@ -16,7 +16,7 @@ import {
 } from '@/components';
 import { useDropdown, useInput, useQueryParams, useWindowWidth } from '@/hooks';
 import { SORTING_OPTIONS } from '@/models/templates';
-import { TemplateListSectionLoading } from '@/pages/MyTemplatesPage/components';
+import { TemplateListSectionLoading } from '@/pages/MemberTemplatePage/components';
 import { HotTopicCarousel } from '@/pages/TemplateExplorePage/components';
 import { useHotTopic } from '@/pages/TemplateExplorePage/hooks';
 import { useTemplateExploreQuery } from '@/queries/templates';

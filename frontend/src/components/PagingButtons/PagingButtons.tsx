@@ -1,5 +1,5 @@
 import { Text } from '@/components';
-import { trackMyTemplatePaging } from '@/service/amplitude/track';
+import { trackMemberTemplatePaging } from '@/service/amplitude/track';
 import { theme } from '@/style/theme';
 
 import * as S from './PagingButtons.style';
@@ -19,7 +19,7 @@ const PagingButtons = ({ currentPage, paginationSizes, onPageChange }: Props) =>
   };
 
   const handlePagingClick = (page: number, label: string) => {
-    trackMyTemplatePaging({ page, label });
+    trackMemberTemplatePaging({ page, label });
     onPageChange(page);
   };
 
