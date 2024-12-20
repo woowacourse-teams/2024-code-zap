@@ -9,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import jakarta.persistence.EntityManager;
-
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,7 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
+import codezap.tag.domain.Tag;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -83,13 +86,44 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
+        @Test
+        @Disabled("@Transactional 과 함께 사용 시 처리 불가능")
+        @DisplayName("동시성 테스트 - 태그 중복이 발생하지 않는지 확인")
+        void createTagsConcurrencyTest() throws InterruptedException {
+            // Given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            CreateTemplateRequest createTemplateRequest = createTemplateRequest(category);
+
+            var member2 = memberRepository.save(MemberFixture.getSecondMember());
+            var category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
+            CreateTemplateRequest createTemplateRequest2 = createTemplateRequest(category2);
+
+            // When
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+            executorService.execute(() -> sut.create(member, createTemplateRequest));
+            executorService.execute(() -> sut.create(member2, createTemplateRequest2));
+
+            executorService.shutdown();
+            executorService.awaitTermination(30, TimeUnit.SECONDS);
+
+            // Then
+            List<Tag> tags = tagRepository.findAllByNames(List.of("Spring"));
+            assertAll(
+                    () -> assertThat(tags).hasSize(1),
+                    () -> assertThat(templateRepository.findByMemberId(member.getId())).isNotEmpty(),
+                    () -> assertThat(templateRepository.findByMemberId(member2.getId())).isNotEmpty()
+            );
+        }
+
         private static CreateTemplateRequest createTemplateRequest(Category category) {
             var title = "title1";
             var description = "description1";
             var sourceCodeRequest = new CreateSourceCodeRequest("filename1", "content1", 1);
             var sourceCodes = List.of(sourceCodeRequest);
             int thumbnailOrdinal = 1;
-            List<String> tags = List.of();
+            List<String> tags = List.of("Spring");
             return new CreateTemplateRequest(
                     title,
                     description,
