@@ -1,4 +1,4 @@
-export { default as Button } from './Button/Button';
+export { default as Button } from '@design/Button/Button';
 export { default as Dropdown } from './Dropdown/Dropdown';
 export { default as Flex } from './Flex/Flex';
 export { default as Header } from './Header/Header';
