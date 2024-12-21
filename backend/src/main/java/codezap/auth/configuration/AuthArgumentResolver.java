@@ -1,21 +1,24 @@
 package codezap.auth.configuration;
 
-import codezap.auth.dto.Credential;
-import codezap.auth.manager.CredentialManager;
-import codezap.auth.provider.CredentialProvider;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
-import codezap.member.domain.Member;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
-import lombok.RequiredArgsConstructor;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+
+import codezap.auth.dto.Credential;
+import codezap.auth.manager.CredentialManager;
+import codezap.auth.provider.CredentialProvider;
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
+import codezap.member.domain.Member;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {

@@ -1,5 +1,8 @@
 package codezap.auth.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.encryption.PasswordEncryptor;
@@ -8,8 +11,6 @@ import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor

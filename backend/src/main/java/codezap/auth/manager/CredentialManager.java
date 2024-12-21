@@ -1,8 +1,9 @@
 package codezap.auth.manager;
 
-import codezap.auth.dto.Credential;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import codezap.auth.dto.Credential;
 
 /**
  * Credential 정보를 Http 응답에 설정하기 위한 클래스입니다.
