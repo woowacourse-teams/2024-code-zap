@@ -3,7 +3,7 @@ import { Configuration } from 'webpack';
 import path from 'path';
 
 const config: StorybookConfig = {
-  stories: ['./**/*.mdx', './**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: ['../**/*.mdx', '../**/*.stories.@(js|jsx|mjs|ts|tsx)'],
   addons: [
     '@storybook/addon-webpack5-compiler-swc',
     '@storybook/addon-onboarding',

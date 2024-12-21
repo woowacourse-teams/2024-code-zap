@@ -22,6 +22,6 @@
     "@storybook/react-webpack5": "^8.2.1",
     "@storybook/test": "^8.2.1",
     "storybook": "^8.2.1",
-    "swc-loader": "^0.2.6"
+    "@svgr/webpack": "^8.1.0"
   }
 }
