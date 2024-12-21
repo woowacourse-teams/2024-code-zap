@@ -87,6 +87,7 @@ const ContactUs = () => {
               <Textarea.TextField
                 minRows={5}
                 maxRows={10}
+                maxLength={MAX_CONTENTS_LENGTH}
                 value={message}
                 onChange={handleMessage}
                 disabled={isSending}
