@@ -53,7 +53,7 @@ interface PagingButtonData {
   label: string;
 }
 
-export const trackMyTemplatePaging = ({ page, label }: PagingButtonData) => {
+export const trackMemberTemplatePaging = ({ page, label }: PagingButtonData) => {
   amplitudeService.customTrack('[Click] 페이징 버튼', {
     page,
     label,

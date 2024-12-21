@@ -4,7 +4,7 @@ import { Flex, Heading, LoadingBall, NoResults, PagingButtons, TemplateCard } fr
 import { useQueryParams, useWindowWidth } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { ForbiddenPage } from '@/pages';
-import { TemplateListSectionLoading } from '@/pages/MyTemplatesPage/components';
+import { TemplateListSectionLoading } from '@/pages/MemberTemplatePage/components';
 import { useLikedTemplateListQuery } from '@/queries/templates/useLikedTemplateListQuery';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { useTrackPageViewed } from '@/service/amplitude';

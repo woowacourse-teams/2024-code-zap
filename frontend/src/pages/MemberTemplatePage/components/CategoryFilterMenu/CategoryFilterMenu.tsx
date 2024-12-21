@@ -4,7 +4,7 @@ import { BooksIcon, Chevron2Icon, SettingIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { useToggle, useWindowWidth } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
-import { CategoryEditModal } from '@/pages/MyTemplatesPage/components';
+import { CategoryEditModal } from '@/pages/MemberTemplatePage/components';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
 import type { Category } from '@/types';

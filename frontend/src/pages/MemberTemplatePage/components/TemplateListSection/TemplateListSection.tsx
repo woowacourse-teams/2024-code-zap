@@ -1,6 +1,6 @@
 import { NoResults } from '@/components';
 import { useWindowWidth } from '@/hooks';
-import { NewTemplateButton, TemplateGrid } from '@/pages/MyTemplatesPage/components';
+import { NewTemplateButton, TemplateGrid } from '@/pages/MemberTemplatePage/components';
 import { TemplateListItem } from '@/types';
 
 interface Props {
@@ -14,11 +14,18 @@ interface Props {
 
 const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
-const TemplateListSection = ({ templateList, isSearching, isEditMode, isMine, selectedList, setSelectedList }: Props) => {
+const TemplateListSection = ({
+  templateList,
+  isSearching,
+  isEditMode,
+  isMine,
+  selectedList,
+  setSelectedList,
+}: Props) => {
   const windowWidth = useWindowWidth();
 
   if (templateList.length === 0) {
-    if (!isMine || isSearching) return <NoResults>검색 결과가 없습니다.</NoResults>
+    if (!isMine || isSearching) return <NoResults>검색 결과가 없습니다.</NoResults>;
     return <NewTemplateButton />;
   }
 

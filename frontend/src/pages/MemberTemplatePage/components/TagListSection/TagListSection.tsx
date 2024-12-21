@@ -1,4 +1,4 @@
-import { TagFilterMenu } from '@/pages/MyTemplatesPage/components';
+import { TagFilterMenu } from '@/pages/MemberTemplatePage/components';
 import { useTagListQuery } from '@/queries/tags';
 
 interface Props {
