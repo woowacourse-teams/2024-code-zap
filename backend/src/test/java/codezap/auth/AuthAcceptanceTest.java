@@ -23,7 +23,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-class AuthTest extends MvcTest {
+class AuthAcceptanceTest extends MvcTest {
 
     @Nested
     @DisplayName("로그인 테스트")
