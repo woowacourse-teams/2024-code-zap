@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.auth.dto.Credential;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
@@ -21,6 +22,7 @@ import codezap.auth.provider.CredentialProvider;
 import codezap.auth.service.AuthService;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import codezap.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -45,14 +47,13 @@ public class AuthController implements SpringDocAuthController {
     }
 
     @GetMapping("/login/check")
-    public ResponseEntity<Void> checkLogin(HttpServletRequest httpServletRequest) {
-        //ArgumentResolver 와 동작이 일치
-        CredentialManager credentialManager = credentialManagers.stream()
-                .filter(eachCredentialManager -> eachCredentialManager.hasCredential(httpServletRequest))
-                .findFirst()
-                .orElseThrow(() -> new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요."));
-        Credential credential = credentialManager.getCredential(httpServletRequest);
-        credentialProvider.extractMember(credential);
+    public ResponseEntity<Void> checkLogin(
+            @AuthenticationPrinciple Member member,
+            HttpServletRequest httpServletRequest
+    ) {
+        if (member == null) {
+            throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요.");
+        }
         return ResponseEntity.ok().build();
     }
 
