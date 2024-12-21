@@ -47,7 +47,7 @@ public class AuthController implements SpringDocAuthController {
         CredentialManager credentialManager = credentialManagers.stream()
                 .filter(eachCredentialManager -> eachCredentialManager.hasCredential(httpServletRequest))
                 .findFirst()
-                .orElseThrow(() -> new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인 해 주세요."));
+                .orElseThrow(() -> new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요."));
         Credential credential = credentialManager.getCredential(httpServletRequest);
         credentialProvider.extractMember(credential);
         return ResponseEntity.ok().build();

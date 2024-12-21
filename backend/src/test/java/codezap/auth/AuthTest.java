@@ -105,7 +105,7 @@ class AuthTest extends MvcTest {
         void noCredential() throws Exception {
             mvc.perform(get("/login/check"))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("인증 정보가 없습니다. 다시 로그인 해 주세요."));
+                    .andExpect(jsonPath("$.detail").value("인증 정보가 없습니다. 다시 로그인해 주세요."));
         }
     }
 

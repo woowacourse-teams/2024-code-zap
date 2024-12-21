@@ -135,7 +135,7 @@ class AuthArgumentResolverTest {
                 //when & then
                 assertThatThrownBy(() -> resolveArgument(requiredMethod, nativeWebRequest))
                         .isInstanceOf(CodeZapException.class)
-                        .hasMessage("인증 정보가 없습니다. 다시 로그인 해 주세요.");
+                        .hasMessage("인증 정보가 없습니다. 다시 로그인해 주세요.");
             }
 
             @Test
