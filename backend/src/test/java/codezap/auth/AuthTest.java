@@ -30,7 +30,7 @@ class AuthTest extends MvcTest {
     class Login {
 
         @Nested
-        @DisplayName("로그인에 성공:")
+        @DisplayName("성공: 올바른 아이디와 비밀번호를 사용하여 로그인에 성공")
         class Success {
 
             private final String name = "name";
