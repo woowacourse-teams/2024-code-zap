@@ -24,7 +24,8 @@
 
     "baseUrl": ".", // 루트 디렉토리
     "paths": {
-      "@/*": ["frontend/src/*"] // frontend/src를 절대경로로 참조
+      "@/*": ["frontend/src/*"],
+      "@design/*": ["design-system/*"]
     }
   }
 }
