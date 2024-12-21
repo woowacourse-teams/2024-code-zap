@@ -17,13 +17,21 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@emotion/css": "^11.13.5",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "react": "^18.3.1"
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.24.1"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "typescript": "^5.7.2"
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.3",
+    "webpack": "^5.92.1",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   }
 }
