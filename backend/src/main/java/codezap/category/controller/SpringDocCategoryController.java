@@ -50,13 +50,9 @@ public interface SpringDocCategoryController {
     @Operation(summary = "카테고리 수정", description = "해당하는 식별자의 카테고리를 수정합니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
+            @ErrorCase(description = "기본 카테고리를 수정한 경우", exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다."),
             @ErrorCase(description = "카테고리 이름이 15자를 초과한 경우", exampleMessage = "카테고리 이름은 최대 15자까지 입력 가능합니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
             @ErrorCase(description = "카테고리의 순서가 잘못된 경우", exampleMessage = "템플릿 순서가 중복됩니다.")
-    })
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
-            @ErrorCase(description = "기본 카테고리를 수정한 경우", exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다.")
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
