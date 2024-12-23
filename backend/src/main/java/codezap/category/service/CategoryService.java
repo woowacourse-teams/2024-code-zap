@@ -18,6 +18,8 @@ import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
+import codezap.template.domain.Template;
+import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -66,6 +68,7 @@ public class CategoryService {
         for (Long deleteCategoryId : request.deleteCategoryIds()) {
             delete(member, deleteCategoryId);
         }
+        validateCategoriesCount(member, request);
     }
 
     private void createCategories(Member member, UpdateAllCategoriesRequest request) {
@@ -151,6 +154,13 @@ public class CategoryService {
 
         if (allIds.size() != new HashSet<>(allIds).size()) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "요청에 중복된 id가 존재합니다.");
+        }
+    }
+
+    private void validateCategoriesCount(Member member, UpdateAllCategoriesRequest request) {
+        if (request.updateCategories().size() + request.createCategories().size()
+                != categoryRepository.countByMember(member)) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리의 개수가 일치하지 않습니다.");
         }
     }
 }

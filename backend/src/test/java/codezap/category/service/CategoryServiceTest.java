@@ -416,5 +416,22 @@ class CategoryServiceTest extends ServiceTest {
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("요청에 중복된 id가 존재합니다.");
         }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 잘못된 개수의 카테고리")
+        void deleteByIdFailWrongCount() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category1 = categoryRepository.save(new Category("카테고리 1", member, 1L));
+            Category category2 = categoryRepository.save(new Category("카테고리 2", member, 2L));
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category1.getId(), category1.getName(), 1L);
+
+            assertThatThrownBy(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                            List.of(),
+                            List.of(request),
+                            List.of())))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("카테고리의 개수가 일치하지 않습니다.");
+        }
     }
 }
