@@ -1,7 +1,6 @@
 package codezap.category.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -9,7 +8,7 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,9 +31,6 @@ class CategoryServiceTest extends ServiceTest {
 
     @Autowired
     private CategoryService sut;
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Nested
     @DisplayName("카테고리 생성 테스트")
@@ -196,13 +192,20 @@ class CategoryServiceTest extends ServiceTest {
     @DisplayName("카테고리 편집 테스트")
     class UpdateCategoryTest {
 
+        Member member;
+        Category defaultCategory;
+
+        @BeforeEach
+        void saveDefaultCategory() {
+            member = memberRepository.save(MemberFixture.getFirstMember());
+            defaultCategory = categoryRepository.save(Category.createDefaultCategory(member));
+        }
+
         @Test
         @DisplayName("카테고리 편집 성공")
-        @Disabled
         void updateCategoriesSuccess() {
             String createCategoryName = "createName";
             String updateCategoryName = "updateName1";
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category1 = categoryRepository.save(new Category("category1", member, 1L));
             Category category2 = categoryRepository.save(new Category("category2", member, 2L));
 
@@ -218,9 +221,9 @@ class CategoryServiceTest extends ServiceTest {
                     () -> assertThat(categoryRepository.fetchById(category1.getId()).getName()).isEqualTo(
                             updateCategoryName),
                     () -> assertThat(categoryRepository.fetchById(category1.getId()).getOrdinal()).isEqualTo(2L),
-                    () -> assertThat(categoryRepository.fetchById(3L).getName()).isEqualTo(
+                    () -> assertThat(categoryRepository.fetchById(4L).getName()).isEqualTo(
                             createCategoryName),
-                    () -> assertThat(categoryRepository.fetchById(3L).getOrdinal()).isEqualTo(1L)
+                    () -> assertThat(categoryRepository.fetchById(4L).getOrdinal()).isEqualTo(1L)
             );
 
         }
@@ -228,7 +231,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 수정 권한 없음")
         void updateCategoriesFailWithUnauthorizedUpdate() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("category1", member, 1L));
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
             UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), "updateName",
@@ -246,15 +248,12 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 기본 카테고리 수정")
         void updateCategoriesFailWithDefaultCategory() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(Category.createDefaultCategory(member));
-            Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
+            categoryRepository.save(new Category("category1", member, 1L));
 
-            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), "updateName",
-                    category.getOrdinal());
+            UpdateCategoryRequest request = new UpdateCategoryRequest(defaultCategory.getId(), "updateName", 1L);
 
             assertThatThrownBy(
-                    () -> sut.updateCategories(otherMember, new UpdateAllCategoriesRequest(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
                             List.of(),
                             List.of(request),
                             List.of())))
@@ -267,7 +266,6 @@ class CategoryServiceTest extends ServiceTest {
         @DisplayName("카테고리 편집 실패: 중복된 카테고리 이름")
         void duplicatedCategoryName() {
             String duplicatedName = "duplicatedName";
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category(duplicatedName, member, 1L));
 
             CreateCategoryRequest createRequest = new CreateCategoryRequest(duplicatedName, 2L);
@@ -286,7 +284,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 존재하지 않는 카테고리 수정")
         void notSavedCategoryId() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             long notSavedId = 100L;
             UpdateCategoryRequest request = new UpdateCategoryRequest(notSavedId, "categoryName", 1L);
 
@@ -302,7 +299,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 중복된 순서")
         void duplicatedCategoryOrdinal() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category1 = categoryRepository.save(new Category("category1", member, 1L));
             Category category2 = categoryRepository.save(new Category("category2", member, 2L));
 
@@ -322,7 +318,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 연속되지 않는 순서")
         void nonSequentialCategoryOrdinal() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category1 = categoryRepository.save(new Category("category1", member, 1L));
             Category category2 = categoryRepository.save(new Category("category2", member, 2L));
 
@@ -342,8 +337,7 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 삭제 권한 없음")
         void updateCategoriesFailWithUnauthorizedDelete() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(new Category("category1", member, 1L));
+            categoryRepository.save(new Category("category1", member, 1L));
             Member otherMember = memberRepository.save(MemberFixture.createFixture("otherMember"));
 
             assertThatThrownBy(
@@ -358,7 +352,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 존재하지 않는 카테고리 삭제")
         void deleteCategoryFailWithNotExistCategory() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             long notSavedId = 100L;
 
             assertThatThrownBy(
@@ -373,7 +366,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 템플릿이 존재하는 카테고리 삭제")
         void deleteByIdFailExistsTemplate() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("카테고리 1", member, 1L));
             templateRepository.save(new Template(member, "title", "desciption", category));
 
@@ -389,8 +381,7 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 기본 카테고리 삭제")
         void deleteByIdFailDefaultCategory() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category defaultCategory = categoryRepository.save(Category.createDefaultCategory(member));
+            categoryRepository.save(new Category("카테고리 1", member, 1L));
 
             assertThatThrownBy(
                     () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
@@ -404,7 +395,6 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 중복된 id 수정 및 삭제")
         void deleteByIdFailDuplicatedId() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("카테고리 1", member, 1L));
             UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), category.getName(), 1L);
 
@@ -420,9 +410,8 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 잘못된 개수의 카테고리")
         void deleteByIdFailWrongCount() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category1 = categoryRepository.save(new Category("카테고리 1", member, 1L));
-            Category category2 = categoryRepository.save(new Category("카테고리 2", member, 2L));
+            categoryRepository.save(new Category("카테고리 2", member, 2L));
             UpdateCategoryRequest request = new UpdateCategoryRequest(category1.getId(), category1.getName(), 1L);
 
             assertThatThrownBy(
