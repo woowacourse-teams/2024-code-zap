@@ -26,7 +26,7 @@ const ContactUs = () => {
 
   const { successAlert, failAlert } = useToast();
 
-  const MIN_CONTENTS_LENGTH = 20;
+  const MIN_CONTENTS_LENGTH = 10;
   const MAX_CONTENTS_LENGTH = 10000;
   const isValidContents = message.trim().length >= MIN_CONTENTS_LENGTH && message.length <= MAX_CONTENTS_LENGTH;
 
@@ -83,7 +83,7 @@ const ContactUs = () => {
               이미지 등을 함께 보내실 경우 codezap2024@gmail.com으로 직접 이메일을 보내실 수 있습니다.
             </Text.Medium>
             <Textarea id='voc' variant='outlined'>
-              <Textarea.Label htmlFor={'voc'}>무엇을 도와드릴까요?</Textarea.Label>
+              <Textarea.Label htmlFor={'voc'}>무엇을 도와드릴까요? (10글자 이상 작성해주세요)</Textarea.Label>
               <Textarea.TextField
                 minRows={5}
                 maxRows={10}
