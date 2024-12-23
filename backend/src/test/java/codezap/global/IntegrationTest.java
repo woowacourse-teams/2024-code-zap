@@ -12,7 +12,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @SpringBootTest
 @EnableConfigurationProperties(CorsProperties.class)
-public abstract class MvcTest {
+public class IntegrationTest {
 
     protected MockMvc mvc;
 

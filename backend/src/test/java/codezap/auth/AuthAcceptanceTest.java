@@ -8,7 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import codezap.auth.dto.request.LoginRequest;
-import codezap.global.MvcTest;
+import codezap.global.IntegrationTest;
 import codezap.member.dto.request.SignupRequest;
 import jakarta.servlet.http.Cookie;
 import java.util.regex.Pattern;
@@ -23,7 +23,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
-class AuthAcceptanceTest extends MvcTest {
+class AuthAcceptanceTest extends IntegrationTest {
 
     @Nested
     @DisplayName("로그인 테스트")
