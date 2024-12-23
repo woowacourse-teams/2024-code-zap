@@ -3,6 +3,7 @@ package codezap.global;
 import codezap.global.cors.CorsProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,13 +15,13 @@ import org.springframework.web.context.WebApplicationContext;
 public abstract class MvcTest {
 
     protected MockMvc mvc;
-    protected ObjectMapper objectMapper;
 
+    @Autowired
+    protected ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext) {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
-        objectMapper = new ObjectMapper();
     }
 }
