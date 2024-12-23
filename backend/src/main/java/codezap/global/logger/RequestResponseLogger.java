@@ -1,9 +1,11 @@
 package codezap.global.logger;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -65,20 +67,27 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     }
 
     private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
+        Set<String> requiredHeaders = Set.of("origin", "host", "content-type");
+
         Map<String, String> headersMap = new HashMap<>();
         Enumeration<String> headerNames = requestWrapper.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headersMap.put(headerName, requestWrapper.getHeader(headerName));
-        }
+        Collections.list(headerNames).stream()
+                .filter(headerName -> requiredHeaders.contains(headerName.toLowerCase()))
+                .forEach(headerName -> headersMap.put(headerName, requestWrapper.getHeader(headerName)));
+
         return convertMapToJson(headersMap);
     }
 
     private String getHeaderAsJson(ContentCachingResponseWrapper responseWrapper) {
+        Set<String> requiredHeaders = Set.of("docker-hostname");
+
         Map<String, String> headersMap = new HashMap<>();
-        for (String headerName : responseWrapper.getHeaderNames()) {
-            headersMap.put(headerName, responseWrapper.getHeader(headerName));
-        }
+        responseWrapper.getHeaderNames().stream()
+                .filter(headerName -> requiredHeaders.contains(headerName.toLowerCase()))
+                .forEach(headerName -> headersMap.put(headerName, responseWrapper.getHeader(headerName)));
+
+        headersMap.put("docker-hostname", System.getenv("HOSTNAME"));
+
         return convertMapToJson(headersMap);
     }
 
