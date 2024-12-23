@@ -1,12 +1,8 @@
 package codezap.category.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -24,8 +20,6 @@ import org.springframework.http.MediaType;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
-import codezap.category.dto.request.DeleteAllCategoriesRequest;
-import codezap.category.dto.request.DeleteCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
@@ -50,7 +44,7 @@ class CategoryControllerTest extends MockMvcTest {
         void createCategorySuccess() throws Exception {
             // given
             long categoryId = 1L;
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1L);
 
             when(categoryService.create(
                     MemberFixture.getFirstMember(), createCategoryRequest))
@@ -68,7 +62,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 생성 실패: 로그인을 하지 않은 회원")
         void createCategoryFailWithNotLogin() throws Exception {
             // given
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category");
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1L);
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialManager).getCredential(any());
@@ -87,7 +81,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
         void createCategoryFailWithLongName() throws Exception {
             // given
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1));
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1), 1L);
 
             // when & then
             mvc.perform(post("/categories")
@@ -122,15 +116,18 @@ class CategoryControllerTest extends MockMvcTest {
     }
 
     @Nested
-    @DisplayName("카테고리 수정 테스트")
+    @DisplayName("카테고리 편집 테스트")
     class UpdateCategoryTest {
 
         @Test
-        @DisplayName("카테고리 수정 성공")
+        @DisplayName("카테고리 편집 성공")
         void updateCategorySuccess() throws Exception {
             // given
             var updateCategoryRequest = new UpdateCategoryRequest(1L, "updateCategory", 1L);
-            var request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(),
+                    List.of(updateCategoryRequest),
+                    List.of());
 
             // when & then
             mvc.perform(put("/categories")
@@ -141,11 +138,14 @@ class CategoryControllerTest extends MockMvcTest {
         }
 
         @Test
-        @DisplayName("카테고리 수정 실패: 로그인 되지 않은 경우")
+        @DisplayName("카테고리 편집 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
             var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1L);
-            var request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(),
+                    List.of(updateCategoryRequest),
+                    List.of());
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialManager).getCredential(any());
@@ -159,11 +159,14 @@ class CategoryControllerTest extends MockMvcTest {
         }
 
         @Test
-        @DisplayName("카테고리 수정 실패: 카테고리 이름 길이 초과")
+        @DisplayName("카테고리 편집 실패: 카테고리 이름 길이 초과")
         void updateCategoryFailWithLongName() throws Exception {
             // given
             var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH + 1), 1L);
-            var request = new UpdateAllCategoriesRequest(List.of(updateCategoryRequest));
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(),
+                    List.of(updateCategoryRequest),
+                    List.of());
 
             // when & then
             mvc.perform(put("/categories")
@@ -172,49 +175,6 @@ class CategoryControllerTest extends MockMvcTest {
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("카테고리 이름은 최대 15자까지 입력 가능합니다."))
                     .andExpect(jsonPath("$.errorCode").value(1101));
-        }
-    }
-
-    @Nested
-    @DisplayName("카테고리 삭제 테스트")
-    class DeleteCategoryTest {
-
-        @Test
-        @DisplayName("카테고리 삭제 성공")
-        void deleteCategorySuccess() throws Exception {
-            // given
-            var deleteCategoryRequest = new DeleteCategoryRequest(1L, 1L);
-            var request = new DeleteAllCategoriesRequest(List.of(deleteCategoryRequest));
-
-            // when
-            mvc.perform(delete("/categories")
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isNoContent());
-
-            // then
-            verify(categoryService, times(1))
-                    .deleteCategories(MemberFixture.getFirstMember(), request);
-        }
-
-        @Test
-        @DisplayName("카테고리 삭제 실패: 로그인 되지 않은 경우")
-        void deleteCategoryFailWithUnauthorized() throws Exception {
-            // given
-            var deleteCategoryRequest = new DeleteCategoryRequest(1L, 1L);
-            var request = new DeleteAllCategoriesRequest(List.of(deleteCategoryRequest));
-            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getCredential(any());
-
-            // when & then
-            mvc.perform(delete("/categories")
-                            .accept(MediaType.APPLICATION_JSON)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(request)))
-                    .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .andExpect(jsonPath("$.errorCode").value(1301));
         }
     }
 }

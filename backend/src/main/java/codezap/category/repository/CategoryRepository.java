@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 public class CategoryRepository {
 
     private final CategoryJpaRepository categoryJpaRepository;
-    private final CategoryQueryDslRepository categoryQueryDslRepository;
 
     public Category save(Category category) {
         return categoryJpaRepository.save(category);
@@ -46,11 +45,7 @@ public class CategoryRepository {
         return categoryJpaRepository.countByMember(member);
     }
 
-    public void shiftOrdinal(Member member, Long ordinal) {
-        categoryQueryDslRepository.shiftOrdinal(member, ordinal);
-    }
-
-    public boolean existsDuplicateOrdinalsByMember(Member member) {
-        return categoryQueryDslRepository.existsDuplicateOrdinalsByMember(member);
+    public List<Category> saveAll(Iterable<Category> entities) {
+        return categoryJpaRepository.saveAll(entities);
     }
 }

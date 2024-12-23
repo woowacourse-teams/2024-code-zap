@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import codezap.category.dto.request.CreateCategoryRequest;
-import codezap.category.dto.request.DeleteAllCategoriesRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
@@ -69,24 +68,4 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
     })
     ResponseEntity<Void> updateCategory(Member member, UpdateAllCategoriesRequest request);
-
-    @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
-    @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
-            @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우",
-                    exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
-            @ErrorCase(description = "기본 카테고리를 수정한 경우", exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다.")
-    })
-    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories", errorCases = {
-            @ErrorCase(description = "존재하지 않는 카테고리인 경우",
-                    exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories", errorCases = {
-            @ErrorCase(description = "카테고리를 삭제할 권한이 없는 경우",
-                    exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
-    })
-    ResponseEntity<Void> deleteCategory(Member member, DeleteAllCategoriesRequest request);
 }

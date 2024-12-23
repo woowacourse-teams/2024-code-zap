@@ -4,7 +4,6 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.category.dto.request.CreateCategoryRequest;
-import codezap.category.dto.request.DeleteAllCategoriesRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
@@ -52,14 +50,5 @@ public class CategoryController implements SpringDocCategoryController {
     ) {
         categoryService.updateCategories(member, request);
         return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping
-    public ResponseEntity<Void> deleteCategory(
-            @AuthenticationPrinciple Member member,
-            @Validated(ValidationSequence.class) @RequestBody DeleteAllCategoriesRequest request
-    ) {
-        categoryService.deleteCategories(member, request);
-        return ResponseEntity.noContent().build();
     }
 }
