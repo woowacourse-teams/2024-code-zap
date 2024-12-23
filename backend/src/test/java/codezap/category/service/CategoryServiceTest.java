@@ -356,7 +356,7 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("카테고리 삭제 실패: 존재하지 않는 카테고리 삭제")
+        @DisplayName("카테고리 편집 실패: 존재하지 않는 카테고리 삭제")
         void deleteCategoryFailWithNotExistCategory() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             long notSavedId = 100L;
@@ -371,7 +371,7 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("카테고리 삭제 실패: 템플릿이 존재하는 카테고리 삭제")
+        @DisplayName("카테고리 편집 실패: 템플릿이 존재하는 카테고리 삭제")
         void deleteByIdFailExistsTemplate() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(new Category("카테고리 1", member, 1L));
@@ -387,7 +387,7 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("카테고리 삭제 실패: 기본 카테고리 삭제")
+        @DisplayName("카테고리 편집 실패: 기본 카테고리 삭제")
         void deleteByIdFailDefaultCategory() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category defaultCategory = categoryRepository.save(Category.createDefaultCategory(member));
@@ -399,6 +399,22 @@ class CategoryServiceTest extends ServiceTest {
                             List.of(defaultCategory.getId()))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("기본 카테고리는 수정 및 삭제할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 중복된 id 수정 및 삭제")
+        void deleteByIdFailDuplicatedId() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(new Category("카테고리 1", member, 1L));
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), category.getName(), 1L);
+
+            assertThatThrownBy(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                            List.of(),
+                            List.of(request),
+                            List.of(category.getId()))))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("요청에 중복된 id가 존재합니다.");
         }
     }
 }

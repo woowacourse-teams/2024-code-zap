@@ -57,6 +57,7 @@ public class CategoryService {
     public void updateCategories(Member member, UpdateAllCategoriesRequest request) {
         validateDuplicateNameRequest(request);
         validateOrdinals(request);
+        validateIds(request);
 
         createCategories(member, request);
         for (UpdateCategoryRequest updateCategory : request.updateCategories()) {
@@ -76,7 +77,6 @@ public class CategoryService {
     }
 
     private void update(Member member, UpdateCategoryRequest request) {
-        validateDuplicatedCategory(request.name(), member);
         Category category = categoryRepository.fetchById(request.id());
         validateDefaultCategory(category);
         category.validateAuthorization(member);
@@ -140,6 +140,17 @@ public class CategoryService {
 
         if (!isSequential) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리 순서가 연속적이지 않습니다.");
+        }
+    }
+
+    private void validateIds(UpdateAllCategoriesRequest request) {
+        List<Long> allIds = Stream.concat(
+                request.updateCategories().stream().map(UpdateCategoryRequest::id),
+                request.deleteCategoryIds().stream()
+        ).toList();
+
+        if (allIds.size() != new HashSet<>(allIds).size()) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "요청에 중복된 id가 존재합니다.");
         }
     }
 }
