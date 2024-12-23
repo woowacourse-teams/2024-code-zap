@@ -12,7 +12,7 @@ public record VocRequest(
 
         @Schema(description = "문의 내용", example = "코드잽 정말 잘 사용하고 있어요. 우테코 6기 코드잽 화이팅!")
         @NotEmpty(message = "문의 내용은 비어있을 수 없습니다.")
-        @Size(min = 20, max = 10_000, message = "문의 내용은 최소 20자, 최대 10,000 자 입력할 수 있습니다.")
+        @Size(min = 10, max = 10_000, message = "문의 내용은 최소 10자, 최대 10,000 자 입력할 수 있습니다.")
         String message,
 
         @Nullable
