@@ -17,6 +17,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 
+import codezap.auth.dto.Credential;
+import codezap.auth.dto.LoginMember;
 import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
