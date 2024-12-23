@@ -44,7 +44,7 @@ const ContactUs = () => {
     setIsSending(true);
     toggleModal();
 
-    const contactBody = { message, email: email || null, name: name || null, memberId: memberId || null };
+    const contactBody = { message, email: email || null, name: name ?? null, memberId: memberId ?? null };
 
     try {
       await postContact(contactBody);
