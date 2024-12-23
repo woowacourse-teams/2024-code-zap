@@ -18,8 +18,6 @@ import codezap.category.repository.CategoryRepository;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
-import codezap.template.domain.Template;
-import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
 import lombok.RequiredArgsConstructor;
 
