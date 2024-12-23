@@ -22,7 +22,7 @@ class VocControllerTest extends MockMvcTest {
         mvc.perform(post("/contact")
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
