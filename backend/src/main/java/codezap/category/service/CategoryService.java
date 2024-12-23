@@ -57,6 +57,7 @@ public class CategoryService {
 
     @Transactional
     public void updateCategories(Member member, UpdateAllCategoriesRequest request) {
+        validateCategoriesCount(member, request);
         validateDuplicateNameRequest(request);
         validateOrdinals(request);
         validateIds(request);
@@ -68,7 +69,6 @@ public class CategoryService {
         for (Long deleteCategoryId : request.deleteCategoryIds()) {
             delete(member, deleteCategoryId);
         }
-        validateCategoriesCount(member, request);
     }
 
     private void createCategories(Member member, UpdateAllCategoriesRequest request) {
@@ -158,8 +158,8 @@ public class CategoryService {
     }
 
     private void validateCategoriesCount(Member member, UpdateAllCategoriesRequest request) {
-        if (request.updateCategories().size() + request.createCategories().size()
-                != categoryRepository.countByMember(member)) {
+        if (request.updateCategories().size() + request.deleteCategoryIds().size()
+                != categoryRepository.countByMember(member) - 1) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리의 개수가 일치하지 않습니다.");
         }
     }
