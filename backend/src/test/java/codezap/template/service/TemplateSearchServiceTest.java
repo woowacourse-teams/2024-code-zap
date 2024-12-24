@@ -1,16 +1,16 @@
 package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
@@ -21,7 +21,6 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
-import codezap.global.exception.CodeZapException;
 import codezap.global.pagination.FixedPage;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
@@ -110,11 +109,11 @@ class TemplateSearchServiceTest {
                     .toArray(Template[]::new));
         }
 
-        @Test
+        @ParameterizedTest
         @DisplayName("검색 기능: 키워드로 템플릿 목록 조회 성공")
-        void findAllSuccessByKeyword() {
+        @ValueSource(strings = {"안녕", "+안녕", "안+녕", " 안녕", "안녕+", "안녕-", "-안녕"})
+        void findAllSuccessByKeyword(String keyword) {
             Long memberId = null;
-            String keyword = "안녕";
             Long categoryId = null;
             List<Long> tagIds = null;
             Visibility visibility = null;
@@ -123,7 +122,7 @@ class TemplateSearchServiceTest {
             FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
-                    .filter(template -> template.getTitle().contains(keyword) || template.getDescription().contains(keyword))
+                    .filter(template -> template.getTitle().contains("안녕") || template.getDescription().contains("안녕"))
                     .toArray(Template[]::new));
         }
 
@@ -145,7 +144,7 @@ class TemplateSearchServiceTest {
         }
 
         @Test
-        @DisplayName("검색 기능: 공개 범위로 템플릿 목록 조회 성공")
+        @DisplayName("검색 기능: 복수 태그 ID로 템플릿 목록 조회 성공")
         void findAllSuccessByTagIds() {
             Long memberId = null;
             String keyword = null;

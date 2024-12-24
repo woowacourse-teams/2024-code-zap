@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -37,6 +39,9 @@ class TemplateServiceTest extends ServiceTest {
 
     @Autowired
     private LikesService likesService;
+
+    @Autowired
+    private EntityManager entityManager;
 
     @Nested
     @DisplayName("템플릿 생성")
@@ -158,7 +163,6 @@ class TemplateServiceTest extends ServiceTest {
         }
     }
 
-
     @Nested
     @DisplayName("좋아요한 템플릿 조회")
     class FindAllByMemberId {
@@ -179,7 +183,8 @@ class TemplateServiceTest extends ServiceTest {
             likesRepository.save(new Likes(template3, member1));
 
             // when
-            FixedPage<Template> actual = templateRepository.findAllLikedByMemberId(member1.getId(), PageRequest.of(0, 5));
+            FixedPage<Template> actual = templateRepository.findAllLikedByMemberId(member1.getId(),
+                    PageRequest.of(0, 5));
 
             // then
             assertThat(actual.contents()).containsExactlyInAnyOrder(template1, template3);
@@ -213,6 +218,30 @@ class TemplateServiceTest extends ServiceTest {
                     () -> assertThat(template.getTitle()).isEqualTo(updateTemplateRequest.title()),
                     () -> assertThat(template.getDescription()).isEqualTo(updateTemplateRequest.description())
             );
+        }
+
+        @Test
+        @DisplayName("템플릿 수정 성공 : 데이터가 수정됐을 경우 modifiedAt 변경")
+        void updateTemplateSuccessChangeModifiedAt() {
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var beforeModifiedAt = template.getModifiedAt();
+            var updateRequest = new UpdateTemplateRequest(
+                    "update title",
+                    "update description",
+                    List.of(),
+                    List.of(),
+                    List.of(),
+                    category.getId(),
+                    List.of(),
+                    Visibility.PRIVATE
+            );
+
+            sut.update(member, template.getId(), updateRequest, category);
+            entityManager.flush();
+
+            assertThat(template.getModifiedAt()).isNotEqualTo(beforeModifiedAt);
         }
 
         @Test

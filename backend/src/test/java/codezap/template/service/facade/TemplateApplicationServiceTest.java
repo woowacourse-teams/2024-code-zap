@@ -6,10 +6,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -30,6 +35,7 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
+import codezap.tag.domain.Tag;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -80,13 +86,44 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
+        @Test
+        @Disabled("@Transactional 과 함께 사용 시 처리 불가능")
+        @DisplayName("동시성 테스트 - 태그 중복이 발생하지 않는지 확인")
+        void createTagsConcurrencyTest() throws InterruptedException {
+            // Given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            CreateTemplateRequest createTemplateRequest = createTemplateRequest(category);
+
+            var member2 = memberRepository.save(MemberFixture.getSecondMember());
+            var category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
+            CreateTemplateRequest createTemplateRequest2 = createTemplateRequest(category2);
+
+            // When
+            ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+            executorService.execute(() -> sut.create(member, createTemplateRequest));
+            executorService.execute(() -> sut.create(member2, createTemplateRequest2));
+
+            executorService.shutdown();
+            executorService.awaitTermination(30, TimeUnit.SECONDS);
+
+            // Then
+            List<Tag> tags = tagRepository.findAllByNames(List.of("Spring"));
+            assertAll(
+                    () -> assertThat(tags).hasSize(1),
+                    () -> assertThat(templateRepository.findByMemberId(member.getId())).isNotEmpty(),
+                    () -> assertThat(templateRepository.findByMemberId(member2.getId())).isNotEmpty()
+            );
+        }
+
         private static CreateTemplateRequest createTemplateRequest(Category category) {
             var title = "title1";
             var description = "description1";
             var sourceCodeRequest = new CreateSourceCodeRequest("filename1", "content1", 1);
             var sourceCodes = List.of(sourceCodeRequest);
             int thumbnailOrdinal = 1;
-            List<String> tags = List.of();
+            List<String> tags = List.of("Spring");
             return new CreateTemplateRequest(
                     title,
                     description,
@@ -460,6 +497,35 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("성공: 소스코드만 변경 시에도 수정 시간 변경")
+        void updateSourceCodesChangeModifiedAt() {
+            // given
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
+            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+            SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
+            thumbnailRepository.save(new Thumbnail(template, sourceCode));
+            UpdateSourceCodeRequest updateRequest1 = updateSourceCodeRequest(sourceCode);
+            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
+                    template.getTitle(),
+                    template.getDescription(),
+                    List.of(),
+                    List.of(updateRequest1),
+                    List.of(),
+                    template.getCategory().getId(),
+                    List.of(),
+                    Visibility.PUBLIC
+            );
+            LocalDateTime beforeModifiedAt = template.getModifiedAt();
+
+            // when
+            sut.update(member, template.getId(), updateTemplateRequest);
+
+            // then
+            assertThat(template.getModifiedAt()).isNotEqualTo(beforeModifiedAt);
+        }
+
+        @Test
         @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
         void updateTemplate_WhenNoAuthorization() {
             // given
@@ -485,7 +551,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     Visibility.PUBLIC);
 
             // when & then
-            assertThatThrownBy(() -> sut.update(otherMember, template.getId(), request))
+            assertThatThrownBy(() -> sut.update(member, template.getId(), request))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
@@ -524,7 +590,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             sut.deleteAllByMemberAndTemplateIds(member, deleteIds);
 
             // then
-            var actualTemplatesLeft = templateRepository.findAll(member.getId(), null, null, null, null, PageRequest.of(0, 10));
+            var actualTemplatesLeft = templateRepository.findAll(member.getId(), null, null, null, null,
+                    PageRequest.of(0, 10));
             var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
             actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));
