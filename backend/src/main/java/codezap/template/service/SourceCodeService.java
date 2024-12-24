@@ -22,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class SourceCodeService {
 
+    private static final int MINIMUM_SOURCE_CODE_COUNT = 1;
+    
     private final SourceCodeRepository sourceCodeRepository;
 
     @Transactional
@@ -43,6 +45,8 @@ public class SourceCodeService {
 
     @Transactional
     public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
+        validateMinimumSourceCodeCount(updateTemplateRequest);
+
         updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
                 updateTemplateRequest.createSourceCodes().stream()
@@ -52,7 +56,14 @@ public class SourceCodeService {
 
         updateThumbnail(updateTemplateRequest, template, thumbnail);
         updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
-        validateSourceCodesCount(template, updateTemplateRequest);
+
+        validateSourceCodeCountMatch(template, updateTemplateRequest);
+    }
+
+    private static void validateMinimumSourceCodeCount(UpdateTemplateRequest updateTemplateRequest) {
+        if(updateTemplateRequest.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
+        }
     }
 
     private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
@@ -92,9 +103,8 @@ public class SourceCodeService {
                 .ifPresent(thumbnail::updateThumbnail);
     }
 
-    private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {
-        if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
-                != sourceCodeRepository.countByTemplate(template)) {
+    private void validateSourceCodeCountMatch(Template template, UpdateTemplateRequest updateTemplateRequest) {
+        if (updateTemplateRequest.countSourceCodes() != sourceCodeRepository.countByTemplate(template)) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
     }
