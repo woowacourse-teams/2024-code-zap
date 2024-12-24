@@ -26,6 +26,7 @@ import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
+import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 
@@ -47,7 +48,7 @@ class SourceCodeServiceTest extends ServiceTest {
             CreateSourceCodeRequest request2 = new CreateSourceCodeRequest("file2.java", "content2", 2);
 
             // when
-            sourceCodeService.createSourceCodes(template, List.of(request1, request2));
+            sourceCodeService.createSourceCodes(template, createSavedTemplateRequest(List.of(request1, request2)));
 
             // then
             List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplate(template);
@@ -61,7 +62,6 @@ class SourceCodeServiceTest extends ServiceTest {
         }
 
         @Test
-        @Disabled("애플리케이션 코드에서 검증 코드 작성 필요")
         @DisplayName("실패: 순서 중복된 코드 존재")
         void createSourceCodes_WhenOrdinalIsDuplicate() {
             // given
@@ -70,17 +70,14 @@ class SourceCodeServiceTest extends ServiceTest {
             CreateSourceCodeRequest request1 = new CreateSourceCodeRequest("file1.java", "content1", sameOrdinal);
             CreateSourceCodeRequest request2 = new CreateSourceCodeRequest("file2.java", "content2", sameOrdinal);
 
-            // when
-            sourceCodeService.createSourceCodes(template, List.of(request1, request2));
-
-            // then
-            assertThatThrownBy(() -> sourceCodeRepository.findAllByTemplate(template))
+            // when & then
+            assertThatThrownBy(() -> sourceCodeService.createSourceCodes(
+                    template, createSavedTemplateRequest(List.of(request1, request2))))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("소스 코드의 순서는 중복될 수 없습니다.");
+                    .hasMessage("소스 코드 순서가 잘못되었습니다.");
         }
 
         @Test
-        @Disabled("애플리케이션 코드에서 검증 코드 작성 필요")
         @DisplayName("실패: 순서가 1부터 시작하지 않는 소스 코드")
         void createSourceCodes_WhenOrdinalIsNotStart1() {
             // given
@@ -88,17 +85,14 @@ class SourceCodeServiceTest extends ServiceTest {
             CreateSourceCodeRequest request1 = new CreateSourceCodeRequest("file1.java", "content1", 0);
             CreateSourceCodeRequest request2 = new CreateSourceCodeRequest("file2.java", "content2", 1);
 
-            // when
-            sourceCodeService.createSourceCodes(template, List.of(request1, request2));
-
-            // then
-            assertThatThrownBy(() -> sourceCodeRepository.findAllByTemplate(template))
+            // when & then
+            assertThatThrownBy(() -> sourceCodeService.createSourceCodes(
+                    template, createSavedTemplateRequest(List.of(request1, request2))))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("소스 코드의 순서는 1부터 시작해야 합니다.");
+                    .hasMessage("소스 코드 순서가 잘못되었습니다.");
         }
 
         @Test
-        @Disabled("애플리케이션 코드에서 검증 코드 작성 필요")
         @DisplayName("실패: 소스 코드의 순서들이 연속적이지 않은 경우")
         void createSourceCodes_WhenOrdinalIsNotSort() {
             // given
@@ -107,9 +101,10 @@ class SourceCodeServiceTest extends ServiceTest {
             CreateSourceCodeRequest request2 = new CreateSourceCodeRequest("file2.java", "content2", 3);
 
             // when & then
-            assertThatThrownBy(() -> sourceCodeService.createSourceCodes(template, List.of(request1, request2)))
+            assertThatThrownBy(() -> sourceCodeService.createSourceCodes(
+                    template, createSavedTemplateRequest(List.of(request1, request2))))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("소스 코드의 순서는 1부터 시작해야 합니다.");
+                    .hasMessage("소스 코드 순서가 잘못되었습니다.");
         }
     }
 
@@ -289,8 +284,8 @@ class SourceCodeServiceTest extends ServiceTest {
             SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
-            UpdateSourceCodeRequest ordinalUpdateRequest = new UpdateSourceCodeRequest(sourceCode1.getId(), "변경된 제목1",
-                    "변경된 내용1", 3);
+            UpdateSourceCodeRequest ordinalUpdateRequest = new UpdateSourceCodeRequest(
+                    sourceCode1.getId(), "변경된 제목1", "변경된 내용1", 3);
             UpdateSourceCodeRequest updateRequest2 = getUpdateSourceCodeRequest(sourceCode2);
             CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목3", "새로운 내용3",
                     sourceCode1.getOrdinal());
@@ -333,7 +328,8 @@ class SourceCodeServiceTest extends ServiceTest {
             );
 
             // when & then
-            assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
+            assertThatThrownBy(
+                    () -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("소스 코드는 최소 1개 입력해야 합니다.");
         }
@@ -357,7 +353,8 @@ class SourceCodeServiceTest extends ServiceTest {
             );
 
             // when & then
-            assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
+            assertThatThrownBy(
+                    () -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("소스 코드의 정보가 정확하지 않습니다.");
         }
@@ -384,7 +381,8 @@ class SourceCodeServiceTest extends ServiceTest {
             );
 
             // when & then
-            assertThatThrownBy(() -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
+            assertThatThrownBy(
+                    () -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("소스 코드의 순서는 중복될 수 없습니다.");
         }
@@ -473,5 +471,17 @@ class SourceCodeServiceTest extends ServiceTest {
         Member member = memberRepository.save(MemberFixture.getFirstMember());
         Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
         return templateRepository.save(TemplateFixture.get(member, category));
+    }
+
+    private CreateTemplateRequest createSavedTemplateRequest(List<CreateSourceCodeRequest> requests) {
+        return new CreateTemplateRequest(
+                "title",
+                "description",
+                requests,
+                1,
+                1L,
+                List.of(),
+                Visibility.PUBLIC
+        );
     }
 }

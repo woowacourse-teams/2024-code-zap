@@ -51,7 +51,7 @@ public class TemplateApplicationService {
         category.validateAuthorization(member);
         Template template = templateService.create(member, createTemplateRequest, category);
         tagService.createTags(template, createTemplateRequest.tags());
-        sourceCodeService.createSourceCodes(template, createTemplateRequest.sourceCodes());
+        sourceCodeService.createSourceCodes(template, createTemplateRequest);
         SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
                 template,
                 createTemplateRequest.thumbnailOrdinal());

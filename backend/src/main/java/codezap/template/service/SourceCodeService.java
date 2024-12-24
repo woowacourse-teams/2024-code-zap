@@ -2,6 +2,7 @@ package codezap.template.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +13,11 @@ import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
+import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
+import codezap.template.dto.request.validation.ValidatedSourceCodesOrdinalRequest;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -27,9 +31,12 @@ public class SourceCodeService {
     private final SourceCodeRepository sourceCodeRepository;
 
     @Transactional
-    public void createSourceCodes(Template template, List<CreateSourceCodeRequest> sourceCodes) {
+    public void createSourceCodes(Template template, CreateTemplateRequest request) {
+        validateSourceCodeCount(request);
+        validateSourceCodesOrdinal(request);
+
         sourceCodeRepository.saveAll(
-                sourceCodes.stream()
+                request.sourceCodes().stream()
                         .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
                         .toList()
         );
@@ -45,7 +52,8 @@ public class SourceCodeService {
 
     @Transactional
     public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        validateMinimumSourceCodeCount(updateTemplateRequest);
+        validateSourceCodeCount(updateTemplateRequest);
+        validateSourceCodesOrdinal(updateTemplateRequest);
 
         updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
@@ -60,9 +68,18 @@ public class SourceCodeService {
         validateSourceCodeCountMatch(template, updateTemplateRequest);
     }
 
-    private static void validateMinimumSourceCodeCount(UpdateTemplateRequest updateTemplateRequest) {
-        if(updateTemplateRequest.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
+    private void validateSourceCodeCount(ValidatedSourceCodesCountRequest request) {
+        if(request.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
+        }
+    }
+
+    private void validateSourceCodesOrdinal(ValidatedSourceCodesOrdinalRequest request) {
+        List<Integer> indexes = request.extractSourceCodesOrdinal();
+        boolean isOrderValid = IntStream.range(0, indexes.size())
+                .allMatch(index -> indexes.get(index) == index + 1);
+        if(!isOrderValid) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드 순서가 잘못되었습니다.");
         }
     }
 
