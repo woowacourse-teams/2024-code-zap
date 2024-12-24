@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -62,7 +61,6 @@ class SourceCodeServiceTest extends ServiceTest {
         }
 
         @Test
-        @Disabled("애플리케이션 코드에서 검증 코드 작성 필요")
         @DisplayName("실패: 순서 중복된 코드 존재")
         void createSourceCodes_WhenOrdinalIsDuplicate() {
             // given
