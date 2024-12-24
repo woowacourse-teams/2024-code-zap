@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -146,7 +145,6 @@ class CategoryServiceTest extends ServiceTest {
 
         @Test
         @DisplayName("카테고리 수정 성공")
-        @Disabled
         void updateCategorySuccess() {
             String updateCategoryName = "updateName";
             Member member = memberRepository.save(MemberFixture.memberFixture());
