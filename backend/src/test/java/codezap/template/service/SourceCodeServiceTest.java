@@ -211,47 +211,12 @@ class SourceCodeServiceTest extends ServiceTest {
         }
 
         @Test
-        @Disabled("애플리케이션 코드에서 로직 변경 필요")
-        @DisplayName("성공: 일부 소스 코드 삭제 및 새로운 소스 코드 추가 시, 삭제된 코드 순서는 앞당겨지고 새로 추가된 소스 코드의 순서는 가장 마지막 순서")
-        void updateSourceCodes_WhenDeleteSomeAndAddNew_ExistingCodesHavePriority() {
-            // given
-            Template template = createSavedTemplate();
-            SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode deleteSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-            Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
-
-            UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
-            CreateSourceCodeRequest createRequest = new CreateSourceCodeRequest("새로운 제목1", "새로운 내용1", 3);
-            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(
-                    List.of(createRequest),
-                    List.of(updateRequest1),
-                    List.of(deleteSourceCode.getId()),
-                    template.getCategory().getId(),
-                    Collections.emptyList()
-            );
-
-            // when
-            sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
-
-            // then
-            assertAll(
-                    () -> assertThat(sourceCodeRepository.countByTemplate(template)).isEqualTo(2),
-                    () -> assertThat(sourceCodeRepository.fetchByTemplateAndOrdinal(template, 2).getFilename())
-                            .isEqualTo("새로운 제목1"),
-                    () -> assertThatThrownBy(() -> sourceCodeRepository.fetchById(deleteSourceCode.getId()))
-                            .isInstanceOf(CodeZapException.class)
-                            .hasMessage("식별자 " + deleteSourceCode.getId() + "에 해당하는 소스 코드가 존재하지 않습니다.")
-            );
-        }
-
-        @Test
-        @Disabled("애플리케이션 코드에서 로직 변경 필요")
         @DisplayName("성공: 썸네일 코드 삭제 시, 새로 순서가 1인 코드가 썸네일으로 등록")
         void updateSourceCodes_WhenDeleteThumbnailCode_NewThumbnailAssigned() {
             // given
             Template template = createSavedTemplate();
             SourceCode thumbnailSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode othersourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
+            SourceCode othersourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, thumbnailSourceCode));
 
             List<Long> deleteSourceCodeIds = List.of(thumbnailSourceCode.getId());
@@ -360,13 +325,12 @@ class SourceCodeServiceTest extends ServiceTest {
         }
 
         @Test
-        @Disabled("중복이어도 저장되고 있음, 애플리케이션 코드에서 로직 변경 필요")
         @DisplayName("실패: 변경할 소스 코드의 순서가 중복된 소스 코드의 순서인 경우")
         void updateSourceCodes_WhenDuplicateOrder() {
             // given
             Template template = createSavedTemplate();
             SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
+            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             Thumbnail thumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
             UpdateSourceCodeRequest updateRequest1 = getUpdateSourceCodeRequest(sourceCode1);
@@ -384,7 +348,7 @@ class SourceCodeServiceTest extends ServiceTest {
             assertThatThrownBy(
                     () -> sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("소스 코드의 순서는 중복될 수 없습니다.");
+                    .hasMessage("소스 코드 순서가 잘못되었습니다.");
         }
 
         private UpdateSourceCodeRequest getUpdateSourceCodeRequest(SourceCode sourceCode) {

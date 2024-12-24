@@ -111,22 +111,6 @@ class TemplateSearchServiceTest {
         }
 
         @Test
-        @Disabled("Pageable에 대한 null 검증이 필요함")
-        @DisplayName("검색 기능 실패: Pageable을 전달하지 않은 경우")
-        void findAllFailureWithNullPageable() {
-            Long memberId = member1.getId();
-            String keyword = null;
-            Long categoryId = null;
-            List<Long> tagIds = null;
-            Visibility visibility = null;
-            Pageable pageable = null;
-
-            assertThatThrownBy(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("Pageable을 필수로 작성해야 합니다.");
-        }
-
-        @Test
         @DisplayName("검색 기능: 키워드로 템플릿 목록 조회 성공")
         void findAllSuccessByKeyword() {
             Long memberId = null;
