@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { postContact } from '@/api/contact';
 import { Button, Input, LoadingBall, Modal, Text, Textarea } from '@/components';
 import { useInput, useInputWithValidate, useToggle, useToast } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
@@ -23,9 +24,11 @@ const ContactUs = () => {
     memberInfo: { name, memberId },
   } = useAuth();
 
-  const { successAlert } = useToast();
+  const { successAlert, failAlert } = useToast();
 
-  const isValidContents = message.trim().length !== 0;
+  const MIN_CONTENTS_LENGTH = 10;
+  const MAX_CONTENTS_LENGTH = 10000;
+  const isValidContents = message.trim().length >= MIN_CONTENTS_LENGTH && message.length <= MAX_CONTENTS_LENGTH;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -41,29 +44,20 @@ const ContactUs = () => {
     setIsSending(true);
     toggleModal();
 
-    const res = await sendData();
+    const contactBody = { message, email: email || null, name: name ?? null, memberId: memberId ?? null };
 
-    if (res) {
+    try {
+      await postContact(contactBody);
       successSubmit();
-      successAlert('보내기 완료! 소중한 의견 감사합니다:)');
+    } catch {
+      failAlert('문의 보내기에 실패하였습니다. 다시 시도하시거나 이메일로 직접 문의해주세요');
+    } finally {
+      setIsSending(false);
     }
   };
 
-  const sendData = () => {
-    const URL = process.env.GOOGLE_URL || '';
-
-    return fetch(URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({ message, email, name, memberId }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
-
   const successSubmit = () => {
-    setIsSending(false);
+    successAlert('보내기 완료! 소중한 의견 감사합니다:)');
     resetForm();
   };
 
@@ -89,10 +83,11 @@ const ContactUs = () => {
               이미지 등을 함께 보내실 경우 codezap2024@gmail.com으로 직접 이메일을 보내실 수 있습니다.
             </Text.Medium>
             <Textarea id='voc' variant='outlined'>
-              <Textarea.Label htmlFor={'voc'}>무엇을 도와드릴까요?</Textarea.Label>
+              <Textarea.Label htmlFor={'voc'}>무엇을 도와드릴까요? (10글자 이상 작성해주세요)</Textarea.Label>
               <Textarea.TextField
                 minRows={5}
                 maxRows={10}
+                maxLength={MAX_CONTENTS_LENGTH}
                 value={message}
                 onChange={handleMessage}
                 disabled={isSending}
