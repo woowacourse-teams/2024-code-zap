@@ -25,7 +25,7 @@ class VocRequestTest {
     private static ValidatorFactory validatorFactory;
     private static Validator validator;
 
-    private static String message = "lorem ipsum dolor sit amet consectetur adipiscing elit fugiat cupiditat";
+    private static String message = "lorem ipsum";
     private static String email = "codezap2024@gmail.com";
     private static Long memberId = 1L;
     private static String name = "만두";
@@ -68,7 +68,7 @@ class VocRequestTest {
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("성공: 문의 내용 길이 20글자부터 10,000글자")
+        @DisplayName("성공: 문의 내용 길이 10글자부터 10,000글자")
         void message_length_success(String message) {
             sut = new VocRequest(message);
 
@@ -78,14 +78,14 @@ class VocRequestTest {
         }
 
         static Stream<String> message_length_success() {
-            var messageLength20 = RandomStringUtils.randomAlphanumeric(20);
+            var messageLength20 = RandomStringUtils.randomAlphanumeric(10);
             var messageLength10_000 = RandomStringUtils.randomAlphanumeric(10_000);
             return Stream.of(messageLength20, messageLength10_000);
         }
 
         @ParameterizedTest
         @MethodSource
-        @DisplayName("실패: 문의 내용 길이 19자 이하, 10,001글자 이상")
+        @DisplayName("실패: 문의 내용 길이 9자 이하, 10,001글자 이상")
         void message_length_fail(String message) {
             sut = new VocRequest(message);
 
@@ -94,11 +94,11 @@ class VocRequestTest {
             assertThat(constraintViolations).isNotEmpty()
                     .first()
                     .extracting(ConstraintViolation::getMessage)
-                    .isEqualTo("문의 내용은 최소 20자, 최대 10,000 자 입력할 수 있습니다.");
+                    .isEqualTo("문의 내용은 최소 10자, 최대 10,000 자 입력할 수 있습니다.");
         }
 
         static Stream<String> message_length_fail() {
-            var messageLength19 = RandomStringUtils.randomAlphanumeric(19);
+            var messageLength19 = RandomStringUtils.randomAlphanumeric(9);
             var messageLength10_001 = RandomStringUtils.randomAlphanumeric(10_001);
             return Stream.of(messageLength19, messageLength10_001);
         }

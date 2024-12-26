@@ -20,7 +20,7 @@ public interface SpringDocVocController {
             instance = "/contact",
             errorCases = {
                     @ErrorCase(description = "문의 내용을 입력하지 않은 경우.", exampleMessage = "문의 내용을 입력해주세요."),
-                    @ErrorCase(description = "문의 내용이 20자 미만인 경우.", exampleMessage = "문의 내용을 20자 이상 입력해주세요."),
+                    @ErrorCase(description = "문의 내용이 10자 미만인 경우.", exampleMessage = "문의 내용을 10자 이상 입력해주세요."),
                     @ErrorCase(description = "문의 내용이 10,000 글자를 초과한 경우.", exampleMessage = "문의 내용은 최대 10,000 글자까지 입력할 수 있습니다.")
             }
     )
