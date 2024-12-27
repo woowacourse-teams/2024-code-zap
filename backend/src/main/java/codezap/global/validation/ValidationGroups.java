@@ -4,7 +4,7 @@ public class ValidationGroups {
 
     public interface NotNullGroup {}
 
-    public interface SourceCodeOrdinalGroup {}
+    public interface OrdinalGroup {}
 
     public interface SourceCodeCountGroup {}
 

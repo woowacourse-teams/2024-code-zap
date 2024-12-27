@@ -41,7 +41,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "태그명이 30자를 초과한 경우", exampleMessage = "태그명은 최대 30자까지 입력 가능합니다."),
             @ErrorCase(description = "소스 코드가 65,535 byte를 초과한 경우",
                     exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
-            @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "소스 코드 순서가 잘못되었습니다."),
+            @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "순서가 잘못되었습니다."),
             @ErrorCase(description = "소스 코드가 0개 입력된 경우", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
     })
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates", errorCases = {
@@ -126,7 +126,7 @@ public interface SpringDocTemplateController {
             @ErrorCase(description = "태그명이 30자를 초과한 경우", exampleMessage = "태그명은 최대 30자까지 입력 가능합니다."),
             @ErrorCase(description = "소스 코드가 65,535 byte를 초과한 경우",
                     exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
-            @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "소스 코드 순서가 잘못되었습니다."),
+            @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "순서가 잘못되었습니다."),
             @ErrorCase(description = "해당 템플릿의 실제 소스 코드 수와 인자로 받은 소스 코드 수가 다를 경우",
                     exampleMessage = "소스 코드의 정보가 정확하지 않습니다."),
     })

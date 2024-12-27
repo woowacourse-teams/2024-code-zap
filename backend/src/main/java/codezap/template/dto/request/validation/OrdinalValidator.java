@@ -6,14 +6,14 @@ import java.util.stream.IntStream;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class SourceCodesOrdinalValidator implements
-        ConstraintValidator<SourceCodesOrdinal, ValidatedSourceCodesOrdinalRequest> {
+public class OrdinalValidator implements
+        ConstraintValidator<Ordinal, ValidatedOrdinalRequest> {
 
     @Override
-    public boolean isValid(ValidatedSourceCodesOrdinalRequest validatedSourceCodesOrdinalRequest,
+    public boolean isValid(ValidatedOrdinalRequest validatedOrdinalRequest,
             ConstraintValidatorContext constraintValidatorContext
     ) {
-        List<Integer> indexes = validatedSourceCodesOrdinalRequest.extractSourceCodesOrdinal();
+        List<Integer> indexes = validatedOrdinalRequest.extractOrdinal();
         return IntStream.range(0, indexes.size())
                 .allMatch(index -> indexes.get(index) == index + 1);
     }

@@ -10,8 +10,8 @@ import jakarta.validation.Payload;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = SourceCodesOrdinalValidator.class)
-public @interface SourceCodesOrdinal {
+@Constraint(validatedBy = OrdinalValidator.class)
+public @interface Ordinal {
 
     String message();
 
