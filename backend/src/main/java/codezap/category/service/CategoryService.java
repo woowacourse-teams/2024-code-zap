@@ -2,7 +2,6 @@ package codezap.category.service;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
@@ -56,7 +55,6 @@ public class CategoryService {
     @Transactional
     public void updateCategories(Member member, UpdateAllCategoriesRequest request) {
         validateDuplicateNameRequest(request);
-        validateOrdinals(request);
         validateIds(request);
 
         createCategories(member, request);
@@ -127,20 +125,6 @@ public class CategoryService {
         long count = categoryRepository.countByMember(member);
         if (ordinal != count) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리 순서가 잘못되었습니다.");
-        }
-    }
-
-    private void validateOrdinals(UpdateAllCategoriesRequest request) {
-        List<Long> allOrdinals = Stream.concat(
-                request.createCategories().stream().map(CreateCategoryRequest::ordinal),
-                request.updateCategories().stream().map(UpdateCategoryRequest::ordinal)
-        ).sorted().toList();
-
-        boolean isSequential = IntStream.range(0, allOrdinals.size())
-                .allMatch(i -> allOrdinals.get(i) == i + 1);
-
-        if (!isSequential) {
-            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리 순서가 연속적이지 않습니다.");
         }
     }
 
