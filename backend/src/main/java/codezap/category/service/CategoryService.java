@@ -57,16 +57,16 @@ public class CategoryService {
         validateDuplicateNameRequest(request);
         validateIds(request);
 
-        createCategories(member, request);
+        createCategories(member, request.createCategories());
         request.updateCategories().forEach(category -> update(member, category));
         request.deleteCategoryIds().forEach(id -> delete(member, id));
 
         validateCategoriesCount(member, request);
     }
 
-    private void createCategories(Member member, UpdateAllCategoriesRequest request) {
+    private void createCategories(Member member, List<CreateCategoryRequest> requests) {
         categoryRepository.saveAll(
-                request.createCategories().stream()
+                requests.stream()
                         .map(createRequest -> createCategory(member, createRequest))
                         .toList()
         );
