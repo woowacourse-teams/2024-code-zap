@@ -22,6 +22,9 @@ import codezap.member.dto.request.SignupRequest;
 
 class AuthAcceptanceTest extends IntegrationTest {
 
+    private final String name = "name";
+    private final String password = "password123!";
+
     @Nested
     @DisplayName("로그인 테스트")
     class Login {
@@ -30,8 +33,6 @@ class AuthAcceptanceTest extends IntegrationTest {
         @DisplayName("성공: 올바른 아이디와 비밀번호를 사용하여 로그인에 성공")
         void success() throws Exception {
             //given
-            String name = "name";
-            String password = "password123!";
             signup(name, password);
 
             //when
@@ -75,9 +76,21 @@ class AuthAcceptanceTest extends IntegrationTest {
     class CheckLogin {
 
         @Test
+        @DisplayName("성공: 인증정보가 있을 경우 200 OK 를 반환")
+        void success() throws Exception {
+            //given
+            signup(name, password);
+            login(name, password);
+
+            //when
+            request(get("/login/check"))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
         @DisplayName("실패: 인증 정보 없음")
         void noCredential() throws Exception {
-            mvc.perform(get("/login/check"))
+            request(get("/login/check"))
                     .andExpect(status().isUnauthorized())
                     .andExpect(jsonPath("$.detail").value("인증 정보가 없습니다. 다시 로그인해 주세요."));
         }
@@ -88,7 +101,7 @@ class AuthAcceptanceTest extends IntegrationTest {
     class Logout {
 
         @Test
-        @DisplayName("성공")
+        @DisplayName("성공: 로그아웃 이후에는 카테고리를 수정할 수 없음")
         void logoutWithCookie() throws Exception {
             //given
             String name = "name";
