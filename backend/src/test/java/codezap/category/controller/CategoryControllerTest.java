@@ -1,5 +1,6 @@
 package codezap.category.controller;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -17,6 +18,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
@@ -44,11 +47,11 @@ class CategoryControllerTest extends MockMvcTest {
         void createCategorySuccess() throws Exception {
             // given
             long categoryId = 1L;
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1L);
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1);
 
             when(categoryService.create(
                     MemberFixture.getFirstMember(), createCategoryRequest))
-                    .thenReturn(new CreateCategoryResponse(1L, "category"));
+                    .thenReturn(new CreateCategoryResponse(1L, "category", 1));
 
             // when & then
             mvc.perform(post("/categories")
@@ -62,7 +65,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 생성 실패: 로그인을 하지 않은 회원")
         void createCategoryFailWithNotLogin() throws Exception {
             // given
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1L);
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1);
 
             doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
                     .when(credentialManager).getCredential(any());
@@ -81,7 +84,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 생성 실패: 카테고리 이름 길이 초과")
         void createCategoryFailWithLongName() throws Exception {
             // given
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1), 1L);
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("a".repeat(MAX_LENGTH + 1), 1);
 
             // when & then
             mvc.perform(post("/categories")
@@ -123,7 +126,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 편집 성공")
         void updateCategorySuccess() throws Exception {
             // given
-            var updateCategoryRequest = new UpdateCategoryRequest(1L, "updateCategory", 1L);
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "updateCategory", 1);
             var request = new UpdateAllCategoriesRequest(
                     List.of(),
                     List.of(updateCategoryRequest),
@@ -141,7 +144,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 편집 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
-            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1L);
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1);
             var request = new UpdateAllCategoriesRequest(
                     List.of(),
                     List.of(updateCategoryRequest),
@@ -162,7 +165,7 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 편집 실패: 카테고리 이름 길이 초과")
         void updateCategoryFailWithLongName() throws Exception {
             // given
-            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH + 1), 1L);
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH + 1), 1);
             var request = new UpdateAllCategoriesRequest(
                     List.of(),
                     List.of(updateCategoryRequest),
@@ -174,6 +177,44 @@ class CategoryControllerTest extends MockMvcTest {
                             .content(objectMapper.writeValueAsString(request)))
                     .andExpect(status().isBadRequest())
                     .andExpect(jsonPath("$.detail").value("카테고리 이름은 최대 15자까지 입력 가능합니다."))
+                    .andExpect(jsonPath("$.errorCode").value(1101));
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 중복된 순서")
+        void duplicatedCategoryOrdinal() throws Exception {
+            CreateCategoryRequest createRequest = new CreateCategoryRequest("category3", 1);
+            UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(1L, "category1", 1);
+
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(createRequest),
+                    List.of(updateRequest),
+                    List.of());
+
+            mvc.perform(put("/categories")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."))
+                    .andExpect(jsonPath("$.errorCode").value(1101));
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 연속되지 않는 순서")
+        void nonSequentialCategoryOrdinal() throws Exception {
+            CreateCategoryRequest createRequest = new CreateCategoryRequest("category3", 3);
+            UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(1L, "category1", 1);
+
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(createRequest),
+                    List.of(updateRequest),
+                    List.of());
+
+            mvc.perform(put("/categories")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."))
                     .andExpect(jsonPath("$.errorCode").value(1101));
         }
     }

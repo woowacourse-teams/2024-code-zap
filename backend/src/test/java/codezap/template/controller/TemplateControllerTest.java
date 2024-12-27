@@ -245,7 +245,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
+                    .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."));
         }
     }
 
@@ -557,7 +557,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
+                    .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."));
         }
 
         private static UpdateTemplateRequest getUpdateTemplateRequest(int createOrdinal1, int createOrdinal2,
