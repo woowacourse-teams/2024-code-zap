@@ -6,16 +6,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import jakarta.servlet.http.Cookie;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 
 import codezap.auth.dto.request.LoginRequest;
@@ -24,50 +19,28 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.global.IntegrationTest;
 import codezap.member.dto.request.SignupRequest;
 
+
 class AuthAcceptanceTest extends IntegrationTest {
 
     @Nested
     @DisplayName("로그인 테스트")
     class Login {
 
-        @Nested
+        @Test
         @DisplayName("성공: 올바른 아이디와 비밀번호를 사용하여 로그인에 성공")
-        class Success {
+        void success() throws Exception {
+            //given
+            String name = "name";
+            String password = "password123!";
+            signup(name, password);
 
-            private final String name = "name";
-            private final String password = "password123!";
+            //when
+            login(name, password);
 
-            private MvcResult loginResult;
-
-            @BeforeEach
-            void successLogin() throws Exception {
-                signup(name, password);
-                loginResult = requestLogin(name, password).andReturn();
-            }
-
-            @Test
-            @DisplayName("정상적인 인증 쿠키 반환")
-            void responseCookie() throws Exception {
-                //when
-                Cookie[] cookies = loginResult.getResponse().getCookies();
-
-                //then
-                mvc.perform(get("/login/check")
-                                .cookie(cookies))
-                        .andExpect(status().isOk());
-            }
-
-            @Test
-            @DisplayName("정상적인 인증 헤더 반환")
-            void responseHeader() throws Exception {
-                //when & then
-                MockHttpServletResponse response = loginResult.getResponse();
-                String authorizationHeader = response.getHeader(HttpHeaders.AUTHORIZATION);
-
-                mvc.perform(get("/login/check")
-                                .header(HttpHeaders.AUTHORIZATION, authorizationHeader))
-                        .andExpect(status().isOk());
-            }
+            //then
+            request(post("/categories")
+                    .content(objectMapper.writeValueAsString(new CreateCategoryRequest("new category"))))
+                    .andExpect(status().isCreated());
         }
 
         @Nested
@@ -78,7 +51,7 @@ class AuthAcceptanceTest extends IntegrationTest {
             @DisplayName("회원가입 하지 않은 정보로 로그인 시도")
             void noSignup() throws Exception {
                 String notExistName = "noSignup";
-                requestLogin(notExistName, "password123!")
+                login(notExistName, "password123!")
                         .andExpect(status().isUnauthorized())
                         .andExpect(jsonPath("$.detail").value("존재하지 않는 아이디 %s 입니다.".formatted(notExistName)));
             }
@@ -90,7 +63,7 @@ class AuthAcceptanceTest extends IntegrationTest {
                 String password = "password123!";
                 signup(name, password);
 
-                requestLogin(name, "wrongPassword123!")
+                login(name, "wrongPassword123!")
                         .andExpect(status().isUnauthorized())
                         .andExpect(jsonPath("$.detail").value("로그인에 실패하였습니다. 비밀번호를 확인해주세요."));
             }
@@ -121,7 +94,7 @@ class AuthAcceptanceTest extends IntegrationTest {
             String name = "name";
             String password = "password123!";
             signup(name, password);
-            requestLogin(name, password);
+            login(name, password);
 
             MockHttpServletResponse createCategoryResponse = request(post("/categories")
                     .content(objectMapper.writeValueAsString(new CreateCategoryRequest("new category"))))
@@ -153,7 +126,7 @@ class AuthAcceptanceTest extends IntegrationTest {
                 .content(objectMapper.writeValueAsString(signupRequest)));
     }
 
-    private ResultActions requestLogin(String name, String password) throws Exception {
+    private ResultActions login(String name, String password) throws Exception {
         return request(post("/login")
                 .content(objectMapper.writeValueAsString(new LoginRequest(name, password))));
     }
