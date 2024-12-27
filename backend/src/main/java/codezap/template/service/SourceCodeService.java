@@ -51,21 +51,21 @@ public class SourceCodeService {
     }
 
     @Transactional
-    public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        validateSourceCodeCount(updateTemplateRequest);
-        validateSourceCodesOrdinal(updateTemplateRequest);
+    public void updateSourceCodes(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
+        validateSourceCodeCount(request);
+        validateSourceCodesOrdinal(request);
 
-        updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
+        request.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
-                updateTemplateRequest.createSourceCodes().stream()
+                request.createSourceCodes().stream()
                         .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
                         .toList()
         );
 
-        updateThumbnail(updateTemplateRequest, template, thumbnail);
-        updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
+        updateThumbnail(request, template, thumbnail);
+        request.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
 
-        validateSourceCodeCountMatch(template, updateTemplateRequest);
+        validateSourceCodeCountMatch(template, request);
     }
 
     private void validateSourceCodeCount(ValidatedSourceCodesCountRequest request) {
@@ -83,26 +83,26 @@ public class SourceCodeService {
         }
     }
 
-    private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
-        SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
+    private void updateSourceCode(UpdateSourceCodeRequest request) {
+        SourceCode sourceCode = sourceCodeRepository.fetchById(request.id());
         sourceCode.updateSourceCode(
-                updateSourceCodeRequest.filename(),
-                updateSourceCodeRequest.content(),
-                updateSourceCodeRequest.ordinal()
+                request.filename(),
+                request.content(),
+                request.ordinal()
         );
     }
 
-    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
+    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest request) {
         return new SourceCode(
                 template,
-                createSourceCodeRequest.filename(),
-                createSourceCodeRequest.content(),
-                createSourceCodeRequest.ordinal()
+                request.filename(),
+                request.content(),
+                request.ordinal()
         );
     }
 
-    private void updateThumbnail(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        boolean isThumbnailDeleted = updateTemplateRequest.deleteSourceCodeIds()
+    private void updateThumbnail(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
+        boolean isThumbnailDeleted = request.deleteSourceCodeIds()
                 .contains(thumbnail.getSourceCode().getId());
         if (isThumbnailDeleted) {
             refreshThumbnail(template, thumbnail);
@@ -120,8 +120,8 @@ public class SourceCodeService {
                 .ifPresent(thumbnail::updateThumbnail);
     }
 
-    private void validateSourceCodeCountMatch(Template template, UpdateTemplateRequest updateTemplateRequest) {
-        if (updateTemplateRequest.countSourceCodes() != sourceCodeRepository.countByTemplate(template)) {
+    private void validateSourceCodeCountMatch(Template template, UpdateTemplateRequest request) {
+        if (request.countSourceCodes() != sourceCodeRepository.countByTemplate(template)) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
     }

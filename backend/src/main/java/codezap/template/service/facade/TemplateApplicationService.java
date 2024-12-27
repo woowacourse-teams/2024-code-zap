@@ -49,15 +49,15 @@ public class TemplateApplicationService {
 
     @Retryable(retryFor = DataIntegrityViolationException.class, maxAttempts = 3)
     @Transactional
-    public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
-        Category category = categoryService.fetchById(createTemplateRequest.categoryId());
+    public Long create(Member member, CreateTemplateRequest request) {
+        Category category = categoryService.fetchById(request.categoryId());
         category.validateAuthorization(member);
-        Template template = templateService.create(member, createTemplateRequest, category);
-        tagService.createTags(template, createTemplateRequest.tags());
-        sourceCodeService.createSourceCodes(template, createTemplateRequest);
+        Template template = templateService.create(member, request, category);
+        tagService.createTags(template, request.tags());
+        sourceCodeService.createSourceCodes(template, request);
         SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
                 template,
-                createTemplateRequest.thumbnailOrdinal());
+                request.thumbnailOrdinal());
         thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
     }
@@ -170,13 +170,13 @@ public class TemplateApplicationService {
     }
 
     @Transactional
-    public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
-        Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
+    public void update(Member member, Long templateId, UpdateTemplateRequest request) {
+        Category category = categoryService.fetchById(request.categoryId());
         category.validateAuthorization(member);
-        Template template = templateService.update(member, templateId, updateTemplateRequest, category);
-        tagService.updateTags(template, updateTemplateRequest.tags());
+        Template template = templateService.update(member, templateId, request, category);
+        tagService.updateTags(template, request.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);
-        sourceCodeService.updateSourceCodes(updateTemplateRequest, template, thumbnail);
+        sourceCodeService.updateSourceCodes(request, template, thumbnail);
     }
 
     @Transactional
