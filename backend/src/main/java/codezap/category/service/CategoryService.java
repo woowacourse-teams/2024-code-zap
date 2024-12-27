@@ -27,7 +27,7 @@ public class CategoryService {
     public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
         String categoryName = createCategoryRequest.name();
         validateDuplicatedCategory(categoryName, member);
-        Category category = categoryRepository.save(new Category(categoryName, member));
+        var category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
     }
 

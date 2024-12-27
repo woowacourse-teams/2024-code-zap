@@ -28,7 +28,7 @@ public class TemplateService {
 
     @Transactional
     public Template create(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
-        Template template = new Template(
+        var template = new Template(
                 member,
                 createTemplateRequest.title(),
                 createTemplateRequest.description(),

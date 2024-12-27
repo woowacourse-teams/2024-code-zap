@@ -57,7 +57,7 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public void setCredential(HttpServletResponse httpServletResponse, Credential credential) {
-        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
+        var responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
                 .maxAge(-1)
                 .path("/")
                 .sameSite(SameSite.NONE.attributeValue())
@@ -69,7 +69,7 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public void removeCredential(HttpServletResponse httpServletResponse) {
-        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME)
+        var responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME)
                 .maxAge(0)
                 .build();
         httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());

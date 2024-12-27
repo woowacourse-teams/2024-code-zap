@@ -49,8 +49,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         List<String> errorMessages = bindingResult.getAllErrors().stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
-        CodeZapException codeZapException =
-                new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", errorMessages));
+        var codeZapException = new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", errorMessages));
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
                 .body(codeZapException.toProblemDetail());
@@ -67,8 +66,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                     .collect(Collectors.joining(" ")) + " 필드의 형식이 잘못되었습니다.";
         }
 
-        CodeZapException codeZapException =
-                new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", exceptionMessage));
+        var codeZapException = new CodeZapException(ErrorCode.INVALID_REQUEST, String.join("\n", exceptionMessage));
 
         return ResponseEntity.status(codeZapException.getErrorCode().getHttpStatus())
                 .body(codeZapException.toProblemDetail());
@@ -77,8 +75,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ProblemDetail> handleException(Exception exception) {
         log.error("[Exception] 예상치 못한 오류 {} 가 발생했습니다. \n", exception.getClass().getName(), exception);
-        CodeZapException codeZapException =
-                new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "서버에서 예상치 못한 오류가 발생하였습니다.");
+        var codeZapException = new CodeZapException(ErrorCode.INTERNAL_SERVER_ERROR, "서버에서 예상치 못한 오류가 발생하였습니다.");
         return ResponseEntity.internalServerError()
                 .body(codeZapException.toProblemDetail());
     }
@@ -91,7 +88,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             return ResponseEntity.status(statusCode)
                     .body(setProperties((ProblemDetail) body, ErrorCode.SPRING_GLOBAL_EXCEPTION.getCode()));
         }
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(statusCode, DEFAULT_DETAIL_MASSAGE);
+        var problemDetail = ProblemDetail.forStatusAndDetail(statusCode, DEFAULT_DETAIL_MASSAGE);
         return ResponseEntity.status(statusCode)
                 .body(setProperties(problemDetail, ErrorCode.SPRING_GLOBAL_EXCEPTION.getCode()));
     }
@@ -99,7 +96,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public static ProblemDetail setProperties(ProblemDetail problemDetail, int code) {
         problemDetail.setProperty(PROPERTY_ERROR_CODE, code);
         problemDetail.setProperty(PROPERTY_TIMESTAMP, LocalDateTime.now().toString());
-
         return problemDetail;
     }
 }

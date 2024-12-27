@@ -29,7 +29,7 @@ public class TemplateOrderSpecifierUtils {
     );
 
     public static OrderSpecifier<?>[] getOrderSpecifier(Sort sort) {
-        List<OrderSpecifier<?>> orders = new ArrayList<>();
+        var orders = new ArrayList<OrderSpecifier<?>>();
         sort.forEach(order -> addOrder(order, orders));
 
         return orders.toArray(new OrderSpecifier[0]);

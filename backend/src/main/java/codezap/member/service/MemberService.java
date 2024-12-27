@@ -30,7 +30,7 @@ public class MemberService {
         assertUniqueName(request.name());
         String salt = saltGenerator.generate();
         String encryptedPassword = passwordEncryptor.encrypt(request.password(), salt);
-        Member member = memberRepository.save(new Member(request.name(), encryptedPassword, salt));
+        var member = memberRepository.save(new Member(request.name(), encryptedPassword, salt));
         categoryRepository.save(Category.createDefaultCategory(member));
         return member.getId();
     }

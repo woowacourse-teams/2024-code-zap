@@ -55,25 +55,25 @@ public class AuthOperationCustomizer implements OperationCustomizer {
     private ApiResponses generateAuthErrorResponse(Operation operation) {
         ApiResponses apiResponses = operation.getResponses();
 
-        Example noTokenCookieExample = new Example()
+        var noTokenCookieExample = new Example()
                 .externalValue("인증 쿠키 없음")
                 .description("쿠키는 있지만 Authorization 대한 담은 쿠키가 없는 경우")
                 .value(getExampleJsonString(
                         new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
                                 "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.").toProblemDetail()));
 
-        Example noCookiesExample = new Example()
+        var noCookiesExample = new Example()
                 .externalValue("모든 쿠키 없음")
                 .description("쿠키 자체가 null인 경우")
                 .value(getExampleJsonString(
                         new CodeZapException(ErrorCode.UNAUTHORIZED_USER,
                                 "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.").toProblemDetail()));
 
-        MediaType mediaType = new MediaType().schema(new Schema<>().$ref("#/components/schemas/Error"));
+        var mediaType = new MediaType().schema(new Schema<>().$ref("#/components/schemas/Error"));
         mediaType.addExamples("인증 쿠키 없음", noTokenCookieExample);
         mediaType.addExamples("모든 쿠키 없음", noCookiesExample);
 
-        ApiResponse unauthorizedResponse = new ApiResponse()
+        var unauthorizedResponse = new ApiResponse()
                 .description("회원 인증 실패")
                 .content(new Content().addMediaType(org.springframework.http.MediaType.APPLICATION_JSON_VALUE,
                         mediaType));

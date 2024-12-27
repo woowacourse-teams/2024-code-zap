@@ -10,7 +10,7 @@ public class RandomSaltGenerator implements SaltGenerator {
 
     @Override
     public String generate() {
-        SecureRandom byteGenerator = new SecureRandom();
+        var byteGenerator = new SecureRandom();
         byte[] saltByte = new byte[32];
         byteGenerator.nextBytes(saltByte);
         return Base64.getEncoder().encodeToString(saltByte);

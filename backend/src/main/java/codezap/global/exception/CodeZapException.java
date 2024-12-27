@@ -15,9 +15,7 @@ public class CodeZapException extends RuntimeException {
     }
 
     public ProblemDetail toProblemDetail() {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
-                errorCode.getHttpStatus(),
-                getMessage());
+        var problemDetail = ProblemDetail.forStatusAndDetail(errorCode.getHttpStatus(), getMessage());
         return GlobalExceptionHandler.setProperties(problemDetail, errorCode.getCode());
     }
 }

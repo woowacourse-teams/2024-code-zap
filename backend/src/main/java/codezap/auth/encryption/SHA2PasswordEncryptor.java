@@ -11,6 +11,7 @@ import codezap.global.exception.ErrorCode;
 
 @Component
 public class SHA2PasswordEncryptor implements PasswordEncryptor {
+
     private final MessageDigest digest;
 
     public SHA2PasswordEncryptor() {

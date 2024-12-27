@@ -34,8 +34,8 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+        var requestWrapper = new ContentCachingRequestWrapper(request);
+        var responseWrapper = new ContentCachingResponseWrapper(response);
 
         long startTime = System.currentTimeMillis();
         filterChain.doFilter(requestWrapper, responseWrapper);
@@ -65,7 +65,7 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     }
 
     private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
-        Map<String, String> headersMap = new HashMap<>();
+        var headersMap = new HashMap<String, String>();
         Enumeration<String> headerNames = requestWrapper.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
@@ -75,7 +75,7 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     }
 
     private String getHeaderAsJson(ContentCachingResponseWrapper responseWrapper) {
-        Map<String, String> headersMap = new HashMap<>();
+        var headersMap = new HashMap<String, String>();
         for (String headerName : responseWrapper.getHeaderNames()) {
             headersMap.put(headerName, responseWrapper.getHeader(headerName));
         }

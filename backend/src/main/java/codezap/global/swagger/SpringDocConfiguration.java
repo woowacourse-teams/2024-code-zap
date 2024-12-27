@@ -20,7 +20,7 @@ public class SpringDocConfiguration {
 
     @Bean
     public OpenAPI openAPI() {
-        Info info = new Info()
+        var info = new Info()
                 .title("코드잽 API")
                 .version("v1.0")
                 .description("""
@@ -28,7 +28,7 @@ public class SpringDocConfiguration {
                         모든 예외 응답의 메시지는 "detail" : "내부 서버 오류입니다." 와 같은 형태로 응답합니다. \n
                         """);
 
-        Components cookieComponent = new Components()
+        var cookieComponent = new Components()
                 .addSecuritySchemes("쿠키 인증 토큰", new SecurityScheme()
                         .type(Type.APIKEY)
                         .in(In.COOKIE)
