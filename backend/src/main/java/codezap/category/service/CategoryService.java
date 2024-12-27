@@ -58,12 +58,9 @@ public class CategoryService {
         validateIds(request);
 
         createCategories(member, request);
-        for (UpdateCategoryRequest updateCategory : request.updateCategories()) {
-            update(member, updateCategory);
-        }
-        for (Long deleteCategoryId : request.deleteCategoryIds()) {
-            delete(member, deleteCategoryId);
-        }
+        request.updateCategories().forEach(category -> update(member, category));
+        request.deleteCategoryIds().forEach(id -> delete(member, id));
+
         validateCategoriesCount(member, request);
     }
 
