@@ -13,7 +13,7 @@ import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
-import codezap.template.dto.request.validation.ValidatedOrdinalRequest;
+import codezap.global.validation.ValidatedOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateTemplateRequest(

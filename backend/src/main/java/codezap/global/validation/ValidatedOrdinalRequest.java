@@ -1,4 +1,4 @@
-package codezap.template.dto.request.validation;
+package codezap.global.validation;
 
 import java.util.List;
 
