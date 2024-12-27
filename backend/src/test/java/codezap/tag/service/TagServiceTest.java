@@ -1,14 +1,12 @@
 package codezap.tag.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -19,7 +17,6 @@ import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
-import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -142,72 +139,6 @@ class TagServiceTest extends ServiceTest {
 
             // when & then
             assertThat(sut.findAllByTemplate(template)).isEmpty();
-        }
-
-        @Test
-        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
-        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
-        void findAllByTemplate_WhenNotExistTemplate() {
-            // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template unSavedTemplate = TemplateFixture.get(member, category);
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-
-            // when & then
-            assertThatThrownBy(() -> sut.findAllByTemplate(unSavedTemplate))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
-        }
-    }
-
-    @Nested
-    @DisplayName("템플릿 Id로 태그 조회")
-    class FindAllByTemplateId {
-
-        @Test
-        @DisplayName("성공: 템플릿 Id에 해당하는 태그 목록 반환")
-        void findAllByTemplate() {
-            // given
-            Template template = createSavedTemplate();
-            Tag tag1 = tagRepository.save(new Tag("tag1"));
-            Tag tag2 = tagRepository.save(new Tag("tag2"));
-            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
-            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
-
-            // when & then
-            assertThat(sut.findAllByTemplateId(template.getId()))
-                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
-        }
-
-        @Test
-        @DisplayName("성공: 템플릿에 해당하는 태그가 없는 경우 빈 목록 반환")
-        void findAllByTemplate_WhenNotExistTemplateTag() {
-            // given
-            Template template = createSavedTemplate();
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-
-            // when & then
-            assertThat(sut.findAllByTemplateId(template.getId())).isEmpty();
-        }
-
-        @Test
-        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
-        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
-        void findAllByTemplate_WhenNotExistTemplate() {
-            // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template unSavedTemplate = TemplateFixture.get(member, category);
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-
-            // when & then
-            assertThatThrownBy(() -> sut.findAllByTemplateId(unSavedTemplate.getId()))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
         }
     }
 

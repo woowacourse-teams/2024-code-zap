@@ -135,32 +135,6 @@ class CategoryServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("카테고리 전체 조회 테스트")
-    class FindAllCategoryTest {
-
-        @Test
-        @DisplayName("성공")
-        void findAllCategoriesSuccess() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-
-            categoryRepository.save(new Category("category1", member, 1));
-            categoryRepository.save(new Category("category2", member, 2));
-
-            FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
-
-            assertThat(findAllCategoriesResponse.categories()).hasSize(2);
-        }
-
-        @Test
-        @DisplayName("성공 : 카테고리가 존재하지 않으면 빈 리스트를 반환한다.")
-        void findAllCategoriesEmptyList() {
-            FindAllCategoriesResponse findAllCategoriesResponse = sut.findAll();
-
-            assertThat(findAllCategoriesResponse.categories()).isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("카테고리 단건 조회 테스트")
     class FetchByIdTest {
 
@@ -258,7 +232,6 @@ class CategoryServiceTest extends ServiceTest {
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("기본 카테고리는 수정 및 삭제할 수 없습니다.");
         }
-
 
         @Test
         @DisplayName("카테고리 편집 실패: 중복된 카테고리 이름")

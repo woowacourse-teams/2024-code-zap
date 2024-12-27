@@ -29,10 +29,6 @@ public class CategoryRepository {
         return categoryJpaRepository.findAllByMemberIdOrderById(memberId);
     }
 
-    public List<Category> findAll() {
-        return categoryJpaRepository.findAll();
-    }
-
     public boolean existsByNameAndMember(String categoryName, Member member) {
         return categoryJpaRepository.existsByNameAndMember(categoryName, member);
     }

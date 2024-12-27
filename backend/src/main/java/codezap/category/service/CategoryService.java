@@ -44,10 +44,6 @@ public class CategoryService {
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberIdOrderById(memberId));
     }
 
-    public FindAllCategoriesResponse findAll() {
-        return FindAllCategoriesResponse.from(categoryRepository.findAll());
-    }
-
     public Category fetchById(Long id) {
         return categoryRepository.fetchById(id);
     }

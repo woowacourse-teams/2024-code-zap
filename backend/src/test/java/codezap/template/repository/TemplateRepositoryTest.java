@@ -77,28 +77,6 @@ class TemplateRepositoryTest {
     }
 
     @Nested
-    @DisplayName("회원 id로 템플릿 조회")
-    class FindByMemberId {
-
-        @Test
-        @DisplayName("회원 id로 템플릿 조회 성공")
-        void findByMemberId() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template savedTemplate = templateRepository.save(TemplateFixture.get(member, category));
-
-            assertThat(templateRepository.findByMemberId(member.getId())).containsExactly(savedTemplate);
-        }
-
-        @Test
-        @DisplayName("회원 id로 템플릿 조회 실패: 존재하지 않는 회원")
-        void findByMemberIdWhenNotExistsMember() {
-            Long notSavedId = 1L;
-            assertThat(templateRepository.findByMemberId(notSavedId)).isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("회원이 좋아요한 템플릿 조회 테스트")
     class FindAllByMemberId {
 

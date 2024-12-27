@@ -1,13 +1,11 @@
 package codezap.template.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -23,7 +21,6 @@ import codezap.category.repository.CategoryRepository;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
-import codezap.global.exception.CodeZapException;
 import codezap.global.pagination.FixedPage;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
@@ -110,22 +107,6 @@ class TemplateSearchServiceTest {
             assertThat(actual.contents()).containsExactlyInAnyOrder(templates.stream()
                     .filter(template -> template.getMember().getId().equals(member1.getId()))
                     .toArray(Template[]::new));
-        }
-
-        @Test
-        @Disabled("Pageable에 대한 null 검증이 필요함")
-        @DisplayName("검색 기능 실패: Pageable을 전달하지 않은 경우")
-        void findAllFailureWithNullPageable() {
-            Long memberId = member1.getId();
-            String keyword = null;
-            Long categoryId = null;
-            List<Long> tagIds = null;
-            Visibility visibility = null;
-            Pageable pageable = null;
-
-            assertThatThrownBy(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("Pageable을 필수로 작성해야 합니다.");
         }
 
         @ParameterizedTest
