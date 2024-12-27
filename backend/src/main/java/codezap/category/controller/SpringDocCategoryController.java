@@ -57,6 +57,10 @@ public interface SpringDocCategoryController {
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "카테고리 이름이 null 입니다."),
             @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우", exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
             @ErrorCase(description = "카테고리의 순서가 1보다 작은 경우", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
+            @ErrorCase(description = "중복된 카테고리 이름이 있는 경우", exampleMessage = "요청에 중복된 카테고리 이름이 존재합니다."),
+            @ErrorCase(description = "중복된 id가 있는 경우", exampleMessage = "요청에 중복된 id가 존재합니다."),
+            @ErrorCase(description = "카테고리의 개수가 일치하지 않는 경우(수정되지 않은 카테고리도 모두 보내주어야 합니다.)",
+                    exampleMessage = "카테고리의 개수가 일치하지 않습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
