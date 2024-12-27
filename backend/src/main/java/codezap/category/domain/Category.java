@@ -55,10 +55,7 @@ public class Category extends BaseTimeEntity {
     private long ordinal;
 
     public Category(String name, Member member, long ordinal) {
-        this.name = name;
-        this.member = member;
-        this.isDefault = false;
-        this.ordinal = ordinal;
+        this(null, member, name, false, ordinal);
     }
 
     public static Category createDefaultCategory(Member member) {
