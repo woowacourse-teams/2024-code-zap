@@ -1,27 +1,28 @@
 package codezap.auth;
 
-import static org.hamcrest.text.MatchesPattern.matchesPattern;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import codezap.auth.dto.request.LoginRequest;
-import codezap.global.IntegrationTest;
-import codezap.member.dto.request.SignupRequest;
 import jakarta.servlet.http.Cookie;
-import java.util.regex.Pattern;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
+
+import codezap.auth.dto.request.LoginRequest;
+import codezap.category.dto.request.CreateCategoryRequest;
+import codezap.category.dto.response.CreateCategoryResponse;
+import codezap.global.IntegrationTest;
+import codezap.member.dto.request.SignupRequest;
 
 class AuthAcceptanceTest extends IntegrationTest {
 
@@ -110,24 +111,32 @@ class AuthAcceptanceTest extends IntegrationTest {
     }
 
     @Nested
-    @DisplayName("로그아웃 성공:")
+    @DisplayName("로그아웃")
     class Logout {
 
         @Test
-        @DisplayName("쿠키 인증 정보를 정상적으로 삭제")
+        @DisplayName("성공")
         void logoutWithCookie() throws Exception {
             //given
             String name = "name";
             String password = "password123!";
             signup(name, password);
-            MvcResult loginResponse = requestLogin(name, password).andReturn();
-            Pattern expireCookieRegex = Pattern.compile("credential=.*?; Max-Age=0;.*?");
+            requestLogin(name, password);
+
+            MockHttpServletResponse createCategoryResponse = request(post("/categories")
+                    .content(objectMapper.writeValueAsString(new CreateCategoryRequest("new category"))))
+                    .andReturn().getResponse();
+            long createdCategoryId = objectMapper.readValue(
+                    createCategoryResponse.getContentAsString(),
+                    CreateCategoryResponse.class
+            ).id();
 
             //when
-            mvc.perform(post("/logout")
-                            .cookie(loginResponse.getResponse().getCookies()))
-                    .andExpect(header().string(HttpHeaders.SET_COOKIE, matchesPattern(expireCookieRegex)))
-                    .andReturn();
+            request(post("/logout"));
+
+            //then
+            request(delete("/categories/" + createdCategoryId))
+                    .andExpect(status().isNoContent());
         }
 
         @Disabled
@@ -140,16 +149,12 @@ class AuthAcceptanceTest extends IntegrationTest {
     private void signup(String name, String password) throws Exception {
         SignupRequest signupRequest = new SignupRequest(name, password);
 
-        mvc.perform(post("/signup")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
+        request(post("/signup")
                 .content(objectMapper.writeValueAsString(signupRequest)));
     }
 
     private ResultActions requestLogin(String name, String password) throws Exception {
-        return mvc.perform(post("/login")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
+        return request(post("/login")
                 .content(objectMapper.writeValueAsString(new LoginRequest(name, password))));
     }
 }
