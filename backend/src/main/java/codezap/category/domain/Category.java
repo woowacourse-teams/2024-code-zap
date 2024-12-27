@@ -24,13 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(
-        uniqueConstraints = @UniqueConstraint(
-                name = "name_with_member",
-                columnNames = {"member_id", "name"}
-        ),
-        indexes = @Index(name = "idx_member_id", columnList = "member_id")
-)
+@Table(indexes= @Index(name = "idx_member_id", columnList = "member_id"))
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Category extends BaseTimeEntity {
