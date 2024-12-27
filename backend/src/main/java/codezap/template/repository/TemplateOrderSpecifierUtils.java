@@ -29,14 +29,14 @@ public class TemplateOrderSpecifierUtils {
     );
 
     public static OrderSpecifier<?>[] getOrderSpecifier(Sort sort) {
-        List<OrderSpecifier<?>> orders = new ArrayList<>();
+        var orders = new ArrayList<OrderSpecifier<?>>();
         sort.forEach(order -> addOrder(order, orders));
 
         return orders.toArray(new OrderSpecifier[0]);
     }
 
     private static void addOrder(Sort.Order order, List<OrderSpecifier<?>> orders) {
-        Order direction = getOrder(order);
+        var direction = getOrder(order);
         orders.add(createOrderSpecifier(order.getProperty(), direction));
     }
 

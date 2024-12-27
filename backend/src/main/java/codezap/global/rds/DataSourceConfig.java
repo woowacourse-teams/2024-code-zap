@@ -1,7 +1,6 @@
 package codezap.global.rds;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -38,11 +37,11 @@ public class DataSourceConfig {
     @Bean
     @DependsOn({"writeDataSource", "readeDataSource"})
     public DataSource routeDataSource() {
-        DataSourceRouter dataSourceRouter = new DataSourceRouter();
-        DataSource writerDataSource = writeDataSource();
-        DataSource readerDataSource = readeDataSource();
+        var dataSourceRouter = new DataSourceRouter();
+        var writerDataSource = writeDataSource();
+        var readerDataSource = readeDataSource();
 
-        Map<Object, Object> dataSourceMap = new HashMap<>();
+        var dataSourceMap = new HashMap<>();
         dataSourceMap.put(DataSourceRouter.WRITER_KEY, writerDataSource);
         dataSourceMap.put(DataSourceRouter.READER_KEY, readerDataSource);
 

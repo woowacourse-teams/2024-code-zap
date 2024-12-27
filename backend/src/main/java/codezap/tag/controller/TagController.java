@@ -18,10 +18,8 @@ public class TagController implements SpringDocTagController {
     private final TagService tagService;
 
     @GetMapping
-    public ResponseEntity<FindAllTagsResponse> getTags(
-            @RequestParam Long memberId
-    ) {
-        FindAllTagsResponse response = tagService.findAllByMemberId(memberId);
+    public ResponseEntity<FindAllTagsResponse> getTags(@RequestParam Long memberId) {
+        var response = tagService.findAllByMemberId(memberId);
         return ResponseEntity.ok(response);
     }
 }

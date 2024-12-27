@@ -15,14 +15,14 @@ public class BasicAuthDecoder {
     private static final int BASIC_AUTH_LENGTH = 2;
 
     public static String[] decodeBasicAuth(String credential) {
-        String[] values = decodeBase64(credential).split(BASIC_AUTH_SEPARATOR, BASIC_AUTH_LENGTH);
+        var values = decodeBase64(credential).split(BASIC_AUTH_SEPARATOR, BASIC_AUTH_LENGTH);
         validateBasicAuth(values);
         return values;
     }
 
     private static String decodeBase64(String base64Credentials) {
         try {
-            byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+            var credDecoded = Base64.getDecoder().decode(base64Credentials);
             return new String(credDecoded, StandardCharsets.UTF_8);
         } catch (IllegalArgumentException e) {
             throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "잘못된 Base64 인코딩입니다.");

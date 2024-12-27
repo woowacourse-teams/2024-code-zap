@@ -2,7 +2,6 @@ package codezap.voc.config;
 
 import java.io.IOException;
 
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
 
@@ -16,7 +15,7 @@ public class VocResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public boolean hasError(ClientHttpResponse response) {
         try {
-            HttpStatusCode statusCode = response.getStatusCode();
+            var statusCode = response.getStatusCode();
             return statusCode.isError();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
@@ -27,7 +26,7 @@ public class VocResponseErrorHandler implements ResponseErrorHandler {
     @Override
     public void handleError(ClientHttpResponse response) {
         try {
-            HttpStatusCode statusCode = response.getStatusCode();
+            var statusCode = response.getStatusCode();
             log.error("{}", statusCode);
         } catch (IOException e) {
             log.error(e.getMessage(), e);

@@ -28,7 +28,7 @@ public class TemplateService {
 
     @Transactional
     public Template create(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
-        Template template = new Template(
+        var template = new Template(
                 member,
                 createTemplateRequest.title(),
                 createTemplateRequest.description(),
@@ -63,7 +63,7 @@ public class TemplateService {
             UpdateTemplateRequest updateTemplateRequest,
             Category category
     ) {
-        Template template = templateRepository.fetchById(templateId);
+        var template = templateRepository.fetchById(templateId);
         if (!template.matchMember(member)) {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
         }
@@ -85,7 +85,7 @@ public class TemplateService {
     }
 
     private void deleteById(Member member, Long id) {
-        Template template = templateRepository.fetchById(id);
+        var template = templateRepository.fetchById(id);
         if (!template.matchMember(member)) {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
         }

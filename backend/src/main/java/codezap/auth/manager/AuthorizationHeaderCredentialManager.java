@@ -13,7 +13,7 @@ public class AuthorizationHeaderCredentialManager implements CredentialManager {
 
     @Override
     public Credential getCredential(HttpServletRequest httpServletRequest) {
-        String authorizationHeaderValue = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        var authorizationHeaderValue = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         checkHeaderExist(authorizationHeaderValue);
 
         return Credential.from(authorizationHeaderValue);

@@ -36,7 +36,7 @@ public class CategoryController implements SpringDocCategoryController {
             @AuthenticationPrinciple Member member,
             @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
     ) {
-        CreateCategoryResponse createdCategory = categoryService.create(member, createCategoryRequest);
+        var createdCategory = categoryService.create(member, createCategoryRequest);
         return ResponseEntity.created(URI.create("/categories/" + createdCategory.id())).body(createdCategory);
     }
 

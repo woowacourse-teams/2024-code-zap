@@ -6,7 +6,6 @@ import org.hibernate.boot.model.FunctionContributions;
 import org.hibernate.dialect.MySQLDialect;
 import org.hibernate.query.ReturnableType;
 import org.hibernate.query.sqm.function.NamedSqmFunctionDescriptor;
-import org.hibernate.query.sqm.function.SqmFunctionRegistry;
 import org.hibernate.query.sqm.produce.function.StandardArgumentsValidators;
 import org.hibernate.sql.ast.SqlAstNodeRenderingMode;
 import org.hibernate.sql.ast.SqlAstTranslator;
@@ -19,13 +18,13 @@ public class FullTextSearchMySQLDialect extends MySQLDialect {
     public void initializeFunctionRegistry(FunctionContributions functionContributions) {	
         super.initializeFunctionRegistry(functionContributions);	
 
-        SqmFunctionRegistry functionRegistry = functionContributions.getFunctionRegistry();	
+        var functionRegistry = functionContributions.getFunctionRegistry();
         functionRegistry.register("match", ExactPhraseMatchFunction.INSTANCE);	
     }	
 
     public static class ExactPhraseMatchFunction extends NamedSqmFunctionDescriptor {	
 
-        public static final ExactPhraseMatchFunction INSTANCE = new ExactPhraseMatchFunction();	
+        public static final ExactPhraseMatchFunction INSTANCE = new ExactPhraseMatchFunction();
 
         public ExactPhraseMatchFunction() {	
             super("MATCH", false, StandardArgumentsValidators.exactly(3), null);	

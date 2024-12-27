@@ -11,7 +11,7 @@ public record Credential(String type, String value) {
     private static final int CREDENTIAL_LENGTH = 2;
 
     public static Credential from(String authorizationHeader) {
-        String[] typeAndCredential = authorizationHeader.split(DELIMITER);
+        var typeAndCredential = authorizationHeader.split(DELIMITER);
         if (typeAndCredential.length != CREDENTIAL_LENGTH) {
             throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 헤더의 값이 잘못되었습니다.");
         }

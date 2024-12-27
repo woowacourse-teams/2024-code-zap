@@ -1,6 +1,5 @@
 package codezap.template.dto.request.validation;
 
-import java.util.List;
 import java.util.stream.IntStream;
 
 import jakarta.validation.ConstraintValidator;
@@ -13,7 +12,7 @@ public class SourceCodesOrdinalValidator implements
     public boolean isValid(ValidatedSourceCodesOrdinalRequest validatedSourceCodesOrdinalRequest,
             ConstraintValidatorContext constraintValidatorContext
     ) {
-        List<Integer> indexes = validatedSourceCodesOrdinalRequest.extractSourceCodesOrdinal();
+        var indexes = validatedSourceCodesOrdinalRequest.extractSourceCodesOrdinal();
         return IntStream.range(0, indexes.size())
                 .allMatch(index -> indexes.get(index) == index + 1);
     }

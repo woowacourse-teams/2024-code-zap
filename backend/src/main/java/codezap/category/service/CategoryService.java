@@ -25,9 +25,9 @@ public class CategoryService {
 
     @Transactional
     public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
-        String categoryName = createCategoryRequest.name();
+        var categoryName = createCategoryRequest.name();
         validateDuplicatedCategory(categoryName, member);
-        Category category = categoryRepository.save(new Category(categoryName, member));
+        var category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
     }
 
@@ -42,7 +42,7 @@ public class CategoryService {
     @Transactional
     public void update(Member member, Long id, UpdateCategoryRequest updateCategoryRequest) {
         validateDuplicatedCategory(updateCategoryRequest.name(), member);
-        Category category = categoryRepository.fetchById(id);
+        var category = categoryRepository.fetchById(id);
         category.validateAuthorization(member);
         category.updateName(updateCategoryRequest.name());
     }
@@ -55,7 +55,7 @@ public class CategoryService {
 
     @Transactional
     public void deleteById(Member member, Long id) {
-        Category category = categoryRepository.fetchById(id);
+        var category = categoryRepository.fetchById(id);
         category.validateAuthorization(member);
 
         if (templateRepository.existsByCategoryId(id)) {

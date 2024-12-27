@@ -26,9 +26,9 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
 
     @Override
     public BooleanExpression matchedKeyword(String trimmedKeyword) {
-        String parsedKeyword = parseKeyword(trimmedKeyword);
-        NumberExpression<Double> titleScore = getMatchedAccuracy(template.title, template.description, parsedKeyword);
-        NumberExpression<Double> sourceCodeScore = getMatchedAccuracy(sourceCode.filename, sourceCode.content, parsedKeyword);
+        var parsedKeyword = parseKeyword(trimmedKeyword);
+        var titleScore = getMatchedAccuracy(template.title, template.description, parsedKeyword);
+        var sourceCodeScore = getMatchedAccuracy(sourceCode.filename, sourceCode.content, parsedKeyword);
         return titleScore.gt(NO_MATCHED_SCORE).or(
                 template.id.in(JPAExpressions
                         .select(sourceCode.template.id)
@@ -39,7 +39,7 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
     }
 
     private String parseKeyword(String trimmedKeyword) {
-        String[] parsedKeywords = trimmedKeyword.split(" ");
+        var parsedKeywords = trimmedKeyword.split(" ");
         return Arrays.stream(parsedKeywords)
                 .map(keyword -> INVALID_CHAR_PATTERN.matcher(keyword).replaceAll(""))
                 .filter(keyword -> !keyword.isEmpty())

@@ -20,14 +20,14 @@ public class AuthService {
     private final PasswordEncryptor passwordEncryptor;
 
     public LoginMember login(LoginRequest loginRequest) {
-        Member member = memberRepository.fetchByName(loginRequest.name());
+        var member = memberRepository.fetchByName(loginRequest.name());
         validateCorrectPassword(member, loginRequest.password());
         return LoginMember.from(member);
     }
 
     private void validateCorrectPassword(Member member, String password) {
-        String salt = member.getSalt();
-        String encryptedPassword = passwordEncryptor.encrypt(password, salt);
+        var salt = member.getSalt();
+        var encryptedPassword = passwordEncryptor.encrypt(password, salt);
         if (!member.matchPassword(encryptedPassword)) {
             throw new CodeZapException(ErrorCode.UNAUTHORIZED_PASSWORD, "로그인에 실패하였습니다. 비밀번호를 확인해주세요.");
         }

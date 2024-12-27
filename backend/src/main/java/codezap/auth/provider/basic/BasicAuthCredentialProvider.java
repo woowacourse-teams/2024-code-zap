@@ -1,7 +1,5 @@
 package codezap.auth.provider.basic;
 
-import codezap.auth.dto.LoginMember;
-import codezap.auth.dto.Credential;
 import java.nio.charset.StandardCharsets;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
+import codezap.auth.dto.Credential;
+import codezap.auth.dto.LoginMember;
 import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
@@ -24,14 +24,14 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
 
     @Override
     public Credential createCredential(LoginMember loginMember) {
-        String credentialValue = HttpHeaders.encodeBasicAuth(loginMember.name(), loginMember.password(), StandardCharsets.UTF_8);
+        var credentialValue = HttpHeaders.encodeBasicAuth(loginMember.name(), loginMember.password(), StandardCharsets.UTF_8);
         return Credential.basic(credentialValue);
     }
 
     @Override
     public Member extractMember(Credential credential) {
-        String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential.value());
-        Member member = memberRepository.fetchByName(nameAndPassword[0]);
+        var nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential.value());
+        var member = memberRepository.fetchByName(nameAndPassword[0]);
         checkMatchPassword(member, nameAndPassword[1]);
         return member;
     }

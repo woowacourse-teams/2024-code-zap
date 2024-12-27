@@ -24,11 +24,10 @@ public class TagService {
 
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
-        List<Tag> existTags = tagRepository.findAllByNames(tagNames);
-        List<String> existNames = getExistTagNames(existTags);
-
-        List<Tag> newTags = getOnlyNewTags(existNames, tagNames);
-        List<Tag> savedNewTags = tagRepository.saveAll(newTags);
+        var existTags = tagRepository.findAllByNames(tagNames);
+        var existNames = getExistTagNames(existTags);
+        var newTags = getOnlyNewTags(existNames, tagNames);
+        var savedNewTags = tagRepository.saveAll(newTags);
         existTags.addAll(savedNewTags);
         saveTemplateTags(template, existTags);
     }
@@ -48,7 +47,7 @@ public class TagService {
     }
 
     private void saveTemplateTags(Template template, List<Tag> tags) {
-        List<TemplateTag> templateTags = tags.stream()
+        var templateTags = tags.stream()
                 .map(tag -> new TemplateTag(template, tag))
                 .toList();
         templateTagRepository.saveAll(templateTags);
@@ -59,12 +58,12 @@ public class TagService {
     }
 
     public List<TemplateTag> getAllTemplateTagsByTemplates(List<Template> templates) {
-        List<Long> templateIds = templates.stream().map(Template::getId).toList();
+        var templateIds = templates.stream().map(Template::getId).toList();
         return templateTagRepository.findAllByTemplateIdsIn(templateIds);
     }
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
-        List<Tag> tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
+        var tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
         return new FindAllTagsResponse(tags.stream()
                 .map(FindTagResponse::from)
                 .toList());

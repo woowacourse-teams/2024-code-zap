@@ -23,8 +23,8 @@ public class SHA2PasswordEncryptor implements PasswordEncryptor {
 
     @Override
     public String encrypt(String plainPassword, String salt) {
-        String passwordWithSalt = plainPassword + salt;
-        byte[] encryptByte = digest.digest(passwordWithSalt.getBytes());
+        var passwordWithSalt = plainPassword + salt;
+        var encryptByte = digest.digest(passwordWithSalt.getBytes());
         return Base64.getEncoder().encodeToString(encryptByte);
     }
 }

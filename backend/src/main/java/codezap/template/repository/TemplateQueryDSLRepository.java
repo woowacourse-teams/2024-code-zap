@@ -32,7 +32,7 @@ public class TemplateQueryDSLRepository {
             Visibility visibility,
             Pageable pageable
     ) {
-        List<Template> content = getTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
+        var content = getTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
         int nextFixedPage = countMaxPageOfTemplates(memberId, keyword, categoryId, tagIds, visibility, pageable);
         return new FixedPage<>(content, nextFixedPage);
     }
@@ -88,7 +88,7 @@ public class TemplateQueryDSLRepository {
     }
 
     public FixedPage<Template> findAllLikedByMemberId(Long memberId, Pageable pageable) {
-        List<Template> content = queryFactory.select(QLikes.likes.template)
+        var content = queryFactory.select(QLikes.likes.template)
                 .from(QLikes.likes)
                 .where(isLikedTemplateByMember(memberId))
                 .orderBy(TemplateOrderSpecifierUtils.getOrderSpecifier(pageable.getSort()))
@@ -109,11 +109,10 @@ public class TemplateQueryDSLRepository {
     }
 
     private static BooleanExpression isLikedTemplateByMember(Long memberId) {
-        BooleanExpression isLikedByMemberId = QLikes.likes.member.id.eq(memberId);
-        BooleanExpression isLikedTemplateByMemberId = QLikes.likes.template.member.id.eq(memberId);
-        BooleanExpression isTemplatePublic = QLikes.likes.template.visibility.eq(Visibility.PUBLIC);
+        var isLikedByMemberId = QLikes.likes.member.id.eq(memberId);
+        var isLikedTemplateByMemberId = QLikes.likes.template.member.id.eq(memberId);
+        var isTemplatePublic = QLikes.likes.template.visibility.eq(Visibility.PUBLIC);
 
         return isLikedByMemberId.and(isLikedTemplateByMemberId.or(isTemplatePublic));
     }
 }
-

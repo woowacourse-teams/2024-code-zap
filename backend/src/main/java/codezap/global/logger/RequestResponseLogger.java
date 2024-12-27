@@ -1,7 +1,6 @@
 package codezap.global.logger;
 
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,8 +33,8 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        ContentCachingRequestWrapper requestWrapper = new ContentCachingRequestWrapper(request);
-        ContentCachingResponseWrapper responseWrapper = new ContentCachingResponseWrapper(response);
+        var requestWrapper = new ContentCachingRequestWrapper(request);
+        var responseWrapper = new ContentCachingResponseWrapper(response);
 
         long startTime = System.currentTimeMillis();
         filterChain.doFilter(requestWrapper, responseWrapper);
@@ -50,12 +49,12 @@ public class RequestResponseLogger extends OncePerRequestFilter {
             ContentCachingRequestWrapper requestWrapper, long duration, ContentCachingResponseWrapper responseWrapper
     ) {
         int status = response.getStatus();
-        String requestMessage = String.format(
+        var requestMessage = String.format(
                 "[Request] %s %s, 헤더 값: %s",
                 request.getMethod(),
                 request.getRequestURI(),
                 getHeaderAsJson(requestWrapper));
-        String responseMessage = String.format(
+        var responseMessage = String.format(
                 "[Response] status: %d, duration: %dms, headers: %s",
                 status,
                 duration,
@@ -65,8 +64,8 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     }
 
     private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
-        Map<String, String> headersMap = new HashMap<>();
-        Enumeration<String> headerNames = requestWrapper.getHeaderNames();
+        var headersMap = new HashMap<String, String>();
+        var headerNames = requestWrapper.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
             headersMap.put(headerName, requestWrapper.getHeader(headerName));
@@ -75,8 +74,8 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     }
 
     private String getHeaderAsJson(ContentCachingResponseWrapper responseWrapper) {
-        Map<String, String> headersMap = new HashMap<>();
-        for (String headerName : responseWrapper.getHeaderNames()) {
+        var headersMap = new HashMap<String, String>();
+        for (var headerName : responseWrapper.getHeaderNames()) {
             headersMap.put(headerName, responseWrapper.getHeader(headerName));
         }
         return convertMapToJson(headersMap);
@@ -108,7 +107,7 @@ public class RequestResponseLogger extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
+        var path = request.getRequestURI();
         return path.contains("/swagger") || path.contains("/v3/api-docs") || path.contains("/actuator");
     }
 }

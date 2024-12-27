@@ -69,22 +69,22 @@ public class SourceCodeService {
     }
 
     private void validateSourceCodeCount(ValidatedSourceCodesCountRequest request) {
-        if(request.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
+        if (request.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
         }
     }
 
     private void validateSourceCodesOrdinal(ValidatedSourceCodesOrdinalRequest request) {
-        List<Integer> indexes = request.extractSourceCodesOrdinal();
+        var indexes = request.extractSourceCodesOrdinal();
         boolean isOrderValid = IntStream.range(0, indexes.size())
                 .allMatch(index -> indexes.get(index) == index + 1);
-        if(!isOrderValid) {
+        if (!isOrderValid) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드 순서가 잘못되었습니다.");
         }
     }
 
     private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
-        SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
+        var sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
         sourceCode.updateSourceCode(
                 updateSourceCodeRequest.filename(),
                 updateSourceCodeRequest.content(),
@@ -110,10 +110,7 @@ public class SourceCodeService {
     }
 
     private void refreshThumbnail(Template template, Thumbnail thumbnail) {
-        List<SourceCode> sourceCodes = sourceCodeRepository.findAllByTemplateAndOrdinal(
-                template,
-                thumbnail.getSourceCode().getOrdinal()
-        );
+        var sourceCodes = sourceCodeRepository.findAllByTemplateAndOrdinal(template, thumbnail.getSourceCode().getOrdinal());
         sourceCodes.stream()
                 .filter(sourceCode -> !Objects.equals(thumbnail.getSourceCode(), sourceCode))
                 .findFirst()

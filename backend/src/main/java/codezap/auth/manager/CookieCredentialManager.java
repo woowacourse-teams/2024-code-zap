@@ -1,20 +1,20 @@
 package codezap.auth.manager;
 
-import codezap.auth.dto.Credential;
 import java.util.Arrays;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import codezap.auth.dto.Credential;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
@@ -24,10 +24,10 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public Credential getCredential(HttpServletRequest httpServletRequest) {
-        Cookie[] cookies = httpServletRequest.getCookies();
+        var cookies = httpServletRequest.getCookies();
         checkCookieExist(cookies);
 
-        Cookie credentialCookie = extractTokenCookie(cookies);
+        var credentialCookie = extractTokenCookie(cookies);
         return Credential.basic(credentialCookie.getValue());
     }
 
@@ -39,7 +39,7 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public boolean hasCredential(HttpServletRequest httpServletRequest) {
-        Cookie[] cookies = httpServletRequest.getCookies();
+        var cookies = httpServletRequest.getCookies();
         if (cookies == null) {
             return false;
         }
@@ -57,7 +57,7 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public void setCredential(HttpServletResponse httpServletResponse, Credential credential) {
-        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
+        var responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME, credential.value())
                 .maxAge(-1)
                 .path("/")
                 .sameSite(SameSite.NONE.attributeValue())
@@ -69,7 +69,7 @@ public class CookieCredentialManager implements CredentialManager {
 
     @Override
     public void removeCredential(HttpServletResponse httpServletResponse) {
-        ResponseCookie responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME)
+        var responseCookie = ResponseCookie.from(CREDENTIAL_COOKIE_NAME)
                 .maxAge(0)
                 .build();
         httpServletResponse.setHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());

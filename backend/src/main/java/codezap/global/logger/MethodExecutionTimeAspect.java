@@ -22,15 +22,15 @@ public class MethodExecutionTimeAspect {
         }
 
         long startTime = System.currentTimeMillis();
-        Object result = joinPoint.proceed();
+        var result = joinPoint.proceed();
         long endTime = System.currentTimeMillis();
 
         long executionTimeMillis = endTime - startTime;
 
-        String className = joinPoint.getSignature()
+        var className = joinPoint.getSignature()
                 .getDeclaringType()
                 .getSimpleName();
-        String methodName = joinPoint.getSignature()
+        var methodName = joinPoint.getSignature()
                 .getName();
 
         log.debug("{}.{} 실행 {}ms", className, methodName, executionTimeMillis);
