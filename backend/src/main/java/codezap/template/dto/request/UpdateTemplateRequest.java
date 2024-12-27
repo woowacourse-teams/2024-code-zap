@@ -53,12 +53,14 @@ public record UpdateTemplateRequest(
         @NotNull(message = "템플릿 공개 여부가 null 입니다.", groups = NotNullGroup.class)
         Visibility visibility
 ) implements ValidatedSourceCodesOrdinalRequest, ValidatedSourceCodesCountRequest {
+
     @Override
     public List<Integer> extractSourceCodesOrdinal() {
         return Stream.concat(
-                updateSourceCodes.stream().map(UpdateSourceCodeRequest::ordinal),
-                createSourceCodes.stream().map(CreateSourceCodeRequest::ordinal)
-        ).toList();
+                        updateSourceCodes.stream().map(UpdateSourceCodeRequest::ordinal),
+                        createSourceCodes.stream().map(CreateSourceCodeRequest::ordinal)
+                ).sorted()
+                .toList();
     }
 
     @Override

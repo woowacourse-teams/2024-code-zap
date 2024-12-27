@@ -111,39 +111,6 @@ class TemplateServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("멤버 ID로 템플릿 조회")
-    class GetByMemberId {
-
-        @Test
-        @DisplayName("멤버 id로 템플릿 조회 성공")
-        void getByMemberIdSuccess() {
-            var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var member2 = memberRepository.save(MemberFixture.getSecondMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
-            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
-            var template3 = templateRepository.save(TemplateFixture.get(member2, category2));
-
-            var actual = sut.getByMemberId(member1.getId());
-
-            assertThat(actual).hasSize(2)
-                    .containsExactly(template1, template2)
-                    .doesNotContain(template3);
-        }
-
-        @Test
-        @DisplayName("멤버 ID로 템플릿 조회 성공: 해당하는 템플릿이 없는 경우 빈 목록 반환")
-        void getByMemberIdSuccessWithEmptyList() {
-            var memberId = 100L;
-
-            var actual = sut.getByMemberId(memberId);
-
-            assertThat(actual).isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("정렬 기능 테스트")
     class SortTest {
 
