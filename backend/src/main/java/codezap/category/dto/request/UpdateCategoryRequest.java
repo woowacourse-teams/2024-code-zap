@@ -20,6 +20,6 @@ public record UpdateCategoryRequest(
 
         @Schema(description = "카테고리 순서", example = "1")
         @NotNull(message = "카테고리 순서가 null 입니다.", groups = NotNullGroup.class)
-        Long ordinal
+        Integer ordinal
 ) {
 }

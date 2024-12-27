@@ -18,6 +18,6 @@ public record CreateCategoryRequest(
         @Schema(description = "카테고리 순서", example = "1")
         @NotNull(message = "카테고리 순서가 null 입니다.", groups = NotNullGroup.class)
         @Min(value = 1, message = "카테고리의 순서는 1 이상이어야 합니다.")
-        Long ordinal
+        Integer ordinal
 ) {
 }
