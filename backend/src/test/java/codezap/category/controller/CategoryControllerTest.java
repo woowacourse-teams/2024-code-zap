@@ -217,5 +217,43 @@ class CategoryControllerTest extends MockMvcTest {
                     .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."))
                     .andExpect(jsonPath("$.errorCode").value(1101));
         }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 중복된 카테고리 이름")
+        void duplicatedCategoryName() throws Exception {
+            String duplicatedName = "duplicatedName";
+            CreateCategoryRequest createRequest = new CreateCategoryRequest(duplicatedName, 2);
+            UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(1L, duplicatedName, 1);
+
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(createRequest),
+                    List.of(updateRequest),
+                    List.of());
+
+            mvc.perform(put("/categories")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("카테고리명이 중복되었습니다."))
+                    .andExpect(jsonPath("$.errorCode").value(1101));
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 중복된 id 수정 및 삭제")
+        void deleteByIdFailDuplicatedId() throws Exception {
+            UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(1L, "category1", 1);
+
+            var request = new UpdateAllCategoriesRequest(
+                    List.of(),
+                    List.of(updateRequest),
+                    List.of(1L));
+
+            mvc.perform(put("/categories")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(objectMapper.writeValueAsString(request)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("id가 중복되었습니다."))
+                    .andExpect(jsonPath("$.errorCode").value(1101));
+        }
     }
 }

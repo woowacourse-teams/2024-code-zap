@@ -9,4 +9,8 @@ public class ValidationGroups {
     public interface SourceCodeCountGroup {}
 
     public interface SizeCheckGroup {}
+
+    public interface DuplicateIdGroup{}
+
+    public interface DuplicateNameGroup {}
 }

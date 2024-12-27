@@ -234,25 +234,6 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("카테고리 편집 실패: 중복된 카테고리 이름")
-        void duplicatedCategoryName() {
-            String duplicatedName = "duplicatedName";
-            Category category = categoryRepository.save(new Category(duplicatedName, member, 1));
-
-            CreateCategoryRequest createRequest = new CreateCategoryRequest(duplicatedName, 2);
-            UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(category.getId(), category.getName(),
-                    category.getOrdinal());
-
-            assertThatThrownBy(
-                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
-                            List.of(createRequest),
-                            List.of(updateRequest),
-                            List.of())))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("요청에 중복된 카테고리 이름이 존재합니다.");
-        }
-
-        @Test
         @DisplayName("카테고리 편집 실패: 존재하지 않는 카테고리 수정")
         void notSavedCategoryId() {
             long notSavedId = 100L;
@@ -323,21 +304,6 @@ class CategoryServiceTest extends ServiceTest {
                             List.of(defaultCategory.getId()))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("기본 카테고리는 수정 및 삭제할 수 없습니다.");
-        }
-
-        @Test
-        @DisplayName("카테고리 편집 실패: 중복된 id 수정 및 삭제")
-        void deleteByIdFailDuplicatedId() {
-            Category category = categoryRepository.save(new Category("카테고리 1", member, 1));
-            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), category.getName(), 1);
-
-            assertThatThrownBy(
-                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
-                            List.of(),
-                            List.of(request),
-                            List.of(category.getId()))))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("요청에 중복된 id가 존재합니다.");
         }
 
         @Test

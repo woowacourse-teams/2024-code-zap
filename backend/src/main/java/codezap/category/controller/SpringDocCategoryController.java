@@ -53,12 +53,12 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
             @ErrorCase(description = "기본 카테고리를 수정 또는 삭제한 경우", exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다."),
             @ErrorCase(description = "카테고리 이름이 15자를 초과한 경우", exampleMessage = "카테고리 이름은 최대 15자까지 입력 가능합니다."),
-            @ErrorCase(description = "카테고리의 순서가 잘못된 경우", exampleMessage = "카테고리 순서가 잘못되었습니다."),
+            @ErrorCase(description = "카테고리의 순서가 잘못된 경우", exampleMessage = "순서가 잘못되었습니다."),
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "카테고리 이름이 null 입니다."),
             @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우", exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
             @ErrorCase(description = "카테고리의 순서가 1보다 작은 경우", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
-            @ErrorCase(description = "중복된 카테고리 이름이 있는 경우", exampleMessage = "요청에 중복된 카테고리 이름이 존재합니다."),
-            @ErrorCase(description = "중복된 id가 있는 경우", exampleMessage = "요청에 중복된 id가 존재합니다."),
+            @ErrorCase(description = "중복된 카테고리 이름이 있는 경우", exampleMessage = "카테고리명이 중복되었습니다."),
+            @ErrorCase(description = "중복된 id가 있는 경우", exampleMessage = "id가 중복되었습니다."),
             @ErrorCase(description = "카테고리의 개수가 일치하지 않는 경우(수정되지 않은 카테고리도 모두 보내주어야 합니다.)",
                     exampleMessage = "카테고리의 개수가 일치하지 않습니다."),
     })

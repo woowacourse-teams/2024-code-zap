@@ -67,6 +67,12 @@ public class Category extends BaseTimeEntity {
         }
     }
 
+    public void validateDefaultCategory() {
+        if (isDefault()) {
+            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 수정 및 삭제할 수 없습니다.");
+        }
+    }
+
     public boolean isDefault() {
         return isDefault;
     }
