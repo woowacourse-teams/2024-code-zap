@@ -63,8 +63,8 @@ public class CategoryService {
     private void updateCategories(List<UpdateCategoryRequest> updates, Member member) {
         updates.forEach(update -> {
             Category category = categoryRepository.fetchById(update.id());
-            category.validateAuthorization(member);
-            category.validateDefaultCategory();
+            validationService.validateAuthorization(category, member);
+            validationService.validateDefaultCategory(category);
             category.update(update.name(), update.ordinal());
         });
     }
@@ -72,8 +72,8 @@ public class CategoryService {
     private void deleteCategories(List<Long> ids, Member member) {
         ids.forEach(id -> {
             Category category = categoryRepository.fetchById(id);
-            category.validateAuthorization(member);
-            category.validateDefaultCategory();
+            validationService.validateAuthorization(category, member);
+            validationService.validateDefaultCategory(category);
             validationService.validateHasTemplate(id);
             categoryRepository.deleteById(id);
         });

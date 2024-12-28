@@ -9,11 +9,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 
 import codezap.global.auditing.BaseTimeEntity;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -61,17 +58,11 @@ public class Category extends BaseTimeEntity {
         this.ordinal = ordinal;
     }
 
-    public void validateAuthorization(Member member) {
-        if (!getMember().equals(member)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
-        }
+    public boolean hasAuthorization(Member member) {
+        return this.member.equals(member);
     }
 
-    public void validateDefaultCategory() {
-        if (isDefault()) {
-            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 수정 및 삭제할 수 없습니다.");
-        }
-    }
+
 
     public boolean isDefault() {
         return isDefault;

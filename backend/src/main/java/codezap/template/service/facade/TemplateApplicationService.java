@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.category.domain.Category;
 import codezap.category.service.CategoryService;
+import codezap.category.service.CategoryValidationService;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.global.pagination.FixedPage;
@@ -46,12 +47,13 @@ public class TemplateApplicationService {
     private final TagService tagService;
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
+    private final CategoryValidationService categoryValidationService;
 
     @Retryable(retryFor = DataIntegrityViolationException.class, maxAttempts = 3)
     @Transactional
     public Long create(Member member, CreateTemplateRequest createTemplateRequest) {
         Category category = categoryService.fetchById(createTemplateRequest.categoryId());
-        category.validateAuthorization(member);
+        categoryValidationService.validateAuthorization(category, member);
         Template template = templateService.create(member, createTemplateRequest, category);
         tagService.createTags(template, createTemplateRequest.tags());
         sourceCodeService.createSourceCodes(template, createTemplateRequest);
@@ -172,7 +174,7 @@ public class TemplateApplicationService {
     @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest updateTemplateRequest) {
         Category category = categoryService.fetchById(updateTemplateRequest.categoryId());
-        category.validateAuthorization(member);
+        categoryValidationService.validateAuthorization(category, member);
         Template template = templateService.update(member, templateId, updateTemplateRequest, category);
         tagService.updateTags(template, updateTemplateRequest.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);

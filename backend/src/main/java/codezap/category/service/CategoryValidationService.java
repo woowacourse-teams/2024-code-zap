@@ -6,6 +6,7 @@ import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 
+import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.repository.CategoryRepository;
@@ -46,6 +47,18 @@ public class CategoryValidationService {
         if (request.updateCategories().size() + request.createCategories().size()
                 != categoryRepository.countByMember(member) - 1) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리의 개수가 일치하지 않습니다.");
+        }
+    }
+
+    public void validateAuthorization(Category category, Member member) {
+        if (!category.hasAuthorization(member)) {
+            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
+        }
+    }
+
+    public void validateDefaultCategory(Category category) {
+        if (category.isDefault()) {
+            throw new CodeZapException(ErrorCode.DEFAULT_CATEGORY, "기본 카테고리는 수정 및 삭제할 수 없습니다.");
         }
     }
 
