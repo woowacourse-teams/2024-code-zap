@@ -30,7 +30,6 @@ public class CategoryService {
     public CreateCategoryResponse create(Member member, CreateCategoryRequest request) {
         validateDuplicatedCategory(request.name(), member);
         validateOrdinal(member, request);
-
         Category category = categoryRepository.save(createCategory(member, request));
         return CreateCategoryResponse.from(category);
     }
@@ -52,13 +51,12 @@ public class CategoryService {
         createCategories(member, request);
         updateCategories(request.updateCategories(), member);
         deleteCategories(request.deleteCategoryIds(), member);
-
         validateCategoriesCount(member, request);
     }
 
     private void createCategories(Member member, UpdateAllCategoriesRequest request) {
         categoryRepository.saveAll(request.createCategories().stream()
-                .map(createRequest -> new Category(createRequest.name(), member, createRequest.ordinal()))
+                .map(createRequest -> createCategory(member, createRequest))
                 .toList());
     }
 
