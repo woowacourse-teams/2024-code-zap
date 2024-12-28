@@ -23,7 +23,7 @@ public class TagController implements SpringDocTagController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/popular")
+    @GetMapping("/top")
     public ResponseEntity<FindAllTagsResponse> getTopTags(@RequestParam(defaultValue = "10") int size) {
         FindAllTagsResponse response = tagService.getPopularTags(size);
         return ResponseEntity.ok(response);
