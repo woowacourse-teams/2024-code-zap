@@ -234,6 +234,25 @@ class CategoryServiceTest extends ServiceTest {
         }
 
         @Test
+        @DisplayName("카테고리 편집 실패: 중복된 카테고리 이름")
+        void duplicatedCategoryName() {
+            String duplicatedName = "duplicatedName";
+            Category category = categoryRepository.save(new Category(duplicatedName, member, 1));
+
+            CreateCategoryRequest createRequest = new CreateCategoryRequest(duplicatedName, 2);
+            UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(category.getId(), category.getName(),
+                    category.getOrdinal());
+
+            assertThatThrownBy(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                            List.of(createRequest),
+                            List.of(updateRequest),
+                            List.of())))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("카테고리명이 중복되었습니다.");
+        }
+
+        @Test
         @DisplayName("카테고리 편집 실패: 존재하지 않는 카테고리 수정")
         void notSavedCategoryId() {
             long notSavedId = 100L;
@@ -246,6 +265,44 @@ class CategoryServiceTest extends ServiceTest {
                             List.of())))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notSavedId + "에 해당하는 카테고리가 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 중복된 순서")
+        void duplicatedCategoryOrdinal() {
+            Category category1 = categoryRepository.save(new Category("category1", member, 1));
+            Category category2 = categoryRepository.save(new Category("category2", member, 2));
+
+            CreateCategoryRequest createRequest = new CreateCategoryRequest("category3", category2.getOrdinal());
+            UpdateCategoryRequest request1 = new UpdateCategoryRequest(category1.getId(), category1.getName(), 2);
+            UpdateCategoryRequest request2 = new UpdateCategoryRequest(category2.getId(), category2.getName(), 1);
+
+            assertThatThrownBy(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                            List.of(createRequest),
+                            List.of(request1, request2),
+                            List.of())))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("순서가 잘못되었습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 연속되지 않는 순서")
+        void nonSequentialCategoryOrdinal() {
+            Category category1 = categoryRepository.save(new Category("category1", member, 1));
+            Category category2 = categoryRepository.save(new Category("category2", member, 2));
+
+            CreateCategoryRequest createRequest = new CreateCategoryRequest("category3", 4);
+            UpdateCategoryRequest request1 = new UpdateCategoryRequest(category1.getId(), category1.getName(), 2);
+            UpdateCategoryRequest request2 = new UpdateCategoryRequest(category2.getId(), category2.getName(), 1);
+
+            assertThatThrownBy(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                            List.of(createRequest),
+                            List.of(request1, request2),
+                            List.of())))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("순서가 잘못되었습니다.");
         }
 
         @Test
@@ -304,6 +361,21 @@ class CategoryServiceTest extends ServiceTest {
                             List.of(defaultCategory.getId()))))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("기본 카테고리는 수정 및 삭제할 수 없습니다.");
+        }
+
+        @Test
+        @DisplayName("카테고리 편집 실패: 중복된 id 수정 및 삭제")
+        void deleteByIdFailDuplicatedId() {
+            Category category = categoryRepository.save(new Category("카테고리 1", member, 1));
+            UpdateCategoryRequest request = new UpdateCategoryRequest(category.getId(), category.getName(), 1);
+
+            assertThatThrownBy(
+                    () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                            List.of(),
+                            List.of(request),
+                            List.of(category.getId()))))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("id가 중복되었습니다.");
         }
 
         @Test
