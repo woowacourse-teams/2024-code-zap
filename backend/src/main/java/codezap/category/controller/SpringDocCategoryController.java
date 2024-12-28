@@ -48,7 +48,7 @@ public interface SpringDocCategoryController {
     ResponseEntity<FindAllCategoriesResponse> getCategories(Long memberId);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "카테고리 생성, 수정, 삭제", description = "해당하는 식별자의 카테고리를 생성, 수정, 삭제할 수 있습니다.")
+    @Operation(summary = "카테고리 생성, 수정, 삭제", description = "카테고리를 생성, 수정, 삭제할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
             @ErrorCase(description = "기본 카테고리를 수정 또는 삭제한 경우", exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다."),
