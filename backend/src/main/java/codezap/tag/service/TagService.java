@@ -1,6 +1,8 @@
 package codezap.tag.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,9 +73,29 @@ public class TagService {
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
         List<Tag> tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
-        return new FindAllTagsResponse(tags.stream()
+        return createFindAllTagsResponse(tags);
+    }
+
+    private FindAllTagsResponse createFindAllTagsResponse(List<Tag> tags) {
+        return tags.stream()
                 .map(FindTagResponse::from)
-                .toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), FindAllTagsResponse::new));
+    }
+
+    public FindAllTagsResponse getPopularTags(int size) {
+        LocalDate startDate = LocalDate.now();
+        List<Tag> tags = findPopularTags(size, startDate);
+        return createFindAllTagsResponse(tags);
+    }
+
+    private List<Tag> findPopularTags(int size, LocalDate startDate) {
+        List<Tag> tags = tagRepository.findPopularTagsWithinDateRange(size, startDate.minusDays(7));
+
+        if (tags.size() >= size) {
+            return tags;
+        }
+
+        return tagRepository.findMostUsedTagsByRecentTemplates(size);
     }
 
     @Transactional

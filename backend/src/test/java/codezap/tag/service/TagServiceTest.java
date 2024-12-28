@@ -13,6 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.jdbc.Sql;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
@@ -337,6 +339,57 @@ class TagServiceTest extends ServiceTest {
             // when & then
             FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
             assertThat(actual).isEqualTo(new FindAllTagsResponse(Collections.EMPTY_LIST));
+        }
+    }
+
+    @Nested
+    @DisplayName("최근 일주일 내 템플릿이 가장 많이 생성된 태그 목록 조회")
+    class GetPopularTags {
+
+        @Test
+        @DisplayName("성공")
+        void getPopularTags() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+
+            var tag1 = tagRepository.save(new Tag("tag1"));
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            templateTagRepository.save(new TemplateTag(template2, tag1));
+
+            var tag2 = tagRepository.save(new Tag("tag2"));
+            templateTagRepository.save(new TemplateTag(template1, tag2));
+            templateTagRepository.save(new TemplateTag(template2, tag2));
+
+            var tag3 = tagRepository.save(new Tag("tag3"));
+            templateTagRepository.save(new TemplateTag(template2, tag3));
+
+            // when
+            var actual = sut.getPopularTags(2);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.tags()).containsExactlyInAnyOrder(FindTagResponse.from(tag1), FindTagResponse.from(tag2)),
+                    () -> assertThat(actual.tags()).doesNotContain(FindTagResponse.from(tag3))
+            );
+        }
+
+        @Test
+        @Sql(scripts = "classpath:popular-tags.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+        @DisplayName("성공: 최근 일주일 내 태그 목록이 지정된 갯수보다 적은 경우 갯수를 만족할만큼 날짜를 늘려 조회한 후 반환")
+        void getPopularTagsWhen() {
+            // given
+            var tag1 = tagRepository.findByName("lastTag1");
+            var tag2 = tagRepository.findByName("lastTag2");
+
+            // when
+            var actual = sut.getPopularTags(2);
+
+            // then
+            assertThat(actual.tags()).containsExactly(FindTagResponse.from(tag1.get()), FindTagResponse.from(tag2.get()));
         }
     }
 
