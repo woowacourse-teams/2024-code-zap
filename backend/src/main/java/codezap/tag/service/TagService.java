@@ -89,7 +89,7 @@ public class TagService {
     }
 
     private List<Tag> findPopularTags(int size, LocalDate startDate) {
-        List<Tag> tags = tagRepository.findPopularTagsWithinDateRange(size, startDate.minusDays(7));
+        List<Tag> tags = tagRepository.findMostUsedTagsWithinDateRange(size, startDate.minusDays(7));
 
         if (tags.size() >= size) {
             return tags;
