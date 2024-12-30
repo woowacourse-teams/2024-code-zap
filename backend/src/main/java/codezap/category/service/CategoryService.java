@@ -24,8 +24,8 @@ public class CategoryService {
     private final TemplateRepository templateRepository;
 
     @Transactional
-    public CreateCategoryResponse create(Member member, CreateCategoryRequest createCategoryRequest) {
-        String categoryName = createCategoryRequest.name();
+    public CreateCategoryResponse create(Member member, CreateCategoryRequest request) {
+        String categoryName = request.name();
         validateDuplicatedCategory(categoryName, member);
         Category category = categoryRepository.save(new Category(categoryName, member));
         return CreateCategoryResponse.from(category);
@@ -40,11 +40,11 @@ public class CategoryService {
     }
 
     @Transactional
-    public void update(Member member, Long id, UpdateCategoryRequest updateCategoryRequest) {
-        validateDuplicatedCategory(updateCategoryRequest.name(), member);
+    public void update(Member member, Long id, UpdateCategoryRequest request) {
+        validateDuplicatedCategory(request.name(), member);
         Category category = categoryRepository.fetchById(id);
         category.validateAuthorization(member);
-        category.updateName(updateCategoryRequest.name());
+        category.updateName(request.name());
     }
 
     private void validateDuplicatedCategory(String categoryName, Member member) {

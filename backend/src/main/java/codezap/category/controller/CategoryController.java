@@ -34,9 +34,9 @@ public class CategoryController implements SpringDocCategoryController {
     @PostMapping
     public ResponseEntity<CreateCategoryResponse> createCategory(
             @AuthenticationPrinciple Member member,
-            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest createCategoryRequest
+            @Validated(ValidationSequence.class) @RequestBody CreateCategoryRequest request
     ) {
-        CreateCategoryResponse createdCategory = categoryService.create(member, createCategoryRequest);
+        CreateCategoryResponse createdCategory = categoryService.create(member, request);
         return ResponseEntity.created(URI.create("/categories/" + createdCategory.id())).body(createdCategory);
     }
 
@@ -49,9 +49,9 @@ public class CategoryController implements SpringDocCategoryController {
     public ResponseEntity<Void> updateCategory(
             @AuthenticationPrinciple Member member,
             @PathVariable Long id,
-            @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest updateCategoryRequest
+            @Validated(ValidationSequence.class) @RequestBody UpdateCategoryRequest request
     ) {
-        categoryService.update(member, id, updateCategoryRequest);
+        categoryService.update(member, id, request);
         return ResponseEntity.ok().build();
     }
 

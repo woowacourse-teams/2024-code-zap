@@ -27,13 +27,13 @@ public class TemplateService {
     private final TemplateRepository templateRepository;
 
     @Transactional
-    public Template create(Member member, CreateTemplateRequest createTemplateRequest, Category category) {
+    public Template create(Member member, CreateTemplateRequest request, Category category) {
         Template template = new Template(
                 member,
-                createTemplateRequest.title(),
-                createTemplateRequest.description(),
+                request.title(),
+                request.description(),
                 category,
-                createTemplateRequest.visibility());
+                request.visibility());
         return templateRepository.save(template);
     }
 
@@ -60,7 +60,7 @@ public class TemplateService {
     public Template update(
             Member member,
             Long templateId,
-            UpdateTemplateRequest updateTemplateRequest,
+            UpdateTemplateRequest request,
             Category category
     ) {
         Template template = templateRepository.fetchById(templateId);
@@ -68,10 +68,10 @@ public class TemplateService {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
         }
         template.updateTemplate(
-                updateTemplateRequest.title(),
-                updateTemplateRequest.description(),
+                request.title(),
+                request.description(),
                 category,
-                updateTemplateRequest.visibility()
+                request.visibility()
         );
         return template;
     }
