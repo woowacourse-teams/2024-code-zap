@@ -99,7 +99,7 @@ class CategoryServiceTest extends ServiceTest {
 
             assertThatThrownBy(() -> sut.create(member, createCategoryRequest))
                     .isInstanceOf(CodeZapException.class)
-                    .hasMessage("이름이 " + duplicatedCategoryName + "인 카테고리가 이미 존재합니다.");
+                    .hasMessage("카테고리명이 중복되었습니다.");
         }
     }
 
