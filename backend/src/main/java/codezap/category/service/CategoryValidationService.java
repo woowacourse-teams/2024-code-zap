@@ -1,12 +1,11 @@
 package codezap.category.service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.stream.IntStream;
-
 import org.springframework.stereotype.Service;
 
 import codezap.category.domain.Category;
+import codezap.category.domain.Ids;
+import codezap.category.domain.Names;
+import codezap.category.domain.Ordinals;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.repository.CategoryRepository;
@@ -25,7 +24,7 @@ public class CategoryValidationService {
 
     public void validateDuplicatedCategory(String categoryName, Member member) {
         if (categoryRepository.existsByNameAndMember(categoryName, member)) {
-            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "이름이 " + categoryName + "인 카테고리가 이미 존재합니다.");
+            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, "카테고리명이 중복되었습니다.");
         }
     }
 
@@ -63,32 +62,30 @@ public class CategoryValidationService {
     }
 
     public void validateOrdinals(UpdateAllCategoriesRequest request) {
-        List<Integer> allOrdinals = request.extractOrdinal();
-        if (!isSequential(allOrdinals)) {
-            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "순서가 잘못되었습니다.");
+        try {
+            Ordinals ordinals = new Ordinals(request.extractOrdinal());
+            ordinals.validateOrdinals();
+        } catch (IllegalArgumentException e) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, e.getMessage());
         }
     }
 
+
     public void validateIds(UpdateAllCategoriesRequest request) {
-        List<Long> allIds = request.extractIds();
-        if (hasDuplicates(allIds)) {
-            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "id가 중복되었습니다.");
+        try {
+            Ids ids = new Ids(request.extractIds());
+            ids.validateIds();
+        } catch (IllegalArgumentException e) {
+            throw new CodeZapException(ErrorCode.DUPLICATE_ID, e.getMessage());
         }
     }
 
     public void validateNames(UpdateAllCategoriesRequest request) {
-        List<String> allNames = request.extractNames();
-        if (hasDuplicates(allNames)) {
-            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "카테고리명이 중복되었습니다.");
+        try {
+            Names names = new Names(request.extractNames());
+            names.validateNames();
+        } catch (IllegalArgumentException e) {
+            throw new CodeZapException(ErrorCode.DUPLICATE_CATEGORY, e.getMessage());
         }
-    }
-
-    private boolean hasDuplicates(List<?> items) {
-        return items.size() != new HashSet<>(items).size();
-    }
-
-    private boolean isSequential(List<Integer> ordinals) {
-        return IntStream.range(0, ordinals.size())
-                .allMatch(index -> ordinals.get(index) == index + 1);
     }
 }
