@@ -85,20 +85,11 @@ public class SourceCodeService {
 
     private void updateSourceCode(UpdateSourceCodeRequest request) {
         SourceCode sourceCode = sourceCodeRepository.fetchById(request.id());
-        sourceCode.updateSourceCode(
-                request.filename(),
-                request.content(),
-                request.ordinal()
-        );
+        sourceCode.updateSourceCode(request.filename(), request.content(), request.ordinal());
     }
 
     private SourceCode createSourceCode(Template template, CreateSourceCodeRequest request) {
-        return new SourceCode(
-                template,
-                request.filename(),
-                request.content(),
-                request.ordinal()
-        );
+        return new SourceCode(template, request.filename(), request.content(), request.ordinal());
     }
 
     private void updateThumbnail(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {

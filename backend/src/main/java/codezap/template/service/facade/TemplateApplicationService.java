@@ -55,9 +55,7 @@ public class TemplateApplicationService {
         Template template = templateService.create(member, request, category);
         tagService.createTags(template, request.tags());
         sourceCodeService.createSourceCodes(template, request);
-        SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(
-                template,
-                request.thumbnailOrdinal());
+        SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(template, request.thumbnailOrdinal());
         thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
     }
