@@ -39,7 +39,7 @@ class CategoryServiceTest extends ServiceTest {
         void createCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             String categoryName = "categoryName";
-            CreateCategoryRequest request = new CreateCategoryRequest(categoryName, 0);
+            CreateCategoryRequest request = new CreateCategoryRequest(categoryName, 1);
 
             CreateCategoryResponse response = sut.create(member, request);
 
@@ -59,7 +59,7 @@ class CategoryServiceTest extends ServiceTest {
             String duplicatedCategoryName = "category";
             categoryRepository.save(new Category(duplicatedCategoryName, member, 0));
 
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName, 0);
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName, 1);
             CreateCategoryResponse createCategoryResponse = sut.create(otherMember, createCategoryRequest);
             Category savedCategory = categoryRepository.fetchById(createCategoryResponse.id());
 
@@ -144,7 +144,7 @@ class CategoryServiceTest extends ServiceTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category savedCategory = categoryRepository.save(new Category("categoryName", member, 1));
 
-            Category actual = sut.fetchById(savedCategory.getId());
+            Category actual = sut.fetchById(member, savedCategory.getId());
 
             assertThat(actual).isEqualTo(savedCategory);
         }
@@ -152,9 +152,10 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("실패: 존재하지 않는 id 값으로 카테고리 조회")
         void failWithNotSavedId() {
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
             long notSavedCategoryId = 100L;
 
-            assertThatThrownBy(() -> sut.fetchById(notSavedCategoryId))
+            assertThatThrownBy(() -> sut.fetchById(member, notSavedCategoryId))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("식별자 " + notSavedCategoryId + "에 해당하는 카테고리가 존재하지 않습니다.");
         }
