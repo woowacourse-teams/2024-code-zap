@@ -82,13 +82,13 @@ public class TagService {
                 .collect(Collectors.collectingAndThen(Collectors.toList(), FindAllTagsResponse::new));
     }
 
-    public FindAllTagsResponse getPopularTags(int size) {
+    public FindAllTagsResponse getTopTags(int size) {
         LocalDate startDate = LocalDate.now();
-        List<Tag> tags = findPopularTags(size, startDate);
+        List<Tag> tags = findTopTags(size, startDate);
         return createFindAllTagsResponse(tags);
     }
 
-    private List<Tag> findPopularTags(int size, LocalDate startDate) {
+    private List<Tag> findTopTags(int size, LocalDate startDate) {
         List<Tag> tags = tagRepository.findMostUsedTagsWithinDateRange(size, startDate.minusDays(7));
 
         if (tags.size() >= size) {

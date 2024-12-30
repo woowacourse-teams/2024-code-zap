@@ -344,11 +344,11 @@ class TagServiceTest extends ServiceTest {
 
     @Nested
     @DisplayName("최근 일주일 내 템플릿이 가장 많이 생성된 태그 목록 조회")
-    class GetPopularTags {
+    class GetTopTags {
 
         @Test
         @DisplayName("성공")
-        void getPopularTags() {
+        void getTopTags() {
             // given
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
@@ -368,7 +368,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template2, tag3));
 
             // when
-            var actual = sut.getPopularTags(2);
+            var actual = sut.getTopTags(2);
 
             // then
             assertAll(
@@ -378,15 +378,15 @@ class TagServiceTest extends ServiceTest {
         }
 
         @Test
-        @Sql(scripts = "classpath:popular-tags.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+        @Sql(scripts = "classpath:top-tags.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
         @DisplayName("성공: 최근 일주일 내 태그 목록이 지정된 갯수보다 적은 경우 갯수를 만족할만큼 날짜를 늘려 조회한 후 반환")
-        void getPopularTagsWhen() {
+        void getTopTagsWhen() {
             // given
             var tag1 = tagRepository.findByName("lastTag1");
             var tag2 = tagRepository.findByName("lastTag2");
 
             // when
-            var actual = sut.getPopularTags(2);
+            var actual = sut.getTopTags(2);
 
             // then
             assertThat(actual.tags()).containsExactly(FindTagResponse.from(tag1.get()), FindTagResponse.from(tag2.get()));

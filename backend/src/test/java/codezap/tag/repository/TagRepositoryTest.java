@@ -119,7 +119,7 @@ class TagRepositoryTest {
 
     @Nested
     @DisplayName("특정 날짜 이후 템플릿 태그가 가장 많이 생성된 태그 목록을 최신순으로 조회")
-    class FindPopularTagsWithinDateRange {
+    class FindMostUsedTagsWithinDateRange {
 
         @Test
         @DisplayName("성공")
@@ -184,11 +184,11 @@ class TagRepositoryTest {
 
     @Nested
     @DisplayName("템플릿 태그가 가장 많이 생성된 태그 목록을 최신순으로 조회")
-    class FindMostUsedTagsWithinDateRange {
+    class FindMostUsedTagsByRecentTemplates {
 
         @Test
         @DisplayName("성공")
-        void findMostUsedTagsWithinDateRange() {
+        void findMostUsedTagsByRecentTemplates() {
             // Given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());

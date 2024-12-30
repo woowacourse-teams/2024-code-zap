@@ -48,7 +48,7 @@ class TagControllerTest extends MockMvcTest {
                 FindTagResponse.from(new Tag(2L, "tag2"))
         ));
 
-        when(tagService.getPopularTags(anyInt())).thenReturn(findAllTagsResponse);
+        when(tagService.getTopTags(anyInt())).thenReturn(findAllTagsResponse);
 
         // when & then
         mvc.perform(get("/tags/top"))
