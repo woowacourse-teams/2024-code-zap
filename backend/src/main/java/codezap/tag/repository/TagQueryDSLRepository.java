@@ -42,8 +42,8 @@ public class TagQueryDSLRepository {
                 .join(templateTag.tag, tag)
                 .groupBy(tag.id)
                 .orderBy(
-                        templateTag.count().desc(),
-                        templateTag.createdAt.max().desc()
+                        templateTag.createdAt.max().desc(),
+                        templateTag.count().desc()
                 )
                 .limit(size)
                 .fetch();
