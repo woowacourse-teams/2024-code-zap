@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
@@ -21,7 +22,19 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Table(indexes= @Index(name = "idx_member_id", columnList = "member_id"))
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "name_with_member",
+                        columnNames = {"member_id", "name"}
+                ),
+                @UniqueConstraint(
+                        name = "ordinal_with_member",
+                        columnNames = {"member_id", "ordinal"}
+                )
+        },
+        indexes = @Index(name = "idx_member_id", columnList = "member_id")
+)
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Category extends BaseTimeEntity {
@@ -61,8 +74,6 @@ public class Category extends BaseTimeEntity {
     public boolean hasAuthorization(Member member) {
         return this.member.equals(member);
     }
-
-
 
     public boolean isDefault() {
         return isDefault;
