@@ -21,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class TagService {
 
+    private static final int DEFAULT_POPULAR_DATE_RANGE = 7;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
 
@@ -89,7 +90,7 @@ public class TagService {
     }
 
     private List<Tag> findTopTags(int size, LocalDate startDate) {
-        List<Tag> tags = tagRepository.findMostUsedTagsWithinDateRange(size, startDate.minusDays(7));
+        List<Tag> tags = tagRepository.findMostUsedTagsWithinDateRange(size, startDate.minusDays(DEFAULT_POPULAR_DATE_RANGE));
 
         if (tags.size() >= size) {
             return tags;
