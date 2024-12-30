@@ -39,7 +39,7 @@ class CategoryServiceTest extends ServiceTest {
         void createCategorySuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             String categoryName = "categoryName";
-            CreateCategoryRequest request = new CreateCategoryRequest(categoryName, 1);
+            CreateCategoryRequest request = new CreateCategoryRequest(categoryName, 0);
 
             CreateCategoryResponse response = sut.create(member, request);
 
@@ -59,7 +59,7 @@ class CategoryServiceTest extends ServiceTest {
             String duplicatedCategoryName = "category";
             categoryRepository.save(new Category(duplicatedCategoryName, member, 0));
 
-            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName, 1);
+            CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest(duplicatedCategoryName, 0);
             CreateCategoryResponse createCategoryResponse = sut.create(otherMember, createCategoryRequest);
             Category savedCategory = categoryRepository.fetchById(createCategoryResponse.id());
 
