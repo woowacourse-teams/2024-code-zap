@@ -27,10 +27,10 @@ public class AuthController implements SpringDocAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
-            @Valid @RequestBody LoginRequest loginRequest,
+            @Valid @RequestBody LoginRequest request,
             HttpServletResponse httpServletResponse
     ) {
-        LoginMember loginMember = authService.login(loginRequest);
+        LoginMember loginMember = authService.login(request);
         Credential credential = credentialProvider.createCredential(loginMember);
         credentialManager.setCredential(httpServletResponse, credential);
         return ResponseEntity.ok(LoginResponse.from(loginMember));

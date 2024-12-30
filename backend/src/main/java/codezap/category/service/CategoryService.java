@@ -78,5 +78,4 @@ public class CategoryService {
             categoryRepository.deleteByIdWithFlush(id);
         });
     }
-
 }
