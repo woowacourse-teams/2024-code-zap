@@ -39,8 +39,10 @@ public class CategoryService {
         return FindAllCategoriesResponse.from(categoryRepository.findAllByMemberIdOrderById(memberId));
     }
 
-    public Category fetchById(Long id) {
-        return categoryRepository.fetchById(id);
+    public Category fetchById(Member member, Long id) {
+        Category category = categoryRepository.fetchById(id);
+        validationService.validateAuthorization(category, member);
+        return category;
     }
 
     @Transactional
