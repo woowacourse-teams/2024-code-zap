@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/tags")
 public class TagController implements SpringDocTagController {
 
+    private static final String DEFAULT_TOP_TAG_COUNT = "10";
+
     private final TagService tagService;
 
     @GetMapping
