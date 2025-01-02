@@ -2,6 +2,8 @@ package codezap.tag.service;
 
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class TagService {
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
 
+    @Retryable(retryFor = DataIntegrityViolationException.class)
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
         List<Tag> existTags = tagRepository.findAllByNames(tagNames);

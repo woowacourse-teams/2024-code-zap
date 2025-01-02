@@ -47,7 +47,6 @@ public class TemplateApplicationService {
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
 
-    @Retryable(retryFor = DataIntegrityViolationException.class, maxAttempts = 3)
     @Transactional
     public Long create(Member member, CreateTemplateRequest request) {
         Category category = categoryService.fetchById(request.categoryId());
