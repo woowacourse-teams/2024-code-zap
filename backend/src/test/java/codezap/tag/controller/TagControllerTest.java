@@ -1,6 +1,7 @@
 package codezap.tag.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,6 +35,23 @@ class TagControllerTest extends MockMvcTest {
         // when & then
         mvc.perform(get("/tags")
                         .param("memberId", "1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.tags.size()").value(2));
+    }
+
+    @Test
+    @DisplayName("인기 태그 조회 성공")
+    void getTopTags() throws Exception {
+        // given
+        FindAllTagsResponse findAllTagsResponse = new FindAllTagsResponse(List.of(
+                FindTagResponse.from(new Tag(1L, "tag1")),
+                FindTagResponse.from(new Tag(2L, "tag2"))
+        ));
+
+        when(tagService.getTopTags(anyInt())).thenReturn(findAllTagsResponse);
+
+        // when & then
+        mvc.perform(get("/tags/top"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.tags.size()").value(2));
     }

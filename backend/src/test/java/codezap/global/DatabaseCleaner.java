@@ -2,11 +2,18 @@ package codezap.global;
 
 import java.util.List;
 
+import org.springframework.core.Ordered;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestContext;
+import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.support.AbstractTestExecutionListener;
 
-public class DatabaseCleaner extends AbstractTestExecutionListener {
+public class DatabaseCleaner implements Ordered, TestExecutionListener {
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
 
     @Override
     public void beforeTestMethod(TestContext testContext) {

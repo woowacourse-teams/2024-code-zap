@@ -15,13 +15,19 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/tags")
 public class TagController implements SpringDocTagController {
 
+    private static final String DEFAULT_TOP_TAG_COUNT = "10";
+
     private final TagService tagService;
 
     @GetMapping
-    public ResponseEntity<FindAllTagsResponse> getTags(
-            @RequestParam Long memberId
-    ) {
+    public ResponseEntity<FindAllTagsResponse> getTags(@RequestParam Long memberId) {
         FindAllTagsResponse response = tagService.findAllByMemberId(memberId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<FindAllTagsResponse> getTopTags(@RequestParam(defaultValue = DEFAULT_TOP_TAG_COUNT) int size) {
+        FindAllTagsResponse response = tagService.getTopTags(size);
         return ResponseEntity.ok(response);
     }
 }
