@@ -4,9 +4,7 @@ import java.util.List;
 
 import jakarta.annotation.Nullable;
 
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +45,6 @@ public class TemplateApplicationService {
     private final ThumbnailService thumbnailService;
     private final LikesService likesService;
 
-    @Retryable(retryFor = DataIntegrityViolationException.class, maxAttempts = 3)
     @Transactional
     public Long create(Member member, CreateTemplateRequest request) {
         Category category = categoryService.fetchById(request.categoryId());
