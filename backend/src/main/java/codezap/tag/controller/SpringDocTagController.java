@@ -15,4 +15,8 @@ public interface SpringDocTagController {
     @Operation(summary = "태그 조회", description = "해당 멤버의 템플릿들에 포함된 태그를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "태그 조회 성공")
     ResponseEntity<FindAllTagsResponse> getTags(Long memberId);
+
+    @Operation(summary = "인기 태그 조회", description = "최근 7일 간 인기 태그를 조회합니다. 기본값은 10개입니다.")
+    @ApiResponse(responseCode = "200", description = "태그 조회 성공")
+    ResponseEntity<FindAllTagsResponse> getTopTags(int size);
 }

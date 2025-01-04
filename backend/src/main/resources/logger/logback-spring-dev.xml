@@ -7,6 +7,10 @@
     <include resource="logger/file/warn-appender.xml"/>
     <include resource="logger/file/error-appender.xml"/>
 
+    <logger name="codezap" level="INFO">
+        <appender-ref ref="console-appender"/>
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="info-appender"/>
         <appender-ref ref="warn-appender"/>
