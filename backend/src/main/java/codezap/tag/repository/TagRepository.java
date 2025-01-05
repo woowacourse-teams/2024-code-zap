@@ -1,5 +1,6 @@
 package codezap.tag.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class TagRepository {
 
     private final TagJpaRepository tagJpaRepository;
+    private final TagQueryDSLRepository tagQueryDSLRepository;
 
     public Tag fetchById(Long id) {
         return tagJpaRepository.findById(id).orElseThrow(
@@ -27,6 +29,14 @@ public class TagRepository {
 
     public List<Tag> findAllByNames(List<String> names) {
         return tagJpaRepository.findAllByNames(names);
+    }
+
+    public List<Tag> findMostUsedTagsWithinDateRange(int size, LocalDate startDate) {
+        return tagQueryDSLRepository.findMostUsedTagsWithinDateRange(size, startDate);
+    }
+
+    public List<Tag> findMostUsedTagsByRecentTemplates(int size) {
+        return tagQueryDSLRepository.findMostUsedTagsByRecentTemplates(size);
     }
 
     public Tag save(Tag tag) {

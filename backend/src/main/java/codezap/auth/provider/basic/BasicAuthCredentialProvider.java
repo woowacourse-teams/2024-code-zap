@@ -1,6 +1,10 @@
 package codezap.auth.provider.basic;
 
+import codezap.auth.dto.LoginMember;
+import codezap.auth.dto.Credential;
 import java.nio.charset.StandardCharsets;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -19,13 +23,14 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
     private final MemberRepository memberRepository;
 
     @Override
-    public String createCredential(Member member) {
-        return HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8);
+    public Credential createCredential(LoginMember loginMember) {
+        String credentialValue = HttpHeaders.encodeBasicAuth(loginMember.name(), loginMember.password(), StandardCharsets.UTF_8);
+        return Credential.basic(credentialValue);
     }
 
     @Override
-    public Member extractMember(String credential) {
-        String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential);
+    public Member extractMember(Credential credential) {
+        String[] nameAndPassword = BasicAuthDecoder.decodeBasicAuth(credential.value());
         Member member = memberRepository.fetchByName(nameAndPassword[0]);
         checkMatchPassword(member, nameAndPassword[1]);
         return member;
@@ -35,5 +40,10 @@ public class BasicAuthCredentialProvider implements CredentialProvider {
         if (!member.matchPassword(password)) {
             throw new CodeZapException(ErrorCode.UNAUTHORIZED_PASSWORD, "비밀번호가 일치하지 않습니다.");
         }
+    }
+
+    @Override
+    public String getType() {
+        return HttpServletRequest.BASIC_AUTH;
     }
 }

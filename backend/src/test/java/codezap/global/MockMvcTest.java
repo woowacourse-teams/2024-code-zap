@@ -1,9 +1,10 @@
 package codezap.global;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import codezap.auth.dto.LoginMember;
+import codezap.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -65,7 +66,8 @@ public abstract class MockMvcTest {
         objectMapper = new ObjectMapper();
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
-        when(credentialManager.getCredential(any())).thenReturn("mock-credential");
-        when(credentialProvider.extractMember(anyString())).thenReturn(MemberFixture.memberFixture());
+        Member member = MemberFixture.memberFixture();
+        //when(credentialManager.getCredential(any())).thenReturn(credentialProvider.createCredential(LoginMember.from(member)));
+        when(credentialProvider.extractMember(any())).thenReturn(member);
     }
 }

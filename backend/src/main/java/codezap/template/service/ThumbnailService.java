@@ -36,10 +36,6 @@ public class ThumbnailService {
         return thumbnailRepository.findAllByTemplateIn(templateIds);
     }
 
-    public ExploreTemplatesResponse findAll() {
-        return ExploreTemplatesResponse.from(thumbnailRepository.findAll());
-    }
-
     @Transactional
     public void deleteAllByTemplateIds(List<Long> templateIds) {
         thumbnailRepository.deleteAllByTemplateIds(templateIds);

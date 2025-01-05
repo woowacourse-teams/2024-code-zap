@@ -1,25 +1,24 @@
 package codezap.tag.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
+import org.springframework.test.context.jdbc.Sql;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
-import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindAllTagsResponse;
@@ -142,72 +141,6 @@ class TagServiceTest extends ServiceTest {
 
             // when & then
             assertThat(sut.findAllByTemplate(template)).isEmpty();
-        }
-
-        @Test
-        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
-        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
-        void findAllByTemplate_WhenNotExistTemplate() {
-            // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template unSavedTemplate = TemplateFixture.get(member, category);
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-
-            // when & then
-            assertThatThrownBy(() -> sut.findAllByTemplate(unSavedTemplate))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
-        }
-    }
-
-    @Nested
-    @DisplayName("템플릿 Id로 태그 조회")
-    class FindAllByTemplateId {
-
-        @Test
-        @DisplayName("성공: 템플릿 Id에 해당하는 태그 목록 반환")
-        void findAllByTemplate() {
-            // given
-            Template template = createSavedTemplate();
-            Tag tag1 = tagRepository.save(new Tag("tag1"));
-            Tag tag2 = tagRepository.save(new Tag("tag2"));
-            TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
-            TemplateTag templateTag2 = templateTagRepository.save(new TemplateTag(template, tag2));
-
-            // when & then
-            assertThat(sut.findAllByTemplateId(template.getId()))
-                    .containsExactly(templateTag1.getTag(), templateTag2.getTag());
-        }
-
-        @Test
-        @DisplayName("성공: 템플릿에 해당하는 태그가 없는 경우 빈 목록 반환")
-        void findAllByTemplate_WhenNotExistTemplateTag() {
-            // given
-            Template template = createSavedTemplate();
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-
-            // when & then
-            assertThat(sut.findAllByTemplateId(template.getId())).isEmpty();
-        }
-
-        @Test
-        @Disabled("현재 InvalidDataAccessApiUsageException 발생하므로 조회 직전에 검증 처리가 필요")
-        @DisplayName("실패: 존재하지 않는 템플릿으로 태그 조회")
-        void findAllByTemplate_WhenNotExistTemplate() {
-            // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template unSavedTemplate = TemplateFixture.get(member, category);
-            tagRepository.save(new Tag("tag1"));
-            tagRepository.save(new Tag("tag2"));
-
-            // when & then
-            assertThatThrownBy(() -> sut.findAllByTemplateId(unSavedTemplate.getId()))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("템플릿이 존재하지 않아 태그를 조회할 수 없습니다.");
         }
     }
 
@@ -337,6 +270,57 @@ class TagServiceTest extends ServiceTest {
             // when & then
             FindAllTagsResponse actual = sut.findAllByMemberId(member.getId());
             assertThat(actual).isEqualTo(new FindAllTagsResponse(Collections.EMPTY_LIST));
+        }
+    }
+
+    @Nested
+    @DisplayName("최근 일주일 내 템플릿이 가장 많이 생성된 태그 목록 조회")
+    class GetTopTags {
+
+        @Test
+        @DisplayName("성공")
+        void getTopTags() {
+            // given
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = categoryRepository.save(Category.createDefaultCategory(member));
+
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+
+            var tag1 = tagRepository.save(new Tag("tag1"));
+            templateTagRepository.save(new TemplateTag(template1, tag1));
+            templateTagRepository.save(new TemplateTag(template2, tag1));
+
+            var tag2 = tagRepository.save(new Tag("tag2"));
+            templateTagRepository.save(new TemplateTag(template1, tag2));
+            templateTagRepository.save(new TemplateTag(template2, tag2));
+
+            var tag3 = tagRepository.save(new Tag("tag3"));
+            templateTagRepository.save(new TemplateTag(template2, tag3));
+
+            // when
+            var actual = sut.getTopTags(2);
+
+            // then
+            assertAll(
+                    () -> assertThat(actual.tags()).containsExactlyInAnyOrder(FindTagResponse.from(tag1), FindTagResponse.from(tag2)),
+                    () -> assertThat(actual.tags()).doesNotContain(FindTagResponse.from(tag3))
+            );
+        }
+
+        @Test
+        @Sql(scripts = "classpath:top-tags.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+        @DisplayName("성공: 최근 일주일 내 태그 목록이 지정된 갯수보다 적은 경우 갯수를 만족할만큼 날짜를 늘려 조회한 후 반환")
+        void getTopTagsWhen() {
+            // given
+            var tag1 = tagRepository.findByName("lastTag1");
+            var tag2 = tagRepository.findByName("lastTag2");
+
+            // when
+            var actual = sut.getTopTags(2);
+
+            // then
+            assertThat(actual.tags()).containsExactly(FindTagResponse.from(tag1.get()), FindTagResponse.from(tag2.get()));
         }
     }
 

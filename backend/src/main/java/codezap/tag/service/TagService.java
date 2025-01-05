@@ -1,7 +1,11 @@
 package codezap.tag.service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +23,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class TagService {
 
+    private static final int DEFAULT_POPULAR_DATE_RANGE = 7;
     private final TagRepository tagRepository;
     private final TemplateTagRepository templateTagRepository;
 
+    @Retryable(retryFor = DataIntegrityViolationException.class)
     @Transactional
     public void createTags(Template template, List<String> tagNames) {
         List<Tag> existTags = tagRepository.findAllByNames(tagNames);
@@ -58,12 +64,6 @@ public class TagService {
         return templateTagRepository.findAllTagsByTemplate(template);
     }
 
-    public List<Tag> findAllByTemplateId(Long templateId) {
-        return templateTagRepository.findAllByTemplateId(templateId).stream()
-                .map(TemplateTag::getTag)
-                .toList();
-    }
-
     public List<TemplateTag> getAllTemplateTagsByTemplates(List<Template> templates) {
         List<Long> templateIds = templates.stream().map(Template::getId).toList();
         return templateTagRepository.findAllByTemplateIdsIn(templateIds);
@@ -71,9 +71,29 @@ public class TagService {
 
     public FindAllTagsResponse findAllByMemberId(Long memberId) {
         List<Tag> tags = templateTagRepository.findAllTagDistinctByMemberId(memberId);
-        return new FindAllTagsResponse(tags.stream()
+        return createFindAllTagsResponse(tags);
+    }
+
+    private FindAllTagsResponse createFindAllTagsResponse(List<Tag> tags) {
+        return tags.stream()
                 .map(FindTagResponse::from)
-                .toList());
+                .collect(Collectors.collectingAndThen(Collectors.toList(), FindAllTagsResponse::new));
+    }
+
+    public FindAllTagsResponse getTopTags(int size) {
+        LocalDate startDate = LocalDate.now();
+        List<Tag> tags = findTopTags(size, startDate);
+        return createFindAllTagsResponse(tags);
+    }
+
+    private List<Tag> findTopTags(int size, LocalDate startDate) {
+        List<Tag> tags = tagRepository.findMostUsedTagsWithinDateRange(size, startDate.minusDays(DEFAULT_POPULAR_DATE_RANGE));
+
+        if (tags.size() >= size) {
+            return tags;
+        }
+
+        return tagRepository.findMostUsedTagsByRecentTemplates(size);
     }
 
     @Transactional

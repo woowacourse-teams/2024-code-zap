@@ -13,6 +13,6 @@ public class CategoryFixture {
     }
 
     public static Category get(Member member) {
-        return new Category(1L, member, "카테고리", false);
+        return new Category("카테고리", member);
     }
 }
