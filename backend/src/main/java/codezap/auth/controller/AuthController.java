@@ -40,9 +40,7 @@ public class AuthController implements SpringDocAuthController {
     ) {
         LoginMember loginMember = authService.login(loginRequest);
         Credential credential = credentialProvider.createCredential(loginMember);
-        credentialManagers.forEach(
-                credentialManager -> credentialManager.setCredential(httpServletResponse, credential)
-        );
+        credentialManagers.forEach(cm -> cm.setCredential(httpServletResponse, credential));
         return ResponseEntity.ok(LoginResponse.from(loginMember));
     }
 
@@ -59,9 +57,7 @@ public class AuthController implements SpringDocAuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse httpServletResponse) {
-        credentialManagers.forEach(
-                credentialManager -> credentialManager.removeCredential(httpServletResponse)
-        );
+        credentialManagers.forEach(cm -> cm.removeCredential(httpServletResponse));
         return ResponseEntity.noContent().build();
     }
 }
