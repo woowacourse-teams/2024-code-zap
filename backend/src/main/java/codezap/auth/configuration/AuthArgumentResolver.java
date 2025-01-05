@@ -45,7 +45,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             return null;
         }
         CredentialManager credentialManager = credentialManagers.stream()
-                .filter(eachCredentialManager -> eachCredentialManager.hasCredential(request))
+                .filter(cm -> cm.hasCredential(request))
                 .findFirst()
                 .orElseThrow(() -> new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요."));
         Credential credential = credentialManager.getCredential(request);
@@ -54,6 +54,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private boolean hasCredential(HttpServletRequest request) {
         return credentialManagers.stream()
-                .anyMatch(credentialManager -> credentialManager.hasCredential(request));
+                .anyMatch(cm -> cm.hasCredential(request));
     }
 }
