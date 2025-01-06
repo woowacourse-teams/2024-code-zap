@@ -1,13 +1,17 @@
 package codezap.auth.manager;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.stereotype.Component;
+
 import codezap.auth.dto.Credential;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 
+@Component
 @RequiredArgsConstructor
 public class AuthorizationHeaderCredentialManager implements CredentialManager {
 

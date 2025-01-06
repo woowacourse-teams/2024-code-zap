@@ -1,20 +1,20 @@
 package codezap.auth.manager;
 
-import codezap.auth.dto.Credential;
 import java.util.Arrays;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.server.Cookie.SameSite;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import codezap.auth.dto.Credential;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
