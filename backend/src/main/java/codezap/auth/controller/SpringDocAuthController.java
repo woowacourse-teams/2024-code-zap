@@ -10,6 +10,7 @@ import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
+import codezap.member.domain.Member;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -41,7 +42,7 @@ public interface SpringDocAuthController {
             @ErrorCase(description = "쿠키 없음", exampleMessage = "쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."),
             @ErrorCase(description = "인증 쿠키 없음", exampleMessage = "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."),
     })
-    ResponseEntity<Void> checkLogin(HttpServletRequest request);
+    ResponseEntity<Void> checkLogin(Member member, HttpServletRequest request);
 
     @Operation(summary = "로그아웃")
     @ApiResponse(responseCode = "204", description = "인증 성공")
