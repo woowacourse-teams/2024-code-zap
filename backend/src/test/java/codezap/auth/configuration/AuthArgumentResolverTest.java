@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.Credential;
+import codezap.auth.manager.AuthorizationHeaderCredentialManager;
 import java.lang.reflect.Method;
 
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -28,8 +30,10 @@ import codezap.member.domain.Member;
 
 class AuthArgumentResolverTest {
     private final CredentialProvider credentialProvider = new PlainCredentialProvider();
-    private final CredentialManager credentialManager = new CookieCredentialManager();
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManager, credentialProvider);
+    private final List<CredentialManager> credentialManagers =
+            List.of(new CookieCredentialManager(), new AuthorizationHeaderCredentialManager());
+
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers, credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")
@@ -131,7 +135,7 @@ class AuthArgumentResolverTest {
                 //when & then
                 assertThatThrownBy(() -> resolveArgument(requiredMethod, nativeWebRequest))
                         .isInstanceOf(CodeZapException.class)
-                        .hasMessage("쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요.");
+                        .hasMessage("인증 정보가 없습니다. 다시 로그인해 주세요.");
             }
 
             @Test
@@ -159,7 +163,7 @@ class AuthArgumentResolverTest {
         private void setCredentialCookie(MockHttpServletRequest request, Member member) {
             MockHttpServletResponse mockResponse = new MockHttpServletResponse();
             Credential credential = credentialProvider.createCredential(LoginMember.from(member));
-            credentialManager.setCredential(mockResponse, credential);
+            credentialManagers.forEach(cm -> cm.setCredential(mockResponse, credential));
             request.setCookies(mockResponse.getCookies());
         }
     }
