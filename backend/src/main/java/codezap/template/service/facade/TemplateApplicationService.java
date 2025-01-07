@@ -47,8 +47,7 @@ public class TemplateApplicationService {
 
     @Transactional
     public Long create(Member member, CreateTemplateRequest request) {
-        Category category = categoryService.fetchById(request.categoryId());
-        category.validateAuthorization(member);
+        Category category = categoryService.fetchById(member, request.categoryId());
         Template template = templateService.create(member, request, category);
         tagService.createTags(template, request.tags());
         sourceCodeService.createSourceCodes(template, request);
@@ -166,8 +165,7 @@ public class TemplateApplicationService {
 
     @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest request) {
-        Category category = categoryService.fetchById(request.categoryId());
-        category.validateAuthorization(member);
+        Category category = categoryService.fetchById(member, request.categoryId());
         Template template = templateService.update(member, templateId, request, category);
         tagService.updateTags(template, request.tags());
         Thumbnail thumbnail = thumbnailService.getByTemplate(template);

@@ -16,8 +16,8 @@ import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.global.validation.ValidatedOrdinalRequest;
 import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
-import codezap.template.dto.request.validation.ValidatedSourceCodesOrdinalRequest;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -74,8 +74,8 @@ public class SourceCodeService {
         }
     }
 
-    private void validateSourceCodesOrdinal(ValidatedSourceCodesOrdinalRequest request) {
-        List<Integer> indexes = request.extractSourceCodesOrdinal();
+    private void validateSourceCodesOrdinal(ValidatedOrdinalRequest request) {
+        List<Integer> indexes = request.extractOrdinal();
         boolean isOrderValid = IntStream.range(0, indexes.size())
                 .allMatch(index -> indexes.get(index) == index + 1);
         if(!isOrderValid) {

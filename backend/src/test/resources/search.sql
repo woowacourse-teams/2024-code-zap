@@ -19,11 +19,11 @@ INSERT INTO member (id, created_at, modified_at, name, password, salt)
 VALUES (3, '2024-09-27 08:43:08.757482', '2024-09-27 08:43:08.757482', '몰리3', 'password1234', 'salt2');
 
 -- Category 삽입
-INSERT INTO category (id, created_at, is_default, member_id, modified_at, name)
-VALUES (1, '2024-09-27 08:43:08.760511', false, 1, '2024-09-27 08:43:08.760511', 'Category 1');
+INSERT INTO category (id, created_at, is_default, member_id, modified_at, name, ordinal)
+VALUES (1, '2024-09-27 08:43:08.760511', false, 1, '2024-09-27 08:43:08.760511', 'Category 1', 1);
 
-INSERT INTO category (id, created_at, is_default, member_id, modified_at, name)
-VALUES (2, '2024-09-27 08:43:08.763888', false, 1, '2024-09-27 08:43:08.763888', 'Category 2');
+INSERT INTO category (id, created_at, is_default, member_id, modified_at, name, ordinal)
+VALUES (2, '2024-09-27 08:43:08.763888', false, 1, '2024-09-27 08:43:08.763888', 'Category 2', 2);
 
 -- Tag 삽입
 INSERT INTO tag (id, created_at, modified_at, name)

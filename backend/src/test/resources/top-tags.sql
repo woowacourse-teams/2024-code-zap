@@ -1,8 +1,8 @@
 INSERT INTO member (id, name, password, salt, created_at, modified_at)
 VALUES (1, 'coco', 'password1234', 'salt1', '2023-12-17 02:05:30.165445', '2023-12-17 02:05:30.165445');
 
-INSERT INTO category (id, name, is_default, member_id, created_at, modified_at)
-VALUES (1, '카테고리 없음', true, 1, '2023-12-17 02:05:30.165445', '2023-12-17 02:05:30.165445');
+INSERT INTO category (id, name, is_default, member_id, ordinal, created_at, modified_at)
+VALUES (1, '카테고리 없음', true, 1, 1, '2023-12-17 02:05:30.165445', '2023-12-17 02:05:30.165445');
 
 -- Template 데이터 삽입
 INSERT INTO template (id, title, description, likes_count, visibility, category_id, member_id, created_at, modified_at)

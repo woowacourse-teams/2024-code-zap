@@ -12,13 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
+import codezap.fixture.MemberFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.member.domain.Member;
 import codezap.member.dto.request.SignupRequest;
 import codezap.member.dto.response.FindMemberResponse;
-import codezap.member.fixture.MemberFixture;
 import codezap.template.domain.Template;
 
 class MemberServiceTest extends ServiceTest {
@@ -33,7 +33,7 @@ class MemberServiceTest extends ServiceTest {
         @Test
         @DisplayName("회원가입 성공: 멤버 생성 및 기본 카테고리 생성 성공")
         void signup() {
-            Member member = MemberFixture.memberFixture();
+            Member member = MemberFixture.getFirstMember();
             SignupRequest signupRequest = new SignupRequest(member.getName(), member.getPassword());
 
             Long savedId = memberService.signup(signupRequest);
@@ -48,7 +48,7 @@ class MemberServiceTest extends ServiceTest {
         @Test
         @DisplayName("회원가입 실패: 아이디 중복")
         void signup_fail_name_duplicate() {
-            Member savedMember = memberRepository.save(MemberFixture.memberFixture());
+            Member savedMember = memberRepository.save(MemberFixture.getFirstMember());
             SignupRequest signupRequest = new SignupRequest(savedMember.getName(), savedMember.getPassword());
 
             assertThatThrownBy(() -> memberService.signup(signupRequest))
@@ -73,7 +73,7 @@ class MemberServiceTest extends ServiceTest {
         @Test
         @DisplayName("아이디 중복 검사 실패: 아이디 중복")
         void assertUniqueName_fail_duplicate() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
 
             assertThatThrownBy(() -> memberService.assertUniqueName(member.getName()))
                     .isInstanceOf(CodeZapException.class)
@@ -88,7 +88,7 @@ class MemberServiceTest extends ServiceTest {
         @Test
         @DisplayName("회원 ID로 멤버 조회 성공")
         void findMember() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
 
             FindMemberResponse actual = memberService.findMember(member.getId());
 
@@ -103,7 +103,7 @@ class MemberServiceTest extends ServiceTest {
         @Test
         @DisplayName("템플릿을 소유한 멤버 조회 성공")
         void getByTemplateId() {
-            Member member = memberRepository.save(MemberFixture.memberFixture());
+            Member member = memberRepository.save(MemberFixture.getFirstMember());
             Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 

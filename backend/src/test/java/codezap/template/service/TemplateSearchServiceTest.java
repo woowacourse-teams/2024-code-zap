@@ -358,8 +358,8 @@ class TemplateSearchServiceTest {
     }
 
     private void saveTwoCategory() {
-        category1 = categoryRepository.save(new Category("Category 1", member1));
-        category2 = categoryRepository.save(new Category("Category 2", member1));
+        category1 = categoryRepository.save(new Category("Category 1", member1, 1));
+        category2 = categoryRepository.save(new Category("Category 2", member1, 2));
     }
 
     private void saveTwoTags() {

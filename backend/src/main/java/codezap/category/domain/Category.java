@@ -12,8 +12,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
 import codezap.global.auditing.BaseTimeEntity;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,10 +23,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(
-        uniqueConstraints = @UniqueConstraint(
-                name = "name_with_member",
-                columnNames = {"member_id", "name"}
-        ),
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "name_with_member",
+                        columnNames = {"member_id", "name"}
+                ),
+                @UniqueConstraint(
+                        name = "ordinal_with_member",
+                        columnNames = {"member_id", "ordinal"}
+                )
+        },
         indexes = @Index(name = "idx_member_id", columnList = "member_id")
 )
 @Getter
@@ -36,6 +40,7 @@ import lombok.NoArgsConstructor;
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
+    private static final int DEFAULT_CATEGORY_ORDINAL = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,24 +55,19 @@ public class Category extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isDefault;
 
-    public Category(String name, Member member) {
-        this.name = name;
-        this.member = member;
-        this.isDefault = false;
+    @Column(nullable = false)
+    private int ordinal;
+
+    public Category(String name, Member member, int ordinal) {
+        this(null, member, name, false, ordinal);
     }
 
     public static Category createDefaultCategory(Member member) {
-        return new Category(null, member, DEFAULT_CATEGORY_NAME, true);
+        return new Category(null, member, DEFAULT_CATEGORY_NAME, true, DEFAULT_CATEGORY_ORDINAL);
     }
 
-    public void updateName(String name) {
-        this.name = name;
-    }
-
-    public void validateAuthorization(Member member) {
-        if (!getMember().equals(member)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
-        }
+    public boolean hasAuthorization(Member member) {
+        return this.member.equals(member);
     }
 
     public boolean isDefault() {
