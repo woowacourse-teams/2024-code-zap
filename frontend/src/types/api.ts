@@ -40,17 +40,10 @@ export interface CategoryListResponse {
   categories: Category[];
 }
 
-export interface CategoryUploadRequest {
-  name: string;
-}
-
 export interface CategoryEditRequest {
-  id: number;
-  name: string;
-}
-
-export interface CategoryDeleteRequest {
-  id: number;
+  createCategories: Omit<Category, 'id'>[];
+  updateCategories: Category[];
+  deleteCategoryIds: number[];
 }
 
 export interface TagListResponse {

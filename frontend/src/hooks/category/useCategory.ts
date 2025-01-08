@@ -12,7 +12,7 @@ export const useCategory = ({ memberId, initCategory }: Props) => {
   const options = data?.categories || [];
 
   if (!initCategory) {
-    initCategory = { id: options[0]?.id, name: '카테고리 없음' };
+    initCategory = { id: options[0]?.id, name: '카테고리 없음', ordinal: 0 };
   }
 
   const { isOpen, toggleDropdown, currentValue, handleCurrentValue, dropdownRef } = useDropdown<Category>(initCategory);
@@ -31,7 +31,7 @@ export const useCategory = ({ memberId, initCategory }: Props) => {
       return;
     }
 
-    const newCategory = { name: categoryName };
+    const newCategory = { name: categoryName, ordinal: options.length };
 
     await postCategory(newCategory);
   };

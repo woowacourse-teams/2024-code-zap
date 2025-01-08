@@ -42,7 +42,9 @@ const CategoryFilterMenu = ({ memberId, categoryList, onSelectCategory }: Catego
     }
   };
 
-  const [defaultCategory, ...userCategories] = categoryList.length ? categoryList : [{ id: 0, name: '' }];
+  const [defaultCategory, ...userCategories] = categoryList.length
+    ? categoryList
+    : [{ id: 0, name: '', ordinal: categoryList.length + 1 }];
 
   const indexById: Record<number, number> = useMemo(() => {
     const map: Record<number, number> = { 0: 0, [defaultCategory.id]: categoryList.length };

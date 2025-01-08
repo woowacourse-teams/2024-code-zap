@@ -2,19 +2,23 @@
   "categories": [
     {
       "id": 1,
-      "name": "카테고리 없음"
+      "name": "카테고리 없음",
+      "ordinal": 0
     },
     {
       "id": 2,
-      "name": "Category1"
+      "name": "Category1",
+      "ordinal": 1
     },
     {
       "id": 3,
-      "name": "Category2"
+      "name": "Category2",
+      "ordinal": 2
     },
     {
       "id": 4,
-      "name": "Category3"
+      "name": "Category3",
+      "ordinal": 3
     }
   ]
 }
