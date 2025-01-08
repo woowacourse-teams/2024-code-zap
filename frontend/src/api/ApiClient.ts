@@ -90,6 +90,8 @@ export class ApiClient {
       localStorage.removeItem('memberId');
     }
 
-    throw new ApiError(getErrorMessage(errorCode, instance), response.status, errorCode, detail);
+    const errorMessage = getErrorMessage(errorCode, instance);
+
+    throw new ApiError(errorMessage !== '' ? errorMessage : detail, response.status, errorCode, detail);
   }
 }

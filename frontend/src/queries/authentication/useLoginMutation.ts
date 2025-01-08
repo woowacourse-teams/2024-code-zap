@@ -26,10 +26,10 @@ export const useLoginMutation = () => {
         navigate(END_POINTS.memberTemplates(memberId));
       }
     },
-    onError: () => {
+    onError: (error) => {
       handleLoginState(false);
       handleMemberInfo({ memberId: undefined, name: undefined });
-      failAlert('로그인에 실패하였습니다.');
+      failAlert(error.message);
     },
   });
 };
