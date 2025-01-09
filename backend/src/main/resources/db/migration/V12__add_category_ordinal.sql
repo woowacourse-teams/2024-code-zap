@@ -1,3 +1,5 @@
+START TRANSACTION;
+
 ALTER TABLE category ADD COLUMN ordinal INTEGER NOT NULL;
 
 CREATE TEMPORARY TABLE temp_category AS
@@ -13,3 +15,5 @@ UPDATE category c
 DROP TEMPORARY TABLE temp_category;
 
 ALTER TABLE category ADD CONSTRAINT ordinal_with_member UNIQUE (member_id, ordinal);
+
+COMMIT;
