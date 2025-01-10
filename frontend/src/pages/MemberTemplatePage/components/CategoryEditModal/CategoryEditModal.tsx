@@ -1,14 +1,14 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { PropsWithChildren, useEffect, useRef, useState } from 'react';
 
-import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '@/assets/images';
+import { PencilIcon, SpinArrowIcon, TrashcanIcon, DragIcon } from '@/assets/images';
 import { Text, Modal, Input, Flex, Button } from '@/components';
 import { useCategoryNameValidation } from '@/hooks/category';
-import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/categories';
+import { useCategoryEditMutation } from '@/queries/categories';
 import { validateCategoryName } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
 import { theme } from '@/style/theme';
-import type { Category, ErrorBody } from '@/types';
+import type { Category } from '@/types';
 
 import * as S from './CategoryEditModal.style';
 
@@ -27,25 +27,23 @@ const CategoryEditModal = ({
   handleCancelEdit,
   onDeleteCategory,
 }: CategoryEditModalProps) => {
-  const [editedCategories, setEditedCategories] = useState<Record<number, string>>({});
-  const [categoriesToDelete, setCategoriesToDelete] = useState<number[]>([]);
-  const [newCategories, setNewCategories] = useState<{ id: number; name: string }[]>([]);
+  const [editedCategories, setEditedCategories] = useState<Category[]>([]);
+  const [newCategories, setNewCategories] = useState<Category[]>([]);
+  const [deleteCategoryIds, setDeleteCategoryIds] = useState<number[]>([]);
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
 
   const { mutateAsync: editCategory } = useCategoryEditMutation();
-  const { mutateAsync: deleteCategory } = useCategoryDeleteMutation(categories);
-  const { mutateAsync: postCategory } = useCategoryUploadMutation();
 
   const { invalidIds, isValid } = useCategoryNameValidation(categories, newCategories, editedCategories);
 
   const resetState = () => {
-    setEditedCategories({});
-    setCategoriesToDelete([]);
+    setEditedCategories([]);
+    setDeleteCategoryIds([]);
     setNewCategories([]);
     setEditingCategoryId(null);
   };
 
-  const isCategoryNew = (id: number) => newCategories.some((category) => category.id === id);
+  const isNewCategory = (id: number) => newCategories.some((category) => category.id === id);
 
   const handleNameInputChange = (id: number, name: string) => {
     const errorMessage = validateCategoryName(name);
@@ -54,23 +52,44 @@ const CategoryEditModal = ({
       return;
     }
 
-    if (isCategoryNew(id)) {
+    if (isNewCategory(id)) {
       setNewCategories((prev) => prev.map((category) => (category.id === id ? { ...category, name } : category)));
     } else {
-      setEditedCategories((prev) => ({ ...prev, [id]: name }));
+      const ordinal = editedCategories.find((category) => category.id === id)?.ordinal as number;
+
+      setEditedCategories((prev) => [...prev, { id, name, ordinal }]);
     }
   };
 
+  const handleDrag = (categories: Category[]) => {
+    const updatedCategories: Category[] = [];
+    const updatedNewCategories: Category[] = [];
+
+    categories.forEach((category) => {
+      if (isNewCategory(category.id)) {
+        updatedNewCategories.push(category);
+      } else {
+        updatedCategories.push({
+          ...category,
+          name: editedCategories.find((editedCategory) => editedCategory.id === category.id)?.name ?? category.name,
+        });
+      }
+    });
+
+    setNewCategories(updatedNewCategories);
+    setEditedCategories(updatedCategories);
+  };
+
   const handleDeleteClick = (id: number) => {
-    if (isCategoryNew(id)) {
+    if (isNewCategory(id)) {
       setNewCategories((prev) => prev.filter((category) => category.id !== id));
     } else {
-      setCategoriesToDelete((prev) => [...prev, id]);
+      setDeleteCategoryIds((prev) => [...prev, id]);
     }
   };
 
   const handleRestoreClick = (id: number) => {
-    setCategoriesToDelete((prev) => prev.filter((categoryId) => categoryId !== id));
+    setDeleteCategoryIds((prev) => prev.filter((categoryId) => categoryId !== id));
   };
 
   const handleEditClick = (id: number) => {
@@ -78,9 +97,9 @@ const CategoryEditModal = ({
   };
 
   const handleNameInputBlur = (id: number) => {
-    const trimmedName = isCategoryNew(id)
+    const trimmedName = isNewCategory(id)
       ? newCategories.find((category) => category.id === id)?.name.trim()
-      : editedCategories[id]?.trim();
+      : editedCategories.find((category) => category.id === id)?.name.trim();
 
     if (trimmedName !== undefined) {
       handleNameInputChange(id, trimmedName);
@@ -90,13 +109,15 @@ const CategoryEditModal = ({
   };
 
   const handleAddCategory = () => {
-    const newCategoryId =
+    const id =
       categories.length > 0
         ? categories[categories.length - 1].id + newCategories.length + 1
         : newCategories.length + 1;
 
-    setNewCategories((prev) => [...prev, { id: newCategoryId, name: '' }]);
-    setEditingCategoryId(newCategoryId);
+    const ordinal = categories.length + newCategories.length;
+
+    setNewCategories((prev) => [...prev, { id, name: '', ordinal }]);
+    setEditingCategoryId(id);
   };
 
   const handleSaveChanges = async () => {
@@ -104,29 +125,20 @@ const CategoryEditModal = ({
       return;
     }
 
-    try {
-      if (categoriesToDelete.length > 0) {
-        await Promise.all(categoriesToDelete.map((id) => deleteCategory({ id })));
-        onDeleteCategory(categoriesToDelete);
-      }
+    const body = {
+      createCategories: newCategories.map(({ name, ordinal }) => ({ name, ordinal })),
+      updateCategories: editedCategories,
+      deleteCategoryIds,
+    };
 
-      await Promise.all(
-        Object.entries(editedCategories).map(async ([id, name]) => {
-          const originalCategory = categories.find((category) => category.id === Number(id));
+    await editCategory(body);
 
-          if (originalCategory && originalCategory.name !== name) {
-            await editCategory({ id: Number(id), name });
-          }
-        }),
-      );
-
-      await Promise.all(newCategories.map((category) => postCategory({ name: category.name })));
-
-      resetState();
-      toggleModal();
-    } catch (error) {
-      console.error((error as ErrorBody).detail);
+    if (deleteCategoryIds.length > 0) {
+      onDeleteCategory(deleteCategoryIds);
     }
+
+    resetState();
+    toggleModal();
   };
 
   const handleCancelEditWithReset = () => {
@@ -142,10 +154,12 @@ const CategoryEditModal = ({
           <CategoryItems
             categories={categories}
             newCategories={newCategories}
+            handleDrag={handleDrag}
             editedCategories={editedCategories}
-            categoriesToDelete={categoriesToDelete}
+            categoriesToDelete={deleteCategoryIds}
             editingCategoryId={editingCategoryId}
             invalidIds={invalidIds}
+            isNewCategory={isNewCategory}
             onEditClick={handleEditClick}
             onDeleteClick={handleDeleteClick}
             onRestoreClick={handleRestoreClick}
@@ -182,11 +196,13 @@ const CategoryEditModal = ({
 
 interface CategoryItemsProps {
   categories: Category[];
-  newCategories: { id: number; name: string }[];
-  editedCategories: Record<number, string>;
+  newCategories: Category[];
+  editedCategories: Category[];
   categoriesToDelete: number[];
   editingCategoryId: number | null;
   invalidIds: number[];
+  isNewCategory: (id: number) => boolean;
+  handleDrag: (categories: Category[]) => void;
   onEditClick: (id: number) => void;
   onDeleteClick: (id: number) => void;
   onRestoreClick: (id: number) => void;
@@ -201,103 +217,250 @@ const CategoryItems = ({
   categoriesToDelete,
   editingCategoryId,
   invalidIds,
+  isNewCategory,
+  handleDrag,
   onEditClick,
   onDeleteClick,
   onRestoreClick,
   onNameInputChange,
   onNameInputBlur,
-}: CategoryItemsProps) => (
-  <>
-    {categories.map(({ id, name }) => (
-      <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
-        {categoriesToDelete.includes(id) ? (
-          // 기존 : 삭제 상태
-          <>
-            <Flex align='center' width='100%' height='2.5rem'>
-              <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
-                {name}
-              </Text.Medium>
-            </Flex>
-            <IconButtons restore onRestoreClick={() => onRestoreClick(id)} />
-          </>
-        ) : (
-          <>
-            <Flex align='center' width='100%' height='2.5rem'>
-              {editingCategoryId === id ? (
-                // 기존 : 수정 상태
-                <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
-                  <Input.TextField
-                    type='text'
-                    value={editedCategories[id] ?? name}
-                    placeholder='카테고리 입력'
-                    onChange={(e) => onNameInputChange(id, e.target.value)}
-                    onBlur={() => onNameInputBlur(id)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        onNameInputBlur(id);
-                      }
-                    }}
-                    autoFocus
-                    css={css`
-                      font-weight: bold;
-                      &::placeholder {
-                        font-weight: normal;
-                        color: ${theme.color.light.secondary_400};
-                      }
-                    `}
-                  />
-                </Input>
-              ) : (
-                // 기존 : 기본 상태
-                <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
-                  {editedCategories[id] !== undefined ? editedCategories[id] : name}
-                </Text.Medium>
-              )}
-            </Flex>
-            <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
-          </>
-        )}
-      </S.EditCategoryItem>
-    ))}
+}: CategoryItemsProps) => {
+  const categoriesMap = new Map();
 
-    {newCategories.map(({ id, name }) => (
-      <S.EditCategoryItem key={id} hasError={invalidIds.includes(id)}>
-        <Flex align='center' width='100%' height='2.5rem'>
-          {editingCategoryId === id ? (
-            // 생성 : 수정 상태
-            <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
-              <Input.TextField
-                type='text'
-                value={name}
-                placeholder='카테고리 입력'
-                onChange={(e) => onNameInputChange(id, e.target.value)}
-                onBlur={() => onNameInputBlur(id)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    onNameInputBlur(id);
-                  }
-                }}
-                autoFocus
-                css={css`
-                  font-weight: bold;
-                  &::placeholder {
-                    font-weight: normal;
-                    color: ${theme.color.light.secondary_400};
-                  }
-                `}
-              />
-            </Input>
+  [...categories, ...editedCategories, ...newCategories].forEach((category) => {
+    categoriesMap.set(category.id, category);
+  });
+
+  const initOrderedCategoriesArray = Array.from(categoriesMap.values()).sort((a, b) => a.ordinal - b.ordinal);
+
+  const [orderedCategories, setOrderedCategories] = useState(initOrderedCategoriesArray);
+
+  useEffect(() => {
+    const categoriesMap = new Map();
+
+    [...categories, ...editedCategories, ...newCategories].forEach((category) => {
+      categoriesMap.set(category.id, category);
+    });
+
+    const orderedCategoriesArray = Array.from(categoriesMap.values()).sort((a, b) => a.ordinal - b.ordinal);
+
+    setOrderedCategories(orderedCategoriesArray);
+  }, [newCategories, editedCategories, categories]);
+
+  const dragItem = useRef<number | null>(null);
+  const dragOverItem = useRef<number | null>(null);
+
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, position: number) => {
+    dragItem.current = position;
+    e.currentTarget.style.opacity = '0.5';
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, position: number) => {
+    dragOverItem.current = position;
+    e.currentTarget.style.backgroundColor = '#f5f5f5';
+  };
+
+  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+    if (dragItem.current === null || dragOverItem.current === null) {
+      return;
+    }
+
+    e.currentTarget.style.opacity = '1';
+    e.currentTarget.style.backgroundColor = '';
+
+    const copyListItems = [...orderedCategories];
+    const dragItemContent = copyListItems[dragItem.current];
+
+    copyListItems.splice(dragItem.current, 1);
+    copyListItems.splice(dragOverItem.current, 0, dragItemContent);
+
+    const updatedItems = copyListItems.map((item, index) => ({
+      ...item,
+      ordinal: index + 1,
+    }));
+
+    dragItem.current = null;
+    dragOverItem.current = null;
+    handleDrag(updatedItems);
+    setOrderedCategories(updatedItems);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.currentTarget.style.backgroundColor = '';
+  };
+
+  return (
+    <>
+      {orderedCategories.map(({ id, name }, index) => (
+        <S.EditCategoryItem
+          key={id}
+          hasError={invalidIds.includes(id)}
+          draggable
+          onDragStart={(e) => handleDragStart(e, index)}
+          onDragEnter={(e) => handleDragEnter(e, index)}
+          onDragEnd={handleDragEnd}
+          onDragLeave={handleDragLeave}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          {isNewCategory(id) ? (
+            <NewCategoryItem
+              id={id}
+              name={name}
+              isEditing={editingCategoryId === id}
+              onChange={(e) => onNameInputChange(id, e.target.value)}
+              onBlur={() => onNameInputBlur(id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onNameInputBlur(id);
+                }
+              }}
+              onEditClick={() => onEditClick(id)}
+              onDeleteClick={() => onDeleteClick(id)}
+            />
           ) : (
-            // 생성 : 기본 상태
+            <ExistingCategoryItem
+              id={id}
+              name={editedCategories.find((category) => category.id === id)?.name ?? name}
+              isEditing={editingCategoryId === id}
+              isDeleted={categoriesToDelete.includes(id)}
+              onChange={(e) => onNameInputChange(id, e.target.value)}
+              onBlur={() => onNameInputBlur(id)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  onNameInputBlur(id);
+                }
+              }}
+              onEditClick={() => onEditClick(id)}
+              onDeleteClick={() => onDeleteClick(id)}
+              onRestoreClick={() => onRestoreClick(id)}
+            />
+          )}
+        </S.EditCategoryItem>
+      ))}
+    </>
+  );
+};
+
+interface ExistingCategoryItemProps {
+  id: number;
+  name: string;
+  isEditing: boolean;
+  isDeleted: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+  onEditClick: (id: number) => void;
+  onDeleteClick: (id: number) => void;
+  onRestoreClick: (id: number) => void;
+}
+
+const ExistingCategoryItem = ({
+  id,
+  name,
+  isEditing,
+  isDeleted,
+  onChange,
+  onBlur,
+  onKeyDown,
+  onEditClick,
+  onDeleteClick,
+  onRestoreClick,
+}: ExistingCategoryItemProps) => (
+  <>
+    {isDeleted ? (
+      <>
+        <CategoryName>
+          <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
+            {name}
+          </Text.Medium>
+        </CategoryName>
+        <IconButtons restore onRestoreClick={() => onRestoreClick(id)} />
+      </>
+    ) : (
+      <>
+        <CategoryName>
+          {isEditing ? (
+            <CategoryNameInput value={name} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} />
+          ) : (
             <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
               {name}
             </Text.Medium>
           )}
-        </Flex>
+        </CategoryName>
         <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
-      </S.EditCategoryItem>
-    ))}
+      </>
+    )}
   </>
+);
+
+interface NewCategoryItemProps {
+  id: number;
+  name: string;
+  isEditing: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+  onEditClick: (id: number) => void;
+  onDeleteClick: (id: number) => void;
+}
+
+const NewCategoryItem = ({
+  id,
+  name,
+  isEditing,
+  onChange,
+  onBlur,
+  onKeyDown,
+  onEditClick,
+  onDeleteClick,
+}: NewCategoryItemProps) => (
+  <>
+    <CategoryName>
+      {isEditing ? (
+        <CategoryNameInput value={name} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} />
+      ) : (
+        <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
+          {name}
+        </Text.Medium>
+      )}
+    </CategoryName>
+    <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
+  </>
+);
+
+const CategoryName = ({ children }: PropsWithChildren) => (
+  <Flex align='center' width='100%' height='2.5rem'>
+    <DragIcon color={theme.color.light.secondary_400} css={{ marginRight: '0.5rem' }} />
+    {children}
+  </Flex>
+);
+
+interface CategoryNameInputProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+}
+
+const CategoryNameInput = ({ value, onChange, onBlur, onKeyDown }: CategoryNameInputProps) => (
+  <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
+    <Input.TextField
+      type='text'
+      value={value}
+      placeholder='카테고리 입력'
+      onChange={onChange}
+      onBlur={onBlur}
+      onKeyDown={onKeyDown}
+      autoFocus
+      css={css`
+        font-weight: bold;
+        &::placeholder {
+          font-weight: normal;
+          color: ${theme.color.light.secondary_400};
+        }
+      `}
+    />
+  </Input>
 );
 
 interface IconButtonsProps {

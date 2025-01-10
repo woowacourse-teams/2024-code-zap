@@ -11,6 +11,8 @@ export const EditCategoryItemList = styled.div`
 `;
 
 export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean; disabled?: boolean }>`
+  cursor: move;
+
   display: flex;
   gap: 1rem;
   align-items: center;
