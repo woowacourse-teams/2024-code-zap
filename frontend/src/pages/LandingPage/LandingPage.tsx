@@ -21,6 +21,12 @@ const LandingPage = () => {
 
   const { isLogin } = useAuth();
 
+  const EXPLAIN = [
+    { title: 'ZAP하게 저장', description: '자주 쓰는 나의 코드를 간편하게 저장하세요' },
+    { title: 'ZAP하게 관리', description: '직관적인 분류 시스템으로 체계적으로 관리하세요' },
+    { title: 'ZAP하게 검색', description: '필요한 나의 코드를 빠르게 찾아 사용하세요' },
+  ];
+
   return (
     <S.Container>
       <S.ContentSection>
@@ -40,29 +46,15 @@ const LandingPage = () => {
       </S.ContentSection>
 
       <S.CardSection>
-        <S.Card>
-          <Flex align='center' gap='0.25rem'>
-            <CheckCircleIcon width={ICON_SIZE.LARGE} />
-            <Text.Large color='black'>ZAP하게 저장</Text.Large>
-          </Flex>
-          <Text.Medium color={theme.color.light.secondary_600}>자주 쓰는 나의 코드를 간편하게 저장하세요</Text.Medium>
-        </S.Card>
-        <S.Card>
-          <Flex align='center' gap='0.25rem'>
-            <CheckCircleIcon width={ICON_SIZE.LARGE} />
-            <Text.Large color='black'>ZAP하게 관리</Text.Large>
-          </Flex>
-          <Text.Medium color={theme.color.light.secondary_600}>
-            직관적인 분류 시스템으로 체계적으로 관리하세요
-          </Text.Medium>
-        </S.Card>
-        <S.Card>
-          <Flex align='center' gap='0.25rem'>
-            <CheckCircleIcon width={ICON_SIZE.LARGE} />
-            <Text.Large color='black'>ZAP하게 검색</Text.Large>
-          </Flex>
-          <Text.Medium color={theme.color.light.secondary_600}>필요한 나의 코드를 빠르게 찾아 사용하세요</Text.Medium>
-        </S.Card>
+        {EXPLAIN.map((el, idx) => (
+          <S.Card key={idx}>
+            <Flex align='center' gap='0.25rem'>
+              <CheckCircleIcon width={ICON_SIZE.LARGE} />
+              <Text.Large color='black'>{el.title}</Text.Large>
+            </Flex>
+            <Text.Medium color={theme.color.light.secondary_600}>{el.description}</Text.Medium>
+          </S.Card>
+        ))}
       </S.CardSection>
 
       <S.TemplateSection>
