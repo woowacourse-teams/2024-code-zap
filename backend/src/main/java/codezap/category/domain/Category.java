@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+import codezap.category.domain.exception.DefaultCategoryException;
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
@@ -27,10 +28,6 @@ import lombok.NoArgsConstructor;
                 @UniqueConstraint(
                         name = "name_with_member",
                         columnNames = {"member_id", "name"}
-                ),
-                @UniqueConstraint(
-                        name = "ordinal_with_member",
-                        columnNames = {"member_id", "ordinal"}
                 )
         },
         indexes = @Index(name = "idx_member_id", columnList = "member_id")
@@ -72,5 +69,13 @@ public class Category extends BaseTimeEntity {
 
     public boolean isDefault() {
         return isDefault;
+    }
+
+    public void update(String name, int ordinal) {
+        if (isDefault) {
+            throw new DefaultCategoryException("기본 카테고리는 수정 및 삭제할 수 없습니다.");
+        }
+        this.name = name;
+        this.ordinal = ordinal;
     }
 }
