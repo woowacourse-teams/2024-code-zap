@@ -24,7 +24,7 @@ const CategoryEditModal = ({
   handleCancelEdit,
   onDeleteCategory,
 }: CategoryEditModalProps) => {
-  const [editedCategories, setEditedCategories] = useState<Category[]>([]);
+  const [editedCategories, setEditedCategories] = useState<Category[]>([...categories]);
   const [newCategories, setNewCategories] = useState<Category[]>([]);
   const [deleteCategoryIds, setDeleteCategoryIds] = useState<number[]>([]);
   const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
@@ -55,7 +55,6 @@ const CategoryEditModal = ({
       return;
     }
 
-    //TODO: targetCategory 네이밍 바꾸기
     const targetCategory = editedCategories.find((category) => category.id === id);
 
     if (targetCategory) {
@@ -63,10 +62,6 @@ const CategoryEditModal = ({
 
       return;
     }
-
-    const ordinal = categories.find((category) => category.id === id)?.ordinal as number;
-
-    setEditedCategories((prev) => [...prev, { id, name, ordinal }]);
   };
 
   const handleOrdinalChange = (categories: Category[]) => {
