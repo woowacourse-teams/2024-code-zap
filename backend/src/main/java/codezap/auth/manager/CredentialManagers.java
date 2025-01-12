@@ -37,4 +37,7 @@ public class CredentialManagers {
     }
 
 
+    public void removeCredential(HttpServletResponse httpServletResponse) {
+        credentialManagers.forEach(cm -> cm.removeCredential(httpServletResponse));
+    }
 }

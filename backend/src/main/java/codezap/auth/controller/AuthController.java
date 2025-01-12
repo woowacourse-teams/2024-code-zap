@@ -1,7 +1,5 @@
 package codezap.auth.controller;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -17,7 +15,6 @@ import codezap.auth.dto.Credential;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
-import codezap.auth.manager.CredentialManager;
 import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.service.AuthService;
@@ -30,8 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController implements SpringDocAuthController {
 
-    private final List<CredentialManager> credentialManagers;
-    private final CredentialManagers credentialManagers1;
+    private final CredentialManagers credentialManagers;
     private final CredentialProvider credentialProvider;
     private final AuthService authService;
 
@@ -43,7 +39,7 @@ public class AuthController implements SpringDocAuthController {
     ) {
         LoginMember loginMember = authService.login(request);
         Credential credential = credentialProvider.createCredential(loginMember);
-        credentialManagers1.setCredential(httpServletRequest, httpServletResponse, credential);
+        credentialManagers.setCredential(httpServletRequest, httpServletResponse, credential);
         return ResponseEntity.ok(LoginResponse.from(loginMember));
     }
 
@@ -60,7 +56,7 @@ public class AuthController implements SpringDocAuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse httpServletResponse) {
-        credentialManagers.forEach(cm -> cm.removeCredential(httpServletResponse));
+        credentialManagers.removeCredential(httpServletResponse);
         return ResponseEntity.noContent().build();
     }
 }
