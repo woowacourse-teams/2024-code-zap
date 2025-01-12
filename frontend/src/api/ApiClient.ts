@@ -37,6 +37,11 @@ export class ApiClient {
     this.credentials = credentials || 'same-origin';
   }
 
+  private getAuthorizationHeader(): HeadersInit {
+    const token = localStorage.getItem('authorization');
+    return token ? { Authorization: token } : {};
+  }
+
   async get(endpoint: string, params?: RequestParams): Promise<Response> {
     const url = new URL(`${this.baseUrl}${endpoint}`);
 
@@ -63,7 +68,10 @@ export class ApiClient {
     try {
       const response = await fetch(url, {
         method,
-        headers: this.headers,
+        headers: {
+          ...this.headers,
+          ...this.getAuthorizationHeader(),
+        },
         credentials: this.credentials,
         body: body ? JSON.stringify(body) : null,
       });
@@ -83,12 +91,13 @@ export class ApiClient {
   }
 
   private async handleError(response: Response) {
-    const { errorCode, instance, detail } = await response.json();
-
     if (response.status === HTTP_STATUS.UNAUTHORIZED) {
+      localStorage.removeItem('authorization');
       localStorage.removeItem('name');
       localStorage.removeItem('memberId');
     }
+
+    const { errorCode, instance, detail } = await response.json();
 
     throw new ApiError(getErrorMessage(errorCode, instance), response.status, errorCode, detail);
   }
