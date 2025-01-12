@@ -18,6 +18,7 @@ import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.manager.CredentialManager;
+import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.service.AuthService;
 import codezap.global.exception.CodeZapException;
@@ -30,17 +31,19 @@ import lombok.RequiredArgsConstructor;
 public class AuthController implements SpringDocAuthController {
 
     private final List<CredentialManager> credentialManagers;
+    private final CredentialManagers credentialManagers1;
     private final CredentialProvider credentialProvider;
     private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse
     ) {
         LoginMember loginMember = authService.login(request);
         Credential credential = credentialProvider.createCredential(loginMember);
-        credentialManagers.forEach(cm -> cm.setCredential(httpServletResponse, credential));
+        credentialManagers1.setCredential(httpServletRequest, httpServletResponse, credential);
         return ResponseEntity.ok(LoginResponse.from(loginMember));
     }
 
