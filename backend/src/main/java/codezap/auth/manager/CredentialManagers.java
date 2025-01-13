@@ -22,7 +22,7 @@ public class CredentialManagers {
     }
 
     private CredentialManager getCredentialManager(HttpServletRequest request) {
-        CredentialType credentialType = CredentialType.valueOf(request.getHeader(CREDENTIAL_TYPE_HEADER));
+        CredentialType credentialType = CredentialType.findByHeaderValue(request.getHeader(CREDENTIAL_TYPE_HEADER));
         return credentialManagers.stream()
                 .filter(cm -> cm.support(credentialType))
                 .findFirst()
