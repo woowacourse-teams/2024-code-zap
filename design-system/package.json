@@ -21,7 +21,10 @@
     "@storybook/react": "^8.2.1",
     "@storybook/react-webpack5": "^8.2.1",
     "@storybook/test": "^8.2.1",
-    "storybook": "^8.2.1",
-    "@svgr/webpack": "^8.1.0"
+    "@svgr/webpack": "^8.1.0",
+    "storybook": "^8.2.1"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.51.1"
   }
 }
