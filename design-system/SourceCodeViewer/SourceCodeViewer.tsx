@@ -1,6 +1,5 @@
 import { ChevronIcon } from '@/assets/images';
 import { SourceCode, Text } from '@/components';
-import { SourceCodeMode } from '@/components/SourceCode/SourceCode';
 import { useToggle } from '@/hooks';
 import { useToast } from '@/hooks/useToast';
 import { trackClickCopyClipBoard } from '@/service/amplitude/track';
@@ -8,6 +7,7 @@ import { theme } from '@/style/theme';
 import { getLanguageByFilename } from '@/utils';
 
 import * as S from './SourceCodeViewer.style';
+import { SourceCodeMode } from '@design/SourceCode/SourceCode';
 
 interface Props {
   mode?: Exclude<SourceCodeMode, 'edit'>;
@@ -16,7 +16,12 @@ interface Props {
   sourceCodeRef?: React.Ref<HTMLInputElement> | null;
 }
 
-const SourceCodeViewer = ({ mode = 'detailView', filename = '', content, sourceCodeRef }: Props) => {
+const SourceCodeViewer = ({
+  mode = 'detailView',
+  filename = '',
+  content,
+  sourceCodeRef,
+}: Props) => {
   const [isSourceCodeOpen, toggleSourceCode] = useToggle(true);
 
   const { infoAlert } = useToast();
@@ -52,7 +57,13 @@ const SourceCodeViewer = ({ mode = 'detailView', filename = '', content, sourceC
         </S.FilenameContainer>
       )}
       <S.SourceCodeWrapper isOpen={isSourceCodeOpen}>
-        {isSourceCodeOpen && <SourceCode mode={mode} content={content} language={getLanguageByFilename(filename)} />}
+        {isSourceCodeOpen && (
+          <SourceCode
+            mode={mode}
+            content={content}
+            language={getLanguageByFilename(filename)}
+          />
+        )}
       </S.SourceCodeWrapper>
     </S.SourceCodeViewerContainer>
   );
