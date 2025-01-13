@@ -4,11 +4,7 @@ import type { LoginRequest, SignupRequest } from '@/types';
 
 export const postSignup = async (signupInfo: SignupRequest) => await apiClient.post(END_POINTS.SIGNUP, signupInfo);
 
-export const postLogin = async (loginInfo: LoginRequest) => {
-  const response = await apiClient.post(END_POINTS.LOGIN, loginInfo);
-
-  return await response.json();
-};
+export const postLogin = async (loginInfo: LoginRequest) => await apiClient.post(END_POINTS.LOGIN, loginInfo);
 
 export const postLogout = async () => await apiClient.post(END_POINTS.LOGOUT, {});
 

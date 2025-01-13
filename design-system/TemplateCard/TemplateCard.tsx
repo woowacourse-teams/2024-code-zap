@@ -25,15 +25,7 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const {
-    title,
-    description,
-    thumbnail,
-    tags,
-    modifiedAt,
-    member,
-    visibility,
-  } = template;
+  const { title, description, thumbnail, tags, createdAt, member, visibility } = template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
   const isPrivate = visibility === VISIBILITY_PRIVATE;
 
@@ -77,9 +69,7 @@ const TemplateCard = ({ template }: Props) => {
                 color={theme.color.light.secondary_600}
               />
               <S.NoWrapTextWrapper>
-                <Text.Small color={theme.color.light.secondary_600}>
-                  {formatRelativeTime(modifiedAt)}
-                </Text.Small>
+                <Text.Small color={theme.color.light.secondary_600}>{formatRelativeTime(createdAt)}</Text.Small>
               </S.NoWrapTextWrapper>
             </S.TimeContainer>
           </Flex>

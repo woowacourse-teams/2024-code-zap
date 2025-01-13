@@ -1,0 +1,75 @@
+name: Frontend CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev/fe
+    paths:
+      - "frontend/**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      frontend-directory: ./frontend
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Node.js 설치
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: 환경 파일 생성
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+            echo "APP_ENV=${{ secrets.APP_ENV_PROD }}" >> ${{ env.frontend-directory }}/.env.production
+          else
+            echo "REACT_APP_API_URL=${{ secrets.REACT_APP_BETA_API_URL }}" > ${{ env.frontend-directory }}/.env.production
+            echo "APP_ENV=${{ secrets.APP_ENV_DEV }}" >> ${{ env.frontend-directory }}/.env.production
+          fi
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> ${{ env.frontend-directory }}/.env.production
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> ${{ env.frontend-directory }}/.env.sentry-build-plugin
+          echo "AMPLITUDE_API_KEY=${{ secrets.AMPLITUDE_API_KEY }}" >> ${{ env.frontend-directory }}/.env.production
+
+      - name: 환경 파일 권한 설정
+        run: chmod 644 ${{ env.frontend-directory }}/.env.*
+
+      - name: npm install
+        run: npm install
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: npm run build
+        run: npm run build
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: AWS credentials 설정
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: S3 업로드
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            aws s3 sync ./dist s3://${{ secrets.S3_BUCKET_NAME }}/prod/ --delete
+          else
+            aws s3 sync ./dist s3://${{ secrets.S3_BUCKET_NAME }}/dev/ --delete
+          fi
+        working-directory: ${{ env.frontend-directory }}
+
+      - name: CloudFront 캐시 무효화
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_PROD }} \
+            --paths "/*"
+          else
+            aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID_DEV }} \
+            --paths "/*"
+          fi

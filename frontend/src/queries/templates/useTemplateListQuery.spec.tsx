@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 
-import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '@/api';
 import { AuthProvider } from '@/contexts';
 import { templates as mockTemplates } from '@/mocks/fixtures/templateList.json';
+import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '@/models/templates';
 
 import { useTemplateListQuery } from './useTemplateListQuery';
 
@@ -43,7 +43,7 @@ describe('useTemplateListQuery', () => {
           keyword: 'console.log',
           categoryId: undefined,
           tagIds: [],
-          sort: 'modifiedAt,desc',
+          sort: 'createdAt,desc',
           page: 1,
           size: 20,
         }),
@@ -70,7 +70,7 @@ describe('useTemplateListQuery', () => {
           keyword: '',
           categoryId: 1,
           tagIds: [],
-          sort: 'modifiedAt,desc',
+          sort: 'createdAt,desc',
           page: 1,
           size: 20,
         }),
@@ -89,7 +89,7 @@ describe('useTemplateListQuery', () => {
           keyword: '',
           categoryId: undefined,
           tagIds: [3, 5],
-          sort: 'modifiedAt,desc',
+          sort: 'createdAt,desc',
           page: 1,
           size: 20,
         }),
@@ -114,7 +114,7 @@ describe('useTemplateListQuery', () => {
           keyword: '',
           categoryId: undefined,
           tagIds: [],
-          sort: 'modifiedAt,desc',
+          sort: 'createdAt,desc',
           page: 2,
           size: 20,
         }),

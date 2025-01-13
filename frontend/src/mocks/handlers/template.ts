@@ -37,12 +37,20 @@ export const templateHandlers = [
     }
 
     switch (sort) {
-      case 'modifiedAt,asc':
-        filteredTemplates.sort((a, b) => new Date(a.modifiedAt).getTime() - new Date(b.modifiedAt).getTime());
+      case 'createdAt,asc':
+        filteredTemplates.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        break;
+
+      case 'createdAt,desc':
+        filteredTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         break;
 
       case 'modifiedAt,desc':
         filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+        break;
+
+      case 'likesCount,desc':
+        filteredTemplates.sort((a, b) => b.likesCount - a.likesCount);
         break;
 
       default:
@@ -84,7 +92,7 @@ export const templateHandlers = [
     });
   }),
 
-  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => mockResponse({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => mockResponse({ status: 201, headers: { 'Location': '/templates/1' } })),
 
   http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
 

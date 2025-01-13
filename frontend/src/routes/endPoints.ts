@@ -28,6 +28,9 @@ export const END_POINTS = {
   LOGOUT: '/logout',
   LOGIN_CHECK: '/login/check',
   CHECK_NAME: '/check-name',
+
+  // contact
+  CONTACT: '/contact',
 } as const;
 
 export const ROUTE_END_POINT = {

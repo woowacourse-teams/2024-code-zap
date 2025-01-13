@@ -7,6 +7,7 @@
     "test": "jest",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
+    "msw": "APP_ENV=msw webpack-dev-server --open --config webpack.dev.js",
     "dev": "webpack-dev-server --config webpack.dev.js --open",
     "tsc": "tsc --noEmit",
     "build": "webpack --mode production --config webpack.prod.js",

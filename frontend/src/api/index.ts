@@ -1,9 +1,6 @@
 export { API_URL } from './config';
 export { QUERY_KEY } from './queryKeys';
 export {
-  PAGE_SIZE,
-  SORTING_OPTIONS,
-  DEFAULT_SORTING_OPTION,
   getTemplateList,
   getTemplateExplore,
   getTemplate,

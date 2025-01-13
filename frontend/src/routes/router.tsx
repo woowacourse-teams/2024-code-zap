@@ -13,7 +13,7 @@ const SignupPage = lazy(() => import('@/pages/SignupPage/SignupPage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage/NotFoundPage'));
 const TemplateExplorePage = lazy(() => import('@/pages/TemplateExplorePage/TemplateExplorePage'));
-const MyTemplatePage = lazy(() => import('@/pages/MyTemplatesPage/MyTemplatePage'));
+const MemberTemplatePage = lazy(() => import('@/pages/MemberTemplatePage/MemberTemplatePage'));
 const MyLikedTemplatePage = lazy(() => import('@/pages/MyLikedTemplatePage/MyLikedTemplatePage'));
 
 const router = createBrowserRouter([
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_END_POINT.MEMBERS_TEMPLATES,
-        element: <MyTemplatePage />,
+        element: <MemberTemplatePage />,
       },
       {
         path: ROUTE_END_POINT.MEMBERS_LIKED_TEMPLATES,
