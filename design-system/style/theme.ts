@@ -1,5 +1,3 @@
-// import { Theme } from '@emotion/react';
-
 import { dark, light } from './color';
 import { fontSize, fontWeight } from './font';
 
