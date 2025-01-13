@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 const slideIn = keyframes`
   from {
@@ -25,7 +25,10 @@ const slideOut = keyframes`
   }
 `;
 
-export const BaseToast = styled.div<{ visible: boolean; type: 'success' | 'fail' | 'info' }>`
+export const BaseToast = styled.div<{
+  visible: boolean;
+  type: 'success' | 'fail' | 'info';
+}>`
   position: fixed;
   z-index: 1000;
   top: 6rem;
