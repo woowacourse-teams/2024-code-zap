@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CredentialManagers {
 
-    private static final String CREDENTIAL_TYPE_HEADER = "Credential-Type";
+    protected static final String CREDENTIAL_TYPE_HEADER = "Credential-Type";
     private final List<CredentialManager> credentialManagers;
 
     public void setCredential(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Credential credential) {
