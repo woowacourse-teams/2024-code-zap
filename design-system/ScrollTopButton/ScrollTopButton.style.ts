@@ -1,8 +1,11 @@
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
-export const ScrollTopButtonContainer = styled.button<{ isVisible: boolean; isTemplateUpload: boolean }>`
+export const ScrollTopButtonContainer = styled.button<{
+  isVisible: boolean;
+  isTemplateUpload: boolean;
+}>`
   cursor: pointer;
 
   position: fixed;
@@ -25,7 +28,8 @@ export const ScrollTopButtonContainer = styled.button<{ isVisible: boolean; isTe
   transition: all 0.3s ease-in-out;
 
   &:hover {
-    transform: ${({ isVisible }) => (isVisible ? 'translateY(-5px)' : 'translateY(20px)')};
+    transform: ${({ isVisible }) =>
+      isVisible ? 'translateY(-5px)' : 'translateY(20px)'};
   }
 `;
 

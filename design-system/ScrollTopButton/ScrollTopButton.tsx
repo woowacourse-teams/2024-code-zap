@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { ArrowUpIcon } from '@/assets/images';
 import { useWindowWidth } from '@/hooks';
 import { END_POINTS } from '@/routes';
-import { BREAKING_POINT } from '@/style/styleConstants';
+import { BREAKING_POINT } from '@design/style/styleConstants';
 import { scroll } from '@/utils';
 
 import * as S from './ScrollTopButton.style';
@@ -17,7 +17,8 @@ const ScrollTopButton = () => {
   const windowWidth = useWindowWidth();
 
   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
-  const isTemplateUpload = isMobile && location.pathname === END_POINTS.TEMPLATES_UPLOAD;
+  const isTemplateUpload =
+    isMobile && location.pathname === END_POINTS.TEMPLATES_UPLOAD;
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -40,7 +41,10 @@ const ScrollTopButton = () => {
       void setIsVisible(shouldShow);
     };
 
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    const observer = new IntersectionObserver(
+      observerCallback,
+      observerOptions
+    );
 
     observer.observe(sentinel);
 
