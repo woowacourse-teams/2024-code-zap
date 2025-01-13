@@ -23,60 +23,122 @@ const buttonWrapper = css({
   width: '7.4rem',
 });
 
-const ButtonGroup = ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => (
+const ButtonGroup = ({
+  variant,
+  disabled,
+}: {
+  variant: ButtonVariant;
+  disabled: boolean;
+}) => (
   <div css={colStyle}>
     <div css={rowStyle}>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='medium' weight='bold' disabled={disabled}>
+        <Button
+          variant={variant}
+          size='medium'
+          weight='bold'
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='medium' weight='regular' disabled={disabled}>
+        <Button
+          variant={variant}
+          size='medium'
+          weight='regular'
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
     </div>
     <div css={rowStyle}>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='small' weight='bold' disabled={disabled}>
+        <Button
+          variant={variant}
+          size='small'
+          weight='bold'
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='small' weight='regular' disabled={disabled}>
+        <Button
+          variant={variant}
+          size='small'
+          weight='regular'
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
     </div>
     <div css={rowStyle}>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='medium' weight='bold' fullWidth disabled={disabled}>
+        <Button
+          variant={variant}
+          size='medium'
+          weight='bold'
+          fullWidth
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='medium' weight='regular' fullWidth disabled={disabled}>
+        <Button
+          variant={variant}
+          size='medium'
+          weight='regular'
+          fullWidth
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
     </div>
     <div css={rowStyle}>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='small' weight='bold' fullWidth disabled={disabled}>
+        <Button
+          variant={variant}
+          size='small'
+          weight='bold'
+          fullWidth
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
       <div css={buttonWrapper}>
-        <Button variant={variant} size='small' weight='regular' fullWidth disabled={disabled}>
+        <Button
+          variant={variant}
+          size='small'
+          weight='regular'
+          fullWidth
+          disabled={disabled}
+        >
           버튼
         </Button>
       </div>
     </div>
-    <Button variant={variant} size='medium' weight='bold' fullWidth disabled={disabled}>
+    <Button
+      variant={variant}
+      size='medium'
+      weight='bold'
+      fullWidth
+      disabled={disabled}
+    >
       버튼
     </Button>
-    <Button variant={variant} size='small' weight='regular' fullWidth disabled={disabled}>
+    <Button
+      variant={variant}
+      size='small'
+      weight='regular'
+      fullWidth
+      disabled={disabled}
+    >
       버튼
     </Button>
   </div>
