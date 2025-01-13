@@ -106,7 +106,7 @@ class CredentialManagersTest {
                     CredentialType.COOKIE.getHeaderValue());
 
             //when
-            credentialManagers.removeCredential(httpServletResponse);
+            credentialManagers.removeCredential(httpServletRequest, httpServletResponse);
 
             //then
             assertThat(httpServletResponse.getHeader("Set-Cookie"))
@@ -128,11 +128,25 @@ class CredentialManagersTest {
                     CredentialType.COOKIE.getHeaderValue());
 
             //when
-            credentialManagers.removeCredential(httpServletResponse);
+            credentialManagers.removeCredential(httpServletRequest, httpServletResponse);
 
             //then
             assertThat(httpServletResponse.getHeader("Set-Cookie"))
                     .contains("Max-Age=0");
+        }
+
+        @Test
+        @DisplayName("실패: 잘못된 지원 타입이 명시될 경우 예외가 발생한다.")
+        void unsupportedCredentialType() {
+            //given
+            var request = new MockHttpServletRequest();
+            var response = new MockHttpServletResponse();
+            request.addHeader(CredentialManagers.CREDENTIAL_TYPE_HEADER, "Unsupported Credential Type");
+
+            //when & then
+            assertThatThrownBy(() -> credentialManagers.removeCredential(request, response))
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("지원하지 않는 인증 타입입니다.");
         }
     }
 }

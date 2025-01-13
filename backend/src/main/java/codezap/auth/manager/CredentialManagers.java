@@ -22,11 +22,15 @@ public class CredentialManagers {
     }
 
     private CredentialManager getCredentialManager(HttpServletRequest request) {
-        CredentialType credentialType = CredentialType.findByHeaderValue(request.getHeader(CREDENTIAL_TYPE_HEADER));
+        CredentialType credentialType = getCredentialType(request);
         return credentialManagers.stream()
                 .filter(cm -> cm.support(credentialType))
                 .findFirst()
                 .orElse(getDefaultCredentialManager());
+    }
+
+    private CredentialType getCredentialType(HttpServletRequest request) {
+        return CredentialType.findByHeaderValue(request.getHeader(CREDENTIAL_TYPE_HEADER));
     }
 
     private CredentialManager getDefaultCredentialManager() {
@@ -36,7 +40,7 @@ public class CredentialManagers {
                 .get();
     }
 
-    public void removeCredential(HttpServletResponse httpServletResponse) {
-        credentialManagers.forEach(cm -> cm.removeCredential(httpServletResponse));
+    public void removeCredential(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        getCredentialManager(httpServletRequest).removeCredential(httpServletResponse);
     }
 }

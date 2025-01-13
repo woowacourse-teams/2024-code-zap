@@ -46,5 +46,5 @@ public interface SpringDocAuthController {
 
     @Operation(summary = "로그아웃")
     @ApiResponse(responseCode = "204", description = "인증 성공")
-    ResponseEntity<Void> logout(HttpServletResponse response);
+    ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response);
 }

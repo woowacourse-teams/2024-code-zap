@@ -55,8 +55,8 @@ public class AuthController implements SpringDocAuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse httpServletResponse) {
-        credentialManagers.removeCredential(httpServletResponse);
+    public ResponseEntity<Void> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        credentialManagers.removeCredential(httpServletRequest, httpServletResponse);
         return ResponseEntity.noContent().build();
     }
 }
