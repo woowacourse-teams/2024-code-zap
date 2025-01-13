@@ -11,11 +11,15 @@ import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { trackClickNewTemplate } from '@/service/amplitude';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './Header.style';
 
-const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) => {
+const Header = ({
+  headerRef,
+}: {
+  headerRef: React.RefObject<HTMLDivElement>;
+}) => {
   const {
     isLogin,
     isChecking,
@@ -63,11 +67,20 @@ const Header = ({ headerRef }: { headerRef: React.RefObject<HTMLDivElement> }) =
           <S.NavContainer>
             {!isChecking && isLogin && memberId && (
               <>
-                <NavOption route={ROUTE_END_POINT.memberTemplates(memberId)} name='내 템플릿' />
-                <NavOption route={ROUTE_END_POINT.memberLikedTemplates(memberId)} name={`좋아요한 템플릿`} />
+                <NavOption
+                  route={ROUTE_END_POINT.memberTemplates(memberId)}
+                  name='내 템플릿'
+                />
+                <NavOption
+                  route={ROUTE_END_POINT.memberLikedTemplates(memberId)}
+                  name={`좋아요한 템플릿`}
+                />
               </>
             )}
-            <NavOption route={ROUTE_END_POINT.TEMPLATES_EXPLORE} name='구경가기' />
+            <NavOption
+              route={ROUTE_END_POINT.TEMPLATES_EXPLORE}
+              name='구경가기'
+            />
 
             <ContactUs />
           </S.NavContainer>
@@ -113,7 +126,13 @@ const Logo = () => {
     <Link to={ROUTE_END_POINT.HOME}>
       <Flex align='center' gap='0.5rem'>
         <CodeZapLogo aria-label='로고 버튼' />
-        <Heading.XSmall color={isLandingPage ? theme.color.light.primary_500 : theme.color.light.secondary_800}>
+        <Heading.XSmall
+          color={
+            isLandingPage
+              ? theme.color.light.primary_500
+              : theme.color.light.secondary_800
+          }
+        >
           코드잽
         </Heading.XSmall>
       </Flex>
@@ -130,7 +149,11 @@ const NavOption = ({ route, name }: { route: string; name: string }) => {
       <S.NavOptionButton>
         <Text.Medium
           weight='bold'
-          color={isCurrentPage ? theme.color.light.primary_500 : theme.color.light.secondary_800}
+          color={
+            isCurrentPage
+              ? theme.color.light.primary_500
+              : theme.color.light.secondary_800
+          }
         >
           {name}
         </Text.Medium>
@@ -147,7 +170,13 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button variant='text' size='medium' weight='bold' hoverStyle='none' onClick={handleLogoutButton}>
+    <Button
+      variant='text'
+      size='medium'
+      weight='bold'
+      hoverStyle='none'
+      onClick={handleLogoutButton}
+    >
       로그아웃
     </Button>
   );
@@ -161,7 +190,13 @@ const LoginButton = () => (
   </Link>
 );
 
-const HeaderMenuButton = ({ menuOpen, toggleMenu }: { menuOpen: boolean; toggleMenu: () => void }) => (
+const HeaderMenuButton = ({
+  menuOpen,
+  toggleMenu,
+}: {
+  menuOpen: boolean;
+  toggleMenu: () => void;
+}) => (
   <S.HamburgerIconWrapper aria-label='메뉴'>
     <HamburgerIcon menuOpen={menuOpen} onClick={toggleMenu} />
   </S.HamburgerIconWrapper>
