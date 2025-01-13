@@ -1,7 +1,7 @@
 import { keyframes } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { theme } from '../../style/theme';
+import { theme } from '@design/style/theme';
 
 const bounce1 = keyframes`
   0%, 100% {
