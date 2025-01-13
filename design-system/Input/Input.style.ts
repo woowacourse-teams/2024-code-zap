@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import type { BaseProps, TextFieldProps } from '@/components/Input/Input';
+import type { BaseProps, TextFieldProps } from './Input';
 import { theme } from '@/style/theme';
 
 const sizes = {
@@ -94,7 +94,8 @@ export const TextField = styled.input<TextFieldProps>`
   background: none;
 
   &::placeholder {
-    color: ${({ placeholderColor }) => (placeholderColor ? placeholderColor : theme.color.light.tertiary_400)};
+    color: ${({ placeholderColor }) =>
+      placeholderColor ? placeholderColor : theme.color.light.tertiary_400};
   }
 
   &:focus {
