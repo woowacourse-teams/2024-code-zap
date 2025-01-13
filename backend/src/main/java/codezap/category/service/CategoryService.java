@@ -66,6 +66,7 @@ public class CategoryService {
         updates.forEach(update -> {
             Category category = categoryRepository.fetchById(update.id());
             validationService.validateAuthorization(category, member);
+            validationService.validateDefaultCategory(category);
             category.update(update.name(), update.ordinal());
         });
     }

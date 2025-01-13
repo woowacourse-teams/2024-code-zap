@@ -72,9 +72,6 @@ public class Category extends BaseTimeEntity {
     }
 
     public void update(String name, int ordinal) {
-        if (isDefault) {
-            throw new DefaultCategoryException("기본 카테고리는 수정 및 삭제할 수 없습니다.");
-        }
         this.name = name;
         this.ordinal = ordinal;
     }
