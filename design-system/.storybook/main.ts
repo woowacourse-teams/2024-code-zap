@@ -51,6 +51,7 @@ const config: StorybookConfig = {
       alias: {
         ...config.resolve?.alias,
         '@design': path.resolve(__dirname, '../.'),
+        '@': path.resolve(__dirname, '../../frontend/src'),
       },
     };
 
