@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import { BaseProps, TextFieldProps } from './Textarea';
 
@@ -79,7 +79,8 @@ export const TextareaField = styled.textarea<TextFieldProps>`
   outline: none;
 
   &::placeholder {
-    color: ${({ placeholderColor }) => placeholderColor || theme.color.light.tertiary_400};
+    color: ${({ placeholderColor }) =>
+      placeholderColor || theme.color.light.tertiary_400};
   }
 
   &:disabled {

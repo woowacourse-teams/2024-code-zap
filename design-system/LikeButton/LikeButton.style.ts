@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 export const LikeButtonContainer = styled.button<{ isLiked: boolean }>`
   cursor: pointer;
@@ -13,9 +13,13 @@ export const LikeButtonContainer = styled.button<{ isLiked: boolean }>`
   height: 2.25rem;
   padding: 0 1rem;
 
-  color: ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : 'white')};
+  color: ${({ isLiked }) =>
+    isLiked ? theme.color.light.analogous_primary_400 : 'white'};
 
   border: 1.5008px solid
-    ${({ isLiked }) => (isLiked ? theme.color.light.analogous_primary_400 : theme.color.light.secondary_800)};
+    ${({ isLiked }) =>
+      isLiked
+        ? theme.color.light.analogous_primary_400
+        : theme.color.light.secondary_800};
   border-radius: 24px;
 `;

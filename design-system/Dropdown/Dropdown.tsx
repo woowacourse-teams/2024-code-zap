@@ -1,7 +1,7 @@
 import { ChevronIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './Dropdown.style';
 
@@ -50,7 +50,9 @@ const Dropdown = <T,>({
       <S.OptionList data-testid='dropdown-option-list'>
         {options?.map((option, idx) => (
           <S.Option key={idx} onClick={() => handleCurrentValue(option)}>
-            <Text.Small color={theme.color.light.black}>{getOptionLabel(option)}</Text.Small>
+            <Text.Small color={theme.color.light.black}>
+              {getOptionLabel(option)}
+            </Text.Small>
           </S.Option>
         ))}
       </S.OptionList>
@@ -60,11 +62,21 @@ const Dropdown = <T,>({
 
 export default Dropdown;
 
-type SelectedButtonProps<T> = Pick<Props<T>, 'toggleDropdown' | 'getOptionLabel' | 'currentValue' | 'isOpen'>;
+type SelectedButtonProps<T> = Pick<
+  Props<T>,
+  'toggleDropdown' | 'getOptionLabel' | 'currentValue' | 'isOpen'
+>;
 
-const SelectedButton = <T,>({ toggleDropdown, getOptionLabel, currentValue, isOpen }: SelectedButtonProps<T>) => (
+const SelectedButton = <T,>({
+  toggleDropdown,
+  getOptionLabel,
+  currentValue,
+  isOpen,
+}: SelectedButtonProps<T>) => (
   <S.SelectedButton onClick={toggleDropdown}>
-    <Text.Small color={theme.color.light.black}>{getOptionLabel(currentValue)}</Text.Small>
+    <Text.Small color={theme.color.light.black}>
+      {getOptionLabel(currentValue)}
+    </Text.Small>
     <ChevronIcon
       width={ICON_SIZE.SMALL}
       height={ICON_SIZE.SMALL}

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Button } from '@/components';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 export const SourceCodeEditorContainer = styled.div`
   position: relative;

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import type { OptionProps } from './SelectList';
 
@@ -65,13 +65,16 @@ export const SelectListOption = styled.a<OptionProps>`
   text-decoration: none;
 
   background-color: ${({ isSelected }) =>
-    isSelected ? theme.color.light.primary_500 : 'var(--select-list-background-color)'};
+    isSelected
+      ? theme.color.light.primary_500
+      : 'var(--select-list-background-color)'};
   border-radius: 50%;
 
   transition: all 0.2s ease-in-out;
 
   &:hover {
-    background: ${({ isSelected }) => isSelected || `rgba(${hexToRgb(theme.color.light.secondary_400)}, 0.1)`};
+    background: ${({ isSelected }) =>
+      isSelected || `rgba(${hexToRgb(theme.color.light.secondary_400)}, 0.1)`};
   }
 `;
 
@@ -93,5 +96,7 @@ const hexToRgb = (hex: string) => {
   hex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 
-  return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : null;
+  return result
+    ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`
+    : null;
 };

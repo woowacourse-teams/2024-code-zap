@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 export const CategoryContainer = styled.div<{ isMenuOpen: boolean }>`
   display: flex;

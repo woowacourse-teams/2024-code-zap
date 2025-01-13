@@ -1,19 +1,31 @@
 import { Input, LoadingBall } from '@/components';
 import { useLoaderDelay } from '@/hooks';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 interface Props {
   value: string;
   onEnterDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>, compareValue?: string) => void;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    compareValue?: string
+  ) => void;
   isPending: boolean;
 }
 
-const NewCategoryInput = ({ value, onChange, onEnterDown, isPending }: Props) => {
+const NewCategoryInput = ({
+  value,
+  onChange,
+  onEnterDown,
+  isPending,
+}: Props) => {
   const showLoader = useLoaderDelay(isPending, 700);
 
   return (
-    <Input size='medium' variant='outlined' inputColor={theme.color.light.secondary_400}>
+    <Input
+      size='medium'
+      variant='outlined'
+      inputColor={theme.color.light.secondary_400}
+    >
       {showLoader ? (
         <LoadingBall />
       ) : (

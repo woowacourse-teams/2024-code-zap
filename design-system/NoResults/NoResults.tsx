@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 
 import { ZapzapCuriousLogo } from '@/assets/images';
 import { Text } from '@/components';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './NoResults.style';
 

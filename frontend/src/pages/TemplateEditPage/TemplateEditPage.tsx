@@ -23,7 +23,7 @@ import { VISIBILITY_OPTIONS } from '@/service/constants';
 import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
 import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
 import { TemplateVisibility } from '@/types/template';
 import { getLanguageForAutoTag } from '@/utils';

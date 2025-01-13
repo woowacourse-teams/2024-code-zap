@@ -6,7 +6,7 @@ import { useToggle, useWindowWidth } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { CategoryEditModal } from '@/pages/MyTemplatesPage/components';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 import type { Category } from '@/types';
 
 import * as S from './CategoryFilterMenu.style';

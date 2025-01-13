@@ -2,7 +2,7 @@ import { captureException } from '@sentry/react';
 import { FallbackProps } from 'react-error-boundary';
 
 import { Button, Flex, Text } from '@/components';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 const TemporaryError = ({ error, resetErrorBoundary }: FallbackProps) => {
   if (error.statusCode !== 500) {
@@ -14,7 +14,14 @@ const TemporaryError = ({ error, resetErrorBoundary }: FallbackProps) => {
   captureException(error);
 
   return (
-    <Flex direction='column' gap='3rem' margin='2rem 0 0 0' justify='center' align='center' width='100%'>
+    <Flex
+      direction='column'
+      gap='3rem'
+      margin='2rem 0 0 0'
+      justify='center'
+      align='center'
+      width='100%'
+    >
       <Flex direction='column' gap='2rem' align='center'>
         <Text.XLarge color={theme.color.light.primary_500} weight='bold'>
           잠시 연결이 지연되고 있습니다

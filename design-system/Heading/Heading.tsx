@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './Heading.style';
 
@@ -18,32 +18,92 @@ interface Props {
   textDecoration?: TextDecoration;
 }
 
-const XLarge = ({ children, as = 'span', color, weight = 'bold', textDecoration }: PropsWithChildren<Props>) => (
-  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.xlarge} textDecoration={textDecoration}>
+const XLarge = ({
+  children,
+  as = 'span',
+  color,
+  weight = 'bold',
+  textDecoration,
+}: PropsWithChildren<Props>) => (
+  <S.HeadingElement
+    as={as}
+    color={color}
+    weight={weights[weight]}
+    size={sizes.xlarge}
+    textDecoration={textDecoration}
+  >
     {children}
   </S.HeadingElement>
 );
 
-const Large = ({ children, as = 'span', color, weight = 'bold', textDecoration }: PropsWithChildren<Props>) => (
-  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.large} textDecoration={textDecoration}>
+const Large = ({
+  children,
+  as = 'span',
+  color,
+  weight = 'bold',
+  textDecoration,
+}: PropsWithChildren<Props>) => (
+  <S.HeadingElement
+    as={as}
+    color={color}
+    weight={weights[weight]}
+    size={sizes.large}
+    textDecoration={textDecoration}
+  >
     {children}
   </S.HeadingElement>
 );
 
-const Medium = ({ children, as = 'span', color, weight = 'bold', textDecoration }: PropsWithChildren<Props>) => (
-  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.medium} textDecoration={textDecoration}>
+const Medium = ({
+  children,
+  as = 'span',
+  color,
+  weight = 'bold',
+  textDecoration,
+}: PropsWithChildren<Props>) => (
+  <S.HeadingElement
+    as={as}
+    color={color}
+    weight={weights[weight]}
+    size={sizes.medium}
+    textDecoration={textDecoration}
+  >
     {children}
   </S.HeadingElement>
 );
 
-const Small = ({ children, as = 'span', color, weight = 'bold', textDecoration }: PropsWithChildren<Props>) => (
-  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.small} textDecoration={textDecoration}>
+const Small = ({
+  children,
+  as = 'span',
+  color,
+  weight = 'bold',
+  textDecoration,
+}: PropsWithChildren<Props>) => (
+  <S.HeadingElement
+    as={as}
+    color={color}
+    weight={weights[weight]}
+    size={sizes.small}
+    textDecoration={textDecoration}
+  >
     {children}
   </S.HeadingElement>
 );
 
-const XSmall = ({ children, as = 'span', color, weight = 'bold', textDecoration }: PropsWithChildren<Props>) => (
-  <S.HeadingElement as={as} color={color} weight={weights[weight]} size={sizes.xsmall} textDecoration={textDecoration}>
+const XSmall = ({
+  children,
+  as = 'span',
+  color,
+  weight = 'bold',
+  textDecoration,
+}: PropsWithChildren<Props>) => (
+  <S.HeadingElement
+    as={as}
+    color={color}
+    weight={weights[weight]}
+    size={sizes.xsmall}
+    textDecoration={textDecoration}
+  >
     {children}
   </S.HeadingElement>
 );
@@ -56,7 +116,7 @@ const Heading = Object.assign(
     Medium,
     Small,
     XSmall,
-  },
+  }
 );
 
 export default Heading;

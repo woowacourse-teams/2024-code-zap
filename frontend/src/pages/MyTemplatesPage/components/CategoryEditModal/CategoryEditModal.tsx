@@ -7,7 +7,7 @@ import { useCategoryNameValidation } from '@/hooks/category';
 import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/categories';
 import { validateCategoryName } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 import type { Category, ErrorBody } from '@/types';
 
 import * as S from './CategoryEditModal.style';

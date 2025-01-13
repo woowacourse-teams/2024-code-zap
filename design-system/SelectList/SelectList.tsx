@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 
 import { Text } from '@/components';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './SelectList.style';
 
@@ -10,12 +10,26 @@ export interface OptionProps {
   onClick: (event: React.MouseEvent<HTMLAnchorElement>) => void;
 }
 
-const SelectListBase = ({ children }: PropsWithChildren) => <S.SelectListContainer>{children}</S.SelectListContainer>;
+const SelectListBase = ({ children }: PropsWithChildren) => (
+  <S.SelectListContainer>{children}</S.SelectListContainer>
+);
 
-const SelectListOption = ({ children, isSelected, onClick }: PropsWithChildren<OptionProps>) => (
-  <S.SelectListOption href={`#${children}`} onClick={onClick} isSelected={isSelected}>
+const SelectListOption = ({
+  children,
+  isSelected,
+  onClick,
+}: PropsWithChildren<OptionProps>) => (
+  <S.SelectListOption
+    href={`#${children}`}
+    onClick={onClick}
+    isSelected={isSelected}
+  >
     <S.SelectListText className='select-list-text'>
-      <Text.Medium color={isSelected ? theme.color.light.white : theme.color.light.secondary_600}>
+      <Text.Medium
+        color={
+          isSelected ? theme.color.light.white : theme.color.light.secondary_600
+        }
+      >
         {children}
       </Text.Medium>
     </S.SelectListText>

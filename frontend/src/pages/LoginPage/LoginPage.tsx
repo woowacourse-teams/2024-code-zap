@@ -6,7 +6,7 @@ import { useToggle } from '@/hooks';
 import { useLoginForm } from '@/pages/LoginPage/hooks';
 import { END_POINTS } from '@/routes';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './LoginPage.style';
 

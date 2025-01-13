@@ -4,7 +4,7 @@ import { Flex, Input, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 interface Props {
   value: string;
@@ -15,10 +15,19 @@ interface Props {
   deleteTag: (tag: string) => void;
 }
 
-const TagInput = ({ value, handleValue, resetValue, tags, addTag, deleteTag }: Props) => {
+const TagInput = ({
+  value,
+  handleValue,
+  resetValue,
+  tags,
+  addTag,
+  deleteTag,
+}: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
 
-  const handleSpaceBarAndEnterKeydown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleSpaceBarAndEnterKeydown = (
+    e: KeyboardEvent<HTMLInputElement>
+  ) => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();
       addTag(value);
@@ -57,7 +66,14 @@ const TagInput = ({ value, handleValue, resetValue, tags, addTag, deleteTag }: P
         </Flex>
       )}
       <Flex gap='0.25rem' css={{ flexWrap: 'wrap', width: '100%' }}>
-        {tags?.map((tag, idx) => <TagButton key={idx} variant='edit' name={tag} onClick={() => deleteTag(tag)} />)}
+        {tags?.map((tag, idx) => (
+          <TagButton
+            key={idx}
+            variant='edit'
+            name={tag}
+            onClick={() => deleteTag(tag)}
+          />
+        ))}
       </Flex>
       <Input size='large' variant='outlined'>
         <Input.TextField

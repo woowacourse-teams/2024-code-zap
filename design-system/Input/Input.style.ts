@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import type { BaseProps, TextFieldProps } from './Input';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 const sizes = {
   small: css`
