@@ -69,7 +69,10 @@ const SelectedButton = <T,>({ toggleDropdown, getOptionLabel, currentValue, isOp
       width={ICON_SIZE.SMALL}
       height={ICON_SIZE.SMALL}
       aria-label='정렬기준 펼침'
-      css={{ transition: 'transform 0.3s ease', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+      css={{
+        transition: 'transform 0.3s ease',
+        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+      }}
     />
   </S.SelectedButton>
 );
