@@ -25,6 +25,7 @@
     "storybook": "^8.2.1"
   },
   "dependencies": {
+    "@sentry/react": "^8.22.0",
     "@tanstack/react-query": "^5.51.1",
     "@uiw/codemirror-extensions-langs": "^4.23.0",
     "@uiw/codemirror-theme-quietlight": "^4.23.0",
