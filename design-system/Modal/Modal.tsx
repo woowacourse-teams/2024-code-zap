@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom';
 import { Heading } from '@/components';
 import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './Modal.style';
 
@@ -16,7 +16,13 @@ export interface BaseProps extends HTMLAttributes<HTMLDivElement> {
   size?: ModalSize;
 }
 
-const Base = ({ isOpen, toggleModal, size = 'small', children, ...props }: PropsWithChildren<BaseProps>) => {
+const Base = ({
+  isOpen,
+  toggleModal,
+  size = 'small',
+  children,
+  ...props
+}: PropsWithChildren<BaseProps>) => {
   usePressESC(isOpen, toggleModal);
   useScrollDisable(isOpen);
 
@@ -31,25 +37,33 @@ const Base = ({ isOpen, toggleModal, size = 'small', children, ...props }: Props
         {children}
       </S.ModalContainer>
     </S.Base>,
-    document.body,
+    document.body
   );
 };
 
 const Header = ({ children }: { children: ReactNode }) => (
   <S.HeaderWrapper>
     {typeof children === 'string' ? (
-      <Heading.XSmall color={theme.color.light.secondary_900}>{children}</Heading.XSmall>
+      <Heading.XSmall color={theme.color.light.secondary_900}>
+        {children}
+      </Heading.XSmall>
     ) : (
       children
     )}
   </S.HeaderWrapper>
 );
 
-const Body = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
+const Body = ({
+  children,
+  ...props
+}: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
   <S.BodyContainer {...props}>{children}</S.BodyContainer>
 );
 
-const Footer = ({ children, ...props }: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
+const Footer = ({
+  children,
+  ...props
+}: PropsWithChildren<HTMLAttributes<HTMLDivElement>>) => (
   <S.FooterContainer {...props}>{children}</S.FooterContainer>
 );
 
