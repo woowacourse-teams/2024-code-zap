@@ -11,20 +11,16 @@
     "forceConsistentCasingInFileNames": true,
 
     "skipLibCheck": true,
-    "sourceMap": true,
 
     "jsx": "react-jsx",
-
     "jsxImportSource": "@emotion/react",
 
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "isolatedModules": true,
-
-    "baseUrl": ".", // 루트 디렉토리
-    "paths": {
-      "@/*": ["*"]
-    }
-  }
+    "isolatedModules": true
+  },
+  "extends": ["../tsconfig.base"],
+  "include": ["."],
+  "exclude": ["node_modules", "dist", "**/*.cjs"]
 }
