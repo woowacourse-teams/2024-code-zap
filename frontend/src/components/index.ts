@@ -4,7 +4,7 @@ export { default as Flex } from '@design/Flex/Flex';
 export { default as Header } from '@design/Header/Header';
 export { default as Heading } from '@design/Heading/Heading';
 export { default as Input } from '@design/Input/Input';
-export { default as Layout } from './Layout/Layout';
+export { default as Layout } from '@design/Layout/Layout';
 export { default as LikeButton } from '@design/LikeButton/LikeButton';
 export { default as LikeCounter } from '@design/LikeCounter/LikeCounter';
 export { default as Modal } from '@design/Modal/Modal';
@@ -37,7 +37,7 @@ export { default as LoadingBall } from '@design/LoadingBall/LoadingBall';
 export { default as LoadingFallback } from '@design/LoadingFallback/LoadingFallback';
 
 // Error UI
-export { default as TemporaryError } from './Error/TemporaryError';
+export { default as TemporaryError } from '@design/Error/TemporaryError';
 
 // ScreenReader
 export { default as ScreenReaderOnly } from '@design/ScreenReaderOnly/ScreenReaderOnly';
