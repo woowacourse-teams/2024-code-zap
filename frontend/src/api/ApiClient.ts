@@ -39,7 +39,7 @@ export class ApiClient {
 
   private getAuthorizationHeader(): HeadersInit {
     const token = localStorage.getItem('authorization');
-    return token ? { Authorization: token } : {};
+    return token ? { Authorization: token, 'Credential-Type': 'Authorization Header' } : {};
   }
 
   async get(endpoint: string, params?: RequestParams): Promise<Response> {
