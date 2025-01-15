@@ -14,6 +14,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codezap.auth.dto.Credential;
 import codezap.auth.manager.CredentialManager;
+import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
+    private final CredentialManagers credentialManagers2;
     private final List<CredentialManager> credentialManagers;
     private final CredentialProvider credentialProvider;
 
@@ -41,6 +43,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         AuthenticationPrinciple parameterAnnotation = parameter.getParameterAnnotation(AuthenticationPrinciple.class);
         boolean supported = Objects.nonNull(parameterAnnotation);
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+
         if (supported && !parameterAnnotation.required() && !hasCredential(request)) {
             return null;
         }
@@ -48,7 +51,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
                 .filter(cm -> cm.hasCredential(request))
                 .findFirst()
                 .orElseThrow(() -> new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요."));
-        Credential credential = credentialManager.getCredential(request);
+        Credential credential = credentialManagers2.getCredential(request);
         return credentialProvider.extractMember(credential);
     }
 
