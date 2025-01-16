@@ -17,10 +17,6 @@ public class CredentialManagers {
     protected static final String CREDENTIAL_TYPE_HEADER = "Credential-Type";
     private final List<CredentialManager> credentialManagers;
 
-    public Credential getCredential(HttpServletRequest request) {
-        return getCredentialManager(request).getCredential(request);
-    }
-
     public void setCredential(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Credential credential) {
         getCredentialManager(httpServletRequest).setCredential(httpServletResponse, credential);
     }
