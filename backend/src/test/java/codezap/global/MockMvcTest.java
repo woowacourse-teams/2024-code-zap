@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import codezap.auth.dto.LoginMember;
+import codezap.auth.manager.CredentialManagers;
 import codezap.member.domain.Member;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -40,6 +41,9 @@ public abstract class MockMvcTest {
 
     @MockBean
     protected CredentialManager credentialManager;
+
+    @MockBean
+    protected CredentialManagers credentialManagers;
 
     @MockBean
     protected CategoryService categoryService;

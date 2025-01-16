@@ -22,6 +22,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import codezap.auth.manager.CookieCredentialManager;
 import codezap.auth.manager.CredentialManager;
+import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
 import codezap.fixture.MemberFixture;
@@ -32,8 +33,11 @@ class AuthArgumentResolverTest {
     private final CredentialProvider credentialProvider = new PlainCredentialProvider();
     private final List<CredentialManager> credentialManagers =
             List.of(new CookieCredentialManager(), new AuthorizationHeaderCredentialManager());
+    private final CredentialManagers credentialManagers1 = new CredentialManagers(
+            List.of(new CookieCredentialManager(), new AuthorizationHeaderCredentialManager())
+    );
 
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers, credentialProvider);
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers, credentialManagers1, credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")
