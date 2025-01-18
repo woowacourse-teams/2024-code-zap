@@ -3,12 +3,9 @@ package codezap.auth.configuration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import codezap.auth.dto.LoginMember;
-import codezap.auth.dto.Credential;
-import codezap.auth.manager.AuthorizationHeaderCredentialManager;
 import java.lang.reflect.Method;
-
 import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,8 +17,10 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.async.StandardServletAsyncWebRequest;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import codezap.auth.dto.Credential;
+import codezap.auth.dto.LoginMember;
+import codezap.auth.manager.AuthorizationHeaderCredentialManager;
 import codezap.auth.manager.CookieCredentialManager;
-import codezap.auth.manager.CredentialManager;
 import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.provider.PlainCredentialProvider;
@@ -35,7 +34,8 @@ class AuthArgumentResolverTest {
             List.of(new CookieCredentialManager(), new AuthorizationHeaderCredentialManager())
     );
 
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers, credentialProvider);
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers,
+            credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")

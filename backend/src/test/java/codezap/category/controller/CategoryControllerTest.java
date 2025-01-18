@@ -1,8 +1,6 @@
 package codezap.category.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,8 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
@@ -29,8 +25,6 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.fixture.MemberFixture;
 import codezap.global.MockMvcTest;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 
 @Import(CategoryController.class)
