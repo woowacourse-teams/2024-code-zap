@@ -27,10 +27,6 @@ import lombok.NoArgsConstructor;
                 @UniqueConstraint(
                         name = "name_with_member",
                         columnNames = {"member_id", "name"}
-                ),
-                @UniqueConstraint(
-                        name = "ordinal_with_member",
-                        columnNames = {"member_id", "ordinal"}
                 )
         },
         indexes = @Index(name = "idx_member_id", columnList = "member_id")
@@ -72,5 +68,10 @@ public class Category extends BaseTimeEntity {
 
     public boolean isDefault() {
         return isDefault;
+    }
+
+    public void update(String name, int ordinal) {
+        this.name = name;
+        this.ordinal = ordinal;
     }
 }

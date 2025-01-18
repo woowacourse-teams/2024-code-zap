@@ -198,7 +198,31 @@ class CategoryServiceTest extends ServiceTest {
                             createCategoryName),
                     () -> assertThat(categoryRepository.fetchById(4L).getOrdinal()).isEqualTo(1L)
             );
+        }
 
+        @Test
+        @DisplayName("카테고리 편집 성공: 복수의 카테고리 순서 변경")
+        void updateCategoriesSuccessWithChangeOdinal() {
+            Category category1 = categoryRepository.save(new Category("category1", member, 1));
+            Category category2 = categoryRepository.save(new Category("category2", member, 2));
+            Category category3 = categoryRepository.save(new Category("category3", member, 3));
+
+            CreateCategoryRequest createRequest = new CreateCategoryRequest("newCategory", 3);
+            UpdateCategoryRequest updateRequest1 = new UpdateCategoryRequest(category1.getId(), "category1", 2);
+            UpdateCategoryRequest updateRequest2 = new UpdateCategoryRequest(category2.getId(), "category2", 4);
+            UpdateCategoryRequest updateRequest3 = new UpdateCategoryRequest(category3.getId(), "category3", 1);
+
+            sut.updateCategories(member, new UpdateAllCategoriesRequest(
+                    List.of(createRequest),
+                    List.of(updateRequest1, updateRequest2, updateRequest3),
+                    List.of()));
+
+            assertAll(
+                    () -> assertThat(categoryRepository.fetchById(category1.getId()).getOrdinal()).isEqualTo(2),
+                    () -> assertThat(categoryRepository.fetchById(category2.getId()).getOrdinal()).isEqualTo(4),
+                    () -> assertThat(categoryRepository.fetchById(category3.getId()).getOrdinal()).isEqualTo(1),
+                    () -> assertThat(categoryRepository.fetchById(5L).getOrdinal()).isEqualTo(3)
+            );
         }
 
         @Test

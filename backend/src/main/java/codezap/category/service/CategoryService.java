@@ -67,7 +67,7 @@ public class CategoryService {
             Category category = categoryRepository.fetchById(update.id());
             validationService.validateAuthorization(category, member);
             validationService.validateDefaultCategory(category);
-            categoryRepository.updateCategoryWithFlush(update.id(), update.name(), update.ordinal());
+            category.update(update.name(), update.ordinal());
         });
     }
 
@@ -77,7 +77,7 @@ public class CategoryService {
             validationService.validateAuthorization(category, member);
             validationService.validateDefaultCategory(category);
             validationService.validateHasTemplate(id);
-            categoryRepository.deleteByIdWithFlush(id);
+            categoryRepository.deleteById(id);
         });
     }
 }

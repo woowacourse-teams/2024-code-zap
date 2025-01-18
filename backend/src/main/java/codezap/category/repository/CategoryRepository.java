@@ -33,12 +33,8 @@ public class CategoryRepository {
         return categoryJpaRepository.existsByNameAndMember(categoryName, member);
     }
 
-    public void deleteByIdWithFlush(Long id) {
-        categoryJpaRepository.deleteByIdWithFlush(id);
-    }
-
-    public void updateCategoryWithFlush(Long id, String name, int ordinal) {
-        categoryJpaRepository.updateCategoryWithFlush(id, name, ordinal);
+    public void deleteById(Long id) {
+        categoryJpaRepository.deleteById(id);
     }
 
     public long countByMember(Member member) {
