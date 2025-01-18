@@ -76,8 +76,6 @@ public abstract class MockMvcTest {
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
         Member member = MemberFixture.getFirstMember();
-        //when(credentialManager.getCredential(any())).thenReturn(credentialProvider.createCredential(LoginMember
-        // .from(member)));
         when(credentialProvider.extractMember(any())).thenReturn(member);
     }
 
