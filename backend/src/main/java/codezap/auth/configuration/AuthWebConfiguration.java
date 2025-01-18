@@ -15,12 +15,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthWebConfiguration implements WebMvcConfigurer {
 
-    private final List<CredentialManager> credentialManagers;
-    private final CredentialManagers credentialManagers1;
+    private final CredentialManagers credentialManagers;
     private final CredentialProvider credentialProvider;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthArgumentResolver(credentialManagers, credentialManagers1, credentialProvider));
+        resolvers.add(new AuthArgumentResolver(credentialManagers, credentialProvider));
     }
 }

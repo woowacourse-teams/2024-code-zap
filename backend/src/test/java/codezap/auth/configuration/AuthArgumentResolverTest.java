@@ -31,13 +31,11 @@ import codezap.member.domain.Member;
 
 class AuthArgumentResolverTest {
     private final CredentialProvider credentialProvider = new PlainCredentialProvider();
-    private final List<CredentialManager> credentialManagers =
-            List.of(new CookieCredentialManager(), new AuthorizationHeaderCredentialManager());
-    private final CredentialManagers credentialManagers1 = new CredentialManagers(
+    private final CredentialManagers credentialManagers = new CredentialManagers(
             List.of(new CookieCredentialManager(), new AuthorizationHeaderCredentialManager())
     );
 
-    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers, credentialManagers1, credentialProvider);
+    private final AuthArgumentResolver authArgumentResolver = new AuthArgumentResolver(credentialManagers, credentialProvider);
 
     @Nested
     @DisplayName("지원하는 파라미터 테스트")
@@ -167,7 +165,7 @@ class AuthArgumentResolverTest {
         private void setCredentialCookie(MockHttpServletRequest request, Member member) {
             MockHttpServletResponse mockResponse = new MockHttpServletResponse();
             Credential credential = credentialProvider.createCredential(LoginMember.from(member));
-            credentialManagers.forEach(cm -> cm.setCredential(mockResponse, credential));
+            credentialManagers.setCredential(request, mockResponse, credential);
             request.setCookies(mockResponse.getCookies());
         }
     }

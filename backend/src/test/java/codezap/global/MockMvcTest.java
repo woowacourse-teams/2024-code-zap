@@ -1,11 +1,11 @@
 package codezap.global;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import codezap.auth.dto.LoginMember;
-import codezap.auth.manager.CredentialManagers;
-import codezap.member.domain.Member;
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,15 +17,20 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import codezap.auth.dto.Credential;
 import codezap.auth.manager.CredentialManager;
+import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
 import codezap.fixture.MemberFixture;
 import codezap.global.cors.CorsProperties;
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.likes.service.LikesService;
+import codezap.member.domain.Member;
 import codezap.member.service.MemberService;
-import codezap.template.service.facade.TemplateApplicationService;
 import codezap.tag.service.TagService;
+import codezap.template.service.facade.TemplateApplicationService;
 import codezap.voc.service.VocService;
 
 @WebMvcTest(SpringExtension.class)
@@ -71,7 +76,19 @@ public abstract class MockMvcTest {
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
         Member member = MemberFixture.getFirstMember();
-        //when(credentialManager.getCredential(any())).thenReturn(credentialProvider.createCredential(LoginMember.from(member)));
+        //when(credentialManager.getCredential(any())).thenReturn(credentialProvider.createCredential(LoginMember
+        // .from(member)));
         when(credentialProvider.extractMember(any())).thenReturn(member);
+    }
+
+    protected void setLogin() {
+        when(credentialManagers.hasCredential(any(HttpServletRequest.class))).thenReturn(true);
+        when(credentialProvider.extractMember(any(Credential.class))).thenReturn(MemberFixture.getFirstMember());
+    }
+
+    protected void setNoLogin() {
+        when(credentialManagers.hasCredential(any(HttpServletRequest.class))).thenReturn(false);
+        doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요.")).when(
+                credentialManagers).getCredential(any(HttpServletRequest.class));
     }
 }

@@ -66,9 +66,7 @@ class CategoryControllerTest extends MockMvcTest {
         void createCategoryFailWithNotLogin() throws Exception {
             // given
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1);
-
-            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getCredential(any());
+            setNoLogin();
 
             // when & then
             mvc.perform(post("/categories")
@@ -76,7 +74,8 @@ class CategoryControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(createCategoryRequest)))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
+                    //Todo ErrorCode 가 있는데 detail 을 확인해야 하나??
+                    .andExpect(jsonPath("$.detail").value("인증 정보가 없습니다. 다시 로그인해 주세요."))
                     .andExpect(jsonPath("$.errorCode").value(1301));
         }
 
@@ -144,14 +143,15 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 편집 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
-            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1);
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a", 1);
             var request = new UpdateAllCategoriesRequest(
                     List.of(),
                     List.of(updateCategoryRequest),
                     List.of());
+            setNoLogin();
 
-            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getCredential(any());
+           /* doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
+                    .when(credentialManager).getCredential(any());*/
 
             // when & then
             mvc.perform(put("/categories")
