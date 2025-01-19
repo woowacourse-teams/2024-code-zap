@@ -1,8 +1,6 @@
 package codezap.category.controller;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,8 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import codezap.category.domain.Category;
 import codezap.category.dto.request.CreateCategoryRequest;
 import codezap.category.dto.request.UpdateAllCategoriesRequest;
@@ -29,8 +25,6 @@ import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.fixture.MemberFixture;
 import codezap.global.MockMvcTest;
-import codezap.global.exception.CodeZapException;
-import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 
 @Import(CategoryController.class)
@@ -66,9 +60,7 @@ class CategoryControllerTest extends MockMvcTest {
         void createCategoryFailWithNotLogin() throws Exception {
             // given
             CreateCategoryRequest createCategoryRequest = new CreateCategoryRequest("category", 1);
-
-            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getCredential(any());
+            setNoLogin();
 
             // when & then
             mvc.perform(post("/categories")
@@ -76,7 +68,7 @@ class CategoryControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(createCategoryRequest)))
                     .andExpect(status().isUnauthorized())
-                    .andExpect(jsonPath("$.detail").value("인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
+                    .andExpect(jsonPath("$.detail").value("인증 정보가 없습니다. 다시 로그인해 주세요."))
                     .andExpect(jsonPath("$.errorCode").value(1301));
         }
 
@@ -144,14 +136,12 @@ class CategoryControllerTest extends MockMvcTest {
         @DisplayName("카테고리 편집 실패: 로그인 되지 않은 경우")
         void updateCategoryFailWithUnauthorized() throws Exception {
             // given
-            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a".repeat(MAX_LENGTH), 1);
+            var updateCategoryRequest = new UpdateCategoryRequest(1L, "a", 1);
             var request = new UpdateAllCategoriesRequest(
                     List.of(),
                     List.of(updateCategoryRequest),
                     List.of());
-
-            doThrow(new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증에 대한 쿠키가 없어서 회원 정보를 찾을 수 없습니다. 다시 로그인해주세요."))
-                    .when(credentialManager).getCredential(any());
+            setNoLogin();
 
             // when & then
             mvc.perform(put("/categories")

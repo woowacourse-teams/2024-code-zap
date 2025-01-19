@@ -23,6 +23,11 @@ public class CookieCredentialManager implements CredentialManager {
     private static final String CREDENTIAL_COOKIE_NAME = "credential";
 
     @Override
+    public boolean support(CredentialType credentialType) {
+        return credentialType == CredentialType.COOKIE;
+    }
+
+    @Override
     public Credential getCredential(HttpServletRequest httpServletRequest) {
         Cookie[] cookies = httpServletRequest.getCookies();
         checkCookieExist(cookies);

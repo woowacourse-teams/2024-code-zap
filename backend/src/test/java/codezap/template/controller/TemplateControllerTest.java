@@ -253,11 +253,11 @@ class TemplateControllerTest extends MockMvcTest {
     class FindAllTemplatesSuccess {
 
         @Test
-        @DisplayName("템플릿 검색 성공")
+        @DisplayName("템플릿 검색 성공: 로그인을 한 경우")
         void findAllTemplatesSuccess() throws Exception {
             // given
             FindAllTemplateItemResponse findAllTemplateItemResponse = getFindAllTemplateItemResponse();
-
+            setLogin();
             when(templateApplicationService.findAllBy(any(), any(), any(), any(), any(), any())).thenReturn(
                     new FindAllTemplatesResponse(1, List.of(findAllTemplateItemResponse)));
 
@@ -307,6 +307,7 @@ class TemplateControllerTest extends MockMvcTest {
         @DisplayName("템플릿 단건 조회 성공")
         void findOneTemplateSuccess() throws Exception {
             // given
+            setLogin();
             Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
             FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(
                     template,

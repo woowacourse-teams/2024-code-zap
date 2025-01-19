@@ -34,7 +34,7 @@ public interface SpringDocAuthController {
             @ErrorCase(description = "아이디 불일치", exampleMessage = "존재하지 않는 아이디 moly 입니다."),
             @ErrorCase(description = "비밀번호 불일치", exampleMessage = "로그인에 실패하였습니다. 비밀번호를 확인해주세요."),
     })
-    ResponseEntity<LoginResponse> login(LoginRequest request, HttpServletResponse response);
+    ResponseEntity<LoginResponse> login(LoginRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse);
 
     @Operation(summary = "아이디 로그인 후 쿠키 인증")
     @ApiResponse(responseCode = "200", description = "쿠키 인증 성공")
@@ -46,5 +46,5 @@ public interface SpringDocAuthController {
 
     @Operation(summary = "로그아웃")
     @ApiResponse(responseCode = "204", description = "인증 성공")
-    ResponseEntity<Void> logout(HttpServletResponse response);
+    ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response);
 }

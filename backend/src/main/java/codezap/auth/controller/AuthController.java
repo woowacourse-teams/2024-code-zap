@@ -1,7 +1,5 @@
 package codezap.auth.controller;
 
-import java.util.List;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -17,7 +15,7 @@ import codezap.auth.dto.Credential;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.dto.response.LoginResponse;
-import codezap.auth.manager.CredentialManager;
+import codezap.auth.manager.CredentialManagers;
 import codezap.auth.provider.CredentialProvider;
 import codezap.auth.service.AuthService;
 import codezap.global.exception.CodeZapException;
@@ -29,18 +27,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthController implements SpringDocAuthController {
 
-    private final List<CredentialManager> credentialManagers;
+    private final CredentialManagers credentialManagers;
     private final CredentialProvider credentialProvider;
     private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(
             @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpServletRequest,
             HttpServletResponse httpServletResponse
     ) {
         LoginMember loginMember = authService.login(request);
         Credential credential = credentialProvider.createCredential(loginMember);
-        credentialManagers.forEach(cm -> cm.setCredential(httpServletResponse, credential));
+        credentialManagers.setCredential(httpServletRequest, httpServletResponse, credential);
         return ResponseEntity.ok(LoginResponse.from(loginMember));
     }
 
@@ -56,8 +55,8 @@ public class AuthController implements SpringDocAuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletResponse httpServletResponse) {
-        credentialManagers.forEach(cm -> cm.removeCredential(httpServletResponse));
+    public ResponseEntity<Void> logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
+        credentialManagers.removeCredential(httpServletRequest, httpServletResponse);
         return ResponseEntity.noContent().build();
     }
 }

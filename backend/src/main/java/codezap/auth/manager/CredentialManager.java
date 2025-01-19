@@ -10,6 +10,8 @@ import codezap.auth.dto.Credential;
  */
 public interface CredentialManager {
 
+    boolean support(CredentialType credentialType);
+
     Credential getCredential(HttpServletRequest httpServletRequest);
 
     boolean hasCredential(HttpServletRequest httpServletRequest);

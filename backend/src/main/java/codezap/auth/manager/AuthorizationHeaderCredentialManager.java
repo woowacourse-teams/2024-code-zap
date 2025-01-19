@@ -16,6 +16,11 @@ import lombok.RequiredArgsConstructor;
 public class AuthorizationHeaderCredentialManager implements CredentialManager {
 
     @Override
+    public boolean support(CredentialType credentialType) {
+        return credentialType == CredentialType.AUTHORIZATION_HEADER;
+    }
+
+    @Override
     public Credential getCredential(HttpServletRequest httpServletRequest) {
         String authorizationHeaderValue = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         checkHeaderExist(authorizationHeaderValue);
