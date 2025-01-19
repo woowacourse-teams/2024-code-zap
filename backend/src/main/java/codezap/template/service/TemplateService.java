@@ -65,7 +65,7 @@ public class TemplateService {
     ) {
         Template template = templateRepository.fetchById(templateId);
         validateAuthorization(member, template);
-        checkCategoryChanged(category, template);
+        updateTemplateCount(category, template);
         template.updateTemplate(
                 request.title(),
                 request.description(),
@@ -75,7 +75,7 @@ public class TemplateService {
         return template;
     }
 
-    private void checkCategoryChanged(Category category, Template template) {
+    private void updateTemplateCount(Category category, Template template) {
         Category originalCategory = template.getCategory();
         if (originalCategory.equals(category)) {
             return;
