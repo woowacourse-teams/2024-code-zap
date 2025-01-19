@@ -75,13 +75,13 @@ public class TemplateService {
         return template;
     }
 
-    private void updateTemplateCount(Category category, Template template) {
+    private void updateTemplateCount(Category changedCategory, Template template) {
         Category originalCategory = template.getCategory();
-        if (originalCategory.equals(category)) {
+        if (originalCategory.equals(changedCategory)) {
             return;
         }
         originalCategory.decreaseTemplateCount();
-        category.increaseTemplateCount();
+        changedCategory.increaseTemplateCount();
     }
 
     @Transactional
