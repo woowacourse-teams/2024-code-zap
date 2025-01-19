@@ -126,11 +126,11 @@ class TagRepositoryTest {
         void findMostUsedTagsWithinDateRange() {
             // Given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
 
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Category category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
+            Category category2 = categoryRepository.save(CategoryFixture.getCategory(member2));
             Template template2 = templateRepository.save(TemplateFixture.get(member2, category2));
 
             Tag tag1 = tagRepository.save(new Tag("Tag1"));
@@ -152,7 +152,7 @@ class TagRepositoryTest {
         void findMostUsedTagsWithinDateRangeWhen() {
             // Given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
 
             Tag tag1 = tagRepository.save(new Tag("Tag1"));
@@ -191,11 +191,11 @@ class TagRepositoryTest {
         void findMostUsedTagsByRecentTemplates() {
             // Given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
 
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Category category2 = categoryRepository.save(CategoryFixture.getSecondCategory());
+            Category category2 = categoryRepository.save(CategoryFixture.getCategory(member2));
             Template template2 = templateRepository.save(TemplateFixture.get(member2, category2));
 
             Tag tag1 = tagRepository.save(new Tag("Tag1"));
@@ -217,7 +217,7 @@ class TagRepositoryTest {
         void findMostUsedTagsWithinDateRangeWhenCountSame() {
             // Given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
 
             Tag tag1 = tagRepository.save(new Tag("Tag1"));

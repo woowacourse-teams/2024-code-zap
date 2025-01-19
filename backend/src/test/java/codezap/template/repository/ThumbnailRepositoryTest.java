@@ -51,10 +51,8 @@ public class ThumbnailRepositoryTest {
         @DisplayName("템플릿으로 썸네일 조회 성공")
         void fetchByTemplateSuccess() {
             // given
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template = templateRepository.save(new Template(member, "Template Title", "Description", category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            var template = createSavedTemplate();
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             var thumbnail = sut.save(new Thumbnail(template, sourceCode));
 
             // when
@@ -96,18 +94,6 @@ public class ThumbnailRepositoryTest {
 
             assertThat(sut.findAllByTemplateIn(List.of(template1.getId()))).isEmpty();
         }
-
-        private Template createSavedTemplate() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            return templateRepository.save(TemplateFixture.get(member, category));
-        }
-
-        private Template createSecondTemplate() {
-            Member member = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(CategoryFixture.getSecondCategory());
-            return templateRepository.save(TemplateFixture.get(member, category));
-        }
     }
 
     @Nested
@@ -118,10 +104,8 @@ public class ThumbnailRepositoryTest {
         @DisplayName("템플릿 id로 썸네일 삭제 성공")
         void deleteByTemplateIdSuccess() {
             // given
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template = templateRepository.save(new Template(member, "Template Title", "Description", category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename", "content", 1));
+            var template = createSavedTemplate();
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             sut.save(new Thumbnail(template, sourceCode));
 
             // when
@@ -139,5 +123,17 @@ public class ThumbnailRepositoryTest {
             assertThatCode(() -> sut.deleteAllByTemplateIds(List.of(100L)))
                     .doesNotThrowAnyException();
         }
+    }
+
+    private Template createSavedTemplate() {
+        Member member = memberRepository.save(MemberFixture.getFirstMember());
+        Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+        return templateRepository.save(TemplateFixture.get(member, category));
+    }
+
+    private Template createSecondTemplate() {
+        Member member = memberRepository.save(MemberFixture.getSecondMember());
+        Category category = categoryRepository.save(CategoryFixture.getCategory(member));
+        return templateRepository.save(TemplateFixture.get(member, category));
     }
 }

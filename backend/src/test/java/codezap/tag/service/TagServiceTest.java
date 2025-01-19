@@ -153,7 +153,7 @@ class TagServiceTest extends ServiceTest {
         void getAllTemplateTagsByTemplates() {
             // given
             Template template = createSavedTemplate();
-            Template secondTemplate = createSecondTemplate();
+            Template secondTemplate = createSavedSecondTemplate();
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
             TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
@@ -188,9 +188,9 @@ class TagServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
 
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = templateRepository.save(new Template(member, "title1", "description", category));
-            var template2 = templateRepository.save(new Template(member, "title2", "description", category));
-            var template3 = templateRepository.save(new Template(member, "title3", "description", category));
+            var template1 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+            var template3 = templateRepository.save(TemplateFixture.get(member, category));
             var tag1 = tagRepository.save(new Tag("tag1"));
             var tag2 = tagRepository.save(new Tag("tag2"));
             var tag3 = tagRepository.save(new Tag("tag3"));
@@ -221,7 +221,7 @@ class TagServiceTest extends ServiceTest {
             Tag tag2 = tagRepository.save(new Tag("tag2"));
 
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(new Category("자바", member, 1));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
 
             Template template1 = templateRepository.save(TemplateFixture.get(member, category));
             templateTagRepository.save(new TemplateTag(template1, tag1));
@@ -250,7 +250,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template1, tag1));
             templateTagRepository.save(new TemplateTag(template1, tag2));
 
-            Template template2 = createSecondTemplate();
+            Template template2 = createSavedSecondTemplate();
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then
@@ -426,17 +426,5 @@ class TagServiceTest extends ServiceTest {
             // then
             assertThat(templateTagRepository.findAllByTemplate(template)).isEmpty();
         }
-    }
-
-    private Template createSavedTemplate() {
-        Member member = memberRepository.save(MemberFixture.getFirstMember());
-        Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-        return templateRepository.save(TemplateFixture.get(member, category));
-    }
-
-    private Template createSecondTemplate() {
-        Member member = memberRepository.save(MemberFixture.getSecondMember());
-        Category category = categoryRepository.save(CategoryFixture.getSecondCategory());
-        return templateRepository.save(TemplateFixture.get(member, category));
     }
 }
