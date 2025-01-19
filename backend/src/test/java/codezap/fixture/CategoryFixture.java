@@ -5,11 +5,11 @@ import codezap.member.domain.Member;
 
 public class CategoryFixture {
     public static Category getFirstCategory() {
-        return new Category(1L, MemberFixture.getFirstMember(), "카테고리 없음", true, 1);
+        return new Category(1L, MemberFixture.getFirstMember(), "카테고리 없음", true, 1, 0);
     }
 
     public static Category getSecondCategory() {
-        return new Category(2L, MemberFixture.getSecondMember(), "자바", true, 2);
+        return new Category(2L, MemberFixture.getSecondMember(), "자바", true, 2, 0);
     }
 
     public static Category get(Member member) {
