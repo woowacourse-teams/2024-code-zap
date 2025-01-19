@@ -80,8 +80,8 @@ public class TemplateService {
         if (originalCategory.equals(category)) {
             return;
         }
-        originalCategory.decreaseTemplate();
-        category.increaseTemplate();
+        originalCategory.decreaseTemplateCount();
+        category.increaseTemplateCount();
     }
 
     @Transactional
@@ -96,7 +96,7 @@ public class TemplateService {
         Template template = templateRepository.fetchById(id);
         validateAuthorization(member, template);
         Category category = template.getCategory();
-        category.decreaseTemplate();
+        category.decreaseTemplateCount();
         templateRepository.deleteById(id);
     }
 

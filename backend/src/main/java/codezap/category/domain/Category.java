@@ -85,11 +85,11 @@ public class Category extends BaseTimeEntity {
         this.ordinal = ordinal;
     }
 
-    public void increaseTemplate() {
+    public void increaseTemplateCount() {
         this.templateCount++;
     }
 
-    public void decreaseTemplate() {
+    public void decreaseTemplateCount() {
         if (this.templateCount <= DEFAULT_TEMPLATE_COUNT) {
             return;
         }
