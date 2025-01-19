@@ -18,7 +18,7 @@ public interface SpringDocMemberController {
 
     @Operation(summary = "회원가입")
     @ApiResponse(responseCode = "201", description = "회원가입 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/members", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/signup", errorCases = {
             @ErrorCase(description = "아이디 입력 없음", exampleMessage = "아이디이 입력되지 않았습니다."),
             @ErrorCase(description = "아이디 글자수 오류", exampleMessage = "아이디은 255자 이하로 입력해주세요."),
             @ErrorCase(description = "비밀번호 입력 없음", exampleMessage = "비밀번호가 입력되지 않았습니다."),
@@ -32,15 +32,15 @@ public interface SpringDocMemberController {
 
     @Operation(summary = "사용자명 중복 확인")
     @ApiResponse(responseCode = "200", description = "사용가능한 아이디")
-    @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/check-login-id", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/check-name", errorCases = {
             @ErrorCase(description = "아이디 중복", exampleMessage = "아이디가 이미 존재합니다."),
     })
     void checkUniquename(@RequestParam String name);
 
     @Operation(summary = "회원 정보 조회", description = "회원의 정보(아이디)를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공")
-    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1", errorCases = {
-            @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 회원이 존재하지 않습니다.")
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1/name", errorCases = {
+            @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다.")
     })
     ResponseEntity<FindMemberResponse> findMemberName(Long id);
 }
