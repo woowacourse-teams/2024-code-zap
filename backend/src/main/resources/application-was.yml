@@ -1,0 +1,6 @@
+server:
+  compression:
+    enabled: true
+  tomcat:
+    mbeanregistry:
+      enabled: true

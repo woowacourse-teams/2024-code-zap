@@ -1,4 +1,4 @@
-package codezap.template.dto.request.validation;
+package codezap.category.dto.request.validation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,8 +10,8 @@ import jakarta.validation.Payload;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = SourceCodesOrdinalValidator.class)
-public @interface SourceCodesOrdinal {
+@Constraint(validatedBy = DuplicateIdValidator.class)
+public @interface DuplicateId {
 
     String message();
 

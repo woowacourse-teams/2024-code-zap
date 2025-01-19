@@ -7,8 +7,6 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import codezap.auth.dto.LoginMember;
-import codezap.auth.dto.Credential;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +17,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.http.HttpHeaders;
 
+import codezap.auth.dto.Credential;
+import codezap.auth.dto.LoginMember;
+import codezap.fixture.MemberFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
-import codezap.member.fixture.MemberFixture;
 import codezap.member.repository.MemberRepository;
 
 class BasicAuthCredentialProviderTest {
@@ -40,7 +40,7 @@ class BasicAuthCredentialProviderTest {
     @DisplayName("BasicAuth 인증 정보 생성 성공")
     void createCredential() {
         //given
-        Member member = MemberFixture.memberFixture();
+        Member member = MemberFixture.getFirstMember();
         Credential expected = Credential.basic(HttpHeaders.encodeBasicAuth(member.getName(), member.getPassword(), StandardCharsets.UTF_8));
 
         //when
@@ -58,7 +58,8 @@ class BasicAuthCredentialProviderTest {
         @DisplayName("회원 추출 성공")
         void extractMember() {
             //given
-            Member member = MemberFixture.memberFixture();
+            Member member = MemberFixture.getFirstMember();
+
             when(memberRepository.fetchByName(any())).thenReturn(member);
             Credential credential = basicAuthCredentialProvider.createCredential(LoginMember.from(member));
 
@@ -69,8 +70,7 @@ class BasicAuthCredentialProviderTest {
         @Test
         @DisplayName("회원 추출 실패: 존재하지 않는 회원")
         void extractMemberThrowNotExistMember() {
-            //given
-            Member unsaverdMember = MemberFixture.memberFixture();
+            Member unsaverdMember = MemberFixture.getFirstMember();
             Credential credential = basicAuthCredentialProvider.createCredential(LoginMember.from(unsaverdMember));
 
             doThrow(new CodeZapException(ErrorCode.INVALID_REQUEST, "존재하지 않는 아이디 " + unsaverdMember.getName() + " 입니다."))
@@ -85,7 +85,7 @@ class BasicAuthCredentialProviderTest {
         @ValueSource(strings = {"wrongPassword", " "})
         @DisplayName("회원 추출 실패: 잘못된 비밀번호로 생성된 인증 값")
         void extractMemberThrow(String wrongPassword) {
-            Member savedMember = MemberFixture.memberFixture();
+            Member savedMember = MemberFixture.getFirstMember();
             String wrongCredentialValue = HttpHeaders.encodeBasicAuth(savedMember.getName(), wrongPassword, StandardCharsets.UTF_8);
             Credential wrongCredential = Credential.basic(wrongCredentialValue);
 

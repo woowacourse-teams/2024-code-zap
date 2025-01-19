@@ -19,9 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
 import codezap.category.service.CategoryService;
+import codezap.fixture.MemberFixture;
 import codezap.global.cors.CorsProperties;
 import codezap.likes.service.LikesService;
-import codezap.member.fixture.MemberFixture;
 import codezap.member.service.MemberService;
 import codezap.template.service.facade.TemplateApplicationService;
 import codezap.tag.service.TagService;
@@ -66,7 +66,7 @@ public abstract class MockMvcTest {
         objectMapper = new ObjectMapper();
 
         when(credentialManager.hasCredential(any())).thenReturn(true);
-        Member member = MemberFixture.memberFixture();
+        Member member = MemberFixture.getFirstMember();
         //when(credentialManager.getCredential(any())).thenReturn(credentialProvider.createCredential(LoginMember.from(member)));
         when(credentialProvider.extractMember(any())).thenReturn(member);
     }

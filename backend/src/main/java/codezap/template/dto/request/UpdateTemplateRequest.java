@@ -13,7 +13,7 @@ import codezap.global.validation.ValidationGroups.NotNullGroup;
 import codezap.global.validation.ValidationGroups.SizeCheckGroup;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
-import codezap.template.dto.request.validation.ValidatedSourceCodesOrdinalRequest;
+import codezap.global.validation.ValidatedOrdinalRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateTemplateRequest(
@@ -52,13 +52,14 @@ public record UpdateTemplateRequest(
         @Schema(description = "템플릿 공개 여부", example = "PUBLIC")
         @NotNull(message = "템플릿 공개 여부가 null 입니다.", groups = NotNullGroup.class)
         Visibility visibility
-) implements ValidatedSourceCodesOrdinalRequest, ValidatedSourceCodesCountRequest {
+) implements ValidatedOrdinalRequest, ValidatedSourceCodesCountRequest {
     @Override
-    public List<Integer> extractSourceCodesOrdinal() {
+    public List<Integer> extractOrdinal() {
         return Stream.concat(
-                updateSourceCodes.stream().map(UpdateSourceCodeRequest::ordinal),
-                createSourceCodes.stream().map(CreateSourceCodeRequest::ordinal)
-        ).toList();
+                        updateSourceCodes.stream().map(UpdateSourceCodeRequest::ordinal),
+                        createSourceCodes.stream().map(CreateSourceCodeRequest::ordinal)
+                ).sorted()
+                .toList();
     }
 
     @Override

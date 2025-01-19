@@ -2,6 +2,7 @@ package codezap.template.service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +13,11 @@ import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 import codezap.template.dto.request.CreateSourceCodeRequest;
+import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
+import codezap.global.validation.ValidatedOrdinalRequest;
+import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -22,12 +26,17 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class SourceCodeService {
 
+    private static final int MINIMUM_SOURCE_CODE_COUNT = 1;
+    
     private final SourceCodeRepository sourceCodeRepository;
 
     @Transactional
-    public void createSourceCodes(Template template, List<CreateSourceCodeRequest> sourceCodes) {
+    public void createSourceCodes(Template template, CreateTemplateRequest request) {
+        validateSourceCodeCount(request);
+        validateSourceCodesOrdinal(request);
+
         sourceCodeRepository.saveAll(
-                sourceCodes.stream()
+                request.sourceCodes().stream()
                         .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
                         .toList()
         );
@@ -42,39 +51,49 @@ public class SourceCodeService {
     }
 
     @Transactional
-    public void updateSourceCodes(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        updateTemplateRequest.updateSourceCodes().forEach(this::updateSourceCode);
+    public void updateSourceCodes(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
+        validateSourceCodeCount(request);
+        validateSourceCodesOrdinal(request);
+
+        request.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
-                updateTemplateRequest.createSourceCodes().stream()
+                request.createSourceCodes().stream()
                         .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
                         .toList()
         );
 
-        updateThumbnail(updateTemplateRequest, template, thumbnail);
-        updateTemplateRequest.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
-        validateSourceCodesCount(template, updateTemplateRequest);
+        updateThumbnail(request, template, thumbnail);
+        request.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
+
+        validateSourceCodeCountMatch(template, request);
     }
 
-    private void updateSourceCode(UpdateSourceCodeRequest updateSourceCodeRequest) {
-        SourceCode sourceCode = sourceCodeRepository.fetchById(updateSourceCodeRequest.id());
-        sourceCode.updateSourceCode(
-                updateSourceCodeRequest.filename(),
-                updateSourceCodeRequest.content(),
-                updateSourceCodeRequest.ordinal()
-        );
+    private void validateSourceCodeCount(ValidatedSourceCodesCountRequest request) {
+        if(request.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
+        }
     }
 
-    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest createSourceCodeRequest) {
-        return new SourceCode(
-                template,
-                createSourceCodeRequest.filename(),
-                createSourceCodeRequest.content(),
-                createSourceCodeRequest.ordinal()
-        );
+    private void validateSourceCodesOrdinal(ValidatedOrdinalRequest request) {
+        List<Integer> indexes = request.extractOrdinal();
+        boolean isOrderValid = IntStream.range(0, indexes.size())
+                .allMatch(index -> indexes.get(index) == index + 1);
+        if(!isOrderValid) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드 순서가 잘못되었습니다.");
+        }
     }
 
-    private void updateThumbnail(UpdateTemplateRequest updateTemplateRequest, Template template, Thumbnail thumbnail) {
-        boolean isThumbnailDeleted = updateTemplateRequest.deleteSourceCodeIds()
+    private void updateSourceCode(UpdateSourceCodeRequest request) {
+        SourceCode sourceCode = sourceCodeRepository.fetchById(request.id());
+        sourceCode.updateSourceCode(request.filename(), request.content(), request.ordinal());
+    }
+
+    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest request) {
+        return new SourceCode(template, request.filename(), request.content(), request.ordinal());
+    }
+
+    private void updateThumbnail(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
+        boolean isThumbnailDeleted = request.deleteSourceCodeIds()
                 .contains(thumbnail.getSourceCode().getId());
         if (isThumbnailDeleted) {
             refreshThumbnail(template, thumbnail);
@@ -92,9 +111,8 @@ public class SourceCodeService {
                 .ifPresent(thumbnail::updateThumbnail);
     }
 
-    private void validateSourceCodesCount(Template template, UpdateTemplateRequest updateTemplateRequest) {
-        if (updateTemplateRequest.updateSourceCodes().size() + updateTemplateRequest.createSourceCodes().size()
-                != sourceCodeRepository.countByTemplate(template)) {
+    private void validateSourceCodeCountMatch(Template template, UpdateTemplateRequest request) {
+        if (request.countSourceCodes() != sourceCodeRepository.countByTemplate(template)) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
     }

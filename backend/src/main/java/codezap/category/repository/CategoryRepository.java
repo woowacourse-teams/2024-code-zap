@@ -29,15 +29,19 @@ public class CategoryRepository {
         return categoryJpaRepository.findAllByMemberIdOrderById(memberId);
     }
 
-    public List<Category> findAll() {
-        return categoryJpaRepository.findAll();
-    }
-
     public boolean existsByNameAndMember(String categoryName, Member member) {
         return categoryJpaRepository.existsByNameAndMember(categoryName, member);
     }
 
     public void deleteById(Long id) {
         categoryJpaRepository.deleteById(id);
+    }
+
+    public long countByMember(Member member) {
+        return categoryJpaRepository.countByMember(member);
+    }
+
+    public List<Category> saveAll(Iterable<Category> entities) {
+        return categoryJpaRepository.saveAll(entities);
     }
 }

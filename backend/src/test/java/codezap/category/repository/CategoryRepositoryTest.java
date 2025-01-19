@@ -60,13 +60,13 @@ public class CategoryRepositoryTest {
         void findAllByMemberIdOrderByIdSuccess() {
             // given
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = sut.save(new Category("category1", member1));
-            var category3 = sut.save(new Category("category3", member1));
-            var category5 = sut.save(new Category("category5", member1));
+            var category1 = sut.save(new Category("category1", member1, 1));
+            var category3 = sut.save(new Category("category3", member1, 2));
+            var category5 = sut.save(new Category("category5", member1, 3));
 
             var member2 = memberRepository.save(MemberFixture.getSecondMember());
-            var category2 = sut.save(new Category("category2", member2));
-            var category4 = sut.save(new Category("category4", member2));
+            var category2 = sut.save(new Category("category2", member2, 1));
+            var category4 = sut.save(new Category("category4", member2, 2));
 
             // when
             var actual1 = sut.findAllByMemberIdOrderById(member1.getId());
@@ -89,7 +89,7 @@ public class CategoryRepositoryTest {
         void existsByNameAndMemberSuccess() {
             var member = new Member("Zappy", "password", "salt");
             memberRepository.save(member);
-            var category1 = new Category("category1", member);
+            var category1 = new Category("category1", member, 1);
             sut.save(category1);
 
             var actual = sut.existsByNameAndMember("category1", member);
@@ -102,12 +102,36 @@ public class CategoryRepositoryTest {
         void existsByNameAndMemberFail() {
             var member = new Member("Zappy", "password", "salt");
             memberRepository.save(member);
-            var category1 = new Category("category1", member);
+            var category1 = new Category("category1", member, 1);
             sut.save(category1);
 
             var actual = sut.existsByNameAndMember("category2", member);
 
             assertThat(actual).isFalse();
+        }
+    }
+
+    @Nested
+    @DisplayName("회원으로 카테고리 개수 조회")
+    class CountByMember {
+
+        @Test
+        @DisplayName("회원으로 카테고리 개수 조회 성공")
+        void countByMemberSuccess() {
+            var member1 = new Member("Zappy1", "password", "salt");
+            var member2 = new Member("Zappy2", "password", "salt");
+            memberRepository.save(member1);
+            memberRepository.save(member2);
+            var category1 = new Category("category1", member1, 1);
+            var category2 = new Category("category2", member1, 2);
+            var category3 = new Category("category3", member2, 1);
+            sut.save(category1);
+            sut.save(category2);
+            sut.save(category3);
+
+            long actual = sut.countByMember(member1);
+
+            assertThat(actual).isEqualTo(2L);
         }
     }
 }

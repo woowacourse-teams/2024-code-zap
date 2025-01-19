@@ -1,5 +1,8 @@
 package codezap.auth.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
 import codezap.auth.encryption.PasswordEncryptor;
@@ -8,8 +11,6 @@ import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,9 +20,9 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final PasswordEncryptor passwordEncryptor;
 
-    public LoginMember login(LoginRequest loginRequest) {
-        Member member = memberRepository.fetchByName(loginRequest.name());
-        validateCorrectPassword(member, loginRequest.password());
+    public LoginMember login(LoginRequest request) {
+        Member member = memberRepository.fetchByName(request.name());
+        validateCorrectPassword(member, request.password());
         return LoginMember.from(member);
     }
 

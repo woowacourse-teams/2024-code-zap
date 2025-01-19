@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import codezap.category.dto.request.CreateCategoryRequest;
-import codezap.category.dto.request.UpdateCategoryRequest;
+import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
 import codezap.global.swagger.error.ApiErrorResponse;
@@ -31,9 +31,10 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
             @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "카테고리 이름이 null 입니다."),
             @ErrorCase(description = "카테고리 이름이 15자를 초과한 경우", exampleMessage = "카테고리 이름은 최대 15자까지 입력 가능합니다."),
+            @ErrorCase(description = "카테고리의 순서가 1보다 작은 경우", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
     })
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/categories", errorCases = {
-            @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다."),
+            @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "카테고리명이 중복되었습니다."),
     })
     ResponseEntity<CreateCategoryResponse> createCategory(
             Member member,
@@ -47,36 +48,27 @@ public interface SpringDocCategoryController {
     ResponseEntity<FindAllCategoriesResponse> getCategories(Long memberId);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "카테고리 수정", description = "해당하는 식별자의 카테고리를 수정합니다.")
+    @Operation(summary = "카테고리 생성, 수정, 삭제", description = "카테고리를 생성, 수정, 삭제할 수 있습니다.")
     @ApiResponse(responseCode = "200", description = "카테고리 수정 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
+            @ErrorCase(description = "기본 카테고리를 수정 또는 삭제한 경우", exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다."),
             @ErrorCase(description = "카테고리 이름이 15자를 초과한 경우", exampleMessage = "카테고리 이름은 최대 15자까지 입력 가능합니다."),
+            @ErrorCase(description = "카테고리의 순서가 잘못된 경우", exampleMessage = "순서가 잘못되었습니다."),
+            @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "카테고리 이름이 null 입니다."),
+            @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우", exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
+            @ErrorCase(description = "카테고리의 순서가 1보다 작은 경우", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
+            @ErrorCase(description = "카테고리의 개수가 일치하지 않는 경우(수정되지 않은 카테고리도 모두 보내주어야 합니다.)",
+                    exampleMessage = "카테고리의 개수가 일치하지 않습니다."),
     })
-    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories/1", errorCases = {
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories", errorCases = {
             @ErrorCase(description = "해당하는 id 값인 카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/categories", errorCases = {
-            @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "이름이 Spring 인 카테고리가 이미 존재합니다."),
+            @ErrorCase(description = "동일한 이름의 카테고리가 존재하는 경우", exampleMessage = "카테고리명이 중복되었습니다."),
+            @ErrorCase(description = "중복된 id가 있는 경우", exampleMessage = "id가 중복되었습니다."),
     })
-    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories/1", errorCases = {
-            @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
+    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories", errorCases = {
+            @ErrorCase(description = "카테고리를 수정 또는 삭제할 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
-    ResponseEntity<Void> updateCategory(Member member, Long id, UpdateCategoryRequest updateCategoryRequest);
-
-    @SecurityRequirement(name = "쿠키 인증 토큰")
-    @Operation(summary = "카테고리 삭제", description = "해당하는 식별자의 카테고리를 삭제합니다.")
-    @ApiResponse(responseCode = "204", description = "카테고리 삭제 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories/1", errorCases = {
-            @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재하는 경우",
-                    exampleMessage = "템플릿이 존재하는 카테고리는 삭제할 수 없습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/categories/1", errorCases = {
-            @ErrorCase(description = "존재하지 않는 카테고리인 경우",
-                    exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/categories/1", errorCases = {
-            @ErrorCase(description = "카테고리를 수정할 권한이 없는 경우",
-                    exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.")
-    })
-    ResponseEntity<Void> deleteCategory(Member member, Long id);
+    ResponseEntity<Void> updateCategory(Member member, UpdateAllCategoriesRequest request);
 }

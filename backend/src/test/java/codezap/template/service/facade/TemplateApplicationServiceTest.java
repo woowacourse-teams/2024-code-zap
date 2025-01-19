@@ -11,8 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import jakarta.persistence.EntityManager;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -89,7 +87,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var sourceCodeRequest = new CreateSourceCodeRequest("filename1", "content1", 1);
             var sourceCodes = List.of(sourceCodeRequest);
             int thumbnailOrdinal = 1;
-            List<String> tags = List.of();
+            List<String> tags = List.of("Spring");
             return new CreateTemplateRequest(
                     title,
                     description,

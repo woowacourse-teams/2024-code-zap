@@ -233,7 +233,7 @@ class TemplateControllerTest extends MockMvcTest {
 
         @ParameterizedTest
         @DisplayName("템플릿 생성 실패: 잘못된 소스 코드 순서 입력 시 400 반환")
-        @CsvSource({"0, 1", "1, 3", "2, 1"})
+        @CsvSource({"0, 1", "1, 3"})
         void createTemplateFailWithWrongSourceCodeOrdinal(int firstIndex, int secondIndex) throws Exception {
             CreateTemplateRequest templateRequest = new CreateTemplateRequest("title", "description",
                     List.of(new CreateSourceCodeRequest("title", "content", firstIndex),
@@ -245,7 +245,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(templateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
+                    .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."));
         }
     }
 
@@ -545,7 +545,7 @@ class TemplateControllerTest extends MockMvcTest {
 
         @ParameterizedTest
         @DisplayName("템플릿 수정 실패: 잘못된 소스 코드 순서 입력")
-        @CsvSource({"1, 2, 1", "3, 2, 1", "0, 2, 1"})
+        @CsvSource({"1, 2, 1", "1, 3, 4", "0, 2, 1"})
         void updateTemplateFailWithWrongSourceCodeOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal)
                 throws Exception {
             // given
@@ -557,7 +557,7 @@ class TemplateControllerTest extends MockMvcTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(updateTemplateRequest)))
                     .andExpect(status().isBadRequest())
-                    .andExpect(jsonPath("$.detail").value("소스 코드 순서가 잘못되었습니다."));
+                    .andExpect(jsonPath("$.detail").value("순서가 잘못되었습니다."));
         }
 
         private static UpdateTemplateRequest getUpdateTemplateRequest(int createOrdinal1, int createOrdinal2,

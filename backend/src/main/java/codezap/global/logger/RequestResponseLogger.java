@@ -1,9 +1,11 @@
 package codezap.global.logger;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,6 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 @Order(2)
 public class RequestResponseLogger extends OncePerRequestFilter {
 
+    private static final Set<String> REQUEST_HEADERS = Set.of("origin", "host", "content-type");
+    private static final Set<String> RESPONSE_HEADERS = Set.of("docker-hostname");
     private static final int ERROR_CODE = 500;
     private static final int WARN_CODE = 400;
 
@@ -67,18 +71,21 @@ public class RequestResponseLogger extends OncePerRequestFilter {
     private String getHeaderAsJson(ContentCachingRequestWrapper requestWrapper) {
         Map<String, String> headersMap = new HashMap<>();
         Enumeration<String> headerNames = requestWrapper.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            headersMap.put(headerName, requestWrapper.getHeader(headerName));
-        }
+        Collections.list(headerNames).stream()
+                .filter(headerName -> REQUEST_HEADERS.contains(headerName.toLowerCase()))
+                .forEach(headerName -> headersMap.put(headerName, requestWrapper.getHeader(headerName)));
+
         return convertMapToJson(headersMap);
     }
 
     private String getHeaderAsJson(ContentCachingResponseWrapper responseWrapper) {
         Map<String, String> headersMap = new HashMap<>();
-        for (String headerName : responseWrapper.getHeaderNames()) {
-            headersMap.put(headerName, responseWrapper.getHeader(headerName));
-        }
+        responseWrapper.getHeaderNames().stream()
+                .filter(headerName -> RESPONSE_HEADERS.contains(headerName.toLowerCase()))
+                .forEach(headerName -> headersMap.put(headerName, responseWrapper.getHeader(headerName)));
+
+        headersMap.put("docker-hostname", System.getenv("HOSTNAME"));
+
         return convertMapToJson(headersMap);
     }
 
