@@ -51,7 +51,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 생성 성공")
         void createTemplateSuccess() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var templateRequest = new CreateTemplateRequest(
                     "title",
                     "description",
@@ -86,7 +86,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 단건 조회 성공")
         void getByIdSuccess() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
 
             var actual = sut.getById(template.getId());
@@ -118,8 +118,9 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("좋아요 순 정렬 테스트")
         void sortByLikesCount() {
             saveMembers10();
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            saveTemplates5(category);
+            Member member = memberRepository.fetchById(1L);
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            saveTemplates5(member, category);
             likeTemplate(3L, 10L);
             likeTemplate(5L, 7L);
             likeTemplate(2L, 5L);
@@ -145,14 +146,9 @@ class TemplateServiceTest extends ServiceTest {
             }
         }
 
-        private void saveTemplates5(Category category) {
+        private void saveTemplates5(Member member, Category category) {
             for (int i = 0; i < 5; i++) {
-                templateRepository.save(new Template(
-                        memberRepository.fetchById(1L),
-                        "title" + i,
-                        "description",
-                        category
-                ));
+                templateRepository.save(TemplateFixture.get(member, category));
             }
         }
 
@@ -173,8 +169,8 @@ class TemplateServiceTest extends ServiceTest {
             // given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Category category1 = categoryRepository.save(CategoryFixture.get(member1));
-            Category category2 = categoryRepository.save(CategoryFixture.get(member2));
+            Category category1 = categoryRepository.save(CategoryFixture.getCategory(member1));
+            Category category2 = categoryRepository.save(CategoryFixture.getCategory(member2));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
             Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
             Template template3 = templateRepository.save(TemplateFixture.get(member2, category2));
@@ -199,7 +195,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 수정 성공")
         void updateTemplateSuccess() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
             var updateTemplateRequest = new UpdateTemplateRequest(
                     "Update Title",
@@ -224,7 +220,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 수정 성공 : 데이터가 수정됐을 경우 modifiedAt 변경")
         void updateTemplateSuccessChangeModifiedAt() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
             var beforeModifiedAt = template.getModifiedAt();
             var updateRequest = new UpdateTemplateRequest(
@@ -248,7 +244,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 수정 실패: 해당하는 ID의 템플릿이 존재하지 않는 경우")
         void updateTemplateFailWithWrongID() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var updateTemplateRequest = new UpdateTemplateRequest(
                     "Update Title",
                     "Update Description",
@@ -271,7 +267,7 @@ class TemplateServiceTest extends ServiceTest {
         void updateTemplateFailWithWrongMember() {
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(ownerMember));
             var template = templateRepository.save(TemplateFixture.get(ownerMember, category));
             var updateTemplateRequest = new UpdateTemplateRequest(
                     "Update Title",
@@ -291,14 +287,14 @@ class TemplateServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("템플릿 삭제")
-    class DeleteTemplate {
+    @DisplayName("회원의 템플릿 목록 삭제")
+    class DeleteByMemberAndIds {
 
         @Test
         @DisplayName("템플릿 삭제 성공: 1개 삭제")
         void deleteTemplateSuccessWithOneTemplate() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
 
@@ -314,7 +310,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 삭제 성공: 여러개 삭제")
         void deleteTemplateSuccessWithMultipleTemplate() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
             var template3 = templateRepository.save(TemplateFixture.get(member, category));
@@ -332,7 +328,7 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 삭제 실패: 존재하지 않는 템플릿 삭제")
         void deleteTemplateSuccessWithNonExistentTemplate() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             templateRepository.save(TemplateFixture.get(member, category));
             Long nonExistentID = 100L;
 
@@ -346,7 +342,7 @@ class TemplateServiceTest extends ServiceTest {
         void deleteTemplateFailWithWrongMember() {
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(ownerMember));
             var template = templateRepository.save(TemplateFixture.get(ownerMember, category));
 
             assertThatThrownBy(() -> sut.deleteByMemberAndIds(otherMember, List.of(template.getId())))
@@ -359,14 +355,12 @@ class TemplateServiceTest extends ServiceTest {
         @DisplayName("템플릿 삭제 실패: 동일한 ID가 2개 들어있는 경우")
         void deleteTemplateFailWithDuplicateID() {
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
-            var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            var category = categoryRepository.save(CategoryFixture.getDefaultCategory(ownerMember));
             var template = templateRepository.save(TemplateFixture.get(ownerMember, category));
 
-            assertThatThrownBy(() -> sut.deleteByMemberAndIds(otherMember, List.of(template.getId(), template.getId())))
+            assertThatThrownBy(() -> sut.deleteByMemberAndIds(ownerMember, List.of(template.getId(), template.getId())))
                     .isInstanceOf(CodeZapException.class)
                     .hasMessage("삭제하고자 하는 템플릿 ID가 중복되었습니다.");
-
         }
     }
 }

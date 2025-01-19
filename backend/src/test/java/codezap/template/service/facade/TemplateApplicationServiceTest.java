@@ -72,7 +72,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // given
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(CategoryFixture.get(ownerMember));
+            var category = categoryRepository.save(CategoryFixture.getCategory(ownerMember));
             var request = createTemplateRequest(category);
 
             // when & then
@@ -274,8 +274,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             for (int i = 0; i < 20; i++) {
-                var template = templateRepository.save(new Template(member, "title" + i, "description" + i, category));
-                var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename" + i, "content" + i, 1));
+                var template = templateRepository.save(TemplateFixture.get(member, category));
+                var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
                 thumbnailRepository.save(new Thumbnail(template, sourceCode));
             }
         }
@@ -411,8 +411,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             for (int i = 0; i < 20; i++) {
-                var template = templateRepository.save(new Template(member, "title" + i, "description" + i, category));
-                var sourceCode = sourceCodeRepository.save(new SourceCode(template, "filename" + i, "content" + i, 1));
+                var template = templateRepository.save(TemplateFixture.get(member, category));
+                var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
                 thumbnailRepository.save(new Thumbnail(template, sourceCode));
             }
         }
@@ -465,7 +465,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
         void updateSourceCodesChangeModifiedAt() {
             // given
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
             SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
@@ -494,10 +494,10 @@ class TemplateApplicationServiceTest extends ServiceTest {
         void updateTemplate_WhenNoAuthorization() {
             // given
             Member otherMember = memberRepository.save(MemberFixture.getFirstMember());
-            Category othersCategory = categoryRepository.save(CategoryFixture.get(otherMember));
+            Category othersCategory = categoryRepository.save(CategoryFixture.getCategory(otherMember));
 
             Member member = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(CategoryFixture.get(member));
+            Category category = categoryRepository.save(CategoryFixture.getCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));

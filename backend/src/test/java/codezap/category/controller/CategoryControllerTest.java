@@ -27,6 +27,7 @@ import codezap.category.dto.request.UpdateAllCategoriesRequest;
 import codezap.category.dto.request.UpdateCategoryRequest;
 import codezap.category.dto.response.CreateCategoryResponse;
 import codezap.category.dto.response.FindAllCategoriesResponse;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.global.MockMvcTest;
 import codezap.global.exception.CodeZapException;
@@ -102,7 +103,7 @@ class CategoryControllerTest extends MockMvcTest {
     void findAllCategoriesSuccess() throws Exception {
         // given
         Member member = MemberFixture.getFirstMember();
-        List<Category> categories = List.of(new Category("category1", member, 1), new Category("category1", member, 2));
+        List<Category> categories = CategoryFixture.getList(member, 2);
         FindAllCategoriesResponse findAllCategoriesResponse = FindAllCategoriesResponse.from(categories);
 
         when(categoryService.findAllByMemberId(any())).thenReturn(findAllCategoriesResponse);
