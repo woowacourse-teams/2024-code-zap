@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 
 import { Input } from '@/components';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 export const MemberTemplatePageContainer = styled.div`
   display: flex;

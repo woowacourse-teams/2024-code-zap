@@ -1,7 +1,7 @@
 import { Heading } from '@/components';
 import { useWindowWidth } from '@/hooks';
 import { BREAKING_POINT } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './TopBanner.style';
 

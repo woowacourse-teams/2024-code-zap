@@ -2,7 +2,7 @@ import { PlusIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { useCustomNavigate } from '@/hooks';
 import { END_POINTS } from '@/routes';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './NewTemplateButton.style';
 

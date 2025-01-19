@@ -1,7 +1,7 @@
 import { TigerLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
 import { useCustomNavigate } from '@/hooks';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 interface props {
   resetError?: () => void;

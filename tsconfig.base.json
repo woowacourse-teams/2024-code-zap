@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "skipLibCheck": true,
+    "sourceMap": true,
+
+    "jsx": "react-jsx",
+
+    "jsxImportSource": "@emotion/react",
+
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    "baseUrl": ".", // 루트 디렉토리
+    "paths": {
+      "@/*": ["frontend/src/*"],
+      "@design/*": ["design-system/*"]
+    }
+  }
+}

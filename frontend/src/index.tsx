@@ -10,7 +10,7 @@ import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
 import { router } from '@/routes';
 import { AmplitudeInitializer } from '@/service/amplitude';
 import GlobalStyles from '@/style/GlobalStyles';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 const queryClient = new QueryClient();
 

@@ -24,7 +24,7 @@ import { useTrackPageViewed } from '@/service/amplitude';
 import { trackClickTemplateShare, trackLikeButton } from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 import { formatRelativeTime } from '@/utils';
 
 import * as S from './TemplatePage.style';
