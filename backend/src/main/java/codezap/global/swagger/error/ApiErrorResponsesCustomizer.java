@@ -78,7 +78,7 @@ public class ApiErrorResponsesCustomizer implements OperationCustomizer {
 
     private Example makeExample(ApiErrorResponse apiErrorResponse, ErrorCase errorCase) {
         return new Example()
-                .summary( "[" + errorCase.errorCode().getCode() + "]" + errorCase.description())
-                .value(ProblemDetailSchema.of(apiErrorResponse, errorCase.exampleMessage()));
+                .summary(errorCase.description())
+                .value(ProblemDetailSchema.of(apiErrorResponse, errorCase.exampleMessage(), errorCase.errorCode()));
     }
 }
