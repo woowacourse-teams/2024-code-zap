@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import codezap.global.exception.ErrorCode;
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
 import codezap.member.domain.Member;
@@ -27,7 +28,7 @@ public interface SpringDocTemplateController {
             새로운 템플릿을 생성합니다. \n
             템플릿명, 템플릿 설명, 소스 코드 목록, 썸네일 순서, 카테고리 ID, 태그 목록, 템플릿 공개 범위가 필요합니다. \n
             * 템플릿 이름은 비어있거나 공백일 수 없다.
-                        
+            
             소스 코드 목록은 파일명, 소스 코드, 소스 코드 순서가 필요합니다. \n
             * 소스 코드 순서는 1부터 시작합니다.
             * 소스 코드 순서는 오름차순으로 정렬하여 보내야 합니다.
@@ -35,23 +36,28 @@ public interface SpringDocTemplateController {
     @ApiResponse(responseCode = "201", description = "템플릿 생성 성공", headers = {
             @Header(name = "생성된 템플릿의 API 경로", example = "/templates/1")})
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates", errorCases = {
-            @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 설명이 null 입니다."),
-            @ErrorCase(description = "템플릿명, 파일명, 소스 코드가 공백일 경우", exampleMessage = "템플릿명이 비어 있거나 공백입니다."),
-            @ErrorCase(description = "템플릿명, 파일명이 255자를 초과한 경우", exampleMessage = "템플릿명은 최대 255자까지 입력 가능합니다."),
-            @ErrorCase(description = "태그명이 30자를 초과한 경우", exampleMessage = "태그명은 최대 30자까지 입력 가능합니다."),
-            @ErrorCase(description = "소스 코드가 65,535 byte를 초과한 경우",
+            @ErrorCase(description = "입력 없는 필드 존재", exampleMessage = "템플릿 설명이 null 입니다."),
+            @ErrorCase(description = "템플릿명, 파일명, 소스 코드가 공백", exampleMessage = "템플릿명이 비어 있거나 공백입니다."),
+            @ErrorCase(description = "템플릿명, 파일명 255자 초과", exampleMessage = "템플릿명은 최대 255자까지 입력 가능합니다."),
+            @ErrorCase(description = "태그명 30자 초과", exampleMessage = "태그명은 최대 30자까지 입력 가능합니다."),
+            @ErrorCase(description = "소스 코드 65,535 byte 초과",
                     exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
-            @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "순서가 잘못되었습니다."),
-            @ErrorCase(description = "소스 코드가 0개 입력된 경우", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
+            @ErrorCase(description = "소스 코드 순서 오류", exampleMessage = "순서가 잘못되었습니다."),
+            @ErrorCase(description = "소스 코드 0개 입력", exampleMessage = "소스 코드는 최소 1개 입력 해야 합니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없음", errorCode = ErrorCode.UNAUTHORIZED_USER,
+                    exampleMessage = "인증 정보가 없습니다. 다시 로그인해 주세요."),
     })
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates", errorCases = {
-            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
+            @ErrorCase(description = "카테고리 권한이 없음", errorCode = ErrorCode.FORBIDDEN_ACCESS,
+                    exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates", errorCases = {
-            @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
-            @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-            @ErrorCase(description = "이름에 맞는 태그가 없는 경우", exampleMessage = "이름이 tag1인 태그는 존재하지 않습니다."),
-            @ErrorCase(description = "해당 순서인 소스 코드가 없는 경우", exampleMessage = "템플릿에 1번째 소스 코드가 존재하지 않습니다."),
+            @ErrorCase(description = "요청한 ID의 카테고리가 없음", errorCode = ErrorCode.RESOURCE_NOT_FOUND,
+                    exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
+            @ErrorCase(description = "해당 순서의 소스코드가 없음", errorCode = ErrorCode.RESOURCE_NOT_FOUND,
+                    exampleMessage = "템플릿에 1번째 소스 코드가 존재하지 않습니다."),
     })
     ResponseEntity<Void> createTemplate(Member member, CreateTemplateRequest createTemplateRequest);
 
@@ -63,34 +69,23 @@ public interface SpringDocTemplateController {
               - 검색 키워드 (템플릿명, 템플릿 설명, 파일명, 소스 코드)
               - 카테고리 ID
               - 태그 ID들 \n
-                        
+            
             조건에 멤버 ID가 있을 경우
             - 멤버 ID가 로그인된 멤버 정보와 동일하면 공개 템플릿, 비공개 템플릿 모두 반환
             - 멤버 ID가 로그인된 멤버 정보와 동일하지 않으면 공개 템플릿만 반환
-
+            
             페이징 조건을 줄 수 있습니다. 페이지 번호는 1, 템플릿 개수는 20, 정렬 방식은 최신순이 기본 값입니다. \n
             - 페이징 조건 \n
               - 페이지 번호(pageNumber)
               - 한 페이지에 템플릿 개수(pageSize)
               - 페이지 정렬 방식(sort) \n
-                        
+            
             - 정렬 방식 \n
               - 최신순 (modifiedAt,asc)
               - 오래된순 (modifiedAt,desc)
               - 좋아요순 (likesCount, desc) \n
             """)
     @ApiResponse(responseCode = "200", description = "템플릿 검색 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST,
-            instance = "/templates?memberId=1&keyword=\"java\"&tagIds=/login", errorCases = {
-            @ErrorCase(description = "태그 ID가 0개인 경우", exampleMessage = "태그 ID가 0개입니다. 필터링 하지 않을 경우 null로 전달해주세요."),
-            @ErrorCase(description = "페이지 번호가 1보다 작을 경우", exampleMessage = "페이지 번호는 1 이상이어야 합니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.NOT_FOUND,
-            instance = "/templates?memberId=1&keyword=\"java\"&categoryId=1&tagIds=1,2/login", errorCases = {
-            @ErrorCase(description = "멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
-            @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-            @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
-    })
     ResponseEntity<FindAllTemplatesResponse> findAllTemplates(
             Member member,
             Long memberId,
@@ -103,42 +98,54 @@ public interface SpringDocTemplateController {
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "좋아요한 템플릿 목록 조회", description = "회원이 좋아요한 템플릿 목록을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 목록 조회 성공")
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없음", errorCode = ErrorCode.UNAUTHORIZED_USER,
+                    exampleMessage = "인증 정보가 없습니다. 다시 로그인해 주세요."),
+    })
     ResponseEntity<FindAllTemplatesResponse> findLikedTemplate(Member member, Pageable pageable);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 단건 조회", description = "해당하는 식별자의 템플릿을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 단건 조회 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "해당하는 ID 값인 템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
+    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
+            @ErrorCase(description = "요청한 ID의 템플릿이 없음", errorCode = ErrorCode.RESOURCE_NOT_FOUND,
+                    exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
     })
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "다른 사람의 private 템플릿인 경우", exampleMessage = "해당 템플릿은 비공개 템플릿입니다."),
+            @ErrorCase(description = "다른 사람의 비공개 템플릿", errorCode = ErrorCode.FORBIDDEN_ACCESS,
+                    exampleMessage = "해당 템플릿은 비공개 템플릿입니다."),
     })
     ResponseEntity<FindTemplateResponse> findTemplateById(Member member, Long id);
 
     @SecurityRequirement(name = "쿠키 인증 토큰")
     @Operation(summary = "템플릿 수정", description = "해당하는 식별자의 템플릿을 수정합니다.")
     @ApiResponse(responseCode = "200", description = "템플릿 수정 성공")
-    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "모든 필드 중 null인 값이 있는 경우", exampleMessage = "템플릿 설명이 null 입니다."),
-            @ErrorCase(description = "템플릿명, 파일명, 소스 코드가 공백일 경우", exampleMessage = "템플릿명이 비어 있거나 공백입니다."),
-            @ErrorCase(description = "템플릿명, 파일명, 태그명이 255자를 초과한 경우", exampleMessage = "템플릿명은 최대 255자까지 입력 가능합니다."),
-            @ErrorCase(description = "태그명이 30자를 초과한 경우", exampleMessage = "태그명은 최대 30자까지 입력 가능합니다."),
-            @ErrorCase(description = "소스 코드가 65,535 byte를 초과한 경우",
+    @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates", errorCases = {
+            @ErrorCase(description = "입력 없는 필드 존재", exampleMessage = "템플릿 설명이 null 입니다."),
+            @ErrorCase(description = "템플릿명, 파일명, 소스 코드가 공백", exampleMessage = "템플릿명이 비어 있거나 공백입니다."),
+            @ErrorCase(description = "템플릿명, 파일명 255자 초과", exampleMessage = "템플릿명은 최대 255자까지 입력 가능합니다."),
+            @ErrorCase(description = "태그명 30자 초과", exampleMessage = "태그명은 최대 30자까지 입력 가능합니다."),
+            @ErrorCase(description = "소스 코드 65,535 byte 초과",
                     exampleMessage = "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
-            @ErrorCase(description = "소스 코드 순서가 잘못된 경우", exampleMessage = "순서가 잘못되었습니다."),
+            @ErrorCase(description = "소스 코드 순서 오류", exampleMessage = "순서가 잘못되었습니다."),
             @ErrorCase(description = "해당 템플릿의 실제 소스 코드 수와 인자로 받은 소스 코드 수가 다를 경우",
                     exampleMessage = "소스 코드의 정보가 정확하지 않습니다."),
     })
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없음", errorCode = ErrorCode.UNAUTHORIZED_USER,
+                    exampleMessage = "인증 정보가 없습니다. 다시 로그인해 주세요."),
+    })
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
-            @ErrorCase(description = "카테고리 권한이 없는 경우", exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
+            @ErrorCase(description = "템플릿 권한이 없음", errorCode = ErrorCode.FORBIDDEN_ACCESS,
+                    exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
+            @ErrorCase(description = "카테고리 권한이 없음", errorCode = ErrorCode.FORBIDDEN_ACCESS,
+                    exampleMessage = "해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다."),
     })
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
-            @ErrorCase(description = "카테고리가 없는 경우", exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
-            @ErrorCase(description = "태그가 없는 경우", exampleMessage = "식별자 1에 해당하는 태그가 존재하지 않습니다."),
-            @ErrorCase(description = "소스 코드가 없는 경우", exampleMessage = "식별자 1에 해당하는 소스 코드가 존재하지 않습니다."),
+            @ErrorCase(description = "요청한 ID의 카테고리가 없음", errorCode = ErrorCode.RESOURCE_NOT_FOUND,
+                    exampleMessage = "식별자 1에 해당하는 카테고리가 존재하지 않습니다."),
+            @ErrorCase(description = "요청한 ID의 썸네일이 없음", errorCode = ErrorCode.RESOURCE_NOT_FOUND,
+                    exampleMessage = "식별자 1인 템플릿에 해당하는 썸네일이 없습니다."),
     })
     ResponseEntity<Void> updateTemplate(Member member, Long id, UpdateTemplateRequest updateTemplateRequest);
 
@@ -146,15 +153,15 @@ public interface SpringDocTemplateController {
     @Operation(summary = "템플릿 삭제", description = "해당하는 식별자의 템플릿들을 삭제합니다.")
     @ApiResponse(responseCode = "204", description = "템플릿 삭제 성공")
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/templates/1,1", errorCases = {
-            @ErrorCase(description = "템플릿 ID가 중복된 경우", exampleMessage = "삭제하고자 하는 템플릿 ID가 중복되었습니다."),
+            @ErrorCase(description = "템플릿 ID 중복", exampleMessage = "삭제하고자 하는 템플릿 ID가 중복되었습니다."),
+    })
+    @ApiErrorResponse(status = HttpStatus.UNAUTHORIZED, instance = "/templates", errorCases = {
+            @ErrorCase(description = "인증 정보에 포함된 멤버가 없음", errorCode = ErrorCode.UNAUTHORIZED_USER,
+                    exampleMessage = "인증 정보가 없습니다. 다시 로그인해 주세요."),
     })
     @ApiErrorResponse(status = HttpStatus.FORBIDDEN, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "자신의 템플릿이 아닐 경우", exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
-    })
-    @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/templates/1", errorCases = {
-            @ErrorCase(description = "인증 정보에 포함된 멤버가 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다."),
-            @ErrorCase(description = "템플릿이 없는 경우", exampleMessage = "식별자 1에 해당하는 템플릿이 존재하지 않습니다."),
-            @ErrorCase(description = "썸네일이 없는 경우", exampleMessage = "식별자가 1인 템플릿에 해당하는 썸네일이 없습니다.")
+            @ErrorCase(description = "템플릿 권한이 없음", errorCode = ErrorCode.FORBIDDEN_ACCESS,
+                    exampleMessage = "해당 템플릿에 대한 권한이 없습니다."),
     })
     ResponseEntity<Void> deleteTemplates(Member member, List<Long> ids);
 }

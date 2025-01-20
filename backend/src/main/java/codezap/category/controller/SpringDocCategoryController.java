@@ -32,7 +32,7 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
             @ErrorCase(description = "카테고리 이름 입력 없음", exampleMessage = "카테고리 이름이 null 입니다."),
             @ErrorCase(description = "카테고리 이름 글자수 오류", exampleMessage = "카테고리 이름은 최대 15자까지 입력 가능합니다."),
-            @ErrorCase(description = "카테고리 순서 1 미만", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
+            @ErrorCase(description = "카테고리 순서 값이 1 미만", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
     })
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/categories", errorCases = {
             @ErrorCase(description = "동일한 이름의 카테고리가 존재", errorCode = ErrorCode.DUPLICATE_CATEGORY,
@@ -55,8 +55,8 @@ public interface SpringDocCategoryController {
     @ApiErrorResponse(status = HttpStatus.BAD_REQUEST, instance = "/categories", errorCases = {
             @ErrorCase(description = "입력 없는 필드 존재", exampleMessage = "카테고리 이름이 null 입니다."),
             @ErrorCase(description = "카테고리 이름 글자수 오류", exampleMessage = "카테고리 이름은 최대 15자까지 입력 가능합니다."),
-            @ErrorCase(description = "카테고리 순서 1 미만", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
-            @ErrorCase(description = "카테고리 순서가 오류", exampleMessage = "순서가 잘못되었습니다."),
+            @ErrorCase(description = "카테고리 순서 값 1 미만", exampleMessage = "카테고리의 순서는 1 이상이어야 합니다."),
+            @ErrorCase(description = "카테고리 순서 오류", exampleMessage = "순서가 잘못되었습니다."),
             @ErrorCase(description = "기본 카테고리 수정 또는 삭제", errorCode = ErrorCode.DEFAULT_CATEGORY,
                     exampleMessage = "기본 카테고리는 수정 및 삭제할 수 없습니다."),
             @ErrorCase(description = "삭제하려는 카테고리에 템플릿이 존재", errorCode = ErrorCode.CATEGORY_HAS_TEMPLATES,
