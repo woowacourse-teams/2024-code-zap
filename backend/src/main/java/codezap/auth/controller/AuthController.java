@@ -2,7 +2,6 @@ package codezap.auth.controller;
 
 import java.util.List;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
@@ -16,6 +15,7 @@ import codezap.auth.configuration.AuthenticationPrinciple;
 import codezap.auth.dto.Credential;
 import codezap.auth.dto.LoginMember;
 import codezap.auth.dto.request.LoginRequest;
+import codezap.auth.dto.response.CheckLoginResponse;
 import codezap.auth.dto.response.LoginResponse;
 import codezap.auth.manager.CredentialManager;
 import codezap.auth.provider.CredentialProvider;
@@ -45,14 +45,11 @@ public class AuthController implements SpringDocAuthController {
     }
 
     @GetMapping("/login/check")
-    public ResponseEntity<Void> checkLogin(
-            @AuthenticationPrinciple Member member,
-            HttpServletRequest httpServletRequest
-    ) {
+    public ResponseEntity<CheckLoginResponse> checkLogin(@AuthenticationPrinciple Member member) {
         if (member == null) {
             throw new CodeZapException(ErrorCode.UNAUTHORIZED_USER, "인증 정보가 없습니다. 다시 로그인해 주세요.");
         }
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new CheckLoginResponse(member));
     }
 
     @PostMapping("/logout")
