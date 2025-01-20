@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Size;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record LoginRequest(
-        @Schema(description = "아이디", example = "code")
+        @Schema(description = "아이디", example = "codezap")
         @NotBlank(message = "아이디가 입력되지 않았습니다.")
         @Size(max = 255, message = "아이디는 255자 이하로 입력해주세요.")
         String name,
