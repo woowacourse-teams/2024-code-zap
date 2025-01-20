@@ -7,7 +7,7 @@ import codezap.template.domain.Visibility;
 
 public class TemplateFixture {
     public static Template get(Member member, Category category) {
-        return new Template(member, "안녕", "Description 1", category);
+        return new Template(member, "안녕", "Description 1", category, Visibility.PUBLIC);
     }
 
     public static Template getPrivate(Member member, Category category) {

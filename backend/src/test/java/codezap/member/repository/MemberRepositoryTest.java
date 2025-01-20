@@ -12,6 +12,7 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
@@ -88,8 +89,8 @@ class MemberRepositoryTest {
         @DisplayName("성공 : 템플릿 id로 Member 조회 가능")
         void fetchByTemplateIdSuccess() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template = templateRepository.save(new Template(member, "title", "description", category));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             Member actual = memberRepository.fetchByTemplateId(template.getId());
 

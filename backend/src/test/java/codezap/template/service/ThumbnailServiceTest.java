@@ -35,10 +35,8 @@ class ThumbnailServiceTest extends ServiceTest {
         @Test
         @DisplayName("썸네일 생성 성공")
         void createThumbnailSuccess() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "Filename 1", "Content 1", 1));
+            var template = createSavedTemplate();
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
 
             sut.createThumbnail(template, sourceCode);
             var actual = thumbnailRepository.fetchByTemplate(template);
@@ -58,10 +56,8 @@ class ThumbnailServiceTest extends ServiceTest {
         @Test
         @DisplayName("썸네일 조회 성공")
         void getByTemplateSuccess() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "Filename 1", "Content 1", 1));
+            var template = createSavedTemplate();
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             thumbnailRepository.save(new Thumbnail(template, sourceCode));
 
             var actual = sut.getByTemplate(template);
@@ -76,9 +72,7 @@ class ThumbnailServiceTest extends ServiceTest {
         @Test
         @DisplayName("썸네일 조회 실패: 해당하는 썸네일이 없는 경우")
         void getByTemplateFailWithWrongID() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template = templateRepository.save(TemplateFixture.get(member, category));
+            var template = createSavedTemplate();
 
             assertThatThrownBy(() -> sut.getByTemplate(template))
                     .isInstanceOf(CodeZapException.class)
@@ -97,7 +91,7 @@ class ThumbnailServiceTest extends ServiceTest {
             var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var thumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
-            var template2 = createSecondTemplate();
+            var template2 = createSavedSecondTemplate();
             var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var thumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
@@ -113,18 +107,6 @@ class ThumbnailServiceTest extends ServiceTest {
 
             assertThat(sut.getAllByTemplates(List.of())).isEmpty();
         }
-
-        private Template createSavedTemplate() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            return templateRepository.save(TemplateFixture.get(member, category));
-        }
-
-        private Template createSecondTemplate() {
-            Member member = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(CategoryFixture.getSecondCategory());
-            return templateRepository.save(TemplateFixture.get(member, category));
-        }
     }
 
     @Nested
@@ -134,13 +116,12 @@ class ThumbnailServiceTest extends ServiceTest {
         @Test
         @DisplayName("썸네일 삭제 성공: 1개의 썸네일 삭제")
         void deleteByTemplateSuccessWithOneThumbnail() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "Filename 1", "Content 1", 1));
+            var template1 = createSavedTemplate();
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var savedThumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
-            var template2 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "Filename 2", "Content 2", 1));
+
+            var template2 = createSavedSecondTemplate();
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
             sut.deleteAllByTemplateIds(List.of(template1.getId()));
@@ -154,13 +135,12 @@ class ThumbnailServiceTest extends ServiceTest {
         @Test
         @DisplayName("썸네일 삭제 성공: 2개의 썸네일 삭제")
         void deleteByTemplateSuccessWithTwoThumbnail() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "Filename 1", "Content 1", 1));
+            var template1 = createSavedTemplate();
+            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var savedThumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
-            var template2 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "Filename 2", "Content 2", 1));
+
+            var template2 = createSavedSecondTemplate();
+            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
             sut.deleteAllByTemplateIds(List.of(template1.getId(), template2.getId()));
@@ -172,10 +152,8 @@ class ThumbnailServiceTest extends ServiceTest {
         @Test
         @DisplayName("썸네일 삭제 성공: 존재하지 않는 경우")
         void deleteByTemplateFailWithWrongID() {
-            var member = memberRepository.save(MemberFixture.getFirstMember());
-            var category = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode = sourceCodeRepository.save(new SourceCode(template, "Filename 1", "Content 1", 1));
+            var template = createSavedTemplate();
+            var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
             var savedThumbnail = thumbnailRepository.save(new Thumbnail(template, sourceCode));
             var nonExistentID = 100L;
 

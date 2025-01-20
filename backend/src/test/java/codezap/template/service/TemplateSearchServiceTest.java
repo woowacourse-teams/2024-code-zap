@@ -18,7 +18,9 @@ import org.springframework.data.domain.Pageable;
 
 import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
+import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.pagination.FixedPage;
@@ -358,8 +360,8 @@ class TemplateSearchServiceTest {
     }
 
     private void saveTwoCategory() {
-        category1 = categoryRepository.save(new Category("Category 1", member1, 1));
-        category2 = categoryRepository.save(new Category("Category 2", member1, 2));
+        category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+        category2 = categoryRepository.save(CategoryFixture.getCategory(member1));
     }
 
     private void saveTwoTags() {
@@ -373,10 +375,10 @@ class TemplateSearchServiceTest {
         var template3 = templateRepository.save(TemplateFixture.get(member2, category1));
         var template4 = templateRepository.save(TemplateFixture.getPrivate(member2, category2));
 
-        SourceCode sourceCode1 = sourceCodeRepository.save(new SourceCode(template1, "filename1", "content1", 1));
-        SourceCode sourceCode2 = sourceCodeRepository.save(new SourceCode(template2, "filename2", "content2", 2));
-        SourceCode sourceCode3 = sourceCodeRepository.save(new SourceCode(template3, "filename1", "content1", 1));
-        SourceCode sourceCode4 = sourceCodeRepository.save(new SourceCode(template4, "filename1", "content1", 1));
+        SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
+        SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
+        SourceCode sourceCode3 = sourceCodeRepository.save(SourceCodeFixture.get(template3, 1));
+        SourceCode sourceCode4 = sourceCodeRepository.save(SourceCodeFixture.get(template4, 1));
 
         thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
         thumbnailRepository.save(new Thumbnail(template2, sourceCode2));

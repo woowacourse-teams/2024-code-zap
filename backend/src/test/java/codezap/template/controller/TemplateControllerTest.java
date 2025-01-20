@@ -24,6 +24,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 
+import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
@@ -290,7 +291,9 @@ class TemplateControllerTest extends MockMvcTest {
         }
 
         private FindAllTemplateItemResponse getFindAllTemplateItemResponse() {
-            Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
+            Member member = MemberFixture.getFirstMember();
+            Category category = CategoryFixture.getDefaultCategory(member);
+            Template template = TemplateFixture.get(member, category);
             return FindAllTemplateItemResponse.of(
                     template,
                     List.of(new Tag(1L, "tag1")),
@@ -307,7 +310,9 @@ class TemplateControllerTest extends MockMvcTest {
         @DisplayName("템플릿 단건 조회 성공")
         void findOneTemplateSuccess() throws Exception {
             // given
-            Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
+            Member member = MemberFixture.getFirstMember();
+            Category category = CategoryFixture.getDefaultCategory(member);
+            Template template = TemplateFixture.get(member, category);
             FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(
                     template,
                     List.of(SourceCodeFixture.get(template, 1)),
@@ -327,7 +332,9 @@ class TemplateControllerTest extends MockMvcTest {
         @DisplayName("템플릿 단건 조회 성공: 로그인한 사용자가 없는 경우도 조회 가능")
         void findOneTemplateSuccessWithNoMember() throws Exception {
             // given
-            Template template = TemplateFixture.get(MemberFixture.getFirstMember(), CategoryFixture.getFirstCategory());
+            Member member = MemberFixture.getFirstMember();
+            Category category = CategoryFixture.getDefaultCategory(member);
+            Template template = TemplateFixture.get(member, category);
             FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(
                     template,
                     List.of(SourceCodeFixture.get(template, 1)),
@@ -619,7 +626,7 @@ class TemplateControllerTest extends MockMvcTest {
         }
 
         private FindAllTemplateItemResponse getFindAllTemplateItemResponse(Member member) {
-            Template template = TemplateFixture.get(member, CategoryFixture.getFirstCategory());
+            Template template = TemplateFixture.get(member, CategoryFixture.getDefaultCategory(member));
             return FindAllTemplateItemResponse.of(
                     template,
                     List.of(new Tag(1L, "tag1")),

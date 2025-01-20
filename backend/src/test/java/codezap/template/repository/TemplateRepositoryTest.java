@@ -42,9 +42,9 @@ class TemplateRepositoryTest {
         // given
         Member member = memberRepository.save(MemberFixture.getFirstMember());
         Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-        Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-        Category otherCategory = categoryRepository.save(CategoryFixture.getSecondCategory());
-        templateRepository.save(new Template(member, "Template 1", "Description 1", category));
+        Category category = categoryRepository.save(CategoryFixture.getCategory(member));
+        Category otherCategory = categoryRepository.save(CategoryFixture.getCategory(member2));
+        templateRepository.save(TemplateFixture.get(member, category));
 
         assertAll(
                 () -> assertThat(templateRepository.existsByCategoryId(category.getId())).isTrue(),
@@ -60,7 +60,7 @@ class TemplateRepositoryTest {
         @DisplayName("템플릿 id로 템플릿 조회 성공")
         void fetchById() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             Template savedTemplate = templateRepository.save(TemplateFixture.get(member, category));
 
             assertThat(templateRepository.fetchById(savedTemplate.getId())).isEqualTo(savedTemplate);
@@ -87,8 +87,8 @@ class TemplateRepositoryTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
 
-            Category category = categoryRepository.save(CategoryFixture.get(member));
-            Category otherCategory = categoryRepository.save(CategoryFixture.get(otherMember));
+            Category category = categoryRepository.save(CategoryFixture.getCategory(member));
+            Category otherCategory = categoryRepository.save(CategoryFixture.getCategory(otherMember));
 
             Template myPublicTemplate = templateRepository.save(TemplateFixture.get(member, category));
             Template myPrivateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
