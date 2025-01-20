@@ -11,6 +11,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicUpdate;
+
 import codezap.global.auditing.BaseTimeEntity;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
@@ -20,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(
@@ -36,6 +40,7 @@ import lombok.NoArgsConstructor;
 public class Category extends BaseTimeEntity {
 
     private static final String DEFAULT_CATEGORY_NAME = "카테고리 없음";
+    private static final long DEFAULT_TEMPLATE_COUNT = 0L;
     private static final int DEFAULT_CATEGORY_ORDINAL = 0;
 
     @Id
@@ -54,12 +59,17 @@ public class Category extends BaseTimeEntity {
     @Column(nullable = false)
     private int ordinal;
 
+    @Column
+    @ColumnDefault("0")
+    private long templateCount;
+
+
     public Category(String name, Member member, int ordinal) {
-        this(null, member, name, false, ordinal);
+        this(null, member, name, false, ordinal, DEFAULT_TEMPLATE_COUNT);
     }
 
     public static Category createDefaultCategory(Member member) {
-        return new Category(null, member, DEFAULT_CATEGORY_NAME, true, DEFAULT_CATEGORY_ORDINAL);
+        return new Category(null, member, DEFAULT_CATEGORY_NAME, true, DEFAULT_CATEGORY_ORDINAL, DEFAULT_TEMPLATE_COUNT);
     }
 
     public boolean hasAuthorization(Member member) {
@@ -73,5 +83,16 @@ public class Category extends BaseTimeEntity {
     public void update(String name, int ordinal) {
         this.name = name;
         this.ordinal = ordinal;
+    }
+
+    public void increaseTemplateCount() {
+        this.templateCount++;
+    }
+
+    public void decreaseTemplateCount() {
+        if (this.templateCount <= DEFAULT_TEMPLATE_COUNT) {
+            return;
+        }
+        this.templateCount--;
     }
 }
