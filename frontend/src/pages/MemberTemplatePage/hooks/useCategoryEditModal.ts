@@ -104,10 +104,7 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
   };
 
   const handleAddCategory = () => {
-    const id =
-      categoryList.length > 0
-        ? categoryList[categoryList.length - 1].id + editedCategoryList.length + 1
-        : editedCategoryList.length + 1;
+    const id = Date.now();
 
     const ordinal = editedCategoryList.length + 1;
 
