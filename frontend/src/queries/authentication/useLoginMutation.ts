@@ -12,15 +12,19 @@ export const useLoginMutation = () => {
   const { failAlert, successAlert } = useCustomContext(ToastContext);
   const navigate = useCustomNavigate();
 
-  return useMutation<MemberInfo, Error, LoginRequest>({
+  return useMutation<Response, Error, LoginRequest>({
     mutationFn: (loginInfo: LoginRequest) => postLogin(loginInfo),
-    onSuccess: (res) => {
-      const { memberId, name } = res;
+    onSuccess: async (res) => {
+      const authorization = res.headers.get('authorization');
+
+      const response = await res.json() as MemberInfo;
+      const { memberId, name } = response;
 
       if (memberId && name) {
         localStorage.setItem('name', String(name));
         localStorage.setItem('memberId', String(memberId));
-        handleMemberInfo(res);
+        localStorage.setItem('authorization', String(authorization));
+        handleMemberInfo({ memberId, name });
         handleLoginState(true);
         successAlert('로그인 성공!');
         navigate(END_POINTS.memberTemplates(memberId));
