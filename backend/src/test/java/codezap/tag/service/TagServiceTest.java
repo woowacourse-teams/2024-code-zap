@@ -153,7 +153,7 @@ class TagServiceTest extends ServiceTest {
         void getAllTemplateTagsByTemplates() {
             // given
             Template template = createSavedTemplate();
-            Template secondTemplate = createSavedSecondTemplate();
+            Template secondTemplate = createAnotherMembersTemplate();
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
             TemplateTag templateTag1 = templateTagRepository.save(new TemplateTag(template, tag1));
@@ -250,7 +250,7 @@ class TagServiceTest extends ServiceTest {
             templateTagRepository.save(new TemplateTag(template1, tag1));
             templateTagRepository.save(new TemplateTag(template1, tag2));
 
-            Template template2 = createSavedSecondTemplate();
+            Template template2 = createAnotherMembersTemplate();
             templateTagRepository.save(new TemplateTag(template2, tag2));
 
             // when & then

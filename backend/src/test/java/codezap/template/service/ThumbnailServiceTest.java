@@ -11,16 +11,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codezap.category.domain.Category;
-import codezap.fixture.CategoryFixture;
-import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
-import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
-import codezap.member.domain.Member;
-import codezap.template.domain.SourceCode;
-import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 
 class ThumbnailServiceTest extends ServiceTest {
@@ -91,7 +84,7 @@ class ThumbnailServiceTest extends ServiceTest {
             var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var thumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
-            var template2 = createSavedSecondTemplate();
+            var template2 = createAnotherMembersTemplate();
             var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var thumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
@@ -120,7 +113,7 @@ class ThumbnailServiceTest extends ServiceTest {
             var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var savedThumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
-            var template2 = createSavedSecondTemplate();
+            var template2 = createAnotherMembersTemplate();
             var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
@@ -139,7 +132,7 @@ class ThumbnailServiceTest extends ServiceTest {
             var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var savedThumbnail1 = thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
-            var template2 = createSavedSecondTemplate();
+            var template2 = createAnotherMembersTemplate();
             var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var savedThumbnail2 = thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
 
