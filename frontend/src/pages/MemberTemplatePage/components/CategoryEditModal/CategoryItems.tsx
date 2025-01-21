@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 
+import { theme } from '@/style/theme';
 import { Category } from '@/types';
 
 import ExistingCategoryItem from './ExistingCategoryItem';
@@ -7,14 +8,12 @@ import NewCategoryItem from './NewCategoryItem';
 import * as S from './CategoryEditModal.style';
 
 interface CategoryItemsProps {
-  categories: Category[];
-  newCategories: Category[];
-  editedCategories: Category[];
-  categoriesToDelete: number[];
+  editedCategoryList: Category[];
+  deleteCategoryIds: number[];
   editingCategoryId: number | null;
   invalidIds: number[];
   isNewCategory: (id: number) => boolean;
-  handleDrag: (categories: Category[]) => void;
+  handleOrdinalChange: (categoryList: Category[]) => void;
   onEditClick: (id: number) => void;
   onDeleteClick: (id: number) => void;
   onRestoreClick: (id: number) => void;
@@ -23,41 +22,19 @@ interface CategoryItemsProps {
 }
 
 const CategoryItems = ({
-  categories,
-  newCategories,
-  editedCategories,
-  categoriesToDelete,
+  editedCategoryList,
+  deleteCategoryIds,
   editingCategoryId,
   invalidIds,
   isNewCategory,
-  handleDrag,
+  handleOrdinalChange,
   onEditClick,
   onDeleteClick,
   onRestoreClick,
   onNameInputChange,
   onNameInputBlur,
 }: CategoryItemsProps) => {
-  const categoriesMap = new Map();
-
-  [...categories, ...editedCategories, ...newCategories].forEach((category) => {
-    categoriesMap.set(category.id, category);
-  });
-
-  const initOrderedCategoriesArray = Array.from(categoriesMap.values()).sort((a, b) => a.ordinal - b.ordinal);
-
-  const [orderedCategories, setOrderedCategories] = useState(initOrderedCategoriesArray);
-
-  useEffect(() => {
-    const categoriesMap = new Map();
-
-    [...categories, ...editedCategories, ...newCategories].forEach((category) => {
-      categoriesMap.set(category.id, category);
-    });
-
-    const orderedCategoriesArray = Array.from(categoriesMap.values()).sort((a, b) => a.ordinal - b.ordinal);
-
-    setOrderedCategories(orderedCategoriesArray);
-  }, [newCategories, editedCategories, categories]);
+  const orderedCategoryList = [...editedCategoryList].sort((a, b) => a.ordinal - b.ordinal);
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
@@ -69,7 +46,7 @@ const CategoryItems = ({
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, position: number) => {
     dragOverItem.current = position;
-    e.currentTarget.style.backgroundColor = '#f5f5f5';
+    e.currentTarget.style.backgroundColor = theme.color.dark.white;
   };
 
   const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
@@ -80,21 +57,22 @@ const CategoryItems = ({
     e.currentTarget.style.opacity = '1';
     e.currentTarget.style.backgroundColor = '';
 
-    const copyListItems = [...orderedCategories];
-    const dragItemContent = copyListItems[dragItem.current];
+    const reorderedCategoryList = getReorderedCategoryList(orderedCategoryList, dragItem.current, dragOverItem.current);
 
-    copyListItems.splice(dragItem.current, 1);
-    copyListItems.splice(dragOverItem.current, 0, dragItemContent);
-
-    const updatedItems = copyListItems.map((item, index) => ({
-      ...item,
-      ordinal: index + 1,
-    }));
+    handleOrdinalChange(reorderedCategoryList);
 
     dragItem.current = null;
     dragOverItem.current = null;
-    handleDrag(updatedItems);
-    setOrderedCategories(updatedItems);
+  };
+
+  const getReorderedCategoryList = (categoryList: Category[], startIndex: number, endIndex: number) => {
+    const copyListItems = [...categoryList];
+    const dragItem = copyListItems[startIndex];
+
+    copyListItems.splice(startIndex, 1);
+    copyListItems.splice(endIndex, 0, dragItem);
+
+    return copyListItems;
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
@@ -103,7 +81,7 @@ const CategoryItems = ({
 
   return (
     <>
-      {orderedCategories.map(({ id, name }, index) => (
+      {orderedCategoryList.map(({ id, name }, index) => (
         <S.EditCategoryItem
           key={id}
           hasError={invalidIds.includes(id)}
@@ -132,9 +110,9 @@ const CategoryItems = ({
           ) : (
             <ExistingCategoryItem
               id={id}
-              name={editedCategories.find((category) => category.id === id)?.name ?? name}
+              name={editedCategoryList.find((category) => category.id === id)?.name ?? name}
               isEditing={editingCategoryId === id}
-              isDeleted={categoriesToDelete.includes(id)}
+              isDeleted={deleteCategoryIds.includes(id)}
               onChange={(e) => onNameInputChange(id, e.target.value)}
               onBlur={() => onNameInputBlur(id)}
               onKeyDown={(e) => {

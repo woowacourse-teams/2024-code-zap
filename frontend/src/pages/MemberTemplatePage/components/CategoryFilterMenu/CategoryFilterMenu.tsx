@@ -42,19 +42,19 @@ const CategoryFilterMenu = ({ memberId, categoryList, onSelectCategory }: Catego
     }
   };
 
-  const [defaultCategory, ...userCategories] = categoryList.length
+  const [defaultCategory, ...userCategoryList] = categoryList.length
     ? categoryList
     : [{ id: 0, name: '', ordinal: categoryList.length + 1 }];
 
   const indexById: Record<number, number> = useMemo(() => {
     const map: Record<number, number> = { 0: 0, [defaultCategory.id]: categoryList.length };
 
-    userCategories.forEach(({ id }, index) => {
+    userCategoryList.forEach(({ id }, index) => {
       map[id] = index + 1;
     });
 
     return map;
-  }, [categoryList.length, defaultCategory.id, userCategories]);
+  }, [categoryList.length, defaultCategory.id, userCategoryList]);
 
   return (
     <>
@@ -76,7 +76,7 @@ const CategoryFilterMenu = ({ memberId, categoryList, onSelectCategory }: Catego
             <CategoryButton name='전체보기' disabled={selectedId === 0} onClick={() => handleCategorySelect(0)} />
           </S.CategoryButtonContainer>
 
-          {userCategories.map(({ id, name }) => (
+          {userCategoryList.map(({ id, name }) => (
             <S.CategoryButtonContainer key={id}>
               <CategoryButton name={name} disabled={selectedId === id} onClick={() => handleCategorySelect(id)} />
             </S.CategoryButtonContainer>
@@ -101,8 +101,7 @@ const CategoryFilterMenu = ({ memberId, categoryList, onSelectCategory }: Catego
         <CategoryEditModal
           isOpen={isEditModalOpen}
           toggleModal={toggleEditModal}
-          categories={userCategories}
-          handleCancelEdit={toggleEditModal}
+          categoryList={userCategoryList}
           onDeleteCategory={handleCategoryDelete}
         />
       </S.CategoryContainer>
