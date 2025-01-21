@@ -172,7 +172,6 @@ class CategoryServiceTest extends ServiceTest {
         @BeforeEach
         void saveDefaultCategory() {
             member = memberRepository.save(MemberFixture.getFirstMember());
-            defaultCategory = categoryRepository.save(Category.createDefaultCategory(member));
         }
 
         @Test
