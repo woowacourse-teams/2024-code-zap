@@ -361,7 +361,7 @@ class TemplateSearchServiceTest {
 
     private void saveTwoCategory() {
         category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
-        category2 = categoryRepository.save(CategoryFixture.getCategory(member1));
+        category2 = categoryRepository.save(CategoryFixture.getAdditionalCategory(member1));
     }
 
     private void saveTwoTags() {

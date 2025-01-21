@@ -169,8 +169,8 @@ class TemplateServiceTest extends ServiceTest {
             // given
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getCategory(member1));
-            Category category2 = categoryRepository.save(CategoryFixture.getCategory(member2));
+            Category category1 = categoryRepository.save(CategoryFixture.getAdditionalCategory(member1));
+            Category category2 = categoryRepository.save(CategoryFixture.getAdditionalCategory(member2));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
             Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
             Template template3 = templateRepository.save(TemplateFixture.get(member2, category2));

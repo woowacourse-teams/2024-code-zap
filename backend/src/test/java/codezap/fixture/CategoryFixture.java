@@ -12,7 +12,7 @@ public class CategoryFixture {
         return new Category(1L, member, "카테고리 없음", true, 1);
     }
 
-    public static Category getCategory(Member member) {
+    public static Category getAdditionalCategory(Member member) {
         return new Category(2L, member, "카테고리", false, 2);
     }
 

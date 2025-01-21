@@ -42,8 +42,8 @@ class TemplateRepositoryTest {
         // given
         Member member = memberRepository.save(MemberFixture.getFirstMember());
         Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-        Category category = categoryRepository.save(CategoryFixture.getCategory(member));
-        Category otherCategory = categoryRepository.save(CategoryFixture.getCategory(member2));
+        Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
+        Category otherCategory = categoryRepository.save(CategoryFixture.getAdditionalCategory(member2));
         templateRepository.save(TemplateFixture.get(member, category));
 
         assertAll(
@@ -87,8 +87,8 @@ class TemplateRepositoryTest {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
             Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
 
-            Category category = categoryRepository.save(CategoryFixture.getCategory(member));
-            Category otherCategory = categoryRepository.save(CategoryFixture.getCategory(otherMember));
+            Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
+            Category otherCategory = categoryRepository.save(CategoryFixture.getAdditionalCategory(otherMember));
 
             Template myPublicTemplate = templateRepository.save(TemplateFixture.get(member, category));
             Template myPrivateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));

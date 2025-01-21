@@ -21,7 +21,6 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
 import codezap.member.repository.MemberRepository;
-import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
 
@@ -133,7 +132,7 @@ public class ThumbnailRepositoryTest {
 
     private Template createSecondTemplate() {
         Member member = memberRepository.save(MemberFixture.getSecondMember());
-        Category category = categoryRepository.save(CategoryFixture.getCategory(member));
+        Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
         return templateRepository.save(TemplateFixture.get(member, category));
     }
 }

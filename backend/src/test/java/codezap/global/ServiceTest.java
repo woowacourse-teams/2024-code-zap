@@ -56,7 +56,7 @@ public class ServiceTest {
 
     protected Template createSavedSecondTemplate() {
         Member member = memberRepository.save(MemberFixture.getSecondMember());
-        Category category = categoryRepository.save(CategoryFixture.getCategory(member));
+        Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
         return templateRepository.save(TemplateFixture.get(member, category));
     }
 }

@@ -72,7 +72,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // given
             var ownerMember = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            var category = categoryRepository.save(CategoryFixture.getCategory(ownerMember));
+            var category = categoryRepository.save(CategoryFixture.getAdditionalCategory(ownerMember));
             var request = createTemplateRequest(category);
 
             // when & then
@@ -494,10 +494,10 @@ class TemplateApplicationServiceTest extends ServiceTest {
         void updateTemplate_WhenNoAuthorization() {
             // given
             Member otherMember = memberRepository.save(MemberFixture.getFirstMember());
-            Category othersCategory = categoryRepository.save(CategoryFixture.getCategory(otherMember));
+            Category othersCategory = categoryRepository.save(CategoryFixture.getAdditionalCategory(otherMember));
 
             Member member = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(CategoryFixture.getCategory(member));
+            Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
