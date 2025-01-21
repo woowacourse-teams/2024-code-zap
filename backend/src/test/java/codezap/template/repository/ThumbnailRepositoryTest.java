@@ -74,7 +74,7 @@ public class ThumbnailRepositoryTest {
             var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var thumbnail1 = sut.save(new Thumbnail(template1, sourceCode1));
 
-            var template2 = createSecondTemplate();
+            var template2 = createAnotherMembersTemplate();
             var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var thumbnail2 = sut.save(new Thumbnail(template2, sourceCode2));
 
@@ -130,7 +130,7 @@ public class ThumbnailRepositoryTest {
         return templateRepository.save(TemplateFixture.get(member, category));
     }
 
-    private Template createSecondTemplate() {
+    private Template createAnotherMembersTemplate() {
         Member member = memberRepository.save(MemberFixture.getSecondMember());
         Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
         return templateRepository.save(TemplateFixture.get(member, category));
