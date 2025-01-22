@@ -167,7 +167,6 @@ class CategoryServiceTest extends ServiceTest {
     class UpdateCategoryTest {
 
         Member member;
-        Category defaultCategory;
 
         @BeforeEach
         void saveDefaultCategory() {
@@ -179,8 +178,9 @@ class CategoryServiceTest extends ServiceTest {
         void updateCategoriesSuccess() {
             String createCategoryName = "createName";
             String updateCategoryName = "updateName1";
-            Category category1 = categoryRepository.save(new Category("category1", member, 1));
-            Category category2 = categoryRepository.save(new Category("category2", member, 2));
+            Category defaultCategory = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Category category1 = categoryRepository.save(new Category("category1", member, 2));
+            Category category2 = categoryRepository.save(new Category("category2", member, 3));
 
             CreateCategoryRequest createRequest = new CreateCategoryRequest(createCategoryName, 1);
             UpdateCategoryRequest updateRequest = new UpdateCategoryRequest(category1.getId(), updateCategoryName, 2);
@@ -201,9 +201,10 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 성공: 복수의 카테고리 순서 변경")
         void updateCategoriesSuccessWithChangeOdinal() {
-            Category category1 = categoryRepository.save(new Category("category1", member, 1));
-            Category category2 = categoryRepository.save(new Category("category2", member, 2));
-            Category category3 = categoryRepository.save(new Category("category3", member, 3));
+            Category defaultCategory = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Category category1 = categoryRepository.save(new Category("category1", member, 2));
+            Category category2 = categoryRepository.save(new Category("category2", member, 3));
+            Category category3 = categoryRepository.save(new Category("category3", member, 4));
 
             CreateCategoryRequest createRequest = new CreateCategoryRequest("newCategory", 3);
             UpdateCategoryRequest updateRequest1 = new UpdateCategoryRequest(category1.getId(), "category1", 2);
@@ -243,7 +244,7 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 기본 카테고리 수정")
         void updateCategoriesFailWithDefaultCategory() {
-            categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Category defaultCategory = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
 
             UpdateCategoryRequest request = new UpdateCategoryRequest(defaultCategory.getId(), "updateName", 1);
 
@@ -375,7 +376,7 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 기본 카테고리 삭제")
         void deleteByIdFailDefaultCategory() {
-            categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Category defaultCategory = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
 
             assertThatThrownBy(
                     () -> sut.updateCategories(member, new UpdateAllCategoriesRequest(
@@ -404,8 +405,9 @@ class CategoryServiceTest extends ServiceTest {
         @Test
         @DisplayName("카테고리 편집 실패: 잘못된 개수의 카테고리")
         void deleteByIdFailWrongCount() {
-            Category category1 = categoryRepository.save(new Category("카테고리 1", member, 1));
-            categoryRepository.save(new Category("카테고리 2", member, 2));
+            Category defaultCategory = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Category category1 = categoryRepository.save(new Category("카테고리 1", member, 2));
+            categoryRepository.save(new Category("카테고리 2", member, 3));
             UpdateCategoryRequest request = new UpdateCategoryRequest(category1.getId(), category1.getName(), 1);
 
             assertThatThrownBy(
