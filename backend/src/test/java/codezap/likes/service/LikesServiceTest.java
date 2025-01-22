@@ -8,6 +8,7 @@ import java.util.List;
 
 import jakarta.persistence.EntityManager;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,10 +39,9 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공: 템플릿 수정 시간은 변경되지 않는다.")
         void success() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+
             LocalDateTime modifiedAtBeforeLike = template.getModifiedAt();
 
             likesService.like(member, template.getId());
@@ -57,10 +57,8 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공: 동일한 사람이 동일한 템플릿에 여러번 좋아요를 해도 Likes 가 한번만 생성된다.")
         void multipleLikes() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             likesService.like(member, template.getId());
             likesService.like(member, template.getId());
@@ -77,8 +75,9 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공")
         void success() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
+
             likesService.like(member, template.getId());
             LocalDateTime modifiedAtBeforeLike = template.getModifiedAt();
 
@@ -95,9 +94,10 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공: 본인의 좋아요만 취소 가능")
         void cancelMyLikes() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
+
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
 
             likesService.like(otherMember, template.getId());
             likesService.cancelLike(member, template.getId());
@@ -114,10 +114,8 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공: 좋아요를 했을 때")
         void successWithLike() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             likesRepository.save(new Likes(template, member));
 
@@ -128,10 +126,8 @@ class LikesServiceTest extends ServiceTest {
         @DisplayName("성공: 좋아요를 하지 않았을 때")
         void successWithNoLike() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             assertThat(likesService.isLiked(member, template)).isFalse();
         }
@@ -146,14 +142,9 @@ class LikesServiceTest extends ServiceTest {
         void deleteAllByTemplateIdSuccess() {
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Template template1 = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
-            Template template2 = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            Template template1 = templateRepository.save(TemplateFixture.get(member1, category));
+            Template template2 = templateRepository.save(TemplateFixture.get(member1, category));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
@@ -171,14 +162,9 @@ class LikesServiceTest extends ServiceTest {
         void deleteAllByTemplateIdsSuccess() {
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Template template1 = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
-            Template template2 = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            Template template1 = templateRepository.save(TemplateFixture.get(member1, category));
+            Template template2 = templateRepository.save(TemplateFixture.get(member1, category));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));

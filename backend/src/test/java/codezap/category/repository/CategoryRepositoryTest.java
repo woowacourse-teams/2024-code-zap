@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,8 +35,8 @@ public class CategoryRepositoryTest {
         @Test
         @DisplayName("Id로 카테고리 조회 성공")
         void fetchByIdSuccess() {
-            memberRepository.save(MemberFixture.getFirstMember());
-            var category = sut.save(CategoryFixture.getFirstCategory());
+            var member = memberRepository.save(MemberFixture.getFirstMember());
+            var category = sut.save(CategoryFixture.getDefaultCategory(member));
 
             var actual = sut.fetchById(category.getId());
 
@@ -89,10 +91,10 @@ public class CategoryRepositoryTest {
         void existsByNameAndMemberSuccess() {
             var member = new Member("Zappy", "password", "salt");
             memberRepository.save(member);
-            var category1 = new Category("category1", member, 1);
+            var category1 = CategoryFixture.getDefaultCategory(member);
             sut.save(category1);
 
-            var actual = sut.existsByNameAndMember("category1", member);
+            var actual = sut.existsByNameAndMember(category1.getName(), member);
 
             assertThat(actual).isTrue();
         }
@@ -102,7 +104,7 @@ public class CategoryRepositoryTest {
         void existsByNameAndMemberFail() {
             var member = new Member("Zappy", "password", "salt");
             memberRepository.save(member);
-            var category1 = new Category("category1", member, 1);
+            var category1 = CategoryFixture.getDefaultCategory(member);
             sut.save(category1);
 
             var actual = sut.existsByNameAndMember("category2", member);
@@ -118,16 +120,11 @@ public class CategoryRepositoryTest {
         @Test
         @DisplayName("회원으로 카테고리 개수 조회 성공")
         void countByMemberSuccess() {
-            var member1 = new Member("Zappy1", "password", "salt");
-            var member2 = new Member("Zappy2", "password", "salt");
-            memberRepository.save(member1);
-            memberRepository.save(member2);
-            var category1 = new Category("category1", member1, 1);
-            var category2 = new Category("category2", member1, 2);
-            var category3 = new Category("category3", member2, 1);
-            sut.save(category1);
-            sut.save(category2);
-            sut.save(category3);
+            var member1 = memberRepository.save(MemberFixture.getFirstMember());
+            var member2 = memberRepository.save(MemberFixture.getSecondMember());
+            sut.save(new Category("category1", member1, 1));
+            sut.save(new Category("category2", member1, 2));
+            sut.save(new Category("category3", member2, 1));
 
             long actual = sut.countByMember(member1);
 

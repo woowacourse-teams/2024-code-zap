@@ -65,10 +65,6 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Visibility visibility;
 
-    public Template(Member member, String title, String description, Category category) {
-        this(member, title, description, category, Visibility.PUBLIC);
-    }
-
     public Template(Member member, String title, String description, Category category, Visibility visibility) {
         this(null, member, title, description, category, null, 0L, visibility);
     }

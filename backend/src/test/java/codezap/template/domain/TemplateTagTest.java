@@ -42,7 +42,7 @@ class TemplateTagTest {
 
         private Template createTemplateById(Long id) {
             Member member = MemberFixture.getFirstMember();
-            Category category = CategoryFixture.getFirstCategory();
+            Category category = CategoryFixture.getDefaultCategory(member);
             List<SourceCode> sourceCodes = List.of();
             long likesCount = 1L;
             return new Template(

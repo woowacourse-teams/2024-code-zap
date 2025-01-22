@@ -6,10 +6,10 @@ import java.util.stream.Stream;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-import codezap.category.dto.request.validation.ValidatedDuplicateNameRequest;
 import codezap.category.dto.request.validation.ValidatedDuplicateIdRequest;
-import codezap.global.validation.ValidationGroups.NotNullGroup;
+import codezap.category.dto.request.validation.ValidatedDuplicateNameRequest;
 import codezap.global.validation.ValidatedOrdinalRequest;
+import codezap.global.validation.ValidationGroups.NotNullGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record UpdateAllCategoriesRequest(
