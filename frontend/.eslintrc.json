@@ -19,6 +19,7 @@
   "parser": "@typescript-eslint/parser",
   "plugins": ["react-refresh", "react", "import"],
   "settings": {
+    "import/core-modules": ["@jest/globals"],
     "import/resolver": {
       "typescript": {
         "project": "../tsconfig.base.json",

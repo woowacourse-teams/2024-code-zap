@@ -20,7 +20,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "extends": ["../tsconfig.base"],
+  "extends": "../tsconfig.base.json",
   "include": ["."],
   "exclude": ["node_modules", "dist", "**/*.cjs"]
 }

@@ -26,7 +26,7 @@
     "esModuleInterop": true,
     "jsxImportSource": "@emotion/react"
   },
-  "extends": ["../tsconfig.base"],
-  "include": ["src"],
+  "extends": "../tsconfig.base.json",
+  "include": ["src", "./jest.config.ts"],
   "exclude": ["node_modules", "dist", "**/*.cjs"]
 }
