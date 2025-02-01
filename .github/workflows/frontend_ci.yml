@@ -22,7 +22,9 @@ jobs:
           cache: "pnpm"
 
       - name: pnpm 설치
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
 
       - name: 의존성 설치
         run: pnpm install
