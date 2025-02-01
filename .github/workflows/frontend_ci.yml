@@ -12,21 +12,26 @@ jobs:
     env:
       frontend-directory: ./frontend
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Node.js 설정
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: "pnpm"
+
+      - name: pnpm 설치
+        run: npm install -g pnpm
 
       - name: 의존성 설치
-        run: npm install
+        run: pnpm install
         working-directory: ${{ env.frontend-directory }}
 
       - name: 타입 체크 실행
-        run: npm run tsc
+        run: pnpm run tsc
         working-directory: ${{ env.frontend-directory }}
 
       - name: 테스트 실행
-        run: npm run test
+        run: pnpm run test
         working-directory: ${{ env.frontend-directory }}
