@@ -5,7 +5,7 @@ import { Button, Flex, Input, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { useSignupForm } from '@/pages/SignupPage/hooks';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import * as S from './SignupPage.style';
 

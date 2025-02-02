@@ -24,14 +24,9 @@
     /* Testing */
     "types": ["jest", "node"],
     "esModuleInterop": true,
-    "jsxImportSource": "@emotion/react",
-
-    "baseUrl": ".",
-    "outDir": "./dist",
-    "paths": {
-      "@/*": ["src/*"]
-    }
+    "jsxImportSource": "@emotion/react"
   },
-  "include": ["src"],
+  "extends": "../tsconfig.base.json",
+  "include": ["src", "./jest.config.ts"],
   "exclude": ["node_modules", "dist", "**/*.cjs"]
 }

@@ -23,7 +23,7 @@ import { DEFAULT_TEMPLATE_VISIBILITY, VISIBILITY_OPTIONS } from '@/service/const
 import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
 import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 import { TemplateUploadRequest } from '@/types';
 import { SourceCodes, TemplateVisibility } from '@/types/template';
 import { getLanguageForAutoTag } from '@/utils';
