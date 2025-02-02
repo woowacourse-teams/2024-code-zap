@@ -1,5 +1,14 @@
-import { Text, Modal, Flex, Button } from '@/components';
-import type { Category } from '@/types';
+import { css } from '@emotion/react';
+import { useState } from 'react';
+
+import { PencilIcon, SpinArrowIcon, TrashcanIcon } from '@/assets/images';
+import { Text, Modal, Input, Flex, Button } from '@/components';
+import { useCategoryNameValidation } from '@/hooks/category';
+import { useCategoryDeleteMutation, useCategoryEditMutation, useCategoryUploadMutation } from '@/queries/categories';
+import { validateCategoryName } from '@/service/validates';
+import { ICON_SIZE } from '@/style/styleConstants';
+import { theme } from '@design/style/theme';
+import type { Category, ErrorBody } from '@/types';
 
 import CategoryItems from './CategoryItems';
 import { useCategoryEditModal } from '../../hooks';

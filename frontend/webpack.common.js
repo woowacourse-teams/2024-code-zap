@@ -81,6 +81,7 @@ module.exports = {
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src/'),
+      '@design': path.resolve(__dirname, '../design-system/'),
     },
     extensions: ['.tsx', '.ts', '.js'],
   },

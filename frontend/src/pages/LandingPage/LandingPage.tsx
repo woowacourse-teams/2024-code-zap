@@ -10,7 +10,7 @@ import { useCustomContext } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 import { SourceCodes } from '@/types';
 import { getLanguageByFilename } from '@/utils';
 

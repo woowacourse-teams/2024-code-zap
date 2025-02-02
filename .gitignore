@@ -1,3 +1,7 @@
+### node_modules
+node_modules
+*/node_modules
+
 ### IntelliJ IDEA ###
 .idea
 
@@ -17,3 +21,5 @@
 *.csr
 *.key
 *.pem
+
+*storybook.log

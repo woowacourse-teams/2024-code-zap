@@ -2,7 +2,7 @@ import { Text } from '@/components';
 import { useWindowWidth } from '@/hooks';
 import { HOT_TOPIC } from '@/service/hotTopic';
 import { BREAKING_POINT } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 import { Carousel } from '../';
 import * as S from './HotTopicCarousel.style';

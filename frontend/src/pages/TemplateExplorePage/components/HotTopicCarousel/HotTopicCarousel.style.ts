@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 export const Topic = styled.button<{ background: string; border: string; isSelected: boolean }>`
   cursor: pointer;

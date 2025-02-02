@@ -1,6 +1,6 @@
 import { css, Global } from '@emotion/react';
 
-import { theme } from '@/style/theme';
+import { theme } from '@design/style/theme';
 
 const globalStyles = css`
   * {
