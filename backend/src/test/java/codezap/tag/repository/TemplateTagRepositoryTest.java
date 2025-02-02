@@ -17,6 +17,7 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.RepositoryTest;
 import codezap.member.domain.Member;
@@ -46,15 +47,14 @@ class TemplateTagRepositoryTest {
     @BeforeEach
     void setUp() {
         member = memberRepository.save(MemberFixture.getFirstMember());
-
-        category = categoryRepository.save(CategoryFixture.getFirstCategory());
+        category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
     }
 
     @Test
     @DisplayName("Template 을 이용한 Tag 목록 조회 성공")
     void findAllTagsByTemplateTest() {
         //given
-        Template template = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template = templateRepository.save(TemplateFixture.get(member, category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -76,7 +76,7 @@ class TemplateTagRepositoryTest {
     @DisplayName("Template Id 을 이용한 TemplateTag 목록 조회 성공")
     void findAllByTemplateIdTest() {
         //given
-        Template template = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template = templateRepository.save(TemplateFixture.get(member, category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -97,8 +97,8 @@ class TemplateTagRepositoryTest {
     @DisplayName("Template Id 목록 중 하나라도 일치하는 TemplateTag 목록 조회 성공")
     void findAllByTemplateIdsInTest() {
         //given
-        Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
-        Template template2 = templateRepository.save(createNthTemplate(member, category, 1));
+        Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+        Template template2 = templateRepository.save(TemplateFixture.get(member, category));
 
         Tag tag1 = tagRepository.save(new Tag("tag1"));
         Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -127,9 +127,9 @@ class TemplateTagRepositoryTest {
         void testFindDistinctByTemplateIn() {
             // given
             Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
-            Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
-            Template template2 = templateRepository.save(createNthTemplate(otherMember, category, 2));
-            Template template3 = templateRepository.save(createNthTemplate(member, category, 3));
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template2 = templateRepository.save(TemplateFixture.get(otherMember, category));
+            Template template3 = templateRepository.save(TemplateFixture.get(member, category));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -175,8 +175,8 @@ class TemplateTagRepositoryTest {
         @DisplayName("태그 삭제 성공 : 주어진 id 의 템플릿에선 태그가 삭제되고, 나머지 템플릿의 태그에는 영향을 주지 않는다.")
         void successTest() {
             //given
-            Template template1 = templateRepository.save(createNthTemplate(member, category, 1));
-            Template template2 = templateRepository.save(createNthTemplate(member, category, 2));
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -201,7 +201,7 @@ class TemplateTagRepositoryTest {
         @DisplayName("태그 삭제 성공 : 존재하지 않는 id 를 사용해도 예외가 발생하지 않고 아무 영향이 없다.")
         void notExistIdTest() {
             //given
-            Template template = templateRepository.save(createNthTemplate(member, category, 1));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -220,9 +220,5 @@ class TemplateTagRepositoryTest {
                             .containsExactly(template1Tag1, template1Tag2)
             );
         }
-    }
-
-    private Template createNthTemplate(Member member, Category category, int n) {
-        return new Template(member, "mockTitle" + n, "mockDescription" + n, category);
     }
 }

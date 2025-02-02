@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,15 @@ class LikesRepositoryTest {
     @Autowired
     private TemplateRepository templateRepository;
 
+    private Member member;
+    private Category category;
+
+    @BeforeEach
+    void setUp() {
+        member = memberRepository.save(MemberFixture.getFirstMember());
+        category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+    }
+
     @Nested
     @DisplayName("좋아요 저장 테스트")
     class SaveTest {
@@ -45,11 +55,7 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공")
         void success() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             likesRepository.save(new Likes(null, template, member));
 
@@ -64,11 +70,7 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공")
         void success() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
             likesRepository.save(new Likes(null, template, member));
 
             assertThat(likesRepository.existsByMemberAndTemplate(member, template))
@@ -78,11 +80,7 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공: 저장되지 않은 좋아요를 찾을 수 없다.")
         void successWithNoData() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             assertThat(likesRepository.existsByMemberAndTemplate(member, template))
                     .isFalse();
@@ -96,11 +94,8 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공")
         void success() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
+
             likesRepository.save(new Likes(null, template, member));
 
             likesRepository.deleteByMemberAndTemplate(member, template);
@@ -111,11 +106,7 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공: 삭제할 데이터가 존재하지 않아도 정상 동작으로 판단")
         void successWithNoLike() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             assertThatCode(() -> likesRepository.deleteByMemberAndTemplate(member, template))
                     .doesNotThrowAnyException();
@@ -129,15 +120,11 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공")
         void success() {
-            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member1,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
-            likesRepository.save(new Likes(null, template, member1));
-            likesRepository.save(new Likes(null, template, member2));
+            likesRepository.save(new Likes(null, template, member));
+            likesRepository.save(new Likes(null, template, otherMember));
 
             assertThat(likesRepository.countByTemplate(template)).isEqualTo(2);
         }
@@ -145,11 +132,7 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공: 좋아요가 없으면 0개가 조회된다.")
         void successWithNoLikes() {
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Template template = templateRepository.save(TemplateFixture.get(
-                    member,
-                    categoryRepository.save(CategoryFixture.getFirstCategory())
-            ));
+            Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             assertThat(likesRepository.countByTemplate(template)).isEqualTo(0);
         }
@@ -164,9 +147,10 @@ class LikesRepositoryTest {
         void testDeleteByTemplateId() {
             Member member1 = memberRepository.save(MemberFixture.getFirstMember());
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
+
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));
             likesRepository.save(new Likes(template2, member1));
@@ -182,14 +166,12 @@ class LikesRepositoryTest {
         @Test
         @DisplayName("성공: 템플릿 ID로 템플릿에 존재하는 좋아요 삭제 (템플릿 2개)")
         void testDeleteByTemplateIds() {
-            Member member1 = memberRepository.save(MemberFixture.getFirstMember());
-            Member member2 = memberRepository.save(MemberFixture.getSecondMember());
-            Category category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
-            likesRepository.save(new Likes(template1, member1));
-            likesRepository.save(new Likes(template1, member2));
-            likesRepository.save(new Likes(template2, member1));
+            Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
+            Template template1 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
+            likesRepository.save(new Likes(template1, member));
+            likesRepository.save(new Likes(template1, otherMember));
+            likesRepository.save(new Likes(template2, member));
 
             likesRepository.deleteAllByTemplateIds(List.of(template1.getId(), template2.getId()));
 

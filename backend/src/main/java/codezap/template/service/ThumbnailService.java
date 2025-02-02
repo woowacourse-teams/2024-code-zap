@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
-import codezap.template.dto.response.ExploreTemplatesResponse;
 import codezap.template.repository.ThumbnailRepository;
 import lombok.RequiredArgsConstructor;
 

@@ -12,14 +12,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import codezap.category.domain.Category;
-import codezap.fixture.CategoryFixture;
-import codezap.fixture.MemberFixture;
 import codezap.fixture.SourceCodeFixture;
-import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
-import codezap.member.domain.Member;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -428,12 +423,6 @@ class SourceCodeServiceTest extends ServiceTest {
 
             assertThat(sourceCodeRepository.findAllByTemplate(template)).isEmpty();
         }
-    }
-
-    private Template createSavedTemplate() {
-        Member member = memberRepository.save(MemberFixture.getFirstMember());
-        Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
-        return templateRepository.save(TemplateFixture.get(member, category));
     }
 
     private CreateTemplateRequest createSavedTemplateRequest(List<CreateSourceCodeRequest> requests) {

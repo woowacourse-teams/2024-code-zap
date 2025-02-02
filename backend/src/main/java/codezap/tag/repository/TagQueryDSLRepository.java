@@ -4,16 +4,13 @@ import static codezap.tag.domain.QTag.tag;
 import static codezap.template.domain.QTemplateTag.templateTag;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import codezap.tag.domain.QTag;
 import codezap.tag.domain.Tag;
-import codezap.template.domain.QTemplateTag;
 import lombok.RequiredArgsConstructor;
 
 @Repository
