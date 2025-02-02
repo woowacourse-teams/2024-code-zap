@@ -22,6 +22,11 @@ jobs:
         with:
           node-version: "20"
 
+      - name: pnpm 설치
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: 환경 파일 생성
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
@@ -38,12 +43,11 @@ jobs:
       - name: 환경 파일 권한 설정
         run: chmod 644 ${{ env.frontend-directory }}/.env.*
 
-      - name: npm install
-        run: npm install
-        working-directory: ${{ env.frontend-directory }}
+      - name: 의존성 설치
+        run: pnpm install
 
-      - name: npm run build
-        run: npm run build
+      - name: 빌드 실행
+        run: pnpm run build
         working-directory: ${{ env.frontend-directory }}
 
       - name: AWS credentials 설정
