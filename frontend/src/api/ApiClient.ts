@@ -31,7 +31,11 @@ export class ApiClient {
   headers: HeadersInit;
   credentials: RequestCredentials;
 
-  constructor(baseUrl: string, headers?: HeadersInit, credentials?: RequestCredentials) {
+  constructor(
+    baseUrl: string,
+    headers?: HeadersInit,
+    credentials?: RequestCredentials,
+  ) {
     this.baseUrl = baseUrl;
     this.headers = headers || { 'Content-Type': 'application/json' };
     this.credentials = credentials || 'same-origin';
@@ -39,14 +43,19 @@ export class ApiClient {
 
   private getAuthorizationHeader(): HeadersInit {
     const token = localStorage.getItem('authorization');
-    return token ? { Authorization: token, 'Credential-Type': 'Authorization Header' } : {};
+
+    return token
+      ? { Authorization: token, 'Credential-Type': 'Authorization Header' }
+      : {};
   }
 
   async get(endpoint: string, params?: RequestParams): Promise<Response> {
     const url = new URL(`${this.baseUrl}${endpoint}`);
 
     if (params) {
-      Object.entries(params).forEach(([key, value]) => url.searchParams.append(key, String(value)));
+      Object.entries(params).forEach(([key, value]) =>
+        url.searchParams.append(key, String(value)),
+      );
     }
 
     return this.customFetch('GET', url.toString());
@@ -85,7 +94,12 @@ export class ApiClient {
       if (error instanceof ApiError) {
         throw error;
       } else {
-        throw new ApiError('일시적인 네트워크 장애입니다.', 500, 2000, 'fetch 네트워크 에러입니다.');
+        throw new ApiError(
+          '일시적인 네트워크 장애입니다.',
+          500,
+          2000,
+          'fetch 네트워크 에러입니다.',
+        );
       }
     }
   }
@@ -99,6 +113,11 @@ export class ApiClient {
 
     const { errorCode, instance, detail } = await response.json();
 
-    throw new ApiError(getErrorMessage(errorCode, instance), response.status, errorCode, detail);
+    throw new ApiError(
+      getErrorMessage(errorCode, instance),
+      response.status,
+      errorCode,
+      detail,
+    );
   }
 }

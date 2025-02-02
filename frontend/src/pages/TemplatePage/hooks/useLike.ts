@@ -8,7 +8,11 @@ interface UseLikeProps {
   initialIsLiked: boolean;
 }
 
-export const useLike = ({ templateId, initialLikesCount, initialIsLiked }: UseLikeProps) => {
+export const useLike = ({
+  templateId,
+  initialLikesCount,
+  initialIsLiked,
+}: UseLikeProps) => {
   const [likesCount, setLikesCount] = useState(initialLikesCount);
   const [isLiked, setIsLiked] = useState(initialIsLiked);
 

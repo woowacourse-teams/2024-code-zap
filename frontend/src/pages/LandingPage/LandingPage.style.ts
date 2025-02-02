@@ -100,7 +100,8 @@ export const CodeSection = styled.div`
 export const SyntaxHighlighterWrapper = styled.div<{ isOpen: boolean }>`
   overflow: hidden;
   max-height: ${({ isOpen }) => (isOpen ? '1000rem' : '0')};
-  animation: ${({ isOpen }) => (!isOpen ? 'collapse' : 'expand')} 0.7s ease-in-out forwards;
+  animation: ${({ isOpen }) => (!isOpen ? 'collapse' : 'expand')} 0.7s
+    ease-in-out forwards;
 `;
 
 export const CustomCodeMirrorTheme = EditorView.theme({

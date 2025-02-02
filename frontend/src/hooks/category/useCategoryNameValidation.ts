@@ -40,7 +40,9 @@ export const useCategoryNameValidation = (
     });
 
     Object.entries(editedCategories).forEach(([id, name]) => {
-      const originalName = categories.find((category) => category.id === Number(id))?.name;
+      const originalName = categories.find(
+        (category) => category.id === Number(id),
+      )?.name;
 
       if (INVALID_NAMES.includes(name)) {
         invalidNames.add(Number(id));

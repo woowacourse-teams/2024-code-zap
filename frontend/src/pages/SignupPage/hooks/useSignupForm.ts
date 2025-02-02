@@ -2,7 +2,11 @@ import { FormEvent, useEffect } from 'react';
 
 import { useCustomNavigate, useInputWithValidate } from '@/hooks';
 import { useCheckNameQuery, useSignupMutation } from '@/queries/authentication';
-import { validateName, validatePassword, validateConfirmPassword } from '@/service';
+import {
+  validateName,
+  validatePassword,
+  validateConfirmPassword,
+} from '@/service';
 
 export const useSignupForm = () => {
   const navigate = useCustomNavigate();
@@ -26,7 +30,9 @@ export const useSignupForm = () => {
     errorMessage: confirmPasswordError,
     handleChange: handleConfirmPasswordChange,
     handleErrorMessage: handleConfirmPasswordErrorMessage,
-  } = useInputWithValidate('', (value, compareValue) => validateConfirmPassword(value, compareValue ?? ''));
+  } = useInputWithValidate('', (value, compareValue) =>
+    validateConfirmPassword(value, compareValue ?? ''),
+  );
 
   const { refetch: checkNameQuery } = useCheckNameQuery(name);
 
@@ -41,11 +47,18 @@ export const useSignupForm = () => {
 
   // only change password not confirmPassword
   useEffect(() => {
-    handleConfirmPasswordErrorMessage(validateConfirmPassword(password, confirmPassword));
+    handleConfirmPasswordErrorMessage(
+      validateConfirmPassword(password, confirmPassword),
+    );
   }, [password, confirmPassword, handleConfirmPasswordErrorMessage]);
 
   const isFormValid = () =>
-    !nameError && !passwordError && !confirmPasswordError && name && password && confirmPassword;
+    !nameError &&
+    !passwordError &&
+    !confirmPasswordError &&
+    name &&
+    password &&
+    confirmPassword;
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

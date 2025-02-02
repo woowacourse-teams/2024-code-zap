@@ -30,7 +30,8 @@ const getFileExtension = (filename: string) => {
   return '';
 };
 
-const getLanguageByExtension = (extension: string) => extensionToLanguage[extension] || 'plaintext';
+const getLanguageByExtension = (extension: string) =>
+  extensionToLanguage[extension] || 'plaintext';
 
 const extensionToLanguage: { [key: string]: string } = {
   '1c': '1c',

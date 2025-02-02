@@ -1,5 +1,3 @@
-import { Link } from 'react-router-dom';
-
 import { ClockIcon, PrivateIcon } from '@/assets/images';
 import {
   Button,
@@ -14,9 +12,11 @@ import { useToggle } from '@/hooks';
 import { END_POINTS } from '@/routes';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@design/style/theme';
-import type { Tag, TemplateListItem } from '@/types';
 import { formatRelativeTime } from '@/utils/formatRelativeTime';
+import { Link } from 'react-router-dom';
+
+import type { Tag, TemplateListItem } from '@/types';
+import { theme } from '@design/style/theme';
 
 import * as S from './TemplateCard.style';
 
@@ -25,14 +25,15 @@ interface Props {
 }
 
 const TemplateCard = ({ template }: Props) => {
-  const { title, description, thumbnail, tags, createdAt, member, visibility } = template;
+  const { title, description, thumbnail, tags, createdAt, member, visibility } =
+    template;
   const [showAllTagList, toggleShowAllTagList] = useToggle();
   const isPrivate = visibility === VISIBILITY_PRIVATE;
 
   const blockMovingToDetailPage = (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -41,7 +42,7 @@ const TemplateCard = ({ template }: Props) => {
   const handleAllTagList = (
     e:
       | React.MouseEvent<HTMLButtonElement, MouseEvent>
-      | React.MouseEvent<HTMLDivElement, MouseEvent>
+      | React.MouseEvent<HTMLDivElement, MouseEvent>,
   ) => {
     blockMovingToDetailPage(e);
     toggleShowAllTagList();
@@ -69,7 +70,9 @@ const TemplateCard = ({ template }: Props) => {
                 color={theme.color.light.secondary_600}
               />
               <S.NoWrapTextWrapper>
-                <Text.Small color={theme.color.light.secondary_600}>{formatRelativeTime(createdAt)}</Text.Small>
+                <Text.Small color={theme.color.light.secondary_600}>
+                  {formatRelativeTime(createdAt)}
+                </Text.Small>
               </S.NoWrapTextWrapper>
             </S.TimeContainer>
           </Flex>

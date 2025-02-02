@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { Link } from 'react-router-dom';
 
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
@@ -5,7 +6,6 @@ import { Button, Flex, Input, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { useSignupForm } from '@/pages/SignupPage/hooks';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { theme } from '@design/style/theme';
 
 import * as S from './SignupPage.style';
 
@@ -30,16 +30,35 @@ const SignupPage = () => {
 
   return (
     <>
-      <S.ResponsiveFlex direction='column' justify='center' align='center' height='100vh'>
-        <S.SignupPageContainer direction='column' justify='center' align='center' width='27.5rem' gap='3.5rem'>
+      <S.ResponsiveFlex
+        direction='column'
+        justify='center'
+        align='center'
+        height='100vh'
+      >
+        <S.SignupPageContainer
+          direction='column'
+          justify='center'
+          align='center'
+          width='27.5rem'
+          gap='3.5rem'
+        >
           <Flex direction='column' justify='center' align='center' gap='1rem'>
             <ZapzapLogo width={100} height={100} />
-            <S.ResponsiveHeading color={theme.color.light.primary_800}>환영하잽</S.ResponsiveHeading>
+            <S.ResponsiveHeading color={theme.color.light.primary_800}>
+              환영하잽
+            </S.ResponsiveHeading>
           </Flex>
 
           <S.SignupForm
             onSubmit={handleSubmit}
-            style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              gap: '1rem',
+            }}
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
               <Input.Label>아이디 (닉네임)</Input.Label>
@@ -62,12 +81,20 @@ const SignupPage = () => {
                 autoComplete='new-password'
               />
               <Input.Adornment>
-                <EyeIcon onClick={handlePasswordToggle} css={{ cursor: 'pointer' }} aria-label='비밀번호 보기' />
+                <EyeIcon
+                  onClick={handlePasswordToggle}
+                  css={{ cursor: 'pointer' }}
+                  aria-label='비밀번호 보기'
+                />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>
 
-            <Input variant='outlined' size='medium' isValid={!errors.confirmPassword}>
+            <Input
+              variant='outlined'
+              size='medium'
+              isValid={!errors.confirmPassword}
+            >
               <Input.Label>비밀번호 확인</Input.Label>
               <Input.TextField
                 type={showPasswordConfirm ? 'text' : 'password'}
@@ -85,12 +112,19 @@ const SignupPage = () => {
               <Input.HelperText>{errors.confirmPassword}</Input.HelperText>
             </Input>
 
-            <Button type='submit' variant='contained' fullWidth disabled={!isFormValid()}>
+            <Button
+              type='submit'
+              variant='contained'
+              fullWidth
+              disabled={!isFormValid()}
+            >
               회원가입
             </Button>
 
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
-              <Text.XSmall color={theme.color.light.secondary_600}>이미 계정이 있으신가요?</Text.XSmall>
+              <Text.XSmall color={theme.color.light.secondary_600}>
+                이미 계정이 있으신가요?
+              </Text.XSmall>
               <Link to={'/login'}>
                 <Button variant='text' size='small'>
                   로그인

@@ -116,7 +116,7 @@ const Heading = Object.assign(
     Medium,
     Small,
     XSmall,
-  }
+  },
 );
 
 export default Heading;

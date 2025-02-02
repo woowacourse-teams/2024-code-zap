@@ -3,11 +3,12 @@ import { SourceCode, Text } from '@/components';
 import { useToggle } from '@/hooks';
 import { useToast } from '@/hooks/useToast';
 import { trackClickCopyClipBoard } from '@/service/amplitude/track';
-import { theme } from '@design/style/theme';
 import { getLanguageByFilename } from '@/utils';
 
-import * as S from './SourceCodeViewer.style';
 import { SourceCodeMode } from '@design/SourceCode/SourceCode';
+import { theme } from '@design/style/theme';
+
+import * as S from './SourceCodeViewer.style';
 
 interface Props {
   mode?: Exclude<SourceCodeMode, 'edit'>;

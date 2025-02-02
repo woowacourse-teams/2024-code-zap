@@ -13,7 +13,13 @@ interface Props {
   cols?: number;
 }
 
-const TemplateGrid = ({ templateList, isEditMode, selectedList, setSelectedList, cols = 2 }: Props) => {
+const TemplateGrid = ({
+  templateList,
+  isEditMode,
+  selectedList,
+  setSelectedList,
+  cols = 2,
+}: Props) => {
   useEffect(() => {
     const resetSelectedList = () => {
       setSelectedList([]);
@@ -24,7 +30,9 @@ const TemplateGrid = ({ templateList, isEditMode, selectedList, setSelectedList,
 
   const toggleTemplateSelection = (templateId: number) => () => {
     setSelectedList((prev) =>
-      prev.includes(templateId) ? prev.filter((id) => id !== templateId) : [...prev, templateId],
+      prev.includes(templateId)
+        ? prev.filter((id) => id !== templateId)
+        : [...prev, templateId],
     );
   };
 

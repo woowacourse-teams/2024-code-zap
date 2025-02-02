@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { useState } from 'react';
 
 import { PlusIcon } from '@/assets/images';
@@ -20,10 +21,12 @@ import { useTag, useSourceCode } from '@/hooks/template';
 import { useTemplateEditMutation } from '@/queries/templates';
 import { useTrackPageViewed } from '@/service/amplitude';
 import { VISIBILITY_OPTIONS } from '@/service/constants';
-import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
+import {
+  generateUniqueFilename,
+  isFilenameEmpty,
+} from '@/service/generateUniqueFilename';
 import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@design/style/theme';
 import type { Template, TemplateEditRequest } from '@/types';
 import { TemplateVisibility } from '@/types/template';
 import { getLanguageForAutoTag } from '@/utils';
@@ -41,7 +44,10 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const {
     memberInfo: { memberId },
   } = useAuth();
-  const categoryProps = useCategory({ memberId: memberId!, initCategory: template.category });
+  const categoryProps = useCategory({
+    memberId: memberId!,
+    initCategory: template.category,
+  });
   const [title, handleTitleChange] = useInput(template.title);
   const [description, handleDescriptionChange] = useInput(template.description);
 
@@ -58,11 +64,21 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
   const initTags = template.tags.map((tag) => tag.name);
   const tagProps = useTag(initTags);
 
-  const [visibility, setVisibility] = useState<TemplateVisibility>(template.visibility);
+  const [visibility, setVisibility] = useState<TemplateVisibility>(
+    template.visibility,
+  );
 
-  const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
+  const {
+    currentOption: currentFile,
+    linkedElementRefs: sourceCodeRefs,
+    handleSelectOption,
+  } = useSelectList();
 
-  const { mutateAsync: updateTemplate, isPending, error } = useTemplateEditMutation(template.id);
+  const {
+    mutateAsync: updateTemplate,
+    isPending,
+    error,
+  } = useTemplateEditMutation(template.id);
 
   const { failAlert } = useToast();
 
@@ -75,7 +91,8 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       return;
     }
 
-    const { createSourceCodes, updateSourceCodes } = generateProcessedSourceCodes();
+    const { createSourceCodes, updateSourceCodes } =
+      generateProcessedSourceCodes();
 
     const templateUpdate: TemplateEditRequest = {
       id: template.id,
@@ -112,12 +129,18 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
       return {
         ...sourceCode,
         ordinal: index + 1,
-        filename: isFilenameEmpty(filename) ? generateUniqueFilename() : filename,
+        filename: isFilenameEmpty(filename)
+          ? generateUniqueFilename()
+          : filename,
       };
     });
 
-    const createSourceCodes = processSourceCodes.filter((sourceCode) => !sourceCode.id);
-    const updateSourceCodes = processSourceCodes.filter((sourceCode) => sourceCode.id);
+    const createSourceCodes = processSourceCodes.filter(
+      (sourceCode) => !sourceCode.id,
+    );
+    const updateSourceCodes = processSourceCodes.filter(
+      (sourceCode) => sourceCode.id,
+    );
 
     return { createSourceCodes, updateSourceCodes };
   };
@@ -129,7 +152,11 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
-            <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
+            <Input.TextField
+              placeholder='제목을 입력해주세요'
+              value={title}
+              onChange={handleTitleChange}
+            />
           </Input>
         </S.UnderlineInputWrapper>
 
@@ -150,9 +177,15 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
             filename={sourceCode.filename}
             content={sourceCode.content}
             isValidContentChange={isValidContentChange}
-            onChangeContent={(newContent) => handleContentChange(newContent, index)}
-            onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
-            onBlurFilename={(newFilename) => tagProps.addTag(getLanguageForAutoTag(newFilename))}
+            onChangeContent={(newContent) =>
+              handleContentChange(newContent, index)
+            }
+            onChangeFilename={(newFilename) =>
+              handleFilenameChange(newFilename, index)
+            }
+            onBlurFilename={(newFilename) =>
+              tagProps.addTag(getLanguageForAutoTag(newFilename))
+            }
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}
           />
@@ -165,18 +198,30 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
           fullWidth
           onClick={addNewEmptySourceCode}
         >
-          <PlusIcon width={ICON_SIZE.X_SMALL} height={ICON_SIZE.X_SMALL} aria-label='소스코드 추가' />
+          <PlusIcon
+            width={ICON_SIZE.X_SMALL}
+            height={ICON_SIZE.X_SMALL}
+            aria-label='소스코드 추가'
+          />
         </Button>
 
         <TagInput {...tagProps} />
 
-        <Radio options={VISIBILITY_OPTIONS} currentValue={visibility} handleCurrentValue={setVisibility} />
+        <Radio
+          options={VISIBILITY_OPTIONS}
+          currentValue={visibility}
+          handleCurrentValue={setVisibility}
+        />
 
         {isPending ? (
           <LoadingBall />
         ) : (
           <S.ButtonGroup>
-            <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
+            <S.CancelButton
+              size='medium'
+              variant='outlined'
+              onClick={handleCancelButton}
+            >
               취소
             </S.CancelButton>
             <Button
@@ -190,13 +235,21 @@ const TemplateEditPage = ({ template, toggleEditButton }: Props) => {
           </S.ButtonGroup>
         )}
 
-        {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
+        {error && (
+          <Text.Medium color={theme.color.light.analogous_primary_400}>
+            Error: {error.message}
+          </Text.Medium>
+        )}
       </S.MainContainer>
 
       <S.SidebarContainer>
         <SelectList>
           {sourceCodes.map((sourceCode, index) => (
-            <SelectList.Option key={index} onClick={handleSelectOption(index)} isSelected={currentFile === index}>
+            <SelectList.Option
+              key={index}
+              onClick={handleSelectOption(index)}
+              isSelected={currentFile === index}
+            >
               {sourceCode.filename}
             </SelectList.Option>
           ))}

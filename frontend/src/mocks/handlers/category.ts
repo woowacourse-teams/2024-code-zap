@@ -1,7 +1,7 @@
 import { http } from 'msw';
 
 import { API_URL } from '@/api';
-import  categories from '@/mocks/fixtures/categoryList.json';
+import categories from '@/mocks/fixtures/categoryList.json';
 import { END_POINTS } from '@/routes';
 import { Category } from '@/types';
 import { mockResponse } from '@/utils/mockResponse';
@@ -36,10 +36,19 @@ export const categoryHandlers = [
   http.put(`${API_URL}${END_POINTS.CATEGORIES}/:id`, async (req) => {
     const { id } = req.params;
     const updatedCategory = await req.request.json();
-    const categoryIndex = mockCategoryList.findIndex((cat) => cat.id.toString() === id);
+    const categoryIndex = mockCategoryList.findIndex(
+      (cat) => cat.id.toString() === id,
+    );
 
-    if (categoryIndex !== -1 && typeof updatedCategory === 'object' && updatedCategory !== null) {
-      mockCategoryList[categoryIndex] = { id: parseInt(id as string), ...updatedCategory } as Category;
+    if (
+      categoryIndex !== -1 &&
+      typeof updatedCategory === 'object' &&
+      updatedCategory !== null
+    ) {
+      mockCategoryList[categoryIndex] = {
+        id: parseInt(id as string),
+        ...updatedCategory,
+      } as Category;
 
       return mockResponse({
         status: 200,
@@ -59,7 +68,9 @@ export const categoryHandlers = [
 
   http.delete(`${API_URL}${END_POINTS.CATEGORIES}/:id`, (req) => {
     const { id } = req.params;
-    const categoryIndex = mockCategoryList.findIndex((cat) => cat.id.toString() === id);
+    const categoryIndex = mockCategoryList.findIndex(
+      (cat) => cat.id.toString() === id,
+    );
 
     if (categoryIndex !== -1) {
       mockCategoryList.splice(categoryIndex, 1);

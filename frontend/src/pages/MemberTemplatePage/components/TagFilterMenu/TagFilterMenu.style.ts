@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { theme } from '@design/style/theme';
+import styled from '@emotion/styled';
 
 export const TagFilterMenuContainer = styled.div`
   display: flex;
@@ -28,7 +27,10 @@ export const TagButtonsContainer = styled.div<{ height: string }>`
   transition: height 0.3s ease-in-out;
 `;
 
-export const ShowMoreButton = styled.button<{ size: number; isExpanded: boolean }>`
+export const ShowMoreButton = styled.button<{
+  size: number;
+  isExpanded: boolean;
+}>`
   cursor: pointer;
 
   display: flex;

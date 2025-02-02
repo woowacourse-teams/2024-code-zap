@@ -46,9 +46,13 @@ const TemplateExplorePage = () => {
     updateQueryParams({ page });
   };
 
-  const [inputKeyword, handleInputKeywordChange] = useInput(queryParams.keyword);
+  const [inputKeyword, handleInputKeywordChange] = useInput(
+    queryParams.keyword,
+  );
 
-  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
+  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(
+    getSortingOptionByValue(queryParams.sort),
+  );
 
   const { selectedTagIds, selectedHotTopic, selectTopic } = useHotTopic();
 
@@ -68,22 +72,36 @@ const TemplateExplorePage = () => {
   };
 
   return (
-    <Flex direction='column' gap='1.5rem' align='flex-start' css={{ paddingTop: '5rem' }}>
+    <Flex
+      direction='column'
+      gap='1.5rem'
+      align='flex-start'
+      css={{ paddingTop: '5rem' }}
+    >
       <Flex direction='column' justify='flex-start' gap='1rem' width='100%'>
         {isMobile ? (
           <Heading.XSmall color='black'>
-            {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
+            {selectedHotTopic
+              ? `🔥 [ ${selectedHotTopic} ] 보는 중`
+              : '🔥 지금 인기있는 토픽'}
           </Heading.XSmall>
         ) : (
           <Heading.Medium color='black'>
-            {selectedHotTopic ? `🔥 [ ${selectedHotTopic} ] 보는 중` : '🔥 지금 인기있는 토픽'}
+            {selectedHotTopic
+              ? `🔥 [ ${selectedHotTopic} ] 보는 중`
+              : '🔥 지금 인기있는 토픽'}
           </Heading.Medium>
         )}
-        <HotTopicCarousel selectTopic={selectTopic} selectedHotTopic={selectedHotTopic} />
+        <HotTopicCarousel
+          selectTopic={selectTopic}
+          selectedHotTopic={selectedHotTopic}
+        />
       </Flex>
 
       <S.SearchKeywordPlaceholder>
-        <Heading.XSmall color='black'>{queryParams.keyword ? `'${queryParams.keyword}' 검색 결과` : ''}</Heading.XSmall>
+        <Heading.XSmall color='black'>
+          {queryParams.keyword ? `'${queryParams.keyword}' 검색 결과` : ''}
+        </Heading.XSmall>
       </S.SearchKeywordPlaceholder>
 
       <Flex width='100%' gap='1rem'>
@@ -108,7 +126,9 @@ const TemplateExplorePage = () => {
       <QueryErrorResetBoundary>
         {({ reset }) => (
           <ErrorBoundary
-            FallbackComponent={(fallbackProps) => <TemporaryError {...fallbackProps} />}
+            FallbackComponent={(fallbackProps) => (
+              <TemporaryError {...fallbackProps} />
+            )}
             onReset={reset}
             resetKeys={[inputKeyword]}
           >
@@ -185,7 +205,11 @@ const TemplateList = ({
 
       {templateList.length !== 0 && (
         <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-          <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
+          <PagingButtons
+            currentPage={page}
+            paginationSizes={paginationSizes}
+            onPageChange={handlePageChange}
+          />
         </Flex>
       )}
     </>

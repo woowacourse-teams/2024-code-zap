@@ -1,4 +1,11 @@
-export type { SourceCodes, Tag, Category, Template, TemplateListItem, TemplateVisibility } from './template';
+export type {
+  SourceCodes,
+  Tag,
+  Category,
+  Template,
+  TemplateListItem,
+  TemplateVisibility,
+} from './template';
 export type {
   SortingKey,
   SortingOption,

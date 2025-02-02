@@ -19,7 +19,9 @@ export const RadioCircle = styled.div<{ isSelected: boolean }>`
   height: 1rem;
 
   background-color: ${({ theme, isSelected }) =>
-    isSelected ? theme.color.light.primary_500 : theme.color.light.secondary_300};
+    isSelected
+      ? theme.color.light.primary_500
+      : theme.color.light.secondary_300};
   border: ${({ theme }) => `0.18rem solid ${theme.color.light.secondary_300}`};
   border-radius: 100%;
 `;

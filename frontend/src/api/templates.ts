@@ -1,7 +1,12 @@
 import { apiClient } from '@/api/config';
 import { DEFAULT_SORTING_OPTION, PAGE_SIZE } from '@/models/templates';
 import { END_POINTS } from '@/routes';
-import type { TemplateRequest, TemplateEditRequest, TemplateUploadRequest, TemplateListRequest } from '@/types';
+import type {
+  TemplateRequest,
+  TemplateEditRequest,
+  TemplateUploadRequest,
+  TemplateListRequest,
+} from '@/types';
 
 export const getTemplateList = async ({
   keyword,
@@ -34,7 +39,9 @@ export const getTemplateList = async ({
     queryParams.append('keyword', keyword);
   }
 
-  const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);
+  const response = await apiClient.get(
+    `${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`,
+  );
 
   return await response.json();
 };
@@ -50,7 +57,9 @@ export const getLikedTemplateList = async ({
     size: size.toString(),
   });
 
-  const response = await apiClient.get(`${END_POINTS.LIKED_TEMPLATES}?${queryParams.toString()}`);
+  const response = await apiClient.get(
+    `${END_POINTS.LIKED_TEMPLATES}?${queryParams.toString()}`,
+  );
 
   return await response.json();
 };
@@ -76,7 +85,9 @@ export const getTemplateExplore = async ({
     queryParams.append('tagIds', tagIds.toString());
   }
 
-  const response = await apiClient.get(`${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`);
+  const response = await apiClient.get(
+    `${END_POINTS.TEMPLATES_EXPLORE}?${queryParams.toString()}`,
+  );
 
   return await response.json();
 };
@@ -91,7 +102,10 @@ export const postTemplate = async (newTemplate: TemplateUploadRequest) =>
   await apiClient.post(`${END_POINTS.TEMPLATES_EXPLORE}`, newTemplate);
 
 export const editTemplate = async (template: TemplateEditRequest) =>
-  await apiClient.post(`${END_POINTS.TEMPLATES_EXPLORE}/${template.id}`, template);
+  await apiClient.post(
+    `${END_POINTS.TEMPLATES_EXPLORE}/${template.id}`,
+    template,
+  );
 
 export const deleteTemplate = async (idList: number[]) =>
   await apiClient.delete(`${END_POINTS.TEMPLATES_EXPLORE}/${idList.join(',')}`);

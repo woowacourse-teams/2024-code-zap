@@ -26,5 +26,8 @@ export const getBrowser = () => {
     return 'Internet Explorer';
   }
 
-  return browsers.find((browser) => userAgent.includes(browser.toLowerCase())) || 'Other';
+  return (
+    browsers.find((browser) => userAgent.includes(browser.toLowerCase())) ||
+    'Other'
+  );
 };

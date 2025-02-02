@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { Link, useParams } from 'react-router-dom';
 
 import { ClockIcon, PrivateIcon, ShareIcon } from '@/assets/images';
@@ -21,10 +22,12 @@ import { TemplateEditPage } from '@/pages';
 import { useLike, useTemplate } from '@/pages/TemplatePage/hooks';
 import { END_POINTS } from '@/routes';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { trackClickTemplateShare, trackLikeButton } from '@/service/amplitude/track';
+import {
+  trackClickTemplateShare,
+  trackLikeButton,
+} from '@/service/amplitude/track';
 import { VISIBILITY_PRIVATE } from '@/service/constants';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@design/style/theme';
 import { formatRelativeTime } from '@/utils';
 
 import * as S from './TemplatePage.style';
@@ -32,7 +35,10 @@ import * as S from './TemplatePage.style';
 const TemplatePage = () => {
   const { id } = useParams<{ id: string }>();
 
-  useTrackPageViewed({ eventName: '[Viewed] 템플릿 조회 페이지', eventProps: { templateId: id } });
+  useTrackPageViewed({
+    eventName: '[Viewed] 템플릿 조회 페이지',
+    eventProps: { templateId: id },
+  });
 
   const { infoAlert } = useToast();
 
@@ -90,7 +96,10 @@ const TemplatePage = () => {
   return (
     <>
       {isEdit ? (
-        <TemplateEditPage template={template} toggleEditButton={toggleEditButton} />
+        <TemplateEditPage
+          template={template}
+          toggleEditButton={toggleEditButton}
+        />
       ) : (
         <Flex justify='space-between' align='center' width='100%'>
           <S.MainContainer>
@@ -107,21 +116,44 @@ const TemplatePage = () => {
             >
               <Flex direction='column' gap='0.75rem' width='100%'>
                 <Flex justify='space-between' align='center'>
-                  <Text.Medium color={theme.color.dark.secondary_500}>{template.category?.name}</Text.Medium>
+                  <Text.Medium color={theme.color.dark.secondary_500}>
+                    {template.category?.name}
+                  </Text.Medium>
                   <Flex gap='0.5rem' justify='flex-end' align='flex-end'>
                     {template.member.name === name && (
                       <>
-                        <S.EditButton size='small' variant='text' onClick={handleEditButtonClick}>
-                          <Text.Medium color={theme.color.light.secondary_700}>편집</Text.Medium>
+                        <S.EditButton
+                          size='small'
+                          variant='text'
+                          onClick={handleEditButtonClick}
+                        >
+                          <Text.Medium color={theme.color.light.secondary_700}>
+                            편집
+                          </Text.Medium>
                         </S.EditButton>
-                        <S.DeleteButton size='small' variant='text' onClick={toggleModal}>
-                          <Text.Medium color={theme.color.light.secondary_700}>삭제</Text.Medium>
+                        <S.DeleteButton
+                          size='small'
+                          variant='text'
+                          onClick={toggleModal}
+                        >
+                          <Text.Medium color={theme.color.light.secondary_700}>
+                            삭제
+                          </Text.Medium>
                         </S.DeleteButton>
                       </>
                     )}
-                    <S.ShareButton size='small' variant='text' onClick={handleShareButtonClick}>
-                      <Text.Medium color={theme.color.light.secondary_700}>공유</Text.Medium>
-                      <ShareIcon width={ICON_SIZE.SMALL} color={theme.color.light.secondary_700} />
+                    <S.ShareButton
+                      size='small'
+                      variant='text'
+                      onClick={handleShareButtonClick}
+                    >
+                      <Text.Medium color={theme.color.light.secondary_700}>
+                        공유
+                      </Text.Medium>
+                      <ShareIcon
+                        width={ICON_SIZE.SMALL}
+                        color={theme.color.light.secondary_700}
+                      />
                     </S.ShareButton>
                   </Flex>
                 </Flex>
@@ -133,11 +165,21 @@ const TemplatePage = () => {
                         <PrivateIcon width={ICON_SIZE.X_SMALL} />
                       </S.PrivateWrapper>
                     )}
-                    <Heading.Large color={theme.mode === 'dark' ? theme.color.dark.white : theme.color.light.black}>
+                    <Heading.Large
+                      color={
+                        theme.mode === 'dark'
+                          ? theme.color.dark.white
+                          : theme.color.light.black
+                      }
+                    >
                       {template.title}
                     </Heading.Large>
                   </Flex>
-                  <LikeButton likesCount={likesCount} isLiked={isLiked} onLikeButtonClick={handleLikeButtonClick} />
+                  <LikeButton
+                    likesCount={likesCount}
+                    isLiked={isLiked}
+                    onLikeButtonClick={handleLikeButtonClick}
+                  />
                 </Flex>
 
                 <Flex gap='0.5rem' align='center' justify='space-between'>
@@ -146,12 +188,19 @@ const TemplatePage = () => {
                   </Link>
 
                   <Flex align='center' gap='0.125rem'>
-                    <ClockIcon width={ICON_SIZE.SMALL} color={theme.color.light.secondary_600} />
+                    <ClockIcon
+                      width={ICON_SIZE.SMALL}
+                      color={theme.color.light.secondary_600}
+                    />
                     <Text.Small color={theme.color.light.secondary_600}>
                       {formatRelativeTime(template.modifiedAt)}
                     </Text.Small>
                     <Text.Small
-                      color={theme.mode === 'dark' ? theme.color.dark.secondary_300 : theme.color.light.secondary_400}
+                      color={
+                        theme.mode === 'dark'
+                          ? theme.color.dark.secondary_300
+                          : theme.color.light.secondary_400
+                      }
                     >
                       ({formatRelativeTime(template.createdAt)})
                     </Text.Small>
@@ -160,7 +209,12 @@ const TemplatePage = () => {
 
                 <Flex gap='0.25rem' wrap='wrap'>
                   {template.tags.map((tag) => (
-                    <TagButton key={tag.id} id={tag.id} name={tag.name} disabled />
+                    <TagButton
+                      key={tag.id}
+                      id={tag.id}
+                      name={tag.name}
+                      disabled
+                    />
                   ))}
                 </Flex>
                 <div
@@ -170,18 +224,33 @@ const TemplatePage = () => {
                     margin: '0.5rem 0rem',
                   }}
                 ></div>
-                <Text.Medium color={theme.color.dark.secondary_600}>{template.description}</Text.Medium>
+                <Text.Medium color={theme.color.dark.secondary_600}>
+                  {template.description}
+                </Text.Medium>
               </Flex>
             </Flex>
 
             {isOpen && (
               <Modal isOpen={isOpen} toggleModal={toggleModal} size='xsmall'>
-                <Flex direction='column' justify='space-between' align='center' margin='1rem 0 0 0' gap='2rem'>
-                  <Flex direction='column' justify='center' align='center' gap='0.75rem'>
+                <Flex
+                  direction='column'
+                  justify='space-between'
+                  align='center'
+                  margin='1rem 0 0 0'
+                  gap='2rem'
+                >
+                  <Flex
+                    direction='column'
+                    justify='center'
+                    align='center'
+                    gap='0.75rem'
+                  >
                     <Text.Large color='black' weight='bold'>
                       정말 삭제하시겠습니까?
                     </Text.Large>
-                    <Text.Medium color='black'>삭제된 템플릿은 복구할 수 없습니다.</Text.Medium>
+                    <Text.Medium color='black'>
+                      삭제된 템플릿은 복구할 수 없습니다.
+                    </Text.Medium>
                   </Flex>
                   <Flex justify='center' align='center' gap='0.5rem'>
                     <Button variant='outlined' onClick={toggleModal}>
@@ -220,7 +289,10 @@ const TemplatePage = () => {
         </Flex>
       )}
 
-      <NonmemberAlerter isOpen={isNonmemberAlerterOpen} toggleModal={toggleNonmemberAlerter} />
+      <NonmemberAlerter
+        isOpen={isNonmemberAlerterOpen}
+        toggleModal={toggleNonmemberAlerter}
+      />
     </>
   );
 };

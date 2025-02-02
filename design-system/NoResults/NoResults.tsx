@@ -1,7 +1,7 @@
-import { PropsWithChildren } from 'react';
-
 import { ZapzapCuriousLogo } from '@/assets/images';
 import { Text } from '@/components';
+import { PropsWithChildren } from 'react';
+
 import { theme } from '@design/style/theme';
 
 import * as S from './NoResults.style';

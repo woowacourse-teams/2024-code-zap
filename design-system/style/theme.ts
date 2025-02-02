@@ -1,7 +1,7 @@
+import { Theme as EmotionTheme } from '@emotion/react';
+
 import { dark, light } from './color';
 import { fontSize, fontWeight } from './font';
-
-import { Theme as EmotionTheme } from '@emotion/react';
 
 interface Theme extends EmotionTheme {
   mode: 'light' | 'dark';

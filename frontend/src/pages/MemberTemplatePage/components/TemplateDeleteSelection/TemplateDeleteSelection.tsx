@@ -30,7 +30,9 @@ const TemplateDeleteSelection = ({
             돌아가기
           </Button>
           <Button variant='outlined' size='small' onClick={handleAllSelected}>
-            {selectedListLength === templateListLength ? '전체 해제' : '전체 선택'}
+            {selectedListLength === templateListLength
+              ? '전체 해제'
+              : '전체 선택'}
           </Button>
           <Button
             variant={selectedListLength ? 'contained' : 'text'}

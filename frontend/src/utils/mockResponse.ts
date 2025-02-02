@@ -9,7 +9,12 @@ interface Props<T> {
   headers?: HeadersInit;
 }
 
-export const mockResponse = <T>({ status, body, errorBody, headers }: Props<T>) => {
+export const mockResponse = <T>({
+  status,
+  body,
+  errorBody,
+  headers,
+}: Props<T>) => {
   if (status === 204) {
     return new HttpResponse(null, { status, headers });
   }

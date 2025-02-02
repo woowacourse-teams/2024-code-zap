@@ -14,7 +14,9 @@ const queryWrapper = ({ children }: PropsWithChildren) => (
 
 describe('useTemplateEditMutation', () => {
   it('templates울 수정할 수 있다.', async () => {
-    const { result } = renderHook(() => useTemplateEditMutation(2024), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useTemplateEditMutation(2024), {
+      wrapper: queryWrapper,
+    });
 
     const editedTemplate: TemplateEditRequest = {
       id: 2024,

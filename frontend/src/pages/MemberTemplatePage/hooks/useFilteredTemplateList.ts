@@ -12,14 +12,20 @@ interface Props {
   memberId?: number;
 }
 
-export const useFilteredTemplateList = ({ memberId: passedMemberId }: Props) => {
+export const useFilteredTemplateList = ({
+  memberId: passedMemberId,
+}: Props) => {
   const { queryParams, updateQueryParams } = useQueryParams();
 
   const selectedCategoryId = queryParams.category;
   const selectedTagIds = queryParams.tags;
   const page = queryParams.page;
-  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(getSortingOptionByValue(queryParams.sort));
-  const [inputKeyword, handleInputKeywordChange] = useInput(queryParams.keyword);
+  const { currentValue: sortingOption, ...dropdownProps } = useDropdown(
+    getSortingOptionByValue(queryParams.sort),
+  );
+  const [inputKeyword, handleInputKeywordChange] = useInput(
+    queryParams.keyword,
+  );
 
   const { memberInfo } = useAuth();
   const memberId = passedMemberId ?? memberInfo.memberId;

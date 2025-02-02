@@ -25,7 +25,10 @@ export const useTemplateUploadMutation = () => {
       const apiError = error as ApiError;
 
       // TODO: 해당 에러들을 상위에서 일괄 처리에 대한 고민, 인증 에러에 대한 처리
-      if (apiError?.statusCode === HTTP_STATUS.BAD_REQUEST || apiError?.statusCode === HTTP_STATUS.NOT_FOUND) {
+      if (
+        apiError?.statusCode === HTTP_STATUS.BAD_REQUEST ||
+        apiError?.statusCode === HTTP_STATUS.NOT_FOUND
+      ) {
         failAlert('템플릿 생성에 실패했습니다. 다시 한 번 시도해주세요');
 
         return;

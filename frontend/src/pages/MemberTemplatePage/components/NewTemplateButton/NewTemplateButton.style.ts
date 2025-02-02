@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { theme } from '@design/style/theme';
+import styled from '@emotion/styled';
 
 export const NewTemplateButtonWrapper = styled.button`
   cursor: pointer;

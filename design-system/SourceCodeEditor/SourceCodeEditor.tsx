@@ -1,10 +1,10 @@
+import { TrashcanIcon } from '@/assets/images';
+import { SourceCode } from '@/components';
+import { getLanguageByFilename } from '@/utils';
 import { type ViewUpdate } from '@uiw/react-codemirror';
 import { useRef } from 'react';
 
-import { TrashcanIcon } from '@/assets/images';
-import { SourceCode } from '@/components';
 import { ICON_SIZE } from '@design/style/styleConstants';
-import { getLanguageByFilename } from '@/utils';
 
 import * as S from './SourceCodeEditor.style';
 

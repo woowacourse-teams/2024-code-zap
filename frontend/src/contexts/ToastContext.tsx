@@ -8,17 +8,22 @@ type ToastContextType = {
   infoAlert: (message: string) => void;
 };
 
-export const ToastContext = createContext<ToastContextType | undefined>(undefined);
+export const ToastContext = createContext<ToastContextType | undefined>(
+  undefined,
+);
 
 export const ToastProvider = ({ children }: PropsWithChildren) => {
-  const [toastList, setToastList] = useState<{ id: number; type: 'success' | 'fail' | 'info'; message: string }[]>([]);
+  const [toastList, setToastList] = useState<
+    { id: number; type: 'success' | 'fail' | 'info'; message: string }[]
+  >([]);
   const nextId = useRef(0);
 
   const removeToast = (id: number) => {
     setToastList((prev) => prev.filter((toast) => toast.id !== id));
   };
 
-  const findDuplicateToast = (message: string) => toastList.find((toast) => toast.message === message);
+  const findDuplicateToast = (message: string) =>
+    toastList.find((toast) => toast.message === message);
 
   const failAlert = (message: string) => {
     const duplicateToast = findDuplicateToast(message);

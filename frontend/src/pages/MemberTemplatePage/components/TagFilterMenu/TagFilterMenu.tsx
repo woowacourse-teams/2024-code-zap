@@ -30,7 +30,9 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
       if (containerRef.current) {
         const containerHeight = containerRef.current.scrollHeight;
 
-        setHeight(isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`);
+        setHeight(
+          isTagBoxOpen ? `${containerHeight}px` : `${LINE_HEIGHT_REM}rem`,
+        );
 
         if (containerHeight > remToPx(LINE_HEIGHT_REM)) {
           setShowMoreButton(true);
@@ -48,7 +50,10 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
       const deselectedTag = tagList.find((tag) => tag.id === tagId);
 
       if (deselectedTag) {
-        setDeselectedTags((prev) => [deselectedTag, ...prev.filter((tag) => tag.id !== tagId)]);
+        setDeselectedTags((prev) => [
+          deselectedTag,
+          ...prev.filter((tag) => tag.id !== tagId),
+        ]);
       }
 
       onSelectTags(selectedTagIds.filter((id) => id !== tagId));
@@ -58,11 +63,15 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
     }
   };
 
-  const selectedTags = selectedTagIds.map((id) => tagList.find((tag) => tag.id === id)!).filter(Boolean);
+  const selectedTags = selectedTagIds
+    .map((id) => tagList.find((tag) => tag.id === id)!)
+    .filter(Boolean);
 
   const unselectedTags = deselectedTags.concat(
     tagList.filter(
-      (tag) => !selectedTagIds.includes(tag.id) && !deselectedTags.some((deselectedTag) => deselectedTag.id === tag.id),
+      (tag) =>
+        !selectedTagIds.includes(tag.id) &&
+        !deselectedTags.some((deselectedTag) => deselectedTag.id === tag.id),
     ),
   );
 
@@ -90,8 +99,16 @@ const TagFilterMenu = ({ tagList, selectedTagIds, onSelectTags }: Props) => {
         ))}
       </S.TagButtonsContainer>
       {showMoreButton && (
-        <S.ShowMoreButton size={LINE_HEIGHT_REM} onClick={toggleTagBox} isExpanded={isTagBoxOpen}>
-          <ChevronIcon width={ICON_SIZE.SMALL} height={ICON_SIZE.SMALL} aria-label='태그 더보기' />
+        <S.ShowMoreButton
+          size={LINE_HEIGHT_REM}
+          onClick={toggleTagBox}
+          isExpanded={isTagBoxOpen}
+        >
+          <ChevronIcon
+            width={ICON_SIZE.SMALL}
+            height={ICON_SIZE.SMALL}
+            aria-label='태그 더보기'
+          />
         </S.ShowMoreButton>
       )}
     </S.TagFilterMenuContainer>

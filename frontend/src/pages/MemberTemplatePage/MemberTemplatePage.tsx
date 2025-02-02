@@ -15,7 +15,10 @@ import {
   TemplateListSectionLoading,
   TopBanner,
 } from '@/pages/MemberTemplatePage/components';
-import { useFilteredTemplateList, useSelectAndDeleteTemplateList } from '@/pages/MemberTemplatePage/hooks';
+import {
+  useFilteredTemplateList,
+  useSelectAndDeleteTemplateList,
+} from '@/pages/MemberTemplatePage/hooks';
 import { useMemberNameQuery } from '@/queries/members';
 import { useTrackPageViewed } from '@/service/amplitude';
 
@@ -25,7 +28,9 @@ const MemberTemplatePage = () => {
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
 
-  useTrackPageViewed({ eventName: `[Viewed] 맴버 (ID:${memberId}) 템플릿 페이지` });
+  useTrackPageViewed({
+    eventName: `[Viewed] 맴버 (ID:${memberId}) 템플릿 페이지`,
+  });
 
   const {
     memberInfo: { memberId: currentMemberId },
@@ -70,7 +75,10 @@ const MemberTemplatePage = () => {
       <TopBanner name={name ?? ''} />
       <S.MainContainer>
         <Suspense fallback={<CategoryListSectionSkeleton />}>
-          <CategoryListSection memberId={memberId} onSelectCategory={handleCategoryMenuClick} />
+          <CategoryListSection
+            memberId={memberId}
+            onSelectCategory={handleCategoryMenuClick}
+          />
         </Suspense>
 
         <Flex direction='column' width='100%' gap='1rem'>
@@ -88,7 +96,9 @@ const MemberTemplatePage = () => {
           )}
 
           <S.SearchKeywordPlaceholder>
-            <Heading.XSmall color='black'>{searchedKeyword ? `'${searchedKeyword}' 검색 결과` : ''}</Heading.XSmall>
+            <Heading.XSmall color='black'>
+              {searchedKeyword ? `'${searchedKeyword}' 검색 결과` : ''}
+            </Heading.XSmall>
           </S.SearchKeywordPlaceholder>
 
           <Flex width='100%' gap='1rem'>
@@ -124,7 +134,9 @@ const MemberTemplatePage = () => {
             {!isTemplateListLoading && (
               <TemplateListSection
                 templateList={templateList}
-                isSearching={inputKeyword !== '' || inputKeyword !== searchedKeyword}
+                isSearching={
+                  inputKeyword !== '' || inputKeyword !== searchedKeyword
+                }
                 isEditMode={isEditMode}
                 isMine={isMine}
                 selectedList={selectedList}
@@ -135,7 +147,11 @@ const MemberTemplatePage = () => {
 
           {templateList.length !== 0 && (
             <Flex justify='center' gap='0.5rem' margin='1rem 0'>
-              <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
+              <PagingButtons
+                currentPage={page}
+                paginationSizes={paginationSizes}
+                onPageChange={handlePageChange}
+              />
             </Flex>
           )}
         </Flex>
