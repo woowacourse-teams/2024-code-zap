@@ -27,7 +27,6 @@ jobs:
 
       - name: 의존성 설치
         run: pnpm install
-        working-directory: ${{ env.frontend-directory }}
 
       - name: 타입 체크 실행
         run: pnpm run tsc
