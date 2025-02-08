@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
 import { useDropdown } from '@/hooks';
 
 import Dropdown from './Dropdown';
@@ -20,8 +19,13 @@ export const Default: Story = {
 
   render: () => {
     const options = ['보기1', '보기2', '보기3'];
-    const { isOpen, toggleDropdown, currentValue, handleCurrentValue, dropdownRef } =
-      useDropdown<string>('선택해주세요');
+    const {
+      isOpen,
+      toggleDropdown,
+      currentValue,
+      handleCurrentValue,
+      dropdownRef,
+    } = useDropdown<string>('선택해주세요');
 
     const props = {
       isOpen,

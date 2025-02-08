@@ -1,9 +1,15 @@
-import { type LanguageName, loadLanguage } from '@uiw/codemirror-extensions-langs';
-import { quietlight } from '@uiw/codemirror-theme-quietlight';
-import ReactCodeMirror, { EditorView, ReactCodeMirrorRef, type ViewUpdate } from '@uiw/react-codemirror';
-import { useRef } from 'react';
-
 import { useWindowWidth } from '@/hooks';
+import {
+  type LanguageName,
+  loadLanguage,
+} from '@uiw/codemirror-extensions-langs';
+import { quietlight } from '@uiw/codemirror-theme-quietlight';
+import ReactCodeMirror, {
+  EditorView,
+  ReactCodeMirrorRef,
+  type ViewUpdate,
+} from '@uiw/react-codemirror';
+import { useRef } from 'react';
 
 import * as S from './SourceCode.style';
 
@@ -16,7 +22,12 @@ interface Props {
   handleContentChange?: (value: string, viewUpdate: ViewUpdate) => void;
 }
 
-const SourceCode = ({ mode = 'detailView', language, content, handleContentChange }: Props) => {
+const SourceCode = ({
+  mode = 'detailView',
+  language,
+  content,
+  handleContentChange,
+}: Props) => {
   const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
   const windowWidth = useWindowWidth();
 

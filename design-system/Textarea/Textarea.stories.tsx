@@ -59,7 +59,11 @@ export const Filled: Story = {
 
     return (
       <div style={{ width: '500px' }}>
-        <Textarea variant={args.variant} size={args.size} isValid={args.isValid}>
+        <Textarea
+          variant={args.variant}
+          size={args.size}
+          isValid={args.isValid}
+        >
           <Textarea.TextField
             placeholder='Enter Text'
             onChange={(e) => setValue(e.target.value)}
@@ -84,7 +88,11 @@ export const Outlined: Story = {
 
     return (
       <div style={{ width: '500px' }}>
-        <Textarea variant={args.variant} size={args.size} isValid={args.isValid}>
+        <Textarea
+          variant={args.variant}
+          size={args.size}
+          isValid={args.isValid}
+        >
           <Textarea.TextField
             placeholder='Enter Text'
             onChange={(e) => setValue(e.target.value)}
@@ -109,7 +117,11 @@ export const Text: Story = {
 
     return (
       <div style={{ width: '500px' }}>
-        <Textarea variant={args.variant} size={args.size} isValid={args.isValid}>
+        <Textarea
+          variant={args.variant}
+          size={args.size}
+          isValid={args.isValid}
+        >
           <Textarea.TextField
             placeholder='Enter Text'
             onChange={(e) => setValue(e.target.value)}
@@ -134,7 +146,12 @@ export const WithLabel: Story = {
 
     return (
       <div style={{ width: '500px' }}>
-        <Textarea id='helper' variant={args.variant} size={args.size} isValid={args.isValid}>
+        <Textarea
+          id='helper'
+          variant={args.variant}
+          size={args.size}
+          isValid={args.isValid}
+        >
           <Textarea.Label htmlFor='helper'>라벨</Textarea.Label>
           <Textarea.TextField
             placeholder='Enter Text'
@@ -162,7 +179,12 @@ export const WithHelperText: Story = {
 
     return (
       <div style={{ width: '500px' }}>
-        <Textarea id='helper' variant={args.variant} size={args.size} isValid={args.isValid}>
+        <Textarea
+          id='helper'
+          variant={args.variant}
+          size={args.size}
+          isValid={args.isValid}
+        >
           <Textarea.Label htmlFor='helper'>라벨</Textarea.Label>
           <Textarea.TextField
             placeholder='Enter Text'

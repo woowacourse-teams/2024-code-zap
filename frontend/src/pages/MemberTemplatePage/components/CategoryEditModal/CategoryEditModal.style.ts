@@ -1,7 +1,6 @@
+import { theme } from '@design/style/theme';
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
-
-import { theme } from '@design/style/theme';
 
 export const EditCategoryItemList = styled.div`
   display: flex;
@@ -10,7 +9,11 @@ export const EditCategoryItemList = styled.div`
   width: 100%;
 `;
 
-export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean; disabled?: boolean }>`
+export const EditCategoryItem = styled.div<{
+  hasError?: boolean;
+  isButton?: boolean;
+  disabled?: boolean;
+}>`
   display: flex;
   gap: 1rem;
   align-items: center;
@@ -35,7 +38,8 @@ export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: bool
     `}
 
   &:focus-within {
-    outline: ${({ hasError }) => !hasError && `1px solid ${theme.color.light.secondary_900}`};
+    outline: ${({ hasError }) =>
+      !hasError && `1px solid ${theme.color.light.secondary_900}`};
   }
 
   ${({ disabled }) =>

@@ -1,6 +1,7 @@
 import { XSignIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { TAG_COLORS, INPUT_TAG_COLOR } from '@/style/tagColors';
+
 import { theme } from '@design/style/theme';
 
 import * as S from './TagButton.style';

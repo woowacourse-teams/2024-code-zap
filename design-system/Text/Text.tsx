@@ -116,7 +116,7 @@ const Text = Object.assign(
     Medium,
     Small,
     XSmall,
-  }
+  },
 );
 
 export default Text;

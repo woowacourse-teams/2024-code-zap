@@ -1,12 +1,11 @@
-import { ErrorBoundary } from '@sentry/react';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { Suspense, useEffect, useRef } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
-
 import { ApiError, HTTP_STATUS } from '@/api/Error';
 import { Footer, Header, LoadingBall, ScrollTopButton } from '@/components';
 import { useHeaderHeight } from '@/hooks';
 import { ForbiddenPage, NotFoundPage } from '@/pages';
+import { ErrorBoundary } from '@sentry/react';
+import { QueryErrorResetBoundary } from '@tanstack/react-query';
+import { Suspense, useEffect, useRef } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import * as S from './Layout.style';
 
@@ -54,7 +53,13 @@ const GlobalSuspense = ({ children }: { children: JSX.Element }) => (
   </Suspense>
 );
 
-const GlobalErrorBoundary = ({ children, reset }: { children: JSX.Element; reset: () => void }) => {
+const GlobalErrorBoundary = ({
+  children,
+  reset,
+}: {
+  children: JSX.Element;
+  reset: () => void;
+}) => {
   const location = useLocation();
 
   return (
@@ -64,7 +69,12 @@ const GlobalErrorBoundary = ({ children, reset }: { children: JSX.Element; reset
 
         if (error instanceof ApiError) {
           if (error.statusCode === HTTP_STATUS.FORBIDDEN) {
-            return <ForbiddenPage resetError={fallbackProps.resetError} error={error} />;
+            return (
+              <ForbiddenPage
+                resetError={fallbackProps.resetError}
+                error={error}
+              />
+            );
           }
         }
 

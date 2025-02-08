@@ -18,13 +18,13 @@ const PagingButtons = ({
   const getPageNumbers = () => {
     const startPage = Math.max(
       1,
-      Math.min(currentPage - 2, currentPage + paginationSizes - 5)
+      Math.min(currentPage - 2, currentPage + paginationSizes - 5),
     );
     const endPage = Math.min(currentPage + paginationSizes - 1, startPage + 4);
 
     return Array.from(
       { length: endPage - startPage + 1 },
-      (_, i) => startPage + i
+      (_, i) => startPage + i,
     );
   };
 

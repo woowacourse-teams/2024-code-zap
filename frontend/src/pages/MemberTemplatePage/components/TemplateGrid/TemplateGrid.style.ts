@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { theme } from '@design/style/theme';
+import styled from '@emotion/styled';
 
 export const TemplateContainer = styled.div<{ cols: number }>`
   display: grid;
@@ -26,15 +25,18 @@ export const TemplateCardWrapper = styled.div<{ isSelected: boolean }>`
     bottom: 0;
     left: 0;
 
-    background-color: ${({ isSelected }) => (isSelected ? 'none' : 'rgba(255, 255, 255, 0.6)')};
+    background-color: ${({ isSelected }) =>
+      isSelected ? 'none' : 'rgba(255, 255, 255, 0.6)'};
     border-radius: 8px;
-    box-shadow: ${({ isSelected }) => (isSelected ? `inset 0 0 0 3px ${theme.color.light.primary_500}` : 'none')};
+    box-shadow: ${({ isSelected }) =>
+      isSelected ? `inset 0 0 0 3px ${theme.color.light.primary_500}` : 'none'};
 
     transition: box-shadow 0.2s ease-in-out;
   }
 
   &:hover::before {
-    background-color: ${({ isSelected }) => (isSelected ? 'none' : 'rgba(255, 255, 255, 0.1)')};
+    background-color: ${({ isSelected }) =>
+      isSelected ? 'none' : 'rgba(255, 255, 255, 0.1)'};
   }
 `;
 

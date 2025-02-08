@@ -1,6 +1,6 @@
+import { Text } from '@/components';
 import { PropsWithChildren } from 'react';
 
-import { Text } from '@/components';
 import { theme } from '@design/style/theme';
 
 import * as S from './SelectList.style';

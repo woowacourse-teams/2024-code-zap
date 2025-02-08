@@ -1,6 +1,10 @@
-import { HTMLAttributes, InputHTMLAttributes, LabelHTMLAttributes, PropsWithChildren } from 'react';
-
 import { getChildOfType, getChildrenWithoutTypes } from '@/utils';
+import {
+  HTMLAttributes,
+  InputHTMLAttributes,
+  LabelHTMLAttributes,
+  PropsWithChildren,
+} from 'react';
 
 import * as S from './Input.style';
 
@@ -25,9 +29,15 @@ export interface HelperTextProps extends HTMLAttributes<HTMLSpanElement> {}
 
 const TextField = ({ ...rests }: TextFieldProps) => <S.TextField {...rests} />;
 
-const Label = ({ children, ...rests }: PropsWithChildren<LabelProps>) => <S.Label {...rests}>{children}</S.Label>;
+const Label = ({ children, ...rests }: PropsWithChildren<LabelProps>) => (
+  <S.Label {...rests}>{children}</S.Label>
+);
 
-const Adornment = ({ children, as, ...rests }: PropsWithChildren<AdornmentProps>) => {
+const Adornment = ({
+  children,
+  as,
+  ...rests
+}: PropsWithChildren<AdornmentProps>) => {
   const buttonProps = as === 'button' ? { type: 'button' } : {};
 
   return (
@@ -36,7 +46,10 @@ const Adornment = ({ children, as, ...rests }: PropsWithChildren<AdornmentProps>
     </S.Adornment>
   );
 };
-const HelperText = ({ children, ...rests }: PropsWithChildren<HelperTextProps>) => (
+const HelperText = ({
+  children,
+  ...rests
+}: PropsWithChildren<HelperTextProps>) => (
   <S.HelperText {...rests}>{children}</S.HelperText>
 );
 
@@ -50,7 +63,10 @@ const Base = ({
   children,
   ...rests
 }: PropsWithChildren<BaseProps>) => {
-  const inputWithAdornment = getChildrenWithoutTypes(children, [HelperTextType, LabelType]);
+  const inputWithAdornment = getChildrenWithoutTypes(children, [
+    HelperTextType,
+    LabelType,
+  ]);
   const helperText = getChildOfType(children, HelperTextType);
   const label = getChildOfType(children, LabelType);
 
@@ -77,7 +93,13 @@ const Base = ({
   return (
     <S.Container>
       {label}
-      <S.Base variant={variant} size={size} isValid={isValid} {...rests} onClick={handleFocusInput}>
+      <S.Base
+        variant={variant}
+        size={size}
+        isValid={isValid}
+        {...rests}
+        onClick={handleFocusInput}
+      >
         {inputWithAdornment}
       </S.Base>
       {helperText}

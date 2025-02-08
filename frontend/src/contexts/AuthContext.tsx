@@ -11,7 +11,9 @@ interface AuthContextProps {
   handleMemberInfo: (newMemberInfo: MemberInfo) => void;
 }
 
-export const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+export const AuthContext = createContext<AuthContextProps | undefined>(
+  undefined,
+);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLogin, setIsLogin] = useState(false);
@@ -69,7 +71,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLogin, isChecking, memberInfo, handleLoginState, handleMemberInfo }}>
+    <AuthContext.Provider
+      value={{
+        isLogin,
+        isChecking,
+        memberInfo,
+        handleLoginState,
+        handleMemberInfo,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

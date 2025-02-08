@@ -5,7 +5,9 @@ import { END_POINTS } from '@/routes';
 import { mockResponse } from '@/utils/mockResponse';
 
 export const authenticationHandler = [
-  http.post(`${API_URL}${END_POINTS.SIGNUP}`, async () => HttpResponse.json({ status: 201 })),
+  http.post(`${API_URL}${END_POINTS.SIGNUP}`, async () =>
+    HttpResponse.json({ status: 201 }),
+  ),
 
   http.post(`${API_URL}${END_POINTS.LOGIN}`, () =>
     mockResponse({

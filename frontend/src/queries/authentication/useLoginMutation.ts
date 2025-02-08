@@ -17,7 +17,7 @@ export const useLoginMutation = () => {
     onSuccess: async (res) => {
       const authorization = res.headers.get('authorization');
 
-      const response = await res.json() as MemberInfo;
+      const response = (await res.json()) as MemberInfo;
       const { memberId, name } = response;
 
       if (memberId && name) {

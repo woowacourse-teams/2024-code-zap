@@ -1,6 +1,5 @@
-import styled from '@emotion/styled';
-
 import { theme } from '@design/style/theme';
+import styled from '@emotion/styled';
 
 export const CategoryContainer = styled.div<{ isMenuOpen: boolean }>`
   display: flex;
@@ -79,7 +78,11 @@ export const IconButtonWrapper = styled.button<{ isMenuOpen: boolean }>`
   }
 `;
 
-export const HighlightBox = styled.div<{ selectedIndex: number; categoryCount: number; isMenuOpen: boolean }>`
+export const HighlightBox = styled.div<{
+  selectedIndex: number;
+  categoryCount: number;
+  isMenuOpen: boolean;
+}>`
   position: absolute;
   top: ${({ selectedIndex }) => `calc(${selectedIndex} * 3.75rem)`};
   left: 0;

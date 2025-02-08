@@ -1,18 +1,27 @@
 import { apiClient } from '@/api/config';
 import { END_POINTS } from '@/routes';
-import type { CategoryUploadRequest, CategoryEditRequest, CategoryDeleteRequest } from '@/types';
+import type {
+  CategoryUploadRequest,
+  CategoryEditRequest,
+  CategoryDeleteRequest,
+} from '@/types';
 
 export const getCategoryList = async (memberId: number) => {
   const queryParams = new URLSearchParams({
     memberId: memberId.toString(),
   });
-  const response = await apiClient.get(`${END_POINTS.CATEGORIES}?${queryParams.toString()}`);
+  const response = await apiClient.get(
+    `${END_POINTS.CATEGORIES}?${queryParams.toString()}`,
+  );
 
   return await response.json();
 };
 
 export const postCategory = async (newCategory: CategoryUploadRequest) => {
-  const response = await apiClient.post(`${END_POINTS.CATEGORIES}`, newCategory);
+  const response = await apiClient.post(
+    `${END_POINTS.CATEGORIES}`,
+    newCategory,
+  );
 
   return await response.json();
 };

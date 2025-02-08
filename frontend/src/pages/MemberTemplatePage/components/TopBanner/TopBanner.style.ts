@@ -16,7 +16,9 @@ export const TopBannerTextWrapper = styled.div`
   gap: 0.5rem;
   align-items: center;
 
-  margin-left: calc(12.5rem + clamp(1rem, calc(0.0888 * 100vw - 3.2618rem), 4.375rem));
+  margin-left: calc(
+    12.5rem + clamp(1rem, calc(0.0888 * 100vw - 3.2618rem), 4.375rem)
+  );
 
   white-space: normal;
 

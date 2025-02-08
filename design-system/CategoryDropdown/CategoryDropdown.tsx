@@ -34,8 +34,14 @@ const CategoryDropdown = ({
     handleChange: handleCategoryInputChange,
   } = useInputWithValidate('', validateCategoryName);
 
-  const handleNewCategory = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!(e.target instanceof HTMLInputElement) || e.key !== 'Enter' || e.nativeEvent.isComposing === true) {
+  const handleNewCategory = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (
+      !(e.target instanceof HTMLInputElement) ||
+      e.key !== 'Enter' ||
+      e.nativeEvent.isComposing === true
+    ) {
       return;
     }
 
@@ -56,7 +62,10 @@ const CategoryDropdown = ({
 
   return (
     <S.CategoryDropdownContainer>
-      <CategoryGuide isOpen={isOpen} categoryErrorMessage={categoryInputErrorMessage} />
+      <CategoryGuide
+        isOpen={isOpen}
+        categoryErrorMessage={categoryInputErrorMessage}
+      />
       <Dropdown
         options={options}
         isOpen={isOpen}

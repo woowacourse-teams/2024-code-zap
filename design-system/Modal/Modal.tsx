@@ -1,9 +1,9 @@
-import { HTMLAttributes, PropsWithChildren, ReactNode } from 'react';
-import { createPortal } from 'react-dom';
-
 import { Heading } from '@/components';
 import { usePressESC } from '@/hooks/usePressESC';
 import { useScrollDisable } from '@/hooks/useScrollDisable';
+import { HTMLAttributes, PropsWithChildren, ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+
 import { theme } from '@design/style/theme';
 
 import * as S from './Modal.style';
@@ -37,7 +37,7 @@ const Base = ({
         {children}
       </S.ModalContainer>
     </S.Base>,
-    document.body
+    document.body,
   );
 };
 

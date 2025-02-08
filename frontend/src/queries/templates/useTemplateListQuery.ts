@@ -28,8 +28,26 @@ export const useTemplateListQuery = ({
   const memberId = passedMemberId ?? memberInfo.memberId;
 
   return useQuery<TemplateListResponse, Error>({
-    queryKey: [QUERY_KEY.TEMPLATE_LIST, keyword, categoryId, tagIds, sort, page, size, memberId],
-    queryFn: () => getTemplateList({ keyword, categoryId, tagIds, sort, page, size, memberId }),
+    queryKey: [
+      QUERY_KEY.TEMPLATE_LIST,
+      keyword,
+      categoryId,
+      tagIds,
+      sort,
+      page,
+      size,
+      memberId,
+    ],
+    queryFn: () =>
+      getTemplateList({
+        keyword,
+        categoryId,
+        tagIds,
+        sort,
+        page,
+        size,
+        memberId,
+      }),
     throwOnError: true,
     placeholderData: keepPreviousData,
   });
