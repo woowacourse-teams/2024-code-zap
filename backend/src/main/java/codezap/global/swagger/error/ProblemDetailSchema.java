@@ -1,5 +1,9 @@
 package codezap.global.swagger.error;
 
+import java.time.LocalDateTime;
+
+import codezap.global.exception.ErrorCode;
+
 /**
  * ApiErrorResponse 어노테이션과 상세 설명을 바탕으로 ProblemDetailSchema 객체를 생성합니다.
  * 이 메서드는 RFC 7807 "Problem Details for HTTP APIs" 규격을 준수하는 오류 응답 스키마를 생성합니다.
@@ -16,15 +20,19 @@ public record ProblemDetailSchema(
         String title,
         int status,
         String detail,
-        String instance
+        String instance,
+        int errorCode,
+        String timestamp
 ) {
-    public static ProblemDetailSchema of(ApiErrorResponse apiErrorResponse, String detail) {
+    public static ProblemDetailSchema of(ApiErrorResponse apiErrorResponse, String detail, ErrorCode errorCode) {
         return new ProblemDetailSchema(
                 apiErrorResponse.type(),
-                apiErrorResponse.status().name(),
+                errorCode.getHttpStatus().name(),
                 apiErrorResponse.status().value(),
                 detail,
-                apiErrorResponse.instance()
+                apiErrorResponse.instance(),
+                errorCode.getCode(),
+                LocalDateTime.now().toString()
         );
     }
 }

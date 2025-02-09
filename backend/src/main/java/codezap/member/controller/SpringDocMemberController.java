@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import codezap.global.exception.ErrorCode;
 import codezap.global.swagger.error.ApiErrorResponse;
 import codezap.global.swagger.error.ErrorCase;
 import codezap.member.dto.request.SignupRequest;
@@ -26,21 +27,22 @@ public interface SpringDocMemberController {
             @ErrorCase(description = "비밀번호 글자수 오류", exampleMessage = "비밀번호는 8~16자 사이로 입력해주세요."),
     })
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/signup", errorCases = {
-            @ErrorCase(description = "아이디 중복", exampleMessage = "아이디가 이미 존재합니다."),
+            @ErrorCase(description = "아이디 중복", errorCode = ErrorCode.DUPLICATE_ID, exampleMessage = "아이디가 이미 존재합니다."),
     })
     ResponseEntity<Void> signup(@RequestBody SignupRequest request);
 
     @Operation(summary = "사용자명 중복 확인")
     @ApiResponse(responseCode = "200", description = "사용가능한 아이디")
     @ApiErrorResponse(status = HttpStatus.CONFLICT, instance = "/check-name", errorCases = {
-            @ErrorCase(description = "아이디 중복", exampleMessage = "아이디가 이미 존재합니다."),
+            @ErrorCase(description = "아이디 중복", errorCode = ErrorCode.DUPLICATE_ID, exampleMessage = "아이디가 이미 존재합니다."),
     })
     void checkUniquename(@RequestParam String name);
 
     @Operation(summary = "회원 정보 조회", description = "회원의 정보(아이디)를 조회합니다.")
     @ApiResponse(responseCode = "200", description = "회원 정보 조회 성공")
     @ApiErrorResponse(status = HttpStatus.NOT_FOUND, instance = "/members/1/name", errorCases = {
-            @ErrorCase(description = "조회하려는 id 값인 회원이 없는 경우", exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다.")
+            @ErrorCase(description = "요청한 ID의 멤버가 없음", errorCode = ErrorCode.RESOURCE_NOT_FOUND,
+                    exampleMessage = "식별자 1에 해당하는 멤버가 존재하지 않습니다.")
     })
     ResponseEntity<FindMemberResponse> findMemberName(Long id);
 }

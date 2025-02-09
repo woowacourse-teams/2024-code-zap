@@ -26,7 +26,6 @@ public class CategoryService {
     @Transactional
     public CreateCategoryResponse create(Member member, CreateCategoryRequest request) {
         validationService.validateDuplicatedCategory(request.name(), member);
-        validationService.validateOrdinal(member, request);
         Category category = categoryRepository.save(createCategory(member, request));
         return CreateCategoryResponse.from(category);
     }
