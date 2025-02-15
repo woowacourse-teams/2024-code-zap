@@ -1,5 +1,6 @@
 import { PersonIcon } from '@/assets/images';
 import { Text } from '@/components';
+
 import { theme } from '@design/style/theme';
 
 import * as S from './AuthorInfo.style';

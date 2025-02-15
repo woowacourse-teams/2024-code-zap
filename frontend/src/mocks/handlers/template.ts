@@ -22,31 +22,48 @@ export const templateHandlers = [
         (template) =>
           template.title.includes(keyword) ||
           template.description.includes(keyword) ||
-          template.sourceCodes.some((sourceCode) => sourceCode.content.includes(keyword)),
+          template.sourceCodes.some((sourceCode) =>
+            sourceCode.content.includes(keyword),
+          ),
       );
     }
 
     if (categoryId) {
-      filteredTemplates = filteredTemplates.filter((template) => template.category.id.toString() === categoryId);
+      filteredTemplates = filteredTemplates.filter(
+        (template) => template.category.id.toString() === categoryId,
+      );
     }
 
     if (tagIds) {
       filteredTemplates = filteredTemplates.filter((template) =>
-        tagIds.split(',').every((tagId) => template.tags.some((tag) => tag.id.toString() === tagId)),
+        tagIds
+          .split(',')
+          .every((tagId) =>
+            template.tags.some((tag) => tag.id.toString() === tagId),
+          ),
       );
     }
 
     switch (sort) {
       case 'createdAt,asc':
-        filteredTemplates.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        filteredTemplates.sort(
+          (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        );
         break;
 
       case 'createdAt,desc':
-        filteredTemplates.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filteredTemplates.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        );
         break;
 
       case 'modifiedAt,desc':
-        filteredTemplates.sort((a, b) => new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime());
+        filteredTemplates.sort(
+          (a, b) =>
+            new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime(),
+        );
         break;
 
       case 'likesCount,desc':
@@ -57,7 +74,10 @@ export const templateHandlers = [
         break;
     }
 
-    const paginationSizes = Math.min(Math.ceil(filteredTemplates.length / size - page + 1), 5);
+    const paginationSizes = Math.min(
+      Math.ceil(filteredTemplates.length / size - page + 1),
+      5,
+    );
     const startIndex = (page - 1) * size;
     const endIndex = startIndex + size;
     const paginatedTemplates = filteredTemplates.slice(startIndex, endIndex);
@@ -76,7 +96,9 @@ export const templateHandlers = [
   http.get(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, (req) => {
     const { id } = req.params;
 
-    const template = mockTemplateList.templates.find((template) => template.id.toString() === id);
+    const template = mockTemplateList.templates.find(
+      (template) => template.id.toString() === id,
+    );
 
     if (template) {
       return mockResponse({ status: 200, body: template });
@@ -92,9 +114,15 @@ export const templateHandlers = [
     });
   }),
 
-  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () => mockResponse({ status: 201, headers: { 'Location': '/templates/1' } })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}`, async () =>
+    mockResponse({ status: 201, headers: { Location: '/templates/1' } }),
+  ),
 
-  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
+  http.post(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () =>
+    mockResponse({ status: 200 }),
+  ),
 
-  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () => mockResponse({ status: 200 })),
+  http.delete(`${API_URL}${END_POINTS.TEMPLATES_EXPLORE}/:id`, async () =>
+    mockResponse({ status: 200 }),
+  ),
 ];

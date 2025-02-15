@@ -1,6 +1,10 @@
 import styled from '@emotion/styled';
 
-export const TagButtonWrapper = styled.button<{ background: string; border: string; isFocused: boolean }>`
+export const TagButtonWrapper = styled.button<{
+  background: string;
+  border: string;
+  isFocused: boolean;
+}>`
   cursor: pointer;
 
   display: flex;
@@ -16,7 +20,8 @@ export const TagButtonWrapper = styled.button<{ background: string; border: stri
   opacity: ${({ isFocused }) => (isFocused ? '0.99' : '0.85')};
   background-color: ${({ background }) => background};
   border-radius: 0.5rem;
-  outline: ${({ isFocused }) => (isFocused ? '1.5' : '1')}px solid ${({ border }) => border};
+  outline: ${({ isFocused }) => (isFocused ? '1.5' : '1')}px solid
+    ${({ border }) => border};
   box-shadow: ${({ isFocused }) => isFocused && '0 0 3px #00000070'};
 
   &:disabled {

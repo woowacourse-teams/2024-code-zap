@@ -1,6 +1,3 @@
-import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-
 import { CodeZapLogo, HamburgerIcon, PlusIcon } from '@/assets/images';
 import { Button, ContactUs, Flex, Heading, Text } from '@/components';
 import { ToastContext } from '@/contexts';
@@ -11,6 +8,9 @@ import { useScrollDisable } from '@/hooks/useScrollDisable';
 import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { trackClickNewTemplate } from '@/service/amplitude';
+import { useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+
 import { theme } from '@design/style/theme';
 
 import * as S from './Header.style';

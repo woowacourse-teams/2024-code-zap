@@ -1,9 +1,9 @@
-import { ChangeEvent, KeyboardEvent } from 'react';
-
 import { Flex, Input, TagButton, Text } from '@/components';
 import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
+import { ChangeEvent, KeyboardEvent } from 'react';
+
 import { theme } from '@design/style/theme';
 
 interface Props {
@@ -26,7 +26,7 @@ const TagInput = ({
   const { failAlert } = useCustomContext(ToastContext);
 
   const handleSpaceBarAndEnterKeydown = (
-    e: KeyboardEvent<HTMLInputElement>
+    e: KeyboardEvent<HTMLInputElement>,
   ) => {
     if (e.key === ' ' || e.key === 'Enter') {
       e.preventDefault();

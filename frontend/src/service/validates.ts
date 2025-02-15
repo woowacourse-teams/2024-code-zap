@@ -6,7 +6,9 @@ export const validateName = (name: string) => {
   const MIN_LENGTH = 1;
   const regex = /^[a-zA-Z0-9가-힣-_]+$/;
 
-  return regex.test(name) && name.length >= MIN_LENGTH && name.length <= MAX_LENGTH
+  return regex.test(name) &&
+    name.length >= MIN_LENGTH &&
+    name.length <= MAX_LENGTH
     ? ''
     : `${MIN_LENGTH} ~ ${MAX_LENGTH}자의 올바른 문자를 입력해주세요. (ex. 코드잽)`;
 };
@@ -17,15 +19,18 @@ export const validatePassword = (password: string) => {
   const hasLetters = /[a-zA-Z]/.test(password);
   const hasNumbers = /[0-9]/.test(password);
   const hasNoSpaces = !/\s/.test(password);
-  const isValidLength = password.length >= MIN_LENGTH && password.length <= MAX_LENGTH;
+  const isValidLength =
+    password.length >= MIN_LENGTH && password.length <= MAX_LENGTH;
 
   return hasLetters && hasNumbers && isValidLength && hasNoSpaces
     ? ''
     : `영문자, 숫자를 포함한 ${MIN_LENGTH} ~ ${MAX_LENGTH}자의 비밀번호를 입력해주세요.`;
 };
 
-export const validateConfirmPassword = (password: string, confirmPassword: string) =>
-  password === confirmPassword ? '' : '비밀번호가 일치하지 않습니다.';
+export const validateConfirmPassword = (
+  password: string,
+  confirmPassword: string,
+) => (password === confirmPassword ? '' : '비밀번호가 일치하지 않습니다.');
 
 export const validateFilename = (filename: string) => {
   const MAX_LENGTH = 255;
@@ -98,7 +103,10 @@ export const validateTemplate = (title: string, sourceCodes: SourceCodes[]) => {
     return '제목을 입력해주세요';
   }
 
-  if (sourceCodes.filter(({ content }) => !content || content.trim() === '').length) {
+  if (
+    sourceCodes.filter(({ content }) => !content || content.trim() === '')
+      .length
+  ) {
     return '소스코드 내용을 입력해주세요';
   }
 

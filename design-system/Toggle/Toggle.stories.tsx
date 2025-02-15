@@ -25,6 +25,12 @@ export const Default: Story = {
       setSelectedOption(option);
     };
 
-    return <Toggle options={args.options} selectedOption={selectedOption} switchOption={handleToggle} />;
+    return (
+      <Toggle
+        options={args.options}
+        selectedOption={selectedOption}
+        switchOption={handleToggle}
+      />
+    );
   },
 };

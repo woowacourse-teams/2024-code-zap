@@ -22,7 +22,9 @@ export const useSourceCode = (initSourceCode: SourceCodes[]) => {
 
       setSourceCodes((prevSourceCodes) =>
         prevSourceCodes.map((sourceCodes, index) =>
-          index === idx ? { ...sourceCodes, filename: newFilename } : sourceCodes,
+          index === idx
+            ? { ...sourceCodes, filename: newFilename }
+            : sourceCodes,
         ),
       );
     },
@@ -68,14 +70,21 @@ export const useSourceCode = (initSourceCode: SourceCodes[]) => {
       const deletedSourceCodeId = sourceCodes[index].id;
 
       if (!sourceCodes[index]) {
-        console.error('존재하지 않는 소스코드는 삭제할 수 없습니다. 삭제하려는 소스코드의 index를 다시 확인해주세요.');
+        console.error(
+          '존재하지 않는 소스코드는 삭제할 수 없습니다. 삭제하려는 소스코드의 index를 다시 확인해주세요.',
+        );
       }
 
       if (deletedSourceCodeId) {
-        setDeleteSourceCodeIds((prevSourceCodeId) => [...prevSourceCodeId, deletedSourceCodeId]);
+        setDeleteSourceCodeIds((prevSourceCodeId) => [
+          ...prevSourceCodeId,
+          deletedSourceCodeId,
+        ]);
       }
 
-      setSourceCodes((prevSourceCodes) => prevSourceCodes.filter((_, idx) => index !== idx));
+      setSourceCodes((prevSourceCodes) =>
+        prevSourceCodes.filter((_, idx) => index !== idx),
+      );
     },
     [sourceCodes],
   );

@@ -1,8 +1,9 @@
 import { LikeIcon } from '@/assets/images';
 import { Text } from '@/components';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@design/style/theme';
 import { formatWithK } from '@/utils';
+
+import { theme } from '@design/style/theme';
 
 import * as S from './LikeButton.style';
 

@@ -1,5 +1,6 @@
 import { Input, LoadingBall } from '@/components';
 import { useLoaderDelay } from '@/hooks';
+
 import { theme } from '@design/style/theme';
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
   onEnterDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   onChange: (
     e: React.ChangeEvent<HTMLInputElement>,
-    compareValue?: string
+    compareValue?: string,
   ) => void;
   isPending: boolean;
 }

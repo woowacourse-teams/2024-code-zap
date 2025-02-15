@@ -4,7 +4,13 @@ import * as S from './Flex.style';
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   direction?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
-  justify?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly';
+  justify?:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'space-evenly';
   align?: 'stretch' | 'flex-start' | 'flex-end' | 'center' | 'baseline';
   wrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
   gap?: string;

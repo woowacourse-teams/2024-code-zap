@@ -1,1 +1,2 @@
-export const getByteSize = (str: string) => new TextEncoder().encode(str).length;
+export const getByteSize = (str: string) =>
+  new TextEncoder().encode(str).length;

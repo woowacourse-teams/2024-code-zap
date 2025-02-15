@@ -1,5 +1,11 @@
 import { SORTING_OPTIONS } from '@/models/templates';
-import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from '@/types';
+import {
+  Category,
+  SourceCodes,
+  Tag,
+  TemplateListItem,
+  TemplateVisibility,
+} from '@/types';
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];

@@ -50,17 +50,30 @@ const CategoryEditModal = ({ isOpen, toggleModal, categoryList, onDeleteCategory
             onNameInputBlur={handleNameInputBlur}
           />
           <S.EditCategoryItem isButton={true} disabled={!isValid}>
-            <Button fullWidth variant='text' hoverStyle='none' onClick={handleAddCategory} disabled={!isValid}>
+            <Button
+              fullWidth
+              variant='text'
+              hoverStyle='none'
+              onClick={handleAddCategory}
+              disabled={!isValid}
+            >
               {'+ 카테고리 추가'}
             </Button>
           </S.EditCategoryItem>
         </S.EditCategoryItemList>
       </Modal.Body>
       <Modal.Footer>
-        <Flex direction='column' gap='0.75rem' width='100%' style={{ alignSelf: 'flex-end' }}>
+        <Flex
+          direction='column'
+          gap='0.75rem'
+          width='100%'
+          style={{ alignSelf: 'flex-end' }}
+        >
           <Flex height='1em'>
             {invalidIds.length > 0 && (
-              <Text.Small color={'red'}>{'유효하지 않은 카테고리 이름이 있습니다.'}</Text.Small>
+              <Text.Small color={'red'}>
+                {'유효하지 않은 카테고리 이름이 있습니다.'}
+              </Text.Small>
             )}
           </Flex>
           <Flex justify='flex-end' gap='1rem'>

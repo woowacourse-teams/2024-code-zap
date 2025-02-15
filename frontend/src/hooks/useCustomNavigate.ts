@@ -1,4 +1,9 @@
-import { useNavigate, useLocation, NavigateOptions, To } from 'react-router-dom';
+import {
+  useNavigate,
+  useLocation,
+  NavigateOptions,
+  To,
+} from 'react-router-dom';
 /**
  * useCustomNavigate - 현재 위치와 대상 위치를 비교하여 불필요한 네비게이션을 방지합니다.
  *

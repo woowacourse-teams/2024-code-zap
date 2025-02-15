@@ -1,7 +1,7 @@
+import { Button, Flex, Text } from '@/components';
 import { captureException } from '@sentry/react';
 import { FallbackProps } from 'react-error-boundary';
 
-import { Button, Flex, Text } from '@/components';
 import { theme } from '@design/style/theme';
 
 const TemporaryError = ({ error, resetErrorBoundary }: FallbackProps) => {

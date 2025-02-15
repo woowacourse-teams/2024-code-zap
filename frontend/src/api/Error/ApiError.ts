@@ -19,7 +19,12 @@ export class ApiError extends Error {
   errorCode: number;
   detail: string;
 
-  constructor(message: string, statusCode: number, errorCode: number, detail: string) {
+  constructor(
+    message: string,
+    statusCode: number,
+    errorCode: number,
+    detail: string,
+  ) {
     super(message);
 
     this.statusCode = statusCode;

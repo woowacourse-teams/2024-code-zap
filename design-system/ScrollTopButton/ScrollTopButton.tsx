@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
-
 import { ArrowUpIcon } from '@/assets/images';
 import { useWindowWidth } from '@/hooks';
 import { END_POINTS } from '@/routes';
-import { BREAKING_POINT } from '@design/style/styleConstants';
 import { scroll } from '@/utils';
+import { useEffect, useState, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+
+import { BREAKING_POINT } from '@design/style/styleConstants';
 
 import * as S from './ScrollTopButton.style';
 
@@ -43,7 +43,7 @@ const ScrollTopButton = () => {
 
     const observer = new IntersectionObserver(
       observerCallback,
-      observerOptions
+      observerOptions,
     );
 
     observer.observe(sentinel);

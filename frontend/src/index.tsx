@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { ThemeProvider } from '@emotion/react';
 import * as Sentry from '@sentry/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -10,14 +11,16 @@ import { AuthProvider, HeaderProvider, ToastProvider } from '@/contexts';
 import { router } from '@/routes';
 import { AmplitudeInitializer } from '@/service/amplitude';
 import GlobalStyles from '@/style/GlobalStyles';
-import { theme } from '@design/style/theme';
 
 const queryClient = new QueryClient();
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
   environment: process.env.NODE_ENV,
-  integrations: [Sentry.browserTracingIntegration(), Sentry.replayIntegration()],
+  integrations: [
+    Sentry.browserTracingIntegration(),
+    Sentry.replayIntegration(),
+  ],
   // Performance Monitoring
   tracesSampleRate: 1.0, //  Capture 100% of the transactions
   // Set 'tracePropagationTargets' to control for which URLs distributed tracing should be enabled
@@ -28,7 +31,9 @@ Sentry.init({
   enabled: process.env.NODE_ENV !== 'development',
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement,
+);
 
 const enableMocking = async () => {
   if (process.env.APP_ENV !== 'msw') {

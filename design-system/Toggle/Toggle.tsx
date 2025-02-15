@@ -32,7 +32,10 @@ const Toggle = <T extends string>({
 
   return (
     <S.ToggleContainer onClick={handleToggle}>
-      <S.ToggleSlider isRight={selectedOption === rightOption} optionSliderColor={optionSliderColor} />
+      <S.ToggleSlider
+        isRight={selectedOption === rightOption}
+        optionSliderColor={optionSliderColor}
+      />
       <S.ToggleOption selected={selectedOption === leftOption}>
         {leftOptionAdornment ?? ''}
         {showOptions && leftOption}

@@ -10,7 +10,11 @@ type RouteGuardProps = {
   redirectTo: string;
 };
 
-const RouteGuard = ({ children, isLoginRequired, redirectTo }: RouteGuardProps) => {
+const RouteGuard = ({
+  children,
+  isLoginRequired,
+  redirectTo,
+}: RouteGuardProps) => {
   const { isLogin, isChecking } = useAuth();
   const { infoAlert } = useCustomContext(ToastContext);
   const navigate = useCustomNavigate();

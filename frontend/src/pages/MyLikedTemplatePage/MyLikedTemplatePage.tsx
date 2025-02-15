@@ -1,6 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
 
-import { Flex, Heading, LoadingBall, NoResults, PagingButtons, TemplateCard } from '@/components';
+import {
+  Flex,
+  Heading,
+  LoadingBall,
+  NoResults,
+  PagingButtons,
+  TemplateCard,
+} from '@/components';
 import { useQueryParams, useWindowWidth } from '@/hooks';
 import { useAuth } from '@/hooks/authentication';
 import { ForbiddenPage } from '@/pages';
@@ -34,7 +41,12 @@ const MyLikedTemplatePage = () => {
     updateQueryParams({ page });
   };
 
-  const { data: templateData, isLoading, isPending, isFetching } = useLikedTemplateListQuery({ page });
+  const {
+    data: templateData,
+    isLoading,
+    isPending,
+    isFetching,
+  } = useLikedTemplateListQuery({ page });
   const templateList = templateData?.templates || [];
   const paginationSizes = templateData?.paginationSizes || 0;
 
@@ -46,9 +58,13 @@ const MyLikedTemplatePage = () => {
     <>
       <S.PageTitle>
         {isMobile ? (
-          <Heading.XSmall color='black'>내가 좋아요한 템플릿 목록입니다 :)</Heading.XSmall>
+          <Heading.XSmall color='black'>
+            내가 좋아요한 템플릿 목록입니다 :)
+          </Heading.XSmall>
         ) : (
-          <Heading.Medium color='black'>내가 좋아요한 템플릿 목록입니다 :)</Heading.Medium>
+          <Heading.Medium color='black'>
+            내가 좋아요한 템플릿 목록입니다 :)
+          </Heading.Medium>
         )}
       </S.PageTitle>
       {templateList.length === 0 ? (
@@ -63,7 +79,10 @@ const MyLikedTemplatePage = () => {
           {!isLoading && (
             <S.TemplateExplorePageContainer cols={getGridCols(windowWidth)}>
               {templateList.map((template) => (
-                <Link to={ROUTE_END_POINT.template(template.id)} key={template.id}>
+                <Link
+                  to={ROUTE_END_POINT.template(template.id)}
+                  key={template.id}
+                >
                   <TemplateCard template={template} />
                 </Link>
               ))}
@@ -74,7 +93,11 @@ const MyLikedTemplatePage = () => {
 
       {templateList.length !== 0 && (
         <Flex justify='center' gap='0.5rem' margin='1rem 0' width='100%'>
-          <PagingButtons currentPage={page} paginationSizes={paginationSizes} onPageChange={handlePageChange} />
+          <PagingButtons
+            currentPage={page}
+            paginationSizes={paginationSizes}
+            onPageChange={handlePageChange}
+          />
         </Flex>
       )}
     </>

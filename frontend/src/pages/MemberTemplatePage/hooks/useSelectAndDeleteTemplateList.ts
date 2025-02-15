@@ -13,7 +13,8 @@ export const useSelectAndDeleteTemplateList = ({ templateList }: Props) => {
   const [selectedList, setSelectedList] = useState<number[]>([]);
   const [isDeleteModalOpen, toggleDeleteModal] = useToggle();
 
-  const { mutateAsync: deleteTemplates } = useTemplateDeleteMutation(selectedList);
+  const { mutateAsync: deleteTemplates } =
+    useTemplateDeleteMutation(selectedList);
 
   const handleAllSelected = () => {
     if (selectedList.length === templateList.length) {

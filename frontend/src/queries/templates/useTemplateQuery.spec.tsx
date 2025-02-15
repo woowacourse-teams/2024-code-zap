@@ -15,7 +15,9 @@ const queryWrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useTemplateQuery', () => {
   it('한 개의 template을 조회할 수 있다.', async () => {
-    const { result } = renderHook(() => useTemplateQuery(1), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useTemplateQuery(1), {
+      wrapper: queryWrapper,
+    });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);

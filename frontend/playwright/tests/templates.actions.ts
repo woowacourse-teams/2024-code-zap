@@ -31,7 +31,9 @@ export const uploadTemplateToCodezap = async ({
 
   // 설명 입력
   if (description) {
-    await page.getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?').fill(description);
+    await page
+      .getByPlaceholder('이 템플릿을 언제 다시 쓸 것 같나요?')
+      .fill(description);
   }
 
   // 파일명 입력
@@ -46,8 +48,12 @@ export const uploadTemplateToCodezap = async ({
 
   // 태그 입력
   if (tag) {
-    await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').fill(tag);
-    await page.getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요').press('Enter');
+    await page
+      .getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요')
+      .fill(tag);
+    await page
+      .getByPlaceholder('enter 또는 space bar로 태그를 등록해보세요')
+      .press('Enter');
   }
 
   // 저장 버튼 클릭
@@ -63,7 +69,10 @@ interface deleteTemplateProps {
   templateName: string;
 }
 
-export const deleteTemplate = async ({ page, templateName }: deleteTemplateProps) => {
+export const deleteTemplate = async ({
+  page,
+  templateName,
+}: deleteTemplateProps) => {
   await page.getByRole('link', { name: templateName }).first().click();
   await page.getByRole('button', { name: '템플릿 삭제' }).click();
 
@@ -71,5 +80,7 @@ export const deleteTemplate = async ({ page, templateName }: deleteTemplateProps
 
   await page.getByRole('button', { name: '삭제', exact: true }).click();
 
-  await expect(page.getByRole('link', { name: ` ${templateName}` })).not.toBeVisible();
+  await expect(
+    page.getByRole('link', { name: ` ${templateName}` }),
+  ).not.toBeVisible();
 };

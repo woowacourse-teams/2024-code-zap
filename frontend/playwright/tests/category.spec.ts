@@ -1,9 +1,16 @@
 import { test, expect } from '@playwright/test';
 
-import { createCategory, deleteCategory, getCategoryButton } from './category.actions';
+import {
+  createCategory,
+  deleteCategory,
+  getCategoryButton,
+} from './category.actions';
 import { waitForSuccess } from './utils';
 
-test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 수 있다.', async ({ page, browserName }) => {
+test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 수 있다.', async ({
+  page,
+  browserName,
+}) => {
   await page.goto('/my-templates');
 
   const newCategoryName = `생성테스트-${browserName}`;
@@ -13,7 +20,10 @@ test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 
 
     await waitForSuccess({ page, apiUrl: '/categories' });
 
-    const newCategoryButton = getCategoryButton({ page, categoryName: newCategoryName });
+    const newCategoryButton = getCategoryButton({
+      page,
+      categoryName: newCategoryName,
+    });
 
     await expect(newCategoryButton).toBeVisible();
   } catch (error) {
@@ -23,13 +33,19 @@ test('카테고리 편집 모달에서 새 카테고리를 추가 및 삭제할 
 
     await waitForSuccess({ page, apiUrl: '/categories' });
 
-    const newCategoryButton = getCategoryButton({ page, categoryName: newCategoryName });
+    const newCategoryButton = getCategoryButton({
+      page,
+      categoryName: newCategoryName,
+    });
 
     await expect(newCategoryButton).not.toBeVisible();
   }
 });
 
-test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 수 있다.', async ({ page, browserName }) => {
+test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 수 있다.', async ({
+  page,
+  browserName,
+}) => {
   await page.goto('/my-templates');
 
   const newCategoryName = `수정테스트-${browserName}`;
@@ -41,7 +57,10 @@ test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 �
 
     await waitForSuccess({ page, apiUrl: '/categories' });
 
-    const newCategoryButton = getCategoryButton({ page, categoryName: newCategoryName });
+    const newCategoryButton = getCategoryButton({
+      page,
+      categoryName: newCategoryName,
+    });
 
     await expect(newCategoryButton).toBeVisible();
 
@@ -56,7 +75,10 @@ test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 �
     await page.getByPlaceholder('카테고리 입력').fill(editedCategoryName);
     await page.getByRole('button', { name: '저장' }).click();
 
-    const editedCategoryButton = getCategoryButton({ page, categoryName: editedCategoryName });
+    const editedCategoryButton = getCategoryButton({
+      page,
+      categoryName: editedCategoryName,
+    });
 
     await expect(editedCategoryButton).toBeVisible();
   } catch (error) {
@@ -65,14 +87,20 @@ test('카테고리 편집 모달에서 카테고리명을 수정 및 삭제할 �
     // 다음 테스트를 위해 테스트용 카테고리 삭제
     await deleteCategory({ page, categoryName: editedCategoryName });
 
-    const editedCategoryButton = getCategoryButton({ page, categoryName: editedCategoryName });
+    const editedCategoryButton = getCategoryButton({
+      page,
+      categoryName: editedCategoryName,
+    });
 
     await waitForSuccess({ page, apiUrl: '/categories' });
     await expect(editedCategoryButton).not.toBeVisible();
   }
 });
 
-test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ page, browserName }) => {
+test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({
+  page,
+  browserName,
+}) => {
   await page.goto('/my-templates');
   const rawCategoryName = `최대글자수테스트-${browserName}`;
   const expectedCategoryName = rawCategoryName.slice(0, 15);
@@ -92,7 +120,10 @@ test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ 
 
     await waitForSuccess({ page, apiUrl: '/categories' });
 
-    const newCategoryButton = getCategoryButton({ page, categoryName: expectedCategoryName });
+    const newCategoryButton = getCategoryButton({
+      page,
+      categoryName: expectedCategoryName,
+    });
 
     await expect(newCategoryButton).toBeVisible();
   } catch (error) {
@@ -101,7 +132,10 @@ test('카테고리는 최대 15글자까지만 입력할 수 있다.', async ({ 
     // 다음 테스트를 위해 테스트용 카테고리 삭제
     await deleteCategory({ page, categoryName: expectedCategoryName });
 
-    const newCategoryButton = getCategoryButton({ page, categoryName: expectedCategoryName });
+    const newCategoryButton = getCategoryButton({
+      page,
+      categoryName: expectedCategoryName,
+    });
 
     await waitForSuccess({ page, apiUrl: '/categories' });
     await expect(newCategoryButton).not.toBeVisible();

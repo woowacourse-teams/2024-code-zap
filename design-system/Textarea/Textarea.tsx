@@ -1,6 +1,5 @@
-import { PropsWithChildren, useEffect, useRef } from 'react';
-
 import { getChildOfType, getChildrenWithoutTypes } from '@/utils';
+import { PropsWithChildren, useEffect, useRef } from 'react';
 
 import * as S from './Textarea.style';
 
@@ -11,20 +10,28 @@ export interface BaseProps extends React.HTMLAttributes<HTMLDivElement> {
   inputColor?: string;
 }
 
-export interface TextFieldProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+export interface TextFieldProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   size?: 'small' | 'medium' | 'large' | 'xlarge';
   minRows?: number;
   maxRows?: number;
   placeholderColor?: string;
 }
 
-export interface LabelProps extends React.LabelHTMLAttributes<HTMLLabelElement> {}
+export interface LabelProps
+  extends React.LabelHTMLAttributes<HTMLLabelElement> {}
 
-export interface HelperTextProps extends React.HTMLAttributes<HTMLSpanElement> {}
+export interface HelperTextProps
+  extends React.HTMLAttributes<HTMLSpanElement> {}
 
-const Label = ({ children, ...rests }: PropsWithChildren<LabelProps>) => <S.Label {...rests}>{children}</S.Label>;
+const Label = ({ children, ...rests }: PropsWithChildren<LabelProps>) => (
+  <S.Label {...rests}>{children}</S.Label>
+);
 
-const HelperText = ({ children, ...rests }: PropsWithChildren<HelperTextProps>) => (
+const HelperText = ({
+  children,
+  ...rests
+}: PropsWithChildren<HelperTextProps>) => (
   <S.HelperText {...rests}>{children}</S.HelperText>
 );
 
@@ -38,7 +45,10 @@ const Base = ({
   children,
   ...rests
 }: PropsWithChildren<BaseProps>) => {
-  const textarea = getChildrenWithoutTypes(children, [HelperTextType, LabelType]);
+  const textarea = getChildrenWithoutTypes(children, [
+    HelperTextType,
+    LabelType,
+  ]);
   const helperText = getChildOfType(children, HelperTextType);
   const label = getChildOfType(children, LabelType);
 
@@ -65,7 +75,13 @@ const Base = ({
   return (
     <S.Container>
       {label}
-      <S.Base variant={variant} size={size} isValid={isValid} {...rests} onClick={handleFocusInput}>
+      <S.Base
+        variant={variant}
+        size={size}
+        isValid={isValid}
+        {...rests}
+        onClick={handleFocusInput}
+      >
         {textarea}
       </S.Base>
       {helperText}
@@ -80,7 +96,13 @@ const fontSize = {
   xlarge: 32,
 } as const;
 
-const TextField = ({ size = 'medium', minRows = 1, maxRows = 1, placeholderColor, ...rest }: TextFieldProps) => {
+const TextField = ({
+  size = 'medium',
+  minRows = 1,
+  maxRows = 1,
+  placeholderColor,
+  ...rest
+}: TextFieldProps) => {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const adjustHeight = () => {

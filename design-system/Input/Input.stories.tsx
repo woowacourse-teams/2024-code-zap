@@ -1,7 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { useState } from 'react';
-
 import { SearchIcon } from '@/assets/images';
+import { useState } from 'react';
 
 import Input from './Input';
 
@@ -45,7 +44,11 @@ export const Filled: Story = {
     return (
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
         </Input>
       </div>
     );
@@ -64,7 +67,11 @@ export const Outlined: Story = {
     return (
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
         </Input>
       </div>
     );
@@ -83,7 +90,11 @@ export const Text: Story = {
     return (
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
         </Input>
       </div>
     );
@@ -105,7 +116,11 @@ export const StartAdornment: Story = {
           <Input.Adornment>
             <SearchIcon />
           </Input.Adornment>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
         </Input>
       </div>
     );
@@ -124,7 +139,11 @@ export const EndAdornment: Story = {
     return (
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
           <Input.Adornment>
             <SearchIcon />
           </Input.Adornment>
@@ -146,7 +165,11 @@ export const Invalid: Story = {
     return (
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
         </Input>
       </div>
     );
@@ -165,7 +188,11 @@ export const HelperText: Story = {
     return (
       <div style={{ width: '500px' }}>
         <Input size={args.size} variant={args.variant} isValid={args.isValid}>
-          <Input.TextField placeholder='Enter Text' onChange={(e) => setValue(e.target.value)} value={value} />
+          <Input.TextField
+            placeholder='Enter Text'
+            onChange={(e) => setValue(e.target.value)}
+            value={value}
+          />
           <Input.Adornment>
             <SearchIcon />
           </Input.Adornment>

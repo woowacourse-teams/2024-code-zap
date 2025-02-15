@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-
 import { templates } from '@/mocks/fixtures/templateList.json';
 import { TemplateListItem } from '@/types';
 

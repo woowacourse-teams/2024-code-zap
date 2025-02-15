@@ -5,7 +5,8 @@ interface Props {
   categoryName: string;
 }
 
-export const getCategoryButton = ({ page, categoryName }: Props) => page.getByRole('button', { name: categoryName });
+export const getCategoryButton = ({ page, categoryName }: Props) =>
+  page.getByRole('button', { name: categoryName });
 
 export const createCategory = async ({ page, categoryName }: Props) => {
   await page.getByRole('button', { name: '카테고리 편집' }).click();

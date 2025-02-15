@@ -32,7 +32,11 @@ interface TemplateUploadData {
   visibility: string;
 }
 
-export const trackClickTemplateSave = ({ templateTitle, sourceCodeCount, visibility }: TemplateUploadData) => {
+export const trackClickTemplateSave = ({
+  templateTitle,
+  sourceCodeCount,
+  visibility,
+}: TemplateUploadData) => {
   amplitudeService.customTrack('[Click] 템플릿 저장 버튼', {
     templateTitle,
     sourceCodeCount,
@@ -53,7 +57,10 @@ interface PagingButtonData {
   label: string;
 }
 
-export const trackMemberTemplatePaging = ({ page, label }: PagingButtonData) => {
+export const trackMemberTemplatePaging = ({
+  page,
+  label,
+}: PagingButtonData) => {
   amplitudeService.customTrack('[Click] 페이징 버튼', {
     page,
     label,
@@ -66,7 +73,11 @@ interface LickButtonData {
   templateId: string;
 }
 
-export const trackLikeButton = ({ isLiked, likesCount, templateId }: LickButtonData) => {
+export const trackLikeButton = ({
+  isLiked,
+  likesCount,
+  templateId,
+}: LickButtonData) => {
   const like = isLiked ? '좋아요 취소' : '좋아요';
 
   amplitudeService.customTrack('[Click] 좋아요 버튼', {
