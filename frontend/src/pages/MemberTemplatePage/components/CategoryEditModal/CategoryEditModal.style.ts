@@ -9,11 +9,9 @@ export const EditCategoryItemList = styled.div`
   width: 100%;
 `;
 
-export const EditCategoryItem = styled.div<{
-  hasError?: boolean;
-  isButton?: boolean;
-  disabled?: boolean;
-}>`
+export const EditCategoryItem = styled.div<{ hasError?: boolean; isButton?: boolean; disabled?: boolean }>`
+  cursor: move;
+
   display: flex;
   gap: 1rem;
   align-items: center;

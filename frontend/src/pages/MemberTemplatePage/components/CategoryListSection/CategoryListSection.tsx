@@ -16,7 +16,7 @@ const CategoryListSection = ({ onSelectCategory, memberId }: Props) => {
     <S.CategoryListSectionContainer>
       <CategoryFilterMenu
         memberId={memberId}
-        categoryList={categoryList}
+        categoryList={categoryList.sort((a, b) => a.ordinal - b.ordinal)}
         onSelectCategory={onSelectCategory}
       />
     </S.CategoryListSectionContainer>

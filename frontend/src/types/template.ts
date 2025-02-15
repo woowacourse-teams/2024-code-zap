@@ -20,6 +20,7 @@ export interface Tag {
 export interface Category {
   id: number;
   name: string;
+  ordinal: number;
 }
 
 export interface Template {

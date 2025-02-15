@@ -46,9 +46,9 @@ const CategoryFilterMenu = ({
     }
   };
 
-  const [defaultCategory, ...userCategories] = categoryList.length
+  const [defaultCategory, ...userCategoryList] = categoryList.length
     ? categoryList
-    : [{ id: 0, name: '' }];
+    : [{ id: 0, name: '', ordinal: categoryList.length + 1 }];
 
   const indexById: Record<number, number> = useMemo(() => {
     const map: Record<number, number> = {
@@ -56,12 +56,12 @@ const CategoryFilterMenu = ({
       [defaultCategory.id]: categoryList.length,
     };
 
-    userCategories.forEach(({ id }, index) => {
+    userCategoryList.forEach(({ id }, index) => {
       map[id] = index + 1;
     });
 
     return map;
-  }, [categoryList.length, defaultCategory.id, userCategories]);
+  }, [categoryList.length, defaultCategory.id, userCategoryList]);
 
   return (
     <>
@@ -98,7 +98,7 @@ const CategoryFilterMenu = ({
             />
           </S.CategoryButtonContainer>
 
-          {userCategories.map(({ id, name }) => (
+          {userCategoryList.map(({ id, name }) => (
             <S.CategoryButtonContainer key={id}>
               <CategoryButton
                 name={name}
@@ -127,8 +127,7 @@ const CategoryFilterMenu = ({
         <CategoryEditModal
           isOpen={isEditModalOpen}
           toggleModal={toggleEditModal}
-          categories={userCategories}
-          handleCancelEdit={toggleEditModal}
+          categoryList={userCategoryList}
           onDeleteCategory={handleCategoryDelete}
         />
       </S.CategoryContainer>

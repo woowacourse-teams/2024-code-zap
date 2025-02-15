@@ -4,11 +4,7 @@ import type { Category } from '@/types';
 
 const INVALID_NAMES = ['전체보기', '카테고리 없음', ''];
 
-export const useCategoryNameValidation = (
-  categories: Category[],
-  newCategories: { id: number; name: string }[],
-  editedCategories: Record<number, string>,
-) => {
+export const useCategoryNameValidation = (categoryList: Category[], editedCategoryList: Category[]) => {
   const [invalidIds, setInvalidIds] = useState<number[]>([]);
 
   useEffect(() => {
@@ -23,7 +19,7 @@ export const useCategoryNameValidation = (
       allNames.get(name)!.push(id);
     };
 
-    categories.forEach(({ id, name }) => {
+    categoryList.forEach(({ id, name }) => {
       if (INVALID_NAMES.includes(name)) {
         invalidNames.add(id);
       } else {
@@ -31,23 +27,13 @@ export const useCategoryNameValidation = (
       }
     });
 
-    newCategories.forEach(({ id, name }) => {
+    editedCategoryList.forEach(({ id, name }) => {
+      const originalName = categoryList.find((category) => category.id === id)?.name;
+
       if (INVALID_NAMES.includes(name)) {
         invalidNames.add(id);
-      } else {
-        addNameToMap(id, name);
-      }
-    });
-
-    Object.entries(editedCategories).forEach(([id, name]) => {
-      const originalName = categories.find(
-        (category) => category.id === Number(id),
-      )?.name;
-
-      if (INVALID_NAMES.includes(name)) {
-        invalidNames.add(Number(id));
       } else if (name !== originalName) {
-        addNameToMap(Number(id), name);
+        addNameToMap(id, name);
       }
     });
 
@@ -58,7 +44,7 @@ export const useCategoryNameValidation = (
     });
 
     setInvalidIds(Array.from(invalidNames));
-  }, [categories, newCategories, editedCategories]);
+  }, [categoryList, editedCategoryList]);
 
   return {
     invalidIds,

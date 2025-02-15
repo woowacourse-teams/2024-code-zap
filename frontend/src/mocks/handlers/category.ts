@@ -33,28 +33,12 @@ export const categoryHandlers = [
     });
   }),
 
-  http.put(`${API_URL}${END_POINTS.CATEGORIES}/:id`, async (req) => {
-    const { id } = req.params;
+  http.put(`${API_URL}${END_POINTS.CATEGORIES}`, async (req) => {
     const updatedCategory = await req.request.json();
-    const categoryIndex = mockCategoryList.findIndex(
-      (cat) => cat.id.toString() === id,
-    );
 
-    if (
-      categoryIndex !== -1 &&
-      typeof updatedCategory === 'object' &&
-      updatedCategory !== null
-    ) {
-      mockCategoryList[categoryIndex] = {
-        id: parseInt(id as string),
-        ...updatedCategory,
-      } as Category;
-
+    if (typeof updatedCategory === 'object' && updatedCategory !== null) {
       return mockResponse({
         status: 200,
-        body: {
-          category: mockCategoryList[categoryIndex],
-        },
       });
     }
 
@@ -62,28 +46,6 @@ export const categoryHandlers = [
       status: 404,
       body: {
         message: 'Category not found or invalid data',
-      },
-    });
-  }),
-
-  http.delete(`${API_URL}${END_POINTS.CATEGORIES}/:id`, (req) => {
-    const { id } = req.params;
-    const categoryIndex = mockCategoryList.findIndex(
-      (cat) => cat.id.toString() === id,
-    );
-
-    if (categoryIndex !== -1) {
-      mockCategoryList.splice(categoryIndex, 1);
-
-      return mockResponse({
-        status: 204,
-      });
-    }
-
-    return mockResponse({
-      status: 404,
-      body: {
-        message: 'Category not found',
       },
     });
   }),

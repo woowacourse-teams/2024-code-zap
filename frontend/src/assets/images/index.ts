@@ -20,6 +20,7 @@ export { default as LikeIcon } from './like';
 export { default as PrivateIcon } from './private.svg';
 export { default as PublicIcon } from './public.svg';
 export { default as ShareIcon } from './share.svg';
+export { default as DragIcon } from './drag.svg';
 
 // Logo
 export { default as CodeZapLogo } from './codezapLogo.svg';
