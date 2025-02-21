@@ -13,11 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.SourceCodeFixture;
+import codezap.fixture.TemplateFixture;
 import codezap.global.exception.CodeZapException;
 import codezap.global.repository.RepositoryTest;
 import codezap.member.repository.MemberRepository;
 import codezap.template.domain.SourceCode;
-import codezap.template.domain.Template;
 
 @RepositoryTest
 public class SourceCodeRepositoryTest {
@@ -34,14 +35,15 @@ public class SourceCodeRepositoryTest {
     @Nested
     @DisplayName("ID로 소스코드 조회")
     class FetchById {
+
         @Test
         @DisplayName("성공: 소스코드 ID로 소스코드 조회")
         void fetchByIdSuccess() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var sourceCode1 = sut.save(SourceCodeFixture.get(template1, 1));
+            var sourceCode2 = sut.save(SourceCodeFixture.get(template1, 2));
 
             var result = sut.fetchById(1L);
 
@@ -65,25 +67,24 @@ public class SourceCodeRepositoryTest {
         @DisplayName("성공: 템플릿으로 전체 소스코드 조회")
         void findAllByTemplateSuccess() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
-            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var sourceCodes = sut.saveAll(SourceCodeFixture.getList(template1, 2));
+            var sourceCode2 = sut.save(SourceCodeFixture.get(template2, 1));
 
             var result = sut.findAllByTemplate(template1);
 
             assertThat(result).hasSize(2)
-                    .containsExactly(sourceCode1, sourceCode2);
+                    .hasSameElementsAs(sourceCodes);
         }
 
         @Test
         @DisplayName("성공: 소스코드가 없는 템플릿으로 조회하는 경우 빈 리스트가 반환된다.")
         void findAllByTemplateSuccessWithNoSourceCodeTemplate() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
 
             var result = sut.findAllByTemplate(template1);
 
@@ -98,12 +99,12 @@ public class SourceCodeRepositoryTest {
         @DisplayName("성공: 템플릿과 소스코드 순서로 조회")
         void fetchByTemplateAndOrdinalSuccess() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
-            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var sourceCode1 = sut.save(SourceCodeFixture.get(template1, 1));
+            var sourceCode2 = sut.save(SourceCodeFixture.get(template1, 2));
+            var sourceCode3 = sut.save(SourceCodeFixture.get(template2, 1));
 
             var result = sut.fetchByTemplateAndOrdinal(template1, 1);
 
@@ -114,9 +115,9 @@ public class SourceCodeRepositoryTest {
         @DisplayName("실패: 잘못된 순서로 조회하는 경우 예외가 발생")
         void fetchByTemplateAndOrdinalFailWithWrongOrdinal() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var sourceCode1 = sut.save(SourceCodeFixture.get(template1, 1));
 
             var ordinal = 100;
             assertThatThrownBy(() -> sut.fetchByTemplateAndOrdinal(template1, ordinal))
@@ -128,40 +129,41 @@ public class SourceCodeRepositoryTest {
     @Nested
     @DisplayName("템플릿과 순서에 해당하는 전체 소스코드 조회")
     class FindAllByTemplateAndOrdinal {
+
         @Test
         @DisplayName("성공: 템플릿과 순서에 해당하는 전체 소스코드 조회")
         void findAllByTemplateAndOrdinalSuccess() {
             var ordinal = 1;
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", ordinal));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", ordinal));
-            var sourceCode3 = sut.save(new SourceCode(template1, "SourceCode 3", "Content 3", 2));
-            var sourceCode4 = sut.save(new SourceCode(template2, "SourceCode 4", "Content 4", ordinal));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var sourceCode1 = sut.save(SourceCodeFixture.get(template1, ordinal));
+            var sourceCode2 = sut.save(SourceCodeFixture.get(template1, ordinal + 1));
+            var sourceCode3 = sut.save(SourceCodeFixture.get(template2, ordinal));
 
             var result = sut.findAllByTemplateAndOrdinal(template1, ordinal);
 
-            assertThat(result).hasSize(2)
-                    .containsExactly(sourceCode1, sourceCode2);
+            assertThat(result).hasSize(1)
+                    .containsExactly(sourceCode1);
         }
     }
 
     @Nested
     @DisplayName("템플릿에 존재하는 소스코드 개수 조회")
     class CountByTemplate {
+
         @Test
         @DisplayName("성공: 템플릿에 존재하는 소스코드 개수 조회")
         void countByTemplateSuccess() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            var sourceCode1 = sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            var sourceCode2 = sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
-            var sourceCode3 = sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            List<SourceCode> sourceCodes = sut.saveAll(SourceCodeFixture.getList(template1, 2));
+            sut.saveAll(SourceCodeFixture.getList(template2,  1));
 
+            System.out.println(sourceCodes);
             var result = sut.countByTemplate(template1);
 
             assertThat(result).isEqualTo(2);
@@ -175,12 +177,11 @@ public class SourceCodeRepositoryTest {
         @DisplayName("성공: 템플릿 ID로 템플릿에 존재하는 소스코드 삭제")
         void testDeleteByTemplateId() {
             var member1 = memberRepository.save(MemberFixture.getFirstMember());
-            var category1 = categoryRepository.save(CategoryFixture.getFirstCategory());
-            var template1 = templateRepository.save(new Template(member1, "Template 1", "Description 1", category1));
-            var template2 = templateRepository.save(new Template(member1, "Template 2", "Description 2", category1));
-            sut.save(new SourceCode(template1, "SourceCode 1", "Content 1", 1));
-            sut.save(new SourceCode(template1, "SourceCode 2", "Content 2", 2));
-            sut.save(new SourceCode(template2, "SourceCode 3", "Content 3", 1));
+            var category1 = categoryRepository.save(CategoryFixture.getDefaultCategory(member1));
+            var template1 = templateRepository.save(TemplateFixture.get(member1, category1));
+            var template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            sut.saveAll(SourceCodeFixture.getList(template1,  2));
+            sut.saveAll(SourceCodeFixture.getList(template2,  1));
 
             sut.deleteAllByTemplateIds(List.of(1L));
             var result = sut.findAllByTemplate(template1);

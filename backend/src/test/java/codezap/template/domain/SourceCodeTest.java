@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
+import codezap.fixture.TemplateFixture;
 import codezap.member.domain.Member;
 
 class SourceCodeTest {
@@ -17,8 +18,8 @@ class SourceCodeTest {
     void getThumbnailContent() {
         // given
         Member member = MemberFixture.getFirstMember();
-        Category category = CategoryFixture.getFirstCategory();
-        Template template = new Template(member, "title", "description", category);
+        Category category = CategoryFixture.getDefaultCategory(member);
+        Template template = TemplateFixture.get(member, category);
         SourceCode sourceCode = new SourceCode(
                 1L,
                 template,

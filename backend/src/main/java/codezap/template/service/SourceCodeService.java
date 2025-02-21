@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
+import codezap.global.validation.ValidatedOrdinalRequest;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
@@ -16,7 +17,6 @@ import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.global.validation.ValidatedOrdinalRequest;
 import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;

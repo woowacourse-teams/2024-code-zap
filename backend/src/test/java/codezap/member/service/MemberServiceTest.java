@@ -104,7 +104,7 @@ class MemberServiceTest extends ServiceTest {
         @DisplayName("템플릿을 소유한 멤버 조회 성공")
         void getByTemplateId() {
             Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getFirstCategory());
+            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 
             Member actual = memberService.getByTemplateId(template.getId());
