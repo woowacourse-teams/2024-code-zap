@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import codezap.fixture.CategoryFixture;
+import codezap.fixture.MemberFixture;
+import codezap.member.domain.Member;
 
 public class CategoryTest {
 
@@ -17,7 +19,7 @@ public class CategoryTest {
         @Test
         @DisplayName("템플릿 개수 증가 성공")
         void increaseTemplateCountSuccess() {
-            Category category = CategoryFixture.getFirstCategory();
+            Category category = CategoryFixture.getDefaultCategory(MemberFixture.getFirstMember());
 
             category.increaseTemplateCount();
 
@@ -32,7 +34,7 @@ public class CategoryTest {
         @Test
         @DisplayName("템플릿 개수 감소 성공")
         void decreaseTemplateCountSuccess() {
-            Category category = CategoryFixture.getFirstCategory();
+            Category category = CategoryFixture.getDefaultCategory(MemberFixture.getFirstMember());
 
             category.increaseTemplateCount();
             category.increaseTemplateCount();
@@ -44,7 +46,7 @@ public class CategoryTest {
         @Test
         @DisplayName("템플릿 개수 감소 성공: 이미 0개인 경우에도 성공")
         void decreaseTemplateCountSuccessAlreadyZero() {
-            Category category = CategoryFixture.getFirstCategory();
+            Category category = CategoryFixture.getDefaultCategory(MemberFixture.getFirstMember());
 
             category.decreaseTemplateCount();
 
