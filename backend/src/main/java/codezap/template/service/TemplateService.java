@@ -64,9 +64,8 @@ public class TemplateService {
             Category category
     ) {
         Template template = templateRepository.fetchById(templateId);
-        if (!template.matchMember(member)) {
-            throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
-        }
+        validateAuthorization(member, template);
+        updateTemplateCount(category, template);
         template.updateTemplate(
                 request.title(),
                 request.description(),
@@ -74,6 +73,15 @@ public class TemplateService {
                 request.visibility()
         );
         return template;
+    }
+
+    private void updateTemplateCount(Category changedCategory, Template template) {
+        Category originalCategory = template.getCategory();
+        if (originalCategory.equals(changedCategory)) {
+            return;
+        }
+        originalCategory.decreaseTemplateCount();
+        changedCategory.increaseTemplateCount();
     }
 
     @Transactional
@@ -86,9 +94,15 @@ public class TemplateService {
 
     private void deleteById(Member member, Long id) {
         Template template = templateRepository.fetchById(id);
+        validateAuthorization(member, template);
+        Category category = template.getCategory();
+        category.decreaseTemplateCount();
+        templateRepository.deleteById(id);
+    }
+
+    private void validateAuthorization(Member member, Template template) {
         if (!template.matchMember(member)) {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿에 대한 권한이 없습니다.");
         }
-        templateRepository.deleteById(id);
     }
 }

@@ -9,11 +9,11 @@ import codezap.member.domain.Member;
 
 public class CategoryFixture {
     public static Category getDefaultCategory(Member member) {
-        return new Category(1L, member, "카테고리 없음", true, 1);
+        return new Category(1L, member, "카테고리 없음", true, 1, 0);
     }
 
     public static Category getAdditionalCategory(Member member) {
-        return new Category(2L, member, "카테고리", false, 2);
+        return new Category(2L, member, "카테고리", false, 2, 0);
     }
 
     public static List<Category> getList(Member member, int size) {
