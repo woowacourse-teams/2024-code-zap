@@ -14,7 +14,9 @@
     "build:report": "webpack-bundle-analyzer --port 8888 dist/bundle-stats.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "lint:style": "stylelint '**/style.ts' --fix"
+    "lint:style": "stylelint '**/style.ts' --fix",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",
