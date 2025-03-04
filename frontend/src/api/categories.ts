@@ -14,9 +14,13 @@ export const getCategoryList = async (memberId: number) => {
 };
 
 export const postCategory = async (newCategory: Omit<Category, 'id'>) => {
-  const response = await apiClient.post(`${END_POINTS.CATEGORIES}`, newCategory);
+  const response = await apiClient.post(
+    `${END_POINTS.CATEGORIES}`,
+    newCategory,
+  );
 
   return await response.json();
 };
 
-export const editCategory = async (body: CategoryEditRequest) => await apiClient.put(`${END_POINTS.CATEGORIES}`, body);
+export const editCategory = async (body: CategoryEditRequest) =>
+  await apiClient.put(`${END_POINTS.CATEGORIES}`, body);

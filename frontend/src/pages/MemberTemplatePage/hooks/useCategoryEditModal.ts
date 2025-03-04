@@ -11,14 +11,25 @@ interface Props {
   onDeleteCategory: (deletedIds: number[]) => void;
 }
 
-export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCategory }: Props) => {
-  const [editedCategoryList, setEditedCategoryList] = useState<Category[]>([...categoryList]);
+export const useCategoryEditModal = ({
+  categoryList,
+  toggleModal,
+  onDeleteCategory,
+}: Props) => {
+  const [editedCategoryList, setEditedCategoryList] = useState<Category[]>([
+    ...categoryList,
+  ]);
   const [deleteCategoryIds, setDeleteCategoryIds] = useState<number[]>([]);
-  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(null);
+  const [editingCategoryId, setEditingCategoryId] = useState<number | null>(
+    null,
+  );
 
   const { mutateAsync: editCategory } = useCategoryEditMutation();
 
-  const { invalidIds, isValid } = useCategoryNameValidation(categoryList, editedCategoryList);
+  const { invalidIds, isValid } = useCategoryNameValidation(
+    categoryList,
+    editedCategoryList,
+  );
 
   useEffect(() => {
     if (!isEqualCategoryList(categoryList, editedCategoryList)) {
@@ -34,11 +45,16 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
     return arr1.every((category, index) => {
       const category2 = arr2[index];
 
-      return category.id === category2.id && category.name === category2.name && category.ordinal === category2.ordinal;
+      return (
+        category.id === category2.id &&
+        category.name === category2.name &&
+        category.ordinal === category2.ordinal
+      );
     });
   };
 
-  const isNewCategory = (id: number) => categoryList.every((category) => category.id !== id);
+  const isNewCategory = (id: number) =>
+    categoryList.every((category) => category.id !== id);
 
   const resetState = () => {
     setEditedCategoryList([...categoryList]);
@@ -53,7 +69,11 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
       return;
     }
 
-    setEditedCategoryList((prev) => prev.map((category) => (category.id === id ? { ...category, name } : category)));
+    setEditedCategoryList((prev) =>
+      prev.map((category) =>
+        category.id === id ? { ...category, name } : category,
+      ),
+    );
   };
 
   const handleOrdinalChange = (categoryList: Category[]) => {
@@ -67,11 +87,13 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
 
   const handleDeleteClick = (id: number) => {
     if (isNewCategory(id)) {
-      setEditedCategoryList((prev) => prev.filter((category) => category.id !== id));
-
-      const updatedCategoryList = [...editedCategoryList.filter((category) => category.id !== id)].sort(
-        (a, b) => a.ordinal - b.ordinal,
+      setEditedCategoryList((prev) =>
+        prev.filter((category) => category.id !== id),
       );
+
+      const updatedCategoryList = [
+        ...editedCategoryList.filter((category) => category.id !== id),
+      ].sort((a, b) => a.ordinal - b.ordinal);
 
       handleOrdinalChange(updatedCategoryList);
 
@@ -80,13 +102,17 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
 
     setDeleteCategoryIds((prev) => [...prev, id]);
 
-    const updatedCategoryList = [...editedCategoryList].sort((a, b) => a.ordinal - b.ordinal);
+    const updatedCategoryList = [...editedCategoryList].sort(
+      (a, b) => a.ordinal - b.ordinal,
+    );
 
     handleOrdinalChange(updatedCategoryList);
   };
 
   const handleRestoreClick = (id: number) => {
-    setDeleteCategoryIds((prev) => prev.filter((categoryId) => categoryId !== id));
+    setDeleteCategoryIds((prev) =>
+      prev.filter((categoryId) => categoryId !== id),
+    );
   };
 
   const handleEditClick = (id: number) => {
@@ -94,7 +120,9 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
   };
 
   const handleNameInputBlur = (id: number) => {
-    const trimmedName = editedCategoryList.find((category) => category.id === id)?.name.trim();
+    const trimmedName = editedCategoryList
+      .find((category) => category.id === id)
+      ?.name.trim();
 
     if (trimmedName !== undefined) {
       handleNameInputChange(id, trimmedName);
@@ -138,7 +166,9 @@ export const useCategoryEditModal = ({ categoryList, toggleModal, onDeleteCatego
       createCategories: filteredCategoryList
         .filter(({ id }) => isNewCategory(id))
         .map(({ name, ordinal }) => ({ name, ordinal })),
-      updateCategories: filteredCategoryList.filter(({ id }) => !isNewCategory(id)),
+      updateCategories: filteredCategoryList.filter(
+        ({ id }) => !isNewCategory(id),
+      ),
       deleteCategoryIds,
     };
 

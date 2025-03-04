@@ -34,17 +34,25 @@ const CategoryItems = ({
   onNameInputChange,
   onNameInputBlur,
 }: CategoryItemsProps) => {
-  const orderedCategoryList = [...editedCategoryList].sort((a, b) => a.ordinal - b.ordinal);
+  const orderedCategoryList = [...editedCategoryList].sort(
+    (a, b) => a.ordinal - b.ordinal,
+  );
 
   const dragItem = useRef<number | null>(null);
   const dragOverItem = useRef<number | null>(null);
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, position: number) => {
+  const handleDragStart = (
+    e: React.DragEvent<HTMLDivElement>,
+    position: number,
+  ) => {
     dragItem.current = position;
     e.currentTarget.style.opacity = '0.5';
   };
 
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>, position: number) => {
+  const handleDragEnter = (
+    e: React.DragEvent<HTMLDivElement>,
+    position: number,
+  ) => {
     dragOverItem.current = position;
     e.currentTarget.style.backgroundColor = theme.color.dark.white;
   };
@@ -57,7 +65,11 @@ const CategoryItems = ({
     e.currentTarget.style.opacity = '1';
     e.currentTarget.style.backgroundColor = '';
 
-    const reorderedCategoryList = getReorderedCategoryList(orderedCategoryList, dragItem.current, dragOverItem.current);
+    const reorderedCategoryList = getReorderedCategoryList(
+      orderedCategoryList,
+      dragItem.current,
+      dragOverItem.current,
+    );
 
     handleOrdinalChange(reorderedCategoryList);
 
@@ -65,7 +77,11 @@ const CategoryItems = ({
     dragOverItem.current = null;
   };
 
-  const getReorderedCategoryList = (categoryList: Category[], startIndex: number, endIndex: number) => {
+  const getReorderedCategoryList = (
+    categoryList: Category[],
+    startIndex: number,
+    endIndex: number,
+  ) => {
     const copyListItems = [...categoryList];
     const dragItem = copyListItems[startIndex];
 
@@ -110,7 +126,10 @@ const CategoryItems = ({
           ) : (
             <ExistingCategoryItem
               id={id}
-              name={editedCategoryList.find((category) => category.id === id)?.name ?? name}
+              name={
+                editedCategoryList.find((category) => category.id === id)
+                  ?.name ?? name
+              }
               isEditing={editingCategoryId === id}
               isDeleted={deleteCategoryIds.includes(id)}
               onChange={(e) => onNameInputChange(id, e.target.value)}

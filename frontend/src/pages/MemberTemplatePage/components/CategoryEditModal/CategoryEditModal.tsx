@@ -12,7 +12,12 @@ interface CategoryEditModalProps {
   onDeleteCategory: (deletedIds: number[]) => void;
 }
 
-const CategoryEditModal = ({ isOpen, toggleModal, categoryList, onDeleteCategory }: CategoryEditModalProps) => {
+const CategoryEditModal = ({
+  isOpen,
+  toggleModal,
+  categoryList,
+  onDeleteCategory,
+}: CategoryEditModalProps) => {
   const {
     editedCategoryList,
     deleteCategoryIds,
