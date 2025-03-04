@@ -10,8 +10,17 @@ interface CategoryNameInputProps {
   onKeyDown: (e: React.KeyboardEvent) => void;
 }
 
-const CategoryNameInput = ({ value, onChange, onBlur, onKeyDown }: CategoryNameInputProps) => (
-  <Input size='large' variant='text' style={{ width: '100%', height: '2.375rem' }}>
+const CategoryNameInput = ({
+  value,
+  onChange,
+  onBlur,
+  onKeyDown,
+}: CategoryNameInputProps) => (
+  <Input
+    size='large'
+    variant='text'
+    style={{ width: '100%', height: '2.375rem' }}
+  >
     <Input.TextField
       type='text'
       value={value}

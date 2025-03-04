@@ -8,7 +8,13 @@ export {
   editTemplate,
   deleteTemplate,
 } from './templates';
-export { postSignup, postLogin, postLogout, getLoginState, checkName } from './authentication';
+export {
+  postSignup,
+  postLogin,
+  postLogout,
+  getLoginState,
+  checkName,
+} from './authentication';
 export { getCategoryList, postCategory, editCategory } from './categories';
 export { getTagList } from './tags';
 export { postLike, deleteLike } from './like';

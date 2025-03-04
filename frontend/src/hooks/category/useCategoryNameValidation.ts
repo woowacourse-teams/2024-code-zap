@@ -4,7 +4,10 @@ import type { Category } from '@/types';
 
 const INVALID_NAMES = ['전체보기', '카테고리 없음', ''];
 
-export const useCategoryNameValidation = (categoryList: Category[], editedCategoryList: Category[]) => {
+export const useCategoryNameValidation = (
+  categoryList: Category[],
+  editedCategoryList: Category[],
+) => {
   const [invalidIds, setInvalidIds] = useState<number[]>([]);
 
   useEffect(() => {
@@ -28,7 +31,9 @@ export const useCategoryNameValidation = (categoryList: Category[], editedCatego
     });
 
     editedCategoryList.forEach(({ id, name }) => {
-      const originalName = categoryList.find((category) => category.id === id)?.name;
+      const originalName = categoryList.find(
+        (category) => category.id === id,
+      )?.name;
 
       if (INVALID_NAMES.includes(name)) {
         invalidNames.add(id);

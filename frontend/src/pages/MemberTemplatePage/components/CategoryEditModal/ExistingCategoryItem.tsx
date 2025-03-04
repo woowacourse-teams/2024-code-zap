@@ -34,7 +34,10 @@ const ExistingCategoryItem = ({
     {isDeleted ? (
       <>
         <CategoryName>
-          <Text.Medium color={theme.color.light.analogous_primary_400} textDecoration='line-through'>
+          <Text.Medium
+            color={theme.color.light.analogous_primary_400}
+            textDecoration='line-through'
+          >
             {name}
           </Text.Medium>
         </CategoryName>
@@ -44,14 +47,24 @@ const ExistingCategoryItem = ({
       <>
         <CategoryName>
           {isEditing ? (
-            <CategoryNameInput value={name} onChange={onChange} onBlur={onBlur} onKeyDown={onKeyDown} />
+            <CategoryNameInput
+              value={name}
+              onChange={onChange}
+              onBlur={onBlur}
+              onKeyDown={onKeyDown}
+            />
           ) : (
             <Text.Medium color={theme.color.light.secondary_500} weight='bold'>
               {name}
             </Text.Medium>
           )}
         </CategoryName>
-        <IconButtons edit delete onEditClick={() => onEditClick(id)} onDeleteClick={() => onDeleteClick(id)} />
+        <IconButtons
+          edit
+          delete
+          onEditClick={() => onEditClick(id)}
+          onDeleteClick={() => onDeleteClick(id)}
+        />
       </>
     )}
   </>

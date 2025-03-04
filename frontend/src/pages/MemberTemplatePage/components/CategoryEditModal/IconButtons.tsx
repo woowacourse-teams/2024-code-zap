@@ -12,7 +12,14 @@ interface IconButtonsProps {
   delete?: boolean;
 }
 
-const IconButtons = ({ onRestoreClick, onEditClick, onDeleteClick, restore, edit, delete: del }: IconButtonsProps) => (
+const IconButtons = ({
+  onRestoreClick,
+  onEditClick,
+  onDeleteClick,
+  restore,
+  edit,
+  delete: del,
+}: IconButtonsProps) => (
   <S.IconButtonContainer>
     {restore && (
       <S.IconButtonWrapper onClick={onRestoreClick}>
@@ -21,12 +28,20 @@ const IconButtons = ({ onRestoreClick, onEditClick, onDeleteClick, restore, edit
     )}
     {edit && (
       <S.IconButtonWrapper onClick={onEditClick}>
-        <PencilIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 이름 변경' />
+        <PencilIcon
+          width={ICON_SIZE.MEDIUM_LARGE}
+          height={ICON_SIZE.MEDIUM_LARGE}
+          aria-label='카테고리 이름 변경'
+        />
       </S.IconButtonWrapper>
     )}
     {del && (
       <S.IconButtonWrapper onClick={onDeleteClick}>
-        <TrashcanIcon width={ICON_SIZE.MEDIUM_LARGE} height={ICON_SIZE.MEDIUM_LARGE} aria-label='카테고리 삭제' />
+        <TrashcanIcon
+          width={ICON_SIZE.MEDIUM_LARGE}
+          height={ICON_SIZE.MEDIUM_LARGE}
+          aria-label='카테고리 삭제'
+        />
       </S.IconButtonWrapper>
     )}
   </S.IconButtonContainer>
