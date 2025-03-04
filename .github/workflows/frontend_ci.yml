@@ -32,6 +32,10 @@ jobs:
         run: pnpm run tsc
         working-directory: ${{ env.frontend-directory }}
 
+      - name: 린트 체크 실행
+        run: pnpm run lint
+        working-directory: ${{ env.frontend-directory }}
+
       - name: 테스트 실행
         run: pnpm run test
         working-directory: ${{ env.frontend-directory }}
