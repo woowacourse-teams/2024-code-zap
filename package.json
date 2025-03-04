@@ -10,8 +10,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack serve",
-    "frontend": "pnpm -F frontend dev",
-    "design": "pnpm -F design-system dev"
+    "frontend": "pnpm -F frontend",
+    "design": "pnpm -F design-system"
   },
   "keywords": [],
   "author": "",
