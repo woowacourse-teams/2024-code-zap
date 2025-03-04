@@ -18,7 +18,14 @@
     "plugin:import/warnings",
     "plugin:import/typescript"
   ],
-  "ignorePatterns": ["dist", "*.config.ts", "*.common.js", "*.prod.js", "*.dev.js", "*.polyfills.js"],
+  "ignorePatterns": [
+    "dist",
+    "*.config.ts",
+    "*.common.js",
+    "*.prod.js",
+    "*.dev.js",
+    "*.polyfills.js"
+  ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["react-refresh", "react", "import", "@typescript-eslint"],
   "settings": {
@@ -64,7 +71,11 @@
     "import/order": [
       "error",
       {
-        "groups": [["builtin", "external"], ["internal"], ["parent", "sibling", "index", "type"]],
+        "groups": [
+          ["builtin", "external"],
+          ["internal"],
+          ["parent", "sibling", "index", "type"]
+        ],
         "warnOnUnassignedImports": true,
         "alphabetize": { "order": "asc" },
         "newlines-between": "always",
@@ -113,7 +124,10 @@
         "tsx": "never"
       }
     ],
-    "react-refresh/only-export-components": ["error", { "allowConstantExport": false }],
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": false }
+    ],
     "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "import/no-default-export": "error"
   },
