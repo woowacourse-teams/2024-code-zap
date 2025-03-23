@@ -1,4 +1,6 @@
 {
+  "$schema": "../schema/LandingPage.schema.json",
+
   "ex_title_1": "ZAP하게 저장",
   "ex_desc_1": "자주 쓰는 나의 코드를 간편하게 저장하세요",
   "ex_title_2": "ZAP하게 관리",

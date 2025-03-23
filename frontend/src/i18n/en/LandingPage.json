@@ -1,4 +1,6 @@
 {
+  "$schema": "../schema/LandingPage.schema.json",
+
   "ex_title_1": "Save with a ZAP",
   "ex_desc_1": "Keep your frequently used code at your fingertips.",
   "ex_title_2": "Organize with a ZAP",
