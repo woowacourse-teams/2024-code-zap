@@ -1,0 +1,14 @@
+{
+  "$schema": "../schema/Header.schema.json",
+
+  "myTemplates": "내 템플릿",
+  "likedTemplates": "좋아요한 템플릿",
+  "explore": "구경가기",
+  "newTemplate": "새 템플릿",
+  "login": "로그인",
+  "logout": "로그아웃",
+  "alertLogin": "로그인을 해주세요.",
+  "newTemplateAria": "템플릿 작성 페이지로 이동됩니다.",
+  "logoButton": "로고 버튼",
+  "menu": "메뉴"
+}
