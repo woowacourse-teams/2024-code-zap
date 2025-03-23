@@ -45,7 +45,11 @@ const enableMocking = async () => {
   await worker.start();
 };
 
-enableMocking().then(() => {
+const enableI18n = async () => {
+  await import('./i18n');
+};
+
+Promise.all([enableMocking(), enableI18n()]).then(() => {
   root.render(
     <React.StrictMode>
       <QueryClientProvider client={queryClient}>
