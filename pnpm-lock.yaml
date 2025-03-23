@@ -14,6 +14,12 @@ importers:
       '@emotion/styled':
         specifier: ^11.11.5
         version: 11.14.0(@emotion/react@11.14.0(@types/react@18.3.18)(react@18.3.1))(@types/react@18.3.18)(react@18.3.1)
+      i18next:
+        specifier: ^24.2.3
+        version: 24.2.3(typescript@5.7.3)
+      i18next-browser-languagedetector:
+        specifier: ^8.0.4
+        version: 8.0.4
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -23,6 +29,9 @@ importers:
       react-error-boundary:
         specifier: ^4.0.13
         version: 4.1.2(react@18.3.1)
+      react-i18next:
+        specifier: ^15.4.1
+        version: 15.4.1(i18next@24.2.3(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
         specifier: ^6.24.1
         version: 6.29.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -166,18 +175,9 @@ importers:
       '@uiw/react-codemirror':
         specifier: ^4.23.0
         version: 4.23.7(@babel/runtime@7.26.10)(@codemirror/autocomplete@6.18.4)(@codemirror/language@6.10.8)(@codemirror/lint@6.8.4)(@codemirror/search@6.5.8)(@codemirror/state@6.5.1)(@codemirror/theme-one-dark@6.1.2)(@codemirror/view@6.36.2)(codemirror@6.0.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      i18next:
-        specifier: ^24.2.3
-        version: 24.2.3(typescript@5.7.3)
-      i18next-browser-languagedetector:
-        specifier: ^8.0.4
-        version: 8.0.4
       react-error-boundary:
         specifier: ^4.0.13
         version: 4.1.2(react@18.3.1)
-      react-i18next:
-        specifier: ^15.4.1
-        version: 15.4.1(i18next@24.2.3(typescript@5.7.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     devDependencies:
       '@chromatic-com/storybook':
         specifier: ^1.6.1
