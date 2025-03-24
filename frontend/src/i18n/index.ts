@@ -7,9 +7,11 @@ import { initReactI18next } from 'react-i18next';
 import headerEn from './en/Header.json';
 import landingEn from './en/LandingPage.json';
 import memberTemplatePageEn from './en/MemberTemplatePage.json';
+import myLikedTemplatePageEn from './en/MyLikedTemplatePage.json';
 import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
 import memberTemplatePageKo from './ko/MemberTemplatePage.json';
+import myLikedTemplatePageKo from './ko/MyLikedTemplatePage.json';
 
 i18n
   .use(LanguageDetector)
@@ -17,17 +19,19 @@ i18n
   .init({
     fallbackLng: 'en',
     lng: 'en',
-    ns: ['LandingPage', 'Header', 'MemberTemplatePage'],
+    ns: ['LandingPage', 'Header', 'MemberTemplatePage', 'MyLikedTemplatePage'],
     resources: {
       ko: {
         LandingPage: landingKo,
         Header: headerKo,
         MemberTemplatePage: memberTemplatePageKo,
+        MyLikedTemplatePage: myLikedTemplatePageKo,
       },
       en: {
         LandingPage: landingEn,
         Header: headerEn,
         MemberTemplatePage: memberTemplatePageEn,
+        MyLikedTemplatePage: myLikedTemplatePageEn,
       },
     },
     interpolation: {

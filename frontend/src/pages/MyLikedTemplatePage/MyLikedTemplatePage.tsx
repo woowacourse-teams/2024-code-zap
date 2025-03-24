@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router-dom';
 
 import {
@@ -50,6 +51,8 @@ const MyLikedTemplatePage = () => {
   const templateList = templateData?.templates || [];
   const paginationSizes = templateData?.paginationSizes || 0;
 
+  const { t } = useTranslation('MyLikedTemplatePage');
+
   if (!isMine) {
     return <ForbiddenPage />;
   }
@@ -58,20 +61,16 @@ const MyLikedTemplatePage = () => {
     <>
       <S.PageTitle>
         {isMobile ? (
-          <Heading.XSmall color='black'>
-            내가 좋아요한 템플릿 목록입니다 :)
-          </Heading.XSmall>
+          <Heading.XSmall color='black'>{t('title')}</Heading.XSmall>
         ) : (
-          <Heading.Medium color='black'>
-            내가 좋아요한 템플릿 목록입니다 :)
-          </Heading.Medium>
+          <Heading.Medium color='black'>{t('title')}</Heading.Medium>
         )}
       </S.PageTitle>
       {templateList.length === 0 ? (
         isPending ? (
           <LoadingBall />
         ) : (
-          <NoResults>좋아요한 템플릿이 없습니다.</NoResults>
+          <NoResults>{t('noResults')}</NoResults>
         )
       ) : (
         <S.TemplateListSectionWrapper>
