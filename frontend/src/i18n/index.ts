@@ -6,24 +6,28 @@ import { initReactI18next } from 'react-i18next';
 
 import headerEn from './en/Header.json';
 import landingEn from './en/LandingPage.json';
+import memberTemplatePageEn from './en/MemberTemplatePage.json';
 import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
+import memberTemplatePageKo from './ko/MemberTemplatePage.json';
 
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    fallbackLng: 'ko',
-    lng: 'ko',
-    ns: ['LandingPage', 'Header'],
+    fallbackLng: 'en',
+    lng: 'en',
+    ns: ['LandingPage', 'Header', 'MemberTemplatePage'],
     resources: {
       ko: {
         LandingPage: landingKo,
         Header: headerKo,
+        MemberTemplatePage: memberTemplatePageKo,
       },
       en: {
         LandingPage: landingEn,
         Header: headerEn,
+        MemberTemplatePage: memberTemplatePageEn,
       },
     },
     interpolation: {
