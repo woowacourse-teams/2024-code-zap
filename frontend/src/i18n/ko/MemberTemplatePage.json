@@ -11,5 +11,8 @@
   },
   "topBanner": {
     "message": "님의 템플릿 입니다 :)"
+  },
+  "templateList": {
+    "noResults": "검색 결과가 없습니다."
   }
 }

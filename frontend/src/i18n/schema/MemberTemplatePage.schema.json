@@ -25,7 +25,15 @@
         "message": { "type": "string" }
       },
       "required": ["message"]
+    },
+    "templateList": {
+      "type": "object",
+      "properties": {
+        "noResults": { "type": "string" }
+      },
+      "required": ["noResults"]
     }
   },
-  "required": ["search", "searchResult", "sorting", "topBanner"]
+
+  "required": ["search", "searchResult", "sorting", "topBanner", "templateList"]
 }

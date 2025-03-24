@@ -12,5 +12,8 @@
 
   "topBanner": {
     "message": "'s templates :)"
+  },
+  "templateList": {
+    "noResults": "No templates found."
   }
 }
