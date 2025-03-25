@@ -1,0 +1,56 @@
+{
+  "$schema": "../schema/TemplateExplorePage.schema.json",
+
+  "watchingHotTopic": "🔥 Watching [ {{topic}} ]",
+  "trendingTopic": "🔥 Trending topics",
+  "searchResult": "'{{keyword}}' search results",
+  "search": "Search",
+  "noResults": "No templates found.",
+  "hotTopic": {
+    "wooteco": {
+      "topic": "Wooteco",
+      "description": "The blend of real-world experience and structured education,",
+      "subDescription": "The joy of growing together, not alone"
+    },
+    "precourse": {
+      "topic": "Precourse",
+      "description": "The first step toward Wooteco,",
+      "subDescription": "A 4-week journey of growth"
+    },
+    "javascript": {
+      "topic": "JavaScript",
+      "description": "The heart of the web,",
+      "subDescription": "A unified language across all platforms beyond browsers"
+    },
+    "java": {
+      "topic": "Java",
+      "description": "The giant of the enterprise world,",
+      "subDescription": "A symbol of reliability trusted for over 20 years"
+    },
+    "kotlin": {
+      "topic": "Kotlin",
+      "description": "The essence of a modern JVM language,",
+      "subDescription": "A perfect harmony of productivity and safety"
+    },
+    "spring": {
+      "topic": "Spring",
+      "description": "The unrivaled Java framework,",
+      "subDescription": "Elegant server architecture"
+    },
+    "react": {
+      "topic": "React",
+      "description": "The power of reusability and ecosystem,",
+      "subDescription": "At the center of modern web development"
+    },
+    "android": {
+      "topic": "Android",
+      "description": "The leader of the mobile revolution,",
+      "subDescription": "The choice of 7 billion devices worldwide"
+    },
+    "algorithm": {
+      "topic": "Algorithm",
+      "description": "Essential knowledge for developers,",
+      "subDescription": "The foundation of efficient thinking"
+    }
+  }
+}
