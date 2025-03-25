@@ -3,12 +3,6 @@
 
   "search": "Search",
   "searchResult": "'{{keyword}}' search results",
-  "sorting": {
-    "최근 생성 순": "Latest created",
-    "최근 수정 순": "Recently updated",
-    "오래된 순": "Oldest first",
-    "좋아요 순": "Most liked"
-  },
 
   "topBanner": {
     "message": "'s templates :)"

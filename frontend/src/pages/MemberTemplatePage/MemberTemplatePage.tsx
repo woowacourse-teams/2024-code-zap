@@ -29,6 +29,7 @@ const MemberTemplatePage = () => {
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
   const { t } = useTranslation('MemberTemplatePage');
+  const { t: tTemplates } = useTranslation('ModelsTemplates');
 
   useTrackPageViewed({
     eventName: `[Viewed] 맴버 (ID:${memberId}) 템플릿 페이지`,
@@ -121,7 +122,7 @@ const MemberTemplatePage = () => {
               {...dropdownProps}
               options={[...SORTING_OPTIONS]}
               currentValue={sortingOption}
-              getOptionLabel={(option) => t(`sorting.${option.value}`)}
+              getOptionLabel={(option) => tTemplates(option.value)}
             />
           </Flex>
 

@@ -36,6 +36,7 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 const TemplateExplorePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
   const { t } = useTranslation('TemplateExplorePage');
+  const { t: tTemplates } = useTranslation('ModelsTemplates');
 
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
@@ -124,7 +125,7 @@ const TemplateExplorePage = () => {
           {...dropdownProps}
           options={[...SORTING_OPTIONS]}
           currentValue={sortingOption}
-          getOptionLabel={(option) => t(`sorting.${option.value}`)}
+          getOptionLabel={(option) => tTemplates(option.value)}
         />
       </Flex>
       <QueryErrorResetBoundary>

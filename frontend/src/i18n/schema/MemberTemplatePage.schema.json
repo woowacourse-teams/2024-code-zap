@@ -3,21 +3,12 @@
   "title": "MemberTemplatePage i18n Schema",
   "type": "object",
   "properties": {
+    "$schema": { "type": "string" },
     "search": {
       "type": "string"
     },
     "searchResult": {
       "type": "string"
-    },
-    "sorting": {
-      "type": "object",
-      "properties": {
-        "최근 생성 순": { "type": "string" },
-        "최근 수정 순": { "type": "string" },
-        "오래된 순": { "type": "string" },
-        "좋아요 순": { "type": "string" }
-      },
-      "required": ["최근 생성 순", "최근 수정 순", "오래된 순", "좋아요 순"]
     },
     "topBanner": {
       "type": "object",
@@ -34,6 +25,6 @@
       "required": ["noResults"]
     }
   },
-
-  "required": ["search", "searchResult", "sorting", "topBanner", "templateList"]
+  "additionalProperties": false,
+  "required": ["search", "searchResult", "topBanner", "templateList"]
 }

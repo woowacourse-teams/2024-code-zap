@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schema/models/Templates.schema.json",
+
+  "createdAtDesc": "최근 생성 순",
+  "modifiedAtDesc": "최근 수정 순",
+  "createdAtAsc": "오래된 순",
+  "likesCountDesc": "좋아요 순"
+}

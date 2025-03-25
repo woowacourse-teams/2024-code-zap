@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Templates sorting options schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "createdAtDesc": { "type": "string" },
+    "modifiedAtDesc": { "type": "string" },
+    "createdAtAsc": { "type": "string" },
+    "likesCountDesc": { "type": "string" },
+    "additionalProperties": false
+  },
+  "required": [
+    "createdAtDesc",
+    "modifiedAtDesc",
+    "createdAtAsc",
+    "likesCountDesc"
+  ],
+  "additionalProperties": false
+}
