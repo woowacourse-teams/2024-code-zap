@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema/TemplateUploadPage.schema.json",
+
+  "titlePlaceholder": "Enter a title",
+  "descriptionPlaceholder": "When do you think you'll reuse this template?",
+  "addSourcecodeAriaLabel": "Add source code",
+  "cancel": "Cancel",
+  "save": "Save",
+  "categoryLoadingError": "Loading category list. Please try again later.",
+  "errorPrefix": "Error: ",
+
+  "sourceCodeEditor": {
+    "filenamePlaceholder": "filename.[extension]",
+    "deleteAriaLabel": "Delete template",
+    "codePlaceholder": "// Enter your code"
+  },
+
+  "tagInput": {
+    "infoText": "Click on a tag to remove it easily!",
+    "inputPlaceholder": "Press enter or space bar to add a tag"
+  }
+}

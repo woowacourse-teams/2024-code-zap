@@ -1,0 +1,47 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TemplateUploadPage i18n Schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "titlePlaceholder": { "type": "string" },
+    "descriptionPlaceholder": { "type": "string" },
+    "addSourcecodeAriaLabel": { "type": "string" },
+    "cancel": { "type": "string" },
+    "save": { "type": "string" },
+    "categoryLoadingError": { "type": "string" },
+    "errorPrefix": { "type": "string" },
+
+    "sourceCodeEditor": {
+      "type": "object",
+      "properties": {
+        "filenamePlaceholder": { "type": "string" },
+        "deleteAriaLabel": { "type": "string" },
+        "codePlaceholder": { "type": "string" }
+      },
+      "required": ["filenamePlaceholder", "deleteAriaLabel", "codePlaceholder"],
+      "additionalProperties": false
+    },
+
+    "tagInput": {
+      "type": "object",
+      "properties": {
+        "infoText": { "type": "string" },
+        "inputPlaceholder": { "type": "string" }
+      },
+      "required": ["infoText", "inputPlaceholder"],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "titlePlaceholder",
+    "descriptionPlaceholder",
+    "addSourcecodeAriaLabel",
+    "cancel",
+    "save",
+    "categoryLoadingError",
+    "errorPrefix"
+  ],
+
+  "additionalProperties": false
+}

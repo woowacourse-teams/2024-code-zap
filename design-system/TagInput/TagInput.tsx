@@ -3,6 +3,7 @@ import { ToastContext } from '@/contexts';
 import { useCustomContext } from '@/hooks';
 import { validateTagLength } from '@/service/validates';
 import { ChangeEvent, KeyboardEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { theme } from '@design/style/theme';
 
@@ -24,6 +25,7 @@ const TagInput = ({
   deleteTag,
 }: Props) => {
   const { failAlert } = useCustomContext(ToastContext);
+  const { t } = useTranslation('TemplateUploadPage');
 
   const handleSpaceBarAndEnterKeydown = (
     e: KeyboardEvent<HTMLInputElement>,
@@ -61,7 +63,7 @@ const TagInput = ({
       {tags.length !== 0 && (
         <Flex justify='flex-end' width='100%'>
           <Text.XSmall color={theme.color.light.tertiary_400}>
-            등록된 태그를 누르면 태그 등록을 쉽게 취소할 수 있어요!
+            {t('tagInput.infoText')}
           </Text.XSmall>
         </Flex>
       )}
@@ -77,7 +79,7 @@ const TagInput = ({
       </Flex>
       <Input size='large' variant='outlined'>
         <Input.TextField
-          placeholder='enter 또는 space bar로 태그를 등록해보세요'
+          placeholder={t('tagInput.inputPlaceholder')}
           value={value}
           onChange={handleTagInput}
           onKeyUp={handleSpaceBarAndEnterKeydown}

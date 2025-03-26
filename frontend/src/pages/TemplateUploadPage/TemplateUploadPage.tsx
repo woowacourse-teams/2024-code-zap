@@ -1,5 +1,6 @@
 import { theme } from '@design/style/theme';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PlusIcon } from '@/assets/images';
 import {
@@ -41,6 +42,7 @@ import * as S from './TemplateUploadPage.style';
 
 const TemplateUploadPage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 템플릿 업로드 페이지' });
+  const { t } = useTranslation('TemplateUploadPage');
 
   const navigate = useCustomNavigate();
   const { failAlert } = useToast();
@@ -117,9 +119,7 @@ const TemplateUploadPage = () => {
 
   const canSaveTemplate = (): boolean => {
     if (categoryProps.isCategoryQueryFetching) {
-      failAlert(
-        '카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.',
-      );
+      failAlert(t('categoryLoadingError'));
 
       return false;
     }
@@ -156,6 +156,19 @@ const TemplateUploadPage = () => {
     });
   };
 
+  const { t: tConstants } = useTranslation('Constants');
+
+  const TRANS_VISIBILITY_OPTIONS: Record<string, string | number> = (() => {
+    const keys = Object.keys(
+      VISIBILITY_OPTIONS,
+    ) as (keyof typeof VISIBILITY_OPTIONS)[];
+
+    return keys.reduce(
+      (acc, key) => ({ ...acc, [key]: tConstants(VISIBILITY_OPTIONS[key]) }),
+      {},
+    );
+  })();
+
   return (
     <S.TemplateEditContainer>
       <S.MainContainer>
@@ -164,7 +177,7 @@ const TemplateUploadPage = () => {
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
             <Input.TextField
-              placeholder='제목을 입력해주세요'
+              placeholder={t('titlePlaceholder')}
               value={title}
               onChange={handleTitleChange}
             />
@@ -173,7 +186,7 @@ const TemplateUploadPage = () => {
 
         <Textarea size='medium' variant='text'>
           <Textarea.TextField
-            placeholder='이 템플릿을 언제 다시 쓸 것 같나요?'
+            placeholder={t('descriptionPlaceholder')}
             minRows={1}
             maxRows={5}
             value={description}
@@ -212,14 +225,14 @@ const TemplateUploadPage = () => {
           <PlusIcon
             width={ICON_SIZE.X_SMALL}
             height={ICON_SIZE.X_SMALL}
-            aria-label='소스코드 추가'
+            aria-label={t('addSourcecodeAriaLabel')}
           />
         </Button>
 
         <TagInput {...tagProps} />
 
         <Radio
-          options={VISIBILITY_OPTIONS}
+          options={TRANS_VISIBILITY_OPTIONS}
           currentValue={visibility}
           handleCurrentValue={setVisibility}
         />
@@ -233,7 +246,7 @@ const TemplateUploadPage = () => {
               variant='outlined'
               onClick={handleCancelButton}
             >
-              취소
+              {t('cancel')}
             </S.CancelButton>
             <Button
               size='medium'
@@ -241,14 +254,14 @@ const TemplateUploadPage = () => {
               onClick={handleSaveButtonClick}
               disabled={sourceCodes.length === 0}
             >
-              저장
+              {t('save')}
             </Button>
           </S.ButtonGroup>
         )}
 
         {error && (
           <Text.Medium color={theme.color.light.analogous_primary_400}>
-            Error: {error.message}
+            {t('errorPrefix') + error.message}
           </Text.Medium>
         )}
       </S.MainContainer>
