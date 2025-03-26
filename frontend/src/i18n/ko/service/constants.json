@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schema/service/constants.schema.json",
+
+  "visibility": {
+    "public": "전체 공개",
+    "private": "비공개"
+  }
+}

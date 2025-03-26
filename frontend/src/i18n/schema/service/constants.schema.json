@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Service constants i18n schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "visibility": {
+      "type": "object",
+      "properties": {
+        "public": { "type": "string" },
+        "private": { "type": "string" }
+      },
+      "required": ["public", "private"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["visibility"],
+  "additionalProperties": false
+}
