@@ -17,7 +17,7 @@ interface Props {
 const HotTopicCarousel = ({ selectTopic, selectedHotTopic }: Props) => {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
-  const { t } = useTranslation('TemplateExplorePage');
+  const { t } = useTranslation('HotTopic');
 
   return (
     <Carousel

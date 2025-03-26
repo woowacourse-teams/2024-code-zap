@@ -10,12 +10,14 @@ import memberTemplatePageEn from './en/MemberTemplatePage.json';
 import myLikedTemplatePageEn from './en/MyLikedTemplatePage.json';
 import templateExplorePageEn from './en/TemplateExplorePage.json';
 import ModelsTemplatesEn from './en/models/Templates.json';
+import HotTopicEn from './en/service/hotTopic.json';
 import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
 import memberTemplatePageKo from './ko/MemberTemplatePage.json';
 import myLikedTemplatePageKo from './ko/MyLikedTemplatePage.json';
 import templateExplorePageKo from './ko/TemplateExplorePage.json';
 import ModelsTemplatesKo from './ko/models/Templates.json';
+import HotTopicKo from './ko/service/hotTopic.json';
 
 i18n
   .use(LanguageDetector)
@@ -30,6 +32,7 @@ i18n
       'MyLikedTemplatePage',
       'TemplateExplorePage',
       'ModelsTemplates',
+      'HotTopic',
     ],
     resources: {
       ko: {
@@ -39,6 +42,7 @@ i18n
         MyLikedTemplatePage: myLikedTemplatePageKo,
         TemplateExplorePage: templateExplorePageKo,
         ModelsTemplates: ModelsTemplatesKo,
+        HotTopic: HotTopicKo,
       },
       en: {
         LandingPage: landingEn,
@@ -47,6 +51,7 @@ i18n
         MyLikedTemplatePage: myLikedTemplatePageEn,
         TemplateExplorePage: templateExplorePageEn,
         ModelsTemplates: ModelsTemplatesEn,
+        HotTopic: HotTopicEn,
       },
     },
     interpolation: {

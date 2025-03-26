@@ -36,6 +36,7 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 const TemplateExplorePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
   const { t } = useTranslation('TemplateExplorePage');
+  const { t: tHotTopic } = useTranslation('HotTopic');
   const { t: tTemplates } = useTranslation('ModelsTemplates');
 
   const windowWidth = useWindowWidth();
@@ -85,13 +86,17 @@ const TemplateExplorePage = () => {
         {isMobile ? (
           <Heading.XSmall color='black'>
             {selectedHotTopic
-              ? t('watchingHotTopic', { topic: t(selectedHotTopic) })
+              ? t('watchingHotTopic', {
+                  topic: tHotTopic(selectedHotTopic),
+                })
               : t('trendingTopic')}
           </Heading.XSmall>
         ) : (
           <Heading.Medium color='black'>
             {selectedHotTopic
-              ? t('watchingHotTopic', { topic: t(selectedHotTopic) })
+              ? t('watchingHotTopic', {
+                  topic: tHotTopic(selectedHotTopic),
+                })
               : t('trendingTopic')}
           </Heading.Medium>
         )}

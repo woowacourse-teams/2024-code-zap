@@ -8,112 +8,14 @@
     "trendingTopic": { "type": "string" },
     "searchResult": { "type": "string" },
     "search": { "type": "string" },
-    "noResults": { "type": "string" },
-    "hotTopic": {
-      "type": "object",
-      "properties": {
-        "wooteco": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "precourse": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "javascript": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "java": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "kotlin": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "spring": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "react": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "android": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        },
-        "algorithm": {
-          "type": "object",
-          "properties": {
-            "topic": { "type": "string" },
-            "description": { "type": "string" },
-            "subDescription": { "type": "string" }
-          },
-          "required": ["topic", "description", "subDescription"]
-        }
-      },
-      "required": [
-        "wooteco",
-        "precourse",
-        "javascript",
-        "java",
-        "kotlin",
-        "spring",
-        "react",
-        "android",
-        "algorithm"
-      ]
-    }
+    "noResults": { "type": "string" }
   },
   "required": [
     "watchingHotTopic",
     "trendingTopic",
     "searchResult",
     "search",
-    "noResults",
-    "hotTopic"
+    "noResults"
   ],
   "additionalProperties": false
 }
