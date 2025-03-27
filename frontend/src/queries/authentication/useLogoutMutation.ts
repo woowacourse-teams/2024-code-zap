@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { postLogout } from '@/api';
 import { ToastContext } from '@/contexts';
@@ -7,6 +8,7 @@ import { useAuth } from '@/hooks/authentication';
 
 export const useLogoutMutation = () => {
   const { handleLoginState } = useAuth();
+  const { t } = useTranslation();
   const { successAlert } = useCustomContext(ToastContext);
 
   return useMutation({
@@ -16,7 +18,7 @@ export const useLogoutMutation = () => {
       localStorage.removeItem('memberId');
       localStorage.removeItem('authorization');
       handleLoginState(false);
-      successAlert('로그아웃 성공!');
+      successAlert(t('LoginPage:alert.logoutSuccess'));
     },
     onError: (error) => {
       console.error(error);

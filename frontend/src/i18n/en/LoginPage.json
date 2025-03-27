@@ -23,6 +23,7 @@
   },
   "alert": {
     "success": "Login successful!",
-    "fail": "Login failed."
+    "fail": "Login failed.",
+    "logoutSuccess": "Logout successful!"
   }
 }

@@ -84,9 +84,13 @@
         "fail": {
           "type": "string",
           "description": "Error message shown after failed login"
+        },
+        "logoutSuccess": {
+          "type": "string",
+          "description": "Success message shown after successful logout"
         }
       },
-      "required": ["success", "fail"]
+      "required": ["success", "fail", "logoutSuccess"]
     }
   },
   "required": ["title", "form", "signup", "alert"]
