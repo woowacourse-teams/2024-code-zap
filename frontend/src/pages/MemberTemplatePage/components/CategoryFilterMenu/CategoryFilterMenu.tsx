@@ -1,5 +1,6 @@
 import { theme } from '@design/style/theme';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { BooksIcon, Chevron2Icon, SettingIcon } from '@/assets/images';
 import { Text } from '@/components';
@@ -22,6 +23,7 @@ const CategoryFilterMenu = ({
   categoryList,
   onSelectCategory,
 }: CategoryMenuProps) => {
+  const { t } = useTranslation('Category');
   const [selectedId, setSelectedId] = useState<number>(0);
   const [isEditModalOpen, toggleEditModal] = useToggle();
   const [isMenuOpen, toggleMenu] = useToggle(false);
@@ -92,7 +94,7 @@ const CategoryFilterMenu = ({
         <S.CategoryListContainer>
           <S.CategoryButtonContainer>
             <CategoryButton
-              name='전체보기'
+              name={t('Category:defaultCategories.viewAll')}
               disabled={selectedId === 0}
               onClick={() => handleCategorySelect(0)}
             />

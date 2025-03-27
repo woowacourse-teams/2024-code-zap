@@ -10,6 +10,7 @@ import memberTemplatePageEn from './en/MemberTemplatePage.json';
 import myLikedTemplatePageEn from './en/MyLikedTemplatePage.json';
 import templateExplorePageEn from './en/TemplateExplorePage.json';
 import templateUploadPageEn from './en/TemplateUploadPage.json';
+import categoryEn from './en/components/Category.json';
 import modelsTemplatesEn from './en/models/Templates.json';
 import ConstantsEn from './en/service/constants.json';
 import HotTopicEn from './en/service/hotTopic.json';
@@ -19,6 +20,7 @@ import memberTemplatePageKo from './ko/MemberTemplatePage.json';
 import myLikedTemplatePageKo from './ko/MyLikedTemplatePage.json';
 import templateExplorePageKo from './ko/TemplateExplorePage.json';
 import templateUploadPageKo from './ko/TemplateUploadPage.json';
+import categoryKo from './ko/components/Category.json';
 import modelsTemplatesKo from './ko/models/Templates.json';
 import ConstantsKo from './ko/service/constants.json';
 import HotTopicKo from './ko/service/hotTopic.json';
@@ -30,6 +32,7 @@ i18n
     fallbackLng: 'en',
     lng: 'en',
     ns: [
+      'Category',
       'LandingPage',
       'Header',
       'MemberTemplatePage',
@@ -41,6 +44,7 @@ i18n
     ],
     resources: {
       ko: {
+        Category: categoryKo,
         LandingPage: landingKo,
         Header: headerKo,
         MemberTemplatePage: memberTemplatePageKo,
@@ -52,6 +56,7 @@ i18n
         Constants: ConstantsKo,
       },
       en: {
+        Category: categoryEn,
         LandingPage: landingEn,
         Header: headerEn,
         MemberTemplatePage: memberTemplatePageEn,

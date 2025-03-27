@@ -1,4 +1,5 @@
 import { Guide, Text } from '@/components';
+import { useTranslation } from 'react-i18next';
 
 import { theme } from '@design/style/theme';
 
@@ -8,6 +9,7 @@ interface Props {
 }
 
 const CategoryGuide = ({ isOpen, categoryErrorMessage }: Props) => {
+  const { t } = useTranslation();
   const isError = categoryErrorMessage !== '';
 
   return (
@@ -18,7 +20,7 @@ const CategoryGuide = ({ isOpen, categoryErrorMessage }: Props) => {
         </Text.Small>
       ) : (
         <Text.Small color={theme.color.light.secondary_400}>
-          엔터로 카테고리를 등록해요
+          {t('Category:guide.enterToRegister')}
         </Text.Small>
       )}
     </Guide>

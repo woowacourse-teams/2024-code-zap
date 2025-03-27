@@ -1,14 +1,23 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import type { Category } from '@/types';
 
-const INVALID_NAMES = ['전체보기', '카테고리 없음', ''];
+const INVALID_KEYS = [
+  'defaultCategories.viewAll',
+  'defaultCategories.noCategory',
+  '',
+];
 
 export const useCategoryNameValidation = (
   categoryList: Category[],
   editedCategoryList: Category[],
 ) => {
+  const { t } = useTranslation();
   const [invalidIds, setInvalidIds] = useState<number[]>([]);
+  const INVALID_NAMES = INVALID_KEYS.map((key) =>
+    key ? t(`Category:${key}`) : '',
+  );
 
   useEffect(() => {
     const allNames = new Map<string, number[]>();
@@ -49,7 +58,7 @@ export const useCategoryNameValidation = (
     });
 
     setInvalidIds(Array.from(invalidNames));
-  }, [categoryList, editedCategoryList]);
+  }, [categoryList, editedCategoryList, INVALID_NAMES]);
 
   return {
     invalidIds,

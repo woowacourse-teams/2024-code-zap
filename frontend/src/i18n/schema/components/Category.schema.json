@@ -1,0 +1,27 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "guide": {
+      "type": "object",
+      "properties": {
+        "enterToRegister": {
+          "type": "string",
+          "description": "Message shown when user can register a category"
+        }
+      },
+      "required": ["enterToRegister"]
+    },
+    "input": {
+      "type": "object",
+      "properties": {
+        "newCategoryPlaceholder": {
+          "type": "string",
+          "description": "Placeholder text for new category input"
+        }
+      },
+      "required": ["newCategoryPlaceholder"]
+    }
+  },
+  "required": ["guide", "input"]
+}

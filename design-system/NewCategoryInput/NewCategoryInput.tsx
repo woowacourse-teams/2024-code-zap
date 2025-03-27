@@ -1,5 +1,6 @@
 import { Input, LoadingBall } from '@/components';
 import { useLoaderDelay } from '@/hooks';
+import { useTranslation } from 'react-i18next';
 
 import { theme } from '@design/style/theme';
 
@@ -19,6 +20,7 @@ const NewCategoryInput = ({
   onEnterDown,
   isPending,
 }: Props) => {
+  const { t } = useTranslation();
   const showLoader = useLoaderDelay(isPending, 700);
 
   return (
@@ -32,7 +34,7 @@ const NewCategoryInput = ({
       ) : (
         <Input.TextField
           autoFocus
-          placeholder='+ 새 카테고리 생성'
+          placeholder={t('Category:input.newCategoryPlaceholder')}
           value={value}
           onChange={onChange}
           onKeyDown={onEnterDown}
