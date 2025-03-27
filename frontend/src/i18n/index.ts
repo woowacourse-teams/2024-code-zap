@@ -15,8 +15,9 @@ import templateUploadPageEn from './en/TemplateUploadPage.json';
 import categoryEn from './en/components/Category.json';
 import contactUsEn from './en/components/ContactUs.json';
 import modelsTemplatesEn from './en/models/Templates.json';
-import ConstantsEn from './en/service/constants.json';
-import HotTopicEn from './en/service/hotTopic.json';
+import constantsEn from './en/service/constants.json';
+import hotTopicEn from './en/service/hotTopic.json';
+import validatesEn from './en/service/validates.json';
 import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
 import loginPageKo from './ko/LoginPage.json';
@@ -28,8 +29,9 @@ import templateUploadPageKo from './ko/TemplateUploadPage.json';
 import categoryKo from './ko/components/Category.json';
 import contactUsKo from './ko/components/ContactUs.json';
 import modelsTemplatesKo from './ko/models/Templates.json';
-import ConstantsKo from './ko/service/constants.json';
-import HotTopicKo from './ko/service/hotTopic.json';
+import constantsKo from './ko/service/constants.json';
+import hotTopicKo from './ko/service/hotTopic.json';
+import validatesKo from './ko/service/validates.json';
 
 i18n
   .use(LanguageDetector)
@@ -50,6 +52,7 @@ i18n
       'ModelsTemplates',
       'HotTopic',
       'Constants',
+      'Validates',
     ],
     resources: {
       ko: {
@@ -64,8 +67,9 @@ i18n
         TemplateExplorePage: templateExplorePageKo,
         TemplateUploadPage: templateUploadPageKo,
         ModelsTemplates: modelsTemplatesKo,
-        HotTopic: HotTopicKo,
-        Constants: ConstantsKo,
+        HotTopic: hotTopicKo,
+        Constants: constantsKo,
+        Validates: validatesKo,
       },
       en: {
         Category: categoryEn,
@@ -79,8 +83,9 @@ i18n
         TemplateExplorePage: templateExplorePageEn,
         TemplateUploadPage: templateUploadPageEn,
         ModelsTemplates: modelsTemplatesEn,
-        HotTopic: HotTopicEn,
-        Constants: ConstantsEn,
+        HotTopic: hotTopicEn,
+        Constants: constantsEn,
+        Validates: validatesEn,
       },
     },
     interpolation: {

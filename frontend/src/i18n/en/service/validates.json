@@ -1,0 +1,31 @@
+{
+  "$schema": "../../schema/service/validates.schema.json",
+  "name": {
+    "invalid": "Please enter {{min}} to {{max}} valid characters. (e.g. CodeZap)"
+  },
+  "password": {
+    "invalid": "Please enter a password with {{min}} to {{max}} characters including letters and numbers.",
+    "mismatch": "Passwords do not match."
+  },
+  "filename": {
+    "tooLong": "Filename must be {{max}} characters or less!",
+    "invalidChars": "Special characters (<, >, :, \", /, \\, |, ?, *) are not allowed!"
+  },
+  "sourceCode": {
+    "tooLong": "Code length exceeds {{max}} bytes.",
+    "invalidExtension": "Unsupported file extension."
+  },
+  "category": {
+    "invalid": "Invalid category name."
+  },
+  "tag": {
+    "tooLong": "Tag length exceeds {{max}} bytes."
+  },
+  "email": {
+    "invalid": "Invalid email format."
+  },
+  "template": {
+    "titleRequired": "Please enter a title.",
+    "sourceCodeRequired": "Please enter source code."
+  }
+}

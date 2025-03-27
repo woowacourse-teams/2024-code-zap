@@ -1,3 +1,5 @@
+import { t } from 'i18next';
+
 import { SourceCodes } from '@/types';
 import { getByteSize } from '@/utils';
 
@@ -10,7 +12,10 @@ export const validateName = (name: string) => {
     name.length >= MIN_LENGTH &&
     name.length <= MAX_LENGTH
     ? ''
-    : `${MIN_LENGTH} ~ ${MAX_LENGTH}자의 올바른 문자를 입력해주세요. (ex. 코드잽)`;
+    : t('Validates:name.invalid', {
+        min: MIN_LENGTH,
+        max: MAX_LENGTH,
+      });
 };
 
 export const validatePassword = (password: string) => {
@@ -24,24 +29,27 @@ export const validatePassword = (password: string) => {
 
   return hasLetters && hasNumbers && isValidLength && hasNoSpaces
     ? ''
-    : `영문자, 숫자를 포함한 ${MIN_LENGTH} ~ ${MAX_LENGTH}자의 비밀번호를 입력해주세요.`;
+    : t('Validates:password.invalid', {
+        min: MIN_LENGTH,
+        max: MAX_LENGTH,
+      });
 };
 
 export const validateConfirmPassword = (
   password: string,
   confirmPassword: string,
-) => (password === confirmPassword ? '' : '비밀번호가 일치하지 않습니다.');
+) => (password === confirmPassword ? '' : t('Validates:password.mismatch'));
 
 export const validateFilename = (filename: string) => {
   const MAX_LENGTH = 255;
   const invalidChars = /[<>:"/\\|?*]/;
 
   if (filename.length > MAX_LENGTH) {
-    return `파일명의 길이는 ${MAX_LENGTH}자 이내로 입력해주세요!`;
+    return t('Validates:filename.tooLong', { max: MAX_LENGTH });
   }
 
   if (invalidChars.test(filename)) {
-    return '특수 문자 (<, >, :, ", /, , |, ?, *)는 사용할 수 없습니다!';
+    return t('Validates:filename.invalidChars');
   }
 
   return '';
@@ -52,7 +60,7 @@ export const validateSourceCode = (sourceCode: string) => {
   const currentByteSize = getByteSize(sourceCode);
 
   if (currentByteSize > MAX_CONTENT_SIZE) {
-    return `소스코드는 최대 ${MAX_CONTENT_SIZE} 바이트까지 입력할 수 있습니다!`;
+    return t('Validates:sourceCode.tooLong', { max: MAX_CONTENT_SIZE });
   }
 
   return '';
@@ -62,11 +70,7 @@ export const validateCategoryName = (categoryName: string) => {
   const maxLength = 15;
 
   if (categoryName.trim().length > maxLength) {
-    return `카테고리 이름은 ${maxLength}자 이내로 입력해주세요.`;
-  }
-
-  if (categoryName.trim().length === 0) {
-    return '카테고리 이름을 입력해주세요.';
+    return t('Validates:category.invalid', { max: maxLength });
   }
 
   return '';
@@ -76,7 +80,7 @@ export const validateTagLength = (tag: string) => {
   const MAX_LENGTH = 30;
 
   if (tag.length > MAX_LENGTH) {
-    return `태그는 최대 ${MAX_LENGTH}자 까지만 입력 가능해요!`;
+    return t('Validates:tag.tooLong', { max: MAX_LENGTH });
   }
 
   return '';
@@ -92,7 +96,7 @@ export const validateEmail = (email: string) => {
   }
 
   if (!isValid) {
-    return '이메일 형식이 잘못되었습니다.';
+    return t('Validates:email.invalid');
   }
 
   return '';
@@ -100,14 +104,14 @@ export const validateEmail = (email: string) => {
 
 export const validateTemplate = (title: string, sourceCodes: SourceCodes[]) => {
   if (!title) {
-    return '제목을 입력해주세요';
+    return t('Validates:template.titleRequired');
   }
 
   if (
     sourceCodes.filter(({ content }) => !content || content.trim() === '')
       .length
   ) {
-    return '소스코드 내용을 입력해주세요';
+    return t('Validates:template.sourceCodeRequired');
   }
 
   return '';
