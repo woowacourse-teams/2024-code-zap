@@ -6,6 +6,7 @@ import { initReactI18next } from 'react-i18next';
 
 import headerEn from './en/Header.json';
 import landingEn from './en/LandingPage.json';
+import loginPageEn from './en/LoginPage.json';
 import memberTemplatePageEn from './en/MemberTemplatePage.json';
 import myLikedTemplatePageEn from './en/MyLikedTemplatePage.json';
 import signupPageEn from './en/SignupPage.json';
@@ -18,6 +19,7 @@ import ConstantsEn from './en/service/constants.json';
 import HotTopicEn from './en/service/hotTopic.json';
 import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
+import loginPageKo from './ko/LoginPage.json';
 import memberTemplatePageKo from './ko/MemberTemplatePage.json';
 import myLikedTemplatePageKo from './ko/MyLikedTemplatePage.json';
 import signupPageKo from './ko/SignupPage.json';
@@ -38,6 +40,7 @@ i18n
     ns: [
       'Category',
       'ContactUs',
+      'LoginPage',
       'SignupPage',
       'LandingPage',
       'Header',
@@ -52,6 +55,7 @@ i18n
       ko: {
         Category: categoryKo,
         ContactUs: contactUsKo,
+        LoginPage: loginPageKo,
         SignupPage: signupPageKo,
         LandingPage: landingKo,
         Header: headerKo,
@@ -66,6 +70,7 @@ i18n
       en: {
         Category: categoryEn,
         ContactUs: contactUsEn,
+        LoginPage: loginPageEn,
         SignupPage: signupPageEn,
         LandingPage: landingEn,
         Header: headerEn,
