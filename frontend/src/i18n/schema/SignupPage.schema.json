@@ -67,7 +67,21 @@
         }
       },
       "required": ["question"]
+    },
+    "alert": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "string",
+          "description": "Success message shown after successful signup"
+        },
+        "fail": {
+          "type": "string",
+          "description": "Error message shown after failed signup"
+        }
+      },
+      "required": ["success", "fail"]
     }
   },
-  "required": ["title", "form", "login"]
+  "required": ["title", "form", "login", "alert"]
 }

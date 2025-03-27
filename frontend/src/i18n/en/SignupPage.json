@@ -18,5 +18,9 @@
   },
   "login": {
     "question": "Already have an account?"
+  },
+  "alert": {
+    "success": "Sign up successful!",
+    "fail": "Sign up failed."
   }
 }
