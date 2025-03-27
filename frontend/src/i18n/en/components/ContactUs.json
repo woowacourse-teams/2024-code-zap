@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schema/components/ContactUs.schema.json",
+
+  "button": {
+    "contact": "Contact Us"
+  },
+  "modal": {
+    "title": "Contact Us",
+    "description": "Feel free to leave your questions/feedback! Your opinions are greatly helpful in making our service better.",
+    "emailDescription": "If you need a response, please leave your email address below. Your email will be used only for responding :)",
+    "emailImageInfo": "If you want to send images, you can email them directly to codezap2024@gmail.com",
+    "emailLabel": "Email (optional)",
+    "messageLabel": "How can we help you?"
+  },
+  "buttons": {
+    "close": "Close",
+    "send": "Send"
+  },
+  "alerts": {
+    "successMessage": "Sent successfully! Thank you for your valuable feedback:)"
+  }
+}

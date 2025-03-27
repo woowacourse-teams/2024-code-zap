@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "button": {
+      "type": "object",
+      "properties": {
+        "contact": {
+          "type": "string",
+          "description": "Contact us button text"
+        }
+      },
+      "required": ["contact"]
+    },
+    "modal": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Modal title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description text in modal"
+        },
+        "emailDescription": {
+          "type": "string",
+          "description": "Email input description"
+        },
+        "emailImageInfo": {
+          "type": "string",
+          "description": "Information about sending images via email"
+        },
+        "emailLabel": {
+          "type": "string",
+          "description": "Email input label"
+        },
+        "messageLabel": {
+          "type": "string",
+          "description": "Message textarea label"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "emailDescription",
+        "emailImageInfo",
+        "emailLabel",
+        "messageLabel"
+      ]
+    },
+    "buttons": {
+      "type": "object",
+      "properties": {
+        "close": {
+          "type": "string",
+          "description": "Close button text"
+        },
+        "send": {
+          "type": "string",
+          "description": "Send button text"
+        }
+      },
+      "required": ["close", "send"]
+    },
+    "alerts": {
+      "type": "object",
+      "properties": {
+        "successMessage": {
+          "type": "string",
+          "description": "Success message after sending"
+        }
+      },
+      "required": ["successMessage"]
+    }
+  },
+  "required": ["button", "modal", "buttons", "alerts"]
+}
