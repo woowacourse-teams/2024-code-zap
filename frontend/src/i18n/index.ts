@@ -8,6 +8,7 @@ import headerEn from './en/Header.json';
 import landingEn from './en/LandingPage.json';
 import memberTemplatePageEn from './en/MemberTemplatePage.json';
 import myLikedTemplatePageEn from './en/MyLikedTemplatePage.json';
+import signupPageEn from './en/SignupPage.json';
 import templateExplorePageEn from './en/TemplateExplorePage.json';
 import templateUploadPageEn from './en/TemplateUploadPage.json';
 import categoryEn from './en/components/Category.json';
@@ -19,6 +20,7 @@ import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
 import memberTemplatePageKo from './ko/MemberTemplatePage.json';
 import myLikedTemplatePageKo from './ko/MyLikedTemplatePage.json';
+import signupPageKo from './ko/SignupPage.json';
 import templateExplorePageKo from './ko/TemplateExplorePage.json';
 import templateUploadPageKo from './ko/TemplateUploadPage.json';
 import categoryKo from './ko/components/Category.json';
@@ -36,6 +38,7 @@ i18n
     ns: [
       'Category',
       'ContactUs',
+      'SignupPage',
       'LandingPage',
       'Header',
       'MemberTemplatePage',
@@ -49,6 +52,7 @@ i18n
       ko: {
         Category: categoryKo,
         ContactUs: contactUsKo,
+        SignupPage: signupPageKo,
         LandingPage: landingKo,
         Header: headerKo,
         MemberTemplatePage: memberTemplatePageKo,
@@ -62,6 +66,7 @@ i18n
       en: {
         Category: categoryEn,
         ContactUs: contactUsEn,
+        SignupPage: signupPageEn,
         LandingPage: landingEn,
         Header: headerEn,
         MemberTemplatePage: memberTemplatePageEn,

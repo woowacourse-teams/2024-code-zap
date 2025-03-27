@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Welcome message"
+    },
+    "form": {
+      "type": "object",
+      "properties": {
+        "labels": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "Username input label"
+            },
+            "password": {
+              "type": "string",
+              "description": "Password input label"
+            },
+            "confirmPassword": {
+              "type": "string",
+              "description": "Confirm password input label"
+            }
+          },
+          "required": ["username", "password", "confirmPassword"]
+        },
+        "buttons": {
+          "type": "object",
+          "properties": {
+            "signup": {
+              "type": "string",
+              "description": "Signup button text"
+            },
+            "login": {
+              "type": "string",
+              "description": "Login button text"
+            }
+          },
+          "required": ["signup", "login"]
+        },
+        "aria": {
+          "type": "object",
+          "properties": {
+            "showPassword": {
+              "type": "string",
+              "description": "Aria label for show password button"
+            },
+            "showConfirmPassword": {
+              "type": "string",
+              "description": "Aria label for show confirm password button"
+            }
+          },
+          "required": ["showPassword", "showConfirmPassword"]
+        }
+      },
+      "required": ["labels", "buttons", "aria"]
+    },
+    "login": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "Text asking if user already has an account"
+        }
+      },
+      "required": ["question"]
+    }
+  },
+  "required": ["title", "form", "login"]
+}

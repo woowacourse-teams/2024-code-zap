@@ -1,4 +1,5 @@
 import { theme } from '@design/style/theme';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
@@ -10,6 +11,8 @@ import { useTrackPageViewed } from '@/service/amplitude';
 import * as S from './SignupPage.style';
 
 const SignupPage = () => {
+  const { t } = useTranslation('SignupPage');
+
   useTrackPageViewed({ eventName: '[Viewed] 회원가입 페이지' });
 
   const [showPassword, handlePasswordToggle] = useToggle();
@@ -46,7 +49,7 @@ const SignupPage = () => {
           <Flex direction='column' justify='center' align='center' gap='1rem'>
             <ZapzapLogo width={100} height={100} />
             <S.ResponsiveHeading color={theme.color.light.primary_800}>
-              환영하잽
+              {t('title')}
             </S.ResponsiveHeading>
           </Flex>
 
@@ -61,7 +64,7 @@ const SignupPage = () => {
             }}
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
-              <Input.Label>아이디 (닉네임)</Input.Label>
+              <Input.Label>{t('form.labels.username')}</Input.Label>
               <Input.TextField
                 type='text'
                 value={name}
@@ -73,7 +76,7 @@ const SignupPage = () => {
             </Input>
 
             <Input variant='outlined' size='medium' isValid={!errors.password}>
-              <Input.Label>비밀번호</Input.Label>
+              <Input.Label>{t('form.labels.password')}</Input.Label>
               <Input.TextField
                 type={showPassword ? 'text' : 'password'}
                 value={password}
@@ -84,7 +87,7 @@ const SignupPage = () => {
                 <EyeIcon
                   onClick={handlePasswordToggle}
                   css={{ cursor: 'pointer' }}
-                  aria-label='비밀번호 보기'
+                  aria-label={t('form.aria.showPassword')}
                 />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
@@ -95,7 +98,7 @@ const SignupPage = () => {
               size='medium'
               isValid={!errors.confirmPassword}
             >
-              <Input.Label>비밀번호 확인</Input.Label>
+              <Input.Label>{t('form.labels.confirmPassword')}</Input.Label>
               <Input.TextField
                 type={showPasswordConfirm ? 'text' : 'password'}
                 value={confirmPassword}
@@ -106,7 +109,7 @@ const SignupPage = () => {
                 <EyeIcon
                   onClick={handlePasswordConfirmToggle}
                   css={{ cursor: 'pointer' }}
-                  aria-label='비밀번호확인 보기'
+                  aria-label={t('form.aria.showConfirmPassword')}
                 />
               </Input.Adornment>
               <Input.HelperText>{errors.confirmPassword}</Input.HelperText>
@@ -118,16 +121,16 @@ const SignupPage = () => {
               fullWidth
               disabled={!isFormValid()}
             >
-              회원가입
+              {t('form.buttons.signup')}
             </Button>
 
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
               <Text.XSmall color={theme.color.light.secondary_600}>
-                이미 계정이 있으신가요?
+                {t('login.question')}
               </Text.XSmall>
               <Link to={'/login'}>
                 <Button variant='text' size='small'>
-                  로그인
+                  {t('form.buttons.login')}
                 </Button>
               </Link>
             </Flex>

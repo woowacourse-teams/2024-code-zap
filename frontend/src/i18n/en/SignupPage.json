@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema/SignupPage.schema.json",
+  "title": "Welcome to CodeZap!",
+  "form": {
+    "labels": {
+      "username": "Username (Nickname)",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "buttons": {
+      "signup": "Sign Up",
+      "login": "Log In"
+    },
+    "aria": {
+      "showPassword": "Show password",
+      "showConfirmPassword": "Show confirm password"
+    }
+  },
+  "login": {
+    "question": "Already have an account?"
+  }
+}
