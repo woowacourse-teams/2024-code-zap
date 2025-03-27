@@ -1,4 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 import { postLogin } from '@/api';
 import { ToastContext } from '@/contexts';
@@ -9,6 +10,7 @@ import { LoginRequest, MemberInfo } from '@/types';
 
 export const useLoginMutation = () => {
   const { handleLoginState, handleMemberInfo } = useAuth();
+  const { t } = useTranslation();
   const { failAlert, successAlert } = useCustomContext(ToastContext);
   const navigate = useCustomNavigate();
 
@@ -26,14 +28,14 @@ export const useLoginMutation = () => {
         localStorage.setItem('authorization', String(authorization));
         handleMemberInfo({ memberId, name });
         handleLoginState(true);
-        successAlert('로그인 성공!');
+        successAlert(t('LoginPage:alert.success'));
         navigate(END_POINTS.memberTemplates(memberId));
       }
     },
     onError: () => {
       handleLoginState(false);
       handleMemberInfo({ memberId: undefined, name: undefined });
-      failAlert('로그인에 실패하였습니다.');
+      failAlert(t('LoginPage:alert.fail'));
     },
   });
 };

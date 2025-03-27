@@ -20,5 +20,9 @@
   },
   "signup": {
     "question": "Don't have an account?"
+  },
+  "alert": {
+    "success": "Login successful!",
+    "fail": "Login failed."
   }
 }
