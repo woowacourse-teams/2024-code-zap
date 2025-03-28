@@ -1,0 +1,14 @@
+{
+  "$schema": "../../schema/components/Category.schema.json",
+
+  "guide": {
+    "enterToRegister": "엔터로 카테고리를 등록해요"
+  },
+  "input": {
+    "newCategoryPlaceholder": "+ 새 카테고리 생성"
+  },
+  "defaultCategories": {
+    "viewAll": "전체보기",
+    "noCategory": "카테고리 없음"
+  }
+}

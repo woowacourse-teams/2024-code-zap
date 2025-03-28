@@ -1,0 +1,15 @@
+{
+
+  "error": "404 ERROR",
+  "mainMessage": "Sorry, we couldn't find the page you requested.",
+  "subMessages": {
+    "notExist": "The page does not exist or has been deleted and is no longer available.",
+    "checkAddress": "Please check if the address is correct or go to the home page."
+  },
+  "button": {
+    "home": "Go to Home"
+  },
+  "aria": {
+    "tigerLogo": "Tiger logo"
+  }
+}

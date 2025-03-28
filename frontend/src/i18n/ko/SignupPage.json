@@ -1,0 +1,26 @@
+{
+  "$schema": "../schema/SignupPage.schema.json",
+  "title": "환영하잽",
+  "form": {
+    "labels": {
+      "username": "아이디 (닉네임)",
+      "password": "비밀번호",
+      "confirmPassword": "비밀번호 확인"
+    },
+    "buttons": {
+      "signup": "회원가입",
+      "login": "로그인"
+    },
+    "aria": {
+      "showPassword": "비밀번호 보기",
+      "showConfirmPassword": "비밀번호확인 보기"
+    }
+  },
+  "login": {
+    "question": "이미 계정이 있으신가요?"
+  },
+  "alert": {
+    "success": "회원가입 성공!",
+    "fail": "회원가입에 실패하였습니다."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "../schema/LandingPage.schema.json",
+
+  "ex_title_1": "Save with a ZAP",
+  "ex_desc_1": "Keep your frequently used code at your fingertips.",
+  "ex_title_2": "Organize with a ZAP",
+  "ex_desc_2": "Stay organized with smart and intuitive categorization.",
+  "ex_title_3": "Search with a ZAP",
+  "ex_desc_3": "Find the exact snippet you need—instantly.",
+  "question": "Sounds familiar?",
+  "quote": "\"Ugh, where did I write that code again...?\"",
+  "no_more_searching": "No more digging through folders for your code.",
+  "intro_text": "Save your favorite snippets as templates and access them in a flash with CodeZap.",
+  "what_is_template": "What's a template?",
+  "template_explanation_1": "In CodeZap, templates are reusable bundles of code you often write.",
+  "template_explanation_2": "You can include multiple snippets in one template for better organization.",
+  "what_is_source_code": "What's a snippet?",
+  "source_code_explanation_1": "A snippet in CodeZap is a unit of code made of a filename and the content itself.",
+  "source_code_explanation_2": "Name your file with an extension to enable syntax highlighting and easy copying.",
+  "target_title": "CodeZap is made for you if you...",
+  "target_1": "Want to quickly save and reuse your go-to snippets",
+  "target_2": "Hate hunting through old files to find that one line of code",
+  "target_3": "Want to finally organize your code but don’t know where to start",
+  "go_login": "Log In",
+  "go_signup": "Sign Up",
+  "expand_source_code": "Expand source code",
+  "copy": "Copy"
+}

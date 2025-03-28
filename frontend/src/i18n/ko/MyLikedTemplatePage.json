@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema/MyLikedTemplatePage.schema.json",
+
+  "title": "내가 좋아요한 템플릿 목록입니다 :)",
+  "noResults": "좋아요한 템플릿이 없습니다."
+}

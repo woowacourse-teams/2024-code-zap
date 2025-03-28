@@ -1,4 +1,5 @@
 import { theme } from '@design/style/theme';
+import { useTranslation } from 'react-i18next';
 
 import { TigerLogo } from '@/assets/images';
 import { Button, Flex, Heading, Text } from '@/components';
@@ -10,6 +11,7 @@ interface props {
 
 const NotFoundPage = ({ resetError }: props) => {
   const navigate = useCustomNavigate();
+  const { t } = useTranslation('NotFoundPage');
 
   return (
     <Flex
@@ -19,21 +21,20 @@ const NotFoundPage = ({ resetError }: props) => {
       justify='center'
       align='center'
     >
-      <TigerLogo aria-label='호랑이 로고' />
+      <TigerLogo aria-label={t('aria.tigerLogo')} />
       <Heading.XLarge color={theme.color.light.primary_500}>
-        404 ERROR
+        {t('error')}
       </Heading.XLarge>
       <Flex direction='column' gap='2rem' align='center'>
         <Text.XLarge color={theme.color.light.primary_500} weight='bold'>
-          죄송합니다. 요청하신 페이지를 찾을 수 없습니다.
+          {t('mainMessage')}
         </Text.XLarge>
         <Flex direction='column' justify='center' align='center' gap='1rem'>
           <Text.Medium color={theme.color.light.secondary_600} weight='bold'>
-            페이지가 존재하지 않거나, 삭제되어 더이상 사용할 수 없는 페이지
-            입니다.
+            {t('subMessages.notExist')}
           </Text.Medium>
           <Text.Medium color={theme.color.light.secondary_600} weight='bold'>
-            입력하신 주소가 정확한지 다시 확인하거나 홈으로 이동해주세요.
+            {t('subMessages.checkAddress')}
           </Text.Medium>
         </Flex>
       </Flex>
@@ -44,7 +45,9 @@ const NotFoundPage = ({ resetError }: props) => {
           navigate('/');
         }}
       >
-        <Text.Medium color={theme.color.light.white}>홈으로 이동</Text.Medium>
+        <Text.Medium color={theme.color.light.white}>
+          {t('button.home')}
+        </Text.Medium>
       </Button>
     </Flex>
   );

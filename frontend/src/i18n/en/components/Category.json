@@ -1,0 +1,13 @@
+{
+  "$schema": "../../schema/components/Category.schema.json",
+  "guide": {
+    "enterToRegister": "Press Enter to register category"
+  },
+  "input": {
+    "newCategoryPlaceholder": "+ Create new category"
+  },
+  "defaultCategories": {
+    "viewAll": "View All",
+    "noCategory": "No Category"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "../../schema/components/ContactUs.schema.json",
+
+  "button": {
+    "contact": "문의하기"
+  },
+  "modal": {
+    "title": "문의하기",
+    "description": "질문/피드백을 편하게 남겨주세요! 여러분의 의견은 더 나은 서비스를 만드는 데 큰 도움이 됩니다.",
+    "emailDescription": "답변이 필요하시면 아래 이메일 주소를 남겨주세요. 이메일은 오직 답변을 위해서만 사용됩니다 :)",
+    "emailImageInfo": "이미지 등을 함께 보내실 경우 codezap2024@gmail.com으로 직접 이메일을 보내실 수 있습니다.",
+    "emailLabel": "이메일 (선택)",
+    "messageLabel": "무엇을 도와드릴까요?"
+  },
+  "buttons": {
+    "close": "닫기",
+    "send": "보내기"
+  },
+  "alerts": {
+    "successMessage": "보내기 완료! 소중한 의견 감사합니다:)"
+  }
+}

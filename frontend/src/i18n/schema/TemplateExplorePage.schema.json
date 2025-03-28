@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TemplateExplorePage i18n Schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "watchingHotTopic": { "type": "string" },
+    "trendingTopic": { "type": "string" },
+    "searchResult": { "type": "string" },
+    "search": { "type": "string" },
+    "noResults": { "type": "string" }
+  },
+  "required": [
+    "watchingHotTopic",
+    "trendingTopic",
+    "searchResult",
+    "search",
+    "noResults"
+  ],
+  "additionalProperties": false
+}

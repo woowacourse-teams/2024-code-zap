@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MemberTemplatePage i18n Schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "search": {
+      "type": "string"
+    },
+    "searchResult": {
+      "type": "string"
+    },
+    "topBanner": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" }
+      },
+      "required": ["message"]
+    },
+    "templateList": {
+      "type": "object",
+      "properties": {
+        "noResults": { "type": "string" }
+      },
+      "required": ["noResults"]
+    },
+    "templateDeleteSelection": {
+      "type": "object",
+      "properties": {
+        "goBack": { "type": "string" },
+        "selectAll": { "type": "string" },
+        "deselectAll": { "type": "string" },
+        "delete": { "type": "string" },
+        "cancel": { "type": "string" },
+        "selectDelete": { "type": "string" }
+      },
+      "required": ["goBack", "selectAll", "deselectAll", "delete", "cancel", "selectDelete"]
+    }
+  },
+  "additionalProperties": false,
+  "required": ["search", "searchResult", "topBanner", "templateList", "templateDeleteSelection"]
+}

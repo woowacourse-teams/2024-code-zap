@@ -1,0 +1,20 @@
+{
+  "$schema": "../schema/MemberTemplatePage.schema.json",
+
+  "search": "검색",
+  "searchResult": "'{{keyword}}' 검색 결과",
+  "topBanner": {
+    "message": "님의 템플릿 입니다 :)"
+  },
+  "templateList": {
+    "noResults": "검색 결과가 없습니다."
+  },
+  "templateDeleteSelection": {
+    "goBack": "돌아가기",
+    "selectAll": "전체 선택",
+    "deselectAll": "전체 해제",
+    "delete": "삭제하기",
+    "cancel": "취소하기",
+    "selectDelete": "선택 삭제"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "$schema": "../schema/MyLikedTemplatePage.schema.json",
+
+  "title": "My liked templates :)",
+  "noResults": "You have no liked templates."
+}

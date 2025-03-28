@@ -1,0 +1,9 @@
+{
+  "$schema": "../schema/TemplateExplorePage.schema.json",
+
+  "watchingHotTopic": "🔥 Watching [ {{topic}} ]",
+  "trendingTopic": "🔥 Trending topics",
+  "searchResult": "'{{keyword}}' search results",
+  "search": "Search",
+  "noResults": "No templates found."
+}

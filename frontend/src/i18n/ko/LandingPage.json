@@ -1,0 +1,28 @@
+{
+  "$schema": "../schema/LandingPage.schema.json",
+
+  "ex_title_1": "ZAP하게 저장",
+  "ex_desc_1": "자주 쓰는 나의 코드를 간편하게 저장하세요",
+  "ex_title_2": "ZAP하게 관리",
+  "ex_desc_2": "직관적인 분류 시스템으로 체계적으로 관리하세요",
+  "ex_title_3": "ZAP하게 검색",
+  "ex_desc_3": "필요한 나의 코드를 빠르게 찾아 사용하세요",
+  "question": "이런 경험 한 번쯤 있으시죠?",
+  "quote": "\"아, 그때 그 코드 어디에 썼더라...\"",
+  "no_more_searching": "더 이상 코드를 찾느라 헤매지 마세요!",
+  "intro_text": "코드잽에 자주 쓰는 코드를 템플릿으로 저장하고 빠르게 찾아요.",
+  "what_is_template": "템플릿이란?",
+  "template_explanation_1": "코드잽에서 템플릿이란 반복적으로 작성하게 되는 소스 코드의 모음을 뜻해요.",
+  "template_explanation_2": "하나의 템플릿에 여러개의 소스코드를 넣을 수 있어요!",
+  "what_is_source_code": "소스코드란?",
+  "source_code_explanation_1": "코드잽에서 소스코드란 파일명 + 소스코드 내용으로 이루어진 코드 단위를 뜻해요.",
+  "source_code_explanation_2": "파일명.[확장자]를 입력하면 하이라이트가 되고 복사 버튼으로 편하게 복사할 수 있어요!",
+  "target_title": "코드잽은 이런 분들에게 딱이에요 !",
+  "target_1": "자주 쓰는 코드 템플릿을 간편하게 저장하고 싶은 분",
+  "target_2": "프로젝트 파일을 뒤적거리는 대신 필요한 코드를 빠르게 찾고 싶은 분",
+  "target_3": "체계적으로 코드를 정리하고 싶지만 방법을 모르셨던 분",
+  "go_login": "로그인 하러가기",
+  "go_signup": "회원가입 하러가기",
+  "expand_source_code": "소스코드 펼침",
+  "copy": "코드가 복사되었습니다!"
+}

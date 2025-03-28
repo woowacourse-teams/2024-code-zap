@@ -1,0 +1,8 @@
+{
+  "$schema": "../../schema/models/Templates.schema.json",
+
+  "createdAtDesc": "Newest first",
+  "modifiedAtDesc": "Recently updated",
+  "createdAtAsc": "Oldest first",
+  "likesCountDesc": "Most liked"
+}

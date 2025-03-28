@@ -1,0 +1,6 @@
+{
+  "$schema": "../../schema/formatRelativeTime.schema.json",
+  "justNow": "방금 전",
+  "minutesAgo": "{{minutes}}분 전",
+  "hoursAgo": "{{hours}}시간 전"
+}

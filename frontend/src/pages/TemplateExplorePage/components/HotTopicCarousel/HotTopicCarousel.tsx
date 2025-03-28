@@ -1,4 +1,5 @@
 import { theme } from '@design/style/theme';
+import { useTranslation } from 'react-i18next';
 
 import { Text } from '@/components';
 import { useWindowWidth } from '@/hooks';
@@ -16,6 +17,7 @@ interface Props {
 const HotTopicCarousel = ({ selectTopic, selectedHotTopic }: Props) => {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
+  const { t } = useTranslation('HotTopic');
 
   return (
     <Carousel
@@ -37,7 +39,7 @@ const HotTopicCarousel = ({ selectTopic, selectedHotTopic }: Props) => {
                     color={theme.color.light.secondary_800}
                     weight='bold'
                   >
-                    {topic}
+                    {t(topic)}
                   </Text.Large>
                 </S.Title>
                 {!isMobile && (
@@ -46,10 +48,10 @@ const HotTopicCarousel = ({ selectTopic, selectedHotTopic }: Props) => {
                       color={theme.color.light.secondary_800}
                       weight='bold'
                     >
-                      {description}
+                      {t(description)}
                     </Text.Small>
                     <Text.Small color={theme.color.light.secondary_800}>
-                      {subDescription}
+                      {t(subDescription)}
                     </Text.Small>
                   </S.Description>
                 )}

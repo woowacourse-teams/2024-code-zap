@@ -9,6 +9,7 @@ import { useLogoutMutation } from '@/queries/authentication/useLogoutMutation';
 import { ROUTE_END_POINT } from '@/routes/endPoints';
 import { trackClickNewTemplate } from '@/service/amplitude';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
 
 import { theme } from '@design/style/theme';
@@ -29,6 +30,7 @@ const Header = ({
   const { failAlert } = useCustomContext(ToastContext);
   const location = useLocation();
   const navigate = useCustomNavigate();
+  const { t } = useTranslation('Header');
 
   useScrollDisable(isMenuOpen);
   usePressESC(isMenuOpen, toggleMenu);
@@ -51,7 +53,7 @@ const Header = ({
     trackClickNewTemplate();
 
     if (!isLogin) {
-      failAlert('로그인을 해주세요.');
+      failAlert(t('alertLogin'));
 
       return;
     }
@@ -69,17 +71,17 @@ const Header = ({
               <>
                 <NavOption
                   route={ROUTE_END_POINT.memberTemplates(memberId)}
-                  name='내 템플릿'
+                  name={t('myTemplates')}
                 />
                 <NavOption
                   route={ROUTE_END_POINT.memberLikedTemplates(memberId)}
-                  name={`좋아요한 템플릿`}
+                  name={t('likedTemplates')}
                 />
               </>
             )}
             <NavOption
               route={ROUTE_END_POINT.TEMPLATES_EXPLORE}
-              name='구경가기'
+              name={t('explore')}
             />
 
             <ContactUs />
@@ -91,9 +93,10 @@ const Header = ({
               weight='bold'
               hoverStyle='none'
               onClick={handleTemplateUploadButton}
-              aria-description='템플릿 작성 페이지로 이동됩니다.'
+              aria-description={t('newTemplateAria')}
             >
-              <PlusIcon />새 템플릿
+              <PlusIcon />
+              {t('newTemplate')}
             </S.MobileHiddenButton>
 
             {!isChecking && isLogin ? <LogoutButton /> : <LoginButton />}
@@ -106,9 +109,10 @@ const Header = ({
             weight='bold'
             hoverStyle='none'
             onClick={handleTemplateUploadButton}
-            aria-description='템플릿 작성 페이지로 이동됩니다.'
+            aria-description={t('newTemplateAria')}
           >
-            <PlusIcon />새 템플릿
+            <PlusIcon />
+            {t('newTemplate')}
           </Button>
           <HeaderMenuButton menuOpen={isMenuOpen} toggleMenu={toggleMenu} />
         </S.MobileMenuContainer>
@@ -121,11 +125,12 @@ const Header = ({
 const Logo = () => {
   const location = useLocation();
   const isLandingPage = location.pathname === '/';
+  const { t } = useTranslation('Header');
 
   return (
     <Link to={ROUTE_END_POINT.HOME}>
       <Flex align='center' gap='0.5rem'>
-        <CodeZapLogo aria-label='로고 버튼' />
+        <CodeZapLogo aria-label={t('logoButton')} />
         <Heading.XSmall
           color={
             isLandingPage
@@ -164,6 +169,7 @@ const NavOption = ({ route, name }: { route: string; name: string }) => {
 
 const LogoutButton = () => {
   const { mutateAsync } = useLogoutMutation();
+  const { t } = useTranslation('Header');
 
   const handleLogoutButton = async () => {
     await mutateAsync();
@@ -177,18 +183,22 @@ const LogoutButton = () => {
       hoverStyle='none'
       onClick={handleLogoutButton}
     >
-      로그아웃
+      {t('logout')}
     </Button>
   );
 };
 
-const LoginButton = () => (
-  <Link to={ROUTE_END_POINT.LOGIN}>
-    <Button variant='text' size='medium' weight='bold' hoverStyle='none'>
-      로그인
-    </Button>
-  </Link>
-);
+const LoginButton = () => {
+  const { t } = useTranslation('Header');
+
+  return (
+    <Link to={ROUTE_END_POINT.LOGIN}>
+      <Button variant='text' size='medium' weight='bold' hoverStyle='none'>
+        {t('login')}
+      </Button>
+    </Link>
+  );
+};
 
 const HeaderMenuButton = ({
   menuOpen,
@@ -196,10 +206,14 @@ const HeaderMenuButton = ({
 }: {
   menuOpen: boolean;
   toggleMenu: () => void;
-}) => (
-  <S.HamburgerIconWrapper aria-label='메뉴'>
-    <HamburgerIcon menuOpen={menuOpen} onClick={toggleMenu} />
-  </S.HamburgerIconWrapper>
-);
+}) => {
+  const { t } = useTranslation('Header');
+
+  return (
+    <S.HamburgerIconWrapper aria-label={t('menu')}>
+      <HamburgerIcon menuOpen={menuOpen} onClick={toggleMenu} />
+    </S.HamburgerIconWrapper>
+  );
+};
 
 export default Header;

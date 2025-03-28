@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Welcome message"
+    },
+    "form": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "Username input label"
+            },
+            "password": {
+              "type": "string",
+              "description": "Password input label"
+            },
+            "confirmPassword": {
+              "type": "string",
+              "description": "Confirm password input label"
+            }
+          },
+          "required": ["username", "password", "confirmPassword"]
+        },
+        "buttons": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "signup": {
+              "type": "string",
+              "description": "Signup button text"
+            },
+            "login": {
+              "type": "string",
+              "description": "Login button text"
+            }
+          },
+          "required": ["signup", "login"]
+        },
+        "aria": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "showPassword": {
+              "type": "string",
+              "description": "Aria label for show password button"
+            },
+            "showConfirmPassword": {
+              "type": "string",
+              "description": "Aria label for show confirm password button"
+            }
+          },
+          "required": ["showPassword", "showConfirmPassword"]
+        }
+      },
+      "required": ["labels", "buttons", "aria"]
+    },
+    "login": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "Text asking if user already has an account"
+        }
+      },
+      "required": ["question"]
+    },
+    "alert": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "success": {
+          "type": "string",
+          "description": "Success message shown after successful signup"
+        },
+        "fail": {
+          "type": "string",
+          "description": "Error message shown after failed signup"
+        }
+      },
+      "required": ["success", "fail"]
+    }
+  },
+
+  "required": ["title", "form", "login", "alert"]
+}

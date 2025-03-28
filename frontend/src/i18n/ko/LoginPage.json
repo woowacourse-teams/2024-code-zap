@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/LoginPage.schema.json",
+  "title": "환영하잽",
+  "form": {
+    "labels": {
+      "username": "아이디 (닉네임)",
+      "password": "비밀번호"
+    },
+    "placeholders": {
+      "username": "아이디 입력. 1자에서 255자의 올바른 문자를 입력해주세요",
+      "password": "비밀번호 입력. 영문자, 숫자를 포함한 8자에서 16자의 비밀번호를 입력해주세요."
+    },
+    "buttons": {
+      "login": "로그인",
+      "signup": "회원가입"
+    },
+    "aria": {
+      "showPassword": "비밀번호 보기"
+    }
+  },
+  "signup": {
+    "question": "계정이 없으신가요?"
+  },
+  "alert": {
+    "success": "로그인 성공!",
+    "fail": "로그인에 실패하였습니다.",
+    "logoutSuccess": "로그아웃 성공!"
+  }
+}

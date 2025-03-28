@@ -1,6 +1,7 @@
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 
 import { SearchIcon } from '@/assets/images';
 import {
@@ -34,6 +35,9 @@ const getGridCols = (windowWidth: number) => (windowWidth <= 1024 ? 1 : 2);
 
 const TemplateExplorePage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 구경가기 페이지' });
+  const { t } = useTranslation('TemplateExplorePage');
+  const { t: tHotTopic } = useTranslation('HotTopic');
+  const { t: tTemplates } = useTranslation('ModelsTemplates');
 
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
@@ -82,14 +86,18 @@ const TemplateExplorePage = () => {
         {isMobile ? (
           <Heading.XSmall color='black'>
             {selectedHotTopic
-              ? `🔥 [ ${selectedHotTopic} ] 보는 중`
-              : '🔥 지금 인기있는 토픽'}
+              ? t('watchingHotTopic', {
+                  topic: tHotTopic(selectedHotTopic),
+                })
+              : t('trendingTopic')}
           </Heading.XSmall>
         ) : (
           <Heading.Medium color='black'>
             {selectedHotTopic
-              ? `🔥 [ ${selectedHotTopic} ] 보는 중`
-              : '🔥 지금 인기있는 토픽'}
+              ? t('watchingHotTopic', {
+                  topic: tHotTopic(selectedHotTopic),
+                })
+              : t('trendingTopic')}
           </Heading.Medium>
         )}
         <HotTopicCarousel
@@ -100,7 +108,9 @@ const TemplateExplorePage = () => {
 
       <S.SearchKeywordPlaceholder>
         <Heading.XSmall color='black'>
-          {queryParams.keyword ? `'${queryParams.keyword}' 검색 결과` : ''}
+          {queryParams.keyword
+            ? t('searchResult', { keyword: queryParams.keyword })
+            : ''}
         </Heading.XSmall>
       </S.SearchKeywordPlaceholder>
 
@@ -110,7 +120,7 @@ const TemplateExplorePage = () => {
             <SearchIcon aria-label='' />
           </Input.Adornment>
           <Input.TextField
-            placeholder='검색'
+            placeholder={t('search')}
             value={inputKeyword}
             onChange={handleInputKeywordChange}
             onKeyDown={handleSearchSubmit}
@@ -120,7 +130,7 @@ const TemplateExplorePage = () => {
           {...dropdownProps}
           options={[...SORTING_OPTIONS]}
           currentValue={sortingOption}
-          getOptionLabel={(option) => option.value}
+          getOptionLabel={(option) => tTemplates(option.value)}
         />
       </Flex>
       <QueryErrorResetBoundary>
@@ -174,6 +184,7 @@ const TemplateList = ({
   });
   const templateList = templateData?.templates || [];
   const paginationSizes = templateData?.paginationSizes || 0;
+  const { t } = useTranslation('TemplateExplorePage');
 
   const windowWidth = useWindowWidth();
 
@@ -188,7 +199,7 @@ const TemplateList = ({
         isPending ? (
           <LoadingBall />
         ) : (
-          <NoResults>검색 결과가 없습니다.</NoResults>
+          <NoResults>{t('noResults')}</NoResults>
         )
       ) : (
         <S.TemplateListSectionWrapper>

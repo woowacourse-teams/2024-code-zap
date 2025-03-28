@@ -1,0 +1,29 @@
+{
+  "$schema": "../schema/LoginPage.schema.json",
+  "title": "Welcome to CodeZap!",
+  "form": {
+    "labels": {
+      "username": "Username (Nickname)",
+      "password": "Password"
+    },
+    "placeholders": {
+      "username": "Enter username. Please enter 1-255 valid characters",
+      "password": "Enter password. Please enter 8-16 characters including letters and numbers"
+    },
+    "buttons": {
+      "login": "Log In",
+      "signup": "Sign Up"
+    },
+    "aria": {
+      "showPassword": "Show password"
+    }
+  },
+  "signup": {
+    "question": "Don't have an account?"
+  },
+  "alert": {
+    "success": "Login successful!",
+    "fail": "Login failed.",
+    "logoutSuccess": "Logout successful!"
+  }
+}

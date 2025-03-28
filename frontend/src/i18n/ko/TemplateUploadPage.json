@@ -1,0 +1,22 @@
+{
+  "$schema": "../schema/TemplateUploadPage.schema.json",
+
+  "titlePlaceholder": "제목을 입력해주세요",
+  "descriptionPlaceholder": "이 템플릿을 언제 다시 쓸 것 같나요?",
+  "addSourcecodeAriaLabel": "소스코드 추가",
+  "cancel": "취소",
+  "save": "저장",
+  "categoryLoadingError": "카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.",
+  "errorPrefix": "에러: ",
+
+  "sourceCodeEditor": {
+    "filenamePlaceholder": "파일명.[확장자]",
+    "deleteAriaLabel": "템플릿 삭제",
+    "codePlaceholder": "// 코드를 입력해주세요"
+  },
+
+  "tagInput": {
+    "infoText": "등록된 태그를 누르면 태그 등록을 쉽게 취소할 수 있어요!",
+    "inputPlaceholder": "enter 또는 space bar로 태그를 등록해보세요"
+  }
+}

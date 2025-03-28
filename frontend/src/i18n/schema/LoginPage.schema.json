@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Welcome message"
+    },
+    "form": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "labels": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "Username input label"
+            },
+            "password": {
+              "type": "string",
+              "description": "Password input label"
+            }
+          },
+          "required": ["username", "password"]
+        },
+        "placeholders": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "username": {
+              "type": "string",
+              "description": "Username input placeholder"
+            },
+            "password": {
+              "type": "string",
+              "description": "Password input placeholder"
+            }
+          },
+          "required": ["username", "password"]
+        },
+        "buttons": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "login": {
+              "type": "string",
+              "description": "Login button text"
+            },
+            "signup": {
+              "type": "string",
+              "description": "Signup button text"
+            }
+          },
+          "required": ["login", "signup"]
+        },
+        "aria": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "showPassword": {
+              "type": "string",
+              "description": "Aria label for show password button"
+            }
+          },
+          "required": ["showPassword"]
+        }
+      },
+      "required": ["labels", "placeholders", "buttons", "aria"]
+    },
+    "signup": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "question": {
+          "type": "string",
+          "description": "Text asking if user doesn't have an account"
+        }
+      },
+      "required": ["question"]
+    },
+    "alert": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "success": {
+          "type": "string",
+          "description": "Success message shown after successful login"
+        },
+        "fail": {
+          "type": "string",
+          "description": "Error message shown after failed login"
+        },
+        "logoutSuccess": {
+          "type": "string",
+          "description": "Success message shown after successful logout"
+        }
+      },
+      "required": ["success", "fail", "logoutSuccess"]
+    }
+  },
+  "required": ["title", "form", "signup", "alert"]
+}

@@ -1,4 +1,5 @@
 import { theme } from '@design/style/theme';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
@@ -11,6 +12,8 @@ import { useTrackPageViewed } from '@/service/amplitude';
 import * as S from './LoginPage.style';
 
 const LoginPage = () => {
+  const { t } = useTranslation('LoginPage');
+
   useTrackPageViewed({ eventName: '[Viewed] 로그인 페이지' });
 
   const [showPassword, handlePasswordToggle] = useToggle();
@@ -42,7 +45,7 @@ const LoginPage = () => {
           <Flex direction='column' justify='center' align='center' gap='1rem'>
             <ZapzapLogo width={100} height={100} />
             <S.ResponsiveHeading color={theme.color.light.primary_800}>
-              환영하잽
+              {t('title')}
             </S.ResponsiveHeading>
           </Flex>
 
@@ -57,10 +60,10 @@ const LoginPage = () => {
             }}
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
-              <Input.Label>아이디 (닉네임)</Input.Label>
+              <Input.Label>{t('form.labels.username')}</Input.Label>
               <Input.TextField
                 type='text'
-                placeholder='아이디 입력. 1자에서 255자의 올바른 문자를 입력해주세요'
+                placeholder={t('form.placeholders.username')}
                 placeholderColor='transparent'
                 value={name}
                 onChange={handleNameChange}
@@ -70,10 +73,10 @@ const LoginPage = () => {
             </Input>
 
             <Input variant='outlined' size='medium' isValid={!errors.password}>
-              <Input.Label>비밀번호</Input.Label>
+              <Input.Label>{t('form.labels.password')}</Input.Label>
               <Input.TextField
                 type={showPassword ? 'text' : 'password'}
-                placeholder='비밀번호 입력. 영문자, 숫자를 포함한 8자에서 16자의 비밀번호를 입력해주세요.'
+                placeholder={t('form.placeholders.password')}
                 placeholderColor='transparent'
                 value={password}
                 onChange={handlePasswordChange}
@@ -81,7 +84,7 @@ const LoginPage = () => {
               />
               <Input.Adornment
                 as='button'
-                aria-label='비밀번호 보기'
+                aria-label={t('form.aria.showPassword')}
                 onClick={handlePasswordToggle}
               >
                 <EyeIcon aria-hidden />
@@ -95,16 +98,16 @@ const LoginPage = () => {
               fullWidth
               disabled={!isFormValid()}
             >
-              로그인
+              {t('form.buttons.login')}
             </Button>
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
               <Text.XSmall color={theme.color.light.secondary_600}>
-                계정이 없으신가요?
+                {t('signup.question')}
               </Text.XSmall>
 
               <Link to={END_POINTS.SIGNUP}>
                 <Button variant='text' size='small'>
-                  회원가입
+                  {t('form.buttons.signup')}
                 </Button>
               </Link>
             </Flex>

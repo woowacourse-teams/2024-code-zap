@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { useDropdown } from '@/hooks';
 import {
   useCategoryListQuery,
@@ -11,11 +13,16 @@ interface Props {
 }
 
 export const useCategory = ({ memberId, initCategory }: Props) => {
+  const { t } = useTranslation();
   const { data, isFetching } = useCategoryListQuery({ memberId });
   const options = data?.categories || [];
 
   if (!initCategory) {
-    initCategory = { id: options[0]?.id, name: '카테고리 없음', ordinal: 0 };
+    initCategory = {
+      id: options[0]?.id,
+      name: t('Category:defaultCategories.noCategory'),
+      ordinal: 0,
+    };
   }
 
   const {

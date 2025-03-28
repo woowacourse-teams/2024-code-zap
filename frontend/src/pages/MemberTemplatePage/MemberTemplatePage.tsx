@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 
 import { SearchIcon } from '@/assets/images';
@@ -27,6 +28,8 @@ import * as S from './MemberTemplatePage.style';
 const MemberTemplatePage = () => {
   const { memberId: routeMemberId } = useParams<{ memberId: string }>();
   const memberId = Number(routeMemberId);
+  const { t } = useTranslation('MemberTemplatePage');
+  const { t: tTemplates } = useTranslation('ModelsTemplates');
 
   useTrackPageViewed({
     eventName: `[Viewed] 맴버 (ID:${memberId}) 템플릿 페이지`,
@@ -97,7 +100,9 @@ const MemberTemplatePage = () => {
 
           <S.SearchKeywordPlaceholder>
             <Heading.XSmall color='black'>
-              {searchedKeyword ? `'${searchedKeyword}' 검색 결과` : ''}
+              {searchedKeyword
+                ? t('searchResult', { keyword: searchedKeyword })
+                : ''}
             </Heading.XSmall>
           </S.SearchKeywordPlaceholder>
 
@@ -107,7 +112,7 @@ const MemberTemplatePage = () => {
                 <SearchIcon aria-label='' />
               </Input.Adornment>
               <Input.TextField
-                placeholder='검색'
+                placeholder={t('search')}
                 value={inputKeyword}
                 onChange={handleKeywordChange}
                 onKeyDown={handleSearchSubmit}
@@ -117,7 +122,7 @@ const MemberTemplatePage = () => {
               {...dropdownProps}
               options={[...SORTING_OPTIONS]}
               currentValue={sortingOption}
-              getOptionLabel={(option) => option.value}
+              getOptionLabel={(option) => tTemplates(option.value)}
             />
           </Flex>
 

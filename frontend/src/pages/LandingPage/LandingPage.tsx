@@ -5,6 +5,7 @@ import {
 } from '@uiw/codemirror-extensions-langs';
 import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import CodeMirror, { EditorView } from '@uiw/react-codemirror';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { CheckCircleIcon, ChevronIcon, ZapzapLogo } from '@/assets/images';
@@ -24,18 +25,20 @@ const LandingPage = () => {
 
   const { isLogin } = useAuth();
 
+  const { t } = useTranslation('LandingPage');
+
   const EXPLAIN = [
     {
-      title: 'ZAP하게 저장',
-      description: '자주 쓰는 나의 코드를 간편하게 저장하세요',
+      title: t('ex_title_1'),
+      description: t('ex_desc_1'),
     },
     {
-      title: 'ZAP하게 관리',
-      description: '직관적인 분류 시스템으로 체계적으로 관리하세요',
+      title: t('ex_title_2'),
+      description: t('ex_desc_2'),
     },
     {
-      title: 'ZAP하게 검색',
-      description: '필요한 나의 코드를 빠르게 찾아 사용하세요',
+      title: t('ex_title_3'),
+      description: t('ex_desc_3'),
     },
   ];
 
@@ -43,17 +46,13 @@ const LandingPage = () => {
     <S.Container>
       <S.ContentSection>
         <S.TextContent>
-          <Text.Medium color='black'>이런 경험 한 번쯤 있으시죠?</Text.Medium>
+          <Text.Medium color='black'>{t('question')}</Text.Medium>
           <Heading.XSmall color={theme.color.light.secondary_800}>
-            {'"아, 그때 그 코드 어디에 썼더라..."'}
+            {t('quote')}
           </Heading.XSmall>
           <Flex direction='column' gap='1rem'>
-            <Text.Medium color='black'>
-              더 이상 코드를 찾느라 헤매지 마세요!
-            </Text.Medium>
-            <Text.Medium color='black'>
-              코드잽에 자주 쓰는 코드를 템플릿으로 저장하고 빠르게 찾아요.
-            </Text.Medium>
+            <Text.Medium color='black'>{t('no_more_searching')}</Text.Medium>
+            <Text.Medium color='black'>{t('intro_text')}</Text.Medium>
           </Flex>
         </S.TextContent>
         <S.ImageWrapper>
@@ -86,27 +85,24 @@ const LandingPage = () => {
         >
           <Flex direction='column' justify='center' gap='1rem'>
             <Heading.XSmall color='black' weight='bold'>
-              템플릿이란?
+              {t('what_is_template')}
             </Heading.XSmall>
             <Text.Medium color={theme.color.light.secondary_500}>
-              코드잽에서 템플릿이란 반복적으로 작성하게 되는 소스 코드의 모음을
-              뜻해요.
+              {t('template_explanation_1')}
             </Text.Medium>
             <Text.Medium color={theme.color.light.secondary_500}>
-              하나의 템플릿에 여러개의 소스코드를 넣을 수 있어요!
+              {t('template_explanation_2')}
             </Text.Medium>
           </Flex>
           <Flex direction='column' justify='center' gap='1rem'>
             <Heading.XSmall color='black' weight='bold'>
-              소스코드란?
+              {t('what_is_source_code')}
             </Heading.XSmall>
             <Text.Medium color={theme.color.light.secondary_500}>
-              코드잽에서 소스코드란 파일명 + 소스코드 내용으로 이루어진 코드
-              단위를 뜻해요.
+              {t('source_code_explanation_1')}
             </Text.Medium>
             <Text.Medium color={theme.color.light.secondary_500}>
-              파일명.[확장자]를 입력하면 하이라이트가 되고 복사 버튼으로 편하게
-              복사할 수 있어요!
+              {t('source_code_explanation_2')}
             </Text.Medium>
           </Flex>
         </Flex>
@@ -114,26 +110,18 @@ const LandingPage = () => {
 
       <S.TemplateSection>
         <S.TextContent>
-          <Heading.XSmall color='black'>
-            코드잽은 이런 분들에게 딱이에요 !
-          </Heading.XSmall>
-          <Text.Medium color='black'>
-            자주 쓰는 코드 템플릿을 간편하게 저장하고 싶은 분
-          </Text.Medium>
-          <Text.Medium color='black'>
-            프로젝트 파일을 뒤적거리는 대신 필요한 코드를 빠르게 찾고 싶은 분
-          </Text.Medium>
-          <Text.Medium color='black'>
-            체계적으로 코드를 정리하고 싶지만 방법을 모르셨던 분
-          </Text.Medium>
+          <Heading.XSmall color='black'>{t('target_title')}</Heading.XSmall>
+          <Text.Medium color='black'>{t('target_2')}</Text.Medium>
+          <Text.Medium color='black'>{t('target_3')}</Text.Medium>
+          <Text.Medium color='black'>{t('target_3')}</Text.Medium>
         </S.TextContent>
         {!isLogin && (
           <Flex direction='column' gap='1rem' width='10rem' margin='2rem 0'>
             <Link to='/login'>
-              <Button fullWidth>로그인 하러가기</Button>
+              <Button fullWidth>{t('go_login')}</Button>
             </Link>
             <Link to='/signup'>
-              <Button fullWidth>회원가입 하러가기</Button>
+              <Button fullWidth>{t('go_signup')}</Button>
             </Link>
           </Flex>
         )}
@@ -154,9 +142,10 @@ const ExamCode = () => {
   };
 
   const { infoAlert } = useCustomContext(ToastContext);
+  const { t } = useTranslation('LandingPage');
   const copyCode = (sourceCode: SourceCodes) => () => {
     navigator.clipboard.writeText(sourceCode.content);
-    infoAlert('코드가 복사되었습니다!');
+    infoAlert(t('copy'));
   };
 
   return (
@@ -169,7 +158,7 @@ const ExamCode = () => {
         style={{ background: '#393e46', borderRadius: '8px 8px 0 0' }}
       >
         <Flex align='center' gap='0.5rem' css={{ cursor: 'pointer' }}>
-          <ChevronIcon aria-label='소스코드 펼침' />
+          <ChevronIcon aria-label={t('expand_source_code')} />
           <Text.Small color='#fff' weight='bold'>
             {sourceCode.filename}
           </Text.Small>

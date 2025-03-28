@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { NoResults } from '@/components';
 import { useWindowWidth } from '@/hooks';
 import {
@@ -26,10 +28,11 @@ const TemplateListSection = ({
   setSelectedList,
 }: Props) => {
   const windowWidth = useWindowWidth();
+  const { t } = useTranslation('MemberTemplatePage');
 
   if (templateList.length === 0) {
     if (!isMine || isSearching) {
-      return <NoResults>검색 결과가 없습니다.</NoResults>;
+      return <NoResults>{t('templateList.noResults')}</NoResults>;
     }
 
     return <NewTemplateButton />;

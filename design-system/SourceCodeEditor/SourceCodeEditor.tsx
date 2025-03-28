@@ -3,6 +3,7 @@ import { SourceCode } from '@/components';
 import { getLanguageByFilename } from '@/utils';
 import { type ViewUpdate } from '@uiw/react-codemirror';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { ICON_SIZE } from '@design/style/styleConstants';
 
@@ -32,6 +33,7 @@ const SourceCodeEditor = ({
   sourceCodeRef = null,
 }: Props) => {
   const previousContentRef = useRef<string>(content);
+  const { t } = useTranslation('TemplateUploadPage');
 
   const handleFilenameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChangeFilename(event.target.value);
@@ -65,7 +67,7 @@ const SourceCodeEditor = ({
         value={filename}
         onChange={handleFilenameChange}
         onBlur={handleFilenameBlur}
-        placeholder={'파일명.[확장자]'}
+        placeholder={t('sourceCodeEditor.filenamePlaceholder')}
         autoFocus={filenameAutoFocus}
       />
       <SourceCode
@@ -82,7 +84,7 @@ const SourceCodeEditor = ({
         <TrashcanIcon
           width={ICON_SIZE.LARGE}
           height={ICON_SIZE.LARGE}
-          aria-label='템플릿 삭제'
+          aria-label={t('sourceCodeEditor.deleteAriaLabel')}
         />
       </S.DeleteButton>
     </S.SourceCodeEditorContainer>

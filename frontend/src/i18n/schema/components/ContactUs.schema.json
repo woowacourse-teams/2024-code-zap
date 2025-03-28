@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "button": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contact": {
+          "type": "string",
+          "description": "Contact us button text"
+        }
+      },
+      "required": ["contact"]
+    },
+    "modal": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Modal title"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description text in modal"
+        },
+        "emailDescription": {
+          "type": "string",
+          "description": "Email input description"
+        },
+        "emailImageInfo": {
+          "type": "string",
+          "description": "Information about sending images via email"
+        },
+        "emailLabel": {
+          "type": "string",
+          "description": "Email input label"
+        },
+        "messageLabel": {
+          "type": "string",
+          "description": "Message textarea label"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "emailDescription",
+        "emailImageInfo",
+        "emailLabel",
+        "messageLabel"
+      ]
+    },
+    "buttons": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "close": {
+          "type": "string",
+          "description": "Close button text"
+        },
+        "send": {
+          "type": "string",
+          "description": "Send button text"
+        }
+      },
+      "required": ["close", "send"]
+    },
+    "alerts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "successMessage": {
+          "type": "string",
+          "description": "Success message after sending"
+        }
+      },
+      "required": ["successMessage"]
+    }
+  },
+  "required": ["button", "modal", "buttons", "alerts"]
+}

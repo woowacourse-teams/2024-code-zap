@@ -10,6 +10,7 @@ import ReactCodeMirror, {
   type ViewUpdate,
 } from '@uiw/react-codemirror';
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import * as S from './SourceCode.style';
 
@@ -30,6 +31,7 @@ const SourceCode = ({
 }: Props) => {
   const codeMirrorRef = useRef<ReactCodeMirrorRef>(null);
   const windowWidth = useWindowWidth();
+  const { t } = useTranslation('TemplateUploadPage');
 
   const focusCodeMirror = () => {
     if (!codeMirrorRef.current) {
@@ -47,7 +49,7 @@ const SourceCode = ({
       value={content}
       onClick={focusCodeMirror}
       onChange={handleContentChange}
-      placeholder={'// 코드를 입력해주세요'}
+      placeholder={t('sourceCodeEditor.codePlaceholder')}
       theme={quietlight}
       height={mode === 'thumbnailView' ? '10rem' : '100%'}
       minHeight={mode === 'edit' ? '10rem' : undefined}

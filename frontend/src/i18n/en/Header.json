@@ -1,0 +1,14 @@
+{
+  "$schema": "../schema/Header.schema.json",
+
+  "myTemplates": "My Templates",
+  "likedTemplates": "Liked Templates",
+  "explore": "Explore",
+  "newTemplate": "New Template",
+  "login": "Login",
+  "logout": "Logout",
+  "alertLogin": "Please log in.",
+  "newTemplateAria": "Go to the page to create a new template.",
+  "logoButton": "Logo button",
+  "menu": "Menu"
+}

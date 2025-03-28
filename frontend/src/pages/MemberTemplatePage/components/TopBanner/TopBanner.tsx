@@ -1,4 +1,5 @@
 import { theme } from '@design/style/theme';
+import { useTranslation } from 'react-i18next';
 
 import { Heading } from '@/components';
 import { useWindowWidth } from '@/hooks';
@@ -13,6 +14,7 @@ interface Props {
 const TopBanner = ({ name }: Props) => {
   const windowWidth = useWindowWidth();
   const isMobile = windowWidth <= BREAKING_POINT.MOBILE;
+  const { t } = useTranslation('MemberTemplatePage');
 
   return (
     <S.TopBannerContainer>
@@ -22,7 +24,7 @@ const TopBanner = ({ name }: Props) => {
             {name}
           </Heading.XSmall>
           <Heading.XSmall color={theme.color.light.black} weight='regular'>
-            {`${name ? '님' : ''}의 템플릿 입니다 :)`}
+            {t('topBanner.message')}
           </Heading.XSmall>
         </S.TopBannerTextWrapper>
       ) : (
@@ -31,7 +33,7 @@ const TopBanner = ({ name }: Props) => {
             {name}
           </Heading.Medium>
           <Heading.XSmall color={theme.color.light.black} weight='regular'>
-            {`${name ? '님' : ''}의 템플릿 입니다 :)`}
+            {t('topBanner.message')}
           </Heading.XSmall>
         </S.TopBannerTextWrapper>
       )}
