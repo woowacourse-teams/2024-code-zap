@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 import { Button, Flex } from '@/components';
 import { ConfirmDeleteModal } from '@/pages/MemberTemplatePage/components';
 
@@ -21,41 +23,49 @@ const TemplateDeleteSelection = ({
   selectedListLength,
   templateListLength,
   handleDelete,
-}: Props) => (
-  <>
-    <Flex justify='flex-end'>
-      {isEditMode ? (
-        <Flex gap='0.25rem'>
+}: Props) => {
+  const { t } = useTranslation('MemberTemplatePage');
+
+  return (
+    <>
+      <Flex justify='flex-end'>
+        {isEditMode ? (
+          <Flex gap='0.25rem'>
+            <Button variant='text' size='small' onClick={toggleIsEditMode}>
+              {t('templateDeleteSelection.goBack')}
+            </Button>
+            <Button variant='outlined' size='small' onClick={handleAllSelected}>
+              {selectedListLength === templateListLength
+                ? t('templateDeleteSelection.deselectAll')
+                : t('templateDeleteSelection.selectAll')}
+            </Button>
+            <Button
+              variant={selectedListLength ? 'contained' : 'text'}
+              size='small'
+              onClick={
+                selectedListLength ? toggleDeleteModal : toggleIsEditMode
+              }
+            >
+              {selectedListLength
+                ? t('templateDeleteSelection.delete')
+                : t('templateDeleteSelection.cancel')}
+            </Button>
+          </Flex>
+        ) : (
           <Button variant='text' size='small' onClick={toggleIsEditMode}>
-            돌아가기
+            {t('templateDeleteSelection.selectDelete')}
           </Button>
-          <Button variant='outlined' size='small' onClick={handleAllSelected}>
-            {selectedListLength === templateListLength
-              ? '전체 해제'
-              : '전체 선택'}
-          </Button>
-          <Button
-            variant={selectedListLength ? 'contained' : 'text'}
-            size='small'
-            onClick={selectedListLength ? toggleDeleteModal : toggleIsEditMode}
-          >
-            {selectedListLength ? '삭제하기' : '취소하기'}
-          </Button>
-        </Flex>
-      ) : (
-        <Button variant='text' size='small' onClick={toggleIsEditMode}>
-          선택 삭제
-        </Button>
+        )}
+      </Flex>
+      {isDeleteModalOpen && (
+        <ConfirmDeleteModal
+          isDeleteModalOpen={isDeleteModalOpen}
+          toggleDeleteModal={toggleDeleteModal}
+          handleDelete={handleDelete}
+        />
       )}
-    </Flex>
-    {isDeleteModalOpen && (
-      <ConfirmDeleteModal
-        isDeleteModalOpen={isDeleteModalOpen}
-        toggleDeleteModal={toggleDeleteModal}
-        handleDelete={handleDelete}
-      />
-    )}
-  </>
-);
+    </>
+  );
+};
 
 export default TemplateDeleteSelection;

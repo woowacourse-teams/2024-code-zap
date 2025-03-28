@@ -23,8 +23,20 @@
         "noResults": { "type": "string" }
       },
       "required": ["noResults"]
+    },
+    "templateDeleteSelection": {
+      "type": "object",
+      "properties": {
+        "goBack": { "type": "string" },
+        "selectAll": { "type": "string" },
+        "deselectAll": { "type": "string" },
+        "delete": { "type": "string" },
+        "cancel": { "type": "string" },
+        "selectDelete": { "type": "string" }
+      },
+      "required": ["goBack", "selectAll", "deselectAll", "delete", "cancel", "selectDelete"]
     }
   },
   "additionalProperties": false,
-  "required": ["search", "searchResult", "topBanner", "templateList"]
+  "required": ["search", "searchResult", "topBanner", "templateList", "templateDeleteSelection"]
 }

@@ -9,5 +9,13 @@
   },
   "templateList": {
     "noResults": "No templates found."
+  },
+  "templateDeleteSelection": {
+    "goBack": "Go Back",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "selectDelete": "Select to Delete"
   }
 }
