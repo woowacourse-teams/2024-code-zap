@@ -4,7 +4,7 @@ const config: Config = {
   verbose: true,
   preset: 'ts-jest',
   testEnvironment: 'jest-fixed-jsdom',
-  setupFiles: ['./jest.polyfills.js'],
+  setupFiles: ['./jest.polyfills.js', './jest.i18n.ts'],
   testEnvironmentOptions: {
     customExportConditions: [''],
   },
