@@ -9,6 +9,7 @@ import landingEn from './en/LandingPage.json';
 import loginPageEn from './en/LoginPage.json';
 import memberTemplatePageEn from './en/MemberTemplatePage.json';
 import myLikedTemplatePageEn from './en/MyLikedTemplatePage.json';
+import notFoundPageEn from './en/NotFoundPage.json';
 import signupPageEn from './en/SignupPage.json';
 import templateExplorePageEn from './en/TemplateExplorePage.json';
 import templateUploadPageEn from './en/TemplateUploadPage.json';
@@ -24,6 +25,7 @@ import landingKo from './ko/LandingPage.json';
 import loginPageKo from './ko/LoginPage.json';
 import memberTemplatePageKo from './ko/MemberTemplatePage.json';
 import myLikedTemplatePageKo from './ko/MyLikedTemplatePage.json';
+import notFoundPageKo from './ko/NotFoundPage.json';
 import signupPageKo from './ko/SignupPage.json';
 import templateExplorePageKo from './ko/TemplateExplorePage.json';
 import templateUploadPageKo from './ko/TemplateUploadPage.json';
@@ -56,6 +58,7 @@ i18n
       'Constants',
       'Validates',
       'FormatRelativeTime',
+      'NotFoundPage',
     ],
     resources: {
       ko: {
@@ -74,6 +77,7 @@ i18n
         Constants: constantsKo,
         Validates: validatesKo,
         FormatRelativeTime: formatRelativeTimeKo,
+        NotFoundPage: notFoundPageKo,
       },
       en: {
         Category: categoryEn,
@@ -91,6 +95,7 @@ i18n
         Constants: constantsEn,
         Validates: validatesEn,
         FormatRelativeTime: formatRelativeTimeEn,
+        NotFoundPage: notFoundPageEn,
       },
     },
     interpolation: {

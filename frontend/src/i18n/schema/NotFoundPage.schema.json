@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "error": {
+      "type": "string",
+      "description": "404 error text"
+    },
+    "mainMessage": {
+      "type": "string",
+      "description": "Main error message"
+    },
+    "subMessages": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "notExist": {
+          "type": "string",
+          "description": "Message about page not existing"
+        },
+        "checkAddress": {
+          "type": "string",
+          "description": "Message asking to check address"
+        }
+      },
+      "required": ["notExist", "checkAddress"]
+    },
+    "button": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "home": {
+          "type": "string",
+          "description": "Home button text"
+        }
+      },
+      "required": ["home"]
+    },
+    "aria": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "tigerLogo": {
+          "type": "string",
+          "description": "Tiger logo aria label"
+        }
+      },
+      "required": ["tigerLogo"]
+    }
+  },
+  "required": ["error", "mainMessage", "subMessages", "button", "aria"]
+}
