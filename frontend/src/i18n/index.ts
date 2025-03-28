@@ -18,6 +18,7 @@ import modelsTemplatesEn from './en/models/Templates.json';
 import constantsEn from './en/service/constants.json';
 import hotTopicEn from './en/service/hotTopic.json';
 import validatesEn from './en/service/validates.json';
+import formatRelativeTimeEn from './en/utils/formatRelativeTime.json';
 import headerKo from './ko/Header.json';
 import landingKo from './ko/LandingPage.json';
 import loginPageKo from './ko/LoginPage.json';
@@ -32,6 +33,7 @@ import modelsTemplatesKo from './ko/models/Templates.json';
 import constantsKo from './ko/service/constants.json';
 import hotTopicKo from './ko/service/hotTopic.json';
 import validatesKo from './ko/service/validates.json';
+import formatRelativeTimeKo from './ko/utils/formatRelativeTime.json';
 
 i18n
   .use(LanguageDetector)
@@ -53,6 +55,7 @@ i18n
       'HotTopic',
       'Constants',
       'Validates',
+      'FormatRelativeTime',
     ],
     resources: {
       ko: {
@@ -70,6 +73,7 @@ i18n
         HotTopic: hotTopicKo,
         Constants: constantsKo,
         Validates: validatesKo,
+        FormatRelativeTime: formatRelativeTimeKo,
       },
       en: {
         Category: categoryEn,
@@ -86,6 +90,7 @@ i18n
         HotTopic: hotTopicEn,
         Constants: constantsEn,
         Validates: validatesEn,
+        FormatRelativeTime: formatRelativeTimeEn,
       },
     },
     interpolation: {

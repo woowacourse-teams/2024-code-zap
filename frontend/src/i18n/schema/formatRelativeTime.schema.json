@@ -1,0 +1,13 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "formatRelativeTime i18n Schema",
+  "type": "object",
+  "properties": {
+    "$schema": { "type": "string" },
+    "justNow": { "type": "string" },
+    "minutesAgo": { "type": "string" },
+    "hoursAgo": { "type": "string" }
+  },
+  "additionalProperties": false,
+  "required": ["justNow", "minutesAgo", "hoursAgo"]
+}
