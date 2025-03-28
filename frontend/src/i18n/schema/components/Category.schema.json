@@ -1,9 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "guide": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "enterToRegister": {
           "type": "string",
@@ -14,6 +16,7 @@
     },
     "input": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "newCategoryPlaceholder": {
           "type": "string",

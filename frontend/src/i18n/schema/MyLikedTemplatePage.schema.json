@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "MyLikedTemplatePage i18n Schema",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "title": { "type": "string" },
     "noResults": { "type": "string" }

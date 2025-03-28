@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "title": {
       "type": "string",
@@ -8,9 +9,11 @@
     },
     "form": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "labels": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "username": {
               "type": "string",
@@ -29,6 +32,7 @@
         },
         "buttons": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "signup": {
               "type": "string",
@@ -43,6 +47,7 @@
         },
         "aria": {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "showPassword": {
               "type": "string",
@@ -60,6 +65,7 @@
     },
     "login": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "question": {
           "type": "string",
@@ -70,6 +76,7 @@
     },
     "alert": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "success": {
           "type": "string",
@@ -83,5 +90,6 @@
       "required": ["success", "fail"]
     }
   },
+
   "required": ["title", "form", "login", "alert"]
 }

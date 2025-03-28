@@ -1,9 +1,11 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "button": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "contact": {
           "type": "string",
@@ -14,6 +16,7 @@
     },
     "modal": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "title": {
           "type": "string",
@@ -51,6 +54,7 @@
     },
     "buttons": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "close": {
           "type": "string",
@@ -65,6 +69,7 @@
     },
     "alerts": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "successMessage": {
           "type": "string",

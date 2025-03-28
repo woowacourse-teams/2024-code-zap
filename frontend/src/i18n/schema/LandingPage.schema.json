@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "LandingPage Translation Schema",
   "type": "object",
+  "additionalProperties": false,
   "properties": {
     "ex_title_1": { "type": "string" },
     "ex_desc_1": { "type": "string" },
