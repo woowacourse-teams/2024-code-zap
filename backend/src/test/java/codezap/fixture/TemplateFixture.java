@@ -12,17 +12,17 @@ import codezap.template.domain.Visibility;
 
 public class TemplateFixture {
     public static Template get(Member member, Category category) {
-        return new Template(1L, member, "안녕", "Description 1", category,0L, Visibility.PUBLIC, 0L, getList(1));
+        return new Template(member, "안녕", "Description 1", category, Visibility.PUBLIC, getList(1));
     }
 
     public static Template getPrivate(Member member, Category category) {
-        return new Template(2L, member, "안녕하세요", "Description 1", category, 0L, Visibility.PRIVATE, 0L, getList(1));
+        return new Template(member, "안녕하세요", "Description 1", category, Visibility.PRIVATE, getList(1));
     }
 
     public static List<Template> getList(int size, Member member, Category category) {
         List<Template> templates = new ArrayList<>();
         IntStream.range(0, size).forEach(i -> templates.add(new Template(
-                (long) 2 + i,
+                (long) i + 1,
                 member,
                 "title" + i,
                 "description" + i,

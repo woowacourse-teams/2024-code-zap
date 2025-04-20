@@ -327,7 +327,7 @@ class TemplateSearchServiceTest {
             FixedPage<Template> actual = sut.findAllBy(memberId, keyword, categoryId, tagIds, visibility, pageable);
 
             assertAll(
-                    () -> assertThat(actual.contents()).hasSize(4),
+                    () -> assertThat(actual.contents()).hasSize(5),
                     () -> assertThat(actual.contents().get(0).getId()).isEqualTo(11L)
             );
         }

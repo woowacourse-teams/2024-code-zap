@@ -405,10 +405,7 @@ class TemplateControllerTest extends MockMvcTest {
                             "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
                     Arguments.of(createUpdateRequestWithInvalidSourceCode("ㄱ".repeat(MAX_CONTENT_LENGTH / 3 + 1)),
                             "소스 코드는 최대 65,535 Byte까지 입력 가능합니다."),
-                    Arguments.of(createUpdateRequestWithNullCreateSourceCodes(), "추가하는 소스 코드 목록이 null 입니다."),
-                    Arguments.of(createUpdateRequestWithNullUpdateSourceCodes(),
-                            "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록이 null 입니다."),
-                    Arguments.of(createUpdateRequestWithNullDeleteSourceCodeIds(), "삭제하는 소스 코드 ID 목록이 null 입니다."),
+                    Arguments.of(createUpdateRequestWithNullCreateSourceCodes(), "소스 코드 목록이 null 입니다."),
                     Arguments.of(createUpdateRequestWithNullCategoryId(), "카테고리 ID가 null 입니다."),
                     Arguments.of(createUpdateRequestWithNullTags(), "태그 목록이 null 입니다.")
             );
@@ -469,30 +466,6 @@ class TemplateControllerTest extends MockMvcTest {
         }
 
         private static UpdateTemplateRequest createUpdateRequestWithNullCreateSourceCodes() {
-            UpdateTemplateRequest validRequest = createValidUpdateTemplateRequest();
-            return new UpdateTemplateRequest(
-                    validRequest.title(),
-                    validRequest.description(),
-                    null,
-                    validRequest.categoryId(),
-                    validRequest.tags(),
-                    Visibility.PUBLIC
-            );
-        }
-
-        private static UpdateTemplateRequest createUpdateRequestWithNullUpdateSourceCodes() {
-            UpdateTemplateRequest validRequest = createValidUpdateTemplateRequest();
-            return new UpdateTemplateRequest(
-                    validRequest.title(),
-                    validRequest.description(),
-                    null,
-                    validRequest.categoryId(),
-                    validRequest.tags(),
-                    Visibility.PUBLIC
-            );
-        }
-
-        private static UpdateTemplateRequest createUpdateRequestWithNullDeleteSourceCodeIds() {
             UpdateTemplateRequest validRequest = createValidUpdateTemplateRequest();
             return new UpdateTemplateRequest(
                     validRequest.title(),

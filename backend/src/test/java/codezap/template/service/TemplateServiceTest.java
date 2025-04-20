@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import jakarta.persistence.EntityManager;
 
@@ -146,10 +147,10 @@ class TemplateServiceTest extends ServiceTest {
             }
         }
 
-        private void saveTemplates5(Member member, Category category) {
-            for (int i = 0; i < 5; i++) {
-                templateRepository.save(TemplateFixture.get(member, category));
-            }
+        private List<Template> saveTemplates5(Member member, Category category) {
+            return IntStream.range(0, 5)
+                    .mapToObj(i -> templateRepository.save(TemplateFixture.get(member, category)))
+                    .toList();
         }
 
         private void likeTemplate(long templateId, long likesCount) {
@@ -200,7 +201,7 @@ class TemplateServiceTest extends ServiceTest {
             var updateTemplateRequest = new UpdateTemplateRequest(
                     "Update Title",
                     "Update Description",
-                    List.of(),
+                    List.of(new CreateSourceCodeRequest("filename1", "content1", 1)),
                     category.getId(),
                     List.of(),
                     Visibility.PUBLIC
@@ -224,7 +225,7 @@ class TemplateServiceTest extends ServiceTest {
             var updateRequest = new UpdateTemplateRequest(
                     "update title",
                     "update description",
-                    List.of(),
+                    List.of(new CreateSourceCodeRequest("filename1", "content1", 1)),
                     category.getId(),
                     List.of(),
                     Visibility.PRIVATE
@@ -309,6 +310,8 @@ class TemplateServiceTest extends ServiceTest {
             var template3 = templateRepository.save(TemplateFixture.get(member, otherCategory));
             var template4 = templateRepository.save(TemplateFixture.getPrivate(member, otherCategory));
 
+            System.out.println( "!!!" + template1.getId());
+            System.out.println( "!!!" + template2.getId());
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
             FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
                     PageRequest.of(0, 10));

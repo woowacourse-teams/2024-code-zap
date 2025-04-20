@@ -285,7 +285,7 @@ class TagServiceTest extends ServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
 
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.getPrivate(member, category));
 
             var tag1 = tagRepository.save(new Tag("tag1"));
             templateTagRepository.save(new TemplateTag(template1, tag1));

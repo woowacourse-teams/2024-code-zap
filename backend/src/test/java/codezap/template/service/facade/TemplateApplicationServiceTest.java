@@ -539,8 +539,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     .map(template -> templateRepository.save(template))
                     .toList();
         }
-
     }
+
     private Template savePublicTemplate(Member member, Category category) {
         return templateRepository.save(TemplateFixture.get(member, category));
     }
