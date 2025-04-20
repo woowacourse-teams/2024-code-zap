@@ -25,10 +25,6 @@ public class SourceCodeService {
 
     private final SourceCodeRepository sourceCodeRepository;
 
-    public SourceCode getByTemplateAndOrdinal(Template template, int ordinal) {
-        return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
-    }
-
     @Transactional
     public void updateSourceCodes(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
         validateSourceCodesOrdinal(request);

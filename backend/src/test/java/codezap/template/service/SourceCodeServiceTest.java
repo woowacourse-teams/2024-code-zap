@@ -103,39 +103,6 @@ class SourceCodeServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("템플릿과 순서에 해당하는 소스 코드 조회")
-    class GetByTemplateAndOrdinal {
-
-        @Test
-        @DisplayName("성공")
-        void getByTemplateAndOrdinal() {
-            // given
-            Template template = createSavedTemplate();
-            SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-
-            // when & then
-            assertAll(
-                    () -> assertThat(sourceCodeService.getByTemplateAndOrdinal(template, 2)).isEqualTo(sourceCode2),
-                    () -> assertThat(sourceCodeService.getByTemplateAndOrdinal(template, 1)).isEqualTo(sourceCode1));
-        }
-
-        @Test
-        @DisplayName("실패: 해당 순서의 소스 코드 없음")
-        void getByTemplateAndOrdinal_WhenOrdinalNotExist() {
-            // given
-            Template template = createSavedTemplate();
-            sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-
-            // when & then
-            assertThatThrownBy(() -> sourceCodeService.getByTemplateAndOrdinal(template, 3))
-                    .isInstanceOf(CodeZapException.class)
-                    .hasMessage("템플릿에 3번째 소스 코드가 존재하지 않습니다.");
-        }
-    }
-
-    @Nested
     @DisplayName("소스 코드 수정")
     class UpdateSourceCodes {
 
