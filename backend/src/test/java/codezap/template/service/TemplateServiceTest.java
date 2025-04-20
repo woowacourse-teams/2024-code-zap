@@ -172,7 +172,7 @@ class TemplateServiceTest extends ServiceTest {
             Category category1 = categoryRepository.save(CategoryFixture.getAdditionalCategory(member1));
             Category category2 = categoryRepository.save(CategoryFixture.getAdditionalCategory(member2));
             Template template1 = templateRepository.save(TemplateFixture.get(member1, category1));
-            Template template2 = templateRepository.save(TemplateFixture.get(member1, category1));
+            Template template2 = templateRepository.save(TemplateFixture.getPrivate(member1, category1));
             Template template3 = templateRepository.save(TemplateFixture.get(member2, category2));
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template2, member2));
@@ -201,8 +201,6 @@ class TemplateServiceTest extends ServiceTest {
                     "Update Title",
                     "Update Description",
                     List.of(),
-                    List.of(),
-                    List.of(),
                     category.getId(),
                     List.of(),
                     Visibility.PUBLIC
@@ -227,8 +225,6 @@ class TemplateServiceTest extends ServiceTest {
                     "update title",
                     "update description",
                     List.of(),
-                    List.of(),
-                    List.of(),
                     category.getId(),
                     List.of(),
                     Visibility.PRIVATE
@@ -248,8 +244,6 @@ class TemplateServiceTest extends ServiceTest {
             var updateTemplateRequest = new UpdateTemplateRequest(
                     "Update Title",
                     "Update Description",
-                    List.of(),
-                    List.of(),
                     List.of(),
                     category.getId(),
                     List.of(),
@@ -273,8 +267,6 @@ class TemplateServiceTest extends ServiceTest {
                     "Update Title",
                     "Update Description",
                     List.of(),
-                    List.of(),
-                    List.of(),
                     category.getId(),
                     List.of(),
                     Visibility.PUBLIC
@@ -296,7 +288,7 @@ class TemplateServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var template2 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.getPrivate(member, category));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId()));
             FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,
@@ -311,10 +303,11 @@ class TemplateServiceTest extends ServiceTest {
         void deleteTemplateSuccessWithMultipleTemplate() {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
+            var otherCategory = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var template2 = templateRepository.save(TemplateFixture.get(member, category));
-            var template3 = templateRepository.save(TemplateFixture.get(member, category));
-            var template4 = templateRepository.save(TemplateFixture.get(member, category));
+            var template2 = templateRepository.save(TemplateFixture.getPrivate(member, category));
+            var template3 = templateRepository.save(TemplateFixture.get(member, otherCategory));
+            var template4 = templateRepository.save(TemplateFixture.getPrivate(member, otherCategory));
 
             sut.deleteByMemberAndIds(member, List.of(template1.getId(), template4.getId()));
             FixedPage<Template> actual = sut.findAllBy(member.getId(), null, null, null, null,

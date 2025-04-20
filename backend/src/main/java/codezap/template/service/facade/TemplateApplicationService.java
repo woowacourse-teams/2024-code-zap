@@ -18,7 +18,6 @@ import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
-import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
 import codezap.template.domain.Visibility;
@@ -70,8 +69,7 @@ public class TemplateApplicationService {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
         }
         List<Tag> tags = tagService.findAllByTemplate(template);
-        List<SourceCode> sourceCodes = template.getSourceCodes();
-        return FindTemplateResponse.of(template, sourceCodes, tags, likedChecker.isLiked(template));
+        return FindTemplateResponse.of(template, tags, likedChecker.isLiked(template));
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -134,7 +132,6 @@ public class TemplateApplicationService {
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         getTagByTemplate(allTemplateTagsByTemplates, template),
-                        template.getThumbnailSourceCode(),
                         likedChecker.isLiked(template)))
                 .toList();
     }

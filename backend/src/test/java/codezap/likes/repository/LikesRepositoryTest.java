@@ -149,7 +149,7 @@ class LikesRepositoryTest {
             Member member2 = memberRepository.save(MemberFixture.getSecondMember());
 
             Template template1 = templateRepository.save(TemplateFixture.get(member, category));
-            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template2 = templateRepository.save(TemplateFixture.getPrivate(member, category));
 
             likesRepository.save(new Likes(template1, member1));
             likesRepository.save(new Likes(template1, member2));

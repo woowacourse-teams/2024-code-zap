@@ -27,7 +27,6 @@ import org.springframework.http.MediaType;
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
-import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.MockMvcTest;
 import codezap.member.domain.Member;
@@ -36,7 +35,6 @@ import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
@@ -297,7 +295,6 @@ class TemplateControllerTest extends MockMvcTest {
             return FindAllTemplateItemResponse.of(
                     template,
                     List.of(new Tag(1L, "tag1")),
-                    SourceCodeFixture.get(template, 1),
                     true);
         }
     }
@@ -315,7 +312,6 @@ class TemplateControllerTest extends MockMvcTest {
             Template template = TemplateFixture.get(member, category);
             FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(
                     template,
-                    List.of(SourceCodeFixture.get(template, 1)),
                     List.of(new Tag(1L, "tag1")),
                     true);
 
@@ -337,7 +333,6 @@ class TemplateControllerTest extends MockMvcTest {
             Template template = TemplateFixture.get(member, category);
             FindTemplateResponse findTemplateResponse = FindTemplateResponse.of(
                     template,
-                    List.of(SourceCodeFixture.get(template, 1)),
                     List.of(new Tag(1L, "tag1")),
                     true);
 
@@ -371,9 +366,10 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     "updateTitle",
                     "description",
-                    List.of(new CreateSourceCodeRequest("filename3", "content3", 2)),
-                    List.of(new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", 1)),
-                    List.of(1L),
+                    List.of(
+                            new CreateSourceCodeRequest("filename3", "content3", 2),
+                            new CreateSourceCodeRequest("updateFilename2", "updateContent2", 1)
+                    ),
                     1L,
                     List.of("tag1", "tag3"),
                     Visibility.PUBLIC
@@ -423,9 +419,7 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     invalidTitle,
                     validRequest.description(),
-                    validRequest.createSourceCodes(),
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
+                    validRequest.sourceCodes(),
                     validRequest.categoryId(),
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -437,9 +431,7 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     validRequest.title(),
                     invalidDescription,
-                    validRequest.createSourceCodes(),
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
+                    validRequest.sourceCodes(),
                     validRequest.categoryId(),
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -455,8 +447,6 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.title(),
                     validRequest.description(),
                     invalidCreateSourceCodes,
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -472,8 +462,6 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.title(),
                     validRequest.description(),
                     invalidCreateSourceCodes,
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -486,8 +474,6 @@ class TemplateControllerTest extends MockMvcTest {
                     validRequest.title(),
                     validRequest.description(),
                     null,
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -499,9 +485,7 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     validRequest.title(),
                     validRequest.description(),
-                    validRequest.createSourceCodes(),
                     null,
-                    validRequest.deleteSourceCodeIds(),
                     validRequest.categoryId(),
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -513,8 +497,6 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     validRequest.title(),
                     validRequest.description(),
-                    validRequest.createSourceCodes(),
-                    validRequest.updateSourceCodes(),
                     null,
                     validRequest.categoryId(),
                     validRequest.tags(),
@@ -527,9 +509,7 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     validRequest.title(),
                     validRequest.description(),
-                    validRequest.createSourceCodes(),
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
+                    validRequest.sourceCodes(),
                     null,
                     validRequest.tags(),
                     Visibility.PUBLIC
@@ -541,9 +521,7 @@ class TemplateControllerTest extends MockMvcTest {
             return new UpdateTemplateRequest(
                     validRequest.title(),
                     validRequest.description(),
-                    validRequest.createSourceCodes(),
-                    validRequest.updateSourceCodes(),
-                    validRequest.deleteSourceCodeIds(),
+                    validRequest.sourceCodes(),
                     validRequest.categoryId(),
                     null,
                     Visibility.PUBLIC
@@ -556,8 +534,8 @@ class TemplateControllerTest extends MockMvcTest {
         void updateTemplateFailWithWrongSourceCodeOrdinal(int createOrdinal1, int createOrdinal2, int updateOrdinal)
                 throws Exception {
             // given
-            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(createOrdinal1,
-                    createOrdinal2, updateOrdinal);
+            UpdateTemplateRequest updateTemplateRequest = getUpdateTemplateRequest(createOrdinal1, createOrdinal2,
+                    updateOrdinal);
 
             // when & then
             mvc.perform(post("/templates/1")
@@ -572,16 +550,13 @@ class TemplateControllerTest extends MockMvcTest {
         ) {
             List<CreateSourceCodeRequest> createSourceCodes = List.of(
                     new CreateSourceCodeRequest("filename3", "content3", createOrdinal1),
-                    new CreateSourceCodeRequest("filename4", "content4", createOrdinal2));
-            List<UpdateSourceCodeRequest> updateSourceCodes = List.of(
-                    new UpdateSourceCodeRequest(2L, "updateFilename2", "updateContent2", updateOrdinal));
+                    new CreateSourceCodeRequest("filename4", "content4", createOrdinal2),
+                    new CreateSourceCodeRequest("filename2", "content2", updateOrdinal));
 
             return new UpdateTemplateRequest(
                     "updateTitle",
                     "description",
                     createSourceCodes,
-                    updateSourceCodes,
-                    List.of(1L),
                     2L,
                     List.of("tag1", "tag3"),
                     Visibility.PUBLIC
@@ -630,7 +605,6 @@ class TemplateControllerTest extends MockMvcTest {
             return FindAllTemplateItemResponse.of(
                     template,
                     List.of(new Tag(1L, "tag1")),
-                    SourceCodeFixture.get(template, 1),
                     true
             );
         }
