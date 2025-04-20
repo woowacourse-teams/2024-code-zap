@@ -48,10 +48,9 @@ class ThumbnailTest {
         private Template createTemplateById(Long id) {
             Member member = MemberFixture.getFirstMember();
             Category category = CategoryFixture.getDefaultCategory(member);
-            List<SourceCode> sourceCodes = List.of();
             long likesCount = 1L;
             return new Template(
-                    id, member, "Template 1", "Description 1", category, sourceCodes, likesCount, Visibility.PUBLIC);
+                    id, member, "Template 1", "Description 1", category, likesCount, Visibility.PUBLIC);
         }
     }
 }

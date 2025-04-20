@@ -53,9 +53,6 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Category category;
 
-    @OneToMany(mappedBy = "template")
-    private List<SourceCode> sourceCodes = new ArrayList<>();
-
     @Column
     @ColumnDefault("0")
     private Long likesCount;
@@ -66,7 +63,7 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     private Visibility visibility;
 
     public Template(Member member, String title, String description, Category category, Visibility visibility) {
-        this(null, member, title, description, category, null, 0L, visibility);
+        this(null, member, title, description, category, 0L, visibility);
     }
 
     public void updateTemplate(String title, String description, Category category, Visibility visibility) {
