@@ -116,9 +116,4 @@ public class SourceCodeService {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드의 정보가 정확하지 않습니다.");
         }
     }
-
-    @Transactional
-    public void deleteAllByTemplateIds(List<Long> templateIds) {
-        sourceCodeRepository.deleteAllByTemplateIds(templateIds);
-    }
 }
