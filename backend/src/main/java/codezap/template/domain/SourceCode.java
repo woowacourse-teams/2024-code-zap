@@ -18,8 +18,4 @@ public record SourceCode(
                 .limit(THUMBNAIL_LINE_HEIGHT)
                 .collect(Collectors.joining(LINE_BREAK));
     }
-
-//    public SourceCode update(String filename, String content, Integer ordinal) {
-//        return new SourceCode(filename, content);
-//    }
 }

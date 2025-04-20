@@ -1,6 +1,5 @@
-package codezap.template.repository.strategy;
+package codezap.template.repository.strategy;//package codezap.template.repository.strategy;
 
-import static codezap.template.domain.QSourceCode.sourceCode;
 import static codezap.template.domain.QTemplate.template;
 
 import java.util.Arrays;
@@ -14,6 +13,11 @@ import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 
+import codezap.template.domain.QSourceCode;
+import codezap.template.domain.QTemplate;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 @Component
 public class FullTextSearchSearchStrategy implements SearchStrategy {
 
@@ -27,20 +31,25 @@ public class FullTextSearchSearchStrategy implements SearchStrategy {
     @Override
     public BooleanExpression matchedKeyword(String trimmedKeyword) {
         String parsedKeyword = parseKeyword(trimmedKeyword);
+
         NumberExpression<Double> titleScore = getMatchedAccuracy(template.title, template.description, parsedKeyword);
-        NumberExpression<Double> sourceCodeScore = getMatchedAccuracy(sourceCode.filename, sourceCode.content, parsedKeyword);
+
+        QTemplate templateAlias = QTemplate.template;
+        QSourceCode sourceCodeAlias = new QSourceCode("sourceCodeAlias");
+
         return titleScore.gt(NO_MATCHED_SCORE).or(
                 template.id.in(JPAExpressions
-                        .select(sourceCode.template.id)
-                        .from(sourceCode)
-                        .where(sourceCodeScore.gt(NO_MATCHED_SCORE))
+                                .select(templateAlias.id)
+                                .from(templateAlias)
+                                .join(templateAlias.sourceCodes, sourceCodeAlias)
+                                .where(getMatchedAccuracy(sourceCodeAlias.filename, sourceCodeAlias.content,
+                                        parsedKeyword).gt(NO_MATCHED_SCORE))
                 )
         );
     }
 
     private String parseKeyword(String trimmedKeyword) {
-        String[] parsedKeywords = trimmedKeyword.split(" ");
-        return Arrays.stream(parsedKeywords)
+        return Arrays.stream(trimmedKeyword.split(" "))
                 .map(keyword -> INVALID_CHAR_PATTERN.matcher(keyword).replaceAll(""))
                 .filter(keyword -> !keyword.isEmpty())
                 .map(keyword -> "+" + keyword)
