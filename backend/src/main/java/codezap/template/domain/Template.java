@@ -37,7 +37,6 @@ import lombok.NoArgsConstructor;
 public class Template extends SkipModifiedAtBaseTimeEntity {
 
     private static final Long LIKES_COUNT_DEFAULT = 0L;
-    private static final int MINIMUM_SOURCE_CODE_COUNT = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -72,7 +71,17 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     @OrderColumn(name = "ordinal")
     private final List<SourceCode> sourceCodes = new ArrayList<>();
 
-    public Template(Long id, Member member, String title, String description, Category category, Long likesCount, Visibility visibility, Long thumbnailOrdinal) {
+    public Template(
+            Long id,
+            Member member,
+            String title,
+            String description,
+            Category category,
+            Long likesCount,
+            Visibility visibility,
+            Long thumbnailOrdinal,
+            List<SourceCode> sourceCodes
+    ) {
         this.id = id;
         this.member = member;
         this.title = title;
@@ -84,11 +93,11 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
         validateSourceCodeCount(sourceCodes);
     }
 
-    public Template(Member member, String title, String description, Category category, Visibility visibility) {
-        this(null, member, title, description, category, 0L, visibility, 0L);
+    public Template(Member member, String title, String description, Category category, Visibility visibility, List<SourceCode> sourceCodes) {
+        this(null, member, title, description, category, 0L, visibility, 0L, sourceCodes);
     }
 
-    public void updateTemplate(String title, String description, Category category, Visibility visibility) {
+    public void updateTemplate(String title, String description, Category category, Visibility visibility, List<SourceCode> sourceCodes) {
         this.modifiedAt = LocalDateTime.now();
         this.title = title;
         this.description = description;
@@ -122,7 +131,7 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     }
 
     private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
-        if (sourceCodes.size() < MINIMUM_SOURCE_CODE_COUNT) {
+        if (sourceCodes.isEmpty()) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
         }
     }
