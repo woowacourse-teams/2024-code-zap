@@ -78,7 +78,7 @@ public class TemplateApplicationService {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
         }
         List<Tag> tags = tagService.findAllByTemplate(template);
-        List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
+        List<SourceCode> sourceCodes = template.getSourceCodes();
         return FindTemplateResponse.of(template, sourceCodes, tags, likedChecker.isLiked(template));
     }
 

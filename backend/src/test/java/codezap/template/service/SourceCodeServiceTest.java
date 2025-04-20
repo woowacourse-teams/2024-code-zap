@@ -136,34 +136,6 @@ class SourceCodeServiceTest extends ServiceTest {
     }
 
     @Nested
-    @DisplayName("템플릿에 해당하는 소스 코드 조회")
-    class FindSourceCodesByTemplate {
-
-        @Test
-        @DisplayName("성공")
-        void findSourceCodesByTemplate() {
-            // given
-            Template template = createSavedTemplate();
-            SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-
-            // when & then
-            assertThat(sourceCodeService.findAllByTemplate(template))
-                    .containsExactly(sourceCode1, sourceCode2);
-        }
-
-        @Test
-        @DisplayName("성공: 템플릿에 해당하는 소스 코드가 존재하지 않은 경우 빈 리스트 반환")
-        void findSourceCodesByTemplate_WhenSourceCodeNotExist() {
-            // given
-            Template template = createSavedTemplate();
-
-            // when & then
-            assertThat(sourceCodeService.findAllByTemplate(template)).isEmpty();
-        }
-    }
-
-    @Nested
     @DisplayName("소스 코드 수정")
     class UpdateSourceCodes {
 

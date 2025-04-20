@@ -46,10 +46,6 @@ public class SourceCodeService {
         return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
     }
 
-    public List<SourceCode> findAllByTemplate(Template template) {
-        return sourceCodeRepository.findAllByTemplate(template);
-    }
-
     @Transactional
     public void updateSourceCodes(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
         validateSourceCodeCount(request);
