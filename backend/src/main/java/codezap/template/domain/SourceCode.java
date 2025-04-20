@@ -3,52 +3,19 @@ package codezap.template.domain;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Embeddable;
 
-import codezap.global.auditing.BaseTimeEntity;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Getter
-@EqualsAndHashCode(of = "id", callSuper = false)
-public class SourceCode extends BaseTimeEntity {
-
+@Embeddable
+public record SourceCode(
+        String filename,
+        String content,
+        int ordinal
+) {
     private static final String LINE_BREAK = "\n";
     private static final int THUMBNAIL_LINE_HEIGHT = 5;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Template template;
-
-    @Column(nullable = false)
-    private String filename;
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
-
-    @Column(nullable = false)
-    private Integer ordinal;
-
-    public SourceCode(Template template, String filename, String content, Integer ordinal) {
-        this.template = template;
-        this.filename = filename;
-        this.content = content;
-        this.ordinal = ordinal;
+    public SourceCode(String filename, String content, Integer ordinal) {
+        this(filename, content, ordinal.intValue());
     }
 
     public String getThumbnailContent() {
@@ -57,9 +24,7 @@ public class SourceCode extends BaseTimeEntity {
                 .collect(Collectors.joining(LINE_BREAK));
     }
 
-    public void updateSourceCode(String filename, String content, Integer ordinal) {
-        this.filename = filename;
-        this.content = content;
-        this.ordinal = ordinal;
+    public SourceCode update(String filename, String content, Integer ordinal) {
+        return new SourceCode(filename, content, ordinal.intValue());
     }
 }
