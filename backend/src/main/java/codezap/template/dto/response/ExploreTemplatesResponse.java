@@ -3,14 +3,14 @@ package codezap.template.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import codezap.template.domain.Thumbnail;
+import codezap.template.domain.Template;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record ExploreTemplatesResponse(
         @Schema(description = "템플릿 목록")
         List<ItemResponse> templates
 ) {
-    public static ExploreTemplatesResponse from(List<Thumbnail> thumbnails) {
+    public static ExploreTemplatesResponse from(List<Template> thumbnails) {
         List<ItemResponse> templatesBySummaryResponse = thumbnails.stream()
                 .map(ItemResponse::from)
                 .toList();
@@ -27,12 +27,12 @@ public record ExploreTemplatesResponse(
             @Schema(description = "템플릿 수정 시간", example = "2024-11-11 12:00", type = "string")
             LocalDateTime modifiedAt
     ) {
-        public static ItemResponse from(Thumbnail thumbnail) {
+        public static ItemResponse from(Template template) {
             return new ItemResponse(
-                    thumbnail.getTemplate().getId(),
-                    thumbnail.getTemplate().getTitle(),
-                    FindThumbnailResponse.from(thumbnail.getSourceCode()),
-                    thumbnail.getModifiedAt()
+                    template.getId(),
+                    template.getTitle(),
+                    FindThumbnailResponse.from(template.getThumbnailSourceCode()),
+                    template.getModifiedAt()
             );
         }
     }
