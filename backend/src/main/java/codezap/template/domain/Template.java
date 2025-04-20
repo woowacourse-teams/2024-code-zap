@@ -25,7 +25,6 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +32,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @DynamicUpdate
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Template extends SkipModifiedAtBaseTimeEntity {
@@ -66,16 +64,28 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Visibility visibility;
 
-//    @Column(nullable = false)
-//    @ColumnDefault("0")
-//    private int thumbnailOrdinal;
+    @Column(nullable = false)
+    @ColumnDefault("0")
+    private Long thumbnailOrdinal;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @OrderColumn(name = "ordinal")
     private final List<SourceCode> sourceCodes = new ArrayList<>();
 
+    public Template(Long id, Member member, String title, String description, Category category, Long likesCount, Visibility visibility, Long thumbnailOrdinal) {
+        this.id = id;
+        this.member = member;
+        this.title = title;
+        this.description = description;
+        this.category = category;
+        this.likesCount = likesCount;
+        this.visibility = visibility;
+        this.thumbnailOrdinal = thumbnailOrdinal;
+        validateSourceCodeCount(sourceCodes);
+    }
+
     public Template(Member member, String title, String description, Category category, Visibility visibility) {
-        this(null, member, title, description, category, 0L, visibility);
+        this(null, member, title, description, category, 0L, visibility, 0L);
     }
 
     public void updateTemplate(String title, String description, Category category, Visibility visibility) {
@@ -107,9 +117,17 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
         this.likesCount--;
     }
 
+    public SourceCode getThumbnailSourceCode() {
+        return sourceCodes.get(thumbnailOrdinal.intValue());
+    }
+
     private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
-        if(sourceCodes.size() < MINIMUM_SOURCE_CODE_COUNT) {
+        if (sourceCodes.size() < MINIMUM_SOURCE_CODE_COUNT) {
             throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
         }
+    }
+
+    public void updateThumbnailCode(Long thumbnailOrdinal) {
+        this.thumbnailOrdinal = thumbnailOrdinal;
     }
 }
