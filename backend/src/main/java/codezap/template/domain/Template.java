@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -13,13 +14,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicUpdate;
 
 import codezap.category.domain.Category;
 import codezap.global.auditing.SkipModifiedAtBaseTimeEntity;
+import codezap.global.exception.CodeZapException;
+import codezap.global.exception.ErrorCode;
 import codezap.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,6 +39,7 @@ import lombok.NoArgsConstructor;
 public class Template extends SkipModifiedAtBaseTimeEntity {
 
     private static final Long LIKES_COUNT_DEFAULT = 0L;
+    private static final int MINIMUM_SOURCE_CODE_COUNT = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +65,14 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     @ColumnDefault("'PUBLIC'")
     @Enumerated(EnumType.STRING)
     private Visibility visibility;
+
+//    @Column(nullable = false)
+//    @ColumnDefault("0")
+//    private int thumbnailOrdinal;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @OrderColumn(name = "ordinal")
+    private final List<SourceCode> sourceCodes = new ArrayList<>();
 
     public Template(Member member, String title, String description, Category category, Visibility visibility) {
         this(null, member, title, description, category, 0L, visibility);

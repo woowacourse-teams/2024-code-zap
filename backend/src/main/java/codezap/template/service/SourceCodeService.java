@@ -13,11 +13,8 @@ import codezap.global.validation.ValidatedOrdinalRequest;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Thumbnail;
-import codezap.template.dto.request.CreateSourceCodeRequest;
-import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
-import codezap.template.dto.request.validation.ValidatedSourceCodesCountRequest;
 import codezap.template.repository.SourceCodeRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -27,17 +24,6 @@ import lombok.RequiredArgsConstructor;
 public class SourceCodeService {
 
     private final SourceCodeRepository sourceCodeRepository;
-
-    @Transactional
-    public void createSourceCodes(Template template, CreateTemplateRequest request) {
-        validateSourceCodesOrdinal(request);
-
-        sourceCodeRepository.saveAll(
-                request.sourceCodes().stream()
-                        .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
-                        .toList()
-        );
-    }
 
     public SourceCode getByTemplateAndOrdinal(Template template, int ordinal) {
         return sourceCodeRepository.fetchByTemplateAndOrdinal(template, ordinal);
@@ -50,7 +36,7 @@ public class SourceCodeService {
         request.updateSourceCodes().forEach(this::updateSourceCode);
         sourceCodeRepository.saveAll(
                 request.createSourceCodes().stream()
-                        .map(createSourceCodeRequest -> createSourceCode(template, createSourceCodeRequest))
+                        .map(createSourceCodeRequest -> new SourceCode(template, createSourceCodeRequest.filename(), createSourceCodeRequest.content(), createSourceCodeRequest.ordinal()))
                         .toList()
         );
 
@@ -72,10 +58,6 @@ public class SourceCodeService {
     private void updateSourceCode(UpdateSourceCodeRequest request) {
         SourceCode sourceCode = sourceCodeRepository.fetchById(request.id());
         sourceCode.updateSourceCode(request.filename(), request.content(), request.ordinal());
-    }
-
-    private SourceCode createSourceCode(Template template, CreateSourceCodeRequest request) {
-        return new SourceCode(template, request.filename(), request.content(), request.ordinal());
     }
 
     private void updateThumbnail(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
