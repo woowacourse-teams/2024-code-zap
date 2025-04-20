@@ -108,6 +108,7 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
         this.visibility = visibility;
         this.category = category;
         recreateSourceCodes(sourceCodes);
+        validateSourceCodeCount(sourceCodes);
     }
 
     private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
