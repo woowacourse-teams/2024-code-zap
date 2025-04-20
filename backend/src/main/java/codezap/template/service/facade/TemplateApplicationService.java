@@ -1,6 +1,5 @@
 package codezap.template.service.facade;
 
-import java.util.Comparator;
 import java.util.List;
 
 import jakarta.annotation.Nullable;
@@ -22,17 +21,13 @@ import codezap.tag.service.TagService;
 import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.domain.Thumbnail;
 import codezap.template.domain.Visibility;
-import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
-import codezap.template.service.ThumbnailService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -41,27 +36,16 @@ import lombok.RequiredArgsConstructor;
 public class TemplateApplicationService {
 
     private final TemplateService templateService;
-    private final SourceCodeService sourceCodeService;
     private final CategoryService categoryService;
     private final TagService tagService;
-    private final ThumbnailService thumbnailService;
     private final LikesService likesService;
 
     @Transactional
     public Long create(Member member, CreateTemplateRequest request) {
         Category category = categoryService.fetchById(member, request.categoryId());
-        List<SourceCode> sourceCodes = createSourceCodes(request);
-        SourceCode thumbnail = sourceCodes.get(request.thumbnailOrdinal());
         Template template = templateService.create(member, request, category);
         tagService.createTags(template, request.tags());
         return template.getId();
-    }
-
-    private List<SourceCode> createSourceCodes(CreateTemplateRequest request) {
-        return request.sourceCodes().stream()
-                .sorted((Comparator.comparingInt(CreateSourceCodeRequest::ordinal)))
-                .map(createSourceCodeRequest -> new SourceCode(createSourceCodeRequest.filename(), createSourceCodeRequest.content()))
-                .toList();
     }
 
     public FindTemplateResponse findById(Long id) {

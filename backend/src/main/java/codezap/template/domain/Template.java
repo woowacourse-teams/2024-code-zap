@@ -101,8 +101,20 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
         this.modifiedAt = LocalDateTime.now();
         this.title = title;
         this.description = description;
-        this.category = category;
         this.visibility = visibility;
+        this.category = category;
+        recreateSourceCodes(sourceCodes);
+    }
+
+    private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
+        if (sourceCodes.isEmpty()) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
+        }
+    }
+
+    private void recreateSourceCodes(List<SourceCode> sourceCodes) {
+        this.sourceCodes.clear();
+        this.sourceCodes.addAll(sourceCodes);
     }
 
     public boolean matchMember(Member member) {
@@ -111,6 +123,10 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
 
     public boolean isPrivate() {
         return visibility == Visibility.PRIVATE;
+    }
+
+    public SourceCode getThumbnailSourceCode() {
+        return sourceCodes.get(thumbnailOrdinal.intValue());
     }
 
     public void increaseLike() {
@@ -124,19 +140,5 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
             return;
         }
         this.likesCount--;
-    }
-
-    public SourceCode getThumbnailSourceCode() {
-        return sourceCodes.get(thumbnailOrdinal.intValue());
-    }
-
-    private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
-        if (sourceCodes.isEmpty()) {
-            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
-        }
-    }
-
-    public void updateThumbnailCode(Long thumbnailOrdinal) {
-        this.thumbnailOrdinal = thumbnailOrdinal;
     }
 }
