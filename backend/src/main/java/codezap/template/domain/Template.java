@@ -94,4 +94,10 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
         }
         this.likesCount--;
     }
+
+    private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
+        if(sourceCodes.size() < MINIMUM_SOURCE_CODE_COUNT) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
+        }
+    }
 }

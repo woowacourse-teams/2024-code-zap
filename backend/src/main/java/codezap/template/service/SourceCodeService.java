@@ -26,13 +26,10 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 public class SourceCodeService {
 
-    private static final int MINIMUM_SOURCE_CODE_COUNT = 1;
-    
     private final SourceCodeRepository sourceCodeRepository;
 
     @Transactional
     public void createSourceCodes(Template template, CreateTemplateRequest request) {
-        validateSourceCodeCount(request);
         validateSourceCodesOrdinal(request);
 
         sourceCodeRepository.saveAll(
@@ -48,7 +45,6 @@ public class SourceCodeService {
 
     @Transactional
     public void updateSourceCodes(UpdateTemplateRequest request, Template template, Thumbnail thumbnail) {
-        validateSourceCodeCount(request);
         validateSourceCodesOrdinal(request);
 
         request.updateSourceCodes().forEach(this::updateSourceCode);
@@ -62,12 +58,6 @@ public class SourceCodeService {
         request.deleteSourceCodeIds().forEach(sourceCodeRepository::deleteById);
 
         validateSourceCodeCountMatch(template, request);
-    }
-
-    private void validateSourceCodeCount(ValidatedSourceCodesCountRequest request) {
-        if(request.countSourceCodes() < MINIMUM_SOURCE_CODE_COUNT) {
-            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "소스 코드는 최소 1개 입력해야 합니다.");
-        }
     }
 
     private void validateSourceCodesOrdinal(ValidatedOrdinalRequest request) {
