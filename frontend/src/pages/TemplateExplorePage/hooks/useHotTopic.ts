@@ -6,7 +6,13 @@ export const useHotTopic = () => {
   const selectedTagIds = queryParams.tags;
   const selectedHotTopic = getHotTopicContent(selectedTagIds);
 
-  const selectTopic = ({ tagIds, topic }: { tagIds: number[]; topic: string }) => {
+  const selectTopic = ({
+    tagIds,
+    topic,
+  }: {
+    tagIds: number[];
+    topic: string;
+  }) => {
     if (topic === selectedHotTopic) {
       resetSelectedTopic();
 

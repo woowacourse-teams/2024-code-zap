@@ -1,8 +1,9 @@
 import type { Config } from 'jest';
 
 const config: Config = {
+  verbose: true,
   preset: 'ts-jest',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'jest-fixed-jsdom',
   setupFiles: ['./jest.polyfills.js'],
   testEnvironmentOptions: {
     customExportConditions: [''],
@@ -17,6 +18,7 @@ const config: Config = {
   clearMocks: true,
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@design/(.*)$': '<rootDir>/../design-system/$1',
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     'react-syntax-highlighter/dist/esm': 'react-syntax-highlighter/dist/cjs',
   },

@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { Link } from 'react-router-dom';
 
 import { EyeIcon, ZapzapLogo } from '@/assets/images';
@@ -6,7 +7,6 @@ import { useToggle } from '@/hooks';
 import { useLoginForm } from '@/pages/LoginPage/hooks';
 import { END_POINTS } from '@/routes';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { theme } from '@/style/theme';
 
 import * as S from './LoginPage.style';
 
@@ -14,20 +14,47 @@ const LoginPage = () => {
   useTrackPageViewed({ eventName: '[Viewed] 로그인 페이지' });
 
   const [showPassword, handlePasswordToggle] = useToggle();
-  const { name, password, errors, handleNameChange, handlePasswordChange, isFormValid, handleSubmit } = useLoginForm();
+  const {
+    name,
+    password,
+    errors,
+    handleNameChange,
+    handlePasswordChange,
+    isFormValid,
+    handleSubmit,
+  } = useLoginForm();
 
   return (
     <>
-      <S.ResponsiveFlex direction='column' justify='center' align='center' height='100vh'>
-        <S.LoginPageContainer direction='column' justify='center' align='center' gap='3.5rem' width='27.5rem'>
+      <S.ResponsiveFlex
+        direction='column'
+        justify='center'
+        align='center'
+        height='100vh'
+      >
+        <S.LoginPageContainer
+          direction='column'
+          justify='center'
+          align='center'
+          gap='3.5rem'
+          width='27.5rem'
+        >
           <Flex direction='column' justify='center' align='center' gap='1rem'>
             <ZapzapLogo width={100} height={100} />
-            <S.ResponsiveHeading color={theme.color.light.primary_800}>환영하잽</S.ResponsiveHeading>
+            <S.ResponsiveHeading color={theme.color.light.primary_800}>
+              환영하잽
+            </S.ResponsiveHeading>
           </Flex>
 
           <S.LoginForm
             onSubmit={handleSubmit}
-            style={{ display: 'flex', flexDirection: 'column', width: '100%', height: '100%', gap: '1rem' }}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              width: '100%',
+              height: '100%',
+              gap: '1rem',
+            }}
           >
             <Input variant='outlined' size='medium' isValid={!errors.name}>
               <Input.Label>아이디 (닉네임)</Input.Label>
@@ -52,17 +79,28 @@ const LoginPage = () => {
                 onChange={handlePasswordChange}
                 autoComplete='current-password'
               />
-              <Input.Adornment as='button' aria-label='비밀번호 보기' onClick={handlePasswordToggle}>
+              <Input.Adornment
+                as='button'
+                aria-label='비밀번호 보기'
+                onClick={handlePasswordToggle}
+              >
                 <EyeIcon aria-hidden />
               </Input.Adornment>
               <Input.HelperText>{errors.password}</Input.HelperText>
             </Input>
 
-            <Button type='submit' variant='contained' fullWidth disabled={!isFormValid()}>
+            <Button
+              type='submit'
+              variant='contained'
+              fullWidth
+              disabled={!isFormValid()}
+            >
               로그인
             </Button>
             <Flex justify='flex-end' align='center' width='100%' gap='0.5rem'>
-              <Text.XSmall color={theme.color.light.secondary_600}>계정이 없으신가요?</Text.XSmall>
+              <Text.XSmall color={theme.color.light.secondary_600}>
+                계정이 없으신가요?
+              </Text.XSmall>
 
               <Link to={END_POINTS.SIGNUP}>
                 <Button variant='text' size='small'>

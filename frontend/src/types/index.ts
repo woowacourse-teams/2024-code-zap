@@ -1,4 +1,11 @@
-export type { SourceCodes, Tag, Category, Template, TemplateListItem, TemplateVisibility } from './template';
+export type {
+  SourceCodes,
+  Tag,
+  Category,
+  Template,
+  TemplateListItem,
+  TemplateVisibility,
+} from './template';
 export type {
   SortingKey,
   SortingOption,
@@ -9,9 +16,7 @@ export type {
   TemplateListRequest,
   LikePostRequest,
   LikeDeleteRequest,
-  CategoryUploadRequest,
   CategoryEditRequest,
-  CategoryDeleteRequest,
   CategoryListResponse,
   TagListResponse,
   GetMemberNameResponse,

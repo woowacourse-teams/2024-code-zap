@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { useState } from 'react';
 
 import { PlusIcon } from '@/assets/images';
@@ -18,12 +19,20 @@ import { useAuth } from '@/hooks/authentication';
 import { useCategory } from '@/hooks/category';
 import { useSourceCode, useTag } from '@/hooks/template';
 import { useTemplateUploadMutation } from '@/queries/templates';
-import { trackClickTemplateSave, useTrackPageViewed } from '@/service/amplitude';
-import { DEFAULT_TEMPLATE_VISIBILITY, VISIBILITY_OPTIONS } from '@/service/constants';
-import { generateUniqueFilename, isFilenameEmpty } from '@/service/generateUniqueFilename';
+import {
+  trackClickTemplateSave,
+  useTrackPageViewed,
+} from '@/service/amplitude';
+import {
+  DEFAULT_TEMPLATE_VISIBILITY,
+  VISIBILITY_OPTIONS,
+} from '@/service/constants';
+import {
+  generateUniqueFilename,
+  isFilenameEmpty,
+} from '@/service/generateUniqueFilename';
 import { validateTemplate } from '@/service/validates';
 import { ICON_SIZE } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
 import { TemplateUploadRequest } from '@/types';
 import { SourceCodes, TemplateVisibility } from '@/types/template';
 import { getLanguageForAutoTag } from '@/utils';
@@ -62,11 +71,21 @@ const TemplateUploadPage = () => {
 
   const tagProps = useTag([]);
 
-  const [visibility, setVisibility] = useState<TemplateVisibility>(DEFAULT_TEMPLATE_VISIBILITY);
+  const [visibility, setVisibility] = useState<TemplateVisibility>(
+    DEFAULT_TEMPLATE_VISIBILITY,
+  );
 
-  const { currentOption: currentFile, linkedElementRefs: sourceCodeRefs, handleSelectOption } = useSelectList();
+  const {
+    currentOption: currentFile,
+    linkedElementRefs: sourceCodeRefs,
+    handleSelectOption,
+  } = useSelectList();
 
-  const { mutateAsync: uploadTemplate, isPending, error } = useTemplateUploadMutation();
+  const {
+    mutateAsync: uploadTemplate,
+    isPending,
+    error,
+  } = useTemplateUploadMutation();
 
   const handleCancelButton = () => {
     navigate(-1);
@@ -98,7 +117,9 @@ const TemplateUploadPage = () => {
 
   const canSaveTemplate = (): boolean => {
     if (categoryProps.isCategoryQueryFetching) {
-      failAlert('카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+      failAlert(
+        '카테고리 목록을 불러오는 중입니다. 잠시 후 다시 시도해주세요.',
+      );
 
       return false;
     }
@@ -121,7 +142,9 @@ const TemplateUploadPage = () => {
       return {
         ...sourceCode,
         ordinal: index + 1,
-        filename: isFilenameEmpty(filename) ? generateUniqueFilename() : filename,
+        filename: isFilenameEmpty(filename)
+          ? generateUniqueFilename()
+          : filename,
       };
     });
 
@@ -140,7 +163,11 @@ const TemplateUploadPage = () => {
 
         <S.UnderlineInputWrapper>
           <Input size='xlarge' variant='text'>
-            <Input.TextField placeholder='제목을 입력해주세요' value={title} onChange={handleTitleChange} />
+            <Input.TextField
+              placeholder='제목을 입력해주세요'
+              value={title}
+              onChange={handleTitleChange}
+            />
           </Input>
         </S.UnderlineInputWrapper>
 
@@ -161,9 +188,15 @@ const TemplateUploadPage = () => {
             filename={sourceCode.filename}
             content={sourceCode.content}
             isValidContentChange={isValidContentChange}
-            onChangeContent={(newContent) => handleContentChange(newContent, index)}
-            onChangeFilename={(newFilename) => handleFilenameChange(newFilename, index)}
-            onBlurFilename={(newFilename) => tagProps.addTag(getLanguageForAutoTag(newFilename))}
+            onChangeContent={(newContent) =>
+              handleContentChange(newContent, index)
+            }
+            onChangeFilename={(newFilename) =>
+              handleFilenameChange(newFilename, index)
+            }
+            onBlurFilename={(newFilename) =>
+              tagProps.addTag(getLanguageForAutoTag(newFilename))
+            }
             handleDeleteSourceCode={() => handleDeleteSourceCode(index)}
             filenameAutoFocus={index !== 0}
           />
@@ -176,18 +209,30 @@ const TemplateUploadPage = () => {
           fullWidth
           onClick={addNewEmptySourceCode}
         >
-          <PlusIcon width={ICON_SIZE.X_SMALL} height={ICON_SIZE.X_SMALL} aria-label='소스코드 추가' />
+          <PlusIcon
+            width={ICON_SIZE.X_SMALL}
+            height={ICON_SIZE.X_SMALL}
+            aria-label='소스코드 추가'
+          />
         </Button>
 
         <TagInput {...tagProps} />
 
-        <Radio options={VISIBILITY_OPTIONS} currentValue={visibility} handleCurrentValue={setVisibility} />
+        <Radio
+          options={VISIBILITY_OPTIONS}
+          currentValue={visibility}
+          handleCurrentValue={setVisibility}
+        />
 
         {isPending ? (
           <LoadingBall />
         ) : (
           <S.ButtonGroup>
-            <S.CancelButton size='medium' variant='outlined' onClick={handleCancelButton}>
+            <S.CancelButton
+              size='medium'
+              variant='outlined'
+              onClick={handleCancelButton}
+            >
               취소
             </S.CancelButton>
             <Button
@@ -201,13 +246,21 @@ const TemplateUploadPage = () => {
           </S.ButtonGroup>
         )}
 
-        {error && <Text.Medium color={theme.color.light.analogous_primary_400}>Error: {error.message}</Text.Medium>}
+        {error && (
+          <Text.Medium color={theme.color.light.analogous_primary_400}>
+            Error: {error.message}
+          </Text.Medium>
+        )}
       </S.MainContainer>
 
       <S.SidebarContainer>
         <SelectList>
           {sourceCodes.map((sourceCode, index) => (
-            <SelectList.Option key={index} onClick={handleSelectOption(index)} isSelected={currentFile === index}>
+            <SelectList.Option
+              key={index}
+              onClick={handleSelectOption(index)}
+              isSelected={currentFile === index}
+            >
               {sourceCode.filename}
             </SelectList.Option>
           ))}

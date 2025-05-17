@@ -1,4 +1,7 @@
-export const formatRelativeTime = (dateString: string, now: Date = new Date()) => {
+export const formatRelativeTime = (
+  dateString: string,
+  now: Date = new Date(),
+) => {
   const date = new Date(dateString);
   const { diffInMinutes, diffInHours } = calculateTimeDifference(date, now);
 

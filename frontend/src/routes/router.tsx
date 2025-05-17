@@ -8,13 +8,21 @@ import { ROUTE_END_POINT } from '@/routes/endPoints';
 /* eslint-disable react-refresh/only-export-components */
 const LandingPage = lazy(() => import('@/pages/LandingPage/LandingPage'));
 const TemplatePage = lazy(() => import('@/pages/TemplatePage/TemplatePage'));
-const TemplateUploadPage = lazy(() => import('@/pages/TemplateUploadPage/TemplateUploadPage'));
+const TemplateUploadPage = lazy(
+  () => import('@/pages/TemplateUploadPage/TemplateUploadPage'),
+);
 const SignupPage = lazy(() => import('@/pages/SignupPage/SignupPage'));
 const LoginPage = lazy(() => import('@/pages/LoginPage/LoginPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage/NotFoundPage'));
-const TemplateExplorePage = lazy(() => import('@/pages/TemplateExplorePage/TemplateExplorePage'));
-const MyTemplatePage = lazy(() => import('@/pages/MyTemplatesPage/MyTemplatePage'));
-const MyLikedTemplatePage = lazy(() => import('@/pages/MyLikedTemplatePage/MyLikedTemplatePage'));
+const TemplateExplorePage = lazy(
+  () => import('@/pages/TemplateExplorePage/TemplateExplorePage'),
+);
+const MemberTemplatePage = lazy(
+  () => import('@/pages/MemberTemplatePage/MemberTemplatePage'),
+);
+const MyLikedTemplatePage = lazy(
+  () => import('@/pages/MyLikedTemplatePage/MyLikedTemplatePage'),
+);
 
 const router = createBrowserRouter([
   {
@@ -26,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: ROUTE_END_POINT.MEMBERS_TEMPLATES,
-        element: <MyTemplatePage />,
+        element: <MemberTemplatePage />,
       },
       {
         path: ROUTE_END_POINT.MEMBERS_LIKED_TEMPLATES,

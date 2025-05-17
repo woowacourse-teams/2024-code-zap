@@ -1,3 +1,4 @@
+import { theme } from '@design/style/theme';
 import { captureException } from '@sentry/react';
 
 import { ApiError } from '@/api/Error';
@@ -5,7 +6,6 @@ import { TigerLogo } from '@/assets/images';
 import { Button, Flex, Text } from '@/components';
 import { useCustomNavigate } from '@/hooks';
 import { useTrackPageViewed } from '@/service/amplitude';
-import { theme } from '@/style/theme';
 
 interface props {
   resetError?: () => void;
@@ -19,7 +19,13 @@ const ForbiddenPage = ({ resetError, error }: props) => {
   useTrackPageViewed({ eventName: '[Viewed] 403 Forbidden 페이지' });
 
   return (
-    <Flex direction='column' gap='3rem' margin='2rem 0 0 0' justify='center' align='center'>
+    <Flex
+      direction='column'
+      gap='3rem'
+      margin='2rem 0 0 0'
+      justify='center'
+      align='center'
+    >
       <TigerLogo aria-label='호랑이 로고' />
       <Flex direction='column' gap='2rem' align='center'>
         <Text.XLarge color={theme.color.light.primary_500} weight='bold'>

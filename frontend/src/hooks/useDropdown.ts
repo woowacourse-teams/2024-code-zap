@@ -16,7 +16,11 @@ export const useDropdown = <T>(initValue: T) => {
 
   const handleClickOutside = useCallback(
     (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node) && isOpen) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node) &&
+        isOpen
+      ) {
         setIsOpen(false);
       }
     },
@@ -31,5 +35,11 @@ export const useDropdown = <T>(initValue: T) => {
     };
   }, [handleClickOutside]);
 
-  return { isOpen, toggleDropdown, currentValue, handleCurrentValue, dropdownRef };
+  return {
+    isOpen,
+    toggleDropdown,
+    currentValue,
+    handleCurrentValue,
+    dropdownRef,
+  };
 };

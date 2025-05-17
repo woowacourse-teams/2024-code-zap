@@ -1,8 +1,9 @@
+import { theme } from '@design/style/theme';
+
 import { Text } from '@/components';
 import { useWindowWidth } from '@/hooks';
 import { HOT_TOPIC } from '@/service/hotTopic';
 import { BREAKING_POINT } from '@/style/styleConstants';
-import { theme } from '@/style/theme';
 
 import { Carousel } from '../';
 import * as S from './HotTopicCarousel.style';
@@ -18,35 +19,45 @@ const HotTopicCarousel = ({ selectTopic, selectedHotTopic }: Props) => {
 
   return (
     <Carousel
-      items={HOT_TOPIC.map(({ topic, description, subDescription, tagIds, color, bg }) => ({
-        id: topic,
-        content: (
-          <S.Topic
-            isSelected={selectedHotTopic === topic}
-            background={bg}
-            border={color}
-            onClick={() => {
-              selectTopic({ tagIds, topic });
-            }}
-          >
-            <S.Content>
-              <S.Title>
-                <Text.Large color={theme.color.light.secondary_800} weight='bold'>
-                  {topic}
-                </Text.Large>
-              </S.Title>
-              {!isMobile && (
-                <S.Description>
-                  <Text.Small color={theme.color.light.secondary_800} weight='bold'>
-                    {description}
-                  </Text.Small>
-                  <Text.Small color={theme.color.light.secondary_800}>{subDescription}</Text.Small>
-                </S.Description>
-              )}
-            </S.Content>
-          </S.Topic>
-        ),
-      }))}
+      items={HOT_TOPIC.map(
+        ({ topic, description, subDescription, tagIds, color, bg }) => ({
+          id: topic,
+          content: (
+            <S.Topic
+              isSelected={selectedHotTopic === topic}
+              background={bg}
+              border={color}
+              onClick={() => {
+                selectTopic({ tagIds, topic });
+              }}
+            >
+              <S.Content>
+                <S.Title>
+                  <Text.Large
+                    color={theme.color.light.secondary_800}
+                    weight='bold'
+                  >
+                    {topic}
+                  </Text.Large>
+                </S.Title>
+                {!isMobile && (
+                  <S.Description>
+                    <Text.Small
+                      color={theme.color.light.secondary_800}
+                      weight='bold'
+                    >
+                      {description}
+                    </Text.Small>
+                    <Text.Small color={theme.color.light.secondary_800}>
+                      {subDescription}
+                    </Text.Small>
+                  </S.Description>
+                )}
+              </S.Content>
+            </S.Topic>
+          ),
+        }),
+      )}
     />
   );
 };

@@ -21,13 +21,14 @@ export const useSelectList = () => {
     scrollTo(targetLinkedElement);
   };
 
-  const handleSelectOption = (index: number) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
+  const handleSelectOption =
+    (index: number) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
 
-    scrollToLinkedElement(index);
+      scrollToLinkedElement(index);
 
-    setCurrentOption(index);
-  };
+      setCurrentOption(index);
+    };
 
   return { currentOption, linkedElementRefs, handleSelectOption };
 };

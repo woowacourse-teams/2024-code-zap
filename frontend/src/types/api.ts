@@ -1,4 +1,11 @@
-import { Category, SourceCodes, Tag, TemplateListItem, TemplateVisibility } from '@/types';
+import { SORTING_OPTIONS } from '@/models/templates';
+import {
+  Category,
+  SourceCodes,
+  Tag,
+  TemplateListItem,
+  TemplateVisibility,
+} from '@/types';
 
 export interface TemplateListResponse {
   templates: TemplateListItem[];
@@ -39,17 +46,10 @@ export interface CategoryListResponse {
   categories: Category[];
 }
 
-export interface CategoryUploadRequest {
-  name: string;
-}
-
 export interface CategoryEditRequest {
-  id: number;
-  name: string;
-}
-
-export interface CategoryDeleteRequest {
-  id: number;
+  createCategories: Omit<Category, 'id'>[];
+  updateCategories: Category[];
+  deleteCategoryIds: number[];
 }
 
 export interface TagListResponse {
@@ -75,6 +75,6 @@ export interface GetMemberNameResponse {
   name: string;
 }
 
-export type SortingKey = 'modifiedAt,asc' | 'modifiedAt,desc' | 'likesCount,desc';
+export type SortingKey = (typeof SORTING_OPTIONS)[number]['key'];
 
 export type SortingOption = { key: SortingKey; value: string };

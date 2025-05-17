@@ -1,6 +1,5 @@
+import { theme } from '@design/style/theme';
 import { css, Global } from '@emotion/react';
-
-import { theme } from '@/style/theme';
 
 const globalStyles = css`
   * {
@@ -19,7 +18,9 @@ const globalStyles = css`
     font-family: 'Pretendard', sans-serif;
     line-height: 100%;
     color: ${theme.color.dark.secondary_800};
-    background-color: ${theme.mode === 'dark' ? theme.color.dark.tertiary_900 : theme.color.light.white};
+    background-color: ${theme.mode === 'dark'
+      ? theme.color.dark.tertiary_900
+      : theme.color.light.white};
   }
 
   a {

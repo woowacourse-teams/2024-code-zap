@@ -14,6 +14,7 @@ export const useLogoutMutation = () => {
     onSuccess: () => {
       localStorage.removeItem('name');
       localStorage.removeItem('memberId');
+      localStorage.removeItem('authorization');
       handleLoginState(false);
       successAlert('로그아웃 성공!');
     },

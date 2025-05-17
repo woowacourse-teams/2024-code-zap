@@ -16,7 +16,9 @@ const queryWrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('useCategoryListQuery', () => {
   it('카테고리 목록을 id 오름차순으로 조회할 수 있다.', async () => {
-    const { result } = renderHook(() => useCategoryListQuery({ memberId: 1 }), { wrapper: queryWrapper });
+    const { result } = renderHook(() => useCategoryListQuery({ memberId: 1 }), {
+      wrapper: queryWrapper,
+    });
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);

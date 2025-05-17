@@ -44,7 +44,8 @@ const Carousel = ({ items }: Props) => {
         return;
       }
 
-      const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
+      const newIndex =
+        direction === 'next' ? currentIndex + 1 : currentIndex - 1;
       const scrollPosition = newIndex * MOVE_DISTANCE;
 
       viewportRef.current.scrollTo({

@@ -1,8 +1,11 @@
+import { theme } from '@design/style/theme';
 import styled from '@emotion/styled';
 
-import { theme } from '@/style/theme';
-
-export const Topic = styled.button<{ background: string; border: string; isSelected: boolean }>`
+export const Topic = styled.button<{
+  background: string;
+  border: string;
+  isSelected: boolean;
+}>`
   cursor: pointer;
 
   position: relative;
@@ -19,7 +22,8 @@ export const Topic = styled.button<{ background: string; border: string; isSelec
   background-position: center;
   background-size: cover;
   border-radius: 12px;
-  box-shadow: ${({ isSelected, border }) => (isSelected ? `0 0 0 2px ${border}` : 'none')};
+  box-shadow: ${({ isSelected, border }) =>
+    isSelected ? `0 0 0 2px ${border}` : 'none'};
 
   transition: box-shadow 0.2s ease-in-out;
 

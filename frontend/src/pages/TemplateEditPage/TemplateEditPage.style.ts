@@ -1,7 +1,7 @@
+import { theme } from '@design/style/theme';
 import styled from '@emotion/styled';
 
 import { Button } from '@/components';
-import { theme } from '@/style/theme';
 
 export const TemplateEditContainer = styled.div`
   display: flex;
