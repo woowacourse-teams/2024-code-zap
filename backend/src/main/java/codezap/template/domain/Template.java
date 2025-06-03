@@ -108,7 +108,6 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
         this.visibility = visibility;
         this.category = category;
         recreateSourceCodes(sourceCodes);
-        validateSourceCodeCount(sourceCodes);
     }
 
     private void validateSourceCodeCount(List<SourceCode> sourceCodes) {
@@ -120,6 +119,7 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     private void recreateSourceCodes(List<SourceCode> sourceCodes) {
         this.sourceCodes.clear();
         this.sourceCodes.addAll(sourceCodes);
+        validateSourceCodeCount(sourceCodes);
     }
 
     public boolean matchMember(Member member) {
@@ -131,6 +131,9 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     }
 
     public SourceCode getThumbnailSourceCode() {
+        if (thumbnailOrdinal == null || thumbnailOrdinal < 0 || thumbnailOrdinal >= sourceCodes.size()) {
+            throw new CodeZapException(ErrorCode.INVALID_REQUEST, "썸네일 순서 값은 소스코드의 개수보다 작아야 합니다: " + thumbnailOrdinal);
+        }
         return sourceCodes.get(thumbnailOrdinal.intValue());
     }
 
