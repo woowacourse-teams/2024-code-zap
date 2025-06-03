@@ -18,19 +18,15 @@ import codezap.likes.service.LikesService;
 import codezap.member.domain.Member;
 import codezap.tag.domain.Tag;
 import codezap.tag.service.TagService;
-import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.domain.Thumbnail;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
 import codezap.template.dto.response.FindTemplateResponse;
-import codezap.template.service.SourceCodeService;
 import codezap.template.service.TemplateService;
-import codezap.template.service.ThumbnailService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -39,10 +35,8 @@ import lombok.RequiredArgsConstructor;
 public class TemplateApplicationService {
 
     private final TemplateService templateService;
-    private final SourceCodeService sourceCodeService;
     private final CategoryService categoryService;
     private final TagService tagService;
-    private final ThumbnailService thumbnailService;
     private final LikesService likesService;
 
     @Transactional
@@ -50,9 +44,6 @@ public class TemplateApplicationService {
         Category category = categoryService.fetchById(member, request.categoryId());
         Template template = templateService.create(member, request, category);
         tagService.createTags(template, request.tags());
-        sourceCodeService.createSourceCodes(template, request);
-        SourceCode thumbnail = sourceCodeService.getByTemplateAndOrdinal(template, request.thumbnailOrdinal());
-        thumbnailService.createThumbnail(template, thumbnail);
         return template.getId();
     }
 
@@ -78,8 +69,7 @@ public class TemplateApplicationService {
             throw new CodeZapException(ErrorCode.FORBIDDEN_ACCESS, "해당 템플릿은 비공개 템플릿입니다.");
         }
         List<Tag> tags = tagService.findAllByTemplate(template);
-        List<SourceCode> sourceCodes = sourceCodeService.findAllByTemplate(template);
-        return FindTemplateResponse.of(template, sourceCodes, tags, likedChecker.isLiked(template));
+        return FindTemplateResponse.of(template, tags, likedChecker.isLiked(template));
     }
 
     public FindAllTemplatesResponse findAllBy(
@@ -137,13 +127,11 @@ public class TemplateApplicationService {
             LikedChecker likedChecker
     ) {
         List<TemplateTag> allTemplateTagsByTemplates = tagService.getAllTemplateTagsByTemplates(templates);
-        List<Thumbnail> allThumbnailsByTemplates = thumbnailService.getAllByTemplates(templates);
 
         return templates.stream()
                 .map(template -> FindAllTemplateItemResponse.of(
                         template,
                         getTagByTemplate(allTemplateTagsByTemplates, template),
-                        getThumbnailSourceCodeByTemplate(allThumbnailsByTemplates, template),
                         likedChecker.isLiked(template)))
                 .toList();
     }
@@ -155,27 +143,15 @@ public class TemplateApplicationService {
                 .toList();
     }
 
-    private SourceCode getThumbnailSourceCodeByTemplate(List<Thumbnail> thumbnails, Template template) {
-        return thumbnails.stream()
-                .filter(thumbnail -> thumbnail.hasTemplate(template))
-                .findFirst()
-                .map(Thumbnail::getSourceCode)
-                .orElseGet(() -> thumbnailService.getByTemplate(template).getSourceCode());
-    }
-
     @Transactional
     public void update(Member member, Long templateId, UpdateTemplateRequest request) {
         Category category = categoryService.fetchById(member, request.categoryId());
         Template template = templateService.update(member, templateId, request, category);
         tagService.updateTags(template, request.tags());
-        Thumbnail thumbnail = thumbnailService.getByTemplate(template);
-        sourceCodeService.updateSourceCodes(request, template, thumbnail);
     }
 
     @Transactional
     public void deleteAllByMemberAndTemplateIds(Member member, List<Long> templateIds) {
-        thumbnailService.deleteAllByTemplateIds(templateIds);
-        sourceCodeService.deleteAllByTemplateIds(templateIds);
         tagService.deleteAllByTemplateIds(templateIds);
         likesService.deleteAllByTemplateIds(templateIds);
         templateService.deleteByMemberAndIds(member, templateIds);

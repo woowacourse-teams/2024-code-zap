@@ -1,7 +1,6 @@
 package codezap.template.dto.request;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -27,19 +26,11 @@ public record UpdateTemplateRequest(
         @ByteLength(max = 65_535, message = "템플릿 설명은 최대 65,535 Byte까지 입력 가능합니다.", groups = SizeCheckGroup.class)
         String description,
 
-        @Schema(description = "추가하는 소스 코드 목록")
-        @NotNull(message = "추가하는 소스 코드 목록이 null 입니다.", groups = NotNullGroup.class)
+        @Schema(description = "업데이트 소스 코드 목록")
+        @NotNull(message = "소스 코드 목록이 null 입니다.", groups = NotNullGroup.class)
+        @Size(min = 1, message = "소스 코드 최소 1개 입력해야 합니다.", groups = SizeCheckGroup.class)
         @Valid
-        List<CreateSourceCodeRequest> createSourceCodes,
-
-        @Schema(description = "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록")
-        @NotNull(message = "삭제, 생성 소스 코드를 제외한 모든 소스 코드 목록이 null 입니다.", groups = NotNullGroup.class)
-        @Valid
-        List<UpdateSourceCodeRequest> updateSourceCodes,
-
-        @Schema(description = "삭제하는 소스 코드 ID 목록")
-        @NotNull(message = "삭제하는 소스 코드 ID 목록이 null 입니다.", groups = NotNullGroup.class)
-        List<Long> deleteSourceCodeIds,
+        List<CreateSourceCodeRequest> sourceCodes,
 
         @Schema(description = "카테고리 ID", example = "1")
         @NotNull(message = "카테고리 ID가 null 입니다.", groups = NotNullGroup.class)
@@ -55,15 +46,14 @@ public record UpdateTemplateRequest(
 ) implements ValidatedOrdinalRequest, ValidatedSourceCodesCountRequest {
     @Override
     public List<Integer> extractOrdinal() {
-        return Stream.concat(
-                        updateSourceCodes.stream().map(UpdateSourceCodeRequest::ordinal),
-                        createSourceCodes.stream().map(CreateSourceCodeRequest::ordinal)
-                ).sorted()
+        return sourceCodes.stream()
+                .map(CreateSourceCodeRequest::ordinal)
+                .sorted()
                 .toList();
     }
 
     @Override
     public Integer countSourceCodes() {
-        return updateSourceCodes.size() + createSourceCodes.size();
+        return sourceCodes.size();
     }
 }

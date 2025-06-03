@@ -15,9 +15,7 @@ import codezap.member.repository.MemberRepository;
 import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
 import codezap.template.domain.Template;
-import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.ThumbnailRepository;
 
 @SpringBootTest
 @DatabaseIsolation
@@ -38,12 +36,6 @@ public class ServiceTest {
 
     @Autowired
     protected TemplateTagRepository templateTagRepository;
-
-    @Autowired
-    protected SourceCodeRepository sourceCodeRepository;
-
-    @Autowired
-    protected ThumbnailRepository thumbnailRepository;
 
     @Autowired
     protected LikesRepository likesRepository;

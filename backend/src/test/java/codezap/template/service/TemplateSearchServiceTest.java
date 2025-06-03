@@ -20,7 +20,6 @@ import codezap.category.domain.Category;
 import codezap.category.repository.CategoryRepository;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
-import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.DatabaseIsolation;
 import codezap.global.pagination.FixedPage;
@@ -29,14 +28,10 @@ import codezap.member.repository.MemberRepository;
 import codezap.tag.domain.Tag;
 import codezap.tag.repository.TagRepository;
 import codezap.tag.repository.TemplateTagRepository;
-import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.TemplateTag;
-import codezap.template.domain.Thumbnail;
 import codezap.template.domain.Visibility;
-import codezap.template.repository.SourceCodeRepository;
 import codezap.template.repository.TemplateRepository;
-import codezap.template.repository.ThumbnailRepository;
 
 @SpringBootTest
 @DatabaseIsolation
@@ -56,12 +51,6 @@ class TemplateSearchServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Autowired
-    private SourceCodeRepository sourceCodeRepository;
-
-    @Autowired
-    private ThumbnailRepository thumbnailRepository;
 
     @Autowired
     private TemplateService sut;
@@ -322,9 +311,7 @@ class TemplateSearchServiceTest {
             saveTwoMembers();
             saveTwoCategory();
 
-            for (int i = 0; i < 15; i++) {
-                templateRepository.save(TemplateFixture.get(member1, category1));
-            }
+            TemplateFixture.getList(15, member1, category1).forEach(templateRepository::save);
         }
 
         @Test
@@ -374,16 +361,6 @@ class TemplateSearchServiceTest {
         var template2 = templateRepository.save(TemplateFixture.get(member1, category2));
         var template3 = templateRepository.save(TemplateFixture.get(member2, category1));
         var template4 = templateRepository.save(TemplateFixture.getPrivate(member2, category2));
-
-        SourceCode sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
-        SourceCode sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
-        SourceCode sourceCode3 = sourceCodeRepository.save(SourceCodeFixture.get(template3, 1));
-        SourceCode sourceCode4 = sourceCodeRepository.save(SourceCodeFixture.get(template4, 1));
-
-        thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
-        thumbnailRepository.save(new Thumbnail(template2, sourceCode2));
-        thumbnailRepository.save(new Thumbnail(template3, sourceCode3));
-        thumbnailRepository.save(new Thumbnail(template4, sourceCode4));
     }
 
     private void saveTemplateTwoTags() {

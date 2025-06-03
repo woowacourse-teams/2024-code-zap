@@ -1,6 +1,5 @@
 -- 모든 테이블의 데이터 삭제
 DELETE FROM template_tag;
-DELETE FROM thumbnail;
 DELETE FROM source_code;
 DELETE FROM template;
 DELETE FROM category;
@@ -56,30 +55,17 @@ VALUES (7, 2, '2024-09-27 08:43:08.790780', 'Description 1', 3, '2024-09-27 08:4
 
 
 -- Source Code 삽입
-INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
-VALUES (1, 'content1', '2024-09-27 08:43:08.793152', 'filename1', '2024-09-27 08:43:08.793152', 1, 1);
+INSERT INTO source_code (content, filename, ordinal, template_id)
+VALUES ('content1', 'filename1', 1, 1);
 
-INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
-VALUES (2, 'content2', '2024-09-27 08:43:08.797349', 'filename2', '2024-09-27 08:43:08.797349', 2, 2);
+INSERT INTO source_code (content, filename, ordinal, template_id)
+VALUES ('content2', 'filename2', 2, 2);
 
-INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
-VALUES (3, 'content1', '2024-09-27 08:43:08.810641', 'filename1', '2024-09-27 08:43:08.810641', 1, 3);
+INSERT INTO source_code (content, filename, ordinal, template_id)
+VALUES ('content1', 'filename1', 1, 3);
 
-INSERT INTO source_code (id, content, created_at, filename, modified_at, ordinal, template_id)
-VALUES (4, 'content1', '2024-09-27 08:43:08.790783', 'filename1', '2024-09-27 08:43:08.790783', 1, 4);
-
--- Thumbnail 삽입
-INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
-VALUES (1, '2024-09-27 08:43:08.812840', '2024-09-27 08:43:08.812840', 1, 1);
-
-INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
-VALUES (2, '2024-09-27 08:43:08.815866', '2024-09-27 08:43:08.815866', 2, 2);
-
-INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
-VALUES (3, '2024-09-27 08:43:08.817850', '2024-09-27 08:43:08.817850', 3, 3);
-
-INSERT INTO thumbnail (id, created_at, modified_at, source_code_id, template_id)
-VALUES (4, '2024-09-27 08:43:08.817850', '2024-09-27 08:43:08.817850', 4, 4);
+INSERT INTO source_code (content, filename, ordinal, template_id)
+VALUES ('content1', 'filename1', 1, 4);
 
 -- Template_Tag 삽입
 INSERT INTO template_tag (created_at, modified_at, tag_id, template_id)
@@ -98,23 +84,29 @@ INSERT INTO template_tag (created_at, modified_at, tag_id, template_id)
 VALUES ('2024-09-27 08:43:08.867619', '2024-09-27 08:43:08.867619', 2, 3);
 
 -- 템플릿 테이블에 전문 검색 인덱스가 존재하는지 조회
-SELECT COUNT(1) INTO @indexExists FROM information_schema.statistics
+SELECT COUNT(1)
+INTO @indexExists
+FROM information_schema.statistics
 WHERE table_name = 'template'
   AND index_name = 'idx_template_fulltext';
 
 -- 없다면 전문 검색 인덱스 생성
-SET @createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_template_fulltext ON template (title, description) with parser ngram;', 'SELECT 1');
+SET
+@createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_template_fulltext ON template (title, description) with parser ngram;', 'SELECT 1');
 PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
 
 -- 소스 코드 테이블에 전문 검색 인덱스가 존재하는지 조회
-SELECT COUNT(1) INTO @indexExists FROM information_schema.statistics
+SELECT COUNT(1)
+INTO @indexExists
+FROM information_schema.statistics
 WHERE table_name = 'source_code'
   AND index_name = 'idx_source_code_fulltext';
 
 -- 없다면 전문 검색 인덱스 생성
-SET @createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_source_code_fulltext ON source_code (content, filename);', 'SELECT 1');
+SET
+@createIndex = IF(@indexExists = 0, 'CREATE FULLTEXT INDEX idx_source_code_fulltext ON source_code (content, filename);', 'SELECT 1');
 PREPARE stmt FROM @createIndex;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;

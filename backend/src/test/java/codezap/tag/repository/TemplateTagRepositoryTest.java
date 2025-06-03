@@ -129,7 +129,7 @@ class TemplateTagRepositoryTest {
             Member otherMember = memberRepository.save(MemberFixture.getSecondMember());
             Template template1 = templateRepository.save(TemplateFixture.get(member, category));
             Template template2 = templateRepository.save(TemplateFixture.get(otherMember, category));
-            Template template3 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template3 = templateRepository.save(TemplateFixture.getPrivate(member, category));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));
@@ -176,7 +176,7 @@ class TemplateTagRepositoryTest {
         void successTest() {
             //given
             Template template1 = templateRepository.save(TemplateFixture.get(member, category));
-            Template template2 = templateRepository.save(TemplateFixture.get(member, category));
+            Template template2 = templateRepository.save(TemplateFixture.getPrivate(member, category));
 
             Tag tag1 = tagRepository.save(new Tag("tag1"));
             Tag tag2 = tagRepository.save(new Tag("tag2"));

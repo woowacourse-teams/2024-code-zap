@@ -2,6 +2,7 @@ package codezap.template.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import codezap.category.dto.response.FindCategoryResponse;
 import codezap.tag.domain.Tag;
@@ -50,7 +51,6 @@ public record FindTemplateResponse(
 ) {
     public static FindTemplateResponse of(
             Template template,
-            List<SourceCode> sourceCodes,
             List<Tag> tags,
             Boolean isLiked
     ) {
@@ -59,9 +59,7 @@ public record FindTemplateResponse(
                 FindMemberResponse.from(template.getMember()),
                 template.getTitle(),
                 template.getDescription(),
-                sourceCodes.stream()
-                        .map(FindAllSourceCodeByTemplateResponse::from)
-                        .toList(),
+                createSourceCodesResponse(template.getSourceCodes()),
                 FindCategoryResponse.from(template.getCategory()),
                 tags.stream()
                         .map(FindTagResponse::from)
@@ -72,5 +70,11 @@ public record FindTemplateResponse(
                 template.getCreatedAt(),
                 template.getModifiedAt()
         );
+    }
+
+    private static List<FindAllSourceCodeByTemplateResponse> createSourceCodesResponse(List<SourceCode> sourceCodes) {
+        return IntStream.range(0, sourceCodes.size())
+                .mapToObj(i -> FindAllSourceCodeByTemplateResponse.from(sourceCodes.get(i), i))
+                .toList();
     }
 }

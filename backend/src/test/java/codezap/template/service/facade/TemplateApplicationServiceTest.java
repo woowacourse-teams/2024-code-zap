@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
@@ -24,20 +23,16 @@ import org.springframework.data.domain.Pageable;
 import codezap.category.domain.Category;
 import codezap.fixture.CategoryFixture;
 import codezap.fixture.MemberFixture;
-import codezap.fixture.SourceCodeFixture;
 import codezap.fixture.TemplateFixture;
 import codezap.global.ServiceTest;
 import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.likes.domain.Likes;
 import codezap.member.domain.Member;
-import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
-import codezap.template.domain.Thumbnail;
 import codezap.template.domain.Visibility;
 import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
-import codezap.template.dto.request.UpdateSourceCodeRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.dto.response.FindAllTemplateItemResponse;
 import codezap.template.dto.response.FindAllTemplatesResponse;
@@ -275,12 +270,10 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             for (int i = 0; i < 20; i++) {
                 var template = templateRepository.save(TemplateFixture.get(member, category));
-                var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-                thumbnailRepository.save(new Thumbnail(template, sourceCode));
             }
         }
-    }
 
+    }
     @Nested
     @DisplayName("템플릿 목록 조회 (회원)")
     class FindAllByWithMember {
@@ -299,8 +292,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
-            thumbnailRepository.save(new Thumbnail(template1, sourceCode1));
 
             // when & then
             assertThatCode(() -> sut.findAllBy(memberId, keyword, categoryId, tagIds, pageable, member))
@@ -412,12 +403,10 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             for (int i = 0; i < 20; i++) {
                 var template = templateRepository.save(TemplateFixture.get(member, category));
-                var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-                thumbnailRepository.save(new Thumbnail(template, sourceCode));
             }
         }
-    }
 
+    }
     @Nested
     @DisplayName("템플릿 수정")
     class Update {
@@ -429,21 +418,13 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template, 2));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode1));
 
             var createRequest = List.of(new CreateSourceCodeRequest("filename3", "content3", 3));
-            var updateRequest1 = updateSourceCodeRequest(sourceCode1);
-            var updateRequest2 = updateSourceCodeRequest(sourceCode2);
-            var updateRequest = List.of(updateRequest1, updateRequest2);
             List<Long> deleteIds = List.of();
             var request = new UpdateTemplateRequest(
                     "Updated Template",
                     "Updated Description",
                     createRequest,
-                    updateRequest,
-                    deleteIds,
                     category.getId(),
                     List.of(),
                     Visibility.PUBLIC
@@ -461,35 +442,6 @@ class TemplateApplicationServiceTest extends ServiceTest {
         }
 
         @Test
-        @DisplayName("성공: 소스코드만 변경 시에도 수정 시간 변경")
-        void updateSourceCodesChangeModifiedAt() {
-            // given
-            Member member = memberRepository.save(MemberFixture.getFirstMember());
-            Category category = categoryRepository.save(CategoryFixture.getDefaultCategory(member));
-            Template template = templateRepository.save(TemplateFixture.get(member, category));
-            SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
-            UpdateSourceCodeRequest updateRequest1 = updateSourceCodeRequest(sourceCode);
-            UpdateTemplateRequest updateTemplateRequest = new UpdateTemplateRequest(
-                    template.getTitle(),
-                    template.getDescription(),
-                    List.of(),
-                    List.of(updateRequest1),
-                    List.of(),
-                    template.getCategory().getId(),
-                    List.of(),
-                    Visibility.PUBLIC
-            );
-            LocalDateTime beforeModifiedAt = template.getModifiedAt();
-
-            // when
-            sut.update(member, template.getId(), updateTemplateRequest);
-
-            // then
-            assertThat(template.getModifiedAt()).isNotEqualTo(beforeModifiedAt);
-        }
-
-        @Test
         @DisplayName("실패: 카테고리에 대한 권한이 없는 경우")
         void updateTemplate_WhenNoAuthorization() {
             // given
@@ -500,16 +452,10 @@ class TemplateApplicationServiceTest extends ServiceTest {
             Category category = categoryRepository.save(CategoryFixture.getAdditionalCategory(member));
             Template template = templateRepository.save(TemplateFixture.get(member, category));
 
-            SourceCode sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-            thumbnailRepository.save(new Thumbnail(template, sourceCode));
-            UpdateSourceCodeRequest updateSourceCodeRequest = updateSourceCodeRequest(sourceCode);
-
             UpdateTemplateRequest request = new UpdateTemplateRequest(
                     "Updated Template",
                     "Updated Description",
-                    Collections.emptyList(),
-                    List.of(updateSourceCodeRequest),
-                    Collections.emptyList(),
+                    List.of(new CreateSourceCodeRequest("filename3", "content3", 1)),
                     othersCategory.getId(),
                     Collections.emptyList(),
                     Visibility.PUBLIC);
@@ -520,15 +466,7 @@ class TemplateApplicationServiceTest extends ServiceTest {
                     .hasMessage("해당 카테고리를 수정 또는 삭제할 권한이 없는 유저입니다.");
         }
 
-        private UpdateSourceCodeRequest updateSourceCodeRequest(SourceCode sourceCode) {
-            return new UpdateSourceCodeRequest(
-                    sourceCode.getId(),
-                    sourceCode.getFilename(),
-                    sourceCode.getContent(),
-                    sourceCode.getOrdinal());
-        }
     }
-
     @Nested
     @DisplayName("템플릿 삭제")
     class DeleteByMemberAndIds {
@@ -540,11 +478,8 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
             var template1 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode1 = sourceCodeRepository.save(SourceCodeFixture.get(template1, 1));
             var template2 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode2 = sourceCodeRepository.save(SourceCodeFixture.get(template2, 1));
             var template3 = templateRepository.save(TemplateFixture.get(member, category));
-            var sourceCode3 = sourceCodeRepository.save(SourceCodeFixture.get(template3, 1));
             likesRepository.save(new Likes(template1, member));
             likesRepository.save(new Likes(template2, member));
 
@@ -556,19 +491,17 @@ class TemplateApplicationServiceTest extends ServiceTest {
             // then
             var actualTemplatesLeft = templateRepository.findAll(member.getId(), null, null, null, null,
                     PageRequest.of(0, 10));
-            var actualSourceCodeLeft = sourceCodeRepository.findAllByTemplate(template1);
-            actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template2));
-            actualSourceCodeLeft.addAll(sourceCodeRepository.findAllByTemplate(template3));
+            var actualSourceCodeLeft = template1.getSourceCodes();
+            actualSourceCodeLeft.addAll(template2.getSourceCodes());
+            actualSourceCodeLeft.addAll(template3.getSourceCodes());
 
             assertAll(
                     () -> assertThat(actualTemplatesLeft.contents()).containsExactly(template3),
-                    () -> assertThat(actualTemplatesLeft.contents()).doesNotContain(template1, template2),
-                    () -> assertThat(actualSourceCodeLeft).containsExactly(sourceCode3),
-                    () -> assertThat(actualSourceCodeLeft).doesNotContain(sourceCode1, sourceCode2)
+                    () -> assertThat(actualTemplatesLeft.contents()).doesNotContain(template1, template2)
             );
         }
-    }
 
+    }
     @Nested
     @DisplayName("회원이 좋아요한 템플릿 목록 조회")
     class FindAllByLiked {
@@ -580,10 +513,11 @@ class TemplateApplicationServiceTest extends ServiceTest {
             var member = memberRepository.save(MemberFixture.getFirstMember());
             var otherMember = memberRepository.save(MemberFixture.getSecondMember());
             var category = categoryRepository.save(Category.createDefaultCategory(member));
-            var template1 = savePublicTemplate(member, category);
-            var template2 = savePublicTemplate(member, category);
-            var template3 = savePublicTemplate(member, category);
 
+            var templates = savePublicTemplates(3, member, category);
+            var template1 = templates.get(0);
+            var template2 = templates.get(1);
+            var template3 = templates.get(2);
             likesRepository.save(new Likes(template1, member));
             likesRepository.save(new Likes(template2, member));
             likesRepository.save(new Likes(template3, otherMember));
@@ -599,19 +533,19 @@ class TemplateApplicationServiceTest extends ServiceTest {
                             .containsExactlyInAnyOrder(true, true)
             );
         }
-    }
 
-    private Template savePrivateTemplate(Member member, Category category) {
-        var privateTemplate = templateRepository.save(TemplateFixture.getPrivate(member, category));
-        var privateSourceCode = sourceCodeRepository.save(SourceCodeFixture.get(privateTemplate, 1));
-        thumbnailRepository.save(new Thumbnail(privateTemplate, privateSourceCode));
-        return privateTemplate;
+        private List<Template> savePublicTemplates(int size, Member member, Category category) {
+            return TemplateFixture.getList(size, member, category).stream()
+                    .map(template -> templateRepository.save(template))
+                    .toList();
+        }
     }
 
     private Template savePublicTemplate(Member member, Category category) {
-        var template = templateRepository.save(TemplateFixture.get(member, category));
-        var sourceCode = sourceCodeRepository.save(SourceCodeFixture.get(template, 1));
-        thumbnailRepository.save(new Thumbnail(template, sourceCode));
-        return template;
+        return templateRepository.save(TemplateFixture.get(member, category));
+    }
+
+    private Template savePrivateTemplate(Member member, Category category) {
+        return templateRepository.save(TemplateFixture.getPrivate(member, category));
     }
 }

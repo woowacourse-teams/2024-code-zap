@@ -24,29 +24,36 @@ class TemplateTagTest {
         @Test
         @DisplayName("TemplateTag 이 Template 을 가지고 있는지 조회: 참")
         void hasTemplate() {
-            Template template = createTemplateById(1L);
+            Member member = MemberFixture.getFirstMember();
+            Category category = CategoryFixture.getDefaultCategory(member);
+
+            Template template = new Template(1L, member, "안녕", "Description 1", category, 0L, Visibility.PUBLIC, 0L,
+                    List.of(
+                            new SourceCode("file1.java", "content1"),
+                            new SourceCode("file2.java", "content2")
+                    ));
             TemplateTag templateTag = new TemplateTag(template, new Tag(1L, "tag1"));
 
             assertTrue(templateTag.hasTemplate(template));
         }
 
         @Test
-        @DisplayName("TemplateTag 이 Template 을 가지고 있는지 조회: 거짓")
+        @DisplayName("TemplateTag가 Template 을 가지고 있는지 조회: id가 다른 Template인 경우 거짓")
         void hasNotTemplate() {
-            Template template = createTemplateById(1L);
-            Template otherTemplate = createTemplateById(2L);
+            Member member = MemberFixture.getFirstMember();
+            Category category = CategoryFixture.getDefaultCategory(member);
+
+            Template template = new Template(1L, member, "안녕", "Description 1", category, 0L, Visibility.PUBLIC, 0L,
+                    List.of(
+                            new SourceCode("file1.java", "content1"),
+                            new SourceCode("file2.java", "content2")
+                    ));
+
+            Template otherTemplate = new Template(2L, member, "안녕", "Description 1", category, 0L, Visibility.PUBLIC,
+                    0L, List.of(new SourceCode("file1.java", "content1")));
             TemplateTag templateTag = new TemplateTag(template, new Tag(1L, "tag1"));
 
             assertFalse(templateTag.hasTemplate(otherTemplate));
-        }
-
-        private Template createTemplateById(Long id) {
-            Member member = MemberFixture.getFirstMember();
-            Category category = CategoryFixture.getDefaultCategory(member);
-            List<SourceCode> sourceCodes = List.of();
-            long likesCount = 1L;
-            return new Template(
-                    id, member, "Template 1", "Description 1", category, sourceCodes, likesCount, Visibility.PUBLIC);
         }
     }
 }

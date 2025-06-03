@@ -12,7 +12,7 @@ public record FindThumbnailResponse(
 ) {
     public static FindThumbnailResponse from(SourceCode sourceCode) {
         return new FindThumbnailResponse(
-                sourceCode.getFilename(),
+                sourceCode.filename(),
                 sourceCode.getThumbnailContent()
         );
     }

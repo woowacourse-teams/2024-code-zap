@@ -5,7 +5,6 @@ import java.util.List;
 
 import codezap.tag.domain.Tag;
 import codezap.tag.dto.response.FindTagResponse;
-import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -46,7 +45,6 @@ public record FindAllTemplateItemResponse(
     public static FindAllTemplateItemResponse of(
             Template template,
             List<Tag> tags,
-            SourceCode thumbnailSourceCode,
             Boolean isLiked
     ) {
         return new FindAllTemplateItemResponse(
@@ -57,7 +55,7 @@ public record FindAllTemplateItemResponse(
                 tags.stream()
                         .map(FindTagResponse::from)
                         .toList(),
-                FindThumbnailResponse.from(thumbnailSourceCode),
+                FindThumbnailResponse.from(template.getThumbnailSourceCode()),
                 template.getVisibility(),
                 template.getLikesCount(),
                 isLiked,

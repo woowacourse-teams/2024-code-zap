@@ -1,5 +1,6 @@
 package codezap.template.service;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
@@ -12,8 +13,10 @@ import codezap.global.exception.CodeZapException;
 import codezap.global.exception.ErrorCode;
 import codezap.global.pagination.FixedPage;
 import codezap.member.domain.Member;
+import codezap.template.domain.SourceCode;
 import codezap.template.domain.Template;
 import codezap.template.domain.Visibility;
+import codezap.template.dto.request.CreateSourceCodeRequest;
 import codezap.template.dto.request.CreateTemplateRequest;
 import codezap.template.dto.request.UpdateTemplateRequest;
 import codezap.template.repository.TemplateRepository;
@@ -33,8 +36,17 @@ public class TemplateService {
                 request.title(),
                 request.description(),
                 category,
-                request.visibility());
+                request.visibility(),
+                createSourceCodes(request.sourceCodes())
+        );
         return templateRepository.save(template);
+    }
+
+    private List<SourceCode> createSourceCodes(List<CreateSourceCodeRequest> request) {
+        return request.stream()
+                .sorted((Comparator.comparingInt(CreateSourceCodeRequest::ordinal)))
+                .map(createSourceCodeRequest -> new SourceCode(createSourceCodeRequest.filename(), createSourceCodeRequest.content()))
+                .toList();
     }
 
     public Template getById(Long id) {
@@ -70,7 +82,8 @@ public class TemplateService {
                 request.title(),
                 request.description(),
                 category,
-                request.visibility()
+                request.visibility(),
+                createSourceCodes(request.sourceCodes())
         );
         return template;
     }
