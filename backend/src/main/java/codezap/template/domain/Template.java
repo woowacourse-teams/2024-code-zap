@@ -19,6 +19,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OrderColumn;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import codezap.category.domain.Category;
@@ -33,6 +34,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @DynamicUpdate
+@DynamicInsert
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -56,7 +58,7 @@ public class Template extends SkipModifiedAtBaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Category category;
 
-    @Column
+    @Column(nullable = false)
     @ColumnDefault("0")
     private Long likesCount;
 
