@@ -90,6 +90,34 @@ class TemplateTest {
             );
         }
 
+
+        @Test
+        @DisplayName("성공: 소스코드는 전체 삭제 후 새로 추가")
+        void updateTemplateWithNewSourceCode() {
+            Member member = MemberFixture.getFirstMember();
+            String title = "title";
+            String description = "description";
+            Category category = CategoryFixture.getDefaultCategory(member);
+            Visibility visibility = Visibility.PUBLIC;
+            List<SourceCode> sourceCodes = List.of(new SourceCode("filename", "content"));
+            Template template = new Template(member, title, description, category, visibility, sourceCodes);
+
+            String newTitle = "newTitle";
+            String newDescription = "newDescription";
+            Category newCategory = CategoryFixture.getDefaultCategory(member);
+            Visibility newVisibility = Visibility.PRIVATE;
+            List<SourceCode> newSourceCodes = List.of(new SourceCode("newFilename", "newContent"));
+            template.updateTemplate(newTitle, newDescription, newCategory, newVisibility, newSourceCodes);
+
+            assertAll(
+                    () -> assertThat(template.getTitle()).isEqualTo(newTitle),
+                    () -> assertThat(template.getDescription()).isEqualTo(newDescription),
+                    () -> assertThat(template.getCategory()).isEqualTo(newCategory),
+                    () -> assertThat(template.getVisibility()).isEqualTo(newVisibility),
+                    () -> assertThat(template.getSourceCodes()).hasSize(1)
+            );
+        }
+
         @Test
         @DisplayName("실패: 소스 코드가 없으면 예외 발생")
         void updateTemplateWithoutSourceCode() {
