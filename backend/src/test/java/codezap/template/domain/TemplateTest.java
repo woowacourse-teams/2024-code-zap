@@ -223,6 +223,28 @@ class TemplateTest {
 
             assertThat(thumbnailSourceCode).isEqualTo(sourceCodes.get(0));
         }
+
+        @Test
+        @DisplayName("실패: 썸네일 순서값이 보다 큰 경우")
+        void getThumbnailSourceCodeWithInvalidRange() {
+            Member member = MemberFixture.getFirstMember();
+            String title = "title";
+            String description = "description";
+            Category category = CategoryFixture.getDefaultCategory(member);
+            Visibility visibility = Visibility.PUBLIC;
+            List<SourceCode> sourceCodes = List.of(
+                    new SourceCode("filename1", "content1"),
+                    new SourceCode("filename2", "content2")
+            );
+
+            long invalidThumbnailOrdinal = sourceCodes.size() + 100L;
+            Template template = new Template(0L, member, title, description, category, 0L,  visibility,
+                    invalidThumbnailOrdinal, sourceCodes);
+
+            assertThatThrownBy(template::getThumbnailSourceCode)
+                    .isInstanceOf(CodeZapException.class)
+                    .hasMessage("썸네일 순서 값은 소스코드의 개수보다 작아야 합니다: " + invalidThumbnailOrdinal);
+        }
     }
 
     @Nested
